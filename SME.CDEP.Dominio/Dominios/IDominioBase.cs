@@ -1,11 +1,10 @@
 namespace SME.CDEP.Dominio.Dominios;
 
-public interface IDominioBase<TEntidade, TChave> 
-    where TEntidade : EntidadeBase<TChave>
-    where TChave : struct
+public interface IDominioBase<TEntidade> 
+    where TEntidade : EntidadeBase
 {
-    Task<TEntidade> ObterPorId(TChave id);
+    Task<TEntidade> ObterPorId(long id);
     Task<IList<TEntidade>> ObterTodos();
-    Task<TChave> Inserir(TEntidade entidade);
+    Task<long> Inserir(TEntidade entidade);
     Task<TEntidade> Atualizar(TEntidade entidade);
 }

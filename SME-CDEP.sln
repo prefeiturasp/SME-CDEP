@@ -1,16 +1,21 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SME.CDEP.Webapi", "SME.CDEP.Webapi\SME.CDEP.Webapi.csproj", "{117FFFA0-C476-4429-9FA2-081D93C42ECC}"
+# Visual Studio Version 17
+VisualStudioVersion = 17.6.33723.286
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SME.CDEP.Webapi", "SME.CDEP.Webapi\SME.CDEP.Webapi.csproj", "{117FFFA0-C476-4429-9FA2-081D93C42ECC}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SME.CDEP.Dominio", "SME.CDEP.Dominio\SME.CDEP.Dominio.csproj", "{AC6B6AF9-25FB-48B9-9EEA-7B88AAA82877}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SME.CDEP.Dominio", "SME.CDEP.Dominio\SME.CDEP.Dominio.csproj", "{AC6B6AF9-25FB-48B9-9EEA-7B88AAA82877}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SME.CDEP.Infra.Dados", "SME.CDEP.Infra.Dados\SME.CDEP.Infra.Dados.csproj", "{F0EA26AF-DC8B-4CF0-8951-4E4122D539CC}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SME.CDEP.Infra.Dados", "SME.CDEP.Infra.Dados\SME.CDEP.Infra.Dados.csproj", "{F0EA26AF-DC8B-4CF0-8951-4E4122D539CC}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SME.CDEP.IoC", "SME.CDEP.IoC\SME.CDEP.IoC.csproj", "{1CFCD45F-F500-44AC-A921-39256A58FA76}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SME.CDEP.IoC", "SME.CDEP.IoC\SME.CDEP.IoC.csproj", "{1CFCD45F-F500-44AC-A921-39256A58FA76}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SME.CDEP.Infra.Servicos", "SME.CDEP.Infra.Servicos\SME.CDEP.Infra.Servicos.csproj", "{4971B2FA-69C3-482E-9907-71F81D882AEA}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SME.CDEP.Infra.Servicos", "SME.CDEP.Infra.Servicos\SME.CDEP.Infra.Servicos.csproj", "{4971B2FA-69C3-482E-9907-71F81D882AEA}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SME.CDEP.Aplicacao", "SME.CDEP.Aplicacao\SME.CDEP.Aplicacao.csproj", "{E2E23399-B583-4F85-AC6F-3DAC016BC63A}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SME.CDEP.Aplicacao", "SME.CDEP.Aplicacao\SME.CDEP.Aplicacao.csproj", "{E2E23399-B583-4F85-AC6F-3DAC016BC63A}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SME.CDEP.TesteIntegracao", "SME.CDEP.Testes\SME.CDEP.TesteIntegracao.csproj", "{0A8AC8A4-CCCB-41C1-8E63-DA6C01870FA3}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -42,5 +47,15 @@ Global
 		{E2E23399-B583-4F85-AC6F-3DAC016BC63A}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{E2E23399-B583-4F85-AC6F-3DAC016BC63A}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{E2E23399-B583-4F85-AC6F-3DAC016BC63A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{0A8AC8A4-CCCB-41C1-8E63-DA6C01870FA3}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{0A8AC8A4-CCCB-41C1-8E63-DA6C01870FA3}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{0A8AC8A4-CCCB-41C1-8E63-DA6C01870FA3}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{0A8AC8A4-CCCB-41C1-8E63-DA6C01870FA3}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {7C8BFE3B-BC28-4781-A67F-86F9898E68E7}
 	EndGlobalSection
 EndGlobal

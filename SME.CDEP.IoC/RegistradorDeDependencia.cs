@@ -1,6 +1,16 @@
-﻿using Microsoft.Extensions.Configuration;
+﻿using Dapper.FluentMap;
+using Dapper.FluentMap.Dommel;
+using Elastic.Apm.Api;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.DependencyInjection.Extensions;
+using SME.CDEP.Aplicacao.Servicos;
+using SME.CDEP.Aplicacao.Servicos.Interface;
+using SME.CDEP.Dominio.Dominios;
 using SME.CDEP.Infra.Dados;
+using SME.CDEP.Infra.Dados.Mapeamentos;
+using SME.CDEP.Infra.Dados.Repositorios;
+using SME.CDEP.Infra.Dados.Repositorios.Interfaces;
 using SME.CDEP.Infra.Servicos.Polly;
 using SME.CDEP.Infra.Servicos.Telemetria.IoC;
 
@@ -17,11 +27,27 @@ public class RegistradorDeDependencia
         _configuration = configuration;
     }
 
+    //public RegistradorDeDependencia() //TODO: isso aqui depois precisamos revisar, que essa injeção de dependencia está dando erro
+    //{}
+
     public virtual void Registrar()
     {
         RegistrarTelemetria();
         RegistrarConexao();
+        RegistrarRepositorios();
         RegistrarPolly();
+        RegistrarMapeamentos();
+        RegistrarServicos();
+    }
+
+    private void RegistrarMapeamentos()
+    {
+        FluentMapper.Initialize(config =>
+        {
+            config.AddMap(new UsuarioMap());
+
+            config.ForDommel();
+        });
     }
 
     protected virtual void RegistrarTelemetria()
@@ -38,5 +64,15 @@ public class RegistradorDeDependencia
     protected virtual void RegistrarPolly()
     {
         _serviceCollection.ConfigurarPolly();
+    }
+
+    protected virtual void RegistrarRepositorios()
+    {
+        _serviceCollection.TryAddScoped<IRepositorioUsuario, RepositorioUsuario>();
+    }
+
+    protected virtual void RegistrarServicos()
+    {
+        _serviceCollection.TryAddScoped<IServicoUsuario, ServicoUsuario>();
     }
 }
