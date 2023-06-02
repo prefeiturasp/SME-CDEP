@@ -43,7 +43,7 @@ namespace SME.CDEP.TesteIntegracao.Setup
             CultureInfo.DefaultThreadCurrentCulture = culture;
             CultureInfo.DefaultThreadCurrentUICulture = culture;
 
-            //new RegistradorDependencias().Registrar();
+            new RegistradorDependencias(Services, config).Registrar();
         }
 
         public void BuildServiceProvider()

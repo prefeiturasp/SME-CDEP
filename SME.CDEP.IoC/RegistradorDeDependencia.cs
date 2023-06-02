@@ -26,10 +26,6 @@ public class RegistradorDeDependencia
         _serviceCollection = serviceCollection;
         _configuration = configuration;
     }
-
-    //public RegistradorDeDependencia() //TODO: isso aqui depois precisamos revisar, que essa injeção de dependencia está dando erro
-    //{}
-
     public virtual void Registrar()
     {
         RegistrarTelemetria();
