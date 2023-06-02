@@ -9,7 +9,7 @@
     }
   },
   "profiles": {
-    "WebApplication1": {
+    "SME.CDEP.Webapi": {
       "commandName": "Project",
       "dotnetRunMessages": true,
       "launchBrowser": true,
