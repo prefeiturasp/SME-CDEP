@@ -1,10 +1,11 @@
 using System.Reflection;
 using Microsoft.Extensions.DependencyInjection;
-using SME.CDEP.TesteIntegracao.Setup;
+using NUnit.Framework.Internal;
+using SME.CDEP.Teste.Setup;
 using Xunit;
 
 [assembly: CollectionBehavior(DisableTestParallelization = true)]
-namespace SME.CDEP.TesteIntegracao
+namespace SME.CDEP.Teste
 {
     [Collection("TesteIntegradoCDEP")]
     public class TesteBase : IClassFixture<TestFixture>

@@ -3,7 +3,7 @@ using Npgsql;
 using System.Data;
 using System.Text;
 
-namespace SME.CDEP.TesteIntegracao.Setup
+namespace SME.CDEP.Teste.Setup
 {
     public class ConstrutorDeTabelas
     {

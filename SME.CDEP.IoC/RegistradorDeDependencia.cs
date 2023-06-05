@@ -53,7 +53,13 @@ public class RegistradorDeDependencia
 
     protected virtual void RegistrarConexao()
     {
-        _serviceCollection.AddScoped<ICdepConexao, CdepConexao>(_ => new CdepConexao(_configuration.GetConnectionString("conexao")));
+        //TODO: Rever isso
+        var conexao = _configuration.GetConnectionString("conexao");
+        if (conexao != null)
+            _serviceCollection.AddScoped<ICdepConexao, CdepConexao>(_ => new CdepConexao(conexao));
+        else
+            _serviceCollection.AddScoped<ICdepConexao, CdepConexao>();    
+        
         _serviceCollection.AddScoped<ITransacao, Transacao>();
     }
 
