@@ -2,18 +2,17 @@ using SME.CDEP.Dominio.Repositorios;
 
 namespace SME.CDEP.Dominio.Dominios;
 
-public abstract class DominioBase<TEntidade, TChave> : IDominioBase<TEntidade,TChave>
-    where TEntidade : EntidadeBase<TChave>
-    where TChave : struct
+public abstract class DominioBase<TEntidade> : IDominioBase<TEntidade>
+    where TEntidade : EntidadeBase
 {
-    private readonly IRepositorioBase<TEntidade, TChave> _repositorio;
+    private readonly IRepositorioBase<TEntidade> _repositorio;
 
-    public DominioBase(IRepositorioBase<TEntidade, TChave> repositorio)
+    public DominioBase(IRepositorioBase<TEntidade> repositorio)
     {
         _repositorio = repositorio;
     }
     
-    public async Task<TEntidade> ObterPorId(TChave id)
+    public async Task<TEntidade> ObterPorId(long id)
     {
         return await _repositorio.ObterPorId(id);
     }
@@ -23,7 +22,7 @@ public abstract class DominioBase<TEntidade, TChave> : IDominioBase<TEntidade,TC
         return await _repositorio.ObterTodos();
     }
 
-    public async Task<TChave> Inserir(TEntidade entidade)
+    public async Task<long> Inserir(TEntidade entidade)
     {
         return await _repositorio.Inserir(entidade);
     }
