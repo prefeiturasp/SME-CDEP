@@ -15,7 +15,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SME.CDEP.Infra.Servicos", "
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SME.CDEP.Aplicacao", "SME.CDEP.Aplicacao\SME.CDEP.Aplicacao.csproj", "{E2E23399-B583-4F85-AC6F-3DAC016BC63A}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SME.CDEP.TesteIntegracao", "SME.CDEP.Testes\SME.CDEP.TesteIntegracao.csproj", "{0A8AC8A4-CCCB-41C1-8E63-DA6C01870FA3}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SME.CDEP.TesteIntegracao", "SME.CDEP.TesteIntegracao\SME.CDEP.TesteIntegracao.csproj", "{0A8AC8A4-CCCB-41C1-8E63-DA6C01870FA3}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
