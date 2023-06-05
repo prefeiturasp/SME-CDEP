@@ -13,12 +13,12 @@ builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
-builder.Services.AddSingleton<RegistradorDeDependencia>();
+var registradorDeDependencia = new RegistradorDeDependencia(builder.Services, builder.Configuration);
+registradorDeDependencia.Registrar();
+
+builder.Services.AddSingleton(registradorDeDependencia);
 
 var app = builder.Build();
-
-var registradorDeDependencia = app.Services.GetRequiredService<RegistradorDeDependencia>();
-registradorDeDependencia.Registrar();
 
 app.UseElasticApm(builder.Configuration,
     new SqlClientDiagnosticSubscriber(),
