@@ -36,7 +36,7 @@ public class RegistradorDeDependencia
         RegistrarServicos();
     }
 
-    private void RegistrarMapeamentos()
+    protected virtual void RegistrarMapeamentos()
     {
         FluentMapper.Initialize(config =>
         {
