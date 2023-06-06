@@ -1,6 +1,6 @@
-﻿using SME.SGP.Infra.Dados.Atributos;
+﻿using SME.SGP.Infra.Dominio.Atributos;
 
-namespace SME.CDEP.Infra.Dados.Enumerados
+namespace SME.CDEP.Infra.Dominio.Enumerados
 {
     public enum Permissao
     {

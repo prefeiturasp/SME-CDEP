@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace SME.SGP.Infra.Dados.Atributos
+namespace SME.SGP.Infra.Dominio.Atributos
 {
     public class PermissaoMenuAttribute : Attribute
     {
