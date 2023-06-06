@@ -1,6 +1,12 @@
 namespace SME.CDEP.Dominio;
 
-public class EntidadeBase<TChave> where TChave : struct
+public abstract class EntidadeBase
 {
-    public TChave Id { get; set; }
+    public long Id { get; set; }
+    public DateTime? AlteradoEm { get; set; }
+    public string AlteradoPor { get; set; }
+    public string AlteradoRF { get; set; }
+    public DateTime CriadoEm { get; set; }
+    public string CriadoPor { get; set; }
+    public string CriadoRF { get; set; }
 }
