@@ -1,6 +1,6 @@
 ﻿using SME.CDEP.Aplicacao.Servicos.Interface;
 using SME.CDEP.Dominio.Dominios;
-using SME.CDEP.Infra.Dados.Dtos;
+using SME.CDEP.Infra.Aplicacao.Dtos;
 using SME.CDEP.Infra.Dados.Repositorios.Interfaces;
 
 namespace SME.CDEP.Aplicacao.Servicos
