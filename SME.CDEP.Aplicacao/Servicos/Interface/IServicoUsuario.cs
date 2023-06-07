@@ -1,5 +1,5 @@
 ﻿using SME.CDEP.Dominio.Dominios;
-using SME.CDEP.Infra.Dominio.Dtos;
+using SME.CDEP.Infra.Aplicacao.Dtos;
 
 namespace SME.CDEP.Aplicacao.Servicos.Interface
 {
