@@ -13,6 +13,9 @@ using SME.CDEP.Infra.Dados.Repositorios;
 using SME.CDEP.Infra.Dados.Repositorios.Interfaces;
 using SME.CDEP.Infra.Servicos.Polly;
 using SME.CDEP.Infra.Servicos.Telemetria.IoC;
+using SME.CDEP.IoC.Extensions;
+using SSME.CDEP.Aplicacao.Integracoes;
+using SSME.CDEP.Aplicacao.Integracoes.Interfaces;
 
 namespace SME.CDEP.IoC;
 
@@ -34,6 +37,7 @@ public class RegistradorDeDependencia
         RegistrarPolly();
         RegistrarMapeamentos();
         RegistrarServicos();
+        RegistrarHttpClients();
     }
 
     protected virtual void RegistrarMapeamentos()
@@ -53,13 +57,7 @@ public class RegistradorDeDependencia
 
     protected virtual void RegistrarConexao()
     {
-        //TODO: Rever isso
-        var conexao = _configuration.GetConnectionString("conexao");
-        if (conexao != null)
-            _serviceCollection.AddScoped<ICdepConexao, CdepConexao>(_ => new CdepConexao(conexao));
-        else
-            _serviceCollection.AddScoped<ICdepConexao, CdepConexao>();    
-        
+        _serviceCollection.AddScoped<ICdepConexao, CdepConexao>(_ => new CdepConexao(_configuration.GetConnectionString("conexao")));
         _serviceCollection.AddScoped<ITransacao, Transacao>();
     }
 
@@ -76,5 +74,10 @@ public class RegistradorDeDependencia
     protected virtual void RegistrarServicos()
     {
         _serviceCollection.TryAddScoped<IServicoUsuario, ServicoUsuario>();
+        _serviceCollection.TryAddScoped<IServicoAcessos, ServicoAcessos>();
+    }
+    protected virtual void RegistrarHttpClients()
+    {
+        _serviceCollection.AdicionarHttpClients(_configuration);
     }
 }
