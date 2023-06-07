@@ -1,4 +1,4 @@
-﻿namespace SME.CDEP.Infra.Dados.Dtos
+﻿namespace SME.CDEP.Infra.Aplicacao.Dtos
 {
     public class UsuarioDto
     {
