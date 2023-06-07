@@ -15,13 +15,6 @@ namespace SME.CDEP.TesteIntegracao.Usuario
         public Ao_fazer_manutencao_usuario(CollectionFixture collectionFixture) : base(collectionFixture)
         { }
         
-        protected override void RegistrarFakes(IServiceCollection services)
-        {
-            base.RegistrarFakes(services);
-
-            services.Replace(new ServiceDescriptor(typeof(IServicoAcessos), typeof(ServicoAcessosFake), ServiceLifetime.Scoped));
-        }
-
         [Fact(DisplayName = "Usuário - Cadastrar usuario")]
         public async Task Cadastrar_usuario()
         {
@@ -79,7 +72,8 @@ namespace SME.CDEP.TesteIntegracao.Usuario
             IServicoUsuario servicoUsuario = await CadastrarVariosUsuarios();
 
             var usuario = await servicoUsuario.ObterPorLogin("login_10");
-            usuario.ShouldBeNull();
+            usuario.ShouldNotBeNull();
+            usuario.Login.ShouldBe("login_10");
         }
 
         private async Task<IServicoUsuario> CadastrarVariosUsuarios()

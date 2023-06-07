@@ -14,13 +14,6 @@ namespace SME.CDEP.TesteIntegracao.Usuario
     {
         public Ao_fazer_autenticacao(CollectionFixture collectionFixture) : base(collectionFixture)
         { }
-        
-        protected override void RegistrarFakes(IServiceCollection services)
-        {
-            base.RegistrarFakes(services);
-
-            services.Replace(new ServiceDescriptor(typeof(IServicoAcessos), typeof(ServicoAcessosFake), ServiceLifetime.Scoped));
-        }
 
         [Fact(DisplayName = "Usuário - Ao autenticar um usuário novo, deve cadastrá-lo")]
         public async Task AutenticarUsuarioNovo()
