@@ -1,5 +1,5 @@
-﻿using SME.CDEP.Dominio.Dominios;
-using SME.CDEP.Infra.Aplicacao.Dtos;
+﻿using SME.CDEP.Aplicacao.Dtos;
+using SME.CDEP.Dominio.Dominios;
 
 namespace SME.CDEP.Aplicacao.Servicos.Interface
 {
@@ -9,5 +9,7 @@ namespace SME.CDEP.Aplicacao.Servicos.Interface
         Task<IList<Usuario>> ObterTodos();
         Task<Usuario> Alterar(UsuarioDto usuarioDto);
         Task<Usuario> ObterPorId(long usuarioId);
+        Task<UsuarioAutenticacaoRetornoDto> Autenticar(string login, string senha);
+        Task<Usuario> ObterPorLogin(string login);
     }
 }

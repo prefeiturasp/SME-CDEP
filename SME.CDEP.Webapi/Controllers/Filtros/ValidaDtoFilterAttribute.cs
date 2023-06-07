@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
+using SME.CDEP.Aplicacao.Dtos;
 
 namespace SME.CDEP.Webapi.Filtros
 {
