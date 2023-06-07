@@ -81,15 +81,6 @@ namespace SME.CDEP.TesteIntegracao.Usuario
             var usuario = await servicoUsuario.ObterPorLogin("login_10");
             usuario.ShouldBeNull();
         }
-        
-        [Fact(DisplayName = "Usuário - Ao autenticar um usuário novo, deve cadastrá-lo")]
-        public async Task AutenticarUsuarioNovo()
-        {
-            // IServicoUsuario servicoUsuario = 
-            //
-            // var usuario = await servicoUsuario.ObterPorLogin("login_10");
-            // usuario.ShouldBeNull();
-        }
 
         private async Task<IServicoUsuario> CadastrarVariosUsuarios()
         {

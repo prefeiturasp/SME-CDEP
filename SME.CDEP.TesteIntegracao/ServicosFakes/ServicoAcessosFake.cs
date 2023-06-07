@@ -14,8 +14,8 @@ public class ServicoAcessosFake: IServicoAcessos
             Perfil = Guid.NewGuid(),
             Token = "token",
             PerfilNome = "Perfil do usuário",
-            UsuarioLogin = "login do usuario",
-            UsuarioNome = "Nome do usuário",
+            UsuarioLogin = "login_10",
+            UsuarioNome = "Nome do usuário de login 10",
             DataHoraExpiracao = DateTime.Now.AddMinutes(120)
         };
     }
