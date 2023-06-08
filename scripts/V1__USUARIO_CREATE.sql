@@ -1,6 +1,5 @@
 CREATE TABLE public.usuario (
 	id int8 NOT NULL GENERATED ALWAYS AS IDENTITY( NO MINVALUE NO MAXVALUE NO CYCLE),
-	rf_codigo varchar(12) NULL,
 	criado_em timestamp NOT NULL,
 	criado_por varchar(200) NOT NULL,
 	alterado_em timestamp NULL,
