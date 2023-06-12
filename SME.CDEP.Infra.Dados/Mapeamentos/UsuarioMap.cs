@@ -8,7 +8,6 @@ namespace SME.CDEP.Infra.Dados.Mapeamentos
         {
             ToTable("usuario");
             Map(a => a.PerfilAtual).Ignore();
-            Map(c => c.CodigoRf).ToColumn("rf_codigo");
             Map(c => c.ExpiracaoRecuperacaoSenha).ToColumn("expiracao_recuperacao_senha");
             Map(c => c.Login).ToColumn("login");
             Map(c => c.Nome).ToColumn("nome");

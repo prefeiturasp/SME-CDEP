@@ -2,8 +2,6 @@
 {
     public class Usuario : EntidadeBase
     {
-        public string CodigoRf { get; set; }
-
         public DateTime? ExpiracaoRecuperacaoSenha { get; set; }
 
         public string Login { get; set; }

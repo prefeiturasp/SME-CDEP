@@ -32,7 +32,6 @@ namespace SME.CDEP.TesteIntegracao.Usuario
             {
                 Login = "login_1",
                 Nome = "Usuário do Login_1",
-                CodigoRf = "login_1",
                 PerfilAtual = new Guid(),
                 UltimoLogin = DateTime.Now.AddDays(-5),
                 CriadoPor = "Sistema", CriadoEm = DateTime.Now, CriadoRF = "Sistema"

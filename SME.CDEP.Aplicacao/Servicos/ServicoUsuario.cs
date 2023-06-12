@@ -88,7 +88,6 @@ namespace SME.CDEP.Aplicacao.Servicos
                 {
                     CriadoEm = DateTime.Now, CriadoPor = retorno.UsuarioNome, CriadoRF = retorno.UsuarioLogin,
                     Login = retorno.UsuarioLogin, Nome = retorno.UsuarioNome, UltimoLogin = DateTime.Now,
-                    CodigoRf = retorno.UsuarioLogin, PerfilAtual = retorno.Perfil
                 });
             }
         }
