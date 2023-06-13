@@ -1,7 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
-using SME.CDEP.Aplicacao.Dtos;
+using SME.CDEP.Aplicacao.DTOS;
 
 namespace SME.CDEP.Webapi.Filtros
 {
@@ -23,9 +23,9 @@ namespace SME.CDEP.Webapi.Filtros
                 StatusCode = StatusCodes.Status422UnprocessableEntity;
             }
 
-            public static RetornoBaseDto RetornaBaseModel(ModelStateDictionary modelState)
+            public static RetornoBaseDTO RetornaBaseModel(ModelStateDictionary modelState)
             {
-                var dto = new RetornoBaseDto();
+                var dto = new RetornoBaseDTO();
                 dto.Mensagens = modelState.Keys
                        .SelectMany(key => modelState[key].Errors.Select(x => new string(x.ErrorMessage)))
                        .ToList();

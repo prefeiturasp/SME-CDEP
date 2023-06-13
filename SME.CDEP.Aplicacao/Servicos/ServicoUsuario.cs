@@ -1,4 +1,4 @@
-﻿using SME.CDEP.Aplicacao.Dtos;
+﻿using SME.CDEP.Aplicacao.DTOS;
 using SME.CDEP.Aplicacao.Servicos.Interface;
 using SME.CDEP.Dominio.Dominios;
 using SME.CDEP.Infra.Dados.Repositorios.Interfaces;
@@ -17,7 +17,7 @@ namespace SME.CDEP.Aplicacao.Servicos
             this.servicoAcessos = servicoAcessos ?? throw new ArgumentNullException(nameof(servicoAcessos));
         }
 
-        public async Task<long> Inserir(UsuarioDto usuarioDto)
+        public async Task<long> Inserir(UsuarioDTO usuarioDto)
         {
             var usuario = new Usuario()
             {
@@ -36,7 +36,7 @@ namespace SME.CDEP.Aplicacao.Servicos
             return await repositorioUsuario.ObterTodos();
         }
 
-        public async Task<Usuario> Alterar(UsuarioDto usuarioDto)
+        public async Task<Usuario> Alterar(UsuarioDTO usuarioDto)
         {
             var usuario = new Usuario()
             {
@@ -64,7 +64,7 @@ namespace SME.CDEP.Aplicacao.Servicos
             return await repositorioUsuario.ObterPorLogin(login);
         }
 
-        public async Task<UsuarioAutenticacaoRetornoDto> Autenticar(string login, string senha)
+        public async Task<UsuarioAutenticacaoRetornoDTO> Autenticar(string login, string senha)
         {
             var retorno = await servicoAcessos.Autenticar(login, senha);
 
@@ -73,21 +73,21 @@ namespace SME.CDEP.Aplicacao.Servicos
             return retorno;
         }
 
-        private async Task ManutencaoUsuario(string login, UsuarioAutenticacaoRetornoDto retorno)
+        private async Task ManutencaoUsuario(string login, UsuarioAutenticacaoRetornoDTO retorno)
         {
             var usuario = await repositorioUsuario.ObterPorLogin(login);
             if (usuario != null)
             {
                 usuario.UltimoLogin = DateTime.Now;
-                usuario.Nome = retorno.UsuarioNome;
+                usuario.Nome = retorno.Nome;
                 await repositorioUsuario.Atualizar(usuario);
             }
             else
             {
                 await repositorioUsuario.Inserir(new Usuario()
                 {
-                    CriadoEm = DateTime.Now, CriadoPor = retorno.UsuarioNome, CriadoRF = retorno.UsuarioLogin,
-                    Login = retorno.UsuarioLogin, Nome = retorno.UsuarioNome, UltimoLogin = DateTime.Now,
+                    CriadoEm = DateTime.Now, CriadoPor = retorno.Nome, CriadoRF = retorno.Login,
+                    Login = retorno.Login, Nome = retorno.Nome, UltimoLogin = DateTime.Now,
                 });
             }
         }

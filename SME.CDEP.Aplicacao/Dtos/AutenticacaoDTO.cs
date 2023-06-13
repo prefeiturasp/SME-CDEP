@@ -1,8 +1,8 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace SME.CDEP.Aplicacao.Dtos
+namespace SME.CDEP.Aplicacao.DTOS
 {
-    public class AutenticacaoDto
+    public class AutenticacaoDTO
     {
         [Required(ErrorMessage = "É necessário informar o login.")]
         [MinLength(5, ErrorMessage = "O login deve conter no mínimo 5 caracteres.")]

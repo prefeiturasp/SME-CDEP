@@ -1,20 +1,20 @@
 ﻿using FluentValidation.Results;
 
-namespace SME.CDEP.Aplicacao.Dtos;
+namespace SME.CDEP.Aplicacao.DTOS;
 
-   public class RetornoBaseDto
+   public class RetornoBaseDTO
     {
-        public RetornoBaseDto(IEnumerable<ValidationFailure> validationFailures)
+        public RetornoBaseDTO(IEnumerable<ValidationFailure> validationFailures)
         {
             if (validationFailures != null && validationFailures.Any())
                 Mensagens = validationFailures.Select(c => c.ErrorMessage).ToList();
         }
-        public RetornoBaseDto()
+        public RetornoBaseDTO()
         {
             Mensagens = new List<string>();
         }
 
-        public RetornoBaseDto(string mensagem)
+        public RetornoBaseDTO(string mensagem)
         {
             Mensagens = new List<string>() { mensagem };
         }

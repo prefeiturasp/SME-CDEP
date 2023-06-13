@@ -1,7 +1,7 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 using Shouldly;
-using SME.CDEP.Aplicacao.Dtos;
+using SME.CDEP.Aplicacao.DTOS;
 using SME.CDEP.Aplicacao.Servicos.Interface;
 using SME.CDEP.TesteIntegracao.ServicosFakes;
 using SME.CDEP.TesteIntegracao.Setup;

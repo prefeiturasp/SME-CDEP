@@ -1,7 +1,7 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 using Shouldly;
-using SME.CDEP.Aplicacao.Dtos;
+using SME.CDEP.Aplicacao.DTOS;
 using SME.CDEP.Aplicacao.Servicos.Interface;
 using SME.CDEP.TesteIntegracao.ServicosFakes;
 using SME.CDEP.TesteIntegracao.Setup;
@@ -50,7 +50,7 @@ namespace SME.CDEP.TesteIntegracao.Usuario
         {
             IServicoUsuario servicoUsuario = await CadastrarVariosUsuarios();
             var usuarios = ObterTodos<Dominio.Dominios.Usuario>();
-            var usuario = await servicoUsuario.Alterar(new UsuarioDto() { Id = 1, Login = "login alterado", Nome = "Nome alterado" });
+            var usuario = await servicoUsuario.Alterar(new UsuarioDTO() { Id = 1, Login = "login alterado", Nome = "Nome alterado" });
             usuario.ShouldNotBeNull();
             usuario.Login.ShouldBe("login alterado");
             usuarios = ObterTodos<Dominio.Dominios.Usuario>();
@@ -93,9 +93,9 @@ namespace SME.CDEP.TesteIntegracao.Usuario
             return servicoUsuario;
         }
 
-        private UsuarioDto ObterUsuarioDto()
+        private UsuarioDTO ObterUsuarioDto()
         {
-            return new UsuarioDto
+            return new UsuarioDTO
             {
                 Login = "login do teste de integração",
                 Nome = "Nome do teste de integração"

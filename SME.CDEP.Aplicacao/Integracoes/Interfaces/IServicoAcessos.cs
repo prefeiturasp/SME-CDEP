@@ -1,8 +1,9 @@
-﻿using SME.CDEP.Aplicacao.Dtos;
+﻿using SME.CDEP.Aplicacao.DTOS;
 
 namespace SSME.CDEP.Aplicacao.Integracoes.Interfaces;
 
 public interface IServicoAcessos
 {
-    Task<UsuarioAutenticacaoRetornoDto> Autenticar(string login, string senha);
+    Task<UsuarioAutenticacaoRetornoDTO> Autenticar(string login, string senha);
+    Task<RetornoPerfilUsuarioDTO> ObterPerfisUsuario(string login);
 }
