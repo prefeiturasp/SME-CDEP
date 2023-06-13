@@ -1,13 +1,15 @@
-﻿using SME.CDEP.Dominio.Dominios;
-using SME.CDEP.Infra.Dados.Dtos;
+﻿using SME.CDEP.Aplicacao.DTOS;
+using SME.CDEP.Dominio.Dominios;
 
 namespace SME.CDEP.Aplicacao.Servicos.Interface
 {
     public interface IServicoUsuario
     {
-        Task<long> Inserir(UsuarioDto usuarioDto);
+        Task<long> Inserir(UsuarioDTO usuarioDto);
         Task<IList<Usuario>> ObterTodos();
-        Task<Usuario> Alterar(UsuarioDto usuarioDto);
+        Task<Usuario> Alterar(UsuarioDTO usuarioDto);
         Task<Usuario> ObterPorId(long usuarioId);
+        Task<UsuarioAutenticacaoRetornoDTO> Autenticar(string login, string senha);
+        Task<Usuario> ObterPorLogin(string login);
     }
 }

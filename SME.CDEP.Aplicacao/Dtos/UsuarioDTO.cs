@@ -1,6 +1,6 @@
-﻿namespace SME.CDEP.Infra.Dados.Dtos
+﻿namespace SME.CDEP.Aplicacao.DTOS
 {
-    public class UsuarioDto
+    public class UsuarioDTO
     {
         public long Id { get; set; }
         public string Nome { get; set; }
