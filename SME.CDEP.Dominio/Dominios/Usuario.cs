@@ -13,7 +13,5 @@
         public Guid? TokenRecuperacaoSenha { get; set; }
 
         public DateTime UltimoLogin { get; set; }
-
-        private string Email { get; set; }
     }
 }
