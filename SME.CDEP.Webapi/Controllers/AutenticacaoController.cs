@@ -27,7 +27,7 @@ public class AutenticacaoController: ControllerBase
         return Ok(retornoAutenticacao);
     }
     
-    [HttpGet("{login}/perfis/listar")]
+    [HttpGet("usuarios/{login}/perfis")]
     [ProducesResponseType(200)]
     [ProducesResponseType(typeof(RetornoPerfilUsuarioDTO), 500)]        
     public async Task<IActionResult> ListarPerfisUsuario(string login, [FromServices]IServicoPerfilUsuario servicoPerfilUsuario)
