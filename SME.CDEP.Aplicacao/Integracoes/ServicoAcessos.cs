@@ -29,8 +29,8 @@ namespace SSME.CDEP.Aplicacao.Integracoes
         
         public async Task<RetornoPerfilUsuarioDTO> ObterPerfisUsuario(string login)
         {
-           var resposta = await httpClient.GetAsync($"v1/autenticacao/{login}/{Sistema_Cdep}/perfis/listar");
-
+           var resposta = await httpClient.GetAsync($"v1/autenticacao/usuarios/{login}/sistemas/{Sistema_Cdep}/perfis");
+           
             if (resposta.IsSuccessStatusCode)
             {
                 var json = await resposta.Content.ReadAsStringAsync();
