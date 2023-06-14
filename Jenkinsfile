@@ -47,6 +47,7 @@ pipeline {
                             }
                         }
                         withCredentials([file(credentialsId: "${kubeconfig}", variable: 'config')]){
+                                sh('if [ -f '+"$home"+'/.kube/config ];then rm -f '+"$home"+'/.kube/config; fi')
                                 sh('cp $config '+"$home"+'/.kube/config')
                                 sh "kubectl rollout restart deployment/sme-cdep-api -n sme-cdep"
                                 sh('rm -f '+"$home"+'/.kube/config')
@@ -55,7 +56,20 @@ pipeline {
             }           
         }
 
+      stage('Flyway') {
+        agent { label 'master' }
+        when { anyOf {  branch 'master'; branch 'main'; branch 'development'; branch 'release'; branch 'release-r2'; } }
+        steps{
+          withCredentials([string(credentialsId: "flyway_cdep_${branchname}", variable: 'url')]) {
+            checkout scm
+            sh 'docker run --rm -v $(pwd)/scripts:/opt/scripts registry.sme.prefeitura.sp.gov.br/devops/flyway:5.2.4 -url=$url -locations="filesystem:/opt/scripts" -outOfOrder=true migrate'
+          }
+        }       
+      }
     }
+post {
+    always { sh('if [ -f '+"$home"+'/.kube/config ];then rm -f '+"$home"+'/.kube/config; fi')}
+  }
 }
 def getKubeconf(branchName) {
     if("main".equals(branchName)) { return "config_prd"; }
