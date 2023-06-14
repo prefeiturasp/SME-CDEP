@@ -30,13 +30,34 @@ namespace SSME.CDEP.Aplicacao.Integracoes
         public async Task<RetornoPerfilUsuarioDTO> ObterPerfisUsuario(string login)
         {
            var resposta = await httpClient.GetAsync($"v1/autenticacao/usuarios/{login}/sistemas/{Sistema_Cdep}/perfis");
+
+           if (!resposta.IsSuccessStatusCode) return null;
            
-            if (resposta.IsSuccessStatusCode)
-            {
-                var json = await resposta.Content.ReadAsStringAsync();
-                return JsonConvert.DeserializeObject<RetornoPerfilUsuarioDTO>(json);
-            }
-            return null;
+           var json = await resposta.Content.ReadAsStringAsync();
+            return JsonConvert.DeserializeObject<RetornoPerfilUsuarioDTO>(json);
+        }
+
+        public async Task<bool> UsuarioCadastradoCoreSSO(string login)
+        {
+            var resposta = await httpClient.GetAsync($"v1/usuarios/{login}/cadastrado");
+
+            if (!resposta.IsSuccessStatusCode) return false;
+            
+            var json = await resposta.Content.ReadAsStringAsync();
+            var usuarioCadastradoCoreSSO = JsonConvert.DeserializeObject<bool>(json);
+            return usuarioCadastradoCoreSSO;
+        }
+
+        public async Task<bool> CadastrarUsuarioCoreSSO(string login, string nome, string email, string senha)
+        {
+            var parametros = JsonConvert.SerializeObject(new { login, nome, email, senha });
+            var resposta = await httpClient.PostAsync($"v1/usuarios/cadastrar", new StringContent(parametros, Encoding.UTF8, "application/json-patch+json"));
+
+            if (!resposta.IsSuccessStatusCode) return false;
+            
+            var json = await resposta.Content.ReadAsStringAsync();
+            var usuarioCadastradoCoreSSO = JsonConvert.DeserializeObject<bool>(json);
+            return usuarioCadastradoCoreSSO;
         }
     }
 }

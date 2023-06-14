@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Mvc;
 using SME.CDEP.Aplicacao.DTOS;
 using SME.CDEP.Aplicacao.Servicos.Interface;
+using SME.CDEP.Dominio.Constantes;
 using SME.CDEP.Webapi.Filtros;
 
 namespace SME.CDEP.Webapi.Controllers;
@@ -33,6 +34,9 @@ public class AutenticacaoController: ControllerBase
     public async Task<IActionResult> ListarPerfisUsuario(string login, [FromServices]IServicoPerfilUsuario servicoPerfilUsuario)
     {
         var retorno = await servicoPerfilUsuario.ObterPerfisUsuario(login);
+
+        if (!retorno.PerfilUsuario.Any())
+            retorno.PerfilUsuario = new List<PerfilUsuarioDTO>() { new (new Guid(Constantes.PERFIL_EXTERNO_GUID), Constantes.PERFIL_EXTERNO_DESCRICAO) };
 
         return Ok(retorno);
     }
