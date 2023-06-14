@@ -14,5 +14,4 @@ CREATE TABLE public.usuario (
 	CONSTRAINT usuario_pk PRIMARY KEY (id),
 	CONSTRAINT usuario_un_login UNIQUE (login)
 );
-CREATE INDEX usuario_codigo_rf_idx ON public.usuario (rf_codigo);
 CREATE INDEX usuario_login_idx ON public.usuario (login);
