@@ -2,8 +2,8 @@
 using Microsoft.Extensions.DependencyInjection;
 using Polly;
 using Polly.Extensions.Http;
-using SSME.CDEP.Aplicacao.Integracoes;
-using SSME.CDEP.Aplicacao.Integracoes.Interfaces;
+using SME.CDEP.Aplicacao.Integracoes;
+using SME.CDEP.Aplicacao.Integracoes.Interfaces;
 
 namespace SME.CDEP.IoC.Extensions;
 

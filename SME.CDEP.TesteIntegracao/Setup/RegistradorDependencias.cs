@@ -6,7 +6,7 @@ using SME.CDEP.Aplicacao.Servicos.Interface;
 using SME.CDEP.Infra.Dados;
 using SME.CDEP.IoC;
 using SME.CDEP.TesteIntegracao.ServicosFakes;
-using SSME.CDEP.Aplicacao.Integracoes.Interfaces;
+using SME.CDEP.Aplicacao.Integracoes.Interfaces;
 
 namespace SME.CDEP.TesteIntegracao.Setup
 {
@@ -26,6 +26,7 @@ namespace SME.CDEP.TesteIntegracao.Setup
             RegistrarTelemetria();
             RegistrarConexao();
             RegistrarRepositorios();
+            RegistrarLogs();
             RegistrarPolly();
             RegistrarMapeamentos();
             RegistrarServicos();
@@ -44,5 +45,8 @@ namespace SME.CDEP.TesteIntegracao.Setup
         }
         protected override void RegistrarHttpClients()
         {}
+
+        protected virtual void RegistrarLogs()
+        { }
     }
 }

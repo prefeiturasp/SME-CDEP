@@ -1,8 +1,11 @@
-﻿using SME.CDEP.Aplicacao.DTOS;
+﻿using System.Text.RegularExpressions;
+using SME.CDEP.Aplicacao.DTOS;
 using SME.CDEP.Aplicacao.Servicos.Interface;
+using SME.CDEP.Dominio.Constantes;
 using SME.CDEP.Dominio.Dominios;
+using SME.CDEP.Dominio.Excecoes;
 using SME.CDEP.Infra.Dados.Repositorios.Interfaces;
-using SSME.CDEP.Aplicacao.Integracoes.Interfaces;
+using SME.CDEP.Aplicacao.Integracoes.Interfaces;
 
 namespace SME.CDEP.Aplicacao.Servicos
 {
@@ -23,7 +26,7 @@ namespace SME.CDEP.Aplicacao.Servicos
             {
                 CriadoEm = DateTime.Now,
                 CriadoPor = "Teste",
-                CriadoRF = "Teste",
+                CriadoLogin = "Teste",
                 Login = usuarioDto.Login,
                 Nome = usuarioDto.Nome,
             }; 
@@ -42,12 +45,12 @@ namespace SME.CDEP.Aplicacao.Servicos
             {
                 CriadoEm = DateTime.Now,
                 CriadoPor = "Teste",
-                CriadoRF = "Teste",
+                CriadoLogin = "Teste",
                 Login = usuarioDto.Login,
                 Nome = usuarioDto.Nome,
                 AlteradoEm = DateTime.Now,
                 AlteradoPor = "Teste Alterado",
-                AlteradoRF = "Teste Alterado",
+                AlteradoLogin = "Teste Alterado",
                 Id = usuarioDto.Id,
             };
 
@@ -62,6 +65,57 @@ namespace SME.CDEP.Aplicacao.Servicos
         public async Task<Usuario> ObterPorLogin(string login)
         {
             return await repositorioUsuario.ObterPorLogin(login);
+        }
+
+        public async Task<bool> CadastrarUsuarioExterno(UsuarioExternoDTO usuarioExternoDto)
+        {
+            ValidarSenha(usuarioExternoDto);
+            
+            var usuarioAcervo = await ObterPorLogin(usuarioExternoDto.Login);
+            if (usuarioAcervo != null)
+                throw new NegocioException(MensagemNegocio.VOCE_JA_POSSUI_LOGIN_ACERVO);
+            
+            var usuarioCoreSSO = await servicoAcessos.UsuarioCadastradoCoreSSO(usuarioExternoDto.Login);
+            if (usuarioCoreSSO)
+                throw new NegocioException(MensagemNegocio.VOCE_JA_POSSUI_LOGIN_CORESSO);
+
+            var retornoCoreSSO = await servicoAcessos.CadastrarUsuarioCoreSSO(usuarioExternoDto.Login, usuarioExternoDto.Nome, usuarioExternoDto.Email, usuarioExternoDto.Senha);
+
+            if (!retornoCoreSSO)
+                throw new NegocioException(MensagemNegocio.NAO_FOI_POSSIVEL_CADASTRAR_USUARIO_EXTERNO_NO_CORESSO);
+                
+            var retorno = await repositorioUsuario.Inserir(new Usuario()
+            {
+                CriadoEm = DateTime.Now, CriadoPor = usuarioExternoDto.Nome, CriadoLogin = usuarioExternoDto.Login,
+                Login = usuarioExternoDto.Login, Nome = usuarioExternoDto.Nome, UltimoLogin = DateTime.Now,
+                Telefone = usuarioExternoDto.Telefone, Endereco = usuarioExternoDto.Endereco, Numero = usuarioExternoDto.Numero,
+                Complemento = usuarioExternoDto.Complemento, Cidade = usuarioExternoDto.Cidade, Estado = usuarioExternoDto.Estado,
+                Cep = usuarioExternoDto.Cep
+            });
+
+            return retorno != 0;
+        }
+
+        private bool ValidarSenha(UsuarioExternoDTO usuarioExternoDto)
+        {
+            if (!usuarioExternoDto.Senha.Equals(usuarioExternoDto.ConfirmarSenha))
+                throw new NegocioException(MensagemNegocio.CONFIRMACAO_SENHA_DEVE_SER_IGUAL_A_SENHA);
+            
+            if (usuarioExternoDto.Senha.Length < 8)
+                throw new NegocioException(MensagemNegocio.A_SENHA_DEVE_TER_NO_MÍNIMO_8_CARACTERES);
+
+            if (usuarioExternoDto.Senha.Length > 12)
+                throw new NegocioException(MensagemNegocio.A_SENHA_DEVE_TER_NO_MÁXIMO_12_CARACTERES);
+
+            if (usuarioExternoDto.Senha.Contains(" "))
+                throw new NegocioException(MensagemNegocio.A_SENHA_NAO_PODE_CONTER_ESPACOS_EM_BRANCO);
+
+            var regexSenha = new Regex(@"^(?=.*[a-z]{1})(?=.*[A-Z])(?=.*\d|\W)[^áàâãéèêíïóôõöúçñ]{8,12}$");
+
+            if (!regexSenha.IsMatch(usuarioExternoDto.Senha))
+                throw new NegocioException(MensagemNegocio.A_SENHA_DEVE_CONTER_SOMENTE);
+
+            return true;
         }
 
         public async Task<UsuarioAutenticacaoRetornoDTO> Autenticar(string login, string senha)
@@ -86,7 +140,7 @@ namespace SME.CDEP.Aplicacao.Servicos
             {
                 await repositorioUsuario.Inserir(new Usuario()
                 {
-                    CriadoEm = DateTime.Now, CriadoPor = retorno.Nome, CriadoRF = retorno.Login,
+                    CriadoEm = DateTime.Now, CriadoPor = retorno.Nome, CriadoLogin = retorno.Login,
                     Login = retorno.Login, Nome = retorno.Nome, UltimoLogin = DateTime.Now,
                 });
             }

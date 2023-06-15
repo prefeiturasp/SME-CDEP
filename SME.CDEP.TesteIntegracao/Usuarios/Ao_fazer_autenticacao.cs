@@ -5,7 +5,7 @@ using SME.CDEP.Aplicacao.DTOS;
 using SME.CDEP.Aplicacao.Servicos.Interface;
 using SME.CDEP.TesteIntegracao.ServicosFakes;
 using SME.CDEP.TesteIntegracao.Setup;
-using SSME.CDEP.Aplicacao.Integracoes.Interfaces;
+using SME.CDEP.Aplicacao.Integracoes.Interfaces;
 using Xunit;
 
 namespace SME.CDEP.TesteIntegracao.Usuario
@@ -34,7 +34,7 @@ namespace SME.CDEP.TesteIntegracao.Usuario
                 Nome = "Usuário do Login_1",
                 PerfilAtual = new Guid(),
                 UltimoLogin = DateTime.Now.AddDays(-5),
-                CriadoPor = "Sistema", CriadoEm = DateTime.Now, CriadoRF = "Sistema"
+                CriadoPor = "Sistema", CriadoEm = DateTime.Now, CriadoLogin = "Sistema"
             });
             
             var usuario = await GetServicoUsuario().Autenticar("login_1","teste");
