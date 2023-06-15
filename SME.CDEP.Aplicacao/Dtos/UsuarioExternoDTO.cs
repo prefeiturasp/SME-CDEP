@@ -41,6 +41,6 @@ namespace SME.CDEP.Aplicacao.DTOS
         public string ConfirmarSenha { get; set; }
         
         [Required(ErrorMessage = "É necessário informar o tipo de perfil.")]
-        public TipoPerfil TipoPerfil { get; set; }
+        public TipoUsuario TipoUsuario { get; set; }
     }
 }
