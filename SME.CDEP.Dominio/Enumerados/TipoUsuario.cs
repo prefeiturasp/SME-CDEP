@@ -1,6 +1,6 @@
 ﻿namespace SME.CDEP.Infra.Dominio.Enumerados;
 
-public enum TipoPerfil
+public enum TipoUsuario
 {
     SERVIDOR_PUBLICO = 1,
     ESTUDANTE = 2,
