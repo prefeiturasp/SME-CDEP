@@ -1,5 +1,5 @@
 ﻿using SME.CDEP.Aplicacao.DTOS;
-using SSME.CDEP.Aplicacao.Integracoes.Interfaces;
+using SME.CDEP.Aplicacao.Integracoes.Interfaces;
 
 namespace SME.CDEP.TesteIntegracao.ServicosFakes;
 

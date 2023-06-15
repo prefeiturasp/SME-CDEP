@@ -1,7 +1,6 @@
 ﻿using SME.CDEP.Aplicacao.DTOS;
 using SME.CDEP.Aplicacao.Servicos.Interface;
-using SME.CDEP.Infra.Dados.Repositorios.Interfaces;
-using SSME.CDEP.Aplicacao.Integracoes.Interfaces;
+using SME.CDEP.Aplicacao.Integracoes.Interfaces;
 
 namespace SME.CDEP.Aplicacao.Servicos
 {

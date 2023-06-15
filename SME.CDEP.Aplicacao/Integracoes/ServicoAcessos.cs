@@ -1,9 +1,9 @@
 ﻿using Newtonsoft.Json;
 using System.Text;
 using SME.CDEP.Aplicacao.DTOS;
-using SSME.CDEP.Aplicacao.Integracoes.Interfaces;
+using SME.CDEP.Aplicacao.Integracoes.Interfaces;
 
-namespace SSME.CDEP.Aplicacao.Integracoes
+namespace SME.CDEP.Aplicacao.Integracoes
 {
     public class ServicoAcessos : IServicoAcessos
     {

@@ -1,6 +1,6 @@
 ﻿using SME.CDEP.Aplicacao.DTOS;
 
-namespace SSME.CDEP.Aplicacao.Integracoes.Interfaces;
+namespace SME.CDEP.Aplicacao.Integracoes.Interfaces;
 
 public interface IServicoAcessos
 {

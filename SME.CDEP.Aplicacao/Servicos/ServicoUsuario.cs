@@ -5,7 +5,7 @@ using SME.CDEP.Dominio.Constantes;
 using SME.CDEP.Dominio.Dominios;
 using SME.CDEP.Dominio.Excecoes;
 using SME.CDEP.Infra.Dados.Repositorios.Interfaces;
-using SSME.CDEP.Aplicacao.Integracoes.Interfaces;
+using SME.CDEP.Aplicacao.Integracoes.Interfaces;
 
 namespace SME.CDEP.Aplicacao.Servicos
 {
@@ -111,8 +111,6 @@ namespace SME.CDEP.Aplicacao.Servicos
                 throw new NegocioException(MensagemNegocio.A_SENHA_NAO_PODE_CONTER_ESPACOS_EM_BRANCO);
 
             var regexSenha = new Regex(@"^(?=.*[a-z]{1})(?=.*[A-Z])(?=.*\d|\W)[^áàâãéèêíïóôõöúçñ]{8,12}$");
-            //var regexSenha = new Regex(@"(?=.*?[A-Z])(?=.*?[a-z])(?=((?=.*[!@#$\-%&/\\\[\]|*()_=+])|(?=.*?[0-9]+)))");
-                                                
 
             if (!regexSenha.IsMatch(usuarioExternoDto.Senha))
                 throw new NegocioException(MensagemNegocio.A_SENHA_DEVE_CONTER_SOMENTE);
