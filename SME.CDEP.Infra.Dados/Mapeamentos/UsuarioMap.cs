@@ -16,7 +16,7 @@ namespace SME.CDEP.Infra.Dados.Mapeamentos
             Map(c => c.Telefone).ToColumn("telefone");
             Map(c => c.Endereco).ToColumn("endereco");
             Map(c => c.Numero).ToColumn("numero");
-            Map(c => c.Complemento).ToColumn("Complemento");
+            Map(c => c.Complemento).ToColumn("complemento");
             Map(c => c.Cidade).ToColumn("cidade");
             Map(c => c.Estado).ToColumn("estado");
             Map(c => c.Cep).ToColumn("cep");

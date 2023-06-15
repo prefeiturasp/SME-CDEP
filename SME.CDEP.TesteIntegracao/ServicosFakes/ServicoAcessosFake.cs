@@ -19,4 +19,14 @@ public class ServicoAcessosFake: IServicoAcessos
     {
         throw new NotImplementedException();
     }
+
+    public async Task<bool> UsuarioCadastradoCoreSSO(string login)
+    {
+        return login.Equals("usuario_coresso");
+    }
+
+    public async Task<bool> CadastrarUsuarioCoreSSO(string login, string nome, string email, string senha)
+    {
+        return true;
+    }
 }

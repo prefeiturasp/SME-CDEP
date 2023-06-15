@@ -3,6 +3,7 @@ using Elastic.Apm.AspNetCore;
 using Elastic.Apm.DiagnosticSource;
 using Elastic.Apm.SqlClient;
 using SME.CDEP.IoC;
+using SME.CDEP.Webapi.Middlewares;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -23,6 +24,8 @@ var app = builder.Build();
 app.UseElasticApm(builder.Configuration,
     new SqlClientDiagnosticSubscriber(),
     new HttpDiagnosticsSubscriber());
+
+app.UseTratamentoExcecoesGlobalMiddleware();
 
 // Configure the HTTP request pipeline.
 app.UseSwagger();
