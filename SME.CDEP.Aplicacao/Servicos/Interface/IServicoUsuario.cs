@@ -11,5 +11,6 @@ namespace SME.CDEP.Aplicacao.Servicos.Interface
         Task<Usuario> ObterPorId(long usuarioId);
         Task<UsuarioAutenticacaoRetornoDTO> Autenticar(string login, string senha);
         Task<Usuario> ObterPorLogin(string login);
+        Task<bool> CadastrarUsuarioExterno(UsuarioExternoDTO usuarioExternoDto);
     }
 }

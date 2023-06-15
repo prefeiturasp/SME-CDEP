@@ -5,7 +5,7 @@ using SME.CDEP.Aplicacao.DTOS;
 using SME.CDEP.Aplicacao.Servicos.Interface;
 using SME.CDEP.TesteIntegracao.ServicosFakes;
 using SME.CDEP.TesteIntegracao.Setup;
-using SSME.CDEP.Aplicacao.Integracoes.Interfaces;
+using SME.CDEP.Aplicacao.Integracoes.Interfaces;
 using Xunit;
 
 namespace SME.CDEP.TesteIntegracao.Usuario
