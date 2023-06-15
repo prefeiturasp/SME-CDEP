@@ -1,4 +1,5 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using SME.CDEP.Infra.Dominio.Enumerados;
 
 namespace SME.CDEP.Aplicacao.DTOS
 {
@@ -38,5 +39,8 @@ namespace SME.CDEP.Aplicacao.DTOS
         
         [Required(ErrorMessage = "É necessário informar confirmar senha.")]
         public string ConfirmarSenha { get; set; }
+        
+        [Required(ErrorMessage = "É necessário informar o tipo de perfil.")]
+        public TipoPerfil TipoPerfil { get; set; }
     }
 }
