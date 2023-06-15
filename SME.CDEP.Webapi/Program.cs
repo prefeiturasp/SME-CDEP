@@ -3,6 +3,8 @@ using Elastic.Apm.AspNetCore;
 using Elastic.Apm.DiagnosticSource;
 using Elastic.Apm.SqlClient;
 using SME.CDEP.IoC;
+using SME.CDEP.Webapi.Configuracoes;
+using SME.CDEP.Webapi.Middlewares;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -15,6 +17,8 @@ builder.Services.AddSwaggerGen();
 
 var registradorDeDependencia = new RegistradorDeDependencia(builder.Services, builder.Configuration);
 registradorDeDependencia.Registrar();
+RegistraDocumentacaoSwagger.Registrar(builder.Services);
+RegistraAutenticacao.Registrar(builder.Services, builder.Configuration);
 
 builder.Services.AddSingleton(registradorDeDependencia);
 
@@ -29,6 +33,8 @@ app.UseCors(config => config
 app.UseElasticApm(builder.Configuration,
     new SqlClientDiagnosticSubscriber(),
     new HttpDiagnosticsSubscriber());
+
+app.UseTratamentoExcecoesGlobalMiddleware();
 
 // Configure the HTTP request pipeline.
 app.UseSwagger();

@@ -1,5 +1,5 @@
 ﻿using SME.CDEP.Aplicacao.DTOS;
-using SSME.CDEP.Aplicacao.Integracoes.Interfaces;
+using SME.CDEP.Aplicacao.Integracoes.Interfaces;
 
 namespace SME.CDEP.TesteIntegracao.ServicosFakes;
 
@@ -18,5 +18,15 @@ public class ServicoAcessosFake: IServicoAcessos
     public Task<RetornoPerfilUsuarioDTO> ObterPerfisUsuario(string login)
     {
         throw new NotImplementedException();
+    }
+
+    public async Task<bool> UsuarioCadastradoCoreSSO(string login)
+    {
+        return login.Equals("usuario_coresso");
+    }
+
+    public async Task<bool> CadastrarUsuarioCoreSSO(string login, string nome, string email, string senha)
+    {
+        return true;
     }
 }
