@@ -90,7 +90,7 @@ namespace SME.CDEP.Aplicacao.Servicos
                 Login = usuarioExternoDto.Login, Nome = usuarioExternoDto.Nome, UltimoLogin = DateTime.Now,
                 Telefone = usuarioExternoDto.Telefone, Endereco = usuarioExternoDto.Endereco, Numero = usuarioExternoDto.Numero,
                 Complemento = usuarioExternoDto.Complemento, Cidade = usuarioExternoDto.Cidade, Estado = usuarioExternoDto.Estado,
-                Cep = usuarioExternoDto.Cep
+                Cep = usuarioExternoDto.Cep, Perfil = usuarioExternoDto.TipoPerfil
             });
 
             return retorno != 0;

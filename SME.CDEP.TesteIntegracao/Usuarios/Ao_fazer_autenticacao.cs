@@ -6,6 +6,7 @@ using SME.CDEP.Aplicacao.Servicos.Interface;
 using SME.CDEP.TesteIntegracao.ServicosFakes;
 using SME.CDEP.TesteIntegracao.Setup;
 using SME.CDEP.Aplicacao.Integracoes.Interfaces;
+using SME.CDEP.Infra.Dominio.Enumerados;
 using Xunit;
 
 namespace SME.CDEP.TesteIntegracao.Usuario
@@ -32,7 +33,6 @@ namespace SME.CDEP.TesteIntegracao.Usuario
             {
                 Login = "login_1",
                 Nome = "Usuário do Login_1",
-                PerfilAtual = new Guid(),
                 UltimoLogin = DateTime.Now.AddDays(-5),
                 CriadoPor = "Sistema", CriadoEm = DateTime.Now, CriadoLogin = "Sistema"
             });

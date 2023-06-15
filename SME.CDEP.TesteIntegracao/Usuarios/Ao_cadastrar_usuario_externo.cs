@@ -7,6 +7,7 @@ using SME.CDEP.Dominio.Excecoes;
 using SME.CDEP.TesteIntegracao.ServicosFakes;
 using SME.CDEP.TesteIntegracao.Setup;
 using SME.CDEP.Aplicacao.Integracoes.Interfaces;
+using SME.CDEP.Infra.Dominio.Enumerados;
 using Xunit;
 
 namespace SME.CDEP.TesteIntegracao.Usuario
@@ -83,7 +84,6 @@ namespace SME.CDEP.TesteIntegracao.Usuario
             {
                 Login = "login_1",
                 Nome = "Usuário do Login_1",
-                PerfilAtual = new Guid(),
                 UltimoLogin = DateTime.Now.AddDays(-5),
                 CriadoPor = "Sistema", CriadoEm = DateTime.Now, CriadoLogin = "Sistema"
             });
@@ -101,7 +101,8 @@ namespace SME.CDEP.TesteIntegracao.Usuario
             {
                 Login = "login_1", Nome = "Nome login_1", Senha = "Cdep@1234", ConfirmarSenha = "Cdep@1234",
                 Cep = "88058-000", Cidade = "Florianópolis", Estado = "SC", Complemento = "Casa 01", Numero = 10,
-                Email = "login_1@email.com.br", Endereco = "Rua do login_1", Telefone = "99 99999 9999"
+                Email = "login_1@email.com.br", Endereco = "Rua do login_1", Telefone = "99 99999 9999",
+                TipoPerfil = TipoPerfil.PROFESSOR
             };
             var usuario = await GetServicoUsuario().CadastrarUsuarioExterno(usuarioExterno);
             usuario.ShouldBeTrue();
@@ -109,6 +110,7 @@ namespace SME.CDEP.TesteIntegracao.Usuario
             var usuarios = ObterTodos<Dominio.Dominios.Usuario>();
             usuarios.FirstOrDefault(f => f.Login.Equals("login_1"));
             usuarios.FirstOrDefault(f => f.UltimoLogin.Date == DateTime.Now.Date);
+            usuarios.FirstOrDefault(f => f.Perfil == TipoPerfil.PROFESSOR);
         }
         
         [Fact(DisplayName = "Usuário - O usuário já existe no CoreSSO")]
@@ -127,7 +129,6 @@ namespace SME.CDEP.TesteIntegracao.Usuario
             {
                 Login = "login_1",
                 Nome = "Usuário do Login_1",
-                PerfilAtual = new Guid(),
                 UltimoLogin = DateTime.Now.AddDays(-5),
                 CriadoPor = "Sistema", CriadoEm = DateTime.Now, CriadoLogin = "Sistema"
             });
