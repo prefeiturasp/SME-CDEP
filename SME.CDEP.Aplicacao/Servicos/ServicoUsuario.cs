@@ -122,7 +122,8 @@ namespace SME.CDEP.Aplicacao.Servicos
         {
             var retorno = await servicoAcessos.Autenticar(login, senha);
 
-            await ManutencaoUsuario(login, retorno);
+            if (retorno != null)
+                await ManutencaoUsuario(login, retorno);
             
             return retorno;
         }
