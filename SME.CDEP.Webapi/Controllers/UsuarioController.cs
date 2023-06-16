@@ -8,7 +8,6 @@ namespace SME.CDEP.Webapi.Controllers;
 
 [ApiController]
 [Route("api/v1/usuarios")]
-[Authorize("Bearer")]
 [ValidaDto]
 public class UsuarioController: ControllerBase
 {
