@@ -41,7 +41,7 @@ public class AutenticacaoController: ControllerBase
         if (retorno == null)
             return BadRequest(MensagemNegocio.PERFIS_DO_USUARIO_NAO_LOCALIZADOS_VERIFIQUE_O_LOGIN);
 
-        if (!retorno.PerfilUsuario.Any())
+        if (retorno.PerfilUsuario == null)
             retorno.PerfilUsuario = new List<PerfilUsuarioDTO>() { new (new Guid(Constantes.PERFIL_EXTERNO_GUID), Constantes.PERFIL_EXTERNO_DESCRICAO) };
 
         return Ok(retorno);

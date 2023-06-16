@@ -69,6 +69,7 @@ namespace SME.CDEP.Aplicacao.Servicos
 
         public async Task<bool> CadastrarUsuarioExterno(UsuarioExternoDTO usuarioExternoDto)
         {
+            usuarioExternoDto.Cpf = usuarioExternoDto.Cpf.Replace(".","").Replace("-","");
             ValidarSenha(usuarioExternoDto);
             
             var usuarioAcervo = await ObterPorLogin(usuarioExternoDto.Cpf);
