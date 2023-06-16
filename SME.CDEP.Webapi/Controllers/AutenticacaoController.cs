@@ -39,7 +39,7 @@ public class AutenticacaoController: ControllerBase
         var retorno = await servicoPerfilUsuario.ObterPerfisUsuario(login);
 
         if (retorno == null)
-            return BadRequest(MensagemNegocio.PERFIS_DO_USUARIO_NAO_LOCALIZADOS_VERIFIQUE_O_LOGIN);
+            return BadRequest(MensagemNegocio.PERFIS_DO_LOGIN_NAO_LOCALIZADOS_VERIFIQUE_O_LOGIN);
 
         if (!retorno.PerfilUsuario.Any())
             retorno.PerfilUsuario = new List<PerfilUsuarioDTO>() { new (new Guid(Constantes.PERFIL_EXTERNO_GUID), Constantes.PERFIL_EXTERNO_DESCRICAO) };
