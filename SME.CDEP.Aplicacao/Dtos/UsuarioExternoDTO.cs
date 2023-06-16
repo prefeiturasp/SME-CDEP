@@ -42,5 +42,7 @@ namespace SME.CDEP.Aplicacao.DTOS
         
         [Required(ErrorMessage = "É necessário informar o tipo de perfil.")]
         public TipoUsuario TipoUsuario { get; set; }
+        [Required(ErrorMessage = "É necessário informar o bairro.")]
+        public string Bairro { get; set; }
     }
 }
