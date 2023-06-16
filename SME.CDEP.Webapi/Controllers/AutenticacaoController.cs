@@ -23,7 +23,7 @@ public class AutenticacaoController: ControllerBase
         var retornoAutenticacao = await servicoUsuario.Autenticar(autenticacaoDto.Login, autenticacaoDto.Senha);
 
         if (retornoAutenticacao == null)
-            return BadRequest(MensagemNegocio.USUARIO_OU_SENHA_INVALIDOS);
+            return BadRequest(MensagemNegocio.LOGIN_OU_SENHA_INVALIDOS);
         
         if (string.IsNullOrEmpty(retornoAutenticacao.Login))
             return StatusCode(401);
