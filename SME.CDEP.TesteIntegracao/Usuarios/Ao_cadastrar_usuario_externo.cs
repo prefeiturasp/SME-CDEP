@@ -90,7 +90,7 @@ namespace SME.CDEP.TesteIntegracao.Usuario
             
             await GetServicoUsuario().CadastrarUsuarioExterno(new UsuarioExternoDTO()
             {
-                Senha = "Cdep@1234", ConfirmarSenha = "Cdep@1234", Login = "login_1"
+                Senha = "Cdep@1234", ConfirmarSenha = "Cdep@1234", Cpf = "login_1"
             }).ShouldThrowAsync<NegocioException>();
         }
         
@@ -99,7 +99,7 @@ namespace SME.CDEP.TesteIntegracao.Usuario
         {
             var usuarioExterno = new UsuarioExternoDTO()
             {
-                Login = "login_1", Nome = "Nome login_1", Senha = "Cdep@1234", ConfirmarSenha = "Cdep@1234",
+                Cpf = "login_1", Nome = "Nome login_1", Senha = "Cdep@1234", ConfirmarSenha = "Cdep@1234",
                 Cep = "88058-000", Cidade = "Florianópolis", Estado = "SC", Complemento = "Casa 01", Numero = 10,
                 Email = "login_1@email.com.br", Endereco = "Rua do login_1", Telefone = "99 99999 9999",
                 TipoUsuario = TipoUsuario.PROFESSOR
@@ -118,7 +118,7 @@ namespace SME.CDEP.TesteIntegracao.Usuario
         {
             await GetServicoUsuario().CadastrarUsuarioExterno(new UsuarioExternoDTO()
             {
-                Senha = "Cdep@1234", ConfirmarSenha = "Cdep@1234", Login = "usuario_coresso"
+                Senha = "Cdep@1234", ConfirmarSenha = "Cdep@1234", Cpf = "usuario_coresso"
             }).ShouldThrowAsync<NegocioException>();
         }
         

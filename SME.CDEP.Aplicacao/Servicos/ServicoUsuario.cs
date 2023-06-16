@@ -71,23 +71,23 @@ namespace SME.CDEP.Aplicacao.Servicos
         {
             ValidarSenha(usuarioExternoDto);
             
-            var usuarioAcervo = await ObterPorLogin(usuarioExternoDto.Login);
+            var usuarioAcervo = await ObterPorLogin(usuarioExternoDto.Cpf);
             if (usuarioAcervo != null)
                 throw new NegocioException(MensagemNegocio.VOCE_JA_POSSUI_LOGIN_ACERVO);
             
-            var usuarioCoreSSO = await servicoAcessos.UsuarioCadastradoCoreSSO(usuarioExternoDto.Login);
+            var usuarioCoreSSO = await servicoAcessos.UsuarioCadastradoCoreSSO(usuarioExternoDto.Cpf);
             if (usuarioCoreSSO)
                 throw new NegocioException(MensagemNegocio.VOCE_JA_POSSUI_LOGIN_CORESSO);
 
-            var retornoCoreSSO = await servicoAcessos.CadastrarUsuarioCoreSSO(usuarioExternoDto.Login, usuarioExternoDto.Nome, usuarioExternoDto.Email, usuarioExternoDto.Senha);
+            var retornoCoreSSO = await servicoAcessos.CadastrarUsuarioCoreSSO(usuarioExternoDto.Cpf, usuarioExternoDto.Nome, usuarioExternoDto.Email, usuarioExternoDto.Senha);
 
             if (!retornoCoreSSO)
                 throw new NegocioException(MensagemNegocio.NAO_FOI_POSSIVEL_CADASTRAR_USUARIO_EXTERNO_NO_CORESSO);
                 
             var retorno = await repositorioUsuario.Inserir(new Usuario()
             {
-                CriadoEm = DateTime.Now, CriadoPor = usuarioExternoDto.Nome, CriadoLogin = usuarioExternoDto.Login,
-                Login = usuarioExternoDto.Login, Nome = usuarioExternoDto.Nome, UltimoLogin = DateTime.Now,
+                CriadoEm = DateTime.Now, CriadoPor = usuarioExternoDto.Nome, CriadoLogin = usuarioExternoDto.Cpf,
+                Login = usuarioExternoDto.Cpf, Nome = usuarioExternoDto.Nome, UltimoLogin = DateTime.Now,
                 Telefone = usuarioExternoDto.Telefone, Endereco = usuarioExternoDto.Endereco, Numero = usuarioExternoDto.Numero,
                 Complemento = usuarioExternoDto.Complemento, Cidade = usuarioExternoDto.Cidade, Estado = usuarioExternoDto.Estado,
                 Cep = usuarioExternoDto.Cep, TipoUsuario = usuarioExternoDto.TipoUsuario

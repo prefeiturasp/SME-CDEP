@@ -5,8 +5,8 @@ namespace SME.CDEP.Aplicacao.DTOS
 {
     public class UsuarioExternoDTO
     {
-        [Required(ErrorMessage = "É necessário informar o login.")]
-        public string Login { get; set; }
+        [Required(ErrorMessage = "É necessário informar o Cpf.")]
+        public string Cpf { get; set; }
         
         [Required(ErrorMessage = "É necessário informar o e-mail.")]
         public string Email { get; set; }
