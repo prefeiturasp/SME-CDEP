@@ -8,7 +8,7 @@ namespace SME.CDEP.Aplicacao.Integracoes
     public class ServicoAcessos : IServicoAcessos
     {
         private readonly HttpClient httpClient;
-        private const int Sistema_Cdep = 1000;
+        private const int Sistema_Cdep = 1006;
 
         public ServicoAcessos(HttpClient httpClient)
         {
