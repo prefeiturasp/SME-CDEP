@@ -17,5 +17,6 @@ namespace SME.CDEP.Dominio.Dominios
         public string Estado { get; set; }
         public string Cep { get; set; }
         public TipoUsuario TipoUsuario { get; set; }
+        public string Bairro { get; set; }
     }
 }

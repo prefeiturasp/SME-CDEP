@@ -91,7 +91,7 @@ namespace SME.CDEP.Aplicacao.Servicos
                 Login = usuarioExternoDto.Cpf, Nome = usuarioExternoDto.Nome, UltimoLogin = DateTime.Now,
                 Telefone = usuarioExternoDto.Telefone, Endereco = usuarioExternoDto.Endereco, Numero = usuarioExternoDto.Numero,
                 Complemento = usuarioExternoDto.Complemento, Cidade = usuarioExternoDto.Cidade, Estado = usuarioExternoDto.Estado,
-                Cep = usuarioExternoDto.Cep, TipoUsuario = usuarioExternoDto.TipoUsuario
+                Cep = usuarioExternoDto.Cep, TipoUsuario = usuarioExternoDto.TipoUsuario, Bairro = usuarioExternoDto.Bairro
             });
 
             return retorno != 0;
@@ -111,7 +111,7 @@ namespace SME.CDEP.Aplicacao.Servicos
             if (usuarioExternoDto.Senha.Contains(" "))
                 throw new NegocioException(MensagemNegocio.A_SENHA_NAO_PODE_CONTER_ESPACOS_EM_BRANCO);
 
-            var regexSenha = new Regex(@"^(?=.*[a-z]{1})(?=.*[A-Z])(?=.*\d|\W)[^áàâãéèêíïóôõöúçñ]{8,12}$");
+            var regexSenha = new Regex(@"^(?=.*[a-z])(?=.*[A-Z])(?=.*\d|\W)[^áàâãéèêíïóôõöúçñÁÀÂÃÉÈÊÍÏÓÔÕÖÚÇÑ]{8,12}$");
 
             if (!regexSenha.IsMatch(usuarioExternoDto.Senha))
                 throw new NegocioException(MensagemNegocio.A_SENHA_DEVE_CONTER_SOMENTE);

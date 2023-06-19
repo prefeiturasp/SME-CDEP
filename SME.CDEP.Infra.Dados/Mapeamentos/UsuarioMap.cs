@@ -20,6 +20,7 @@ namespace SME.CDEP.Infra.Dados.Mapeamentos
             Map(c => c.Estado).ToColumn("estado");
             Map(c => c.Cep).ToColumn("cep");
             Map(c => c.TipoUsuario).ToColumn("tipo");
+            Map(c => c.Bairro).ToColumn("bairro");
         }
     }
 }
