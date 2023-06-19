@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Mvc;
 using SME.CDEP.Aplicacao.DTOS;
 using SME.CDEP.Aplicacao.Servicos.Interface;
+using SME.CDEP.Dominio.Constantes;
 using SME.CDEP.Webapi.Filtros;
 
 namespace SME.CDEP.Webapi.Controllers;
@@ -21,6 +22,9 @@ public class AutenticacaoController: ControllerBase
     {
         var retornoAutenticacao = await servicoUsuario.Autenticar(autenticacaoDto.Login, autenticacaoDto.Senha);
 
+        if (retornoAutenticacao == null)
+            return BadRequest(MensagemNegocio.USUARIO_OU_SENHA_INVALIDOS);
+        
         if (string.IsNullOrEmpty(retornoAutenticacao.Login))
             return StatusCode(401);
 
@@ -33,6 +37,12 @@ public class AutenticacaoController: ControllerBase
     public async Task<IActionResult> ListarPerfisUsuario(string login, [FromServices]IServicoPerfilUsuario servicoPerfilUsuario)
     {
         var retorno = await servicoPerfilUsuario.ObterPerfisUsuario(login);
+
+        if (retorno == null)
+            return BadRequest(MensagemNegocio.PERFIS_DO_USUARIO_NAO_LOCALIZADOS_VERIFIQUE_O_LOGIN);
+
+        if (retorno.PerfilUsuario == null)
+            retorno.PerfilUsuario = new List<PerfilUsuarioDTO>() { new (new Guid(Constantes.PERFIL_EXTERNO_GUID), Constantes.PERFIL_EXTERNO_DESCRICAO) };
 
         return Ok(retorno);
     }

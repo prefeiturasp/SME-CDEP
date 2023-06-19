@@ -17,5 +17,13 @@ public static class PollyIoCHelper
                                 + TimeSpan.FromMilliseconds(random.Next(0, 30)));
 
         registry.Add(ConstsPoliticaPolly.CDEP, politica);
+        
+        Random jitterer = new();
+        var policyFila = Policy.Handle<Exception>()
+            .WaitAndRetryAsync(3,
+                retryAttempt => TimeSpan.FromSeconds(Math.Pow(2, retryAttempt))
+                                + TimeSpan.FromMilliseconds(jitterer.Next(0, 30)));
+
+        registry.Add(ConstsPoliticaPolly.PublicaFila, policyFila);
     }
 }
