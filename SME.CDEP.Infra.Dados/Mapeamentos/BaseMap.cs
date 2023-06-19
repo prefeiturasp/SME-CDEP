@@ -12,8 +12,8 @@ namespace SME.CDEP.Infra.Dados.Mapeamentos
             Map(c => c.CriadoPor).ToColumn("criado_por");
             Map(c => c.AlteradoEm).ToColumn("alterado_em");
             Map(c => c.AlteradoPor).ToColumn("alterado_por");
-            Map(c => c.AlteradoRF).ToColumn("alterado_rf");
-            Map(c => c.CriadoRF).ToColumn("criado_rf");
+            Map(c => c.AlteradoLogin).ToColumn("alterado_login");
+            Map(c => c.CriadoLogin).ToColumn("criado_login");
         }
     }
 }

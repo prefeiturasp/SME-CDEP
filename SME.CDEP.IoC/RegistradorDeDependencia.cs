@@ -4,6 +4,10 @@ using Elastic.Apm.Api;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
+using Microsoft.Extensions.ObjectPool;
+using Microsoft.Extensions.Options;
+using SME.CDEP.Aplicacao.Integracoes;
+using SME.CDEP.Aplicacao.Integracoes.Interfaces;
 using SME.CDEP.Aplicacao.Servicos;
 using SME.CDEP.Aplicacao.Servicos.Interface;
 using SME.CDEP.Dominio.Dominios;
@@ -11,11 +15,11 @@ using SME.CDEP.Infra.Dados;
 using SME.CDEP.Infra.Dados.Mapeamentos;
 using SME.CDEP.Infra.Dados.Repositorios;
 using SME.CDEP.Infra.Dados.Repositorios.Interfaces;
+using SME.CDEP.Infra.Servicos.Log;
+using SME.CDEP.Infra.Servicos.Options;
 using SME.CDEP.Infra.Servicos.Polly;
 using SME.CDEP.Infra.Servicos.Telemetria.IoC;
 using SME.CDEP.IoC.Extensions;
-using SSME.CDEP.Aplicacao.Integracoes;
-using SSME.CDEP.Aplicacao.Integracoes.Interfaces;
 
 namespace SME.CDEP.IoC;
 
@@ -34,10 +38,27 @@ public class RegistradorDeDependencia
         RegistrarTelemetria();
         RegistrarConexao();
         RegistrarRepositorios();
+        RegistrarLogs();
         RegistrarPolly();
         RegistrarMapeamentos();
         RegistrarServicos();
         RegistrarHttpClients();
+    }
+    
+    protected virtual void RegistrarLogs()
+    {
+        _serviceCollection.AddOptions<ConfiguracaoRabbitLogsOptions>()
+            .Bind(_configuration.GetSection(ConfiguracaoRabbitLogsOptions.Secao), c => c.BindNonPublicProperties = true);
+
+        _serviceCollection.AddSingleton<ConfiguracaoRabbitLogsOptions>();
+        _serviceCollection.AddSingleton<IConexoesRabbitLogs>(serviceProvider =>
+        {
+            var options = serviceProvider.GetService<IOptions<ConfiguracaoRabbitLogsOptions>>().Value;
+            var provider = serviceProvider.GetService<IOptions<DefaultObjectPoolProvider>>().Value;
+            return new ConexoesRabbitLogs(options, provider);
+        });
+
+        _serviceCollection.AddSingleton<IServicoLogs, ServicoLogs>();
     }
 
     protected virtual void RegistrarMapeamentos()
