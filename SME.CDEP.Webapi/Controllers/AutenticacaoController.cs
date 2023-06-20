@@ -14,7 +14,7 @@ public class AutenticacaoController: ControllerBase
 {
     [HttpPost]
     [ProducesResponseType(200)]
-    [ProducesResponseType(401)]
+    [ProducesResponseType(typeof(RetornoBaseDTO), 400)]
     [ProducesResponseType(typeof(RetornoBaseDTO), 500)]
     [ProducesResponseType(typeof(UsuarioAutenticacaoRetornoDTO), 200)]
     [AllowAnonymous]
@@ -33,6 +33,7 @@ public class AutenticacaoController: ControllerBase
     
     [HttpGet("usuarios/{login}/perfis")]
     [ProducesResponseType(200)]
+    [ProducesResponseType(typeof(RetornoBaseDTO), 400)]
     [ProducesResponseType(typeof(RetornoPerfilUsuarioDTO), 500)]        
     public async Task<IActionResult> ListarPerfisUsuario(string login, [FromServices]IServicoPerfilUsuario servicoPerfilUsuario)
     {
