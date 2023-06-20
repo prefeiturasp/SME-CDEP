@@ -2,6 +2,7 @@
 
 public class MensagemNegocio
 {
+    public const string O_COMPLEMENTO_NAO_PODE_EXCEDER_20_CARACTERES = "O complemento não pode exceder 20 caracteres";
     public const string PERFIS_DO_USUARIO_NAO_LOCALIZADOS_VERIFIQUE_O_LOGIN = "Os perfis do usuário não foram localizados!Verifique o login.";
     public const string USUARIO_OU_SENHA_INVALIDOS = "Usuário ou senha inválidos";
     public const string A_SENHA_DEVE_CONTER_SOMENTE = "A senha deve conter pelo menos 1 letra maiúscula, 1 minúscula, 1 número e/ou 1 caractere especial e não pode conter acentuação";
