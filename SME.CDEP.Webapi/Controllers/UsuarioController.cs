@@ -17,7 +17,6 @@ public class UsuarioController: ControllerBase
     [ProducesResponseType(typeof(UsuarioExternoDTO), 200)]
     public async Task<IActionResult> CadastrarUsuarioExterno(UsuarioExternoDTO usuarioExternoDto, [FromServices] IServicoUsuario servicoUsuario)
     {
-        throw new Exception("teste");
         var retorno = await servicoUsuario.CadastrarUsuarioExterno(usuarioExternoDto);
        
         return Ok(retorno);
