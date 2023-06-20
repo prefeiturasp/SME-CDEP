@@ -29,4 +29,9 @@ public class ServicoAcessosFake: IServicoAcessos
     {
         return true;
     }
+
+    public async Task<bool> VincularPerfilExternoCoreSSO(string login, Guid perfilId)
+    {
+        return true;
+    }
 }

@@ -18,5 +18,11 @@ namespace SME.CDEP.Aplicacao.Servicos
             var retorno = await servicoAcessos.ObterPerfisUsuario(login);
             return retorno;
         }
+
+        public async Task<bool> VincularPerfilExternoCoreSSO(string login, Guid perfilId)
+        {
+            var retorno = await servicoAcessos.VincularPerfilExternoCoreSSO(login, perfilId);
+            return retorno;
+        }
     }
 }

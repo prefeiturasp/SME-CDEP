@@ -6,5 +6,6 @@ namespace SME.CDEP.Aplicacao.Servicos.Interface
     public interface IServicoPerfilUsuario
     {
         Task<RetornoPerfilUsuarioDTO> ObterPerfisUsuario(string login);
+        Task<bool> VincularPerfilExternoCoreSSO(string login, Guid perfilId);
     }
 }
