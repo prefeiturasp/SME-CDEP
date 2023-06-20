@@ -10,7 +10,7 @@ public class ServicoAcessosFake: IServicoAcessos
         return new UsuarioAutenticacaoRetornoDTO()
         {
             Email = "seu.email@cdep.gov.br",
-            Login = "login_10",
+            Login = "99999999999",
             Nome = "Nome do usuário de login 10",
         };
     }
@@ -22,10 +22,15 @@ public class ServicoAcessosFake: IServicoAcessos
 
     public async Task<bool> UsuarioCadastradoCoreSSO(string login)
     {
-        return login.Equals("usuario_coresso");
+        return login.Equals("99999999998");
     }
 
     public async Task<bool> CadastrarUsuarioCoreSSO(string login, string nome, string email, string senha)
+    {
+        return true;
+    }
+
+    public async Task<bool> VincularPerfilExternoCoreSSO(string login, Guid perfilId)
     {
         return true;
     }

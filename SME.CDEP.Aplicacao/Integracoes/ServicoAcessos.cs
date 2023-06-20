@@ -59,5 +59,16 @@ namespace SME.CDEP.Aplicacao.Integracoes
             var usuarioCadastradoCoreSSO = JsonConvert.DeserializeObject<bool>(json);
             return usuarioCadastradoCoreSSO;
         }
+
+        public async Task<bool> VincularPerfilExternoCoreSSO(string login, Guid perfilId)
+        {
+            var resposta = await httpClient.PostAsync($"v1/usuarios/{login}/vincular-perfil/{perfilId}",null);
+
+            if (!resposta.IsSuccessStatusCode) return false;
+            
+            var json = await resposta.Content.ReadAsStringAsync();
+            var usuarioVinculadoCoreSSO = JsonConvert.DeserializeObject<bool>(json);
+            return usuarioVinculadoCoreSSO;
+        }
     }
 }

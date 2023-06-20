@@ -10,7 +10,7 @@ namespace SME.CDEP.Webapi.Middlewares
     public class ChaveIntegracaoCdepApi : Attribute, IAsyncActionFilter
     {
         private const string ChaveIntegracaoHeader = "x-cdep-api-key";
-        private const string ChaveIntegracaoEnvironmentVariableName = "ChaveIntegracaoSgpApi";
+        private const string ChaveIntegracaoEnvironmentVariableName = "ChaveIntegracaoApi";
         public async Task OnActionExecutionAsync(ActionExecutingContext context, ActionExecutionDelegate next)
         {
             string chaveApi = Environment.GetEnvironmentVariable(ChaveIntegracaoEnvironmentVariableName);
