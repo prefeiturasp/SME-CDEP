@@ -1,5 +1,8 @@
 ﻿using Newtonsoft.Json;
 using System.Net;
+using System.Text;
+using Microsoft.AspNetCore.Mvc;
+using Newtonsoft.Json.Serialization;
 using SME.CDEP.Aplicacao.DTOS;
 using SME.CDEP.Dominio.Excecoes;
 using SME.CDEP.Infra.Servicos.Log;
@@ -40,7 +43,7 @@ namespace SME.CDEP.Webapi.Middlewares
         {
             context.Response.ContentType = "application/json";
             context.Response.StatusCode = statusCode;
-            await context.Response.WriteAsync(JsonConvert.SerializeObject(new RetornoBaseDTO(mensagem)));
+            await context.Response.WriteAsync(JsonConvert.SerializeObject(new RetornoBaseDTO(mensagem), new JsonSerializerSettings { ContractResolver = new CamelCasePropertyNamesContractResolver() }));
         }
     }
 

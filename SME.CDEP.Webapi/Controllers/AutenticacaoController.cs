@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using SME.CDEP.Aplicacao.DTOS;
 using SME.CDEP.Aplicacao.Servicos.Interface;
 using SME.CDEP.Dominio.Constantes;
+using SME.CDEP.Dominio.Excecoes;
 using SME.CDEP.Webapi.Filtros;
 
 namespace SME.CDEP.Webapi.Controllers;
@@ -23,10 +24,10 @@ public class AutenticacaoController: ControllerBase
         var retornoAutenticacao = await servicoUsuario.Autenticar(autenticacaoDto.Login, autenticacaoDto.Senha);
 
         if (retornoAutenticacao == null)
-            return BadRequest(MensagemNegocio.USUARIO_OU_SENHA_INVALIDOS);
+            throw new NegocioException(MensagemNegocio.USUARIO_OU_SENHA_INVALIDOS);
         
         if (string.IsNullOrEmpty(retornoAutenticacao.Login))
-            return StatusCode(401);
+            throw new NegocioException(MensagemNegocio.USUARIO_OU_SENHA_INVALIDOS);
 
         return Ok(retornoAutenticacao);
     }
@@ -40,7 +41,7 @@ public class AutenticacaoController: ControllerBase
         var retorno = await servicoPerfilUsuario.ObterPerfisUsuario(login);
 
         if (retorno == null)
-            return BadRequest(MensagemNegocio.PERFIS_DO_USUARIO_NAO_LOCALIZADOS_VERIFIQUE_O_LOGIN);
+            throw new NegocioException(MensagemNegocio.PERFIS_DO_USUARIO_NAO_LOCALIZADOS_VERIFIQUE_O_LOGIN);
 
         if (retorno.PerfilUsuario == null)
         {
