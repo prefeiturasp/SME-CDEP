@@ -2,8 +2,10 @@ using System.Configuration;
 using Elastic.Apm.AspNetCore;
 using Elastic.Apm.DiagnosticSource;
 using Elastic.Apm.SqlClient;
+using Microsoft.AspNetCore.Mvc;
 using SME.CDEP.IoC;
 using SME.CDEP.Webapi.Configuracoes;
+using SME.CDEP.Webapi.Filtros;
 using SME.CDEP.Webapi.Middlewares;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -19,6 +21,17 @@ var registradorDeDependencia = new RegistradorDeDependencia(builder.Services, bu
 registradorDeDependencia.Registrar();
 RegistraDocumentacaoSwagger.Registrar(builder.Services);
 RegistraAutenticacao.Registrar(builder.Services, builder.Configuration);
+
+builder.Services.Configure<ApiBehaviorOptions>(options =>
+{
+    options.SuppressModelStateInvalidFilter = true;
+});
+
+builder.Services.AddMvc(options =>
+{
+    options.EnableEndpointRouting = true;
+    options.Filters.Add(new ValidaDtoAttribute());
+});
 
 builder.Services.AddSingleton(registradorDeDependencia);
 
