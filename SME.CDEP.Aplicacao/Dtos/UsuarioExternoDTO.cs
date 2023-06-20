@@ -29,6 +29,8 @@ namespace SME.CDEP.Aplicacao.DTOS
         [StringLength(200, ErrorMessage = "O endereço não pode exceder 200 caracteres.")]
         public string Endereco { get; set; }
         
+        
+        [Range(0,20, ErrorMessage = "O complemento não pode exceder 20 caracteres.")]
         public string? Complemento { get; set; }
         
 
