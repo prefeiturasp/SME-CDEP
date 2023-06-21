@@ -101,10 +101,5 @@ namespace SME.CDEP.TesteIntegracao.Usuario
                 Nome = "Nome do teste de integração"
             };
         }
-
-        private IServicoUsuario GetServicoUsuario()
-        {
-            return ServiceProvider.GetService<IServicoUsuario>();
-        }
     }
 }

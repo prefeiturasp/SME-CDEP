@@ -1,5 +1,6 @@
 using System.Reflection;
 using Microsoft.Extensions.DependencyInjection;
+using SME.CDEP.Aplicacao.Servicos.Interface;
 using SME.CDEP.TesteIntegracao.Setup;
 using Xunit;
 
@@ -80,6 +81,17 @@ namespace SME.CDEP.TesteIntegracao
             where K : struct
         {
             return _collectionFixture.Database.ObterPorId<T, K>(id);
+        }
+
+        protected IServicoUsuario GetServicoUsuario()
+        {
+            return ObterServicoAplicacao<IServicoUsuario>();
+        }
+
+        public T ObterServicoAplicacao<T>()
+            where T : IServicoAplicacao
+        {
+            return ServiceProvider.GetService<T>() ?? throw new Exception($"Serviço {typeof(T).Name} não registrado!");
         }
     }
 }
