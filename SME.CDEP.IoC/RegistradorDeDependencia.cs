@@ -11,6 +11,7 @@ using SME.CDEP.Aplicacao.Integracoes.Interfaces;
 using SME.CDEP.Aplicacao.Mapeamentos;
 using SME.CDEP.Aplicacao.Servicos;
 using SME.CDEP.Aplicacao.Servicos.Interface;
+using SME.CDEP.Dominio.Contexto;
 using SME.CDEP.Dominio.Dominios;
 using SME.CDEP.Infra.Dados;
 using SME.CDEP.Infra.Dados.Mapeamentos;
