@@ -1,4 +1,4 @@
-﻿using SME.CDEP.Dominio.Dominios;
+﻿using SME.CDEP.Dominio.Entidades;
 
 namespace SME.CDEP.Infra.Dados.Mapeamentos
 {

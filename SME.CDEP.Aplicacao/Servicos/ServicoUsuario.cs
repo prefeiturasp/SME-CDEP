@@ -3,7 +3,7 @@ using AutoMapper;
 using SME.CDEP.Aplicacao.DTOS;
 using SME.CDEP.Aplicacao.Servicos.Interface;
 using SME.CDEP.Dominio.Constantes;
-using SME.CDEP.Dominio.Dominios;
+using SME.CDEP.Dominio.Entidades;
 using SME.CDEP.Dominio.Excecoes;
 using SME.CDEP.Infra.Dados.Repositorios.Interfaces;
 using SME.CDEP.Aplicacao.Integracoes.Interfaces;
@@ -24,31 +24,31 @@ namespace SME.CDEP.Aplicacao.Servicos
             this.mapper = mapper ?? throw new ArgumentNullException(nameof(mapper));
         }
 
-        public async Task<long> Inserir(UsuarioDTO usuarioDto)
+        public async Task<long> Inserir(UsuarioIdNomeLoginDTO usuarioIdNomeLoginDto)
         {
-            var usuario = mapper.Map<Usuario>(usuarioDto);
+            var usuario = mapper.Map<Usuario>(usuarioIdNomeLoginDto);
             return await repositorioUsuario.Inserir(usuario);
         }
 
-        public async Task<IList<RetornoUsuarioDTO>> ObterTodos()
+        public async Task<IList<UsuarioDTO>> ObterTodos()
         {
-            return (await repositorioUsuario.ObterTodos()).ToList().Select(s=> mapper.Map<RetornoUsuarioDTO>(s)).ToList();
+            return (await repositorioUsuario.ObterTodos()).ToList().Select(s=> mapper.Map<UsuarioDTO>(s)).ToList();
         }
 
-        public async Task<RetornoUsuarioDTO> Alterar(UsuarioDTO usuarioDto)
+        public async Task<UsuarioDTO> Alterar(UsuarioDTO usuarioDTO)
         {
-            var usuario = mapper.Map<Usuario>(usuarioDto);
-            return mapper.Map<RetornoUsuarioDTO>(await repositorioUsuario.Atualizar(usuario));
+            var usuario = mapper.Map<Usuario>(usuarioDTO);
+            return mapper.Map<UsuarioDTO>(await repositorioUsuario.Atualizar(usuario));
         }
 
-        public async Task<RetornoUsuarioDTO> ObterPorId(long usuarioId)
+        public async Task<UsuarioDTO> ObterPorId(long usuarioId)
         {
-            return mapper.Map<RetornoUsuarioDTO>(await repositorioUsuario.ObterPorId(usuarioId));
+            return mapper.Map<UsuarioDTO>(await repositorioUsuario.ObterPorId(usuarioId));
         }
         
-        public async Task<RetornoUsuarioDTO> ObterPorLogin(string login)
+        public async Task<UsuarioDTO> ObterPorLogin(string login)
         {
-            return mapper.Map<RetornoUsuarioDTO>(await repositorioUsuario.ObterPorLogin(login));
+            return mapper.Map<UsuarioDTO>(await repositorioUsuario.ObterPorLogin(login));
         }
 
         public async Task<bool> CadastrarUsuarioExterno(UsuarioExternoDTO usuarioExternoDto)

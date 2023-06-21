@@ -1,4 +1,4 @@
-namespace SME.CDEP.Dominio.Dominios;
+namespace SME.CDEP.Dominio.Entidades;
 
 public interface IDominioBase<TEntidade> 
     where TEntidade : EntidadeBase

@@ -1,8 +1,9 @@
-﻿namespace SME.CDEP.Aplicacao.DTOS
+﻿using SME.CDEP.Infra.Dominio.Enumerados;
+
+namespace SME.CDEP.Dominio.Entidades
 {
-    public class RetornoUsuarioDTO
+    public class Usuario : EntidadeBase
     {
-        public long Id { get; set; }
         public DateTime? ExpiracaoRecuperacaoSenha { get; set; }
         public string Login { get; set; }
         public string Nome { get; set; }
@@ -15,13 +16,7 @@
         public string Cidade { get; set; }
         public string Estado { get; set; }
         public string Cep { get; set; }
-        public int TipoUsuario { get; set; }
+        public TipoUsuario TipoUsuario { get; set; }
         public string Bairro { get; set; }
-        public DateTime? AlteradoEm { get; set; }
-        public string AlteradoPor { get; set; }
-        public string AlteradoLogin { get; set; }
-        public DateTime CriadoEm { get; set; }
-        public string CriadoPor { get; set; }
-        public string CriadoLogin { get; set; }
     }
 }

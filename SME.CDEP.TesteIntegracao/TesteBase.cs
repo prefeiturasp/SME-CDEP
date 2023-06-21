@@ -1,4 +1,5 @@
 using System.Reflection;
+using AutoMapper;
 using Microsoft.Extensions.DependencyInjection;
 using SME.CDEP.Aplicacao.Servicos.Interface;
 using SME.CDEP.Dominio.Contexto;
@@ -13,7 +14,7 @@ namespace SME.CDEP.TesteIntegracao
     public class TesteBase : IClassFixture<TestFixture>
     {
         protected readonly CollectionFixture _collectionFixture;
-        
+
         private const string USUARIO_CHAVE = "NomeUsuario";
         private const string USUARIO_RF_CHAVE = "RF";
         private const string USUARIO_LOGIN_CHAVE = "login";
@@ -22,7 +23,7 @@ namespace SME.CDEP.TesteIntegracao
         private const string USUARIO_CLAIM_TIPO_RF = "rf";
         private const string USUARIO_CLAIM_TIPO_PERFIL = "perfil";
 
-        private const string LOGIN_123456789 = "123456789";
+        protected const string LOGIN_123456789 = "123456789";
         protected const string SISTEMA = "SISTEMA";
 
         public ServiceProvider ServiceProvider => _collectionFixture.ServiceProvider;
@@ -120,10 +121,8 @@ namespace SME.CDEP.TesteIntegracao
             
             return new Dictionary<string, object>
             {
-                { USUARIO_CHAVE, rfLoginPerfil },
-                { USUARIO_LOGADO_CHAVE, rfLoginPerfil },
-                { USUARIO_RF_CHAVE, rfLoginPerfil },
-                { USUARIO_LOGIN_CHAVE, rfLoginPerfil },
+                { USUARIO_CHAVE, SISTEMA },
+                { USUARIO_LOGADO_CHAVE, LOGIN_123456789 },
                 {
                     USUARIO_CLAIMS_CHAVE,
                     new List<InternalClaim> {

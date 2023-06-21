@@ -99,7 +99,7 @@ namespace SME.CDEP.TesteIntegracao.Usuario
         public async Task ValidarUsuarioExistenteAcervo()
         {
             CriarClaimUsuario();
-            await InserirNaBase(new Dominio.Dominios.Usuario()
+            await InserirNaBase(new Dominio.Entidades.Usuario()
             {
                 Login = "99999999999",
                 Nome = "Usuário do Login_1",
@@ -126,7 +126,7 @@ namespace SME.CDEP.TesteIntegracao.Usuario
             var usuario = await GetServicoUsuario().CadastrarUsuarioExterno(usuarioExterno);
             usuario.ShouldBeTrue();
             
-            var usuarios = ObterTodos<Dominio.Dominios.Usuario>();
+            var usuarios = ObterTodos<Dominio.Entidades.Usuario>();
             usuarios.FirstOrDefault(f => f.Login.Equals("99999999999"));
             usuarios.FirstOrDefault(f => f.UltimoLogin.Date == DateTimeExtension.HorarioBrasilia().Date);
             usuarios.FirstOrDefault(f => f.TipoUsuario == TipoUsuario.PROFESSOR);
@@ -145,7 +145,7 @@ namespace SME.CDEP.TesteIntegracao.Usuario
         public async Task AutenticarUsuarioExistente()
         {
             CriarClaimUsuario();
-            await InserirNaBase(new Dominio.Dominios.Usuario()
+            await InserirNaBase(new Dominio.Entidades.Usuario()
             {
                 Login = "99999999999",
                 Nome = "Usuário do Login_1",
@@ -156,7 +156,7 @@ namespace SME.CDEP.TesteIntegracao.Usuario
             var usuario = await GetServicoUsuario().Autenticar("99999999999","teste");
             usuario.ShouldNotBeNull();
             
-            var usuarios = ObterTodos<Dominio.Dominios.Usuario>();
+            var usuarios = ObterTodos<Dominio.Entidades.Usuario>();
             usuarios.FirstOrDefault(f => f.Login.Equals("99999999999"));
             usuarios.FirstOrDefault(f => f.UltimoLogin.Date == DateTimeExtension.HorarioBrasilia().Date);
         }

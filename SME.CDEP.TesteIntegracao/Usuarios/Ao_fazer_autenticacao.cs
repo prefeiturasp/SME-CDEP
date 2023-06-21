@@ -22,14 +22,14 @@ namespace SME.CDEP.TesteIntegracao.Usuario
             var usuario = await GetServicoUsuario().Autenticar("login_10","teste");
             usuario.ShouldNotBeNull();
             
-            var usuarios = ObterTodos<Dominio.Dominios.Usuario>();
+            var usuarios = ObterTodos<Dominio.Entidades.Usuario>();
             usuarios.FirstOrDefault(f => f.Login.Equals("login_10"));
         }
         
         [Fact(DisplayName = "Usuário - Ao autenticar um usuário existente, deve atualizar a data de login")]
         public async Task AutenticarUsuarioExistente()
         {
-            await InserirNaBase(new Dominio.Dominios.Usuario()
+            await InserirNaBase(new Dominio.Entidades.Usuario()
             {
                 Login = "login_1",
                 Nome = "Usuário do Login_1",
@@ -40,7 +40,7 @@ namespace SME.CDEP.TesteIntegracao.Usuario
             var usuario = await GetServicoUsuario().Autenticar("login_1","teste");
             usuario.ShouldNotBeNull();
             
-            var usuarios = ObterTodos<Dominio.Dominios.Usuario>();
+            var usuarios = ObterTodos<Dominio.Entidades.Usuario>();
             usuarios.FirstOrDefault(f => f.Login.Equals("login_1"));
             usuarios.FirstOrDefault(f => f.UltimoLogin.Date == DateTimeExtension.HorarioBrasilia().Date);
         }

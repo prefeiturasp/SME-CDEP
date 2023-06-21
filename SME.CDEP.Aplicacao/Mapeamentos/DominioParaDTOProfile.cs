@@ -1,6 +1,6 @@
 ﻿using AutoMapper;
 using SME.CDEP.Aplicacao.DTOS;
-using SME.CDEP.Dominio.Dominios;
+using SME.CDEP.Dominio.Entidades;
 
 namespace SME.CDEP.Aplicacao.Mapeamentos
 {
@@ -8,8 +8,8 @@ namespace SME.CDEP.Aplicacao.Mapeamentos
     {
         public DominioParaDTOProfile()
         {
-            CreateMap<RetornoUsuarioDTO, Usuario>().ReverseMap();
             CreateMap<UsuarioDTO, Usuario>().ReverseMap();
+            CreateMap<UsuarioIdNomeLoginDTO, Usuario>().ReverseMap();
         }
     }
 }
