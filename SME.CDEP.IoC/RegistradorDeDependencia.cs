@@ -8,6 +8,7 @@ using Microsoft.Extensions.ObjectPool;
 using Microsoft.Extensions.Options;
 using SME.CDEP.Aplicacao.Integracoes;
 using SME.CDEP.Aplicacao.Integracoes.Interfaces;
+using SME.CDEP.Aplicacao.Mapeamentos;
 using SME.CDEP.Aplicacao.Servicos;
 using SME.CDEP.Aplicacao.Servicos.Interface;
 using SME.CDEP.Dominio.Dominios;
@@ -42,7 +43,13 @@ public class RegistradorDeDependencia
         RegistrarPolly();
         RegistrarMapeamentos();
         RegistrarServicos();
+        RegistrarProfiles();
         RegistrarHttpClients();
+    }
+    
+    protected virtual void RegistrarProfiles()
+    {
+        _serviceCollection.AddAutoMapper(typeof(DominioParaDTOProfile));
     }
     
     protected virtual void RegistrarLogs()

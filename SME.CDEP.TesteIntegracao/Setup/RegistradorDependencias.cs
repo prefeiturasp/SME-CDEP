@@ -7,6 +7,7 @@ using SME.CDEP.Infra.Dados;
 using SME.CDEP.IoC;
 using SME.CDEP.TesteIntegracao.ServicosFakes;
 using SME.CDEP.Aplicacao.Integracoes.Interfaces;
+using SME.CDEP.Aplicacao.Mapeamentos;
 
 namespace SME.CDEP.TesteIntegracao.Setup
 {
@@ -30,9 +31,15 @@ namespace SME.CDEP.TesteIntegracao.Setup
             RegistrarPolly();
             RegistrarMapeamentos();
             RegistrarServicos();
+            RegistrarProfiles();
             RegistrarHttpClients();
         }
 
+        protected override void RegistrarProfiles()
+        {
+            _serviceCollection.AddAutoMapper(typeof(DominioParaDTOProfile));
+        }
+        
         protected override void RegistrarConexao()
         {
             _serviceCollection.AddScoped<ICdepConexao, CdepConexao>();

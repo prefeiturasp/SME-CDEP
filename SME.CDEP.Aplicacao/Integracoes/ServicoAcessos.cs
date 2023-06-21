@@ -2,6 +2,8 @@
 using System.Text;
 using SME.CDEP.Aplicacao.DTOS;
 using SME.CDEP.Aplicacao.Integracoes.Interfaces;
+using SME.CDEP.Dominio.Constantes;
+using SME.CDEP.Dominio.Excecoes;
 
 namespace SME.CDEP.Aplicacao.Integracoes
 {
@@ -20,7 +22,8 @@ namespace SME.CDEP.Aplicacao.Integracoes
             var parametros = JsonConvert.SerializeObject(new { login, senha });
             var resposta = await httpClient.PostAsync($"v1/autenticacao/autenticar", new StringContent(parametros, Encoding.UTF8, "application/json-patch+json"));
 
-            if (!resposta.IsSuccessStatusCode) return null;
+            if (!resposta.IsSuccessStatusCode)
+                throw new NegocioException(MensagemNegocio.USUARIO_OU_SENHA_INVALIDOS);
             
             var json = await resposta.Content.ReadAsStringAsync();
             var retorno = JsonConvert.DeserializeObject<UsuarioAutenticacaoRetornoDTO>(json);
@@ -31,7 +34,8 @@ namespace SME.CDEP.Aplicacao.Integracoes
         {
            var resposta = await httpClient.GetAsync($"v1/autenticacao/usuarios/{login}/sistemas/{Sistema_Cdep}/perfis");
 
-           if (!resposta.IsSuccessStatusCode) return null;
+           if (!resposta.IsSuccessStatusCode)
+               throw new NegocioException(MensagemNegocio.PERFIS_DO_USUARIO_NAO_LOCALIZADOS_VERIFIQUE_O_LOGIN);
            
            var json = await resposta.Content.ReadAsStringAsync();
             return JsonConvert.DeserializeObject<RetornoPerfilUsuarioDTO>(json);

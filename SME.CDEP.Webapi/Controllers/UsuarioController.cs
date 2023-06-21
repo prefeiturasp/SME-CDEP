@@ -9,11 +9,11 @@ namespace SME.CDEP.Webapi.Controllers;
 [ApiController]
 [Route("api/v1/usuarios")]
 [ValidaDto]
-public class UsuarioController: ControllerBase
+public class UsuarioController: BaseController
 {
     [HttpPost]
     [ProducesResponseType(typeof(RetornoBaseDTO), 400)]
-    [ProducesResponseType(typeof(RetornoBaseDTO), 500)]
+    [ProducesResponseType(typeof(RetornoBaseDTO), 601)]
     [ProducesResponseType(typeof(UsuarioExternoDTO), 200)]
     public async Task<IActionResult> CadastrarUsuarioExterno(UsuarioExternoDTO usuarioExternoDto, [FromServices] IServicoUsuario servicoUsuario)
     {

@@ -1,4 +1,5 @@
 ﻿using System.Text.RegularExpressions;
+using AutoMapper;
 using SME.CDEP.Aplicacao.DTOS;
 using SME.CDEP.Aplicacao.Servicos.Interface;
 using SME.CDEP.Dominio.Constantes;
@@ -6,6 +7,7 @@ using SME.CDEP.Dominio.Dominios;
 using SME.CDEP.Dominio.Excecoes;
 using SME.CDEP.Infra.Dados.Repositorios.Interfaces;
 using SME.CDEP.Aplicacao.Integracoes.Interfaces;
+using SME.CDEP.Infra.Dominio.Enumerados;
 
 namespace SME.CDEP.Aplicacao.Servicos
 {
@@ -13,58 +15,40 @@ namespace SME.CDEP.Aplicacao.Servicos
     {
         private readonly IRepositorioUsuario repositorioUsuario;
         private readonly IServicoAcessos servicoAcessos;
+        private readonly IMapper mapper;
         
-        public ServicoUsuario(IRepositorioUsuario repositorioUsuario,IServicoAcessos servicoAcessos) 
+        public ServicoUsuario(IRepositorioUsuario repositorioUsuario,IServicoAcessos servicoAcessos, IMapper mapper) 
         {
             this.repositorioUsuario = repositorioUsuario ?? throw new ArgumentNullException(nameof(repositorioUsuario));
             this.servicoAcessos = servicoAcessos ?? throw new ArgumentNullException(nameof(servicoAcessos));
+            this.mapper = mapper ?? throw new ArgumentNullException(nameof(mapper));
         }
 
         public async Task<long> Inserir(UsuarioDTO usuarioDto)
         {
-            var usuario = new Usuario()
-            {
-                CriadoEm = DateTime.Now,
-                CriadoPor = "Teste",
-                CriadoLogin = "Teste",
-                Login = usuarioDto.Login,
-                Nome = usuarioDto.Nome,
-            }; 
-
+            var usuario = mapper.Map<Usuario>(usuarioDto);
             return await repositorioUsuario.Inserir(usuario);
         }
 
-        public async Task<IList<Usuario>> ObterTodos()
+        public async Task<IList<RetornoUsuarioDTO>> ObterTodos()
         {
-            return await repositorioUsuario.ObterTodos();
+            return (await repositorioUsuario.ObterTodos()).ToList().Select(s=> mapper.Map<RetornoUsuarioDTO>(s)).ToList();
         }
 
-        public async Task<Usuario> Alterar(UsuarioDTO usuarioDto)
+        public async Task<RetornoUsuarioDTO> Alterar(UsuarioDTO usuarioDto)
         {
-            var usuario = new Usuario()
-            {
-                CriadoEm = DateTime.Now,
-                CriadoPor = "Teste",
-                CriadoLogin = "Teste",
-                Login = usuarioDto.Login,
-                Nome = usuarioDto.Nome,
-                AlteradoEm = DateTime.Now,
-                AlteradoPor = "Teste Alterado",
-                AlteradoLogin = "Teste Alterado",
-                Id = usuarioDto.Id,
-            };
-
-            return await repositorioUsuario.Atualizar(usuario);
+            var usuario = mapper.Map<Usuario>(usuarioDto);
+            return mapper.Map<RetornoUsuarioDTO>(await repositorioUsuario.Atualizar(usuario));
         }
 
-        public async Task<Usuario> ObterPorId(long usuarioId)
+        public async Task<RetornoUsuarioDTO> ObterPorId(long usuarioId)
         {
-            return await repositorioUsuario.ObterPorId(usuarioId);
+            return mapper.Map<RetornoUsuarioDTO>(await repositorioUsuario.ObterPorId(usuarioId));
         }
         
-        public async Task<Usuario> ObterPorLogin(string login)
+        public async Task<RetornoUsuarioDTO> ObterPorLogin(string login)
         {
-            return await repositorioUsuario.ObterPorLogin(login);
+            return mapper.Map<RetornoUsuarioDTO>(await repositorioUsuario.ObterPorLogin(login));
         }
 
         public async Task<bool> CadastrarUsuarioExterno(UsuarioExternoDTO usuarioExternoDto)
@@ -87,8 +71,7 @@ namespace SME.CDEP.Aplicacao.Servicos
                 
             var retorno = await repositorioUsuario.Inserir(new Usuario()
             {
-                CriadoEm = DateTime.Now, CriadoPor = usuarioExternoDto.Nome, CriadoLogin = usuarioExternoDto.Cpf,
-                Login = usuarioExternoDto.Cpf, Nome = usuarioExternoDto.Nome, UltimoLogin = DateTime.Now,
+                Login = usuarioExternoDto.Cpf, Nome = usuarioExternoDto.Nome, UltimoLogin = DateTimeExtension.HorarioBrasilia().Date,
                 Telefone = usuarioExternoDto.Telefone, Endereco = usuarioExternoDto.Endereco, Numero = usuarioExternoDto.Numero,
                 Complemento = usuarioExternoDto.Complemento, Cidade = usuarioExternoDto.Cidade, Estado = usuarioExternoDto.Estado,
                 Cep = usuarioExternoDto.Cep, TipoUsuario = usuarioExternoDto.TipoUsuario, Bairro = usuarioExternoDto.Bairro
@@ -123,8 +106,7 @@ namespace SME.CDEP.Aplicacao.Servicos
         {
             var retorno = await servicoAcessos.Autenticar(login, senha);
 
-            if (retorno != null)
-                await ManutencaoUsuario(login, retorno);
+            await ManutencaoUsuario(login, retorno);
             
             return retorno;
         }
@@ -134,7 +116,7 @@ namespace SME.CDEP.Aplicacao.Servicos
             var usuario = await repositorioUsuario.ObterPorLogin(login);
             if (usuario != null)
             {
-                usuario.UltimoLogin = DateTime.Now;
+                usuario.UltimoLogin = DateTimeExtension.HorarioBrasilia().Date;
                 usuario.Nome = retorno.Nome;
                 await repositorioUsuario.Atualizar(usuario);
             }
@@ -142,8 +124,7 @@ namespace SME.CDEP.Aplicacao.Servicos
             {
                 await repositorioUsuario.Inserir(new Usuario()
                 {
-                    CriadoEm = DateTime.Now, CriadoPor = retorno.Nome, CriadoLogin = retorno.Login,
-                    Login = retorno.Login, Nome = retorno.Nome, UltimoLogin = DateTime.Now,
+                    Login = retorno.Login, Nome = retorno.Nome, UltimoLogin = DateTimeExtension.HorarioBrasilia().Date,
                 });
             }
         }

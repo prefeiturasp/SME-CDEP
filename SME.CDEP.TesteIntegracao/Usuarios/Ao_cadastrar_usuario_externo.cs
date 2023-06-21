@@ -102,8 +102,7 @@ namespace SME.CDEP.TesteIntegracao.Usuario
             {
                 Login = "99999999999",
                 Nome = "Usuário do Login_1",
-                UltimoLogin = DateTime.Now.AddDays(-5),
-                CriadoPor = "Sistema", CriadoEm = DateTime.Now, CriadoLogin = "Sistema"
+                UltimoLogin = DateTimeExtension.HorarioBrasilia().Date.AddDays(-5)
             });
             
             await GetServicoUsuario().CadastrarUsuarioExterno(new UsuarioExternoDTO()
@@ -127,7 +126,7 @@ namespace SME.CDEP.TesteIntegracao.Usuario
             
             var usuarios = ObterTodos<Dominio.Dominios.Usuario>();
             usuarios.FirstOrDefault(f => f.Login.Equals("99999999999"));
-            usuarios.FirstOrDefault(f => f.UltimoLogin.Date == DateTime.Now.Date);
+            usuarios.FirstOrDefault(f => f.UltimoLogin.Date == DateTimeExtension.HorarioBrasilia().Date);
             usuarios.FirstOrDefault(f => f.TipoUsuario == TipoUsuario.PROFESSOR);
         }
         
@@ -147,8 +146,7 @@ namespace SME.CDEP.TesteIntegracao.Usuario
             {
                 Login = "99999999999",
                 Nome = "Usuário do Login_1",
-                UltimoLogin = DateTime.Now.AddDays(-5),
-                CriadoPor = "Sistema", CriadoEm = DateTime.Now, CriadoLogin = "Sistema"
+                UltimoLogin = DateTimeExtension.HorarioBrasilia().Date.AddDays(-5)
             });
             
             var usuario = await GetServicoUsuario().Autenticar("99999999999","teste");
@@ -156,7 +154,7 @@ namespace SME.CDEP.TesteIntegracao.Usuario
             
             var usuarios = ObterTodos<Dominio.Dominios.Usuario>();
             usuarios.FirstOrDefault(f => f.Login.Equals("99999999999"));
-            usuarios.FirstOrDefault(f => f.UltimoLogin.Date == DateTime.Now.Date);
+            usuarios.FirstOrDefault(f => f.UltimoLogin.Date == DateTimeExtension.HorarioBrasilia().Date);
         }
 
         private IServicoUsuario GetServicoUsuario()

@@ -49,11 +49,9 @@ namespace SME.CDEP.TesteIntegracao.Usuario
         public async Task Atualizar()
         {
             IServicoUsuario servicoUsuario = await CadastrarVariosUsuarios();
-            var usuarios = ObterTodos<Dominio.Dominios.Usuario>();
             var usuario = await servicoUsuario.Alterar(new UsuarioDTO() { Id = 1, Login = "login alterado", Nome = "Nome alterado" });
             usuario.ShouldNotBeNull();
             usuario.Login.ShouldBe("login alterado");
-            usuarios = ObterTodos<Dominio.Dominios.Usuario>();
         }
         
         [Fact(DisplayName = "Usuário - Obter por login")]
@@ -100,11 +98,6 @@ namespace SME.CDEP.TesteIntegracao.Usuario
                 Login = "login do teste de integração",
                 Nome = "Nome do teste de integração"
             };
-        }
-
-        private IServicoUsuario GetServicoUsuario()
-        {
-            return ServiceProvider.GetService<IServicoUsuario>();
         }
     }
 }
