@@ -98,11 +98,13 @@ namespace SME.CDEP.TesteIntegracao.Usuario
         [Fact(DisplayName = "Usuário - O usuário já existe no Acervo")]
         public async Task ValidarUsuarioExistenteAcervo()
         {
+            CriarClaimUsuario();
             await InserirNaBase(new Dominio.Dominios.Usuario()
             {
                 Login = "99999999999",
                 Nome = "Usuário do Login_1",
-                UltimoLogin = DateTimeExtension.HorarioBrasilia().Date.AddDays(-5)
+                UltimoLogin = DateTimeExtension.HorarioBrasilia().Date.AddDays(-5),
+                CriadoLogin = SISTEMA, CriadoPor = SISTEMA, CriadoEm = DateTimeExtension.HorarioBrasilia().Date
             });
             
             await GetServicoUsuario().CadastrarUsuarioExterno(new UsuarioExternoDTO()
@@ -142,11 +144,13 @@ namespace SME.CDEP.TesteIntegracao.Usuario
         [Fact(DisplayName = "Usuário - Ao autenticar um usuário existente, deve atualizar a data de login")]
         public async Task AutenticarUsuarioExistente()
         {
+            CriarClaimUsuario();
             await InserirNaBase(new Dominio.Dominios.Usuario()
             {
                 Login = "99999999999",
                 Nome = "Usuário do Login_1",
-                UltimoLogin = DateTimeExtension.HorarioBrasilia().Date.AddDays(-5)
+                UltimoLogin = DateTimeExtension.HorarioBrasilia().Date.AddDays(-5),
+                CriadoLogin = SISTEMA, CriadoPor = SISTEMA, CriadoEm = DateTimeExtension.HorarioBrasilia().Date
             });
             
             var usuario = await GetServicoUsuario().Autenticar("99999999999","teste");

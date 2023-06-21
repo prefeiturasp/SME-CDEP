@@ -17,5 +17,11 @@
         public string Cep { get; set; }
         public int TipoUsuario { get; set; }
         public string Bairro { get; set; }
+        public DateTime? AlteradoEm { get; set; }
+        public string AlteradoPor { get; set; }
+        public string AlteradoLogin { get; set; }
+        public DateTime CriadoEm { get; set; }
+        public string CriadoPor { get; set; }
+        public string CriadoLogin { get; set; }
     }
 }

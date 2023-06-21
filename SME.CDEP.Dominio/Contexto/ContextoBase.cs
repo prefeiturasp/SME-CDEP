@@ -9,10 +9,11 @@ public abstract class ContextoBase : IContextoAplicacao
         Variaveis = new Dictionary<string, object>();
     }
 
-    public string LoginUsuario => ObterVariavel<string>("UsuarioLogin") ?? "Sistema";
-    public string NomeUsuario => ObterVariavel<string>("UsuarioNome") ?? "Sistema";
+    public string NomeUsuario => ObterVariavel<string>("NomeUsuario") ?? "Sistema";
+    public string UsuarioLogado => ObterVariavel<string>("UsuarioLogado") ?? "Sistema";
     public string PerfilUsuario => ObterVariavel<string>("PerfilUsuario") ?? string.Empty;
     public IDictionary<string, object> Variaveis { get; set; }
+    public string Administrador => ObterVariavel<string>("Administrador") ?? string.Empty;
     public abstract void AdicionarVariaveis(IDictionary<string, object> variaveis);
     public abstract IContextoAplicacao AtribuirContexto(IContextoAplicacao contexto);
 

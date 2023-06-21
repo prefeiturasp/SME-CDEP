@@ -33,7 +33,8 @@ namespace SME.CDEP.TesteIntegracao.Usuario
             {
                 Login = "login_1",
                 Nome = "Usuário do Login_1",
-                UltimoLogin = DateTimeExtension.HorarioBrasilia().Date.AddDays(-5)
+                UltimoLogin = DateTimeExtension.HorarioBrasilia().Date.AddDays(-5),
+                CriadoLogin = SISTEMA, CriadoPor = SISTEMA, CriadoEm = DateTimeExtension.HorarioBrasilia().Date
             });
             
             var usuario = await GetServicoUsuario().Autenticar("login_1","teste");

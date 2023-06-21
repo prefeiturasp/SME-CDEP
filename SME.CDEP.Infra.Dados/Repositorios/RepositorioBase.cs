@@ -29,7 +29,7 @@ public abstract class RepositorioBase<TEntidade> : IRepositorioBase<TEntidade>
     {
         entidade.CriadoEm = DateTimeExtension.HorarioBrasilia();
         entidade.CriadoPor = contexto.NomeUsuario;
-        entidade.CriadoLogin = contexto.LoginUsuario;
+        entidade.CriadoLogin = contexto.UsuarioLogado;
         entidade.Id = (long)await conexao.Obter().InsertAsync(entidade);
         return entidade.Id;
     }
@@ -38,7 +38,7 @@ public abstract class RepositorioBase<TEntidade> : IRepositorioBase<TEntidade>
     {
         entidade.AlteradoEm = DateTimeExtension.HorarioBrasilia();
         entidade.AlteradoPor = contexto.NomeUsuario;
-        entidade.AlteradoLogin = contexto.LoginUsuario;
+        entidade.AlteradoLogin = contexto.UsuarioLogado;
        await conexao.Obter().UpdateAsync(entidade);
        return entidade;
     }

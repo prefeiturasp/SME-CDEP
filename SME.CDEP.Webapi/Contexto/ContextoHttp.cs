@@ -17,15 +17,15 @@ namespace SME.CDEP.Webapi.Contexto;
 
         private void CapturarVariaveis()
         {
-            Variaveis.Add("Login", httpContextAccessor.HttpContext?.User?.FindFirst("Login")?.Value ?? "0");
+            Variaveis.Add("RF", httpContextAccessor.HttpContext?.User?.FindFirst("RF")?.Value ?? "0");
             Variaveis.Add("Claims", GetInternalClaim());
             Variaveis.Add("login", httpContextAccessor.HttpContext?.User?.Claims?.FirstOrDefault(a => a.Type == "login")?.Value ?? string.Empty);
-            Variaveis.Add("UsuarioLogin", httpContextAccessor.HttpContext?.User?.Identity?.Name ?? "Sistema");
-            Variaveis.Add("UsuarioNome", httpContextAccessor.HttpContext?.User?.FindFirst("Nome")?.Value ?? "Sistema");
+            Variaveis.Add("UsuarioLogado", httpContextAccessor.HttpContext?.User?.Identity?.Name ?? "Sistema");
+            Variaveis.Add("NomeUsuario", httpContextAccessor.HttpContext?.User?.FindFirst("Nome")?.Value ?? "Sistema");
             Variaveis.Add("PerfilUsuario", ObterPerfilAtual());
             
             var authorizationHeader = httpContextAccessor.HttpContext?.Request?.Headers["authorization"];
-            
+
             if (!authorizationHeader.HasValue || authorizationHeader.Value == StringValues.Empty)
             {
                 Variaveis.Add("TemAuthorizationHeader", false);

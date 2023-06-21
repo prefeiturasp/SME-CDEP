@@ -48,6 +48,7 @@ namespace SME.CDEP.TesteIntegracao.Usuario
         [Fact(DisplayName = "Usuário - Atualizar")]
         public async Task Atualizar()
         {
+            CriarClaimUsuario();
             IServicoUsuario servicoUsuario = await CadastrarVariosUsuarios();
             var usuario = await servicoUsuario.Alterar(new UsuarioDTO() { Id = 1, Login = "login alterado", Nome = "Nome alterado" });
             usuario.ShouldNotBeNull();
