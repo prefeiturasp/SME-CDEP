@@ -85,7 +85,13 @@ namespace SME.CDEP.TesteIntegracao
 
         protected IServicoUsuario GetServicoUsuario()
         {
-            return ServiceProvider.GetService<IServicoUsuario>();
+            return ObterServicoAplicacao<IServicoUsuario>();
+        }
+
+        public T ObterServicoAplicacao<T>()
+            where T : IServicoAplicacao
+        {
+            return ServiceProvider.GetService<T>() ?? throw new Exception($"Servi�o {typeof(T).Name} n�o registrado!");
         }
     }
 }

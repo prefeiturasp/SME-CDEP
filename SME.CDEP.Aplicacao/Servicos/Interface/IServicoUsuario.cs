@@ -3,7 +3,7 @@ using SME.CDEP.Dominio.Dominios;
 
 namespace SME.CDEP.Aplicacao.Servicos.Interface
 {
-    public interface IServicoUsuario
+    public interface IServicoUsuario : IServicoAplicacao
     {
         Task<long> Inserir(UsuarioDTO usuarioDto);
         Task<IList<RetornoUsuarioDTO>> ObterTodos();
