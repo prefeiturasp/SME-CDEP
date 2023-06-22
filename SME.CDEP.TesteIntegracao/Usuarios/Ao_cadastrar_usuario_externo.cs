@@ -98,12 +98,13 @@ namespace SME.CDEP.TesteIntegracao.Usuario
         [Fact(DisplayName = "Usuário - O usuário já existe no Acervo")]
         public async Task ValidarUsuarioExistenteAcervo()
         {
-            await InserirNaBase(new Dominio.Dominios.Usuario()
+            CriarClaimUsuario();
+            await InserirNaBase(new Dominio.Entidades.Usuario()
             {
                 Login = "99999999999",
                 Nome = "Usuário do Login_1",
-                UltimoLogin = DateTime.Now.AddDays(-5),
-                CriadoPor = "Sistema", CriadoEm = DateTime.Now, CriadoLogin = "Sistema"
+                UltimoLogin = DateTimeExtension.HorarioBrasilia().Date.AddDays(-5),
+                CriadoLogin = SISTEMA, CriadoPor = SISTEMA, CriadoEm = DateTimeExtension.HorarioBrasilia().Date
             });
             
             await GetServicoUsuario().CadastrarUsuarioExterno(new UsuarioExternoDTO()
@@ -125,9 +126,9 @@ namespace SME.CDEP.TesteIntegracao.Usuario
             var usuario = await GetServicoUsuario().CadastrarUsuarioExterno(usuarioExterno);
             usuario.ShouldBeTrue();
             
-            var usuarios = ObterTodos<Dominio.Dominios.Usuario>();
+            var usuarios = ObterTodos<Dominio.Entidades.Usuario>();
             usuarios.FirstOrDefault(f => f.Login.Equals("99999999999"));
-            usuarios.FirstOrDefault(f => f.UltimoLogin.Date == DateTime.Now.Date);
+            usuarios.FirstOrDefault(f => f.UltimoLogin.Date == DateTimeExtension.HorarioBrasilia().Date);
             usuarios.FirstOrDefault(f => f.TipoUsuario == TipoUsuario.PROFESSOR);
         }
         
@@ -143,20 +144,21 @@ namespace SME.CDEP.TesteIntegracao.Usuario
         [Fact(DisplayName = "Usuário - Ao autenticar um usuário existente, deve atualizar a data de login")]
         public async Task AutenticarUsuarioExistente()
         {
-            await InserirNaBase(new Dominio.Dominios.Usuario()
+            CriarClaimUsuario();
+            await InserirNaBase(new Dominio.Entidades.Usuario()
             {
                 Login = "99999999999",
                 Nome = "Usuário do Login_1",
-                UltimoLogin = DateTime.Now.AddDays(-5),
-                CriadoPor = "Sistema", CriadoEm = DateTime.Now, CriadoLogin = "Sistema"
+                UltimoLogin = DateTimeExtension.HorarioBrasilia().Date.AddDays(-5),
+                CriadoLogin = SISTEMA, CriadoPor = SISTEMA, CriadoEm = DateTimeExtension.HorarioBrasilia().Date
             });
             
             var usuario = await GetServicoUsuario().Autenticar("99999999999","teste");
             usuario.ShouldNotBeNull();
             
-            var usuarios = ObterTodos<Dominio.Dominios.Usuario>();
+            var usuarios = ObterTodos<Dominio.Entidades.Usuario>();
             usuarios.FirstOrDefault(f => f.Login.Equals("99999999999"));
-            usuarios.FirstOrDefault(f => f.UltimoLogin.Date == DateTime.Now.Date);
+            usuarios.FirstOrDefault(f => f.UltimoLogin.Date == DateTimeExtension.HorarioBrasilia().Date);
         }
 
         private IServicoUsuario GetServicoUsuario()

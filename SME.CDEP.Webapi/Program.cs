@@ -3,8 +3,10 @@ using Elastic.Apm.AspNetCore;
 using Elastic.Apm.DiagnosticSource;
 using Elastic.Apm.SqlClient;
 using Microsoft.AspNetCore.Mvc;
+using SME.CDEP.Dominio.Contexto;
 using SME.CDEP.IoC;
 using SME.CDEP.Webapi.Configuracoes;
+using SME.CDEP.Webapi.Contexto;
 using SME.CDEP.Webapi.Filtros;
 using SME.CDEP.Webapi.Middlewares;
 
@@ -21,6 +23,9 @@ var registradorDeDependencia = new RegistradorDeDependencia(builder.Services, bu
 registradorDeDependencia.Registrar();
 RegistraDocumentacaoSwagger.Registrar(builder.Services);
 RegistraAutenticacao.Registrar(builder.Services, builder.Configuration);
+
+builder.Services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
+builder.Services.AddScoped<IContextoAplicacao, ContextoHttp>();
 
 builder.Services.Configure<ApiBehaviorOptions>(options =>
 {

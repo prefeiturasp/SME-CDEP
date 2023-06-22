@@ -1,6 +1,6 @@
 ﻿using SME.CDEP.Infra.Dominio.Enumerados;
 
-namespace SME.CDEP.Dominio.Dominios
+namespace SME.CDEP.Dominio.Entidades
 {
     public class Usuario : EntidadeBase
     {

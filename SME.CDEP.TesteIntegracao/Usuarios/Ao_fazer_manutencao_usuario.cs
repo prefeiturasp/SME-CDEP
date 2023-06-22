@@ -1,4 +1,5 @@
-﻿using Microsoft.Extensions.DependencyInjection;
+﻿using AutoMapper;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 using Shouldly;
 using SME.CDEP.Aplicacao.DTOS;
@@ -6,6 +7,7 @@ using SME.CDEP.Aplicacao.Servicos.Interface;
 using SME.CDEP.TesteIntegracao.ServicosFakes;
 using SME.CDEP.TesteIntegracao.Setup;
 using SME.CDEP.Aplicacao.Integracoes.Interfaces;
+using SME.CDEP.Infra.Dominio.Enumerados;
 using Xunit;
 
 namespace SME.CDEP.TesteIntegracao.Usuario
@@ -13,7 +15,7 @@ namespace SME.CDEP.TesteIntegracao.Usuario
     public class Ao_fazer_manutencao_usuario : TesteBase
     {
         public Ao_fazer_manutencao_usuario(CollectionFixture collectionFixture) : base(collectionFixture)
-        { }
+        {}
         
         [Fact(DisplayName = "Usuário - Cadastrar usuario")]
         public async Task Cadastrar_usuario()
@@ -48,12 +50,18 @@ namespace SME.CDEP.TesteIntegracao.Usuario
         [Fact(DisplayName = "Usuário - Atualizar")]
         public async Task Atualizar()
         {
+            CriarClaimUsuario();
             IServicoUsuario servicoUsuario = await CadastrarVariosUsuarios();
-            var usuarios = ObterTodos<Dominio.Dominios.Usuario>();
-            var usuario = await servicoUsuario.Alterar(new UsuarioDTO() { Id = 1, Login = "login alterado", Nome = "Nome alterado" });
+
+            var usuarioAlterado = await servicoUsuario.ObterPorId(1);
+            usuarioAlterado.Login = "login alterado";
+            usuarioAlterado.Nome = "Nome alterado";
+            var usuario = await servicoUsuario.Alterar(usuarioAlterado);
             usuario.ShouldNotBeNull();
             usuario.Login.ShouldBe("login alterado");
-            usuarios = ObterTodos<Dominio.Dominios.Usuario>();
+            usuario.AlteradoLogin.ShouldBe(LOGIN_123456789);
+            usuario.AlteradoPor.ShouldBe(SISTEMA);
+            usuario.AlteradoEm.Value.Date.ShouldBe(DateTimeExtension.HorarioBrasilia().Date);
         }
         
         [Fact(DisplayName = "Usuário - Obter por login")]
@@ -93,9 +101,9 @@ namespace SME.CDEP.TesteIntegracao.Usuario
             return servicoUsuario;
         }
 
-        private UsuarioDTO ObterUsuarioDto()
+        private UsuarioIdNomeLoginDTO ObterUsuarioDto()
         {
-            return new UsuarioDTO
+            return new UsuarioIdNomeLoginDTO
             {
                 Login = "login do teste de integração",
                 Nome = "Nome do teste de integração"

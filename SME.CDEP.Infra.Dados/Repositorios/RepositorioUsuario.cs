@@ -1,12 +1,13 @@
 ﻿using Dapper;
-using SME.CDEP.Dominio.Dominios;
+using SME.CDEP.Dominio.Contexto;
+using SME.CDEP.Dominio.Entidades;
 using SME.CDEP.Infra.Dados.Repositorios.Interfaces;
 
 namespace SME.CDEP.Infra.Dados.Repositorios
 {
     public class RepositorioUsuario : RepositorioBase<Usuario>, IRepositorioUsuario
     {
-        public RepositorioUsuario(ICdepConexao conexao) : base(conexao)
+        public RepositorioUsuario(IContextoAplicacao contexto, ICdepConexao conexao) : base(contexto,conexao)
         { }
 
         public Task<Usuario> ObterPorLogin(string login)
