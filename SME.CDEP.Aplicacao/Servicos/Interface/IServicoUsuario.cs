@@ -1,5 +1,5 @@
-﻿using SME.CDEP.Aplicacao.DTOS;
-using SME.CDEP.Dominio.Entidades;
+﻿using SME.CDEP.Aplicacao.DTO;
+using SME.CDEP.Aplicacao.DTOS;
 
 namespace SME.CDEP.Aplicacao.Servicos.Interface
 {
@@ -12,5 +12,6 @@ namespace SME.CDEP.Aplicacao.Servicos.Interface
         Task<UsuarioAutenticacaoRetornoDTO> Autenticar(string login, string senha);
         Task<UsuarioDTO> ObterPorLogin(string login);
         Task<bool> CadastrarUsuarioExterno(UsuarioExternoDTO usuarioExternoDto);
+        Task<DadosUsuarioDTO> ObterMeusDados(string login);
     }
 }

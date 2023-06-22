@@ -1,4 +1,5 @@
-﻿using SME.CDEP.Aplicacao.DTOS;
+﻿using SME.CDEP.Aplicacao.DTO;
+using SME.CDEP.Aplicacao.DTOS;
 
 namespace SME.CDEP.Aplicacao.Integracoes.Interfaces;
 
@@ -9,4 +10,5 @@ public interface IServicoAcessos
     Task<bool> UsuarioCadastradoCoreSSO(string login);
     Task<bool> CadastrarUsuarioCoreSSO(string login, string nome, string email, string senha);
     Task<bool> VincularPerfilExternoCoreSSO(string login, Guid perfilId);
+    Task<DadosUsuarioDTO> ObterMeusDados(string login);
 }

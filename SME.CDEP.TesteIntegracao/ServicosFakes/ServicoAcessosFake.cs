@@ -1,18 +1,19 @@
-﻿using SME.CDEP.Aplicacao.DTOS;
+﻿using SME.CDEP.Aplicacao.DTO;
+using SME.CDEP.Aplicacao.DTOS;
 using SME.CDEP.Aplicacao.Integracoes.Interfaces;
 
 namespace SME.CDEP.TesteIntegracao.ServicosFakes;
 
 public class ServicoAcessosFake: IServicoAcessos
 {
-    public async Task<UsuarioAutenticacaoRetornoDTO> Autenticar(string login, string senha)
+    public Task<UsuarioAutenticacaoRetornoDTO> Autenticar(string login, string senha)
     {
-        return new UsuarioAutenticacaoRetornoDTO()
+        return Task.FromResult(new UsuarioAutenticacaoRetornoDTO()
         {
             Email = "seu.email@cdep.gov.br",
             Login = "99999999999",
             Nome = "Nome do usuário de login 10",
-        };
+        });
     }
 
     public Task<RetornoPerfilUsuarioDTO> ObterPerfisUsuario(string login)
@@ -33,5 +34,10 @@ public class ServicoAcessosFake: IServicoAcessos
     public async Task<bool> VincularPerfilExternoCoreSSO(string login, Guid perfilId)
     {
         return true;
+    }
+
+    public Task<DadosUsuarioDTO> ObterMeusDados(string login)
+    {
+        return Task.FromResult(new DadosUsuarioDTO());
     }
 }

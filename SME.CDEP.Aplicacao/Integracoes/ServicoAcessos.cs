@@ -1,5 +1,6 @@
 ﻿using Newtonsoft.Json;
 using System.Text;
+using SME.CDEP.Aplicacao.DTO;
 using SME.CDEP.Aplicacao.DTOS;
 using SME.CDEP.Aplicacao.Integracoes.Interfaces;
 using SME.CDEP.Dominio.Constantes;
@@ -26,8 +27,7 @@ namespace SME.CDEP.Aplicacao.Integracoes
                 throw new NegocioException(MensagemNegocio.USUARIO_OU_SENHA_INVALIDOS);
             
             var json = await resposta.Content.ReadAsStringAsync();
-            var retorno = JsonConvert.DeserializeObject<UsuarioAutenticacaoRetornoDTO>(json);
-            return retorno;
+            return JsonConvert.DeserializeObject<UsuarioAutenticacaoRetornoDTO>(json);
         }
         
         public async Task<RetornoPerfilUsuarioDTO> ObterPerfisUsuario(string login)
@@ -48,8 +48,7 @@ namespace SME.CDEP.Aplicacao.Integracoes
             if (!resposta.IsSuccessStatusCode) return false;
             
             var json = await resposta.Content.ReadAsStringAsync();
-            var usuarioCadastradoCoreSSO = JsonConvert.DeserializeObject<bool>(json);
-            return usuarioCadastradoCoreSSO;
+            return JsonConvert.DeserializeObject<bool>(json);
         }
 
         public async Task<bool> CadastrarUsuarioCoreSSO(string login, string nome, string email, string senha)
@@ -60,8 +59,7 @@ namespace SME.CDEP.Aplicacao.Integracoes
             if (!resposta.IsSuccessStatusCode) return false;
             
             var json = await resposta.Content.ReadAsStringAsync();
-            var usuarioCadastradoCoreSSO = JsonConvert.DeserializeObject<bool>(json);
-            return usuarioCadastradoCoreSSO;
+            return JsonConvert.DeserializeObject<bool>(json);
         }
 
         public async Task<bool> VincularPerfilExternoCoreSSO(string login, Guid perfilId)
@@ -71,8 +69,17 @@ namespace SME.CDEP.Aplicacao.Integracoes
             if (!resposta.IsSuccessStatusCode) return false;
             
             var json = await resposta.Content.ReadAsStringAsync();
-            var usuarioVinculadoCoreSSO = JsonConvert.DeserializeObject<bool>(json);
-            return usuarioVinculadoCoreSSO;
+            return JsonConvert.DeserializeObject<bool>(json);
+        }
+
+        public async Task<DadosUsuarioDTO> ObterMeusDados(string login)
+        {
+            var resposta = await httpClient.GetAsync($"v1/usuarios/{login}/sistemas/{Sistema_Cdep}/meus-dados");
+
+            if (!resposta.IsSuccessStatusCode) return new DadosUsuarioDTO();
+            
+            var json = await resposta.Content.ReadAsStringAsync();
+            return JsonConvert.DeserializeObject<DadosUsuarioDTO>(json);
         }
     }
 }

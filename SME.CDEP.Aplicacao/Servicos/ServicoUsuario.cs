@@ -1,5 +1,6 @@
 ﻿using System.Text.RegularExpressions;
 using AutoMapper;
+using SME.CDEP.Aplicacao.DTO;
 using SME.CDEP.Aplicacao.DTOS;
 using SME.CDEP.Aplicacao.Servicos.Interface;
 using SME.CDEP.Dominio.Constantes;
@@ -78,6 +79,25 @@ namespace SME.CDEP.Aplicacao.Servicos
             });
 
             return retorno != 0;
+        }
+
+        public async Task<DadosUsuarioDTO> ObterMeusDados(string login)
+        {
+            var dadosUsuarioCoreSSO = await servicoAcessos.ObterMeusDados(login);
+
+            var dadosusuarioAcervo = await repositorioUsuario.ObterPorLogin(login);
+            if (dadosusuarioAcervo.EhCadastroExterno())
+            {
+                dadosUsuarioCoreSSO.Telefone = dadosusuarioAcervo.Telefone;
+                dadosUsuarioCoreSSO.Endereco = dadosusuarioAcervo.Endereco;
+                dadosUsuarioCoreSSO.Numero = dadosusuarioAcervo.Numero.ToString();
+                dadosUsuarioCoreSSO.Complemento = dadosusuarioAcervo.Complemento;
+                dadosUsuarioCoreSSO.Bairro = dadosusuarioAcervo.Bairro;
+                dadosUsuarioCoreSSO.Cep = dadosusuarioAcervo.Cep;
+                dadosUsuarioCoreSSO.Cidade = dadosusuarioAcervo.Cidade;
+                dadosUsuarioCoreSSO.Estado = dadosusuarioAcervo.Estado;
+            }
+            return dadosUsuarioCoreSSO;
         }
 
         private bool ValidarSenha(UsuarioExternoDTO usuarioExternoDto)
