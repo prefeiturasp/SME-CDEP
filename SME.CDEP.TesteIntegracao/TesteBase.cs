@@ -1,8 +1,9 @@
-using System.Reflection;
-using AutoMapper;
 using Microsoft.Extensions.DependencyInjection;
+using SME.CDEP.Aplicacao.DTOS;
 using SME.CDEP.Aplicacao.Servicos.Interface;
 using SME.CDEP.Dominio.Contexto;
+using SME.CDEP.Infra.Dominio.Enumerados;
+using SME.CDEP.TesteIntegracao.Constantes;
 using SME.CDEP.TesteIntegracao.Setup;
 using SME.CDEP.Webapi.Contexto;
 using Xunit;
@@ -14,17 +15,6 @@ namespace SME.CDEP.TesteIntegracao
     public class TesteBase : IClassFixture<TestFixture>
     {
         protected readonly CollectionFixture _collectionFixture;
-
-        private const string USUARIO_CHAVE = "NomeUsuario";
-        private const string USUARIO_RF_CHAVE = "RF";
-        private const string USUARIO_LOGIN_CHAVE = "login";
-        private const string USUARIO_LOGADO_CHAVE = "UsuarioLogado";
-        private const string USUARIO_CLAIMS_CHAVE = "Claims";
-        private const string USUARIO_CLAIM_TIPO_RF = "rf";
-        private const string USUARIO_CLAIM_TIPO_PERFIL = "perfil";
-
-        protected const string LOGIN_123456789 = "123456789";
-        protected const string SISTEMA = "SISTEMA";
 
         public ServiceProvider ServiceProvider => _collectionFixture.ServiceProvider;
 
@@ -117,20 +107,39 @@ namespace SME.CDEP.TesteIntegracao
 
         private Dictionary<string, object> ObterVariaveisPorPerfil()
         {
-            var rfLoginPerfil = LOGIN_123456789;
+            var rfLoginPerfil = ConstantesTestes.LOGIN_123456789;
             
             return new Dictionary<string, object>
             {
-                { USUARIO_CHAVE, SISTEMA },
-                { USUARIO_LOGADO_CHAVE, LOGIN_123456789 },
+                { ConstantesTestes.USUARIO_CHAVE, ConstantesTestes.SISTEMA },
+                { ConstantesTestes.USUARIO_LOGADO_CHAVE, ConstantesTestes.LOGIN_123456789 },
                 {
-                    USUARIO_CLAIMS_CHAVE,
+                    ConstantesTestes.USUARIO_CLAIMS_CHAVE,
                     new List<InternalClaim> {
-                        new InternalClaim { Value = rfLoginPerfil, Type = USUARIO_CLAIM_TIPO_RF },
+                        new InternalClaim { Value = rfLoginPerfil, Type = ConstantesTestes.USUARIO_CLAIM_TIPO_RF },
                         // new InternalClaim { Value = perfil, Type = USUARIO_CLAIM_TIPO_PERFIL }
                     }
                 }
             };
+        }
+
+        protected static UsuarioDTO ObterUsuarioDto(TipoUsuario tipoUsuario, string numero)
+        {
+            var retorno = new UsuarioDTO()
+            {
+                Login = $"9999999999{numero}",
+                Nome = $"Usuário 9999999999{numero}'",
+                Endereco = $"Rua 9999999999{numero}'",
+                Numero = int.Parse($"9{numero}"),
+                Complemento = $"Casa 9{numero}'",
+                Cep = $"8805899{numero}'",
+                Cidade = $"Cidade 9999999999{numero}'",
+                Estado = ConstantesTestes.ESTADO_SC,
+                Telefone = $"99_99999_999{numero}'",
+                Bairro = $"Bairro 9999999999{numero}'",
+                TipoUsuario = (int)tipoUsuario
+            };
+            return retorno;
         }
     }
 }

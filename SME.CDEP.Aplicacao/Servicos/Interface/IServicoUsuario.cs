@@ -5,7 +5,7 @@ namespace SME.CDEP.Aplicacao.Servicos.Interface
 {
     public interface IServicoUsuario : IServicoAplicacao
     {
-        Task<long> Inserir(UsuarioIdNomeLoginDTO usuarioIdNomeLoginDto);
+        Task<long> Inserir(UsuarioDTO usuarioDto);
         Task<IList<UsuarioDTO>> ObterTodos();
         Task<UsuarioDTO> Alterar(UsuarioDTO usuarioDTO);
         Task<UsuarioDTO> ObterPorId(long usuarioId);

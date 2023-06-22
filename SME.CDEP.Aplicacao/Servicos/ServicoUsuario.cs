@@ -25,9 +25,9 @@ namespace SME.CDEP.Aplicacao.Servicos
             this.mapper = mapper ?? throw new ArgumentNullException(nameof(mapper));
         }
 
-        public async Task<long> Inserir(UsuarioIdNomeLoginDTO usuarioIdNomeLoginDto)
+        public async Task<long> Inserir(UsuarioDTO usuarioDto)
         {
-            var usuario = mapper.Map<Usuario>(usuarioIdNomeLoginDto);
+            var usuario = mapper.Map<Usuario>(usuarioDto);
             return await repositorioUsuario.Inserir(usuario);
         }
 
