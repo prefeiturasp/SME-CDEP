@@ -54,7 +54,7 @@ namespace SME.CDEP.Aplicacao.Servicos
         public async Task<bool> CadastrarUsuarioExterno(UsuarioExternoDTO usuarioExternoDto)
         {
             usuarioExternoDto.Cpf = usuarioExternoDto.Cpf.Replace(".","").Replace("-","");
-            ValidarSenha(usuarioExternoDto);
+            ValidarSenha(usuarioExternoDto.Senha, usuarioExternoDto.ConfirmarSenha);
             
             var usuarioAcervo = await ObterPorLogin(usuarioExternoDto.Cpf);
             if (usuarioAcervo != null)
@@ -80,26 +80,35 @@ namespace SME.CDEP.Aplicacao.Servicos
             return retorno != 0;
         }
 
-        private bool ValidarSenha(UsuarioExternoDTO usuarioExternoDto)
+        public async Task<bool> AlterarSenha(string login, string senhaAtual, string senhaNova, string confirmarSenha)
         {
-            if (!usuarioExternoDto.Senha.Equals(usuarioExternoDto.ConfirmarSenha))
+            ValidarSenha(senhaNova, confirmarSenha);
+            var retorno = await servicoAcessos.AlterarSenha(login, senhaAtual, senhaNova);
+            
+            if (!retorno)
+                throw new NegocioException(MensagemNegocio.LOGIN_OU_SENHA_ATUAL_NAO_COMFEREM);
+            
+            return retorno;
+        }
+
+        private void ValidarSenha(string senhaNova, string confirmarSenha)
+        {
+            if (!senhaNova.Equals(confirmarSenha))
                 throw new NegocioException(MensagemNegocio.CONFIRMACAO_SENHA_DEVE_SER_IGUAL_A_SENHA);
             
-            if (usuarioExternoDto.Senha.Length < 8)
+            if (senhaNova.Length < 8)
                 throw new NegocioException(MensagemNegocio.A_SENHA_DEVE_TER_NO_MÍNIMO_8_CARACTERES);
 
-            if (usuarioExternoDto.Senha.Length > 12)
+            if (senhaNova.Length > 12)
                 throw new NegocioException(MensagemNegocio.A_SENHA_DEVE_TER_NO_MÁXIMO_12_CARACTERES);
 
-            if (usuarioExternoDto.Senha.Contains(" "))
+            if (senhaNova.Contains(" "))
                 throw new NegocioException(MensagemNegocio.A_SENHA_NAO_PODE_CONTER_ESPACOS_EM_BRANCO);
 
             var regexSenha = new Regex(@"^(?=.*[a-z])(?=.*[A-Z])(?=.*\d|\W)[^áàâãéèêíïóôõöúçñÁÀÂÃÉÈÊÍÏÓÔÕÖÚÇÑ]{8,12}$");
 
-            if (!regexSenha.IsMatch(usuarioExternoDto.Senha))
+            if (!regexSenha.IsMatch(senhaNova))
                 throw new NegocioException(MensagemNegocio.A_SENHA_DEVE_CONTER_SOMENTE);
-
-            return true;
         }
 
         public async Task<UsuarioAutenticacaoRetornoDTO> Autenticar(string login, string senha)
