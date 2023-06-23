@@ -59,14 +59,26 @@ public class UsuarioController: BaseController
         return Ok(retorno);
     }
     
-    [HttpPut("alterar-endereco-telefone")]
+    [HttpPut("alterar-endereco")]
     [ProducesResponseType(typeof(RetornoBaseDTO), 400)]
     [ProducesResponseType(typeof(RetornoBaseDTO), 601)]
     [ProducesResponseType(typeof(bool), 200)]
     [Authorize("Bearer")]
-    public async Task<IActionResult> AlterarEnderecoTelefoneAcervo(EnderecoTelefoneUsuarioExternoDTO enderecoTelefoneUsuarioExternoDto, [FromServices] IServicoUsuario servicoUsuario)
+    public async Task<IActionResult> AlterarEnderecoAcervo(EnderecoTelefoneUsuarioExternoDTO enderecoTelefoneUsuarioExternoDto, [FromServices] IServicoUsuario servicoUsuario)
     {
-        var retorno = await servicoUsuario.AlterarEnderecoTelefone(enderecoTelefoneUsuarioExternoDto);
+        var retorno = await servicoUsuario.AlterarEndereco(enderecoTelefoneUsuarioExternoDto);
+       
+        return Ok(retorno);
+    }
+    
+    [HttpPut("alterar-telefone")]
+    [ProducesResponseType(typeof(RetornoBaseDTO), 400)]
+    [ProducesResponseType(typeof(RetornoBaseDTO), 601)]
+    [ProducesResponseType(typeof(bool), 200)]
+    [Authorize("Bearer")]
+    public async Task<IActionResult> AlterarTelefoneAcervo(EnderecoTelefoneUsuarioExternoDTO TelefoneUsuarioExternoDto, [FromServices] IServicoUsuario servicoUsuario)
+    {
+        var retorno = await servicoUsuario.AlterarTelefone(TelefoneUsuarioExternoDto);
        
         return Ok(retorno);
     }
