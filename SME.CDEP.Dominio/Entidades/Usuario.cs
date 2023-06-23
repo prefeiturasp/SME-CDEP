@@ -18,5 +18,10 @@ namespace SME.CDEP.Dominio.Entidades
         public string Cep { get; set; }
         public TipoUsuario TipoUsuario { get; set; }
         public string Bairro { get; set; }
+
+        public bool EhCadastroExterno()
+        {
+            return TipoUsuario is TipoUsuario.SERVIDOR_PUBLICO or TipoUsuario.ESTUDANTE or TipoUsuario.PROFESSOR or TipoUsuario.POPULACAO_GERAL;
+        }
     }
 }

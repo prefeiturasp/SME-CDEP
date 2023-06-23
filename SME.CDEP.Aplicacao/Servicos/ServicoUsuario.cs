@@ -24,9 +24,9 @@ namespace SME.CDEP.Aplicacao.Servicos
             this.mapper = mapper ?? throw new ArgumentNullException(nameof(mapper));
         }
 
-        public async Task<long> Inserir(UsuarioIdNomeLoginDTO usuarioIdNomeLoginDto)
+        public async Task<long> Inserir(UsuarioDTO usuarioDto)
         {
-            var usuario = mapper.Map<Usuario>(usuarioIdNomeLoginDto);
+            var usuario = mapper.Map<Usuario>(usuarioDto);
             return await repositorioUsuario.Inserir(usuario);
         }
 
@@ -78,6 +78,25 @@ namespace SME.CDEP.Aplicacao.Servicos
             });
 
             return retorno != 0;
+        }
+        
+        public async Task<DadosUsuarioDTO> ObterMeusDados(string login)
+        {
+            var dadosUsuarioCoreSSO = await servicoAcessos.ObterMeusDados(login);
+
+            var dadosusuarioAcervo = await repositorioUsuario.ObterPorLogin(login);
+            if (dadosusuarioAcervo.EhCadastroExterno())
+            {
+                dadosUsuarioCoreSSO.Telefone = dadosusuarioAcervo.Telefone;
+                dadosUsuarioCoreSSO.Endereco = dadosusuarioAcervo.Endereco;
+                dadosUsuarioCoreSSO.Numero = dadosusuarioAcervo.Numero.ToString();
+                dadosUsuarioCoreSSO.Complemento = dadosusuarioAcervo.Complemento;
+                dadosUsuarioCoreSSO.Bairro = dadosusuarioAcervo.Bairro;
+                dadosUsuarioCoreSSO.Cep = dadosusuarioAcervo.Cep;
+                dadosUsuarioCoreSSO.Cidade = dadosusuarioAcervo.Cidade;
+                dadosUsuarioCoreSSO.Estado = dadosusuarioAcervo.Estado;
+            }
+            return dadosUsuarioCoreSSO;
         }
 
         public async Task<bool> AlterarSenha(string login, string senhaAtual, string senhaNova, string confirmarSenha)

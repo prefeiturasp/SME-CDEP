@@ -9,5 +9,6 @@ public interface IServicoAcessos
     Task<bool> UsuarioCadastradoCoreSSO(string login);
     Task<bool> CadastrarUsuarioCoreSSO(string login, string nome, string email, string senha);
     Task<bool> VincularPerfilExternoCoreSSO(string login, Guid perfilId);
+    Task<DadosUsuarioDTO> ObterMeusDados(string login);
     Task<bool> AlterarSenha(string login, string senhaAtual, string senhaNova);
 }
