@@ -160,5 +160,94 @@ namespace SME.CDEP.TesteIntegracao.Usuario
             usuarios.FirstOrDefault(f => f.Login.Equals(ConstantesTestes.LOGIN_99999999999));
             usuarios.FirstOrDefault(f => f.UltimoLogin.Date == DateTimeExtension.HorarioBrasilia().Date);
         }
+        
+        [Fact(DisplayName = "Usuário - Alterar endereço e telefone de usuário externo")]
+        public async Task AlterarEnderecoTelefone()
+        {
+            CriarClaimUsuario();
+            await InserirNaBase(new Dominio.Entidades.Usuario()
+            {
+                Login = ConstantesTestes.LOGIN_99999999999,
+                Nome = ConstantesTestes.USUARIO_INTERNO_99999999999,
+                Endereco = ConstantesTestes.RUA_99999999999,
+                Numero = int.Parse(ConstantesTestes.NUMERO_99),
+                Complemento = ConstantesTestes.COMPLEMENTO_CASA_99,
+                Bairro = ConstantesTestes.BAIRRO_99999999999,
+                Cidade = ConstantesTestes.CIDADE_99999999999,
+                Estado = ConstantesTestes.ESTADO_SC,
+                Cep = ConstantesTestes.CEP_88058999,
+                UltimoLogin = DateTimeExtension.HorarioBrasilia().Date.AddDays(-5),
+                TipoUsuario = TipoUsuario.PROFESSOR,
+                CriadoLogin = ConstantesTestes.SISTEMA, CriadoPor = ConstantesTestes.SISTEMA, CriadoEm = DateTimeExtension.HorarioBrasilia().Date
+            });
+
+            var usuatioAlterado = new EnderecoTelefoneUsuarioExternoDTO()
+            {
+                Login = ConstantesTestes.LOGIN_99999999999,
+                Endereco = ConstantesTestes.RUA_99999999998,
+                Numero = int.Parse(ConstantesTestes.NUMERO_98),
+                Complemento = ConstantesTestes.COMPLEMENTO_CASA_98,
+                Bairro = ConstantesTestes.BAIRRO_99999999998,
+                Cidade = ConstantesTestes.CIDADE_99999999998,
+                Cep = ConstantesTestes.CEP_88058998,
+            };
+            
+            var usuario = await GetServicoUsuario().AlterarEnderecoTelefone(usuatioAlterado);
+            usuario.ShouldBeTrue();
+            
+            var usuarios = ObterTodos<Dominio.Entidades.Usuario>();
+            usuarios.FirstOrDefault(f => f.Login.Equals(ConstantesTestes.LOGIN_99999999999));
+            usuarios.FirstOrDefault(f => f.Endereco.Equals(ConstantesTestes.RUA_99999999998));
+            usuarios.FirstOrDefault(f => f.Numero.Equals(ConstantesTestes.NUMERO_98));
+            usuarios.FirstOrDefault(f => f.Complemento.Equals(ConstantesTestes.COMPLEMENTO_CASA_98));
+            usuarios.FirstOrDefault(f => f.Bairro.Equals(ConstantesTestes.BAIRRO_99999999998));
+            usuarios.FirstOrDefault(f => f.Cidade.Equals(ConstantesTestes.CIDADE_99999999998));
+            usuarios.FirstOrDefault(f => f.Cep.Equals(ConstantesTestes.CEP_88058998));
+            usuarios.FirstOrDefault(f => f.TipoUsuario == TipoUsuario.PROFESSOR);
+        }
+        
+        [Fact(DisplayName = "Usuário - Não deve permitir alterar endereço e telefone de usuário que não seja externo")]
+        public async Task NaoDeveAlterarEnderecoTelefone()
+        {
+            CriarClaimUsuario();
+            await InserirNaBase(new Dominio.Entidades.Usuario()
+            {
+                Login = ConstantesTestes.LOGIN_99999999999,
+                Nome = ConstantesTestes.USUARIO_INTERNO_99999999999,
+                Endereco = ConstantesTestes.RUA_99999999999,
+                Numero = int.Parse(ConstantesTestes.NUMERO_99),
+                Complemento = ConstantesTestes.COMPLEMENTO_CASA_99,
+                Bairro = ConstantesTestes.BAIRRO_99999999999,
+                Cidade = ConstantesTestes.CIDADE_99999999999,
+                Estado = ConstantesTestes.ESTADO_SC,
+                Cep = ConstantesTestes.CEP_88058999,
+                TipoUsuario = TipoUsuario.CORESSO,
+                UltimoLogin = DateTimeExtension.HorarioBrasilia().Date.AddDays(-5),
+                CriadoLogin = ConstantesTestes.SISTEMA, CriadoPor = ConstantesTestes.SISTEMA, CriadoEm = DateTimeExtension.HorarioBrasilia().Date
+            });
+
+            var usuatioAlterado = new EnderecoTelefoneUsuarioExternoDTO()
+            {
+                Login = ConstantesTestes.LOGIN_99999999999,
+                Endereco = ConstantesTestes.RUA_99999999998,
+                Numero = int.Parse(ConstantesTestes.NUMERO_98),
+                Complemento = ConstantesTestes.COMPLEMENTO_CASA_98,
+                Bairro = ConstantesTestes.BAIRRO_99999999998,
+                Cidade = ConstantesTestes.CIDADE_99999999998,
+                Cep = ConstantesTestes.CEP_88058998,
+            };
+            
+            await GetServicoUsuario().AlterarEnderecoTelefone(usuatioAlterado).ShouldThrowAsync<NegocioException>();
+            
+            var usuarios = ObterTodos<Dominio.Entidades.Usuario>();
+            usuarios.FirstOrDefault(f => f.Login.Equals(ConstantesTestes.LOGIN_99999999999));
+            usuarios.FirstOrDefault(f => f.Endereco.Equals(ConstantesTestes.RUA_99999999999));
+            usuarios.FirstOrDefault(f => f.Numero.Equals(ConstantesTestes.NUMERO_99));
+            usuarios.FirstOrDefault(f => f.Complemento.Equals(ConstantesTestes.COMPLEMENTO_CASA_99));
+            usuarios.FirstOrDefault(f => f.Bairro.Equals(ConstantesTestes.BAIRRO_99999999999));
+            usuarios.FirstOrDefault(f => f.Cidade.Equals(ConstantesTestes.CIDADE_99999999999));
+            usuarios.FirstOrDefault(f => f.Cep.Equals(ConstantesTestes.CEP_88058999));
+            usuarios.FirstOrDefault(f => f.TipoUsuario == TipoUsuario.CORESSO);
+        }
     }
 }

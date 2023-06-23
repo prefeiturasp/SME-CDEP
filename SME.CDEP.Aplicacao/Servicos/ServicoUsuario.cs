@@ -117,6 +117,27 @@ namespace SME.CDEP.Aplicacao.Servicos
             return retorno;
         }
 
+        public async Task<bool> AlterarEnderecoTelefone(EnderecoTelefoneUsuarioExternoDTO enderecoTelefoneUsuarioExternoDto)
+        {
+            var usuario = await repositorioUsuario.ObterPorLogin(enderecoTelefoneUsuarioExternoDto.Login);
+            if (usuario == null)
+                throw new NegocioException(MensagemNegocio.LOGIN_NAO_ENCONTRADO);
+
+            if (!usuario.EhCadastroExterno())
+                throw new NegocioException(MensagemNegocio.SO_EH_PERMITIDO_ALTERAR_ENDERECO_TELEFONE_DE_USUARIOS_EXTERNOS);
+                
+            usuario.Telefone = enderecoTelefoneUsuarioExternoDto.Telefone;
+            usuario.Endereco = enderecoTelefoneUsuarioExternoDto.Endereco;
+            usuario.Numero = enderecoTelefoneUsuarioExternoDto.Numero;
+            usuario.Complemento = enderecoTelefoneUsuarioExternoDto.Complemento;
+            usuario.Cidade = enderecoTelefoneUsuarioExternoDto.Cidade;
+            usuario.Estado = enderecoTelefoneUsuarioExternoDto.Estado;
+            usuario.Cep = enderecoTelefoneUsuarioExternoDto.Cep;
+            await repositorioUsuario.Atualizar(usuario);
+            
+            return true;
+        }
+
         private void ValidarSenha(string senhaNova, string confirmarSenha)
         {
             if (!senhaNova.Equals(confirmarSenha))

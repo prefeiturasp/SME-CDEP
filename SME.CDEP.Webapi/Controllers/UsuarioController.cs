@@ -38,7 +38,7 @@ public class UsuarioController: BaseController
     [HttpPut("alterar-senha")]
     [ProducesResponseType(typeof(RetornoBaseDTO), 400)]
     [ProducesResponseType(typeof(RetornoBaseDTO), 601)]
-    [ProducesResponseType(typeof(UsuarioExternoDTO), 200)]
+    [ProducesResponseType(typeof(bool), 200)]
     [Authorize("Bearer")]
     public async Task<IActionResult> AlterarSenha(string login, string senhaAtual, string senhaNova, string confirmarSenha, [FromServices] IServicoUsuario servicoUsuario)
     {
@@ -50,11 +50,23 @@ public class UsuarioController: BaseController
     [HttpPut("alterar-email")]
     [ProducesResponseType(typeof(RetornoBaseDTO), 400)]
     [ProducesResponseType(typeof(RetornoBaseDTO), 601)]
-    [ProducesResponseType(typeof(UsuarioExternoDTO), 200)]
+    [ProducesResponseType(typeof(bool), 200)]
     [Authorize("Bearer")]
     public async Task<IActionResult> AlterarEmail(string login, string email, [FromServices] IServicoUsuario servicoUsuario)
     {
         var retorno = await servicoUsuario.AlterarEmail(login, email);
+       
+        return Ok(retorno);
+    }
+    
+    [HttpPut("alterar-endereco_telefone")]
+    [ProducesResponseType(typeof(RetornoBaseDTO), 400)]
+    [ProducesResponseType(typeof(RetornoBaseDTO), 601)]
+    [ProducesResponseType(typeof(bool), 200)]
+    [Authorize("Bearer")]
+    public async Task<IActionResult> AlterarEnderecoTelefoneAcervo(EnderecoTelefoneUsuarioExternoDTO enderecoTelefoneUsuarioExternoDto, [FromServices] IServicoUsuario servicoUsuario)
+    {
+        var retorno = await servicoUsuario.AlterarEnderecoTelefone(enderecoTelefoneUsuarioExternoDto);
        
         return Ok(retorno);
     }
