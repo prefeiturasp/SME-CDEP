@@ -23,7 +23,7 @@ public class UsuarioController: BaseController
         return Ok(retorno);
     }
     
-    [HttpGet("{login}/meus-dados")]
+    [HttpGet("{login}")]
     [ProducesResponseType(typeof(RetornoBaseDTO), 400)]
     [ProducesResponseType(typeof(RetornoBaseDTO), 601)]
     [ProducesResponseType(typeof(DadosUsuarioDTO), 200)]  
