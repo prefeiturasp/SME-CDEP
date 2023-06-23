@@ -83,7 +83,7 @@ namespace SME.CDEP.Aplicacao.Integracoes
 
         public async Task<bool> AlterarSenha(string login, string senhaAtual, string senhaNova)
         {
-            var parametros = JsonConvert.SerializeObject(new { login, senha = senhaAtual, novaSenha = senhaNova, sistemaId = Sistema_Cdep });
+            var parametros = JsonConvert.SerializeObject(new { login, senhaAtual, senhaNova, sistemaId = Sistema_Cdep });
             var resposta = await httpClient.PutAsync($"v1/usuarios/alterar-senha", new StringContent(parametros, Encoding.UTF8, "application/json-patch+json"));
 
             if (!resposta.IsSuccessStatusCode) return false;
