@@ -46,4 +46,16 @@ public class UsuarioController: BaseController
        
         return Ok(retorno);
     }
+    
+    [HttpPut("alterar-email")]
+    [ProducesResponseType(typeof(RetornoBaseDTO), 400)]
+    [ProducesResponseType(typeof(RetornoBaseDTO), 601)]
+    [ProducesResponseType(typeof(UsuarioExternoDTO), 200)]
+    [Authorize("Bearer")]
+    public async Task<IActionResult> AlterarEmail(string login, string email, [FromServices] IServicoUsuario servicoUsuario)
+    {
+        var retorno = await servicoUsuario.AlterarEmail(login, email);
+       
+        return Ok(retorno);
+    }
 }

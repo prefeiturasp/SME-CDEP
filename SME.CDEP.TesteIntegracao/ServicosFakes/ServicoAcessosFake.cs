@@ -41,6 +41,11 @@ public class ServicoAcessosFake : IServicoAcessos
         return Task.FromResult(true);
     }
 
+    public Task<bool> AlterarEmail(string login, string email)
+    {
+        return Task.FromResult(true);
+    }
+
     public Task<DadosUsuarioDTO> ObterMeusDados(string login)
     {
         return login switch

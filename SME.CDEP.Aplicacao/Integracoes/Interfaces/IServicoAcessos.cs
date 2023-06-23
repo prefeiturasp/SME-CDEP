@@ -11,4 +11,5 @@ public interface IServicoAcessos
     Task<bool> VincularPerfilExternoCoreSSO(string login, Guid perfilId);
     Task<DadosUsuarioDTO> ObterMeusDados(string login);
     Task<bool> AlterarSenha(string login, string senhaAtual, string senhaNova);
+    Task<bool> AlterarEmail(string login, string email);
 }
