@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace SME.CDEP.Aplicacao.DTO
+namespace SME.CDEP.Aplicacao.DTOS
 {
     public class DadosUsuarioDTO
     {

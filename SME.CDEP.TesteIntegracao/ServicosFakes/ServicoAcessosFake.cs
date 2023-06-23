@@ -1,5 +1,4 @@
-﻿using SME.CDEP.Aplicacao.DTO;
-using SME.CDEP.Aplicacao.DTOS;
+﻿using SME.CDEP.Aplicacao.DTOS;
 using SME.CDEP.Aplicacao.Integracoes.Interfaces;
 using SME.CDEP.TesteIntegracao.Constantes;
 

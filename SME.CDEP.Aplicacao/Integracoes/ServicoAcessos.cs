@@ -1,6 +1,5 @@
 ﻿using Newtonsoft.Json;
 using System.Text;
-using SME.CDEP.Aplicacao.DTO;
 using SME.CDEP.Aplicacao.DTOS;
 using SME.CDEP.Aplicacao.Integracoes.Interfaces;
 using SME.CDEP.Dominio.Constantes;
@@ -74,7 +73,7 @@ namespace SME.CDEP.Aplicacao.Integracoes
 
         public async Task<DadosUsuarioDTO> ObterMeusDados(string login)
         {
-            var resposta = await httpClient.GetAsync($"v1/usuarios/{login}/sistemas/{Sistema_Cdep}/meus-dados");
+            var resposta = await httpClient.GetAsync($"v1/usuarios/{login}");
 
             if (!resposta.IsSuccessStatusCode) return new DadosUsuarioDTO();
             

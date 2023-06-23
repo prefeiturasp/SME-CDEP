@@ -1,6 +1,5 @@
 ﻿using System.Text.RegularExpressions;
 using AutoMapper;
-using SME.CDEP.Aplicacao.DTO;
 using SME.CDEP.Aplicacao.DTOS;
 using SME.CDEP.Aplicacao.Servicos.Interface;
 using SME.CDEP.Dominio.Constantes;
