@@ -59,7 +59,7 @@ public class UsuarioController: BaseController
         return Ok(retorno);
     }
     
-    [HttpPut("alterar-endereco_telefone")]
+    [HttpPut("alterar-endereco-telefone")]
     [ProducesResponseType(typeof(RetornoBaseDTO), 400)]
     [ProducesResponseType(typeof(RetornoBaseDTO), 601)]
     [ProducesResponseType(typeof(bool), 200)]
