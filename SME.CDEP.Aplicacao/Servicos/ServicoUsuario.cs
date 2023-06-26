@@ -133,6 +133,7 @@ namespace SME.CDEP.Aplicacao.Servicos
             usuario.Cidade = enderecoTelefoneUsuarioExternoDto.Cidade;
             usuario.Estado = enderecoTelefoneUsuarioExternoDto.Estado;
             usuario.Cep = enderecoTelefoneUsuarioExternoDto.Cep;
+            usuario.Bairro = enderecoTelefoneUsuarioExternoDto.Bairro;
             await repositorioUsuario.Atualizar(usuario);
             
             return true;

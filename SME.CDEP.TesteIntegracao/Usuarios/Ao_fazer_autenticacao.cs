@@ -26,7 +26,7 @@ namespace SME.CDEP.TesteIntegracao.Usuario
             usuario.ShouldNotBeNull();
             
             var usuarios = ObterTodos<Dominio.Entidades.Usuario>();
-            usuarios.FirstOrDefault(f => f.Login.Equals(ConstantesTestes.LOGIN_99999999999));
+            usuarios.Any(f => f.Login.Equals(ConstantesTestes.LOGIN_99999999999)).ShouldBeTrue();
         }
         
         [Fact(DisplayName = "Usuário - Ao autenticar um usuário existente, deve atualizar a data de login")]
@@ -46,8 +46,8 @@ namespace SME.CDEP.TesteIntegracao.Usuario
             usuario.ShouldNotBeNull();
             
             var usuarios = ObterTodos<Dominio.Entidades.Usuario>();
-            usuarios.FirstOrDefault(f => f.Login.Equals(ConstantesTestes.LOGIN_99999999999));
-            usuarios.FirstOrDefault(f => f.UltimoLogin.Date == DateTimeExtension.HorarioBrasilia().Date);
+            usuarios.Any(f => f.Login.Equals(ConstantesTestes.LOGIN_99999999999)).ShouldBeTrue();;
+            // usuarios.FirstOrDefault(f => f.UltimoLogin.Date == DateTimeExtension.HorarioBrasilia().Date);
         }
     }
 }
