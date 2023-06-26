@@ -35,7 +35,7 @@ public class UsuarioController: BaseController
         return Ok(retorno);
     }
     
-    [HttpPut("alterar-senha")]
+    [HttpPut("senha")]
     [ProducesResponseType(typeof(RetornoBaseDTO), 400)]
     [ProducesResponseType(typeof(RetornoBaseDTO), 601)]
     [ProducesResponseType(typeof(bool), 200)]
@@ -47,7 +47,7 @@ public class UsuarioController: BaseController
         return Ok(retorno);
     }
     
-    [HttpPut("alterar-email")]
+    [HttpPut("email")]
     [ProducesResponseType(typeof(RetornoBaseDTO), 400)]
     [ProducesResponseType(typeof(RetornoBaseDTO), 601)]
     [ProducesResponseType(typeof(bool), 200)]
@@ -59,7 +59,7 @@ public class UsuarioController: BaseController
         return Ok(retorno);
     }
     
-    [HttpPut("alterar-endereco")]
+    [HttpPut("endereco")]
     [ProducesResponseType(typeof(RetornoBaseDTO), 400)]
     [ProducesResponseType(typeof(RetornoBaseDTO), 601)]
     [ProducesResponseType(typeof(bool), 200)]
@@ -71,7 +71,7 @@ public class UsuarioController: BaseController
         return Ok(retorno);
     }
     
-    [HttpPut("alterar-telefone")]
+    [HttpPut("telefone")]
     [ProducesResponseType(typeof(RetornoBaseDTO), 400)]
     [ProducesResponseType(typeof(RetornoBaseDTO), 601)]
     [ProducesResponseType(typeof(bool), 200)]

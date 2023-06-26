@@ -99,12 +99,12 @@ namespace SME.CDEP.Aplicacao.Servicos
             return dadosUsuarioCoreSSO;
         }
 
-        public async Task<bool> AlterarSenha(string login, string senhaAtual, string senhaNova, string confirmarSenha)
+        public Task<bool> AlterarSenha(string login, string senhaAtual, string senhaNova, string confirmarSenha)
         {
             ValidarSenha(senhaNova, confirmarSenha);
-            var retorno = await servicoAcessos.AlterarSenha(login, senhaAtual, senhaNova);
+            var retorno = servicoAcessos.AlterarSenha(login, senhaAtual, senhaNova);
             
-            if (!retorno)
+            if (!retorno.Result)
                 throw new NegocioException(MensagemNegocio.LOGIN_OU_SENHA_ATUAL_NAO_COMFEREM);
             
             return retorno;
