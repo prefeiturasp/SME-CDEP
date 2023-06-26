@@ -89,7 +89,7 @@ namespace SME.CDEP.Aplicacao.Integracoes
 
         public async Task<bool> AlterarEmail(string login, string email)
         {
-            return await InvocarPutServicoAcessosRetornandoBool($"v1/usuarios/{login}/email", JsonConvert.SerializeObject(new { email }));
+            return await InvocarPutServicoAcessosRetornandoBool($"v1/usuarios/{login}/email", JsonConvert.SerializeObject(new { login, email }));
         }
 
         private async Task<bool> InvocarPutServicoAcessosRetornandoBool(string rota, string parametros)

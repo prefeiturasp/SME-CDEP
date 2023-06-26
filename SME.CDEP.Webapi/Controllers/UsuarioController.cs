@@ -51,7 +51,7 @@ public class UsuarioController: BaseController
     [ProducesResponseType(typeof(RetornoBaseDTO), 400)]
     [ProducesResponseType(typeof(RetornoBaseDTO), 601)]
     [ProducesResponseType(typeof(bool), 200)]
-    [Authorize("Bearer")]
+    // [Authorize("Bearer")]
     public async Task<IActionResult> AlterarEmail(string login, string email, [FromServices] IServicoUsuario servicoUsuario)
     {
         var retorno = await servicoUsuario.AlterarEmail(login, email);
