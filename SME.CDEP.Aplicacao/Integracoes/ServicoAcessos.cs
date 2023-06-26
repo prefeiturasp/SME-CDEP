@@ -83,13 +83,13 @@ namespace SME.CDEP.Aplicacao.Integracoes
 
         public async Task<bool> AlterarSenha(string login, string senhaAtual, string senhaNova)
         {
-            return await InvocarPutServicoAcessosRetornandoBool("v1/usuarios/alterar-senha", 
+            return await InvocarPutServicoAcessosRetornandoBool("v1/usuarios/senha", 
                 JsonConvert.SerializeObject(new { login, senhaAtual, senhaNova, sistemaId = Sistema_Cdep }));
         }
 
         public async Task<bool> AlterarEmail(string login, string email)
         {
-            return await InvocarPutServicoAcessosRetornandoBool("v1/usuarios/alterar-email", JsonConvert.SerializeObject(new { login, email }));
+            return await InvocarPutServicoAcessosRetornandoBool("v1/usuarios/email", JsonConvert.SerializeObject(new { login, email }));
         }
 
         private async Task<bool> InvocarPutServicoAcessosRetornandoBool(string rota, string parametros)
