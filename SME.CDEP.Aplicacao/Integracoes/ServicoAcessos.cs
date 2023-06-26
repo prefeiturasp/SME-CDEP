@@ -74,5 +74,40 @@ namespace SME.CDEP.Aplicacao.Integracoes
             var usuarioVinculadoCoreSSO = JsonConvert.DeserializeObject<bool>(json);
             return usuarioVinculadoCoreSSO;
         }
+        
+        public async Task<string> SolicitarRecuperacaoSenha(string login)
+        {
+            var resposta = await httpClient.GetAsync($"v1/usuarios/{login}/sistemas/{Sistema_Cdep}/recuperar-senha");
+            //var resposta = await httpClient.PostAsync($"v1/autenticacao/RecuperarSenha/usuario?sistema=1", new StringContent(parametros, Encoding.UTF8, "application/json-patch+json"));
+
+            if (!resposta.IsSuccessStatusCode) return string.Empty;
+
+            var json = await resposta.Content.ReadAsStringAsync();
+            return JsonConvert.DeserializeObject<string>(json);
+        }
+
+        public async Task<bool> TokenRecuperacaoSenhaEstaValido(Guid token)
+        {
+            var resposta = await httpClient.GetAsync($"v1/usuarios/{token}/sistemas/{Sistema_Cdep}/validar");
+            //var resposta = await httpClient.PostAsync($"v1/autenticacao/RecuperarSenha/token/validar", new StringContent(parametros, Encoding.UTF8, "application/json-patch+json"));
+
+            if (!resposta.IsSuccessStatusCode) return false;
+
+            var json = await resposta.Content.ReadAsStringAsync();
+            return JsonConvert.DeserializeObject<bool>(json);
+        }
+
+        public async Task<string> AlterarSenhaComTokenRecuperacao(RecuperacaoSenhaDto recuperacaoSenhaDto)
+        {
+            var parametros = JsonConvert.SerializeObject(new { token = recuperacaoSenhaDto.Token.ToString(), senha = recuperacaoSenhaDto.NovaSenha });
+            
+            var resposta = await httpClient.PutAsync($"v1/usuarios/senha", new StringContent(parametros, Encoding.UTF8, "application/json-patch+json"));
+            //var resposta = await httpClient.PostAsync($"v1/autenticacao/AlterarSenha/", new FormUrlEncodedContent(valoresParaEnvio));
+
+            if (!resposta.IsSuccessStatusCode) return string.Empty;
+
+            var json = await resposta.Content.ReadAsStringAsync();
+            return JsonConvert.DeserializeObject<string>(json);
+        }
     }
 }

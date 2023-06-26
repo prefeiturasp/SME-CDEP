@@ -17,8 +17,36 @@ public class UsuarioController: BaseController
     [ProducesResponseType(typeof(UsuarioExternoDTO), 200)]
     public async Task<IActionResult> CadastrarUsuarioExterno(UsuarioExternoDTO usuarioExternoDto, [FromServices] IServicoUsuario servicoUsuario)
     {
-        var retorno = await servicoUsuario.CadastrarUsuarioExterno(usuarioExternoDto);
-       
-        return Ok(retorno);
+        return Ok(await servicoUsuario.CadastrarUsuarioExterno(usuarioExternoDto));
+    }
+    
+    [HttpPost("solicitar-recuperacao-senha")] //Esses métodos no SGP são no AutenticarController
+    [ProducesResponseType(typeof(string), 200)]
+    [ProducesResponseType(typeof(RetornoBaseDTO), 400)]
+    [ProducesResponseType(typeof(RetornoBaseDTO), 601)]
+    [AllowAnonymous]
+    public async Task<IActionResult> SolicitarRecuperacaoSenha(string login, [FromServices] IServicoRecuperacaoSenha servicoRecuperacaoSenha)
+    {
+        return Ok(await servicoRecuperacaoSenha.SolicitarRecuperacaoSenha(login));
+    }
+    
+    [HttpGet("valida-token-recuperacao-senha/{token}")] //Esses métodos no SGP são no AutenticarController
+    [ProducesResponseType(typeof(bool), 200)]
+    [ProducesResponseType(typeof(RetornoBaseDTO), 400)]
+    [ProducesResponseType(typeof(RetornoBaseDTO), 601)]
+    [AllowAnonymous]
+    public async Task<IActionResult> TokenRecuperacaoSenhaEstaValidoAsync(Guid token, [FromServices] IServicoRecuperacaoSenha servicoRecuperacaoSenha)
+    {
+        return Ok(await servicoRecuperacaoSenha.TokenRecuperacaoSenhaEstaValido(token));
+    }
+    
+    [HttpPost("recuperar-senha")] //Esses métodos no SGP são no AutenticarController
+    [ProducesResponseType(typeof(UsuarioAutenticacaoRetornoDTO), 200)]
+    [ProducesResponseType(typeof(RetornoBaseDTO), 400)]
+    [ProducesResponseType(typeof(RetornoBaseDTO), 601)]
+    [AllowAnonymous]
+    public async Task<IActionResult> RecuperarSenha([FromForm]RecuperacaoSenhaDto recuperacaoSenhaDto, [FromServices] IServicoRecuperacaoSenha servicoRecuperacaoSenha)
+    {
+        return Ok(await servicoRecuperacaoSenha.AlterarSenhaComTokenRecuperacao(recuperacaoSenhaDto));
     }
 }
