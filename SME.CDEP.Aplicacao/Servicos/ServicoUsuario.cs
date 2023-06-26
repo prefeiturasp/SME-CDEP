@@ -155,22 +155,27 @@ namespace SME.CDEP.Aplicacao.Servicos
 
         private void ValidarSenha(string senhaNova, string confirmarSenha)
         {
+            var erros = new List<string>();
+            
             if (!senhaNova.Equals(confirmarSenha))
-                throw new NegocioException(MensagemNegocio.CONFIRMACAO_SENHA_DEVE_SER_IGUAL_A_SENHA);
+                erros.Add(MensagemNegocio.CONFIRMACAO_SENHA_DEVE_SER_IGUAL_A_SENHA);
             
             if (senhaNova.Length < 8)
-                throw new NegocioException(MensagemNegocio.A_SENHA_DEVE_TER_NO_MÍNIMO_8_CARACTERES);
+                erros.Add(MensagemNegocio.A_SENHA_DEVE_TER_NO_MÍNIMO_8_CARACTERES);
 
             if (senhaNova.Length > 12)
-                throw new NegocioException(MensagemNegocio.A_SENHA_DEVE_TER_NO_MÁXIMO_12_CARACTERES);
+                erros.Add(MensagemNegocio.A_SENHA_DEVE_TER_NO_MÁXIMO_12_CARACTERES);
 
             if (senhaNova.Contains(" "))
-                throw new NegocioException(MensagemNegocio.A_SENHA_NAO_PODE_CONTER_ESPACOS_EM_BRANCO);
+                erros.Add(MensagemNegocio.A_SENHA_NAO_PODE_CONTER_ESPACOS_EM_BRANCO);
 
             var regexSenha = new Regex(@"^(?=.*[a-z])(?=.*[A-Z])(?=.*\d|\W)[^áàâãéèêíïóôõöúçñÁÀÂÃÉÈÊÍÏÓÔÕÖÚÇÑ]{8,12}$");
 
             if (!regexSenha.IsMatch(senhaNova))
-                throw new NegocioException(MensagemNegocio.A_SENHA_DEVE_CONTER_SOMENTE);
+                erros.Add(MensagemNegocio.A_SENHA_DEVE_CONTER_SOMENTE);
+
+            if (erros.Any())
+                throw new NegocioException(erros);
         }
 
         public async Task<UsuarioAutenticacaoRetornoDTO> Autenticar(string login, string senha)
