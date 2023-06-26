@@ -47,7 +47,7 @@ public class UsuarioController: BaseController
         return Ok(retorno);
     }
     
-    [HttpPut("email")]
+    [HttpPut("{login}/email")]
     [ProducesResponseType(typeof(RetornoBaseDTO), 400)]
     [ProducesResponseType(typeof(RetornoBaseDTO), 601)]
     [ProducesResponseType(typeof(bool), 200)]

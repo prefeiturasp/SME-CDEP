@@ -110,9 +110,9 @@ namespace SME.CDEP.Aplicacao.Servicos
             return retorno;
         }
 
-        public async Task<bool> AlterarEmail(string login, string email)
+        public Task<bool> AlterarEmail(string login, string email)
         {
-            var retorno = await servicoAcessos.AlterarEmail(login, email);
+            var retorno = servicoAcessos.AlterarEmail(login, email);
             
             return retorno;
         }
