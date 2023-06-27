@@ -1,6 +1,6 @@
 using SME.CDEP.Dominio.Repositorios;
 
-namespace SME.CDEP.Dominio.Dominios;
+namespace SME.CDEP.Dominio.Entidades;
 
 public abstract class DominioBase<TEntidade> : IDominioBase<TEntidade>
     where TEntidade : EntidadeBase

@@ -34,6 +34,7 @@
     <ProjectReference Include="..\SME.CDEP.Aplicacao\SME.CDEP.Aplicacao.csproj" />
     <ProjectReference Include="..\SME.CDEP.Infra.Servicos\SME.CDEP.Infra.Servicos.csproj" />
     <ProjectReference Include="..\SME.CDEP.IoC\SME.CDEP.IoC.csproj" />
+    <ProjectReference Include="..\SME.CDEP.Webapi\SME.CDEP.Webapi.csproj" />
   </ItemGroup>
 
   <ItemGroup>

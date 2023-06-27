@@ -9,15 +9,75 @@ namespace SME.CDEP.Webapi.Controllers;
 [ApiController]
 [Route("api/v1/usuarios")]
 [ValidaDto]
-public class UsuarioController: ControllerBase
+public class UsuarioController: BaseController
 {
     [HttpPost]
-    [ProducesResponseType(401)]
-    [ProducesResponseType(typeof(RetornoBaseDTO), 500)]
+    [ProducesResponseType(typeof(RetornoBaseDTO), 400)]
+    [ProducesResponseType(typeof(RetornoBaseDTO), 601)]
     [ProducesResponseType(typeof(UsuarioExternoDTO), 200)]
     public async Task<IActionResult> CadastrarUsuarioExterno(UsuarioExternoDTO usuarioExternoDto, [FromServices] IServicoUsuario servicoUsuario)
     {
         var retorno = await servicoUsuario.CadastrarUsuarioExterno(usuarioExternoDto);
+       
+        return Ok(retorno);
+    }
+    
+    [HttpGet("{login}")]
+    [ProducesResponseType(typeof(RetornoBaseDTO), 400)]
+    [ProducesResponseType(typeof(RetornoBaseDTO), 601)]
+    [ProducesResponseType(typeof(DadosUsuarioDTO), 200)]  
+    [Authorize("Bearer")]
+    public async Task<IActionResult> MeusDados(string login, [FromServices]IServicoUsuario servicoUsuario)
+    {
+        var retorno = await servicoUsuario.ObterMeusDados(login);
+
+        return Ok(retorno);
+    }
+    
+    [HttpPut("{login}/senha")]
+    [ProducesResponseType(typeof(RetornoBaseDTO), 400)]
+    [ProducesResponseType(typeof(RetornoBaseDTO), 601)]
+    [ProducesResponseType(typeof(bool), 200)]
+    [Authorize("Bearer")]
+    public async Task<IActionResult> AlterarSenha(string login, string senhaAtual, string senhaNova, string confirmarSenha, [FromServices] IServicoUsuario servicoUsuario)
+    {
+        var retorno = await servicoUsuario.AlterarSenha(login, senhaAtual, senhaNova, confirmarSenha);
+       
+        return Ok(retorno);
+    }
+    
+    [HttpPut("{login}/email")]
+    [ProducesResponseType(typeof(RetornoBaseDTO), 400)]
+    [ProducesResponseType(typeof(RetornoBaseDTO), 601)]
+    [ProducesResponseType(typeof(bool), 200)]
+    [Authorize("Bearer")]
+    public async Task<IActionResult> AlterarEmail(string login, string email, [FromServices] IServicoUsuario servicoUsuario)
+    {
+        var retorno = await servicoUsuario.AlterarEmail(login, email);
+       
+        return Ok(retorno);
+    }
+    
+    [HttpPut("{login}/endereco")]
+    [ProducesResponseType(typeof(RetornoBaseDTO), 400)]
+    [ProducesResponseType(typeof(RetornoBaseDTO), 601)]
+    [ProducesResponseType(typeof(bool), 200)]
+    [Authorize("Bearer")]
+    public async Task<IActionResult> AlterarEnderecoAcervo(string login, EnderecoUsuarioExternoDTO enderecoTelefoneUsuarioExternoDto, [FromServices] IServicoUsuario servicoUsuario)
+    {
+        var retorno = await servicoUsuario.AlterarEndereco(login, enderecoTelefoneUsuarioExternoDto);
+       
+        return Ok(retorno);
+    }
+    
+    [HttpPut("{login}/telefone")]
+    [ProducesResponseType(typeof(RetornoBaseDTO), 400)]
+    [ProducesResponseType(typeof(RetornoBaseDTO), 601)]
+    [ProducesResponseType(typeof(bool), 200)]
+    [Authorize("Bearer")]
+    public async Task<IActionResult> AlterarTelefoneAcervo(string login, string telefone, [FromServices] IServicoUsuario servicoUsuario)
+    {
+        var retorno = await servicoUsuario.AlterarTelefone(login,telefone);
        
         return Ok(retorno);
     }

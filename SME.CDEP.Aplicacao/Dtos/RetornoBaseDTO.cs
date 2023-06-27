@@ -1,4 +1,5 @@
-﻿using FluentValidation.Results;
+﻿using System.ComponentModel.DataAnnotations;
+using FluentValidation.Results;
 
 namespace SME.CDEP.Aplicacao.DTOS;
 
@@ -14,11 +15,14 @@ namespace SME.CDEP.Aplicacao.DTOS;
             Mensagens = new List<string>();
         }
 
-        public RetornoBaseDTO(string mensagem)
+        public RetornoBaseDTO(List<string> mensagens)
         {
-            Mensagens = new List<string>() { mensagem };
+            Mensagens = mensagens;
         }
 
+        
+        [Required]
         public List<string> Mensagens { get; set; }
+        
         public bool ExistemErros => Mensagens?.Any() ?? false;
     }

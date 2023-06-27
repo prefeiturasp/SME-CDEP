@@ -17,7 +17,7 @@ namespace SME.CDEP.Webapi.Configuracoes;
             {
                 c.SwaggerDoc("v1", new OpenApiInfo
                 {
-                    Title = $"SGP v1",
+                    Title = $"SME.CDEP.Webapi",
                     Version = versaoAtual
                 });
 
