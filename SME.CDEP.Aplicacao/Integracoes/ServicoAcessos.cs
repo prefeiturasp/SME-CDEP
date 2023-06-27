@@ -83,7 +83,7 @@ namespace SME.CDEP.Aplicacao.Integracoes
 
         public Task<bool> AlterarSenha(string login, string senhaAtual, string senhaNova)
         {
-            return InvocarPutServicoAcessosRetornandoBool("v1/usuarios/senha", 
+            return InvocarPutServicoAcessosRetornandoBool($"v1/usuarios/{login}/senha", 
                 JsonConvert.SerializeObject(new { login, senhaAtual, senhaNova, sistemaId = Sistema_Cdep }));
         }
 
