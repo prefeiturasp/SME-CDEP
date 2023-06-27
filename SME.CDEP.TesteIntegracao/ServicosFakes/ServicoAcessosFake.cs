@@ -21,19 +21,29 @@ public class ServicoAcessosFake : IServicoAcessos
         throw new NotImplementedException();
     }
 
-    public async Task<bool> UsuarioCadastradoCoreSSO(string login)
+    public Task<bool> UsuarioCadastradoCoreSSO(string login)
     {
-        return login.Equals(ConstantesTestes.LOGIN_99999999998);
+        return Task.FromResult(login.Equals(ConstantesTestes.LOGIN_99999999998));
     }
 
-    public async Task<bool> CadastrarUsuarioCoreSSO(string login, string nome, string email, string senha)
+    public Task<bool> CadastrarUsuarioCoreSSO(string login, string nome, string email, string senha)
     {
-        return true;
+        return Task.FromResult(true);
     }
 
-    public async Task<bool> VincularPerfilExternoCoreSSO(string login, Guid perfilId)
+    public Task<bool> VincularPerfilExternoCoreSSO(string login, Guid perfilId)
     {
-        return true;
+        return Task.FromResult(true);
+    }
+
+    public Task<bool> AlterarSenha(string login, string senhaAtual, string senhaNova)
+    {
+        return Task.FromResult(true);
+    }
+
+    public Task<bool> AlterarEmail(string login, string email)
+    {
+        return Task.FromResult(true);
     }
 
     public Task<DadosUsuarioDTO> ObterMeusDados(string login)

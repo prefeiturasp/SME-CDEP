@@ -80,5 +80,27 @@ namespace SME.CDEP.Aplicacao.Integracoes
             var json = await resposta.Content.ReadAsStringAsync();
             return JsonConvert.DeserializeObject<DadosUsuarioDTO>(json);
         }
+
+        public Task<bool> AlterarSenha(string login, string senhaAtual, string senhaNova)
+        {
+            return InvocarPutServicoAcessosRetornandoBool("v1/usuarios/senha", 
+                JsonConvert.SerializeObject(new { login, senhaAtual, senhaNova, sistemaId = Sistema_Cdep }));
+        }
+
+        public Task<bool> AlterarEmail(string login, string email)
+        {
+            return InvocarPutServicoAcessosRetornandoBool($"v1/usuarios/{login}/email", JsonConvert.SerializeObject(new { login, email }));
+        }
+
+        private async Task<bool> InvocarPutServicoAcessosRetornandoBool(string rota, string parametros)
+        {
+            var resposta = await httpClient.PutAsync(rota,new StringContent(parametros, Encoding.UTF8, "application/json-patch+json"));
+
+            if (!resposta.IsSuccessStatusCode) return false;
+
+            var json = await resposta.Content.ReadAsStringAsync();
+            var retorno = JsonConvert.DeserializeObject<bool>(json);
+            return retorno;
+        }
     }
 }

@@ -54,7 +54,7 @@ namespace SME.CDEP.Aplicacao.Servicos
         public async Task<bool> CadastrarUsuarioExterno(UsuarioExternoDTO usuarioExternoDto)
         {
             usuarioExternoDto.Cpf = usuarioExternoDto.Cpf.Replace(".","").Replace("-","");
-            ValidarSenha(usuarioExternoDto);
+            ValidarSenha(usuarioExternoDto.Senha, usuarioExternoDto.ConfirmarSenha);
             
             var usuarioAcervo = await ObterPorLogin(usuarioExternoDto.Cpf);
             if (usuarioAcervo != null)
@@ -79,7 +79,7 @@ namespace SME.CDEP.Aplicacao.Servicos
 
             return retorno != 0;
         }
-
+        
         public async Task<DadosUsuarioDTO> ObterMeusDados(string login)
         {
             var dadosUsuarioCoreSSO = await servicoAcessos.ObterMeusDados(login);
@@ -99,26 +99,87 @@ namespace SME.CDEP.Aplicacao.Servicos
             return dadosUsuarioCoreSSO;
         }
 
-        private bool ValidarSenha(UsuarioExternoDTO usuarioExternoDto)
+        public async Task<bool> AlterarSenha(string login, string senhaAtual, string senhaNova, string confirmarSenha)
         {
-            if (!usuarioExternoDto.Senha.Equals(usuarioExternoDto.ConfirmarSenha))
-                throw new NegocioException(MensagemNegocio.CONFIRMACAO_SENHA_DEVE_SER_IGUAL_A_SENHA);
+            ValidarSenha(senhaNova, confirmarSenha);
+            var retorno = await servicoAcessos.AlterarSenha(login, senhaAtual, senhaNova);
             
-            if (usuarioExternoDto.Senha.Length < 8)
-                throw new NegocioException(MensagemNegocio.A_SENHA_DEVE_TER_NO_MÍNIMO_8_CARACTERES);
+            if (!retorno)
+                throw new NegocioException(MensagemNegocio.LOGIN_OU_SENHA_ATUAL_NAO_COMFEREM);
+            
+            return retorno;
+        }
 
-            if (usuarioExternoDto.Senha.Length > 12)
-                throw new NegocioException(MensagemNegocio.A_SENHA_DEVE_TER_NO_MÁXIMO_12_CARACTERES);
+        public Task<bool> AlterarEmail(string login, string email)
+        {
+            var retorno = servicoAcessos.AlterarEmail(login, email);
+            
+            return retorno;
+        }
 
-            if (usuarioExternoDto.Senha.Contains(" "))
-                throw new NegocioException(MensagemNegocio.A_SENHA_NAO_PODE_CONTER_ESPACOS_EM_BRANCO);
+        public async Task<bool> AlterarEndereco(EnderecoTelefoneUsuarioExternoDTO enderecoTelefoneUsuarioExternoDto)
+        {
+            var usuario = await repositorioUsuario.ObterPorLogin(enderecoTelefoneUsuarioExternoDto.Login);
+            
+            ValidarUsuarioExterno(usuario);
+                
+            usuario.Telefone = enderecoTelefoneUsuarioExternoDto.Telefone;
+            usuario.Endereco = enderecoTelefoneUsuarioExternoDto.Endereco;
+            usuario.Numero = enderecoTelefoneUsuarioExternoDto.Numero;
+            usuario.Complemento = enderecoTelefoneUsuarioExternoDto.Complemento;
+            usuario.Cidade = enderecoTelefoneUsuarioExternoDto.Cidade;
+            usuario.Estado = enderecoTelefoneUsuarioExternoDto.Estado;
+            usuario.Cep = enderecoTelefoneUsuarioExternoDto.Cep;
+            usuario.Bairro = enderecoTelefoneUsuarioExternoDto.Bairro;
+            await repositorioUsuario.Atualizar(usuario);
+            
+            return true;
+        }
+        
+        public async Task<bool> AlterarTelefone(EnderecoTelefoneUsuarioExternoDTO enderecoTelefoneUsuarioExternoDto)
+        {
+            var usuario = await repositorioUsuario.ObterPorLogin(enderecoTelefoneUsuarioExternoDto.Login);
+            
+            ValidarUsuarioExterno(usuario);
+            
+            usuario.Telefone = enderecoTelefoneUsuarioExternoDto.Telefone;
+            await repositorioUsuario.Atualizar(usuario);
+            
+            return true;
+        }
+
+        private void ValidarUsuarioExterno(Usuario usuario)
+        {
+            if (usuario == null)
+                throw new NegocioException(MensagemNegocio.LOGIN_NAO_ENCONTRADO);
+
+            if (!usuario.EhCadastroExterno())
+                throw new NegocioException(MensagemNegocio.SO_EH_PERMITIDO_ALTERAR_ENDERECO_TELEFONE_DE_USUARIOS_EXTERNOS);
+        }
+
+        private void ValidarSenha(string senhaNova, string confirmarSenha)
+        {
+            var erros = new List<string>();
+            
+            if (!senhaNova.Equals(confirmarSenha))
+                erros.Add(MensagemNegocio.CONFIRMACAO_SENHA_DEVE_SER_IGUAL_A_SENHA);
+            
+            if (senhaNova.Length < 8)
+                erros.Add(MensagemNegocio.A_SENHA_DEVE_TER_NO_MÍNIMO_8_CARACTERES);
+
+            if (senhaNova.Length > 12)
+                erros.Add(MensagemNegocio.A_SENHA_DEVE_TER_NO_MÁXIMO_12_CARACTERES);
+
+            if (senhaNova.Contains(" "))
+                erros.Add(MensagemNegocio.A_SENHA_NAO_PODE_CONTER_ESPACOS_EM_BRANCO);
 
             var regexSenha = new Regex(@"^(?=.*[a-z])(?=.*[A-Z])(?=.*\d|\W)[^áàâãéèêíïóôõöúçñÁÀÂÃÉÈÊÍÏÓÔÕÖÚÇÑ]{8,12}$");
 
-            if (!regexSenha.IsMatch(usuarioExternoDto.Senha))
-                throw new NegocioException(MensagemNegocio.A_SENHA_DEVE_CONTER_SOMENTE);
+            if (!regexSenha.IsMatch(senhaNova))
+                erros.Add(MensagemNegocio.A_SENHA_DEVE_CONTER_SOMENTE);
 
-            return true;
+            if (erros.Any())
+                throw new NegocioException(erros);
         }
 
         public async Task<UsuarioAutenticacaoRetornoDTO> Autenticar(string login, string senha)

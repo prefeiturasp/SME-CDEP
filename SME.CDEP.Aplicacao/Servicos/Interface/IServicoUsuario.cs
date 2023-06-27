@@ -12,5 +12,9 @@ namespace SME.CDEP.Aplicacao.Servicos.Interface
         Task<UsuarioDTO> ObterPorLogin(string login);
         Task<bool> CadastrarUsuarioExterno(UsuarioExternoDTO usuarioExternoDto);
         Task<DadosUsuarioDTO> ObterMeusDados(string login);
+        Task<bool> AlterarSenha(string login, string senhaAtual, string senhaNova, string confirmarSenha);
+        Task<bool> AlterarEmail(string login, string email);
+        Task<bool> AlterarEndereco(EnderecoTelefoneUsuarioExternoDTO enderecoTelefoneUsuarioExternoDto);
+        Task<bool> AlterarTelefone(EnderecoTelefoneUsuarioExternoDTO enderecoTelefoneUsuarioExternoDto);
     }
 }

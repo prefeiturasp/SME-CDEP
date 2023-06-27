@@ -34,4 +34,52 @@ public class UsuarioController: BaseController
 
         return Ok(retorno);
     }
+    
+    [HttpPut("senha")]
+    [ProducesResponseType(typeof(RetornoBaseDTO), 400)]
+    [ProducesResponseType(typeof(RetornoBaseDTO), 601)]
+    [ProducesResponseType(typeof(bool), 200)]
+    [Authorize("Bearer")]
+    public async Task<IActionResult> AlterarSenha(string login, string senhaAtual, string senhaNova, string confirmarSenha, [FromServices] IServicoUsuario servicoUsuario)
+    {
+        var retorno = await servicoUsuario.AlterarSenha(login, senhaAtual, senhaNova, confirmarSenha);
+       
+        return Ok(retorno);
+    }
+    
+    [HttpPut("{login}/email")]
+    [ProducesResponseType(typeof(RetornoBaseDTO), 400)]
+    [ProducesResponseType(typeof(RetornoBaseDTO), 601)]
+    [ProducesResponseType(typeof(bool), 200)]
+    [Authorize("Bearer")]
+    public async Task<IActionResult> AlterarEmail(string login, string email, [FromServices] IServicoUsuario servicoUsuario)
+    {
+        var retorno = await servicoUsuario.AlterarEmail(login, email);
+       
+        return Ok(retorno);
+    }
+    
+    [HttpPut("endereco")]
+    [ProducesResponseType(typeof(RetornoBaseDTO), 400)]
+    [ProducesResponseType(typeof(RetornoBaseDTO), 601)]
+    [ProducesResponseType(typeof(bool), 200)]
+    [Authorize("Bearer")]
+    public async Task<IActionResult> AlterarEnderecoAcervo(EnderecoTelefoneUsuarioExternoDTO enderecoTelefoneUsuarioExternoDto, [FromServices] IServicoUsuario servicoUsuario)
+    {
+        var retorno = await servicoUsuario.AlterarEndereco(enderecoTelefoneUsuarioExternoDto);
+       
+        return Ok(retorno);
+    }
+    
+    [HttpPut("telefone")]
+    [ProducesResponseType(typeof(RetornoBaseDTO), 400)]
+    [ProducesResponseType(typeof(RetornoBaseDTO), 601)]
+    [ProducesResponseType(typeof(bool), 200)]
+    [Authorize("Bearer")]
+    public async Task<IActionResult> AlterarTelefoneAcervo(EnderecoTelefoneUsuarioExternoDTO TelefoneUsuarioExternoDto, [FromServices] IServicoUsuario servicoUsuario)
+    {
+        var retorno = await servicoUsuario.AlterarTelefone(TelefoneUsuarioExternoDto);
+       
+        return Ok(retorno);
+    }
 }
