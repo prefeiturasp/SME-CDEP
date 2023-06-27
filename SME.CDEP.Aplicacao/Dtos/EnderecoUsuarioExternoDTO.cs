@@ -3,9 +3,8 @@ using SME.CDEP.Infra.Dominio.Enumerados;
 
 namespace SME.CDEP.Aplicacao.DTOS
 {
-    public class EnderecoTelefoneUsuarioExternoDTO
+    public class EnderecoUsuarioExternoDTO
     {
-        public string Login { get; set; }
         public string Telefone { get; set; }
         public string Endereco { get; set; }
         public string? Complemento { get; set; }

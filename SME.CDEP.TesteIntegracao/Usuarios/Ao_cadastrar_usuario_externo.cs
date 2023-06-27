@@ -183,9 +183,8 @@ namespace SME.CDEP.TesteIntegracao.Usuario
                 CriadoLogin = ConstantesTestes.SISTEMA, CriadoPor = ConstantesTestes.SISTEMA, CriadoEm = DateTimeExtension.HorarioBrasilia().Date
             });
 
-            var usuatioAlterado = new EnderecoTelefoneUsuarioExternoDTO()
+            var usuatioAlterado = new EnderecoUsuarioExternoDTO()
             {
-                Login = ConstantesTestes.LOGIN_99999999999,
                 Endereco = ConstantesTestes.RUA_99999999998,
                 Numero = int.Parse(ConstantesTestes.NUMERO_98),
                 Complemento = ConstantesTestes.COMPLEMENTO_CASA_98,
@@ -194,7 +193,7 @@ namespace SME.CDEP.TesteIntegracao.Usuario
                 Cep = ConstantesTestes.CEP_88058998,
             };
             
-            var usuario = await GetServicoUsuario().AlterarEndereco(usuatioAlterado);
+            var usuario = await GetServicoUsuario().AlterarEndereco(ConstantesTestes.LOGIN_99999999999,usuatioAlterado);
             usuario.ShouldBeTrue();
             
             var usuarios = ObterTodos<Dominio.Entidades.Usuario>();
@@ -209,33 +208,20 @@ namespace SME.CDEP.TesteIntegracao.Usuario
         }
         
         [Fact(DisplayName = "Usuário - Alterar telefone de usuário externo")]
-        public async Task AlterarEnderecoTelefone()
+        public async Task AlterarTelefone()
         {
             CriarClaimUsuario();
             await InserirNaBase(new Dominio.Entidades.Usuario()
             {
                 Login = ConstantesTestes.LOGIN_99999999999,
                 Nome = ConstantesTestes.USUARIO_INTERNO_99999999999,
-                Endereco = ConstantesTestes.RUA_99999999999,
-                Numero = int.Parse(ConstantesTestes.NUMERO_99),
-                Complemento = ConstantesTestes.COMPLEMENTO_CASA_99,
-                Bairro = ConstantesTestes.BAIRRO_99999999999,
-                Cidade = ConstantesTestes.CIDADE_99999999999,
-                Estado = ConstantesTestes.ESTADO_SC,
-                Cep = ConstantesTestes.CEP_88058999,
                 Telefone = ConstantesTestes.TELEFONE_99_99999_9999,
                 UltimoLogin = DateTimeExtension.HorarioBrasilia().Date.AddDays(-5),
                 TipoUsuario = TipoUsuario.PROFESSOR,
                 CriadoLogin = ConstantesTestes.SISTEMA, CriadoPor = ConstantesTestes.SISTEMA, CriadoEm = DateTimeExtension.HorarioBrasilia().Date
             });
 
-            var usuatioAlterado = new EnderecoTelefoneUsuarioExternoDTO()
-            {
-                Login = ConstantesTestes.LOGIN_99999999999,
-                Telefone = ConstantesTestes.TELEFONE_99_99999_9998
-            };
-            
-            var usuario = await GetServicoUsuario().AlterarTelefone(usuatioAlterado);
+            var usuario = await GetServicoUsuario().AlterarTelefone(ConstantesTestes.LOGIN_99999999999,ConstantesTestes.TELEFONE_99_99999_9998);
             usuario.ShouldBeTrue();
             
             var usuarios = ObterTodos<Dominio.Entidades.Usuario>();
@@ -263,9 +249,8 @@ namespace SME.CDEP.TesteIntegracao.Usuario
                 CriadoLogin = ConstantesTestes.SISTEMA, CriadoPor = ConstantesTestes.SISTEMA, CriadoEm = DateTimeExtension.HorarioBrasilia().Date
             });
 
-            var usuatioAlterado = new EnderecoTelefoneUsuarioExternoDTO()
+            var usuatioAlterado = new EnderecoUsuarioExternoDTO()
             {
-                Login = ConstantesTestes.LOGIN_99999999999,
                 Endereco = ConstantesTestes.RUA_99999999998,
                 Numero = int.Parse(ConstantesTestes.NUMERO_98),
                 Complemento = ConstantesTestes.COMPLEMENTO_CASA_98,
@@ -274,7 +259,7 @@ namespace SME.CDEP.TesteIntegracao.Usuario
                 Cep = ConstantesTestes.CEP_88058998,
             };
             
-            await GetServicoUsuario().AlterarEndereco(usuatioAlterado).ShouldThrowAsync<NegocioException>();
+            await GetServicoUsuario().AlterarEndereco(ConstantesTestes.LOGIN_99999999999,usuatioAlterado).ShouldThrowAsync<NegocioException>();
             
             var usuarios = ObterTodos<Dominio.Entidades.Usuario>();
             usuarios.Any(f => f.Login.Equals(ConstantesTestes.LOGIN_99999999999)).ShouldBeTrue();
@@ -295,36 +280,18 @@ namespace SME.CDEP.TesteIntegracao.Usuario
             {
                 Login = ConstantesTestes.LOGIN_99999999999,
                 Nome = ConstantesTestes.USUARIO_INTERNO_99999999999,
-                Endereco = ConstantesTestes.RUA_99999999999,
-                Numero = int.Parse(ConstantesTestes.NUMERO_99),
-                Complemento = ConstantesTestes.COMPLEMENTO_CASA_99,
-                Bairro = ConstantesTestes.BAIRRO_99999999999,
-                Cidade = ConstantesTestes.CIDADE_99999999999,
-                Estado = ConstantesTestes.ESTADO_SC,
-                Cep = ConstantesTestes.CEP_88058999,
-                TipoUsuario = TipoUsuario.CORESSO,
                 Telefone = ConstantesTestes.TELEFONE_99_99999_9999,
                 UltimoLogin = DateTimeExtension.HorarioBrasilia().Date.AddDays(-5),
                 CriadoLogin = ConstantesTestes.SISTEMA, CriadoPor = ConstantesTestes.SISTEMA, CriadoEm = DateTimeExtension.HorarioBrasilia().Date
             });
 
-            var usuatioAlterado = new EnderecoTelefoneUsuarioExternoDTO()
-            {
-                Login = ConstantesTestes.LOGIN_99999999999,
-                Telefone = ConstantesTestes.TELEFONE_99_99999_9998
-            };
-            
-            await GetServicoUsuario().AlterarTelefone(usuatioAlterado).ShouldThrowAsync<NegocioException>();
-            
             var usuarios = ObterTodos<Dominio.Entidades.Usuario>();
+            
+            await GetServicoUsuario().AlterarTelefone(ConstantesTestes.LOGIN_99999999999,ConstantesTestes.TELEFONE_99_99999_9998).ShouldThrowAsync<NegocioException>();
+            
+            usuarios = ObterTodos<Dominio.Entidades.Usuario>();
             usuarios.Any(f => f.Login.Equals(ConstantesTestes.LOGIN_99999999999)).ShouldBeTrue();
-            usuarios.Any(f => f.Endereco.Equals(ConstantesTestes.RUA_99999999999)).ShouldBeTrue();
-            usuarios.Any(f => f.Numero == int.Parse(ConstantesTestes.NUMERO_99)).ShouldBeTrue();
-            usuarios.Any(f => f.Complemento.Equals(ConstantesTestes.COMPLEMENTO_CASA_99)).ShouldBeTrue();
-            usuarios.Any(f => f.Bairro.Equals(ConstantesTestes.BAIRRO_99999999999)).ShouldBeTrue();
-            usuarios.Any(f => f.Cidade.Equals(ConstantesTestes.CIDADE_99999999999)).ShouldBeTrue();
-            usuarios.Any(f => f.Cep.Equals(ConstantesTestes.CEP_88058999)).ShouldBeTrue();
-            usuarios.Any(f => f.TipoUsuario == TipoUsuario.CORESSO).ShouldBeTrue();
+            usuarios.Any(f => f.Telefone.Equals(ConstantesTestes.TELEFONE_99_99999_9999)).ShouldBeTrue();
         }
     }
 }

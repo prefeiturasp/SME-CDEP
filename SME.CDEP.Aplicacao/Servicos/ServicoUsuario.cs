@@ -117,32 +117,31 @@ namespace SME.CDEP.Aplicacao.Servicos
             return retorno;
         }
 
-        public async Task<bool> AlterarEndereco(EnderecoTelefoneUsuarioExternoDTO enderecoTelefoneUsuarioExternoDto)
+        public async Task<bool> AlterarEndereco(string login, EnderecoUsuarioExternoDTO enderecoUsuarioExternoDto)
         {
-            var usuario = await repositorioUsuario.ObterPorLogin(enderecoTelefoneUsuarioExternoDto.Login);
+            var usuario = await repositorioUsuario.ObterPorLogin(login);
             
             ValidarUsuarioExterno(usuario);
                 
-            usuario.Telefone = enderecoTelefoneUsuarioExternoDto.Telefone;
-            usuario.Endereco = enderecoTelefoneUsuarioExternoDto.Endereco;
-            usuario.Numero = enderecoTelefoneUsuarioExternoDto.Numero;
-            usuario.Complemento = enderecoTelefoneUsuarioExternoDto.Complemento;
-            usuario.Cidade = enderecoTelefoneUsuarioExternoDto.Cidade;
-            usuario.Estado = enderecoTelefoneUsuarioExternoDto.Estado;
-            usuario.Cep = enderecoTelefoneUsuarioExternoDto.Cep;
-            usuario.Bairro = enderecoTelefoneUsuarioExternoDto.Bairro;
+            usuario.Endereco = enderecoUsuarioExternoDto.Endereco;
+            usuario.Numero = enderecoUsuarioExternoDto.Numero;
+            usuario.Complemento = enderecoUsuarioExternoDto.Complemento;
+            usuario.Cidade = enderecoUsuarioExternoDto.Cidade;
+            usuario.Estado = enderecoUsuarioExternoDto.Estado;
+            usuario.Cep = enderecoUsuarioExternoDto.Cep;
+            usuario.Bairro = enderecoUsuarioExternoDto.Bairro;
             await repositorioUsuario.Atualizar(usuario);
             
             return true;
         }
         
-        public async Task<bool> AlterarTelefone(EnderecoTelefoneUsuarioExternoDTO enderecoTelefoneUsuarioExternoDto)
+        public async Task<bool> AlterarTelefone(string login, string telefone)
         {
-            var usuario = await repositorioUsuario.ObterPorLogin(enderecoTelefoneUsuarioExternoDto.Login);
+            var usuario = await repositorioUsuario.ObterPorLogin(login);
             
             ValidarUsuarioExterno(usuario);
             
-            usuario.Telefone = enderecoTelefoneUsuarioExternoDto.Telefone;
+            usuario.Telefone = telefone;
             await repositorioUsuario.Atualizar(usuario);
             
             return true;
