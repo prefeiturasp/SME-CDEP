@@ -120,11 +120,8 @@ namespace SME.CDEP.Aplicacao.Servicos
         public async Task<bool> AlterarEndereco(EnderecoTelefoneUsuarioExternoDTO enderecoTelefoneUsuarioExternoDto)
         {
             var usuario = await repositorioUsuario.ObterPorLogin(enderecoTelefoneUsuarioExternoDto.Login);
-            if (usuario == null)
-                throw new NegocioException(MensagemNegocio.LOGIN_NAO_ENCONTRADO);
-
-            if (!usuario.EhCadastroExterno())
-                throw new NegocioException(MensagemNegocio.SO_EH_PERMITIDO_ALTERAR_ENDERECO_TELEFONE_DE_USUARIOS_EXTERNOS);
+            
+            ValidarUsuarioExterno(usuario);
                 
             usuario.Telefone = enderecoTelefoneUsuarioExternoDto.Telefone;
             usuario.Endereco = enderecoTelefoneUsuarioExternoDto.Endereco;
@@ -142,16 +139,22 @@ namespace SME.CDEP.Aplicacao.Servicos
         public async Task<bool> AlterarTelefone(EnderecoTelefoneUsuarioExternoDTO enderecoTelefoneUsuarioExternoDto)
         {
             var usuario = await repositorioUsuario.ObterPorLogin(enderecoTelefoneUsuarioExternoDto.Login);
+            
+            ValidarUsuarioExterno(usuario);
+            
+            usuario.Telefone = enderecoTelefoneUsuarioExternoDto.Telefone;
+            await repositorioUsuario.Atualizar(usuario);
+            
+            return true;
+        }
+
+        private void ValidarUsuarioExterno(Usuario usuario)
+        {
             if (usuario == null)
                 throw new NegocioException(MensagemNegocio.LOGIN_NAO_ENCONTRADO);
 
             if (!usuario.EhCadastroExterno())
                 throw new NegocioException(MensagemNegocio.SO_EH_PERMITIDO_ALTERAR_ENDERECO_TELEFONE_DE_USUARIOS_EXTERNOS);
-                
-            usuario.Telefone = enderecoTelefoneUsuarioExternoDto.Telefone;
-            await repositorioUsuario.Atualizar(usuario);
-            
-            return true;
         }
 
         private void ValidarSenha(string senhaNova, string confirmarSenha)
