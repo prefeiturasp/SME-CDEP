@@ -1,6 +1,11 @@
-using System.Reflection;
 using Microsoft.Extensions.DependencyInjection;
+using SME.CDEP.Aplicacao.DTOS;
+using SME.CDEP.Aplicacao.Servicos.Interface;
+using SME.CDEP.Dominio.Contexto;
+using SME.CDEP.Infra.Dominio.Enumerados;
+using SME.CDEP.TesteIntegracao.Constantes;
 using SME.CDEP.TesteIntegracao.Setup;
+using SME.CDEP.Webapi.Contexto;
 using Xunit;
 
 [assembly: CollectionBehavior(DisableTestParallelization = true)]
@@ -80,6 +85,61 @@ namespace SME.CDEP.TesteIntegracao
             where K : struct
         {
             return _collectionFixture.Database.ObterPorId<T, K>(id);
+        }
+
+        protected IServicoUsuario GetServicoUsuario()
+        {
+            return ObterServicoAplicacao<IServicoUsuario>();
+        }
+
+        public T ObterServicoAplicacao<T>()
+            where T : IServicoAplicacao
+        {
+            return ServiceProvider.GetService<T>() ?? throw new Exception($"Servi�o {typeof(T).Name} n�o registrado!");
+        }
+        
+        protected void CriarClaimUsuario()
+        {
+            var contextoAplicacao = ServiceProvider.GetService<IContextoAplicacao>();
+            
+            contextoAplicacao.AdicionarVariaveis(ObterVariaveisPorPerfil());
+        }
+
+        private Dictionary<string, object> ObterVariaveisPorPerfil()
+        {
+            var rfLoginPerfil = ConstantesTestes.LOGIN_123456789;
+            
+            return new Dictionary<string, object>
+            {
+                { ConstantesTestes.USUARIO_CHAVE, ConstantesTestes.SISTEMA },
+                { ConstantesTestes.USUARIO_LOGADO_CHAVE, ConstantesTestes.LOGIN_123456789 },
+                {
+                    ConstantesTestes.USUARIO_CLAIMS_CHAVE,
+                    new List<InternalClaim> {
+                        new InternalClaim { Value = rfLoginPerfil, Type = ConstantesTestes.USUARIO_CLAIM_TIPO_RF },
+                        // new InternalClaim { Value = perfil, Type = USUARIO_CLAIM_TIPO_PERFIL }
+                    }
+                }
+            };
+        }
+
+        protected static UsuarioDTO ObterUsuarioDto(TipoUsuario tipoUsuario, string numero)
+        {
+            var retorno = new UsuarioDTO()
+            {
+                Login = $"9999999999{numero}",
+                Nome = $"Usuário 9999999999{numero}'",
+                Endereco = $"Rua 9999999999{numero}'",
+                Numero = int.Parse($"9{numero}"),
+                Complemento = $"Casa 9{numero}'",
+                Cep = $"8805899{numero}'",
+                Cidade = $"Cidade 9999999999{numero}'",
+                Estado = ConstantesTestes.ESTADO_SC,
+                Telefone = $"99_99999_999{numero}'",
+                Bairro = $"Bairro 9999999999{numero}'",
+                TipoUsuario = (int)tipoUsuario
+            };
+            return retorno;
         }
     }
 }

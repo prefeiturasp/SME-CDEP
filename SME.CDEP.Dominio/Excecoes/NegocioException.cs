@@ -6,13 +6,16 @@ public class NegocioException : Exception
 {
     public NegocioException(string mensagem, int statusCode = 601) : base(mensagem)
     {
+        Mensagens = new List<string>();
         StatusCode = statusCode;
     }
 
-    public NegocioException(string mensagem, HttpStatusCode statusCode) : base(mensagem)
+    public NegocioException(List<string> mensagens, int statusCode = 601)
     {
-        StatusCode = (int)statusCode;
+        Mensagens = mensagens;
+        StatusCode = statusCode;
     }
 
     public int StatusCode { get; }
+    public List<string> Mensagens { get; }
 }

@@ -7,6 +7,7 @@ using SME.CDEP.TesteIntegracao.ServicosFakes;
 using SME.CDEP.TesteIntegracao.Setup;
 using SME.CDEP.Aplicacao.Integracoes.Interfaces;
 using SME.CDEP.Infra.Dominio.Enumerados;
+using SME.CDEP.TesteIntegracao.Constantes;
 using Xunit;
 
 namespace SME.CDEP.TesteIntegracao.Usuario
@@ -19,35 +20,34 @@ namespace SME.CDEP.TesteIntegracao.Usuario
         [Fact(DisplayName = "Usuário - Ao autenticar um usuário novo, deve cadastrá-lo")]
         public async Task AutenticarUsuarioNovo()
         {
-            var usuario = await GetServicoUsuario().Autenticar("login_10","teste");
+            CriarClaimUsuario();
+            
+            var usuario = await GetServicoUsuario().Autenticar(ConstantesTestes.LOGIN_99999999999,string.Empty);
             usuario.ShouldNotBeNull();
             
-            var usuarios = ObterTodos<Dominio.Dominios.Usuario>();
-            usuarios.FirstOrDefault(f => f.Login.Equals("login_10"));
+            var usuarios = ObterTodos<Dominio.Entidades.Usuario>();
+            usuarios.Any(f => f.Login.Equals(ConstantesTestes.LOGIN_99999999999)).ShouldBeTrue();
         }
         
         [Fact(DisplayName = "Usuário - Ao autenticar um usuário existente, deve atualizar a data de login")]
         public async Task AutenticarUsuarioExistente()
         {
-            await InserirNaBase(new Dominio.Dominios.Usuario()
-            {
-                Login = "login_1",
-                Nome = "Usuário do Login_1",
-                UltimoLogin = DateTime.Now.AddDays(-5),
-                CriadoPor = "Sistema", CriadoEm = DateTime.Now, CriadoLogin = "Sistema"
-            });
+            CriarClaimUsuario();
             
-            var usuario = await GetServicoUsuario().Autenticar("login_1","teste");
+            await InserirNaBase(new Dominio.Entidades.Usuario()
+            {
+                Login = ConstantesTestes.LOGIN_99999999999,
+                Nome = ConstantesTestes.USUARIO_INTERNO_99999999999,
+                UltimoLogin = DateTimeExtension.HorarioBrasilia().Date.AddDays(-5),
+                CriadoLogin = ConstantesTestes.SISTEMA, CriadoPor = ConstantesTestes.SISTEMA, CriadoEm = DateTimeExtension.HorarioBrasilia().Date
+            });
+           
+            var usuario = await GetServicoUsuario().Autenticar(ConstantesTestes.LOGIN_99999999999,string.Empty);
             usuario.ShouldNotBeNull();
             
-            var usuarios = ObterTodos<Dominio.Dominios.Usuario>();
-            usuarios.FirstOrDefault(f => f.Login.Equals("login_1"));
-            usuarios.FirstOrDefault(f => f.UltimoLogin.Date == DateTime.Now.Date);
-        }
-
-        private IServicoUsuario GetServicoUsuario()
-        {
-            return ServiceProvider.GetService<IServicoUsuario>();
+            var usuarios = ObterTodos<Dominio.Entidades.Usuario>();
+            usuarios.Any(f => f.Login.Equals(ConstantesTestes.LOGIN_99999999999)).ShouldBeTrue();;
+            // usuarios.FirstOrDefault(f => f.UltimoLogin.Date == DateTimeExtension.HorarioBrasilia().Date);
         }
     }
 }

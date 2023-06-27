@@ -1,10 +1,10 @@
 ﻿using SME.CDEP.Aplicacao.DTOS;
-using SME.CDEP.Dominio.Dominios;
 
 namespace SME.CDEP.Aplicacao.Servicos.Interface
 {
-    public interface IServicoPerfilUsuario
+    public interface IServicoPerfilUsuario : IServicoAplicacao
     {
         Task<RetornoPerfilUsuarioDTO> ObterPerfisUsuario(string login);
+        Task<bool> VincularPerfilExternoCoreSSO(string login, Guid perfilId);
     }
 }

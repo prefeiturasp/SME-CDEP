@@ -1,11 +1,13 @@
 ﻿using System.Text.RegularExpressions;
+using AutoMapper;
 using SME.CDEP.Aplicacao.DTOS;
 using SME.CDEP.Aplicacao.Servicos.Interface;
 using SME.CDEP.Dominio.Constantes;
-using SME.CDEP.Dominio.Dominios;
+using SME.CDEP.Dominio.Entidades;
 using SME.CDEP.Dominio.Excecoes;
 using SME.CDEP.Infra.Dados.Repositorios.Interfaces;
 using SME.CDEP.Aplicacao.Integracoes.Interfaces;
+using SME.CDEP.Infra.Dominio.Enumerados;
 
 namespace SME.CDEP.Aplicacao.Servicos
 {
@@ -13,64 +15,46 @@ namespace SME.CDEP.Aplicacao.Servicos
     {
         private readonly IRepositorioUsuario repositorioUsuario;
         private readonly IServicoAcessos servicoAcessos;
+        private readonly IMapper mapper;
         
-        public ServicoUsuario(IRepositorioUsuario repositorioUsuario,IServicoAcessos servicoAcessos) 
+        public ServicoUsuario(IRepositorioUsuario repositorioUsuario,IServicoAcessos servicoAcessos, IMapper mapper) 
         {
             this.repositorioUsuario = repositorioUsuario ?? throw new ArgumentNullException(nameof(repositorioUsuario));
             this.servicoAcessos = servicoAcessos ?? throw new ArgumentNullException(nameof(servicoAcessos));
+            this.mapper = mapper ?? throw new ArgumentNullException(nameof(mapper));
         }
 
         public async Task<long> Inserir(UsuarioDTO usuarioDto)
         {
-            var usuario = new Usuario()
-            {
-                CriadoEm = DateTime.Now,
-                CriadoPor = "Teste",
-                CriadoLogin = "Teste",
-                Login = usuarioDto.Login,
-                Nome = usuarioDto.Nome,
-            }; 
-
+            var usuario = mapper.Map<Usuario>(usuarioDto);
             return await repositorioUsuario.Inserir(usuario);
         }
 
-        public async Task<IList<Usuario>> ObterTodos()
+        public async Task<IList<UsuarioDTO>> ObterTodos()
         {
-            return await repositorioUsuario.ObterTodos();
+            return (await repositorioUsuario.ObterTodos()).ToList().Select(s=> mapper.Map<UsuarioDTO>(s)).ToList();
         }
 
-        public async Task<Usuario> Alterar(UsuarioDTO usuarioDto)
+        public async Task<UsuarioDTO> Alterar(UsuarioDTO usuarioDTO)
         {
-            var usuario = new Usuario()
-            {
-                CriadoEm = DateTime.Now,
-                CriadoPor = "Teste",
-                CriadoLogin = "Teste",
-                Login = usuarioDto.Login,
-                Nome = usuarioDto.Nome,
-                AlteradoEm = DateTime.Now,
-                AlteradoPor = "Teste Alterado",
-                AlteradoLogin = "Teste Alterado",
-                Id = usuarioDto.Id,
-            };
-
-            return await repositorioUsuario.Atualizar(usuario);
+            var usuario = mapper.Map<Usuario>(usuarioDTO);
+            return mapper.Map<UsuarioDTO>(await repositorioUsuario.Atualizar(usuario));
         }
 
-        public async Task<Usuario> ObterPorId(long usuarioId)
+        public async Task<UsuarioDTO> ObterPorId(long usuarioId)
         {
-            return await repositorioUsuario.ObterPorId(usuarioId);
+            return mapper.Map<UsuarioDTO>(await repositorioUsuario.ObterPorId(usuarioId));
         }
         
-        public async Task<Usuario> ObterPorLogin(string login)
+        public async Task<UsuarioDTO> ObterPorLogin(string login)
         {
-            return await repositorioUsuario.ObterPorLogin(login);
+            return mapper.Map<UsuarioDTO>(await repositorioUsuario.ObterPorLogin(login));
         }
 
         public async Task<bool> CadastrarUsuarioExterno(UsuarioExternoDTO usuarioExternoDto)
         {
             usuarioExternoDto.Cpf = usuarioExternoDto.Cpf.Replace(".","").Replace("-","");
-            ValidarSenha(usuarioExternoDto);
+            ValidarSenha(usuarioExternoDto.Senha, usuarioExternoDto.ConfirmarSenha);
             
             var usuarioAcervo = await ObterPorLogin(usuarioExternoDto.Cpf);
             if (usuarioAcervo != null)
@@ -87,8 +71,7 @@ namespace SME.CDEP.Aplicacao.Servicos
                 
             var retorno = await repositorioUsuario.Inserir(new Usuario()
             {
-                CriadoEm = DateTime.Now, CriadoPor = usuarioExternoDto.Nome, CriadoLogin = usuarioExternoDto.Cpf,
-                Login = usuarioExternoDto.Cpf, Nome = usuarioExternoDto.Nome, UltimoLogin = DateTime.Now,
+                Login = usuarioExternoDto.Cpf, Nome = usuarioExternoDto.Nome, UltimoLogin = DateTimeExtension.HorarioBrasilia().Date,
                 Telefone = usuarioExternoDto.Telefone, Endereco = usuarioExternoDto.Endereco, Numero = usuarioExternoDto.Numero,
                 Complemento = usuarioExternoDto.Complemento, Cidade = usuarioExternoDto.Cidade, Estado = usuarioExternoDto.Estado,
                 Cep = usuarioExternoDto.Cep, TipoUsuario = usuarioExternoDto.TipoUsuario, Bairro = usuarioExternoDto.Bairro
@@ -96,35 +79,113 @@ namespace SME.CDEP.Aplicacao.Servicos
 
             return retorno != 0;
         }
-
-        private bool ValidarSenha(UsuarioExternoDTO usuarioExternoDto)
+        
+        public async Task<DadosUsuarioDTO> ObterMeusDados(string login)
         {
-            if (!usuarioExternoDto.Senha.Equals(usuarioExternoDto.ConfirmarSenha))
-                throw new NegocioException(MensagemNegocio.CONFIRMACAO_SENHA_DEVE_SER_IGUAL_A_SENHA);
+            var dadosUsuarioCoreSSO = await servicoAcessos.ObterMeusDados(login);
+
+            var dadosusuarioAcervo = await repositorioUsuario.ObterPorLogin(login);
+            if (dadosusuarioAcervo.EhCadastroExterno())
+            {
+                dadosUsuarioCoreSSO.Telefone = dadosusuarioAcervo.Telefone;
+                dadosUsuarioCoreSSO.Endereco = dadosusuarioAcervo.Endereco;
+                dadosUsuarioCoreSSO.Numero = dadosusuarioAcervo.Numero.ToString();
+                dadosUsuarioCoreSSO.Complemento = dadosusuarioAcervo.Complemento;
+                dadosUsuarioCoreSSO.Bairro = dadosusuarioAcervo.Bairro;
+                dadosUsuarioCoreSSO.Cep = dadosusuarioAcervo.Cep;
+                dadosUsuarioCoreSSO.Cidade = dadosusuarioAcervo.Cidade;
+                dadosUsuarioCoreSSO.Estado = dadosusuarioAcervo.Estado;
+            }
+            return dadosUsuarioCoreSSO;
+        }
+
+        public async Task<bool> AlterarSenha(string login, string senhaAtual, string senhaNova, string confirmarSenha)
+        {
+            ValidarSenha(senhaNova, confirmarSenha);
+            var retorno = await servicoAcessos.AlterarSenha(login, senhaAtual, senhaNova);
             
-            if (usuarioExternoDto.Senha.Length < 8)
-                throw new NegocioException(MensagemNegocio.A_SENHA_DEVE_TER_NO_MÍNIMO_8_CARACTERES);
+            if (!retorno)
+                throw new NegocioException(MensagemNegocio.LOGIN_OU_SENHA_ATUAL_NAO_COMFEREM);
+            
+            return retorno;
+        }
 
-            if (usuarioExternoDto.Senha.Length > 12)
-                throw new NegocioException(MensagemNegocio.A_SENHA_DEVE_TER_NO_MÁXIMO_12_CARACTERES);
+        public Task<bool> AlterarEmail(string login, string email)
+        {
+            var retorno = servicoAcessos.AlterarEmail(login, email);
+            
+            return retorno;
+        }
 
-            if (usuarioExternoDto.Senha.Contains(" "))
-                throw new NegocioException(MensagemNegocio.A_SENHA_NAO_PODE_CONTER_ESPACOS_EM_BRANCO);
+        public async Task<bool> AlterarEndereco(string login, EnderecoUsuarioExternoDTO enderecoUsuarioExternoDto)
+        {
+            var usuario = await repositorioUsuario.ObterPorLogin(login);
+            
+            ValidarUsuarioExterno(usuario);
+                
+            usuario.Endereco = enderecoUsuarioExternoDto.Endereco;
+            usuario.Numero = enderecoUsuarioExternoDto.Numero;
+            usuario.Complemento = enderecoUsuarioExternoDto.Complemento;
+            usuario.Cidade = enderecoUsuarioExternoDto.Cidade;
+            usuario.Estado = enderecoUsuarioExternoDto.Estado;
+            usuario.Cep = enderecoUsuarioExternoDto.Cep;
+            usuario.Bairro = enderecoUsuarioExternoDto.Bairro;
+            await repositorioUsuario.Atualizar(usuario);
+            
+            return true;
+        }
+        
+        public async Task<bool> AlterarTelefone(string login, string telefone)
+        {
+            var usuario = await repositorioUsuario.ObterPorLogin(login);
+            
+            ValidarUsuarioExterno(usuario);
+            
+            usuario.Telefone = telefone;
+            await repositorioUsuario.Atualizar(usuario);
+            
+            return true;
+        }
+
+        private void ValidarUsuarioExterno(Usuario usuario)
+        {
+            if (usuario == null)
+                throw new NegocioException(MensagemNegocio.LOGIN_NAO_ENCONTRADO);
+
+            if (!usuario.EhCadastroExterno())
+                throw new NegocioException(MensagemNegocio.SO_EH_PERMITIDO_ALTERAR_ENDERECO_TELEFONE_DE_USUARIOS_EXTERNOS);
+        }
+
+        private void ValidarSenha(string senhaNova, string confirmarSenha)
+        {
+            var erros = new List<string>();
+            
+            if (!senhaNova.Equals(confirmarSenha))
+                erros.Add(MensagemNegocio.CONFIRMACAO_SENHA_DEVE_SER_IGUAL_A_SENHA);
+            
+            if (senhaNova.Length < 8)
+                erros.Add(MensagemNegocio.A_SENHA_DEVE_TER_NO_MÍNIMO_8_CARACTERES);
+
+            if (senhaNova.Length > 12)
+                erros.Add(MensagemNegocio.A_SENHA_DEVE_TER_NO_MÁXIMO_12_CARACTERES);
+
+            if (senhaNova.Contains(" "))
+                erros.Add(MensagemNegocio.A_SENHA_NAO_PODE_CONTER_ESPACOS_EM_BRANCO);
 
             var regexSenha = new Regex(@"^(?=.*[a-z])(?=.*[A-Z])(?=.*\d|\W)[^áàâãéèêíïóôõöúçñÁÀÂÃÉÈÊÍÏÓÔÕÖÚÇÑ]{8,12}$");
 
-            if (!regexSenha.IsMatch(usuarioExternoDto.Senha))
-                throw new NegocioException(MensagemNegocio.A_SENHA_DEVE_CONTER_SOMENTE);
+            if (!regexSenha.IsMatch(senhaNova))
+                erros.Add(MensagemNegocio.A_SENHA_DEVE_CONTER_SOMENTE);
 
-            return true;
+            if (erros.Any())
+                throw new NegocioException(erros);
         }
 
         public async Task<UsuarioAutenticacaoRetornoDTO> Autenticar(string login, string senha)
         {
             var retorno = await servicoAcessos.Autenticar(login, senha);
 
-            if (retorno != null)
-                await ManutencaoUsuario(login, retorno);
+            await ManutencaoUsuario(login, retorno);
             
             return retorno;
         }
@@ -134,7 +195,7 @@ namespace SME.CDEP.Aplicacao.Servicos
             var usuario = await repositorioUsuario.ObterPorLogin(login);
             if (usuario != null)
             {
-                usuario.UltimoLogin = DateTime.Now;
+                usuario.UltimoLogin = DateTimeExtension.HorarioBrasilia().Date;
                 usuario.Nome = retorno.Nome;
                 await repositorioUsuario.Atualizar(usuario);
             }
@@ -142,8 +203,7 @@ namespace SME.CDEP.Aplicacao.Servicos
             {
                 await repositorioUsuario.Inserir(new Usuario()
                 {
-                    CriadoEm = DateTime.Now, CriadoPor = retorno.Nome, CriadoLogin = retorno.Login,
-                    Login = retorno.Login, Nome = retorno.Nome, UltimoLogin = DateTime.Now,
+                    Login = retorno.Login, Nome = retorno.Nome, UltimoLogin = DateTimeExtension.HorarioBrasilia().Date,
                 });
             }
         }

@@ -13,9 +13,15 @@ namespace SME.CDEP.Aplicacao.Servicos
             this.servicoAcessos = servicoAcessos ?? throw new ArgumentNullException(nameof(servicoAcessos));
         }
         
-        public async Task<RetornoPerfilUsuarioDTO> ObterPerfisUsuario(string login)
+        public Task<RetornoPerfilUsuarioDTO> ObterPerfisUsuario(string login)
         {
-            var retorno = await servicoAcessos.ObterPerfisUsuario(login);
+            var retorno = servicoAcessos.ObterPerfisUsuario(login);
+            return retorno;
+        }
+
+        public Task<bool> VincularPerfilExternoCoreSSO(string login, Guid perfilId)
+        {
+            var retorno = servicoAcessos.VincularPerfilExternoCoreSSO(login, perfilId);
             return retorno;
         }
     }
