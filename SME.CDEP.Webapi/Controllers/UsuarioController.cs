@@ -27,7 +27,7 @@ public class UsuarioController: BaseController
     [ProducesResponseType(typeof(RetornoBaseDTO), 601)]
     [ProducesResponseType(typeof(DadosUsuarioDTO), 200)]  
     [Authorize("Bearer")]
-    public async Task<IActionResult> MeusDados(string login, [FromServices]IServicoUsuario servicoUsuario)
+    public async Task<IActionResult> MeusDados([FromRoute] string login, [FromServices]IServicoUsuario servicoUsuario)
     {
         var retorno = await servicoUsuario.ObterMeusDados(login);
 
@@ -39,7 +39,7 @@ public class UsuarioController: BaseController
     [ProducesResponseType(typeof(RetornoBaseDTO), 601)]
     [ProducesResponseType(typeof(bool), 200)]
     [Authorize("Bearer")]
-    public async Task<IActionResult> AlterarSenha(string login, string senhaAtual, string senhaNova, string confirmarSenha, [FromServices] IServicoUsuario servicoUsuario)
+    public async Task<IActionResult> AlterarSenha([FromRoute] string login, [FromBody] string senhaAtual, [FromBody] string senhaNova, [FromBody] string confirmarSenha, [FromServices] IServicoUsuario servicoUsuario)
     {
         var retorno = await servicoUsuario.AlterarSenha(login, senhaAtual, senhaNova, confirmarSenha);
        
@@ -51,7 +51,7 @@ public class UsuarioController: BaseController
     [ProducesResponseType(typeof(RetornoBaseDTO), 601)]
     [ProducesResponseType(typeof(bool), 200)]
     [Authorize("Bearer")]
-    public async Task<IActionResult> AlterarEmail(string login, string email, [FromServices] IServicoUsuario servicoUsuario)
+    public async Task<IActionResult> AlterarEmail([FromRoute] string login, [FromBody] string email, [FromServices] IServicoUsuario servicoUsuario)
     {
         var retorno = await servicoUsuario.AlterarEmail(login, email);
        
@@ -63,7 +63,7 @@ public class UsuarioController: BaseController
     [ProducesResponseType(typeof(RetornoBaseDTO), 601)]
     [ProducesResponseType(typeof(bool), 200)]
     [Authorize("Bearer")]
-    public async Task<IActionResult> AlterarEnderecoAcervo(string login, EnderecoUsuarioExternoDTO enderecoTelefoneUsuarioExternoDto, [FromServices] IServicoUsuario servicoUsuario)
+    public async Task<IActionResult> AlterarEnderecoAcervo([FromRoute] string login, [FromBody] EnderecoUsuarioExternoDTO enderecoTelefoneUsuarioExternoDto, [FromServices] IServicoUsuario servicoUsuario)
     {
         var retorno = await servicoUsuario.AlterarEndereco(login, enderecoTelefoneUsuarioExternoDto);
        
@@ -75,7 +75,7 @@ public class UsuarioController: BaseController
     [ProducesResponseType(typeof(RetornoBaseDTO), 601)]
     [ProducesResponseType(typeof(bool), 200)]
     [Authorize("Bearer")]
-    public async Task<IActionResult> AlterarTelefoneAcervo(string login, [FromBody] string telefone, [FromServices] IServicoUsuario servicoUsuario)
+    public async Task<IActionResult> AlterarTelefoneAcervo([FromRoute] string login, [FromBody] string telefone, [FromServices] IServicoUsuario servicoUsuario)
     {
         var retorno = await servicoUsuario.AlterarTelefone(login,telefone);
        
