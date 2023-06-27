@@ -128,5 +128,22 @@ namespace SME.CDEP.Aplicacao.Servicos
                 });
             }
         }
+        
+        public Task<string> SolicitarRecuperacaoSenha(string login)
+        {
+            var loginRecuperar = login.Replace(" ", "");
+            return servicoAcessos.SolicitarRecuperacaoSenha(loginRecuperar);
+        }
+
+        public Task<bool> TokenRecuperacaoSenhaEstaValido(Guid token)
+        {
+            return servicoAcessos.TokenRecuperacaoSenhaEstaValido(token);
+        }
+
+        public async Task<UsuarioAutenticacaoRetornoDTO> AlterarSenhaComTokenRecuperacao(RecuperacaoSenhaDto recuperacaoSenhaDto)
+        {
+            var login = await servicoAcessos.AlterarSenhaComTokenRecuperacao(recuperacaoSenhaDto);
+            return await Autenticar(login, recuperacaoSenhaDto.NovaSenha);
+        }
     }
 }

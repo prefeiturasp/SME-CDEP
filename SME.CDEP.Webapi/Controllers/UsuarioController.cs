@@ -20,33 +20,33 @@ public class UsuarioController: BaseController
         return Ok(await servicoUsuario.CadastrarUsuarioExterno(usuarioExternoDto));
     }
     
-    [HttpPost("solicitar-recuperacao-senha")] //Esses métodos no SGP são no AutenticarController
+    [HttpPost("solicitar-recuperacao-senha")] 
     [ProducesResponseType(typeof(string), 200)]
     [ProducesResponseType(typeof(RetornoBaseDTO), 400)]
     [ProducesResponseType(typeof(RetornoBaseDTO), 601)]
     [AllowAnonymous]
-    public async Task<IActionResult> SolicitarRecuperacaoSenha(string login, [FromServices] IServicoRecuperacaoSenha servicoRecuperacaoSenha)
+    public async Task<IActionResult> SolicitarRecuperacaoSenha(string login, [FromServices] IServicoUsuario servicoUsuario)
     {
-        return Ok(await servicoRecuperacaoSenha.SolicitarRecuperacaoSenha(login));
+        return Ok(await servicoUsuario.SolicitarRecuperacaoSenha(login));
     }
     
-    [HttpGet("valida-token-recuperacao-senha/{token}")] //Esses métodos no SGP são no AutenticarController
+    [HttpGet("valida-token-recuperacao-senha/{token}")] 
     [ProducesResponseType(typeof(bool), 200)]
     [ProducesResponseType(typeof(RetornoBaseDTO), 400)]
     [ProducesResponseType(typeof(RetornoBaseDTO), 601)]
     [AllowAnonymous]
-    public async Task<IActionResult> TokenRecuperacaoSenhaEstaValidoAsync(Guid token, [FromServices] IServicoRecuperacaoSenha servicoRecuperacaoSenha)
+    public async Task<IActionResult> TokenRecuperacaoSenhaEstaValidoAsync(Guid token, [FromServices] IServicoUsuario servicoUsuario)
     {
-        return Ok(await servicoRecuperacaoSenha.TokenRecuperacaoSenhaEstaValido(token));
+        return Ok(await servicoUsuario.TokenRecuperacaoSenhaEstaValido(token));
     }
     
-    [HttpPost("recuperar-senha")] //Esses métodos no SGP são no AutenticarController
+    [HttpPost("recuperar-senha")] 
     [ProducesResponseType(typeof(UsuarioAutenticacaoRetornoDTO), 200)]
     [ProducesResponseType(typeof(RetornoBaseDTO), 400)]
     [ProducesResponseType(typeof(RetornoBaseDTO), 601)]
     [AllowAnonymous]
-    public async Task<IActionResult> RecuperarSenha([FromForm]RecuperacaoSenhaDto recuperacaoSenhaDto, [FromServices] IServicoRecuperacaoSenha servicoRecuperacaoSenha)
+    public async Task<IActionResult> RecuperarSenha([FromForm]RecuperacaoSenhaDto recuperacaoSenhaDto, [FromServices] IServicoUsuario servicoUsuario)
     {
-        return Ok(await servicoRecuperacaoSenha.AlterarSenhaComTokenRecuperacao(recuperacaoSenhaDto));
+        return Ok(await servicoUsuario.AlterarSenhaComTokenRecuperacao(recuperacaoSenhaDto));
     }
 }

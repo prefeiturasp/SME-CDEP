@@ -103,7 +103,6 @@ public class RegistradorDeDependencia
     protected virtual void RegistrarServicos()
     {
         _serviceCollection.TryAddScoped<IServicoUsuario, ServicoUsuario>();
-        _serviceCollection.TryAddScoped<IServicoRecuperacaoSenha, ServicoRecuperacaoSenha>();
         _serviceCollection.TryAddScoped<IServicoPerfilUsuario, ServicoPerfilUsuario>();
         _serviceCollection.TryAddScoped<IServicoAcessos, ServicoAcessos>();
     }

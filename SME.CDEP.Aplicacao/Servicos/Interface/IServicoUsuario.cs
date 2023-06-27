@@ -12,5 +12,8 @@ namespace SME.CDEP.Aplicacao.Servicos.Interface
         Task<UsuarioAutenticacaoRetornoDTO> Autenticar(string login, string senha);
         Task<UsuarioDTO> ObterPorLogin(string login);
         Task<bool> CadastrarUsuarioExterno(UsuarioExternoDTO usuarioExternoDto);
+        Task<string> SolicitarRecuperacaoSenha(string login);
+        Task<bool> TokenRecuperacaoSenhaEstaValido(Guid token);
+        Task<UsuarioAutenticacaoRetornoDTO?> AlterarSenhaComTokenRecuperacao(RecuperacaoSenhaDto recuperacaoSenhaDto);
     }
 }
