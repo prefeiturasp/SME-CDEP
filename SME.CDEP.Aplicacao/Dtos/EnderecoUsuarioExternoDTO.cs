@@ -5,7 +5,6 @@ namespace SME.CDEP.Aplicacao.DTOS
 {
     public class EnderecoUsuarioExternoDTO
     {
-        public string Telefone { get; set; }
         public string Endereco { get; set; }
         public string? Complemento { get; set; }
         public int Numero { get; set; }
