@@ -42,6 +42,12 @@ builder.Services.AddSingleton(registradorDeDependencia);
 
 var app = builder.Build();
 
+app.UseCors(config => config
+    .AllowAnyMethod()
+    .AllowAnyHeader()
+    .SetIsOriginAllowed(origin => true) // allow any origin
+    .AllowCredentials());
+
 app.UseElasticApm(builder.Configuration,
     new SqlClientDiagnosticSubscriber(),
     new HttpDiagnosticsSubscriber());
@@ -51,7 +57,6 @@ app.UseTratamentoExcecoesGlobalMiddleware();
 // Configure the HTTP request pipeline.
 app.UseSwagger();
 app.UseSwaggerUI();
-
 
 app.UseHttpsRedirection();
 
