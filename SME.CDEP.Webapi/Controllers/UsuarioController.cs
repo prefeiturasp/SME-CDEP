@@ -51,9 +51,9 @@ public class UsuarioController: BaseController
     [ProducesResponseType(typeof(RetornoBaseDTO), 601)]
     [ProducesResponseType(typeof(bool), 200)]
     [Authorize("Bearer")]
-    public async Task<IActionResult> AlterarEmail([FromRoute] string login, string email, [FromServices] IServicoUsuario servicoUsuario)
+    public async Task<IActionResult> AlterarEmail([FromRoute] string login, [FromBody] EmailUsuarioDTO emailUsuarioDto, [FromServices] IServicoUsuario servicoUsuario)
     {
-        var retorno = await servicoUsuario.AlterarEmail(login, email);
+        var retorno = await servicoUsuario.AlterarEmail(login, emailUsuarioDto.Email);
        
         return Ok(retorno);
     }
@@ -75,9 +75,9 @@ public class UsuarioController: BaseController
     [ProducesResponseType(typeof(RetornoBaseDTO), 601)]
     [ProducesResponseType(typeof(bool), 200)]
     [Authorize("Bearer")]
-    public async Task<IActionResult> AlterarTelefoneAcervo([FromRoute] string login, string telefone, [FromServices] IServicoUsuario servicoUsuario)
+    public async Task<IActionResult> AlterarTelefoneAcervo([FromRoute] string login, [FromBody] TelefoneUsuarioExternoDTO telefoneUsuarioExternoDto, [FromServices] IServicoUsuario servicoUsuario)
     {
-        var retorno = await servicoUsuario.AlterarTelefone(login,telefone);
+        var retorno = await servicoUsuario.AlterarTelefone(login,telefoneUsuarioExternoDto.Telefone);
        
         return Ok(retorno);
     }
