@@ -16,12 +16,14 @@ namespace SME.CDEP.Aplicacao.Servicos
         private readonly IRepositorioUsuario repositorioUsuario;
         private readonly IServicoAcessos servicoAcessos;
         private readonly IMapper mapper;
+        private readonly IServicoPerfilUsuario servicoPerfilUsuario;
         
-        public ServicoUsuario(IRepositorioUsuario repositorioUsuario,IServicoAcessos servicoAcessos, IMapper mapper) 
+        public ServicoUsuario(IRepositorioUsuario repositorioUsuario,IServicoAcessos servicoAcessos, IMapper mapper,IServicoPerfilUsuario servicoPerfilUsuario) 
         {
             this.repositorioUsuario = repositorioUsuario ?? throw new ArgumentNullException(nameof(repositorioUsuario));
             this.servicoAcessos = servicoAcessos ?? throw new ArgumentNullException(nameof(servicoAcessos));
             this.mapper = mapper ?? throw new ArgumentNullException(nameof(mapper));
+            this.servicoPerfilUsuario = servicoPerfilUsuario ?? throw new ArgumentNullException(nameof(servicoPerfilUsuario));
         }
 
         public async Task<long> Inserir(UsuarioIdNomeLoginDTO usuarioIdNomeLoginDto)
@@ -140,10 +142,10 @@ namespace SME.CDEP.Aplicacao.Servicos
             return servicoAcessos.TokenRecuperacaoSenhaEstaValido(token);
         }
 
-        public async Task<UsuarioAutenticacaoRetornoDTO> AlterarSenhaComTokenRecuperacao(RecuperacaoSenhaDto recuperacaoSenhaDto)
+        public async Task<RetornoPerfilUsuarioDTO> AlterarSenhaComTokenRecuperacao(RecuperacaoSenhaDto recuperacaoSenhaDto)
         {
             var login = await servicoAcessos.AlterarSenhaComTokenRecuperacao(recuperacaoSenhaDto);
-            return await Autenticar(login, recuperacaoSenhaDto.NovaSenha);
+            return await servicoPerfilUsuario.ObterPerfisUsuario(login);
         }
     }
 }

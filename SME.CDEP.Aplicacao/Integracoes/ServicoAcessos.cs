@@ -78,7 +78,6 @@ namespace SME.CDEP.Aplicacao.Integracoes
         public async Task<string> SolicitarRecuperacaoSenha(string login)
         {
             var resposta = await httpClient.GetAsync($"v1/usuarios/{login}/sistemas/{Sistema_Cdep}/recuperar-senha");
-            //var resposta = await httpClient.PostAsync($"v1/autenticacao/RecuperarSenha/usuario?sistema=1", new StringContent(parametros, Encoding.UTF8, "application/json-patch+json"));
 
             if (!resposta.IsSuccessStatusCode) return string.Empty;
 
@@ -89,7 +88,6 @@ namespace SME.CDEP.Aplicacao.Integracoes
         public async Task<bool> TokenRecuperacaoSenhaEstaValido(Guid token)
         {
             var resposta = await httpClient.GetAsync($"v1/usuarios/{token}/sistemas/{Sistema_Cdep}/validar");
-            //var resposta = await httpClient.PostAsync($"v1/autenticacao/RecuperarSenha/token/validar", new StringContent(parametros, Encoding.UTF8, "application/json-patch+json"));
 
             if (!resposta.IsSuccessStatusCode) return false;
 
@@ -99,10 +97,9 @@ namespace SME.CDEP.Aplicacao.Integracoes
 
         public async Task<string> AlterarSenhaComTokenRecuperacao(RecuperacaoSenhaDto recuperacaoSenhaDto)
         {
-            var parametros = JsonConvert.SerializeObject(new { token = recuperacaoSenhaDto.Token.ToString(), senha = recuperacaoSenhaDto.NovaSenha });
+            var parametros = JsonConvert.SerializeObject(new { token = recuperacaoSenhaDto.Token, senha = recuperacaoSenhaDto.NovaSenha });
             
-            var resposta = await httpClient.PutAsync($"v1/usuarios/senha", new StringContent(parametros, Encoding.UTF8, "application/json-patch+json"));
-            //var resposta = await httpClient.PostAsync($"v1/autenticacao/AlterarSenha/", new FormUrlEncodedContent(valoresParaEnvio));
+            var resposta = await httpClient.PutAsync($"v1/usuarios/sistemas/{Sistema_Cdep}/senha", new StringContent(parametros, Encoding.UTF8, "application/json-patch+json"));
 
             if (!resposta.IsSuccessStatusCode) return string.Empty;
 

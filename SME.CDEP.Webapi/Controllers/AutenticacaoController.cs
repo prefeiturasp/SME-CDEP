@@ -36,11 +36,6 @@ public class AutenticacaoController: BaseController
     {
         var retorno = await servicoPerfilUsuario.ObterPerfisUsuario(login);
 
-        if (retorno.PerfilUsuario == null)
-        {
-            await servicoPerfilUsuario.VincularPerfilExternoCoreSSO(login,new Guid(Constantes.PERFIL_EXTERNO_GUID));
-            retorno = await servicoPerfilUsuario.ObterPerfisUsuario(login);
-        }
         return Ok(retorno);
     }
 }
