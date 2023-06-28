@@ -39,9 +39,9 @@ public class UsuarioController: BaseController
     [ProducesResponseType(typeof(RetornoBaseDTO), 601)]
     [ProducesResponseType(typeof(bool), 200)]
     [Authorize("Bearer")]
-    public async Task<IActionResult> AlterarSenha([FromRoute] string login, [FromBody] string senhaAtual, [FromBody] string senhaNova, [FromBody] string confirmarSenha, [FromServices] IServicoUsuario servicoUsuario)
+    public async Task<IActionResult> AlterarSenha([FromRoute] string login, [FromBody] AlterarSenhaUsuarioDTO alterarSenhaUsuarioDto, [FromServices] IServicoUsuario servicoUsuario)
     {
-        var retorno = await servicoUsuario.AlterarSenha(login, senhaAtual, senhaNova, confirmarSenha);
+        var retorno = await servicoUsuario.AlterarSenha(login, alterarSenhaUsuarioDto);
        
         return Ok(retorno);
     }
