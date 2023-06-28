@@ -12,9 +12,10 @@ namespace SME.CDEP.Webapi.Controllers;
 public class UsuarioController: BaseController
 {
     [HttpPost]
-    [ProducesResponseType(typeof(RetornoBaseDTO), 400)]
-    [ProducesResponseType(typeof(RetornoBaseDTO), 601)]
     [ProducesResponseType(typeof(UsuarioExternoDTO), 200)]
+    [ProducesResponseType(typeof(RetornoBaseDTO), 400)]
+    [ProducesResponseType(typeof(RetornoBaseDTO), 500)]
+    [ProducesResponseType(typeof(RetornoBaseDTO), 601)]
     public async Task<IActionResult> CadastrarUsuarioExterno(UsuarioExternoDTO usuarioExternoDto, [FromServices] IServicoUsuario servicoUsuario)
     {
         return Ok(await servicoUsuario.CadastrarUsuarioExterno(usuarioExternoDto));
@@ -23,6 +24,7 @@ public class UsuarioController: BaseController
     [HttpPost("{login}/solicitar-recuperacao-senha")] 
     [ProducesResponseType(typeof(string), 200)]
     [ProducesResponseType(typeof(RetornoBaseDTO), 400)]
+    [ProducesResponseType(typeof(RetornoBaseDTO), 500)]
     [AllowAnonymous]
     public async Task<IActionResult> SolicitarRecuperacaoSenha([FromRoute] string login, [FromServices] IServicoUsuario servicoUsuario)
     {
@@ -32,6 +34,7 @@ public class UsuarioController: BaseController
     [HttpGet("valida-token-recuperacao-senha/{token}")] 
     [ProducesResponseType(typeof(bool), 200)]
     [ProducesResponseType(typeof(RetornoBaseDTO), 400)]
+    [ProducesResponseType(typeof(RetornoBaseDTO), 500)]
     [AllowAnonymous]
     public async Task<IActionResult> TokenRecuperacaoSenhaEstaValidoAsync([FromRoute] Guid token, [FromServices] IServicoUsuario servicoUsuario)
     {
@@ -41,6 +44,7 @@ public class UsuarioController: BaseController
     [HttpPut("recuperar-senha")] 
     [ProducesResponseType(typeof(RetornoPerfilUsuarioDTO), 200)]
     [ProducesResponseType(typeof(RetornoBaseDTO), 400)]
+    [ProducesResponseType(typeof(RetornoBaseDTO), 500)]
     [ProducesResponseType(typeof(RetornoBaseDTO), 601)]
     [AllowAnonymous]
     public async Task<IActionResult> RecuperarSenha([FromForm]RecuperacaoSenhaDto recuperacaoSenhaDto, [FromServices] IServicoUsuario servicoUsuario)
