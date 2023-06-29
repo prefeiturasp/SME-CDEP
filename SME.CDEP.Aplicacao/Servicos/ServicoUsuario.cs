@@ -95,6 +95,7 @@ namespace SME.CDEP.Aplicacao.Servicos
                 dadosUsuarioCoreSSO.Cep = dadosusuarioAcervo.Cep;
                 dadosUsuarioCoreSSO.Cidade = dadosusuarioAcervo.Cidade;
                 dadosUsuarioCoreSSO.Estado = dadosusuarioAcervo.Estado;
+                dadosUsuarioCoreSSO.Tipo = (int)dadosusuarioAcervo.TipoUsuario;
             }
             return dadosUsuarioCoreSSO;
         }
