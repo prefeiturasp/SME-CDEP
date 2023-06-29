@@ -63,8 +63,5 @@ namespace SME.CDEP.TesteIntegracao.Setup
         }
         protected override void RegistrarHttpClients()
         {}
-
-        protected virtual void RegistrarLogs()
-        { }
     }
 }

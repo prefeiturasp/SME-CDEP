@@ -61,7 +61,6 @@ app.UseTratamentoExcecoesGlobalMiddleware();
 app.UseSwagger();
 app.UseSwaggerUI();
 
-
 app.UseHttpsRedirection();
 
 app.UseAuthorization();
