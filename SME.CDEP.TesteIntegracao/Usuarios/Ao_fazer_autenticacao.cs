@@ -33,8 +33,8 @@ namespace SME.CDEP.TesteIntegracao.Usuario
             {
                 Login = "login_1",
                 Nome = "Usuário do Login_1",
-                UltimoLogin = DateTimeExtension.HorarioBrasilia().Date.AddDays(-5),
-                CriadoLogin = SISTEMA, CriadoPor = SISTEMA, CriadoEm = DateTimeExtension.HorarioBrasilia().Date
+                UltimoLogin = DateTimeExtension.HorarioBrasilia().AddDays(-5),
+                CriadoLogin = SISTEMA, CriadoPor = SISTEMA, CriadoEm = DateTimeExtension.HorarioBrasilia()
             });
             
             var usuario = await GetServicoUsuario().Autenticar("login_1","teste");
@@ -42,7 +42,7 @@ namespace SME.CDEP.TesteIntegracao.Usuario
             
             var usuarios = ObterTodos<Dominio.Entidades.Usuario>();
             usuarios.FirstOrDefault(f => f.Login.Equals("login_1"));
-            usuarios.FirstOrDefault(f => f.UltimoLogin.Date == DateTimeExtension.HorarioBrasilia().Date);
+            usuarios.FirstOrDefault(f => f.UltimoLogin.Value.Date == DateTimeExtension.HorarioBrasilia());
         }
 
         private IServicoUsuario GetServicoUsuario()

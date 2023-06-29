@@ -73,7 +73,7 @@ namespace SME.CDEP.Aplicacao.Servicos
                 
             var retorno = await repositorioUsuario.Inserir(new Usuario()
             {
-                Login = usuarioExternoDto.Cpf, Nome = usuarioExternoDto.Nome, UltimoLogin = DateTimeExtension.HorarioBrasilia().Date,
+                Login = usuarioExternoDto.Cpf, Nome = usuarioExternoDto.Nome,
                 Telefone = usuarioExternoDto.Telefone, Endereco = usuarioExternoDto.Endereco, Numero = usuarioExternoDto.Numero,
                 Complemento = usuarioExternoDto.Complemento, Cidade = usuarioExternoDto.Cidade, Estado = usuarioExternoDto.Estado,
                 Cep = usuarioExternoDto.Cep, TipoUsuario = usuarioExternoDto.TipoUsuario, Bairro = usuarioExternoDto.Bairro
@@ -118,7 +118,7 @@ namespace SME.CDEP.Aplicacao.Servicos
             var usuario = await repositorioUsuario.ObterPorLogin(login);
             if (usuario != null)
             {
-                usuario.UltimoLogin = DateTimeExtension.HorarioBrasilia().Date;
+                usuario.UltimoLogin = DateTimeExtension.HorarioBrasilia();
                 usuario.Nome = retorno.Nome;
                 await repositorioUsuario.Atualizar(usuario);
             }
@@ -126,7 +126,7 @@ namespace SME.CDEP.Aplicacao.Servicos
             {
                 await repositorioUsuario.Inserir(new Usuario()
                 {
-                    Login = retorno.Login, Nome = retorno.Nome, UltimoLogin = DateTimeExtension.HorarioBrasilia().Date,
+                    Login = retorno.Login, Nome = retorno.Nome, UltimoLogin = DateTimeExtension.HorarioBrasilia(),
                 });
             }
         }
