@@ -42,7 +42,7 @@ namespace SME.CDEP.TesteIntegracao.Usuario
             
             var usuarios = ObterTodos<Dominio.Entidades.Usuario>();
             usuarios.FirstOrDefault(f => f.Login.Equals("login_1"));
-            usuarios.FirstOrDefault(f => f.UltimoLogin.Value.Date == DateTimeExtension.HorarioBrasilia());
+            usuarios.FirstOrDefault(f => f.UltimoLogin.Value.Date == DateTimeExtension.HorarioBrasilia().Date);
         }
 
         private IServicoUsuario GetServicoUsuario()
