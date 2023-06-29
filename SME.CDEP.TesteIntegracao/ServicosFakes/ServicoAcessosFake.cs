@@ -34,4 +34,19 @@ public class ServicoAcessosFake: IServicoAcessos
     {
         return true;
     }
+
+    public Task<string> SolicitarRecuperacaoSenha(string login)
+    {
+        return Task.FromResult(string.Empty);
+    }
+
+    public Task<bool> TokenRecuperacaoSenhaEstaValido(Guid token)
+    {
+        return Task.FromResult(true);
+    }
+
+    public Task<string> AlterarSenhaComTokenRecuperacao(RecuperacaoSenhaDto recuperacaoSenhaDto)
+    {
+        return Task.FromResult(string.Empty);
+    }
 }

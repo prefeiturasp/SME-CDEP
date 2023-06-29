@@ -1,6 +1,7 @@
 ﻿using SME.CDEP.Aplicacao.DTOS;
 using SME.CDEP.Aplicacao.Servicos.Interface;
 using SME.CDEP.Aplicacao.Integracoes.Interfaces;
+using SME.CDEP.Dominio.Constantes;
 
 namespace SME.CDEP.Aplicacao.Servicos
 {
@@ -13,9 +14,16 @@ namespace SME.CDEP.Aplicacao.Servicos
             this.servicoAcessos = servicoAcessos ?? throw new ArgumentNullException(nameof(servicoAcessos));
         }
         
-        public Task<RetornoPerfilUsuarioDTO> ObterPerfisUsuario(string login)
+        public async Task<RetornoPerfilUsuarioDTO> ObterPerfisUsuario(string login)
         {
-            var retorno = servicoAcessos.ObterPerfisUsuario(login);
+            var retorno = await servicoAcessos.ObterPerfisUsuario(login);
+            
+            if (retorno.PerfilUsuario == null)
+            {
+                await VincularPerfilExternoCoreSSO(login,new Guid(Constantes.PERFIL_EXTERNO_GUID));
+                retorno = await ObterPerfisUsuario(login);
+            }
+            
             return retorno;
         }
 
