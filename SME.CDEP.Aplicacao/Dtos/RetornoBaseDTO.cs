@@ -15,9 +15,9 @@ namespace SME.CDEP.Aplicacao.DTOS;
             Mensagens = new List<string>();
         }
 
-        public RetornoBaseDTO(string mensagem)
+        public RetornoBaseDTO(List<string> mensagens)
         {
-            Mensagens = new List<string>() { mensagem };
+            Mensagens = mensagens;
         }
 
         
