@@ -3,8 +3,9 @@
 public class MensagemNegocio
 {
     public const string SO_EH_PERMITIDO_ALTERAR_ENDERECO_TELEFONE_DE_USUARIOS_EXTERNOS = "Só é permitido alterar endereço/telefone de usuários externos";
-    public const string LOGIN_NAO_ENCONTRADO = "Login não encontrado";
     public const string LOGIN_OU_SENHA_ATUAL_NAO_COMFEREM = "Login ou senha atual não conferem";
+    public const string LOGIN_NAO_ENCONTRADO = "Login não encontrado";
+    public const string AS_ORIENTAÇÕES_PARA_RECUPERAÇÃO_DE_SENHA_FORAM_ENVIADOS_PARA_EMAIL_VERIFIQUE_SUA_CAIXA_DE_ENTRADA = "As orientações para recuperação de senha foram enviados para {0}, verifique sua caixa de entrada!";
     public const string O_COMPLEMENTO_NAO_PODE_EXCEDER_20_CARACTERES = "O complemento não pode exceder 20 caracteres";
     public const string PERFIS_DO_USUARIO_NAO_LOCALIZADOS_VERIFIQUE_O_LOGIN = "Os perfis do usuário não foram localizados!Verifique o login.";
     public const string USUARIO_OU_SENHA_INVALIDOS = "Usuário ou senha inválidos";

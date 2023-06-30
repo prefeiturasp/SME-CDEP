@@ -211,10 +211,17 @@ namespace SME.CDEP.Aplicacao.Servicos
             }
         }
         
-        public Task<string> SolicitarRecuperacaoSenha(string login)
+        public async Task<string> SolicitarRecuperacaoSenha(string login)
         {
             var loginRecuperar = login.Replace(" ", "");
-            return servicoAcessos.SolicitarRecuperacaoSenha(loginRecuperar);
+            var retorno = await servicoAcessos.SolicitarRecuperacaoSenha(loginRecuperar);
+            if (retorno.IndexOf('@') == 0)
+                throw new NegocioException(MensagemNegocio.LOGIN_NAO_ENCONTRADO);
+            
+            var inicioServidor = retorno.LastIndexOf('@');
+            var emailTratrado = retorno.Substring(0, 3) + new string('*', inicioServidor - 3) + retorno.Substring(inicioServidor);
+                
+            return string.Format(MensagemNegocio.AS_ORIENTAÇÕES_PARA_RECUPERAÇÃO_DE_SENHA_FORAM_ENVIADOS_PARA_EMAIL_VERIFIQUE_SUA_CAIXA_DE_ENTRADA, emailTratrado);
         }
 
         public Task<bool> TokenRecuperacaoSenhaEstaValido(Guid token)
