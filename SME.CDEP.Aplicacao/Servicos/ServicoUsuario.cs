@@ -135,7 +135,7 @@ namespace SME.CDEP.Aplicacao.Servicos
         {
             var loginRecuperar = login.Replace(" ", "");
             var retorno = await servicoAcessos.SolicitarRecuperacaoSenha(loginRecuperar);
-            if (retorno.IndexOf('@') == 0)
+            if (retorno.IndexOf('@') < 0)
                 throw new NegocioException(MensagemNegocio.LOGIN_NAO_ENCONTRADO);
             
             var inicioServidor = retorno.LastIndexOf('@');
