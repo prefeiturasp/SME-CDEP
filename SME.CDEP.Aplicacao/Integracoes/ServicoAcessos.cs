@@ -26,8 +26,7 @@ namespace SME.CDEP.Aplicacao.Integracoes
                 throw new NegocioException(MensagemNegocio.USUARIO_OU_SENHA_INVALIDOS);
             
             var json = await resposta.Content.ReadAsStringAsync();
-            var retorno = JsonConvert.DeserializeObject<UsuarioAutenticacaoRetornoDTO>(json);
-            return retorno;
+            return JsonConvert.DeserializeObject<UsuarioAutenticacaoRetornoDTO>(json);
         }
         
         public async Task<RetornoPerfilUsuarioDTO> ObterPerfisUsuario(string login)
@@ -48,8 +47,7 @@ namespace SME.CDEP.Aplicacao.Integracoes
             if (!resposta.IsSuccessStatusCode) return false;
             
             var json = await resposta.Content.ReadAsStringAsync();
-            var usuarioCadastradoCoreSSO = JsonConvert.DeserializeObject<bool>(json);
-            return usuarioCadastradoCoreSSO;
+            return JsonConvert.DeserializeObject<bool>(json);
         }
 
         public async Task<bool> CadastrarUsuarioCoreSSO(string login, string nome, string email, string senha)
@@ -60,8 +58,7 @@ namespace SME.CDEP.Aplicacao.Integracoes
             if (!resposta.IsSuccessStatusCode) return false;
             
             var json = await resposta.Content.ReadAsStringAsync();
-            var usuarioCadastradoCoreSSO = JsonConvert.DeserializeObject<bool>(json);
-            return usuarioCadastradoCoreSSO;
+            return JsonConvert.DeserializeObject<bool>(json);
         }
 
         public async Task<bool> VincularPerfilExternoCoreSSO(string login, Guid perfilId)
@@ -71,8 +68,39 @@ namespace SME.CDEP.Aplicacao.Integracoes
             if (!resposta.IsSuccessStatusCode) return false;
             
             var json = await resposta.Content.ReadAsStringAsync();
-            var usuarioVinculadoCoreSSO = JsonConvert.DeserializeObject<bool>(json);
-            return usuarioVinculadoCoreSSO;
+            return JsonConvert.DeserializeObject<bool>(json);
+        }
+
+        public async Task<DadosUsuarioDTO> ObterMeusDados(string login)
+        {
+            var resposta = await httpClient.GetAsync($"v1/usuarios/{login}");
+
+            if (!resposta.IsSuccessStatusCode) return new DadosUsuarioDTO();
+            
+            var json = await resposta.Content.ReadAsStringAsync();
+            return JsonConvert.DeserializeObject<DadosUsuarioDTO>(json);
+        }
+
+        public Task<bool> AlterarSenha(string login, string senhaAtual, string senhaNova)
+        {
+            return InvocarPutServicoAcessosRetornandoBool($"v1/usuarios/{login}/senha", 
+                JsonConvert.SerializeObject(new { login, senhaAtual, senhaNova, sistemaId = Sistema_Cdep }));
+        }
+
+        public Task<bool> AlterarEmail(string login, string email)
+        {
+            return InvocarPutServicoAcessosRetornandoBool($"v1/usuarios/{login}/email", JsonConvert.SerializeObject(new { login, email }));
+        }
+
+        private async Task<bool> InvocarPutServicoAcessosRetornandoBool(string rota, string parametros)
+        {
+            var resposta = await httpClient.PutAsync(rota,new StringContent(parametros, Encoding.UTF8, "application/json-patch+json"));
+
+            if (!resposta.IsSuccessStatusCode) return false;
+
+            var json = await resposta.Content.ReadAsStringAsync();
+            var retorno = JsonConvert.DeserializeObject<bool>(json);
+            return retorno;
         }
         
         public async Task<string> SolicitarRecuperacaoSenha(string login)
