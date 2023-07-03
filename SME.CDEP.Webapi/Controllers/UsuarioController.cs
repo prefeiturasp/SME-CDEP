@@ -105,7 +105,7 @@ public class UsuarioController: BaseController
     [ProducesResponseType(typeof(RetornoBaseDTO), 601)]
     [ProducesResponseType(typeof(bool), 200)]
     [Authorize("Bearer")]
-    public async Task<IActionResult> AlterarTelefoneAcervo([FromBody] string login, [FromBody] TelefoneUsuarioExternoDTO telefoneUsuarioExternoDto, [FromServices] IServicoUsuario servicoUsuario)
+    public async Task<IActionResult> AlterarTelefoneAcervo([FromBody] string login, TelefoneUsuarioExternoDTO telefoneUsuarioExternoDto, [FromServices] IServicoUsuario servicoUsuario)
     {
         var retorno = await servicoUsuario.AlterarTelefone(login,telefoneUsuarioExternoDto.Telefone);
        
