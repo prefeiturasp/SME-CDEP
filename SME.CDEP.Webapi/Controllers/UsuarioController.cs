@@ -47,7 +47,7 @@ public class UsuarioController: BaseController
     [ProducesResponseType(typeof(RetornoBaseDTO), 500)]
     [ProducesResponseType(typeof(RetornoBaseDTO), 601)]
     [AllowAnonymous]
-    public async Task<IActionResult> RecuperarSenha([FromForm]RecuperacaoSenhaDto recuperacaoSenhaDto, [FromServices] IServicoUsuario servicoUsuario)
+    public async Task<IActionResult> RecuperarSenha([FromBody]RecuperacaoSenhaDto recuperacaoSenhaDto, [FromServices] IServicoUsuario servicoUsuario)
     {
         return Ok(await servicoUsuario.AlterarSenhaComTokenRecuperacao(recuperacaoSenhaDto));
     }
