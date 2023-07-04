@@ -22,7 +22,7 @@ public class UsuarioController: BaseController
     }
     
     [HttpPost("{login}/solicitar-recuperacao-senha")] 
-    [ProducesResponseType(typeof(string), 200)]
+    [ProducesResponseType(typeof(string), 200,"Retorna o e-mail do usuário que solicitou a recuperação de senha")]
     [ProducesResponseType(typeof(RetornoBaseDTO), 400)]
     [ProducesResponseType(typeof(RetornoBaseDTO), 500)]
     [AllowAnonymous]
