@@ -12,4 +12,7 @@ public interface IServicoAcessos
     Task<DadosUsuarioDTO> ObterMeusDados(string login);
     Task<bool> AlterarSenha(string login, string senhaAtual, string senhaNova);
     Task<bool> AlterarEmail(string login, string email);
+    Task<string> SolicitarRecuperacaoSenha(string login);
+    Task<bool> TokenRecuperacaoSenhaEstaValido(Guid token);
+    Task<string> AlterarSenhaComTokenRecuperacao(RecuperacaoSenhaDto recuperacaoSenhaDto);
 }

@@ -15,6 +15,7 @@ public class AutenticacaoController: BaseController
 {
     [HttpPost]
     [ProducesResponseType(typeof(RetornoBaseDTO), 400)]
+    [ProducesResponseType(typeof(RetornoBaseDTO), 500)]
     [ProducesResponseType(typeof(RetornoBaseDTO), 601)]
     [ProducesResponseType(typeof(UsuarioAutenticacaoRetornoDTO), 200)]
     [AllowAnonymous]
@@ -30,17 +31,13 @@ public class AutenticacaoController: BaseController
     
     [HttpGet("usuarios/{login}/perfis")]
     [ProducesResponseType(typeof(RetornoBaseDTO), 400)]
+    [ProducesResponseType(typeof(RetornoBaseDTO), 500)]
     [ProducesResponseType(typeof(RetornoBaseDTO), 601)]
     [ProducesResponseType(typeof(RetornoPerfilUsuarioDTO), 200)]        
     public async Task<IActionResult> ListarPerfisUsuario(string login, [FromServices]IServicoPerfilUsuario servicoPerfilUsuario)
     {
         var retorno = await servicoPerfilUsuario.ObterPerfisUsuario(login);
 
-        if (retorno.PerfilUsuario == null)
-        {
-            await servicoPerfilUsuario.VincularPerfilExternoCoreSSO(login,new Guid(Constantes.PERFIL_EXTERNO_GUID));
-            retorno = await servicoPerfilUsuario.ObterPerfisUsuario(login);
-        }
         return Ok(retorno);
     }
 }

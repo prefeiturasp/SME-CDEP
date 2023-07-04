@@ -16,12 +16,14 @@ namespace SME.CDEP.Aplicacao.Servicos
         private readonly IRepositorioUsuario repositorioUsuario;
         private readonly IServicoAcessos servicoAcessos;
         private readonly IMapper mapper;
+        private readonly IServicoPerfilUsuario servicoPerfilUsuario;
         
-        public ServicoUsuario(IRepositorioUsuario repositorioUsuario,IServicoAcessos servicoAcessos, IMapper mapper) 
+        public ServicoUsuario(IRepositorioUsuario repositorioUsuario,IServicoAcessos servicoAcessos, IMapper mapper,IServicoPerfilUsuario servicoPerfilUsuario) 
         {
             this.repositorioUsuario = repositorioUsuario ?? throw new ArgumentNullException(nameof(repositorioUsuario));
             this.servicoAcessos = servicoAcessos ?? throw new ArgumentNullException(nameof(servicoAcessos));
             this.mapper = mapper ?? throw new ArgumentNullException(nameof(mapper));
+            this.servicoPerfilUsuario = servicoPerfilUsuario ?? throw new ArgumentNullException(nameof(servicoPerfilUsuario));
         }
 
         public async Task<long> Inserir(UsuarioDTO usuarioDto)
@@ -71,7 +73,7 @@ namespace SME.CDEP.Aplicacao.Servicos
                 
             var retorno = await repositorioUsuario.Inserir(new Usuario()
             {
-                Login = usuarioExternoDto.Cpf, Nome = usuarioExternoDto.Nome, UltimoLogin = DateTimeExtension.HorarioBrasilia().Date,
+                Login = usuarioExternoDto.Cpf, Nome = usuarioExternoDto.Nome,
                 Telefone = usuarioExternoDto.Telefone, Endereco = usuarioExternoDto.Endereco, Numero = usuarioExternoDto.Numero,
                 Complemento = usuarioExternoDto.Complemento, Cidade = usuarioExternoDto.Cidade, Estado = usuarioExternoDto.Estado,
                 Cep = usuarioExternoDto.Cep, TipoUsuario = usuarioExternoDto.TipoUsuario, Bairro = usuarioExternoDto.Bairro
@@ -196,7 +198,7 @@ namespace SME.CDEP.Aplicacao.Servicos
             var usuario = await repositorioUsuario.ObterPorLogin(login);
             if (usuario != null)
             {
-                usuario.UltimoLogin = DateTimeExtension.HorarioBrasilia().Date;
+                usuario.UltimoLogin = DateTimeExtension.HorarioBrasilia();
                 usuario.Nome = retorno.Nome;
                 await repositorioUsuario.Atualizar(usuario);
             }
@@ -204,9 +206,33 @@ namespace SME.CDEP.Aplicacao.Servicos
             {
                 await repositorioUsuario.Inserir(new Usuario()
                 {
-                    Login = retorno.Login, Nome = retorno.Nome, UltimoLogin = DateTimeExtension.HorarioBrasilia().Date,
+                    Login = retorno.Login, Nome = retorno.Nome, UltimoLogin = DateTimeExtension.HorarioBrasilia(),
                 });
             }
+        }
+        
+        public async Task<string> SolicitarRecuperacaoSenha(string login)
+        {
+            var loginRecuperar = login.Replace(" ", "");
+            var retorno = await servicoAcessos.SolicitarRecuperacaoSenha(loginRecuperar);
+            if (retorno.IndexOf('@') < 0)
+                throw new NegocioException(MensagemNegocio.LOGIN_NAO_ENCONTRADO);
+            
+            var inicioServidor = retorno.LastIndexOf('@');
+            var emailTratrado = retorno.Substring(0, 3) + new string('*', inicioServidor - 3) + retorno.Substring(inicioServidor);
+                
+            return string.Format(MensagemNegocio.AS_ORIENTAÇÕES_PARA_RECUPERAÇÃO_DE_SENHA_FORAM_ENVIADOS_PARA_EMAIL_VERIFIQUE_SUA_CAIXA_DE_ENTRADA, emailTratrado);
+        }
+
+        public Task<bool> TokenRecuperacaoSenhaEstaValido(Guid token)
+        {
+            return servicoAcessos.TokenRecuperacaoSenhaEstaValido(token);
+        }
+
+        public async Task<RetornoPerfilUsuarioDTO> AlterarSenhaComTokenRecuperacao(RecuperacaoSenhaDto recuperacaoSenhaDto)
+        {
+            var login = await servicoAcessos.AlterarSenhaComTokenRecuperacao(recuperacaoSenhaDto);
+            return await servicoPerfilUsuario.ObterPerfisUsuario(login);
         }
     }
 }

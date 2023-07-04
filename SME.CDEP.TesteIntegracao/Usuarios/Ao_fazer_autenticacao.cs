@@ -46,8 +46,8 @@ namespace SME.CDEP.TesteIntegracao.Usuario
             usuario.ShouldNotBeNull();
             
             var usuarios = ObterTodos<Dominio.Entidades.Usuario>();
-            usuarios.Any(f => f.Login.Equals(ConstantesTestes.LOGIN_99999999999)).ShouldBeTrue();;
-            // usuarios.FirstOrDefault(f => f.UltimoLogin.Date == DateTimeExtension.HorarioBrasilia().Date);
+            usuarios.Any(f => f.Login.Equals(ConstantesTestes.LOGIN_99999999999)).ShouldBeTrue();
+            usuarios.Any(f => f.UltimoLogin.Value.Date == DateTimeExtension.HorarioBrasilia().Date).ShouldBeTrue();
         }
     }
 }

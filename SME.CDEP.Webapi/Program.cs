@@ -42,6 +42,9 @@ builder.Services.AddSingleton(registradorDeDependencia);
 
 var app = builder.Build();
 
+AppContext.SetSwitch("Npgsql.EnableLegacyTimestampBehavior", true);
+AppContext.SetSwitch("Npgsql.DisableDateTimeInfinityConversions", true);
+
 app.UseCors(config => config
     .AllowAnyMethod()
     .AllowAnyHeader()

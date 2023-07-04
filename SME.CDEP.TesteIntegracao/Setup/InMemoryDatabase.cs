@@ -13,8 +13,15 @@ namespace SME.CDEP.TesteIntegracao.Setup
         public InMemoryDatabase()
         {
             _postgresRunner = PostgresRunner.Start();
+            DefinirComportamentoDateTimeNpgsql();
             CriarConexaoEAbrir();
             new ConstrutorDeTabelas().Contruir(Conexao);
+        }
+
+        private void DefinirComportamentoDateTimeNpgsql()
+        {
+            AppContext.SetSwitch("Npgsql.EnableLegacyTimestampBehavior", true);
+            AppContext.SetSwitch("Npgsql.DisableDateTimeInfinityConversions", true);
         }
 
         public void CriarConexaoEAbrir()

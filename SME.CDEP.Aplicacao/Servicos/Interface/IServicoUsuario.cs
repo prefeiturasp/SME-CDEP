@@ -16,5 +16,8 @@ namespace SME.CDEP.Aplicacao.Servicos.Interface
         Task<bool> AlterarEmail(string login, string email);
         Task<bool> AlterarEndereco(string login, EnderecoUsuarioExternoDTO enderecoUsuarioExternoDto);
         Task<bool> AlterarTelefone(string login, string telefone);
+        Task<string> SolicitarRecuperacaoSenha(string login);
+        Task<bool> TokenRecuperacaoSenhaEstaValido(Guid token);
+        Task<RetornoPerfilUsuarioDTO?> AlterarSenhaComTokenRecuperacao(RecuperacaoSenhaDto recuperacaoSenhaDto);
     }
 }

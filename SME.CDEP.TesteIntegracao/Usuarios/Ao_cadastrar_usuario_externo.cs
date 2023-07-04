@@ -128,7 +128,7 @@ namespace SME.CDEP.TesteIntegracao.Usuario
             
             var usuarios = ObterTodos<Dominio.Entidades.Usuario>();
             usuarios.Any(f => f.Login.Equals(ConstantesTestes.LOGIN_99999999999)).ShouldBeTrue();
-            // usuarios.Any(f => f.UltimoLogin.Date == DateTimeExtension.HorarioBrasilia().Date).ShouldBeTrue();
+            usuarios.Any(f => f.UltimoLogin.HasValue).ShouldBeFalse();
             usuarios.Any(f => f.TipoUsuario == TipoUsuario.PROFESSOR).ShouldBeTrue();
         }
         
@@ -150,7 +150,7 @@ namespace SME.CDEP.TesteIntegracao.Usuario
                 Login = ConstantesTestes.LOGIN_99999999999,
                 Nome = ConstantesTestes.USUARIO_INTERNO_99999999999,
                 UltimoLogin = DateTimeExtension.HorarioBrasilia(),
-                CriadoLogin = ConstantesTestes.SISTEMA, CriadoPor = ConstantesTestes.SISTEMA, CriadoEm = DateTimeExtension.HorarioBrasilia().Date
+                CriadoLogin = ConstantesTestes.SISTEMA, CriadoPor = ConstantesTestes.SISTEMA, CriadoEm = DateTimeExtension.HorarioBrasilia()
             });
             
             var usuarios = ObterTodos<Dominio.Entidades.Usuario>();
@@ -160,7 +160,7 @@ namespace SME.CDEP.TesteIntegracao.Usuario
             
             usuarios = ObterTodos<Dominio.Entidades.Usuario>();
             usuarios.Any(f => f.Login.Equals(ConstantesTestes.LOGIN_99999999999)).ShouldBeTrue();
-            // usuarios.Any(f => f.UltimoLogin.Date == DateTimeExtension.HorarioBrasilia().Date).ShouldBeTrue();;
+            usuarios.Any(f => f.UltimoLogin.Value.Date == DateTimeExtension.HorarioBrasilia().Date).ShouldBeTrue();
         }
         
         [Fact(DisplayName = "Usuário - Alterar endereço  de usuário externo")]
