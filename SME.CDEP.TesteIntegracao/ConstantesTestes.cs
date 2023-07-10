@@ -4,6 +4,9 @@ namespace SME.CDEP.TesteIntegracao.Constantes;
 
 public class ConstantesTestes
 {
+    public const string IMPRESSO = "Impresso";
+    public const string PAPEL = "Papel";
+    public const string PAPEL_DIGITAL = "Papel/Digital";
     public const string TRANSPARENTE = "Transparente";
     public const string COLOR = "Color";
     public const string PB = "PB";

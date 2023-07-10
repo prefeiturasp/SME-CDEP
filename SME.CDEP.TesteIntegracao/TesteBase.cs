@@ -106,6 +106,11 @@ namespace SME.CDEP.TesteIntegracao
         {
             return ObterServicoAplicacao<IServicoCromia>();
         }
+        
+        protected IServicoFormato GetServicoFormato()
+        {
+            return ObterServicoAplicacao<IServicoFormato>();
+        }
 
         public T ObterServicoAplicacao<T>()
             where T : IServicoAplicacao
