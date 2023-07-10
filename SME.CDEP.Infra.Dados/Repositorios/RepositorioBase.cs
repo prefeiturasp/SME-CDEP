@@ -45,13 +45,11 @@ public abstract class RepositorioBase<TEntidade> : IRepositorioBase<TEntidade>
 
     public async Task Remover(TEntidade entidade)
     {
-        entidade.Excluido = true;
-        await Atualizar(entidade);
+        throw new NotImplementedException();
     }
 
     public async Task Remover(long id)
     {
-        var retorno = await ObterPorId(id);
-        await Remover(retorno);
+        throw new NotImplementedException();
     }
 }

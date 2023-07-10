@@ -9,5 +9,4 @@ public abstract class EntidadeBase
     public DateTime CriadoEm { get; set; }
     public string CriadoPor { get; set; }
     public string CriadoLogin { get; set; }
-    public bool Excluido { get; set; }
 }
