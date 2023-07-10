@@ -1,7 +1,7 @@
 namespace SME.CDEP.Dominio.Entidades;
 
 public interface IDominioBaseSemAuditoria<TEntidade> 
-    where TEntidade : EntidadeBaseSemAuditoria
+    where TEntidade : EntidadeBase
 {
     Task<TEntidade> ObterPorId(long id);
     Task<IList<TEntidade>> ObterTodos();

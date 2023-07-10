@@ -5,7 +5,7 @@ using SME.CDEP.Infra.Dados.Repositorios.Interfaces;
 
 namespace SME.CDEP.Infra.Dados.Repositorios
 {
-    public class RepositorioCromia : RepositorioBaseSemAuditoria<Cromia>, IRepositorioCromia
+    public class RepositorioCromia : RepositorioBase<Cromia>, IRepositorioCromia
     {
         public RepositorioCromia(IContextoAplicacao contexto, ICdepConexao conexao) : base(contexto,conexao)
         { }

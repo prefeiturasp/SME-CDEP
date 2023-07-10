@@ -3,6 +3,6 @@ using SME.CDEP.Dominio.Repositorios;
 
 namespace SME.CDEP.Infra.Dados.Repositorios.Interfaces
 {
-    public interface IRepositorioCromia : IRepositorioBaseSemAuditoria<Cromia>
+    public interface IRepositorioCromia : IRepositorioBase<Cromia>
     {}
 }

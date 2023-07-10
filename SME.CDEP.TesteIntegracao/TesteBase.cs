@@ -111,6 +111,11 @@ namespace SME.CDEP.TesteIntegracao
         {
             return ObterServicoAplicacao<IServicoFormato>();
         }
+        
+        protected IServicoIdioma GetServicoIdioma()
+        {
+            return ObterServicoAplicacao<IServicoIdioma>();
+        }
 
         public T ObterServicoAplicacao<T>()
             where T : IServicoAplicacao

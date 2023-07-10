@@ -6,13 +6,13 @@ using SME.CDEP.Infra.Dominio.Enumerados;
 
 namespace SME.CDEP.Infra.Dados.Repositorios;
 
-public abstract class RepositorioBaseSemAuditoria<TEntidade> : IRepositorioBaseSemAuditoria<TEntidade>
-    where TEntidade : EntidadeBaseSemAuditoria    
+public abstract class RepositorioBaseAuditavel<TEntidade> : IRepositorioBaseAuditavel<TEntidade>
+    where TEntidade : EntidadeBaseAuditavel    
 {
     protected readonly IContextoAplicacao contexto;
     protected readonly ICdepConexao conexao;
 
-    public RepositorioBaseSemAuditoria(IContextoAplicacao contexto,ICdepConexao conexao)
+    public RepositorioBaseAuditavel(IContextoAplicacao contexto,ICdepConexao conexao)
     {
         this.contexto = contexto;
         this.conexao = conexao;
@@ -27,25 +27,29 @@ public abstract class RepositorioBaseSemAuditoria<TEntidade> : IRepositorioBaseS
 
     public async Task<long> Inserir(TEntidade entidade)
     {
+        entidade.CriadoEm = DateTimeExtension.HorarioBrasilia();
+        entidade.CriadoPor = contexto.NomeUsuario;
+        entidade.CriadoLogin = contexto.UsuarioLogado;
         entidade.Id = (long)await conexao.Obter().InsertAsync(entidade);
         return entidade.Id;
     }
 
     public async Task<TEntidade> Atualizar(TEntidade entidade)
     {
+        entidade.AlteradoEm = DateTimeExtension.HorarioBrasilia();
+        entidade.AlteradoPor = contexto.NomeUsuario;
+        entidade.AlteradoLogin = contexto.UsuarioLogado;
        await conexao.Obter().UpdateAsync(entidade);
        return entidade;
     }
 
     public async Task Remover(TEntidade entidade)
     {
-        entidade.Excluido = true;
-        await Atualizar(entidade);
+        throw new NotImplementedException();
     }
 
     public async Task Remover(long id)
     {
-        var retorno = await ObterPorId(id);
-        await Remover(retorno);
+        throw new NotImplementedException();
     }
 }

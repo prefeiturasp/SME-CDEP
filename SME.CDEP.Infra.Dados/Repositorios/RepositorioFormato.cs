@@ -5,7 +5,7 @@ using SME.CDEP.Infra.Dados.Repositorios.Interfaces;
 
 namespace SME.CDEP.Infra.Dados.Repositorios
 {
-    public class RepositorioFormato : RepositorioBaseSemAuditoria<Formato>, IRepositorioFormato
+    public class RepositorioFormato : RepositorioBase<Formato>, IRepositorioFormato
     {
         public RepositorioFormato(IContextoAplicacao contexto, ICdepConexao conexao) : base(contexto,conexao)
         { }

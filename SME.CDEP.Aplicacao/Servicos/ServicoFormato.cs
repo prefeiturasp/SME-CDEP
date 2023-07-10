@@ -41,7 +41,9 @@ namespace SME.CDEP.Aplicacao.Servicos
 
         public async Task<bool> Excluir(long formatoId)
         {
-            await repositorioFormato.Remover(formatoId);
+            var formato = await ObterPorId(formatoId);
+            formato.Excluido = true;
+            await Alterar(formato);
             return true;
         }
     }

@@ -2,7 +2,7 @@
 
 namespace SME.CDEP.Dominio.Entidades
 {
-    public class Usuario : EntidadeBase
+    public class Usuario : EntidadeBaseAuditavel
     {
         public DateTime? ExpiracaoRecuperacaoSenha { get; set; }
         public string Login { get; set; }

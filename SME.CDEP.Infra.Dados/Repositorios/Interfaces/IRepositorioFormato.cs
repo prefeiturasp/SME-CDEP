@@ -3,6 +3,6 @@ using SME.CDEP.Dominio.Repositorios;
 
 namespace SME.CDEP.Infra.Dados.Repositorios.Interfaces
 {
-    public interface IRepositorioFormato : IRepositorioBaseSemAuditoria<Formato>
+    public interface IRepositorioFormato : IRepositorioBase<Formato>
     {}
 }

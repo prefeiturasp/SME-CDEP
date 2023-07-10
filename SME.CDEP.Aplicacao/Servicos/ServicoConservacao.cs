@@ -41,7 +41,9 @@ namespace SME.CDEP.Aplicacao.Servicos
 
         public async Task<bool> Excluir(long conservacaoId)
         {
-            await repositorioConservacao.Remover(conservacaoId);
+            var conservacao = await ObterPorId(conservacaoId);
+            conservacao.Excluido = true;
+            await Alterar(conservacao);
             return true;
         }
     }

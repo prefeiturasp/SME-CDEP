@@ -2,8 +2,9 @@
 
 namespace SME.CDEP.Dominio.Entidades
 {
-    public class Formato : EntidadeBaseSemAuditoria
+    public class Formato : EntidadeBase
     {
         public string Nome { get; set; }
+        public bool Excluido { get; set; }
     }
 }

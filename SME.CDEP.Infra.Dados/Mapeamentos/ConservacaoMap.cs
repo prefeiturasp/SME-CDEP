@@ -2,12 +2,13 @@
 
 namespace SME.CDEP.Infra.Dados.Mapeamentos
 {
-    public class ConservacaoMap : BaseSemAuditoriaMap<Conservacao>
+    public class ConservacaoMap : BaseMap<Conservacao>
     {
         public ConservacaoMap()
         {
             ToTable("conservacao");
             Map(c => c.Nome).ToColumn("nome");
+            Map(c => c.Excluido).ToColumn("excluido");
         }
     }
 }

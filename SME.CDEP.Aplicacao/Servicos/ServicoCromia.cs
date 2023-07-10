@@ -34,14 +34,16 @@ namespace SME.CDEP.Aplicacao.Servicos
             return mapper.Map<CromiaDTO>(await repositorioCromia.Atualizar(cromia));
         }
 
-        public async Task<CromiaDTO> ObterPorId(long acessoDocumentoId)
+        public async Task<CromiaDTO> ObterPorId(long cromiaId)
         {
-            return mapper.Map<CromiaDTO>(await repositorioCromia.ObterPorId(acessoDocumentoId));
+            return mapper.Map<CromiaDTO>(await repositorioCromia.ObterPorId(cromiaId));
         }
 
-        public async Task<bool> Excluir(long acessoDocumentoId)
+        public async Task<bool> Excluir(long cromiaId)
         {
-            await repositorioCromia.Remover(acessoDocumentoId);
+            var cromia = await ObterPorId(cromiaId);
+            cromia.Excluido = true;
+            await Alterar(cromia);
             return true;
         }
     }

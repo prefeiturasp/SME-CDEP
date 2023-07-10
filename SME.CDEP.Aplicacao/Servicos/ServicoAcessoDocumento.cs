@@ -41,7 +41,9 @@ namespace SME.CDEP.Aplicacao.Servicos
 
         public async Task<bool> Excluir(long acessoDocumentoId)
         {
-            await repositorioAcessoDocumento.Remover(acessoDocumentoId);
+            var acessoDocumento = await ObterPorId(acessoDocumentoId);
+            acessoDocumento.Excluido = true;
+            await Alterar(acessoDocumento);
             return true;
         }
     }
