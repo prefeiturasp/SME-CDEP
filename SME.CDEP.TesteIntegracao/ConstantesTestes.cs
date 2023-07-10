@@ -4,9 +4,12 @@ namespace SME.CDEP.TesteIntegracao.Constantes;
 
 public class ConstantesTestes
 {
+    public const string ITALIANO = "Italiano";
     public const string PORTUGUES = "Português";
     public const string INGLES = "Inglês";
     public const string ESPANHOL = "Espanhol";
+    public const string FRANCES = "Frances";
+    public const string Alemao = "Alemao";
     
     public const string IMPRESSO = "Impresso";
     public const string PAPEL = "Papel";

@@ -26,62 +26,64 @@ namespace SME.CDEP.TesteIntegracao.Usuario
         [Fact(DisplayName = "Idioma - Obter todos")]
         public async Task Obter_todos()
         {
-            await InserirAcessoDocumentos();
-            var servicoAcessoDocumento = GetServicoAcessoDocumento();
+            await InserirIdiomas();
+            var servicoIdioma = GetServicoIdioma();
 
-            var acessoDocumentoDtos = await servicoAcessoDocumento.ObterTodos();
-            acessoDocumentoDtos.ShouldNotBeNull();
-            acessoDocumentoDtos.Count.ShouldBe(3);
+            var idiomas = await servicoIdioma.ObterTodos();
+            idiomas.ShouldNotBeNull();
+            idiomas.Count.ShouldBe(5);
         }
 
         [Fact(DisplayName = "Idioma - Obter por id")]
         public async Task Obter_por_id()
         {
-            await InserirAcessoDocumentos();
+            await InserirIdiomas();
             
-            var servicoAcessoDocumento = GetServicoAcessoDocumento();
+            var servicoIdioma = GetServicoIdioma();
 
-            var acessoDocumentoDto = await servicoAcessoDocumento.ObterPorId(1);
-            acessoDocumentoDto.ShouldNotBeNull();
-            acessoDocumentoDto.Id.ShouldBe(1);
-            acessoDocumentoDto.Nome.ShouldBe(ConstantesTestes.DIGITAL);
+            var idioma = await servicoIdioma.ObterPorId(1);
+            idioma.ShouldNotBeNull();
+            idioma.Id.ShouldBe(1);
+            idioma.Nome.ShouldBe(ConstantesTestes.PORTUGUES);
         }
 
         [Fact(DisplayName = "Idioma - Atualizar")]
         public async Task Atualizar()
         {
-            await InserirAcessoDocumentos();
+            await InserirIdiomas();
             
-            var servicoAcessoDocumento = GetServicoAcessoDocumento();
+            var servicoIdioma = GetServicoIdioma();
 
-            var acessoDocumentoDto = await servicoAcessoDocumento.ObterPorId(3);
-            acessoDocumentoDto.Nome = ConstantesTestes.DIGITAL;
+            var idioma = await servicoIdioma.ObterPorId(3);
+            idioma.Nome = ConstantesTestes.ITALIANO;
             
-            var acessosDocumentosDto = await servicoAcessoDocumento.Alterar(acessoDocumentoDto);
+            var idiomasAlterados = await servicoIdioma.Alterar(idioma);
             
-            acessosDocumentosDto.ShouldNotBeNull();
-            acessosDocumentosDto.Nome = ConstantesTestes.DIGITAL;
+            idiomasAlterados.ShouldNotBeNull();
+            idiomasAlterados.Nome = ConstantesTestes.ITALIANO;
         }
         
         [Fact(DisplayName = "Idioma - Excluir")]
         public async Task Excluir()
         {
-            await InserirAcessoDocumentos();
+            await InserirIdiomas();
             
-            var servicoAcessoDocumento = GetServicoAcessoDocumento();
+            var servicoIdioma = GetServicoIdioma();
 
-            await servicoAcessoDocumento.Excluir(3);
+            await servicoIdioma.Excluir(3);
 
-            var acessosDocumentos = ObterTodos<AcessoDocumento>();
-            acessosDocumentos.Count(a=> a.Excluido).ShouldBeEquivalentTo(1);
-            acessosDocumentos.Count(a=> !a.Excluido).ShouldBeEquivalentTo(2);
+            var idiomas = ObterTodos<Idioma>();
+            idiomas.Count(a=> a.Excluido).ShouldBeEquivalentTo(1);
+            idiomas.Count(a=> !a.Excluido).ShouldBeEquivalentTo(4);
         }
 
-        private async Task InserirAcessoDocumentos()
+        private async Task InserirIdiomas()
         {
-            await InserirNaBase(new AcessoDocumento() { Nome = ConstantesTestes.DIGITAL });
-            await InserirNaBase(new AcessoDocumento() { Nome = ConstantesTestes.FISICO });
-            await InserirNaBase(new AcessoDocumento() { Nome = ConstantesTestes.DIGITAL_E_FISICO });
+            await InserirNaBase(new Idioma() { Nome = ConstantesTestes.PORTUGUES });
+            await InserirNaBase(new Idioma() { Nome = ConstantesTestes.INGLES });
+            await InserirNaBase(new Idioma() { Nome = ConstantesTestes.ESPANHOL });
+            await InserirNaBase(new Idioma() { Nome = ConstantesTestes.FRANCES });
+            await InserirNaBase(new Idioma() { Nome = ConstantesTestes.Alemao });
         }
     }
 }
