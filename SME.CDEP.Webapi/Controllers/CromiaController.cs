@@ -8,37 +8,37 @@ namespace SME.CDEP.Webapi.Controllers;
 
 [ApiController]
 [ValidaDto]
-public class ConservacaoController: BaseController
+public class CromiaController: BaseController
 {
     [HttpPost]
-    [ProducesResponseType(typeof(ConservacaoDTO), 200)]
+    [ProducesResponseType(typeof(CromiaDTO), 200)]
     [ProducesResponseType(typeof(RetornoBaseDTO), 400)]
     [ProducesResponseType(typeof(RetornoBaseDTO), 500)]
     [ProducesResponseType(typeof(RetornoBaseDTO), 601)]
     [Authorize("Bearer")]
-    public async Task<IActionResult> CadastrarAlterar([FromBody] ConservacaoDTO conservacaoDTO, [FromServices] IServicoConservacao servicoConservacao)
+    public async Task<IActionResult> CadastrarAlterar([FromBody] CromiaDTO cromiaDTO, [FromServices] IServicoCromia servicoCromia)
     {
-        return conservacaoDTO.Id > 0 ? Ok(await servicoConservacao.Alterar(conservacaoDTO)) : Ok(await servicoConservacao.Inserir(conservacaoDTO));
+        return cromiaDTO.Id > 0 ? Ok(await servicoCromia.Alterar(cromiaDTO)) : Ok(await servicoCromia.Inserir(cromiaDTO));
     }
 
     [HttpGet("obter-todos")]
     [ProducesResponseType(typeof(RetornoBaseDTO), 400)]
     [ProducesResponseType(typeof(RetornoBaseDTO), 601)]
-    [ProducesResponseType(typeof(ConservacaoDTO), 200)]  
+    [ProducesResponseType(typeof(CromiaDTO), 200)]  
     [Authorize("Bearer")]
-    public async Task<IActionResult> ObterTodos([FromServices]IServicoConservacao servicoConservacao)
+    public async Task<IActionResult> ObterTodos([FromServices]IServicoCromia servicoCromia)
     {
-        return Ok(await servicoConservacao.ObterTodos());
+        return Ok(await servicoCromia.ObterTodos());
     }
     
     [HttpGet("{id}")]
     [ProducesResponseType(typeof(RetornoBaseDTO), 400)]
     [ProducesResponseType(typeof(RetornoBaseDTO), 601)]
-    [ProducesResponseType(typeof(ConservacaoDTO), 200)]  
+    [ProducesResponseType(typeof(CromiaDTO), 200)]  
     [Authorize("Bearer")]
-    public async Task<IActionResult> ObterTodos([FromRoute] long id,[FromServices]IServicoConservacao servicoConservacao)
+    public async Task<IActionResult> ObterTodos([FromRoute] long id,[FromServices]IServicoCromia servicoCromia)
     {
-        return Ok(await servicoConservacao.ObterPorId(id));
+        return Ok(await servicoCromia.ObterPorId(id));
     }
     
     [HttpDelete("{id}")]
@@ -46,8 +46,8 @@ public class ConservacaoController: BaseController
     [ProducesResponseType(typeof(RetornoBaseDTO), 601)]
     [ProducesResponseType(typeof(bool), 200)]
     [Authorize("Bearer")]
-    public async Task<IActionResult> ExclusaoLogica([FromRoute] long id, [FromServices] IServicoConservacao servicoConservacao)
+    public async Task<IActionResult> ExclusaoLogica([FromRoute] long id, [FromServices] IServicoCromia servicoCromia)
     {
-        return Ok(await servicoConservacao.Excluir(id));
+        return Ok(await servicoCromia.Excluir(id));
     }
 }

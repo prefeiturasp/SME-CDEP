@@ -12,6 +12,7 @@ namespace SME.CDEP.Aplicacao.Mapeamentos
             CreateMap<UsuarioIdNomeLoginDTO, Usuario>().ReverseMap();
             CreateMap<AcessoDocumentoDTO, AcessoDocumento>().ReverseMap();
             CreateMap<ConservacaoDTO, Conservacao>().ReverseMap();
+            CreateMap<CromiaDTO, Cromia>().ReverseMap();
         }
     }
 }

@@ -123,6 +123,7 @@ public class RegistradorDeDependencia
         _serviceCollection.TryAddScoped<IServicoAcessos, ServicoAcessos>();
         _serviceCollection.TryAddScoped<IServicoAcessoDocumento, ServicoAcessoDocumento>();
         _serviceCollection.TryAddScoped<IServicoConservacao, ServicoConservacao>();
+        _serviceCollection.TryAddScoped<IServicoCromia, ServicoCromia>();
     }
     protected virtual void RegistrarHttpClients()
     {

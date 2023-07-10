@@ -4,6 +4,10 @@ namespace SME.CDEP.TesteIntegracao.Constantes;
 
 public class ConstantesTestes
 {
+    public const string TRANSPARENTE = "Transparente";
+    public const string COLOR = "Color";
+    public const string PB = "PB";
+    
     public const string OTIMO = "Ótimo";
     public const string EXCELENTE = "Excelente";
     public const string BOM = "Bom";
