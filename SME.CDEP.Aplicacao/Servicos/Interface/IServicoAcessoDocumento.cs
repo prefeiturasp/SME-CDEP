@@ -8,6 +8,6 @@ namespace SME.CDEP.Aplicacao.Servicos.Interface
         Task<IList<AcessoDocumentoDTO>> ObterTodos();
         Task<AcessoDocumentoDTO> Alterar(AcessoDocumentoDTO acessoDocumentoDto);
         Task<AcessoDocumentoDTO> ObterPorId(long acessoDocumentoId);
-        Task Excluir(long acessoDocumentoId);
+        Task<bool> Excluir(long acessoDocumentoId);
     }
 }

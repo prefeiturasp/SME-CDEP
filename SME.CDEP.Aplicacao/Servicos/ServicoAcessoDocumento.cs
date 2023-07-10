@@ -25,7 +25,7 @@ namespace SME.CDEP.Aplicacao.Servicos
 
         public async Task<IList<AcessoDocumentoDTO>> ObterTodos()
         {
-            return (await repositorioAcessoDocumento.ObterTodos()).ToList().Select(s=> mapper.Map<AcessoDocumentoDTO>(s)).ToList();
+            return (await repositorioAcessoDocumento.ObterTodos()).ToList().Where(w=> !w.Excluido).Select(s=> mapper.Map<AcessoDocumentoDTO>(s)).ToList();
         }
 
         public async Task<AcessoDocumentoDTO> Alterar(AcessoDocumentoDTO acessoDocumentoDto)
@@ -39,9 +39,10 @@ namespace SME.CDEP.Aplicacao.Servicos
             return mapper.Map<AcessoDocumentoDTO>(await repositorioAcessoDocumento.ObterPorId(acessoDocumentoId));
         }
 
-        public Task Excluir(long acessoDocumentoId)
+        public async Task<bool> Excluir(long acessoDocumentoId)
         {
-            return Task.FromResult(repositorioAcessoDocumento.Remover(acessoDocumentoId));
+            await repositorioAcessoDocumento.Remover(acessoDocumentoId);
+            return true;
         }
     }
 }
