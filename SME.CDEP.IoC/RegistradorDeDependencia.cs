@@ -127,6 +127,7 @@ public class RegistradorDeDependencia
         _serviceCollection.TryAddScoped<IServicoFormato, ServicoFormato>();
         _serviceCollection.TryAddScoped<IServicoIdioma, ServicoIdioma>();
         _serviceCollection.TryAddScoped<IServicoMaterial, ServicoMaterial>();
+        _serviceCollection.TryAddScoped<IServicoSuporte, ServicoSuporte>();
     }
     protected virtual void RegistrarHttpClients()
     {

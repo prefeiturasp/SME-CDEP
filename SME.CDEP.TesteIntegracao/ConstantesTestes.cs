@@ -4,6 +4,9 @@ namespace SME.CDEP.TesteIntegracao.Constantes;
 
 public class ConstantesTestes
 {
+    public const string VHS = "VHS";
+    public const string DVD = "DVD";
+    
     public const string OUTROS = "Outros";
     public const string APOSTILA = "Apostila";
     public const string LIVRO = "Livro";
