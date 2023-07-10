@@ -4,6 +4,13 @@ namespace SME.CDEP.TesteIntegracao.Constantes;
 
 public class ConstantesTestes
 {
+    public const string ANEXO = "Anexo";
+    public const string AUDIOVISUAL = "Audiovisual";
+    public const string CD = "CD";
+    public const string DISQUETE = "Disquete";
+    public const string ENCARTE = "Encarte";
+    public const string FITAS_DE_VIDEO = "Fitas de Vídeo";
+    
     public const string VHS = "VHS";
     public const string DVD = "DVD";
     

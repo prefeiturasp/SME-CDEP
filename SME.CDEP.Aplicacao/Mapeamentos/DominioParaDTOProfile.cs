@@ -17,6 +17,7 @@ namespace SME.CDEP.Aplicacao.Mapeamentos
             CreateMap<IdiomaDTO, Idioma>().ReverseMap();
             CreateMap<MaterialDTO, Material>().ReverseMap();
             CreateMap<SuporteDTO, Suporte>().ReverseMap();
+            CreateMap<TipoAnexoDTO, TipoAnexo>().ReverseMap();
         }
     }
 }
