@@ -30,6 +30,19 @@ select 'Papel/Digital',1 where not exists (select 1 from public.suporte where no
 select 'VHS',2 where not exists (select 1 from public.suporte where nome = 'VHS') union all
 select 'DVD',2 where not exists (select 1 from public.suporte where nome = 'DVD');
 
+CREATE TABLE IF NOT EXISTS public.formato (
+	id int8 NOT NULL GENERATED ALWAYS AS IDENTITY( NO MINVALUE NO MAXVALUE NO CYCLE),
+	nome varchar(500) NULL,
+	excluido bool NOT NULL DEFAULT false,	
+	CONSTRAINT formato_pk PRIMARY KEY (id)
+);
+
+insert into public.formato (nome) 
+select 'Papel' where not exists (select 1 from public.formato where nome = 'Papel') union all
+select 'Digital' where not exists (select 1 from public.formato where nome = 'Digital') union all
+select 'Papel/Digital' where not exists (select 1 from public.formato where nome = 'Papel/Digital');
+
+
 CREATE TABLE IF NOT EXISTS public.material (
 	id int8 NOT NULL GENERATED ALWAYS AS IDENTITY( NO MINVALUE NO MAXVALUE NO CYCLE),
 	nome varchar(500) NULL,

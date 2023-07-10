@@ -74,6 +74,14 @@ public class RegistradorDeDependencia
         FluentMapper.Initialize(config =>
         {
             config.AddMap(new UsuarioMap());
+            config.AddMap(new AcessoDocumentoMap());
+            config.AddMap(new ConservacaoMap());
+            config.AddMap(new CromiaMap());
+            config.AddMap(new FormatoMap());
+            config.AddMap(new IdiomaMap());
+            config.AddMap(new MaterialMap());
+            config.AddMap(new SuporteMap());
+            config.AddMap(new TipoAnexoMap());
 
             config.ForDommel();
         });
@@ -98,6 +106,14 @@ public class RegistradorDeDependencia
     protected virtual void RegistrarRepositorios()
     {
         _serviceCollection.TryAddScoped<IRepositorioUsuario, RepositorioUsuario>();
+        _serviceCollection.TryAddScoped<IRepositorioAcessoDocumento, RepositorioAcessoDocumento>();
+        _serviceCollection.TryAddScoped<IRepositorioConservacao, RepositorioConservacao>();
+        _serviceCollection.TryAddScoped<IRepositorioCromia, RepositorioCromia>();
+        _serviceCollection.TryAddScoped<IRepositorioFormato, RepositorioFormato>();
+        _serviceCollection.TryAddScoped<IRepositorioIdioma, RepositorioIdioma>();
+        _serviceCollection.TryAddScoped<IRepositorioMaterial, RepositorioMaterial>();
+        _serviceCollection.TryAddScoped<IRepositorioSuporte, RepositorioSuporte>();
+        _serviceCollection.TryAddScoped<IRepositorioTipoAnexo, RepositorioTipoAnexo>();
     }
 
     protected virtual void RegistrarServicos()
