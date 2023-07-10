@@ -15,6 +15,7 @@ namespace SME.CDEP.Aplicacao.Mapeamentos
             CreateMap<CromiaDTO, Cromia>().ReverseMap();
             CreateMap<FormatoDTO, Formato>().ReverseMap();
             CreateMap<IdiomaDTO, Idioma>().ReverseMap();
+            CreateMap<MaterialDTO, Material>().ReverseMap();
         }
     }
 }

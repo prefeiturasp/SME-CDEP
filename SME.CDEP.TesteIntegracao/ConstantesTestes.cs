@@ -4,6 +4,14 @@ namespace SME.CDEP.TesteIntegracao.Constantes;
 
 public class ConstantesTestes
 {
+    public const string OUTROS = "Outros";
+    public const string APOSTILA = "Apostila";
+    public const string LIVRO = "Livro";
+    public const string CADERNO = "Caderno";
+    public const string PERIODICO = "Periódico";
+    public const string REVISTA = "Revista";
+    public const string TESE = "Tese";
+    
     public const string ITALIANO = "Italiano";
     public const string PORTUGUES = "Português";
     public const string INGLES = "Inglês";
