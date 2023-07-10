@@ -96,6 +96,11 @@ namespace SME.CDEP.TesteIntegracao
         {
             return ObterServicoAplicacao<IServicoAcessoDocumento>();
         }
+        
+        protected IServicoConservacao GetServicoConservacao()
+        {
+            return ObterServicoAplicacao<IServicoConservacao>();
+        }
 
         public T ObterServicoAplicacao<T>()
             where T : IServicoAplicacao

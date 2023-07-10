@@ -4,9 +4,16 @@ namespace SME.CDEP.TesteIntegracao.Constantes;
 
 public class ConstantesTestes
 {
+    public const string OTIMO = "Ótimo";
+    public const string EXCELENTE = "Excelente";
+    public const string BOM = "Bom";
+    public const string REGULAR = "Regular";
+    public const string RUIM = "Ruim";
+    
     public const string DIGITAL = "Digital";
     public const string FISICO = "Físico";
     public const string DIGITAL_E_FISICO = "Digital e Físico";
+    
     public const string SENHA_TESTE = "senha_teste";
     public const string USUARIO_CHAVE = "NomeUsuario";
     public const string USUARIO_RF_CHAVE = "RF";

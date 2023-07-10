@@ -61,6 +61,7 @@ namespace SME.CDEP.TesteIntegracao.Setup
             _serviceCollection.TryAddScoped<IServicoAcessos, ServicoAcessosFake>();
             _serviceCollection.TryAddScoped<IServicoPerfilUsuario, ServicoPerfilUsuario>();
             _serviceCollection.TryAddScoped<IServicoAcessoDocumento, ServicoAcessoDocumento>();
+            _serviceCollection.TryAddScoped<IServicoConservacao, ServicoConservacao>();
         }
         protected override void RegistrarHttpClients()
         {}
