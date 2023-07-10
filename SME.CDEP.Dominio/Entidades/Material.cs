@@ -2,10 +2,9 @@
 
 namespace SME.CDEP.Dominio.Entidades
 {
-    public class Material : EntidadeBase
+    public class Material : EntidadeBaseSemAuditoria
     {
         public string Nome { get; set; }
-        public bool Excluido { get; set; }
         public TipoMaterial TipoMaterial { get; set; }
     }
 }

@@ -5,7 +5,7 @@ using SME.CDEP.Infra.Dados.Repositorios.Interfaces;
 
 namespace SME.CDEP.Infra.Dados.Repositorios
 {
-    public class RepositorioTipoAnexo : RepositorioBase<TipoAnexo>, IRepositorioTipoAnexo
+    public class RepositorioTipoAnexo : RepositorioBaseSemAuditoria<TipoAnexo>, IRepositorioTipoAnexo
     {
         public RepositorioTipoAnexo(IContextoAplicacao contexto, ICdepConexao conexao) : base(contexto,conexao)
         { }

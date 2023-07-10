@@ -3,7 +3,7 @@ using SME.CDEP.Dominio;
 
 namespace SME.CDEP.Infra.Dados.Mapeamentos
 {
-    public class BaseSemAuditoriaMap<T> : DommelEntityMap<T> where T : EntidadeBase
+    public class BaseSemAuditoriaMap<T> : DommelEntityMap<T> where T : EntidadeBaseSemAuditoria
     {
         public BaseSemAuditoriaMap()
         {

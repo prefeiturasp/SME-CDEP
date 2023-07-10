@@ -121,6 +121,7 @@ public class RegistradorDeDependencia
         _serviceCollection.TryAddScoped<IServicoUsuario, ServicoUsuario>();
         _serviceCollection.TryAddScoped<IServicoPerfilUsuario, ServicoPerfilUsuario>();
         _serviceCollection.TryAddScoped<IServicoAcessos, ServicoAcessos>();
+        _serviceCollection.TryAddScoped<IServicoAcessoDocumento, ServicoAcessoDocumento>();
     }
     protected virtual void RegistrarHttpClients()
     {

@@ -4,6 +4,9 @@ namespace SME.CDEP.TesteIntegracao.Constantes;
 
 public class ConstantesTestes
 {
+    public const string DIGITAL = "Digital";
+    public const string FISICO = "Físico";
+    public const string DIGITAL_E_FISICO = "Digital e Físico";
     public const string SENHA_TESTE = "senha_teste";
     public const string USUARIO_CHAVE = "NomeUsuario";
     public const string USUARIO_RF_CHAVE = "RF";

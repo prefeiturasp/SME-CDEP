@@ -2,9 +2,8 @@
 
 namespace SME.CDEP.Dominio.Entidades
 {
-    public class Conservacao : EntidadeBase
+    public class Conservacao : EntidadeBaseSemAuditoria
     {
         public string Nome { get; set; }
-        public bool Excluido { get; set; }
     }
 }
