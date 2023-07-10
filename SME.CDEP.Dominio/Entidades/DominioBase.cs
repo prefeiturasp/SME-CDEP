@@ -3,11 +3,11 @@ using SME.CDEP.Dominio.Repositorios;
 namespace SME.CDEP.Dominio.Entidades;
 
 public abstract class DominioBase<TEntidade> : IDominioBase<TEntidade>
-    where TEntidade : EntidadeBase
+    where TEntidade : EntidadeBaseAuditavel
 {
-    private readonly IRepositorioBase<TEntidade> _repositorio;
+    private readonly IRepositorioBaseAuditavel<TEntidade> _repositorio;
 
-    public DominioBase(IRepositorioBase<TEntidade> repositorio)
+    public DominioBase(IRepositorioBaseAuditavel<TEntidade> repositorio)
     {
         _repositorio = repositorio;
     }
