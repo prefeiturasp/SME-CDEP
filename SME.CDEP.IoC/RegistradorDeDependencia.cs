@@ -6,6 +6,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 using Microsoft.Extensions.ObjectPool;
 using Microsoft.Extensions.Options;
+using SME.CDEP.Aplicacao.DTOS;
 using SME.CDEP.Aplicacao.Integracoes;
 using SME.CDEP.Aplicacao.Integracoes.Interfaces;
 using SME.CDEP.Aplicacao.Mapeamentos;
@@ -22,6 +23,7 @@ using SME.CDEP.Infra.Servicos.Options;
 using SME.CDEP.Infra.Servicos.Polly;
 using SME.CDEP.Infra.Servicos.Telemetria.IoC;
 using SME.CDEP.IoC.Extensions;
+using Usuario = SME.CDEP.Infra.Dados.Mapeamentos.Usuario;
 
 namespace SME.CDEP.IoC;
 
@@ -73,7 +75,15 @@ public class RegistradorDeDependencia
     {
         FluentMapper.Initialize(config =>
         {
-            config.AddMap(new UsuarioMap());
+            config.AddMap(new Usuario());
+            config.AddMap(new AcessoDocumentoMap());
+            config.AddMap(new ConservacaoMap());
+            config.AddMap(new CromiaMap());
+            config.AddMap(new FormatoMap());
+            config.AddMap(new IdiomaMap());
+            config.AddMap(new MaterialMap());
+            config.AddMap(new SuporteMap());
+            config.AddMap(new TipoAnexoMap());
 
             config.ForDommel();
         });
@@ -98,6 +108,14 @@ public class RegistradorDeDependencia
     protected virtual void RegistrarRepositorios()
     {
         _serviceCollection.TryAddScoped<IRepositorioUsuario, RepositorioUsuario>();
+        _serviceCollection.TryAddScoped<IRepositorioAcessoDocumento, RepositorioAcessoDocumento>();
+        _serviceCollection.TryAddScoped<IRepositorioConservacao, RepositorioConservacao>();
+        _serviceCollection.TryAddScoped<IRepositorioCromia, RepositorioCromia>();
+        _serviceCollection.TryAddScoped<IRepositorioFormato, RepositorioFormato>();
+        _serviceCollection.TryAddScoped<IRepositorioIdioma, RepositorioIdioma>();
+        _serviceCollection.TryAddScoped<IRepositorioMaterial, RepositorioMaterial>();
+        _serviceCollection.TryAddScoped<IRepositorioSuporte, RepositorioSuporte>();
+        _serviceCollection.TryAddScoped<IRepositorioTipoAnexo, RepositorioTipoAnexo>();
     }
 
     protected virtual void RegistrarServicos()
@@ -105,6 +123,14 @@ public class RegistradorDeDependencia
         _serviceCollection.TryAddScoped<IServicoUsuario, ServicoUsuario>();
         _serviceCollection.TryAddScoped<IServicoPerfilUsuario, ServicoPerfilUsuario>();
         _serviceCollection.TryAddScoped<IServicoAcessos, ServicoAcessos>();
+        _serviceCollection.TryAddScoped<IServicoAcessoDocumento, ServicoAcessoDocumento>();
+        _serviceCollection.TryAddScoped<IServicoConservacao, ServicoConservacao>();
+        _serviceCollection.TryAddScoped<IServicoCromia, ServicoCromia>();
+        _serviceCollection.TryAddScoped<IServicoFormato, ServicoFormato>();
+        _serviceCollection.TryAddScoped<IServicoIdioma, ServicoIdioma>();
+        _serviceCollection.TryAddScoped<IServicoMaterial, ServicoMaterial>();
+        _serviceCollection.TryAddScoped<IServicoSuporte, ServicoSuporte>();
+        _serviceCollection.TryAddScoped<IServicoTipoAnexo, ServicoTipoAnexo>();
     }
     protected virtual void RegistrarHttpClients()
     {

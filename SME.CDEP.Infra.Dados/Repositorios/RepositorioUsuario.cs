@@ -5,7 +5,7 @@ using SME.CDEP.Infra.Dados.Repositorios.Interfaces;
 
 namespace SME.CDEP.Infra.Dados.Repositorios
 {
-    public class RepositorioUsuario : RepositorioBase<Usuario>, IRepositorioUsuario
+    public class RepositorioUsuario : RepositorioBaseAuditavel<Usuario>, IRepositorioUsuario
     {
         public RepositorioUsuario(IContextoAplicacao contexto, ICdepConexao conexao) : base(contexto,conexao)
         { }

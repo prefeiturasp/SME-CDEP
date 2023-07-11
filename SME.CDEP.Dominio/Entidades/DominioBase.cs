@@ -12,23 +12,23 @@ public abstract class DominioBase<TEntidade> : IDominioBase<TEntidade>
         _repositorio = repositorio;
     }
     
-    public async Task<TEntidade> ObterPorId(long id)
+    public Task<TEntidade> ObterPorId(long id)
     {
-        return await _repositorio.ObterPorId(id);
+        return _repositorio.ObterPorId(id);
     }
 
-    public async Task<IList<TEntidade>> ObterTodos()
+    public Task<IList<TEntidade>> ObterTodos()
     {
-        return await _repositorio.ObterTodos();
+        return _repositorio.ObterTodos();
     }
 
-    public async Task<long> Inserir(TEntidade entidade)
+    public Task<long> Inserir(TEntidade entidade)
     {
-        return await _repositorio.Inserir(entidade);
+        return _repositorio.Inserir(entidade);
     }
 
-    public async Task<TEntidade> Atualizar(TEntidade entidade)
+    public Task<TEntidade> Atualizar(TEntidade entidade)
     {
-        return await _repositorio.Atualizar(entidade);
+        return _repositorio.Atualizar(entidade);
     }
 }

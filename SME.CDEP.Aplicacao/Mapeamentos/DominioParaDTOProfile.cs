@@ -10,6 +10,14 @@ namespace SME.CDEP.Aplicacao.Mapeamentos
         {
             CreateMap<UsuarioDTO, Usuario>().ReverseMap();
             CreateMap<UsuarioIdNomeLoginDTO, Usuario>().ReverseMap();
+            CreateMap<IdNomeExcluidoDTO, AcessoDocumento>().ReverseMap();
+            CreateMap<IdNomeExcluidoDTO, Conservacao>().ReverseMap();
+            CreateMap<IdNomeExcluidoDTO, Cromia>().ReverseMap();
+            CreateMap<IdNomeExcluidoDTO, Formato>().ReverseMap();
+            CreateMap<IdNomeExcluidoDTO, Idioma>().ReverseMap();
+            CreateMap<IdNomeTipoExcluidoDTO, Material>().ReverseMap();
+            CreateMap<IdNomeTipoExcluidoDTO, Suporte>().ReverseMap();
+            CreateMap<IdNomeExcluidoDTO, TipoAnexo>().ReverseMap();
         }
     }
 }

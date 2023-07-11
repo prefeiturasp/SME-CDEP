@@ -4,6 +4,48 @@ namespace SME.CDEP.TesteIntegracao.Constantes;
 
 public class ConstantesTestes
 {
+    public const string ANEXO = "Anexo";
+    public const string AUDIOVISUAL = "Audiovisual";
+    public const string CD = "CD";
+    public const string DISQUETE = "Disquete";
+    public const string ENCARTE = "Encarte";
+    public const string FITAS_DE_VIDEO = "Fitas de Vídeo";
+    
+    public const string VHS = "VHS";
+    public const string DVD = "DVD";
+    
+    public const string OUTROS = "Outros";
+    public const string APOSTILA = "Apostila";
+    public const string LIVRO = "Livro";
+    public const string CADERNO = "Caderno";
+    public const string PERIODICO = "Periódico";
+    public const string REVISTA = "Revista";
+    public const string TESE = "Tese";
+    
+    public const string ITALIANO = "Italiano";
+    public const string PORTUGUES = "Português";
+    public const string INGLES = "Inglês";
+    public const string ESPANHOL = "Espanhol";
+    public const string FRANCES = "Frances";
+    public const string Alemao = "Alemao";
+    
+    public const string IMPRESSO = "Impresso";
+    public const string PAPEL = "Papel";
+    public const string PAPEL_DIGITAL = "Papel/Digital";
+    public const string TRANSPARENTE = "Transparente";
+    public const string COLOR = "Color";
+    public const string PB = "PB";
+    
+    public const string OTIMO = "Ótimo";
+    public const string EXCELENTE = "Excelente";
+    public const string BOM = "Bom";
+    public const string REGULAR = "Regular";
+    public const string RUIM = "Ruim";
+    
+    public const string DIGITAL = "Digital";
+    public const string FISICO = "Físico";
+    public const string DIGITAL_E_FISICO = "Digital e Físico";
+    
     public const string SENHA_TESTE = "senha_teste";
     public const string USUARIO_CHAVE = "NomeUsuario";
     public const string USUARIO_RF_CHAVE = "RF";
