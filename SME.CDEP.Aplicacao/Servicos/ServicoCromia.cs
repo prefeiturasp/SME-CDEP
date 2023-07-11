@@ -17,15 +17,15 @@ namespace SME.CDEP.Aplicacao.Servicos
             this.mapper = mapper ?? throw new ArgumentNullException(nameof(mapper));
         }
 
-        public async Task<long> Inserir(CromiaDTO cromiaDTO)
+        public Task<long> Inserir(CromiaDTO cromiaDTO)
         {
             var cromia = mapper.Map<Cromia>(cromiaDTO);
-            return await repositorioCromia.Inserir(cromia);
+            return repositorioCromia.Inserir(cromia);
         }
 
         public async Task<IList<CromiaDTO>> ObterTodos()
         {
-            return (await repositorioCromia.ObterTodos()).ToList().Where(w=> !w.Excluido).Select(s=> mapper.Map<CromiaDTO>(s)).ToList();
+            return (await repositorioCromia.ObterTodos()).Where(w=> !w.Excluido).Select(s=> mapper.Map<CromiaDTO>(s)).ToList();
         }
 
         public async Task<CromiaDTO> Alterar(CromiaDTO cromiaDTO)

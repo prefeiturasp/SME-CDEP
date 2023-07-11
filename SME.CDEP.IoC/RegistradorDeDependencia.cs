@@ -22,6 +22,7 @@ using SME.CDEP.Infra.Servicos.Options;
 using SME.CDEP.Infra.Servicos.Polly;
 using SME.CDEP.Infra.Servicos.Telemetria.IoC;
 using SME.CDEP.IoC.Extensions;
+using Usuario = SME.CDEP.Infra.Dados.Mapeamentos.Usuario;
 
 namespace SME.CDEP.IoC;
 
@@ -73,7 +74,7 @@ public class RegistradorDeDependencia
     {
         FluentMapper.Initialize(config =>
         {
-            config.AddMap(new UsuarioMap());
+            config.AddMap(new Usuario());
             config.AddMap(new AcessoDocumentoMap());
             config.AddMap(new ConservacaoMap());
             config.AddMap(new CromiaMap());

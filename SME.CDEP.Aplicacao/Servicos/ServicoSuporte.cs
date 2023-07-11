@@ -17,15 +17,15 @@ namespace SME.CDEP.Aplicacao.Servicos
             this.mapper = mapper ?? throw new ArgumentNullException(nameof(mapper));
         }
 
-        public async Task<long> Inserir(SuporteDTO suporteDTO)
+        public Task<long> Inserir(SuporteDTO suporteDTO)
         {
             var suporte = mapper.Map<Suporte>(suporteDTO);
-            return await repositorioSuporte.Inserir(suporte);
+            return repositorioSuporte.Inserir(suporte);
         }
 
         public async Task<IList<SuporteDTO>> ObterTodos()
         {
-            return (await repositorioSuporte.ObterTodos()).ToList().Where(w=> !w.Excluido).Select(s=> mapper.Map<SuporteDTO>(s)).ToList();
+            return (await repositorioSuporte.ObterTodos()).Where(w=> !w.Excluido).Select(s=> mapper.Map<SuporteDTO>(s)).ToList();
         }
 
         public async Task<SuporteDTO> Alterar(SuporteDTO suporteDTO)

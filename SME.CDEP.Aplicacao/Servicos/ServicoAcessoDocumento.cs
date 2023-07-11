@@ -17,15 +17,15 @@ namespace SME.CDEP.Aplicacao.Servicos
             this.mapper = mapper ?? throw new ArgumentNullException(nameof(mapper));
         }
 
-        public async Task<long> Inserir(AcessoDocumentoDTO acessoDocumentoDto)
+        public Task<long> Inserir(AcessoDocumentoDTO acessoDocumentoDto)
         {
             var acessoDocumento = mapper.Map<AcessoDocumento>(acessoDocumentoDto);
-            return await repositorioAcessoDocumento.Inserir(acessoDocumento);
+            return repositorioAcessoDocumento.Inserir(acessoDocumento);
         }
 
         public async Task<IList<AcessoDocumentoDTO>> ObterTodos()
         {
-            return (await repositorioAcessoDocumento.ObterTodos()).ToList().Where(w=> !w.Excluido).Select(s=> mapper.Map<AcessoDocumentoDTO>(s)).ToList();
+            return (await repositorioAcessoDocumento.ObterTodos()).Where(w=> !w.Excluido).Select(s=> mapper.Map<AcessoDocumentoDTO>(s)).ToList();
         }
 
         public async Task<AcessoDocumentoDTO> Alterar(AcessoDocumentoDTO acessoDocumentoDto)
