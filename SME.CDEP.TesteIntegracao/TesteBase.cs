@@ -91,6 +91,46 @@ namespace SME.CDEP.TesteIntegracao
         {
             return ObterServicoAplicacao<IServicoUsuario>();
         }
+        
+        protected IServicoAcessoDocumento GetServicoAcessoDocumento()
+        {
+            return ObterServicoAplicacao<IServicoAcessoDocumento>();
+        }
+        
+        protected IServicoConservacao GetServicoConservacao()
+        {
+            return ObterServicoAplicacao<IServicoConservacao>();
+        }
+        
+        protected IServicoCromia GetServicoCromia()
+        {
+            return ObterServicoAplicacao<IServicoCromia>();
+        }
+        
+        protected IServicoFormato GetServicoFormato()
+        {
+            return ObterServicoAplicacao<IServicoFormato>();
+        }
+        
+        protected IServicoIdioma GetServicoIdioma()
+        {
+            return ObterServicoAplicacao<IServicoIdioma>();
+        }
+        
+        protected IServicoMaterial GetServicoMaterial()
+        {
+            return ObterServicoAplicacao<IServicoMaterial>();
+        }
+        
+        protected IServicoSuporte GetServicoSuporte()
+        {
+            return ObterServicoAplicacao<IServicoSuporte>();
+        }
+        
+        protected IServicoTipoAnexo GetServicoTipoAnexo()
+        {
+            return ObterServicoAplicacao<IServicoTipoAnexo>();
+        }
 
         public T ObterServicoAplicacao<T>()
             where T : IServicoAplicacao

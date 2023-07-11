@@ -2,7 +2,7 @@
 
 namespace SME.CDEP.Infra.Dados.Mapeamentos
 {
-    public class UsuarioMap : BaseMap<Usuario>
+    public class UsuarioMap : BaseAuditavelMap<Usuario>
     {
         public UsuarioMap()
         {
