@@ -6,6 +6,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 using Microsoft.Extensions.ObjectPool;
 using Microsoft.Extensions.Options;
+using SME.CDEP.Aplicacao.DTOS;
 using SME.CDEP.Aplicacao.Integracoes;
 using SME.CDEP.Aplicacao.Integracoes.Interfaces;
 using SME.CDEP.Aplicacao.Mapeamentos;
@@ -126,7 +127,7 @@ public class RegistradorDeDependencia
         _serviceCollection.TryAddScoped<IServicoConservacao, ServicoConservacao>();
         _serviceCollection.TryAddScoped<IServicoCromia, ServicoCromia>();
         _serviceCollection.TryAddScoped<IServicoFormato, ServicoFormato>();
-        _serviceCollection.TryAddScoped<IServicoIdioma, ServicoIdioma>();
+         _serviceCollection.TryAddScoped<IServicoIdioma, ServicoIdioma>();
         _serviceCollection.TryAddScoped<IServicoMaterial, ServicoMaterial>();
         _serviceCollection.TryAddScoped<IServicoSuporte, ServicoSuporte>();
         _serviceCollection.TryAddScoped<IServicoTipoAnexo, ServicoTipoAnexo>();

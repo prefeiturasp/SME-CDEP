@@ -17,7 +17,7 @@ namespace SME.CDEP.TesteIntegracao.Usuario
         {
             var servicoCromia = GetServicoCromia();
 
-            var cromia = await servicoCromia.Inserir(new CromiaDTO(){Nome = ConstantesTestes.PB});
+            var cromia = await servicoCromia.Inserir(new IdNomeExcluidoDTO(){Nome = ConstantesTestes.PB});
             cromia.ShouldBeGreaterThan(0);
             var obterTodos = ObterTodos<Cromia>();
             obterTodos.Count.ShouldBe(1);

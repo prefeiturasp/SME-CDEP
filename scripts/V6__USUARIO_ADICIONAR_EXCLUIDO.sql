@@ -1,0 +1,1 @@
+ALTER TABLE usuario ADD COLUMN IF NOT EXISTS excluido bool NOT NULL DEFAULT false; 

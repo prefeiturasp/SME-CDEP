@@ -9,7 +9,6 @@ namespace SME.CDEP.Infra.Dados.Mapeamentos
             ToTable("suporte");
             Map(c => c.Nome).ToColumn("nome");
             Map(c => c.TipoSuporte).ToColumn("tipo_suporte");
-            Map(c => c.Excluido).ToColumn("excluido");
         }
     }
 }

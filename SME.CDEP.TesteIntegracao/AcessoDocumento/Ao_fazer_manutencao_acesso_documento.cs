@@ -17,7 +17,7 @@ namespace SME.CDEP.TesteIntegracao.Usuario
         {
             var servicoAcessoDocumento = GetServicoAcessoDocumento();
 
-            var acessoDocumento = await servicoAcessoDocumento.Inserir(new AcessoDocumentoDTO(){Nome = ConstantesTestes.DIGITAL_E_FISICO});
+            var acessoDocumento = await servicoAcessoDocumento.Inserir(new IdNomeExcluidoDTO(){Nome = ConstantesTestes.DIGITAL_E_FISICO});
             acessoDocumento.ShouldBeGreaterThan(0);
             var obterTodos = ObterTodos<AcessoDocumento>();
             obterTodos.Count.ShouldBe(1);

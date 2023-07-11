@@ -6,6 +6,5 @@ namespace SME.CDEP.Dominio.Entidades
     {
         public string Nome { get; set; }
         public TipoMaterial TipoMaterial { get; set; }
-        public bool Excluido { get; set; }
     }
 }

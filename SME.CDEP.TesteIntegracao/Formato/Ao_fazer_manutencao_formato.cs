@@ -17,7 +17,7 @@ namespace SME.CDEP.TesteIntegracao.Usuario
         {
             var servicoFormato = GetServicoFormato();
 
-            var formato = await servicoFormato.Inserir(new FormatoDTO(){Nome = ConstantesTestes.PAPEL});
+            var formato = await servicoFormato.Inserir(new IdNomeExcluidoDTO(){Nome = ConstantesTestes.PAPEL});
             formato.ShouldBeGreaterThan(0);
             var obterTodos = ObterTodos<Formato>();
             obterTodos.Count.ShouldBe(1);

@@ -6,45 +6,9 @@ using SME.CDEP.Infra.Dados.Repositorios.Interfaces;
 
 namespace SME.CDEP.Aplicacao.Servicos
 {
-    public class ServicoCromia : IServicoCromia
+    public class ServicoCromia  : ServicoAplicacao<Cromia, IdNomeExcluidoDTO>,IServicoCromia
     {
-        private readonly IRepositorioCromia repositorioCromia;
-        private readonly IMapper mapper;
-        
-        public ServicoCromia(IRepositorioCromia repositorioCromia, IMapper mapper) 
-        {
-            this.repositorioCromia = repositorioCromia ?? throw new ArgumentNullException(nameof(repositorioCromia));
-            this.mapper = mapper ?? throw new ArgumentNullException(nameof(mapper));
-        }
-
-        public Task<long> Inserir(CromiaDTO cromiaDTO)
-        {
-            var cromia = mapper.Map<Cromia>(cromiaDTO);
-            return repositorioCromia.Inserir(cromia);
-        }
-
-        public async Task<IList<CromiaDTO>> ObterTodos()
-        {
-            return (await repositorioCromia.ObterTodos()).Where(w=> !w.Excluido).Select(s=> mapper.Map<CromiaDTO>(s)).ToList();
-        }
-
-        public async Task<CromiaDTO> Alterar(CromiaDTO cromiaDTO)
-        {
-            var cromia = mapper.Map<Cromia>(cromiaDTO);
-            return mapper.Map<CromiaDTO>(await repositorioCromia.Atualizar(cromia));
-        }
-
-        public async Task<CromiaDTO> ObterPorId(long cromiaId)
-        {
-            return mapper.Map<CromiaDTO>(await repositorioCromia.ObterPorId(cromiaId));
-        }
-
-        public async Task<bool> Excluir(long cromiaId)
-        {
-            var cromia = await ObterPorId(cromiaId);
-            cromia.Excluido = true;
-            await Alterar(cromia);
-            return true;
-        }
+        public ServicoCromia(IRepositorioCromia repositorio, IMapper mapper) : base(repositorio, mapper)
+        {}
     }
 }

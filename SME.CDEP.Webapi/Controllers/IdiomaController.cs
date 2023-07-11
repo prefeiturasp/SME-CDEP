@@ -11,20 +11,20 @@ namespace SME.CDEP.Webapi.Controllers;
 public class IdiomaController: BaseController
 {
     [HttpPost]
-    [ProducesResponseType(typeof(IdiomaDTO), 200)]
+    [ProducesResponseType(typeof(IdNomeExcluidoDTO), 200)]
     [ProducesResponseType(typeof(RetornoBaseDTO), 400)]
     [ProducesResponseType(typeof(RetornoBaseDTO), 500)]
     [ProducesResponseType(typeof(RetornoBaseDTO), 601)]
     [Authorize("Bearer")]
-    public async Task<IActionResult> CadastrarAlterar([FromBody] IdiomaDTO acessoDocumentoDTO, [FromServices] IServicoIdioma servicoIdioma)
+    public async Task<IActionResult> CadastrarAlterar([FromBody] IdNomeExcluidoDTO idiomaDTO, [FromServices] IServicoIdioma servicoIdioma)
     {
-        return acessoDocumentoDTO.Id > 0 ? Ok(await servicoIdioma.Alterar(acessoDocumentoDTO)) : Ok(await servicoIdioma.Inserir(acessoDocumentoDTO));
+        return idiomaDTO.Id > 0 ? Ok(await servicoIdioma.Alterar(idiomaDTO)) : Ok(await servicoIdioma.Inserir(idiomaDTO));
     }
 
     [HttpGet("obter-todos")]
     [ProducesResponseType(typeof(RetornoBaseDTO), 400)]
     [ProducesResponseType(typeof(RetornoBaseDTO), 601)]
-    [ProducesResponseType(typeof(IdiomaDTO), 200)]  
+    [ProducesResponseType(typeof(IdNomeExcluidoDTO), 200)]  
     [Authorize("Bearer")]
     public async Task<IActionResult> ObterTodos([FromServices]IServicoIdioma servicoIdioma)
     {
@@ -34,7 +34,7 @@ public class IdiomaController: BaseController
     [HttpGet("{id}")]
     [ProducesResponseType(typeof(RetornoBaseDTO), 400)]
     [ProducesResponseType(typeof(RetornoBaseDTO), 601)]
-    [ProducesResponseType(typeof(IdiomaDTO), 200)]  
+    [ProducesResponseType(typeof(IdNomeExcluidoDTO), 200)]  
     [Authorize("Bearer")]
     public async Task<IActionResult> ObterTodos([FromRoute] long id,[FromServices]IServicoIdioma servicoIdioma)
     {

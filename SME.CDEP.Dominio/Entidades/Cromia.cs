@@ -5,6 +5,5 @@ namespace SME.CDEP.Dominio.Entidades
     public class Cromia : EntidadeBase
     {
         public string Nome { get; set; }
-        public bool Excluido { get; set; }
     }
 }
