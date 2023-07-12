@@ -18,7 +18,7 @@ namespace SME.CDEP.TesteIntegracao.Usuario
         {
             var servicoSuporte = GetServicoSuporte();
 
-            var suporte = await servicoSuporte.Inserir(new IdNomeTipoExcluidoDTO(){Nome = ConstantesTestes.DIGITAL_E_FISICO, TipoSuporte = (int)TipoSuporte.VIDEO});
+            var suporte = await servicoSuporte.Inserir(new IdNomeTipoExcluidoDTO(){Nome = ConstantesTestes.DIGITAL_E_FISICO, Tipo = (int)TipoSuporte.VIDEO});
             suporte.ShouldBeGreaterThan(0);
             var obterTodos = ObterTodos<Suporte>();
             obterTodos.Count.ShouldBe(1);

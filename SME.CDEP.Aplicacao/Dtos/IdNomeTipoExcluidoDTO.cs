@@ -2,6 +2,6 @@
 {
     public class IdNomeTipoExcluidoDTO : IdNomeExcluidoDTO
     {
-        public int TipoSuporte { get; set; }
+        public int Tipo { get; set; }
     }
 }
