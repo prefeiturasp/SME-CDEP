@@ -21,7 +21,7 @@ public class FormatoController: BaseController
         return formatoDTO.Id > 0 ? Ok(await servicoFormato.Alterar(formatoDTO)) : Ok(await servicoFormato.Inserir(formatoDTO));
     }
 
-    [HttpGet("obter-todos")]
+    [HttpGet]
     [ProducesResponseType(typeof(RetornoBaseDTO), 400)]
     [ProducesResponseType(typeof(RetornoBaseDTO), 601)]
     [ProducesResponseType(typeof(IdNomeExcluidoDTO), 200)]  

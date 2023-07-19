@@ -21,7 +21,7 @@ public class ConservacaoController: BaseController
         return conservacaoDTO.Id > 0 ? Ok(await servicoConservacao.Alterar(conservacaoDTO)) : Ok(await servicoConservacao.Inserir(conservacaoDTO));
     }
 
-    [HttpGet("obter-todos")]
+    [HttpGet]
     [ProducesResponseType(typeof(RetornoBaseDTO), 400)]
     [ProducesResponseType(typeof(RetornoBaseDTO), 601)]
     [ProducesResponseType(typeof(IdNomeExcluidoDTO), 200)]  

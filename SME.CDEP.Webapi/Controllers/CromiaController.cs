@@ -21,7 +21,7 @@ public class CromiaController: BaseController
         return cromiaDTO.Id > 0 ? Ok(await servicoCromia.Alterar(cromiaDTO)) : Ok(await servicoCromia.Inserir(cromiaDTO));
     }
 
-    [HttpGet("obter-todos")]
+    [HttpGet]
     [ProducesResponseType(typeof(RetornoBaseDTO), 400)]
     [ProducesResponseType(typeof(RetornoBaseDTO), 601)]
     [ProducesResponseType(typeof(IdNomeExcluidoDTO), 200)]  
