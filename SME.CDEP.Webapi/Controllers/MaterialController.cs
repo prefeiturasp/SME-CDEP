@@ -21,7 +21,7 @@ public class MaterialController: BaseController
         return materialDTO.Id > 0 ? Ok(await servicoMaterial.Alterar(materialDTO)) : Ok(await servicoMaterial.Inserir(materialDTO));
     }
 
-    [HttpGet("obter-todos")]
+    [HttpGet]
     [ProducesResponseType(typeof(RetornoBaseDTO), 400)]
     [ProducesResponseType(typeof(RetornoBaseDTO), 601)]
     [ProducesResponseType(typeof(IdNomeTipoExcluidoDTO), 200)]  

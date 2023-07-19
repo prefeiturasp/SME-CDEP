@@ -13,7 +13,7 @@ namespace SME.CDEP.Aplicacao.Mapeamentos
             CreateMap<IdNomeExcluidoDTO, AcessoDocumento>().ReverseMap();
             CreateMap<IdNomeExcluidoDTO, Conservacao>().ReverseMap();
             CreateMap<IdNomeExcluidoDTO, Cromia>().ReverseMap();
-            CreateMap<IdNomeExcluidoDTO, Formato>().ReverseMap();
+            CreateMap<IdNomeTipoExcluidoDTO, Formato>().ReverseMap();
             CreateMap<IdNomeExcluidoDTO, Idioma>().ReverseMap();
             CreateMap<IdNomeTipoExcluidoDTO, Material>().ReverseMap();
             CreateMap<IdNomeTipoExcluidoDTO, Suporte>().ReverseMap();

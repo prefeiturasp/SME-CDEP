@@ -21,7 +21,7 @@ public class AcessoDocumentoController: BaseController
         return acessoDocumentoDTO.Id > 0 ? Ok(await servicoAcessoDocumento.Alterar(acessoDocumentoDTO)) : Ok(await servicoAcessoDocumento.Inserir(acessoDocumentoDTO));
     }
 
-    [HttpGet("obter-todos")]
+    [HttpGet]
     [ProducesResponseType(typeof(RetornoBaseDTO), 400)]
     [ProducesResponseType(typeof(RetornoBaseDTO), 601)]
     [ProducesResponseType(typeof(IdNomeExcluidoDTO), 200)]  

@@ -80,11 +80,11 @@ namespace SME.CDEP.TesteIntegracao.Usuario
 
         private async Task InserirSuporte()
         {
-            await InserirNaBase(new Suporte() { Nome = ConstantesTestes.PAPEL, TipoSuporte = TipoSuporte.IMAGEM});
-            await InserirNaBase(new Suporte() { Nome = ConstantesTestes.DIGITAL, TipoSuporte = TipoSuporte.IMAGEM});
-            await InserirNaBase(new Suporte() { Nome = ConstantesTestes.PAPEL_DIGITAL, TipoSuporte = TipoSuporte.IMAGEM});
-            await InserirNaBase(new Suporte() { Nome = ConstantesTestes.VHS, TipoSuporte = TipoSuporte.VIDEO});
-            await InserirNaBase(new Suporte() { Nome = ConstantesTestes.DVD, TipoSuporte = TipoSuporte.VIDEO});
+            await InserirNaBase(new Suporte() { Nome = ConstantesTestes.PAPEL, Tipo = TipoSuporte.IMAGEM});
+            await InserirNaBase(new Suporte() { Nome = ConstantesTestes.DIGITAL, Tipo = TipoSuporte.IMAGEM});
+            await InserirNaBase(new Suporte() { Nome = ConstantesTestes.PAPEL_DIGITAL, Tipo = TipoSuporte.IMAGEM});
+            await InserirNaBase(new Suporte() { Nome = ConstantesTestes.VHS, Tipo = TipoSuporte.VIDEO});
+            await InserirNaBase(new Suporte() { Nome = ConstantesTestes.DVD, Tipo = TipoSuporte.VIDEO});
         }
     }
 }

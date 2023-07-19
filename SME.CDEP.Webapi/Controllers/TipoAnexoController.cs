@@ -21,7 +21,7 @@ public class TipoAnexoController: BaseController
         return tipoAnexoDTO.Id > 0 ? Ok(await servicoTipoAnexo.Alterar(tipoAnexoDTO)) : Ok(await servicoTipoAnexo.Inserir(tipoAnexoDTO));
     }
 
-    [HttpGet("obter-todos")]
+    [HttpGet]
     [ProducesResponseType(typeof(RetornoBaseDTO), 400)]
     [ProducesResponseType(typeof(RetornoBaseDTO), 601)]
     [ProducesResponseType(typeof(IdNomeExcluidoDTO), 200)]  

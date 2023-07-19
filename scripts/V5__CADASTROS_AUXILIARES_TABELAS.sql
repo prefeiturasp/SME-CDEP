@@ -7,59 +7,59 @@ CREATE TABLE IF NOT EXISTS public.tipo_anexo (
 );
 
 insert into public.tipo_anexo (nome) 
-select 'Anexo' where not exists (select 1 from public.tipo_anexo where nome = 'Anexo') union all
-select 'Audiovisual' where not exists (select 1 from public.tipo_anexo where nome = 'Audiovisual') union all
 select 'CD' where not exists (select 1 from public.tipo_anexo where nome = 'CD') union all
 select 'Disquete' where not exists (select 1 from public.tipo_anexo where nome = 'Disquete') union all
 select 'DVD' where not exists (select 1 from public.tipo_anexo where nome = 'DVD') union all
 select 'Encarte' where not exists (select 1 from public.tipo_anexo where nome = 'Encarte') union all
-select 'Fitas de vídeo' where not exists (select 1 from public.tipo_anexo where nome = 'Fitas de vídeo');
+select 'VHS' where not exists (select 1 from public.tipo_anexo where nome = 'Fitas de vídeo');
 
 CREATE TABLE IF NOT EXISTS public.suporte (
 	id int8 NOT NULL GENERATED ALWAYS AS IDENTITY( NO MINVALUE NO MAXVALUE NO CYCLE),
 	nome varchar(500) NULL,
 	excluido bool NOT NULL DEFAULT false,
-	tipo_suporte INTEGER null,
+	tipo INTEGER null,
 	CONSTRAINT suporte_pk PRIMARY KEY (id)
 );
 
-insert into public.suporte (nome,tipo_suporte) 
-select 'Papel',1 where not exists (select 1 from public.suporte where nome = 'Papel') union all
-select 'Digital',1 where not exists (select 1 from public.suporte where nome = 'Digital') union all
-select 'Papel/Digital',1 where not exists (select 1 from public.suporte where nome = 'Papel/Digital') union all
-select 'VHS',2 where not exists (select 1 from public.suporte where nome = 'VHS') union all
-select 'DVD',2 where not exists (select 1 from public.suporte where nome = 'DVD');
+insert into public.suporte (nome,tipo) 
+select 'Papel',1 where not exists (select 1 from public.suporte where nome = 'Papel' and tipo = 1) union all
+select 'Digital',1 where not exists (select 1 from public.suporte where nome = 'Digital' and tipo = 1) union all
+select 'Papel/Digital',1 where not exists (select 1 from public.suporte where nome = 'Papel/Digital' and tipo = 1) union all
+select 'VHS',2 where not exists (select 1 from public.suporte where nome = 'VHS' and tipo = 2) union all
+select 'DVD',2 where not exists (select 1 from public.suporte where nome = 'DVD' and tipo = 2);
 
 CREATE TABLE IF NOT EXISTS public.formato (
 	id int8 NOT NULL GENERATED ALWAYS AS IDENTITY( NO MINVALUE NO MAXVALUE NO CYCLE),
 	nome varchar(500) NULL,
+	tipo INTEGER null,
 	excluido bool NOT NULL DEFAULT false,	
 	CONSTRAINT formato_pk PRIMARY KEY (id)
 );
 
-insert into public.formato (nome) 
-select 'Papel' where not exists (select 1 from public.formato where nome = 'Papel') union all
-select 'Digital' where not exists (select 1 from public.formato where nome = 'Digital') union all
-select 'Papel/Digital' where not exists (select 1 from public.formato where nome = 'Papel/Digital');
+insert into public.formato (nome,tipo) 
+select 'JPEG',1 where not exists (select 1 from public.formato where nome = 'JPEG' and tipo = 1) union all
+select 'TIFF',1 where not exists (select 1 from public.formato where nome = 'TIFF' and tipo = 1) union all
+select 'VDF',2 where not exists (select 1 from public.formato where nome = 'VDF' and tipo = 2) union all
+select 'VOB',2 where not exists (select 1 from public.formato where nome = 'VOB' and tipo = 2);
 
 
 CREATE TABLE IF NOT EXISTS public.material (
 	id int8 NOT NULL GENERATED ALWAYS AS IDENTITY( NO MINVALUE NO MAXVALUE NO CYCLE),
 	nome varchar(500) NULL,
 	excluido bool NOT NULL DEFAULT false,
-	tipo_material INTEGER null,
+	tipo INTEGER null,
 	CONSTRAINT material_pk PRIMARY KEY (id)
 );
 
-insert into public.material (nome,tipo_material) 
-select 'Apostila',1 where not exists (select 1 from public.material where nome = 'Apostila' and tipo_material = 1) union all
-select 'Livro',1 where not exists (select 1 from public.material where nome = 'Livro' and tipo_material = 1) union all
-select 'Caderno',1 where not exists (select 1 from public.material where nome = 'Caderno' and tipo_material = 1) union all
-select 'Periódico',1 where not exists (select 1 from public.material where nome = 'Periódico' and tipo_material = 1) union all
-select 'Revista',1 where not exists (select 1 from public.material where nome = 'Revista' and tipo_material = 1) union all
-select 'Livro',2 where not exists (select 1 from public.material where nome = 'Livro' and tipo_material = 2) union all
-select 'Tese',2 where not exists (select 1 from public.material where nome = 'Tese'  and tipo_material = 2) union all
-select 'Periódico',2 where not exists (select 1 from public.material where nome = 'Periódico'  and tipo_material = 2);
+insert into public.material (nome,tipo) 
+select 'Apostila',1 where not exists (select 1 from public.material where nome = 'Apostila' and tipo = 1) union all
+select 'Livro',1 where not exists (select 1 from public.material where nome = 'Livro' and tipo = 1) union all
+select 'Caderno',1 where not exists (select 1 from public.material where nome = 'Caderno' and tipo = 1) union all
+select 'Periódico',1 where not exists (select 1 from public.material where nome = 'Periódico' and tipo = 1) union all
+select 'Revista',1 where not exists (select 1 from public.material where nome = 'Revista' and tipo = 1) union all
+select 'Livro',2 where not exists (select 1 from public.material where nome = 'Livro' and tipo = 2) union all
+select 'Tese',2 where not exists (select 1 from public.material where nome = 'Tese'  and tipo = 2) union all
+select 'Periódico',2 where not exists (select 1 from public.material where nome = 'Periódico'  and tipo = 2);
 
 CREATE TABLE IF NOT EXISTS public.idioma (
 	id int8 NOT NULL GENERATED ALWAYS AS IDENTITY( NO MINVALUE NO MAXVALUE NO CYCLE),

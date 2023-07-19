@@ -8,6 +8,7 @@ namespace SME.CDEP.Infra.Dados.Mapeamentos
         {
             ToTable("formato");
             Map(c => c.Nome).ToColumn("nome");
+            Map(c => c.Tipo).ToColumn("tipo");
         }
     }
 }
