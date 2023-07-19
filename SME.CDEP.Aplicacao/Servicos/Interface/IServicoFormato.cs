@@ -2,6 +2,6 @@
 
 namespace SME.CDEP.Aplicacao.Servicos.Interface
 {
-    public interface IServicoFormato : IServicoAplicacao, IServicoIdNomeExcluido
+    public interface IServicoFormato : IServicoAplicacao, IServicoIdNomeTipoExcluido
     {}
 }

@@ -16,7 +16,7 @@ public class FormatoController: BaseController
     [ProducesResponseType(typeof(RetornoBaseDTO), 500)]
     [ProducesResponseType(typeof(RetornoBaseDTO), 601)]
     [Authorize("Bearer")]
-    public async Task<IActionResult> CadastrarAlterar([FromBody] IdNomeExcluidoDTO formatoDTO, [FromServices] IServicoFormato servicoFormato)
+    public async Task<IActionResult> CadastrarAlterar([FromBody] IdNomeTipoExcluidoDTO formatoDTO, [FromServices] IServicoFormato servicoFormato)
     {
         return formatoDTO.Id > 0 ? Ok(await servicoFormato.Alterar(formatoDTO)) : Ok(await servicoFormato.Inserir(formatoDTO));
     }
