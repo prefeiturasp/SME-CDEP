@@ -2,12 +2,6 @@
 
 namespace SME.CDEP.Aplicacao.Servicos.Interface
 {
-    public interface IServicoCromia : IServicoAplicacao
-    {
-        Task<long> Inserir(CromiaDTO cromiaDTO);
-        Task<IList<CromiaDTO>> ObterTodos();
-        Task<CromiaDTO> Alterar(CromiaDTO cromiaDTO);
-        Task<CromiaDTO> ObterPorId(long cromiaId);
-        Task<bool> Excluir(long cromiaId);
-    }
+    public interface IServicoCromia : IServicoAplicacao, IServicoIdNomeExcluido
+    {}
 }

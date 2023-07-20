@@ -18,7 +18,7 @@ namespace SME.CDEP.TesteIntegracao.Usuario
         {
             var servicoMaterial = GetServicoMaterial();
 
-            var material = await servicoMaterial.Inserir(new MaterialDTO(){Nome = ConstantesTestes.APOSTILA});
+            var material = await servicoMaterial.Inserir(new IdNomeTipoExcluidoDTO(){Nome = ConstantesTestes.APOSTILA});
             material.ShouldBeGreaterThan(0);
             var obterTodos = ObterTodos<Material>();
             obterTodos.Count.ShouldBe(1);
@@ -80,14 +80,14 @@ namespace SME.CDEP.TesteIntegracao.Usuario
 
         private async Task InserirMaterial()
         {
-            await InserirNaBase(new Material() { Nome = ConstantesTestes.APOSTILA, TipoMaterial = TipoMaterial.DOCUMENTAL});
-            await InserirNaBase(new Material() { Nome = ConstantesTestes.LIVRO, TipoMaterial = TipoMaterial.DOCUMENTAL});
-            await InserirNaBase(new Material() { Nome = ConstantesTestes.CADERNO, TipoMaterial = TipoMaterial.DOCUMENTAL});
-            await InserirNaBase(new Material() { Nome = ConstantesTestes.PERIODICO, TipoMaterial = TipoMaterial.DOCUMENTAL});
-            await InserirNaBase(new Material() { Nome = ConstantesTestes.REVISTA, TipoMaterial = TipoMaterial.DOCUMENTAL});
-            await InserirNaBase(new Material() { Nome = ConstantesTestes.LIVRO, TipoMaterial = TipoMaterial.BIBLIOGRAFICO});
-            await InserirNaBase(new Material() { Nome = ConstantesTestes.TESE, TipoMaterial = TipoMaterial.BIBLIOGRAFICO});
-            await InserirNaBase(new Material() { Nome = ConstantesTestes.PERIODICO, TipoMaterial = TipoMaterial.BIBLIOGRAFICO});
+            await InserirNaBase(new Material() { Nome = ConstantesTestes.APOSTILA, Tipo = TipoMaterial.DOCUMENTAL});
+            await InserirNaBase(new Material() { Nome = ConstantesTestes.LIVRO, Tipo = TipoMaterial.DOCUMENTAL});
+            await InserirNaBase(new Material() { Nome = ConstantesTestes.CADERNO, Tipo = TipoMaterial.DOCUMENTAL});
+            await InserirNaBase(new Material() { Nome = ConstantesTestes.PERIODICO, Tipo = TipoMaterial.DOCUMENTAL});
+            await InserirNaBase(new Material() { Nome = ConstantesTestes.REVISTA, Tipo = TipoMaterial.DOCUMENTAL});
+            await InserirNaBase(new Material() { Nome = ConstantesTestes.LIVRO, Tipo = TipoMaterial.BIBLIOGRAFICO});
+            await InserirNaBase(new Material() { Nome = ConstantesTestes.TESE, Tipo = TipoMaterial.BIBLIOGRAFICO});
+            await InserirNaBase(new Material() { Nome = ConstantesTestes.PERIODICO, Tipo = TipoMaterial.BIBLIOGRAFICO});
         }
     }
 }

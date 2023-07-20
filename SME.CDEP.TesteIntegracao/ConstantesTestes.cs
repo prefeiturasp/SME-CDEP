@@ -36,6 +36,11 @@ public class ConstantesTestes
     public const string COLOR = "Color";
     public const string PB = "PB";
     
+    public const string JPEG = "JPEG";
+    public const string TIFF = "TIFF";
+    public const string VDF = "VDF";
+    public const string VOB = "VOB";
+    
     public const string OTIMO = "Ótimo";
     public const string EXCELENTE = "Excelente";
     public const string BOM = "Bom";

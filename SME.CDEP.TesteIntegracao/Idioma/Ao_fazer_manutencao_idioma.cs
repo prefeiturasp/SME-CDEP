@@ -17,7 +17,7 @@ namespace SME.CDEP.TesteIntegracao.Usuario
         {
             var servicoIdioma = GetServicoIdioma();
 
-            var idioma = await servicoIdioma.Inserir(new IdiomaDTO(){Nome = ConstantesTestes.PORTUGUES});
+            var idioma = await servicoIdioma.Inserir(new IdNomeExcluidoDTO(){Nome = ConstantesTestes.PORTUGUES});
             idioma.ShouldBeGreaterThan(0);
             var obterTodos = ObterTodos<Idioma>();
             obterTodos.Count.ShouldBe(1);

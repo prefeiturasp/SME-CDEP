@@ -6,6 +6,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 using Microsoft.Extensions.ObjectPool;
 using Microsoft.Extensions.Options;
+using SME.CDEP.Aplicacao.DTOS;
 using SME.CDEP.Aplicacao.Integracoes;
 using SME.CDEP.Aplicacao.Integracoes.Interfaces;
 using SME.CDEP.Aplicacao.Mapeamentos;
@@ -22,6 +23,7 @@ using SME.CDEP.Infra.Servicos.Options;
 using SME.CDEP.Infra.Servicos.Polly;
 using SME.CDEP.Infra.Servicos.Telemetria.IoC;
 using SME.CDEP.IoC.Extensions;
+using Usuario = SME.CDEP.Infra.Dados.Mapeamentos.Usuario;
 
 namespace SME.CDEP.IoC;
 
@@ -73,7 +75,7 @@ public class RegistradorDeDependencia
     {
         FluentMapper.Initialize(config =>
         {
-            config.AddMap(new UsuarioMap());
+            config.AddMap(new Usuario());
             config.AddMap(new AcessoDocumentoMap());
             config.AddMap(new ConservacaoMap());
             config.AddMap(new CromiaMap());

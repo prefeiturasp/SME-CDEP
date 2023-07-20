@@ -1,6 +1,6 @@
-namespace SME.CDEP.Dominio;
+﻿namespace SME.CDEP.Aplicacao.DTOS;
 
-public abstract class EntidadeBase
+public abstract class BaseDTO
 {
     public long Id { get; set; }
     public bool Excluido { get; set; }

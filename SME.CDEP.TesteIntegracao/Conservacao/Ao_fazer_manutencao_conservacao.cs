@@ -17,7 +17,7 @@ namespace SME.CDEP.TesteIntegracao.Usuario
         {
             var servicoConservacao = GetServicoConservacao();
 
-            var conservacaoDTO = await servicoConservacao.Inserir(new ConservacaoDTO(){Nome = ConstantesTestes.OTIMO});
+            var conservacaoDTO = await servicoConservacao.Inserir(new IdNomeExcluidoDTO(){Nome = ConstantesTestes.OTIMO});
             conservacaoDTO.ShouldBeGreaterThan(0);
             var obterTodos = ObterTodos<Conservacao>();
             obterTodos.Count.ShouldBe(1);

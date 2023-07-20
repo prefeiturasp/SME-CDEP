@@ -1,6 +1,7 @@
 ﻿using Shouldly;
 using SME.CDEP.Aplicacao.DTOS;
 using SME.CDEP.Dominio.Entidades;
+using SME.CDEP.Infra.Dominio.Enumerados;
 using SME.CDEP.TesteIntegracao.Setup;
 using SME.CDEP.TesteIntegracao.Constantes;
 using Xunit;
@@ -17,7 +18,7 @@ namespace SME.CDEP.TesteIntegracao.Usuario
         {
             var servicoFormato = GetServicoFormato();
 
-            var formato = await servicoFormato.Inserir(new FormatoDTO(){Nome = ConstantesTestes.PAPEL});
+            var formato = await servicoFormato.Inserir(new IdNomeTipoExcluidoDTO(){Nome = ConstantesTestes.PAPEL});
             formato.ShouldBeGreaterThan(0);
             var obterTodos = ObterTodos<Formato>();
             obterTodos.Count.ShouldBe(1);
@@ -31,7 +32,7 @@ namespace SME.CDEP.TesteIntegracao.Usuario
 
             var formatos = await servicoFormato.ObterTodos();
             formatos.ShouldNotBeNull();
-            formatos.Count.ShouldBe(3);
+            formatos.Count.ShouldBe(4);
         }
 
         [Fact(DisplayName = "Formato - Obter por id")]
@@ -44,7 +45,8 @@ namespace SME.CDEP.TesteIntegracao.Usuario
             var formato = await servicoFormato.ObterPorId(1);
             formato.ShouldNotBeNull();
             formato.Id.ShouldBe(1);
-            formato.Nome.ShouldBe(ConstantesTestes.PAPEL);
+            formato.Nome.ShouldBe(ConstantesTestes.JPEG);
+            formato.Tipo.ShouldBe((int)TipoFormato.ACERVO_FOTOS);
         }
 
         [Fact(DisplayName = "Formato - Atualizar")]
@@ -74,14 +76,15 @@ namespace SME.CDEP.TesteIntegracao.Usuario
 
             var acessosDocumentos = ObterTodos<Formato>();
             acessosDocumentos.Count(a=> a.Excluido).ShouldBeEquivalentTo(1);
-            acessosDocumentos.Count(a=> !a.Excluido).ShouldBeEquivalentTo(2);
+            acessosDocumentos.Count(a=> !a.Excluido).ShouldBeEquivalentTo(3);
         }
 
         private async Task InserirFormatos()
         {
-            await InserirNaBase(new Formato() { Nome = ConstantesTestes.PAPEL });
-            await InserirNaBase(new Formato() { Nome = ConstantesTestes.DIGITAL });
-            await InserirNaBase(new Formato() { Nome = ConstantesTestes.PAPEL_DIGITAL });
+            await InserirNaBase(new Formato() { Nome = ConstantesTestes.JPEG, Tipo = TipoFormato.ACERVO_FOTOS });
+            await InserirNaBase(new Formato() { Nome = ConstantesTestes.TIFF, Tipo = TipoFormato.ACERVO_FOTOS });
+            await InserirNaBase(new Formato() { Nome = ConstantesTestes.VDF, Tipo = TipoFormato.ACERVO_AUDIOVISUAL });
+            await InserirNaBase(new Formato() { Nome = ConstantesTestes.VOB, Tipo = TipoFormato.ACERVO_AUDIOVISUAL });
         }
     }
 }
