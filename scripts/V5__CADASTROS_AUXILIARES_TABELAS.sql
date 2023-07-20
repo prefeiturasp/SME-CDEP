@@ -108,4 +108,4 @@ CREATE TABLE IF NOT EXISTS public.acesso_documento (
 
 insert into public.acesso_documento (nome) 
 select 'Digital' where not exists (select 1 from public.acesso_documento where nome = 'Digital') union all
-select 'Físico' where not exists (select 1 from public.acesso_documento where nome = 'Físico');
+select 'Físico' where not exists (select 1 from public.acesso_documento where nome = 'Físico'); 
