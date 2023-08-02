@@ -122,4 +122,14 @@ public class UsuarioController: BaseController
        
         return Ok(retorno);
     }
+    
+    [HttpGet("validar-cpf-existente/{cpf}")] 
+    [ProducesResponseType(typeof(bool), 200)]
+    [ProducesResponseType(typeof(RetornoBaseDTO), 400)]
+    [ProducesResponseType(typeof(RetornoBaseDTO), 500)]
+    [Authorize("Bearer")]
+    public async Task<IActionResult> ValidarCpfExistente([FromRoute] string cpf, [FromServices] IServicoUsuario servicoUsuario)
+    {
+        return Ok(await servicoUsuario.ValidarCpfExistente(cpf));
+    }
 }
