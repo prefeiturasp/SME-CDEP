@@ -111,7 +111,7 @@ public class UsuarioController: BaseController
         return Ok(retorno);
     }
     
-    [HttpGet("validar-cpf-existente/{cpf}")] 
+    [HttpGet("{cpf}/existe")] 
     [ProducesResponseType(typeof(bool), 200)]
     [ProducesResponseType(typeof(RetornoBaseDTO), 400)]
     [ProducesResponseType(typeof(RetornoBaseDTO), 500)]
