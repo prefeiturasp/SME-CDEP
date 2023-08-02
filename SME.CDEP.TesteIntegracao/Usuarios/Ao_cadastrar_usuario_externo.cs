@@ -293,5 +293,50 @@ namespace SME.CDEP.TesteIntegracao.Usuario
             usuarios.Any(f => f.Login.Equals(ConstantesTestes.LOGIN_99999999999)).ShouldBeTrue();
             usuarios.Any(f => f.Telefone.Equals(ConstantesTestes.TELEFONE_99_99999_9999)).ShouldBeTrue();
         }
+        
+        [Fact(DisplayName = "Usuário - Alterar tipo usuário para usuário externo")]
+        public async Task AlterarTipoUsuario()
+        {
+            CriarClaimUsuario();
+            await InserirNaBase(new Dominio.Entidades.Usuario()
+            {
+                Login = ConstantesTestes.LOGIN_99999999999,
+                Nome = ConstantesTestes.USUARIO_INTERNO_99999999999,
+                Telefone = ConstantesTestes.TELEFONE_99_99999_9999,
+                UltimoLogin = DateTimeExtension.HorarioBrasilia().Date.AddDays(-5),
+                TipoUsuario = TipoUsuario.PROFESSOR,
+                CriadoLogin = ConstantesTestes.SISTEMA, CriadoPor = ConstantesTestes.SISTEMA, CriadoEm = DateTimeExtension.HorarioBrasilia().Date
+            });
+
+            var usuario = await GetServicoUsuario().AlterarTipoUsuario(ConstantesTestes.LOGIN_99999999999,new TipoUsuarioExternoDTO() { Tipo = (int)TipoUsuario.POPULACAO_GERAL});
+            usuario.ShouldBeTrue();
+            
+            var usuarios = ObterTodos<Dominio.Entidades.Usuario>();
+            usuarios.Any(f => f.Login.Equals(ConstantesTestes.LOGIN_99999999999)).ShouldBeTrue();
+            usuarios.Any(f => f.TipoUsuario == TipoUsuario.POPULACAO_GERAL).ShouldBeTrue();
+        }
+        
+        [Fact(DisplayName = "Usuário - Não deve permitir alterar tipo de usuário para quem não seja externo")]
+        public async Task NaoDeveAlterarTipoUsuario()
+        {
+            CriarClaimUsuario();
+            await InserirNaBase(new Dominio.Entidades.Usuario()
+            {
+                Login = ConstantesTestes.LOGIN_99999999999,
+                Nome = ConstantesTestes.USUARIO_INTERNO_99999999999,
+                Telefone = ConstantesTestes.TELEFONE_99_99999_9999,
+                UltimoLogin = DateTimeExtension.HorarioBrasilia().Date.AddDays(-5),
+                CriadoLogin = ConstantesTestes.SISTEMA, CriadoPor = ConstantesTestes.SISTEMA, CriadoEm = DateTimeExtension.HorarioBrasilia().Date
+            });
+
+            var usuarios = ObterTodos<Dominio.Entidades.Usuario>();
+            
+            await GetServicoUsuario().AlterarTipoUsuario(ConstantesTestes.LOGIN_99999999999,new TipoUsuarioExternoDTO() { Tipo = (int)TipoUsuario.POPULACAO_GERAL}).ShouldThrowAsync<NegocioException>();
+            
+            usuarios = ObterTodos<Dominio.Entidades.Usuario>();
+            usuarios.Any(f => f.Login.Equals(ConstantesTestes.LOGIN_99999999999)).ShouldBeTrue();
+            usuarios.Any(f => f.Telefone.Equals(ConstantesTestes.TELEFONE_99_99999_9999)).ShouldBeTrue();
+            usuarios.Any(f => f.TipoUsuario == TipoUsuario.CORESSO).ShouldBeTrue();
+        }
     }
 }
