@@ -105,6 +105,7 @@ namespace SME.CDEP.Aplicacao.Servicos
                 dadosUsuarioCoreSSO.Cidade = dadosusuarioAcervo.Cidade;
                 dadosUsuarioCoreSSO.Estado = dadosusuarioAcervo.Estado;
                 dadosUsuarioCoreSSO.Tipo = (int)dadosusuarioAcervo.TipoUsuario;
+                dadosUsuarioCoreSSO.TipoDescricao = dadosusuarioAcervo.TipoUsuario.Descricao();
             }
             return dadosUsuarioCoreSSO;
         }
@@ -240,6 +241,18 @@ namespace SME.CDEP.Aplicacao.Servicos
         {
             var login = await servicoAcessos.AlterarSenhaComTokenRecuperacao(recuperacaoSenhaDto);
             return await servicoPerfilUsuario.ObterPerfisUsuario(login);
+        }
+        
+        public async Task<bool> AlterarTipoUsuario(string login, TipoUsuarioExternoDTO tipoUsuario)
+        {
+            var usuario = await repositorioUsuario.ObterPorLogin(login);
+            
+            ValidarUsuarioExterno(usuario);
+            
+            usuario.TipoUsuario = (TipoUsuario)tipoUsuario.Tipo;
+            await repositorioUsuario.Atualizar(usuario);
+            
+            return true;
         }
 
         public async Task<bool> ValidarCpfExistente(string cpf)
