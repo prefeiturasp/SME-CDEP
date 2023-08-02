@@ -23,7 +23,6 @@ using SME.CDEP.Infra.Servicos.Options;
 using SME.CDEP.Infra.Servicos.Polly;
 using SME.CDEP.Infra.Servicos.Telemetria.IoC;
 using SME.CDEP.IoC.Extensions;
-using Usuario = SME.CDEP.Infra.Dados.Mapeamentos.Usuario;
 
 namespace SME.CDEP.IoC;
 
@@ -75,7 +74,7 @@ public class RegistradorDeDependencia
     {
         FluentMapper.Initialize(config =>
         {
-            config.AddMap(new Usuario());
+            config.AddMap(new UsuarioMap());
             config.AddMap(new AcessoDocumentoMap());
             config.AddMap(new ConservacaoMap());
             config.AddMap(new CromiaMap());
@@ -131,6 +130,11 @@ public class RegistradorDeDependencia
         _serviceCollection.TryAddScoped<IServicoMaterial, ServicoMaterial>();
         _serviceCollection.TryAddScoped<IServicoSuporte, ServicoSuporte>();
         _serviceCollection.TryAddScoped<IServicoTipoAnexo, ServicoTipoAnexo>();
+        _serviceCollection.TryAddScoped<IServicoCredito, ServicoCredito>();
+        _serviceCollection.TryAddScoped<IServicoAutor, ServicoAutor>();
+        _serviceCollection.TryAddScoped<IServicoEditora, ServicoEditora>();
+        _serviceCollection.TryAddScoped<IServicoAssunto, ServicoAssunto>();
+        _serviceCollection.TryAddScoped<IServicoSerieColecao, ServicoSerieColecao>();
     }
     protected virtual void RegistrarHttpClients()
     {

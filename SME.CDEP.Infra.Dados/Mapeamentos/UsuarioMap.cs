@@ -2,9 +2,9 @@
 
 namespace SME.CDEP.Infra.Dados.Mapeamentos
 {
-    public class Usuario : BaseMapAuditavel<CDEP.Dominio.Entidades.Usuario>
+    public class UsuarioMap : BaseMapAuditavel<CDEP.Dominio.Entidades.Usuario>
     {
-        public Usuario()
+        public UsuarioMap()
         {
             ToTable("usuario");
             Map(c => c.ExpiracaoRecuperacaoSenha).ToColumn("expiracao_recuperacao_senha");
