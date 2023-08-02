@@ -55,7 +55,7 @@ public class UsuarioController: BaseController
     [ProducesResponseType(typeof(RetornoBaseDTO), 400)]
     [ProducesResponseType(typeof(RetornoBaseDTO), 601)]
     [ProducesResponseType(typeof(DadosUsuarioDTO), 200)]  
-    // [Authorize("Bearer")]
+    [Authorize("Bearer")]
     public async Task<IActionResult> MeusDados([FromRoute] string login, [FromServices]IServicoUsuario servicoUsuario)
     {
         var retorno = await servicoUsuario.ObterMeusDados(login);
