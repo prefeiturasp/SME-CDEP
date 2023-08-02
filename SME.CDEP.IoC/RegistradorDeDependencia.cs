@@ -83,7 +83,6 @@ public class RegistradorDeDependencia
             config.AddMap(new IdiomaMap());
             config.AddMap(new MaterialMap());
             config.AddMap(new SuporteMap());
-            config.AddMap(new TipoAnexoMap());
 
             config.ForDommel();
         });
@@ -115,7 +114,6 @@ public class RegistradorDeDependencia
         _serviceCollection.TryAddScoped<IRepositorioIdioma, RepositorioIdioma>();
         _serviceCollection.TryAddScoped<IRepositorioMaterial, RepositorioMaterial>();
         _serviceCollection.TryAddScoped<IRepositorioSuporte, RepositorioSuporte>();
-        _serviceCollection.TryAddScoped<IRepositorioTipoAnexo, RepositorioTipoAnexo>();
     }
 
     protected virtual void RegistrarServicos()
@@ -130,7 +128,6 @@ public class RegistradorDeDependencia
         _serviceCollection.TryAddScoped<IServicoIdioma, ServicoIdioma>();
         _serviceCollection.TryAddScoped<IServicoMaterial, ServicoMaterial>();
         _serviceCollection.TryAddScoped<IServicoSuporte, ServicoSuporte>();
-        _serviceCollection.TryAddScoped<IServicoTipoAnexo, ServicoTipoAnexo>();
     }
     protected virtual void RegistrarHttpClients()
     {
