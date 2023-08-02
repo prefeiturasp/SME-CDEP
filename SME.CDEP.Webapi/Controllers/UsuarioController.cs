@@ -111,6 +111,18 @@ public class UsuarioController: BaseController
         return Ok(retorno);
     }
     
+    [HttpPut("{login}/tipo-usuario")]
+    [ProducesResponseType(typeof(RetornoBaseDTO), 400)]
+    [ProducesResponseType(typeof(RetornoBaseDTO), 601)]
+    [ProducesResponseType(typeof(bool), 200)]
+    [Authorize("Bearer")]
+    public async Task<IActionResult> AlterarTipoUsuario([FromRoute] string login, [FromBody] TipoUsuarioExternoDTO tipoUsuario, [FromServices] IServicoUsuario servicoUsuario)
+    {
+        var retorno = await servicoUsuario.AlterarTipoUsuario(login, tipoUsuario);
+       
+        return Ok(retorno);
+    }
+    
     [HttpGet("{cpf}/existe")] 
     [ProducesResponseType(typeof(bool), 200)]
     [ProducesResponseType(typeof(RetornoBaseDTO), 400)]
