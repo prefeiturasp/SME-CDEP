@@ -127,11 +127,6 @@ namespace SME.CDEP.TesteIntegracao
             return ObterServicoAplicacao<IServicoSuporte>();
         }
         
-        protected IServicoTipoAnexo GetServicoTipoAnexo()
-        {
-            return ObterServicoAplicacao<IServicoTipoAnexo>();
-        }
-        
         public T ObterServicoAplicacao<T>()
             where T : IServicoAplicacao
         {
