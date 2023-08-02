@@ -15,7 +15,7 @@ namespace SME.CDEP.Infra.Dominio.Enumerados
                             .GetCustomAttribute<TAttribute>();
         }
 
-        public static string Nome(this Enum enumValue)
-            => enumValue.ObterAtributo<DisplayAttribute>().Name;
+        public static string Descricao(this Enum enumValue)
+            => enumValue.ObterAtributo<DisplayAttribute>().Description;
     }
 }

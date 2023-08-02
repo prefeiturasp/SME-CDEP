@@ -4,18 +4,18 @@ namespace SME.CDEP.Infra.Dominio.Enumerados;
 
 public enum TipoUsuario
 {
-    [Display(Name = "Usuário Interno")]
+    [Display(Description = "Usuário Interno")]
     CORESSO = 0,
     
-    [Display(Name = "Usuário Externo - Servidor Público")]
+    [Display(Description = "Usuário Externo - Servidor Público")]
     SERVIDOR_PUBLICO = 1,
     
-    [Display(Name = "Usuário Externo - Estudante")]
+    [Display(Description = "Usuário Externo - Estudante")]
     ESTUDANTE = 2,
     
-    [Display(Name = "Usuário Externo - Professor")]
+    [Display(Description = "Usuário Externo - Professor")]
     PROFESSOR = 3,
     
-    [Display(Name = "Usuário Externo - População Geral")]
+    [Display(Description = "Usuário Externo - População Geral")]
     POPULACAO_GERAL = 4
 }
