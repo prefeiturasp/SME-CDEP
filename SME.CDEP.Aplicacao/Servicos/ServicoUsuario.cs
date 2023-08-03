@@ -7,6 +7,7 @@ using SME.CDEP.Dominio.Entidades;
 using SME.CDEP.Dominio.Excecoes;
 using SME.CDEP.Infra.Dados.Repositorios.Interfaces;
 using SME.CDEP.Aplicacao.Integracoes.Interfaces;
+using SME.CDEP.Dominio.Contexto;
 using SME.CDEP.Infra.Dominio.Enumerados;
 
 namespace SME.CDEP.Aplicacao.Servicos
@@ -17,13 +18,17 @@ namespace SME.CDEP.Aplicacao.Servicos
         private readonly IServicoAcessos servicoAcessos;
         private readonly IMapper mapper;
         private readonly IServicoPerfilUsuario servicoPerfilUsuario;
+        private readonly IContextoAplicacao contextoAplicacao;
+        private const string CLAIM_PERMISSAO = "http://schemas.microsoft.com/ws/2008/06/identity/claims/role";
         
-        public ServicoUsuario(IRepositorioUsuario repositorioUsuario,IServicoAcessos servicoAcessos, IMapper mapper,IServicoPerfilUsuario servicoPerfilUsuario) 
+        public ServicoUsuario(IRepositorioUsuario repositorioUsuario,IServicoAcessos servicoAcessos, 
+            IMapper mapper,IServicoPerfilUsuario servicoPerfilUsuario,IContextoAplicacao contextoAplicacao) 
         {
             this.repositorioUsuario = repositorioUsuario ?? throw new ArgumentNullException(nameof(repositorioUsuario));
             this.servicoAcessos = servicoAcessos ?? throw new ArgumentNullException(nameof(servicoAcessos));
             this.mapper = mapper ?? throw new ArgumentNullException(nameof(mapper));
             this.servicoPerfilUsuario = servicoPerfilUsuario ?? throw new ArgumentNullException(nameof(servicoPerfilUsuario));
+            this.contextoAplicacao = contextoAplicacao ?? throw new ArgumentNullException(nameof(contextoAplicacao));
         }
 
         public async Task<long> Inserir(UsuarioDTO usuarioDto)
@@ -233,6 +238,22 @@ namespace SME.CDEP.Aplicacao.Servicos
         {
             var login = await servicoAcessos.AlterarSenhaComTokenRecuperacao(recuperacaoSenhaDto);
             return await servicoPerfilUsuario.ObterPerfisUsuario(login);
+        }
+
+        public IEnumerable<Permissao> ObterPermissoes()
+        {
+            var claims = contextoAplicacao.ObterVariavel("Claims");//.Where(a => a.Key == CLAIM_PERMISSAO);
+            List<Permissao> retorno = new List<Permissao>();
+
+            // if (claims.Any())
+            // {
+            //     foreach (var claim in claims)
+            //     {
+            //         var permissao = (Permissao)Enum.Parse(typeof(Permissao), claim.Value);
+            //         retorno.Add(permissao);
+            //     }
+            // }
+            return retorno;
         }
     }
 }

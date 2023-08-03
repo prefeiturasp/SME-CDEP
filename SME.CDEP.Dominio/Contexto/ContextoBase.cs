@@ -25,4 +25,13 @@ public abstract class ContextoBase : IContextoAplicacao
 
         return default;
     }
+    
+    public IDictionary<string, object> ObterVariavel(string nome)
+    {
+
+        if (Variaveis.TryGetValue(nome, out object valor))
+            return (IDictionary<string, object>)valor;
+
+        return default;
+    }
 }
