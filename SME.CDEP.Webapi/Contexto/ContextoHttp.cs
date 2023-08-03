@@ -40,7 +40,6 @@ namespace SME.CDEP.Webapi.Contexto;
 
         private List<Tuple<string, string>> GetInternalClaim()
         {
-            // return (httpContextAccessor.HttpContext?.User?.Claims ?? Enumerable.Empty<Claim>()).Select(x => new InternalClaim() { Type = x.Type, Value = x.Value }).ToList();
             return (httpContextAccessor.HttpContext?.User?.Claims ?? default).Select(x => new Tuple<string, string>(x.Type, x.Value)).ToList();
         }
 
