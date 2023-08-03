@@ -26,11 +26,11 @@ public abstract class ContextoBase : IContextoAplicacao
         return default;
     }
     
-    public IDictionary<string, object> ObterVariavel(string nome)
+    public List<Tuple<string, string>> ObterVariavel(string nome)
     {
 
         if (Variaveis.TryGetValue(nome, out object valor))
-            return (IDictionary<string, object>)valor;
+            return (List<Tuple<string, string>>)valor;
 
         return default;
     }

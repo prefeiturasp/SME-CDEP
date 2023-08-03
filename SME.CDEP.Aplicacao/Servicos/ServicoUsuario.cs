@@ -19,7 +19,6 @@ namespace SME.CDEP.Aplicacao.Servicos
         private readonly IMapper mapper;
         private readonly IServicoPerfilUsuario servicoPerfilUsuario;
         private readonly IContextoAplicacao contextoAplicacao;
-        private const string CLAIM_PERMISSAO = "http://schemas.microsoft.com/ws/2008/06/identity/claims/role";
         
         public ServicoUsuario(IRepositorioUsuario repositorioUsuario,IServicoAcessos servicoAcessos, 
             IMapper mapper,IServicoPerfilUsuario servicoPerfilUsuario,IContextoAplicacao contextoAplicacao) 
@@ -242,7 +241,7 @@ namespace SME.CDEP.Aplicacao.Servicos
 
         public IEnumerable<Permissao> ObterPermissoes()
         {
-            var claims = contextoAplicacao.ObterVariavel("Claims");//.Where(a => a.Key == CLAIM_PERMISSAO);
+            var claims = contextoAplicacao.ObterVariavel(Constantes.CLAIMS);//.Where(a => a.Key == Constantes.CLAIM_PERMISSAO);
             List<Permissao> retorno = new List<Permissao>();
 
             // if (claims.Any())
