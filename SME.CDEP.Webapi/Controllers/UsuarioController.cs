@@ -127,7 +127,7 @@ public class UsuarioController: BaseController
     [ProducesResponseType(typeof(bool), 200)]
     [ProducesResponseType(typeof(RetornoBaseDTO), 400)]
     [ProducesResponseType(typeof(RetornoBaseDTO), 500)]
-    [Authorize("Bearer")]
+    [AllowAnonymous]
     public async Task<IActionResult> ValidarCpfExistente([FromRoute] string cpf, [FromServices] IServicoUsuario servicoUsuario)
     {
         return Ok(await servicoUsuario.ValidarCpfExistente(cpf));
