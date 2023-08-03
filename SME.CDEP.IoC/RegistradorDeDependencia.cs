@@ -131,6 +131,7 @@ public class RegistradorDeDependencia
         _serviceCollection.TryAddScoped<IServicoMaterial, ServicoMaterial>();
         _serviceCollection.TryAddScoped<IServicoSuporte, ServicoSuporte>();
         _serviceCollection.TryAddScoped<IServicoTipoAnexo, ServicoTipoAnexo>();
+        _serviceCollection.TryAddScoped<IServicoMenu, ServicoMenu>();
     }
     protected virtual void RegistrarHttpClients()
     {
