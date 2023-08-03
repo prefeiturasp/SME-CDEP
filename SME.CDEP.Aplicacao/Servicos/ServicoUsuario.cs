@@ -241,17 +241,12 @@ namespace SME.CDEP.Aplicacao.Servicos
 
         public IEnumerable<Permissao> ObterPermissoes()
         {
-            var claims = contextoAplicacao.ObterVariavel(Constantes.CLAIMS);//.Where(a => a.Key == Constantes.CLAIM_PERMISSAO);
-            List<Permissao> retorno = new List<Permissao>();
+            var claims = contextoAplicacao.ObterVariavel(Constantes.CLAIMS).Where(a => a.Item1 == Constantes.CLAIM_PERMISSAO);
+            var retorno = new List<Permissao>();
 
-            // if (claims.Any())
-            // {
-            //     foreach (var claim in claims)
-            //     {
-            //         var permissao = (Permissao)Enum.Parse(typeof(Permissao), claim.Value);
-            //         retorno.Add(permissao);
-            //     }
-            // }
+            if (claims.Any())
+                retorno.AddRange(claims.Select(claim => (Permissao)Enum.Parse(typeof(Permissao), claim.Item2)));
+            
             return retorno;
         }
     }
