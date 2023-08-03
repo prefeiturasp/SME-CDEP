@@ -155,10 +155,7 @@ namespace SME.CDEP.TesteIntegracao
                 { ConstantesTestes.USUARIO_LOGADO_CHAVE, ConstantesTestes.LOGIN_123456789 },
                 {
                     ConstantesTestes.USUARIO_CLAIMS_CHAVE,
-                    new List<InternalClaim> {
-                        new InternalClaim { Value = rfLoginPerfil, Type = ConstantesTestes.USUARIO_CLAIM_TIPO_RF },
-                        // new InternalClaim { Value = perfil, Type = USUARIO_CLAIM_TIPO_PERFIL }
-                    }
+                    new Tuple<string, string>(rfLoginPerfil, ConstantesTestes.USUARIO_CLAIM_TIPO_RF)
                 }
             };
         }
