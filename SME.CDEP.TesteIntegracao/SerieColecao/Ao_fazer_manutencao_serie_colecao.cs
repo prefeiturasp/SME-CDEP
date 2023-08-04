@@ -102,6 +102,19 @@ namespace SME.CDEP.TesteIntegracao.Usuario
             serieColecoes.Count(a=> a.Excluido).ShouldBeEquivalentTo(1);
             serieColecoes.Count(a=> !a.Excluido).ShouldBeEquivalentTo(1);
         }
+        
+        [Fact(DisplayName = "Serie/Coleca - Pesquisar por Nome")]
+        public async Task Pesquisar_por_nome()
+        {
+            await InserirSerieColecao();
+            
+            var servicoSerieColecao = GetServicoSerieColecao();
+
+            var retorno = await servicoSerieColecao.PesquisarPorNome(ConstantesTestes.COLOR.Substring(4));
+            retorno.ShouldNotBeNull();
+            retorno.Nome.ShouldBe(ConstantesTestes.COLOR);
+            retorno.Id.ShouldBe(long.Parse(ConstantesTestes.NUMERO_1));
+        }
 
         private async Task InserirSerieColecao()
         {

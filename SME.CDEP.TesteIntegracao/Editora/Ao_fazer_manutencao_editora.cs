@@ -102,6 +102,19 @@ namespace SME.CDEP.TesteIntegracao.Usuario
             editoras.Count(a=> a.Excluido).ShouldBeEquivalentTo(1);
             editoras.Count(a=> !a.Excluido).ShouldBeEquivalentTo(1);
         }
+        
+        [Fact(DisplayName = "Editora - Pesquisar por Nome")]
+        public async Task Pesquisar_por_nome()
+        {
+            await InserirEditora();
+            
+            var servicoEditora = GetServicoEditora();
+
+            var retorno = await servicoEditora.PesquisarPorNome(ConstantesTestes.COLOR.Substring(4));
+            retorno.ShouldNotBeNull();
+            retorno.Nome.ShouldBe(ConstantesTestes.COLOR);
+            retorno.Id.ShouldBe(long.Parse(ConstantesTestes.NUMERO_1));
+        }
 
         private async Task InserirEditora()
         {

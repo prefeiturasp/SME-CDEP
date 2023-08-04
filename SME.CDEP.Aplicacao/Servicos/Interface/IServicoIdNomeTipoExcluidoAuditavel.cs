@@ -9,5 +9,6 @@ namespace SME.CDEP.Aplicacao.Servicos.Interface
         Task<IdNomeExcluidoAuditavelDTO> Alterar(IdNomeExcluidoAuditavelDTO idNomeExcluidoAuditavelDTO);
         Task<IdNomeExcluidoAuditavelDTO> ObterPorId(long Id);
         Task<bool> Excluir(long Id);
+        Task<IdNomeExcluidoAuditavelDTO> PesquisarPorNome(string nome);
     }
 }

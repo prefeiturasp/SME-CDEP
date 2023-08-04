@@ -50,4 +50,14 @@ public class AutorController: BaseController
     {
         return Ok(await servicoAutor.Excluir(id));
     }
+    
+    [HttpGet("pesquisar/{nome}")]
+    [ProducesResponseType(typeof(RetornoBaseDTO), 400)]
+    [ProducesResponseType(typeof(RetornoBaseDTO), 601)]
+    [ProducesResponseType(typeof(IdNomeExcluidoAuditavelDTO), 200)]  
+    [Authorize("Bearer")]
+    public async Task<IActionResult> PesquisarPorNome([FromRoute] string nome, [FromServices] IServicoAutor servicoAutor)
+    {
+        return Ok(await servicoAutor.PesquisarPorNome(nome));
+    }
 }
