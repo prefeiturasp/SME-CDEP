@@ -102,6 +102,19 @@ namespace SME.CDEP.TesteIntegracao.Usuario
             creditos.Count(a=> a.Excluido).ShouldBeEquivalentTo(1);
             creditos.Count(a=> !a.Excluido).ShouldBeEquivalentTo(1);
         }
+        
+        [Fact(DisplayName = "Crédito - Pesquisar por Nome")]
+        public async Task Pesquisar_por_nome()
+        {
+            await InserirCredito();
+            
+            var servicoCredito = GetServicoCredito();
+
+            var retorno = await servicoCredito.PesquisarPorNome(ConstantesTestes.COLOR.Substring(3));
+            retorno.ShouldNotBeNull();
+            retorno.Nome.ShouldBe(ConstantesTestes.COLOR);
+            retorno.Id.ShouldBe(long.Parse(ConstantesTestes.NUMERO_1));
+        }
 
         private async Task InserirCredito()
         {

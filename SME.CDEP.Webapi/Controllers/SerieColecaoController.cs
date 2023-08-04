@@ -50,4 +50,14 @@ public class SerieColecaoController: BaseController
     {
         return Ok(await servicoSerieColecao.Excluir(id));
     }
+    
+    [HttpGet("pesquisar/{nome}")]
+    [ProducesResponseType(typeof(RetornoBaseDTO), 400)]
+    [ProducesResponseType(typeof(RetornoBaseDTO), 601)]
+    [ProducesResponseType(typeof(IdNomeExcluidoAuditavelDTO), 200)]  
+    [Authorize("Bearer")]
+    public async Task<IActionResult> PesquisarPorNome([FromRoute] string nome, [FromServices] IServicoSerieColecao servicoSerieColecao)
+    {
+        return Ok(await servicoSerieColecao.PesquisarPorNome(nome));
+    }
 }

@@ -1,3 +1,4 @@
+using Dapper;
 using Dommel;
 using SME.CDEP.Dominio;
 using SME.CDEP.Dominio.Constantes;
@@ -65,5 +66,11 @@ public abstract class RepositorioBase<TEntidade> : IRepositorioBase<TEntidade>
     public async Task Remover(long id)
     {
         throw new NotImplementedException();
+    }
+
+    public async Task<TEntidade> PesquisarPorNome(string nome)
+    {
+        var tableName = Resolvers.Table(typeof(TEntidade), conexao.Obter());
+        return await conexao.Obter().QueryFirstOrDefaultAsync<TEntidade>($"select * from {tableName} where lower(nome) like '%{nome.ToLower()}%'");
     }
 }
