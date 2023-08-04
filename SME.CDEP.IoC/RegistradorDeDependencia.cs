@@ -83,6 +83,11 @@ public class RegistradorDeDependencia
             config.AddMap(new MaterialMap());
             config.AddMap(new SuporteMap());
             config.AddMap(new TipoAnexoMap());
+            config.AddMap(new CreditoMap());
+            config.AddMap(new AutorMap());
+            config.AddMap(new EditoraMap());
+            config.AddMap(new AssuntoMap());
+            config.AddMap(new SerieColecaoMap());
 
             config.ForDommel();
         });
@@ -115,6 +120,11 @@ public class RegistradorDeDependencia
         _serviceCollection.TryAddScoped<IRepositorioMaterial, RepositorioMaterial>();
         _serviceCollection.TryAddScoped<IRepositorioSuporte, RepositorioSuporte>();
         _serviceCollection.TryAddScoped<IRepositorioTipoAnexo, RepositorioTipoAnexo>();
+        _serviceCollection.TryAddScoped<IRepositorioCredito, RepositorioCredito>();
+        _serviceCollection.TryAddScoped<IRepositorioAutor, RepositorioAutor>();
+        _serviceCollection.TryAddScoped<IRepositorioEditora, RepositorioEditora>();
+        _serviceCollection.TryAddScoped<IRepositorioAssunto, RepositorioAssunto>();
+        _serviceCollection.TryAddScoped<IRepositorioSerieColecao, RepositorioSerieColecao>();
     }
 
     protected virtual void RegistrarServicos()
