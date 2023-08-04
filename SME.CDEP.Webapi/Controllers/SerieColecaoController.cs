@@ -2,12 +2,14 @@
 using Microsoft.AspNetCore.Mvc;
 using SME.CDEP.Aplicacao.DTOS;
 using SME.CDEP.Aplicacao.Servicos.Interface;
+using SME.CDEP.Infra.Dominio.Enumerados;
 using SME.CDEP.Webapi.Filtros;
 
 namespace SME.CDEP.Webapi.Controllers;
 
 [ApiController]
 [ValidaDto]
+[Authorize("Bearer")]
 public class SerieColecaoController: BaseController
 {
     [HttpPost]
@@ -15,7 +17,8 @@ public class SerieColecaoController: BaseController
     [ProducesResponseType(typeof(RetornoBaseDTO), 400)]
     [ProducesResponseType(typeof(RetornoBaseDTO), 500)]
     [ProducesResponseType(typeof(RetornoBaseDTO), 601)]
-    [Authorize("Bearer")]
+    [Permissao(Permissao.SRC_I, Policy = "Bearer")]
+    [Permissao(Permissao.SRC_A, Policy = "Bearer")]
     public async Task<IActionResult> CadastrarAlterar([FromBody] IdNomeExcluidoAuditavelDTO serieColecao, [FromServices] IServicoSerieColecao servicoSerieColecao)
     {
         return serieColecao.Id > 0 ? Ok(await servicoSerieColecao.Alterar(serieColecao)) : Ok(await servicoSerieColecao.Inserir(serieColecao));
@@ -25,7 +28,7 @@ public class SerieColecaoController: BaseController
     [ProducesResponseType(typeof(RetornoBaseDTO), 400)]
     [ProducesResponseType(typeof(RetornoBaseDTO), 601)]
     [ProducesResponseType(typeof(IdNomeExcluidoDTO), 200)]  
-    [Authorize("Bearer")]
+    [Permissao(Permissao.SRC_C, Policy = "Bearer")]
     public async Task<IActionResult> ObterTodos([FromServices]IServicoSerieColecao servicoSerieColecao)
     {
         return Ok(await servicoSerieColecao.ObterTodos());
@@ -35,8 +38,8 @@ public class SerieColecaoController: BaseController
     [ProducesResponseType(typeof(RetornoBaseDTO), 400)]
     [ProducesResponseType(typeof(RetornoBaseDTO), 601)]
     [ProducesResponseType(typeof(IdNomeExcluidoDTO), 200)]  
-    [Authorize("Bearer")]
-    public async Task<IActionResult> ObterTodos([FromRoute] long id,[FromServices]IServicoSerieColecao servicoSerieColecao)
+    [Permissao(Permissao.SRC_C, Policy = "Bearer")]
+    public async Task<IActionResult> ObterPorId([FromRoute] long id,[FromServices]IServicoSerieColecao servicoSerieColecao)
     {
         return Ok(await servicoSerieColecao.ObterPorId(id));
     }
@@ -45,7 +48,7 @@ public class SerieColecaoController: BaseController
     [ProducesResponseType(typeof(RetornoBaseDTO), 400)]
     [ProducesResponseType(typeof(RetornoBaseDTO), 601)]
     [ProducesResponseType(typeof(bool), 200)]
-    [Authorize("Bearer")]
+    [Permissao(Permissao.SRC_E, Policy = "Bearer")]
     public async Task<IActionResult> ExclusaoLogica([FromRoute] long id, [FromServices] IServicoSerieColecao servicoSerieColecao)
     {
         return Ok(await servicoSerieColecao.Excluir(id));
@@ -55,7 +58,7 @@ public class SerieColecaoController: BaseController
     [ProducesResponseType(typeof(RetornoBaseDTO), 400)]
     [ProducesResponseType(typeof(RetornoBaseDTO), 601)]
     [ProducesResponseType(typeof(IdNomeExcluidoAuditavelDTO), 200)]  
-    [Authorize("Bearer")]
+    [Permissao(Permissao.SRC_C, Policy = "Bearer")]
     public async Task<IActionResult> PesquisarPorNome([FromRoute] string nome, [FromServices] IServicoSerieColecao servicoSerieColecao)
     {
         return Ok(await servicoSerieColecao.PesquisarPorNome(nome));

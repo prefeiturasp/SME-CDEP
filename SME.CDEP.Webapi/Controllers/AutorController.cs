@@ -2,12 +2,14 @@
 using Microsoft.AspNetCore.Mvc;
 using SME.CDEP.Aplicacao.DTOS;
 using SME.CDEP.Aplicacao.Servicos.Interface;
+using SME.CDEP.Infra.Dominio.Enumerados;
 using SME.CDEP.Webapi.Filtros;
 
 namespace SME.CDEP.Webapi.Controllers;
 
 [ApiController]
 [ValidaDto]
+[Authorize("Bearer")]
 public class AutorController: BaseController
 {
     [HttpPost]
@@ -15,7 +17,8 @@ public class AutorController: BaseController
     [ProducesResponseType(typeof(RetornoBaseDTO), 400)]
     [ProducesResponseType(typeof(RetornoBaseDTO), 500)]
     [ProducesResponseType(typeof(RetornoBaseDTO), 601)]
-    [Authorize("Bearer")]
+    [Permissao(Permissao.AUT_I, Policy = "Bearer")]
+    [Permissao(Permissao.AUT_A, Policy = "Bearer")]
     public async Task<IActionResult> CadastrarAlterar([FromBody] IdNomeExcluidoAuditavelDTO autor, [FromServices] IServicoAutor servicoAutor)
     {
         return autor.Id > 0 ? Ok(await servicoAutor.Alterar(autor)) : Ok(await servicoAutor.Inserir(autor));
@@ -25,7 +28,7 @@ public class AutorController: BaseController
     [ProducesResponseType(typeof(RetornoBaseDTO), 400)]
     [ProducesResponseType(typeof(RetornoBaseDTO), 601)]
     [ProducesResponseType(typeof(IdNomeExcluidoDTO), 200)]  
-    [Authorize("Bearer")]
+    [Permissao(Permissao.AUT_C, Policy = "Bearer")]
     public async Task<IActionResult> ObterTodos([FromServices]IServicoAutor servicoAutor)
     {
         return Ok(await servicoAutor.ObterTodos());
@@ -35,8 +38,8 @@ public class AutorController: BaseController
     [ProducesResponseType(typeof(RetornoBaseDTO), 400)]
     [ProducesResponseType(typeof(RetornoBaseDTO), 601)]
     [ProducesResponseType(typeof(IdNomeExcluidoDTO), 200)]  
-    [Authorize("Bearer")]
-    public async Task<IActionResult> ObterTodos([FromRoute] long id,[FromServices]IServicoAutor servicoAutor)
+    [Permissao(Permissao.AUT_C, Policy = "Bearer")]
+    public async Task<IActionResult> ObterPorId([FromRoute] long id,[FromServices]IServicoAutor servicoAutor)
     {
         return Ok(await servicoAutor.ObterPorId(id));
     }
@@ -45,7 +48,7 @@ public class AutorController: BaseController
     [ProducesResponseType(typeof(RetornoBaseDTO), 400)]
     [ProducesResponseType(typeof(RetornoBaseDTO), 601)]
     [ProducesResponseType(typeof(bool), 200)]
-    [Authorize("Bearer")]
+    [Permissao(Permissao.AUT_E, Policy = "Bearer")]
     public async Task<IActionResult> ExclusaoLogica([FromRoute] long id, [FromServices] IServicoAutor servicoAutor)
     {
         return Ok(await servicoAutor.Excluir(id));
@@ -55,7 +58,7 @@ public class AutorController: BaseController
     [ProducesResponseType(typeof(RetornoBaseDTO), 400)]
     [ProducesResponseType(typeof(RetornoBaseDTO), 601)]
     [ProducesResponseType(typeof(IdNomeExcluidoAuditavelDTO), 200)]  
-    [Authorize("Bearer")]
+    [Permissao(Permissao.AUT_C, Policy = "Bearer")]
     public async Task<IActionResult> PesquisarPorNome([FromRoute] string nome, [FromServices] IServicoAutor servicoAutor)
     {
         return Ok(await servicoAutor.PesquisarPorNome(nome));

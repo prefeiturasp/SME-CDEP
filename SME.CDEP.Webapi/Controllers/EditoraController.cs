@@ -2,12 +2,14 @@
 using Microsoft.AspNetCore.Mvc;
 using SME.CDEP.Aplicacao.DTOS;
 using SME.CDEP.Aplicacao.Servicos.Interface;
+using SME.CDEP.Infra.Dominio.Enumerados;
 using SME.CDEP.Webapi.Filtros;
 
 namespace SME.CDEP.Webapi.Controllers;
 
 [ApiController]
 [ValidaDto]
+[Authorize("Bearer")]
 public class EditoraController: BaseController
 {
     [HttpPost]
@@ -15,7 +17,8 @@ public class EditoraController: BaseController
     [ProducesResponseType(typeof(RetornoBaseDTO), 400)]
     [ProducesResponseType(typeof(RetornoBaseDTO), 500)]
     [ProducesResponseType(typeof(RetornoBaseDTO), 601)]
-    [Authorize("Bearer")]
+    [Permissao(Permissao.EDT_I, Policy = "Bearer")]
+    [Permissao(Permissao.EDT_A, Policy = "Bearer")]
     public async Task<IActionResult> CadastrarAlterar([FromBody] IdNomeExcluidoAuditavelDTO editora, [FromServices] IServicoEditora servicoEditora)
     {
         return editora.Id > 0 ? Ok(await servicoEditora.Alterar(editora)) : Ok(await servicoEditora.Inserir(editora));
@@ -25,7 +28,7 @@ public class EditoraController: BaseController
     [ProducesResponseType(typeof(RetornoBaseDTO), 400)]
     [ProducesResponseType(typeof(RetornoBaseDTO), 601)]
     [ProducesResponseType(typeof(IdNomeExcluidoDTO), 200)]  
-    [Authorize("Bearer")]
+    [Permissao(Permissao.EDT_C, Policy = "Bearer")]
     public async Task<IActionResult> ObterTodos([FromServices]IServicoEditora servicoEditora)
     {
         return Ok(await servicoEditora.ObterTodos());
@@ -35,8 +38,8 @@ public class EditoraController: BaseController
     [ProducesResponseType(typeof(RetornoBaseDTO), 400)]
     [ProducesResponseType(typeof(RetornoBaseDTO), 601)]
     [ProducesResponseType(typeof(IdNomeExcluidoDTO), 200)]  
-    [Authorize("Bearer")]
-    public async Task<IActionResult> ObterTodos([FromRoute] long id,[FromServices]IServicoEditora servicoEditora)
+    [Permissao(Permissao.EDT_C, Policy = "Bearer")]
+    public async Task<IActionResult> ObterPorId([FromRoute] long id,[FromServices]IServicoEditora servicoEditora)
     {
         return Ok(await servicoEditora.ObterPorId(id));
     }
@@ -45,7 +48,7 @@ public class EditoraController: BaseController
     [ProducesResponseType(typeof(RetornoBaseDTO), 400)]
     [ProducesResponseType(typeof(RetornoBaseDTO), 601)]
     [ProducesResponseType(typeof(bool), 200)]
-    [Authorize("Bearer")]
+    [Permissao(Permissao.EDT_E, Policy = "Bearer")]
     public async Task<IActionResult> ExclusaoLogica([FromRoute] long id, [FromServices] IServicoEditora servicoEditora)
     {
         return Ok(await servicoEditora.Excluir(id));
@@ -55,7 +58,7 @@ public class EditoraController: BaseController
     [ProducesResponseType(typeof(RetornoBaseDTO), 400)]
     [ProducesResponseType(typeof(RetornoBaseDTO), 601)]
     [ProducesResponseType(typeof(IdNomeExcluidoAuditavelDTO), 200)]  
-    [Authorize("Bearer")]
+    [Permissao(Permissao.EDT_C, Policy = "Bearer")]
     public async Task<IActionResult> PesquisarPorNome([FromRoute] string nome, [FromServices] IServicoEditora servicoEditora)
     {
         return Ok(await servicoEditora.PesquisarPorNome(nome));
