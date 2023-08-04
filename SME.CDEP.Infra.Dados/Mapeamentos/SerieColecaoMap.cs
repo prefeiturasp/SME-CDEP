@@ -8,7 +8,6 @@ namespace SME.CDEP.Infra.Dados.Mapeamentos
         {
             ToTable("serie_colecao");
             Map(c => c.Nome).ToColumn("nome");
-            Map(c => c.Excluido).ToColumn("excluido");
         }
     }
 }

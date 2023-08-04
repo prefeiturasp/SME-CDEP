@@ -68,6 +68,12 @@ namespace SME.CDEP.TesteIntegracao.Setup
             _serviceCollection.TryAddScoped<IServicoMaterial, ServicoMaterial>();
             _serviceCollection.TryAddScoped<IServicoSuporte, ServicoSuporte>();
             _serviceCollection.TryAddScoped<IServicoTipoAnexo, ServicoTipoAnexo>();
+            _serviceCollection.TryAddScoped<IServicoCredito, ServicoCredito>();
+            _serviceCollection.TryAddScoped<IServicoAutor, ServicoAutor>();
+            _serviceCollection.TryAddScoped<IServicoEditora, ServicoEditora>();
+            _serviceCollection.TryAddScoped<IServicoAssunto, ServicoAssunto>();
+            _serviceCollection.TryAddScoped<IServicoSerieColecao, ServicoSerieColecao>();
+            _serviceCollection.TryAddScoped<IServicoMenu, ServicoMenu>();
         }
         protected override void RegistrarHttpClients()
         {}

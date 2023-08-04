@@ -132,10 +132,35 @@ namespace SME.CDEP.TesteIntegracao
             return ObterServicoAplicacao<IServicoTipoAnexo>();
         }
         
+        protected IServicoCredito GetServicoCredito()
+        {
+            return ObterServicoAplicacao<IServicoCredito>();
+        }
+        
+        protected IServicoAutor GetServicoAutor()
+        {
+            return ObterServicoAplicacao<IServicoAutor>();
+        }
+        
+        protected IServicoEditora GetServicoEditora()
+        {
+            return ObterServicoAplicacao<IServicoEditora>();
+        }
+        
+        protected IServicoAssunto GetServicoAssunto()
+        {
+            return ObterServicoAplicacao<IServicoAssunto>();
+        }
+        
+        protected IServicoSerieColecao GetServicoSerieColecao()
+        {
+            return ObterServicoAplicacao<IServicoSerieColecao>();
+        }
+        
         public T ObterServicoAplicacao<T>()
             where T : IServicoAplicacao
         {
-            return ServiceProvider.GetService<T>() ?? throw new Exception($"Servi�o {typeof(T).Name} n�o registrado!");
+            return ServiceProvider.GetService<T>() ?? throw new Exception($"Serviço {typeof(T).Name} não registrado!");
         }
         
         protected void CriarClaimUsuario()
@@ -177,6 +202,17 @@ namespace SME.CDEP.TesteIntegracao
                 TipoUsuario = (int)tipoUsuario
             };
             return retorno;
+        }
+        
+        protected IdNomeExcluidoAuditavelDTO ObterIdNomeExcluidoAuditavelDTO(string nome)
+        {
+            return new IdNomeExcluidoAuditavelDTO()
+            {
+                Nome = nome,
+                CriadoPor = ConstantesTestes.SISTEMA,
+                CriadoEm = DateTimeExtension.HorarioBrasilia().Date,
+                CriadoLogin = ConstantesTestes.LOGIN_123456789
+            };
         }
     }
 }
