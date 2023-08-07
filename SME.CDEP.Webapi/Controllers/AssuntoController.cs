@@ -33,7 +33,7 @@ public class AssuntoController: BaseController
     [Permissao(Permissao.ASS_C, Policy = "Bearer")]
     public async Task<IActionResult> ObterTodos([FromServices]IServicoAssunto servicoAssunto)
     {
-        return Ok(await servicoAssunto.ObterTodos());
+        return Ok((await servicoAssunto.ObterTodos()).OrderByDescending(o=> o.AlteradoEm.HasValue ? o.AlteradoEm : o.CriadoEm));
     }
     
     [HttpGet("{id}")]
