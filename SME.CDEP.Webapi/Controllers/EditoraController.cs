@@ -13,8 +13,9 @@ namespace SME.CDEP.Webapi.Controllers;
 public class EditoraController: BaseController
 {
     [HttpPost]
-    [ProducesResponseType(typeof(IdNomeExcluidoDTO), 200)]
+    [ProducesResponseType(typeof(IdNomeExcluidoAuditavelDTO), 200)]
     [ProducesResponseType(typeof(RetornoBaseDTO), 400)]
+    [ProducesResponseType(typeof(RetornoBaseDTO), 403)]
     [ProducesResponseType(typeof(RetornoBaseDTO), 500)]
     [ProducesResponseType(typeof(RetornoBaseDTO), 601)]
     [Permissao(Permissao.EDT_I, Policy = "Bearer")]
@@ -25,9 +26,11 @@ public class EditoraController: BaseController
     }
 
     [HttpGet]
+    [ProducesResponseType(typeof(IdNomeExcluidoAuditavelDTO), 200)]
     [ProducesResponseType(typeof(RetornoBaseDTO), 400)]
-    [ProducesResponseType(typeof(RetornoBaseDTO), 601)]
-    [ProducesResponseType(typeof(IdNomeExcluidoDTO), 200)]  
+    [ProducesResponseType(typeof(RetornoBaseDTO), 403)]
+    [ProducesResponseType(typeof(RetornoBaseDTO), 500)]
+    [ProducesResponseType(typeof(RetornoBaseDTO), 601)] 
     [Permissao(Permissao.EDT_C, Policy = "Bearer")]
     public async Task<IActionResult> ObterTodos([FromServices]IServicoEditora servicoEditora)
     {
@@ -35,9 +38,11 @@ public class EditoraController: BaseController
     }
     
     [HttpGet("{id}")]
+    [ProducesResponseType(typeof(IdNomeExcluidoAuditavelDTO), 200)]
     [ProducesResponseType(typeof(RetornoBaseDTO), 400)]
-    [ProducesResponseType(typeof(RetornoBaseDTO), 601)]
-    [ProducesResponseType(typeof(IdNomeExcluidoDTO), 200)]  
+    [ProducesResponseType(typeof(RetornoBaseDTO), 403)]
+    [ProducesResponseType(typeof(RetornoBaseDTO), 500)]
+    [ProducesResponseType(typeof(RetornoBaseDTO), 601)] 
     [Permissao(Permissao.EDT_C, Policy = "Bearer")]
     public async Task<IActionResult> ObterPorId([FromRoute] long id,[FromServices]IServicoEditora servicoEditora)
     {
@@ -45,9 +50,11 @@ public class EditoraController: BaseController
     }
     
     [HttpDelete("{id}")]
-    [ProducesResponseType(typeof(RetornoBaseDTO), 400)]
-    [ProducesResponseType(typeof(RetornoBaseDTO), 601)]
     [ProducesResponseType(typeof(bool), 200)]
+    [ProducesResponseType(typeof(RetornoBaseDTO), 400)]
+    [ProducesResponseType(typeof(RetornoBaseDTO), 403)]
+    [ProducesResponseType(typeof(RetornoBaseDTO), 500)]
+    [ProducesResponseType(typeof(RetornoBaseDTO), 601)]
     [Permissao(Permissao.EDT_E, Policy = "Bearer")]
     public async Task<IActionResult> ExclusaoLogica([FromRoute] long id, [FromServices] IServicoEditora servicoEditora)
     {
@@ -55,9 +62,11 @@ public class EditoraController: BaseController
     }
     
     [HttpGet("pesquisar/{nome}")]
+    [ProducesResponseType(typeof(IdNomeExcluidoAuditavelDTO), 200)]
     [ProducesResponseType(typeof(RetornoBaseDTO), 400)]
-    [ProducesResponseType(typeof(RetornoBaseDTO), 601)]
-    [ProducesResponseType(typeof(IdNomeExcluidoAuditavelDTO), 200)]  
+    [ProducesResponseType(typeof(RetornoBaseDTO), 403)]
+    [ProducesResponseType(typeof(RetornoBaseDTO), 500)]
+    [ProducesResponseType(typeof(RetornoBaseDTO), 601)] 
     [Permissao(Permissao.EDT_C, Policy = "Bearer")]
     public async Task<IActionResult> PesquisarPorNome([FromRoute] string nome, [FromServices] IServicoEditora servicoEditora)
     {

@@ -13,8 +13,9 @@ namespace SME.CDEP.Webapi.Controllers;
 public class CreditoController: BaseController
 {
     [HttpPost]
-    [ProducesResponseType(typeof(IdNomeExcluidoDTO), 200)]
+    [ProducesResponseType(typeof(IdNomeExcluidoAuditavelDTO), 200)]
     [ProducesResponseType(typeof(RetornoBaseDTO), 400)]
+    [ProducesResponseType(typeof(RetornoBaseDTO), 403)]
     [ProducesResponseType(typeof(RetornoBaseDTO), 500)]
     [ProducesResponseType(typeof(RetornoBaseDTO), 601)]
     [Permissao(Permissao.CRD_I, Policy = "Bearer")]
@@ -25,9 +26,11 @@ public class CreditoController: BaseController
     }
 
     [HttpGet]
+    [ProducesResponseType(typeof(IdNomeExcluidoAuditavelDTO), 200)]
     [ProducesResponseType(typeof(RetornoBaseDTO), 400)]
+    [ProducesResponseType(typeof(RetornoBaseDTO), 403)]
+    [ProducesResponseType(typeof(RetornoBaseDTO), 500)]
     [ProducesResponseType(typeof(RetornoBaseDTO), 601)]
-    [ProducesResponseType(typeof(IdNomeExcluidoDTO), 200)]  
     [Permissao(Permissao.CRD_C, Policy = "Bearer")]
     public async Task<IActionResult> ObterTodos([FromServices]IServicoCredito servicoCredito)
     {
@@ -35,9 +38,11 @@ public class CreditoController: BaseController
     }
     
     [HttpGet("{id}")]
+    [ProducesResponseType(typeof(IdNomeExcluidoAuditavelDTO), 200)]
     [ProducesResponseType(typeof(RetornoBaseDTO), 400)]
+    [ProducesResponseType(typeof(RetornoBaseDTO), 403)]
+    [ProducesResponseType(typeof(RetornoBaseDTO), 500)]
     [ProducesResponseType(typeof(RetornoBaseDTO), 601)]
-    [ProducesResponseType(typeof(IdNomeExcluidoDTO), 200)]  
     [Permissao(Permissao.CRD_C, Policy = "Bearer")]
     public async Task<IActionResult> ObterPorId([FromRoute] long id,[FromServices]IServicoCredito servicoCredito)
     {
@@ -45,9 +50,11 @@ public class CreditoController: BaseController
     }
     
     [HttpDelete("{id}")]
-    [ProducesResponseType(typeof(RetornoBaseDTO), 400)]
-    [ProducesResponseType(typeof(RetornoBaseDTO), 601)]
     [ProducesResponseType(typeof(bool), 200)]
+    [ProducesResponseType(typeof(RetornoBaseDTO), 400)]
+    [ProducesResponseType(typeof(RetornoBaseDTO), 403)]
+    [ProducesResponseType(typeof(RetornoBaseDTO), 500)]
+    [ProducesResponseType(typeof(RetornoBaseDTO), 601)]
     [Permissao(Permissao.CRD_E, Policy = "Bearer")]
     public async Task<IActionResult> ExclusaoLogica([FromRoute] long id, [FromServices] IServicoCredito servicoCredito)
     {
@@ -55,9 +62,11 @@ public class CreditoController: BaseController
     }
     
     [HttpGet("pesquisar/{nome}")]
+    [ProducesResponseType(typeof(IdNomeExcluidoAuditavelDTO), 200)]
     [ProducesResponseType(typeof(RetornoBaseDTO), 400)]
-    [ProducesResponseType(typeof(RetornoBaseDTO), 601)]
-    [ProducesResponseType(typeof(IdNomeExcluidoAuditavelDTO), 200)]  
+    [ProducesResponseType(typeof(RetornoBaseDTO), 403)]
+    [ProducesResponseType(typeof(RetornoBaseDTO), 500)]
+    [ProducesResponseType(typeof(RetornoBaseDTO), 601)] 
     [Permissao(Permissao.CRD_C, Policy = "Bearer")]
     public async Task<IActionResult> PesquisarPorNome([FromRoute] string nome, [FromServices]IServicoCredito servicoCredito)
     {

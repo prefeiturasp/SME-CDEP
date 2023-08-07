@@ -13,8 +13,9 @@ namespace SME.CDEP.Webapi.Controllers;
 public class AssuntoController: BaseController
 {
     [HttpPost]
-    [ProducesResponseType(typeof(IdNomeExcluidoDTO), 200)]
+    [ProducesResponseType(typeof(IdNomeExcluidoAuditavelDTO), 200)]
     [ProducesResponseType(typeof(RetornoBaseDTO), 400)]
+    [ProducesResponseType(typeof(RetornoBaseDTO), 403)]
     [ProducesResponseType(typeof(RetornoBaseDTO), 500)]
     [ProducesResponseType(typeof(RetornoBaseDTO), 601)]
     [Permissao(Permissao.ASS_I, Policy = "Bearer")]
@@ -25,9 +26,10 @@ public class AssuntoController: BaseController
     }
 
     [HttpGet]
+    [ProducesResponseType(typeof(IdNomeExcluidoAuditavelDTO), 200)]
     [ProducesResponseType(typeof(RetornoBaseDTO), 400)]
+    [ProducesResponseType(typeof(RetornoBaseDTO), 403)]
     [ProducesResponseType(typeof(RetornoBaseDTO), 601)]
-    [ProducesResponseType(typeof(IdNomeExcluidoDTO), 200)]
     [Permissao(Permissao.ASS_C, Policy = "Bearer")]
     public async Task<IActionResult> ObterTodos([FromServices]IServicoAssunto servicoAssunto)
     {
@@ -35,9 +37,10 @@ public class AssuntoController: BaseController
     }
     
     [HttpGet("{id}")]
+    [ProducesResponseType(typeof(IdNomeExcluidoAuditavelDTO), 200)]
     [ProducesResponseType(typeof(RetornoBaseDTO), 400)]
+    [ProducesResponseType(typeof(RetornoBaseDTO), 403)]
     [ProducesResponseType(typeof(RetornoBaseDTO), 601)]
-    [ProducesResponseType(typeof(IdNomeExcluidoDTO), 200)]
     [Permissao(Permissao.ASS_C, Policy = "Bearer")]
     public async Task<IActionResult> ObterPorId([FromRoute] long id,[FromServices]IServicoAssunto servicoAssunto)
     {
@@ -45,9 +48,10 @@ public class AssuntoController: BaseController
     }
     
     [HttpDelete("{id}")]
-    [ProducesResponseType(typeof(RetornoBaseDTO), 400)]
-    [ProducesResponseType(typeof(RetornoBaseDTO), 601)]
     [ProducesResponseType(typeof(bool), 200)]
+    [ProducesResponseType(typeof(RetornoBaseDTO), 400)]
+    [ProducesResponseType(typeof(RetornoBaseDTO), 403)]
+    [ProducesResponseType(typeof(RetornoBaseDTO), 601)]
     [Permissao(Permissao.ASS_E, Policy = "Bearer")]
     public async Task<IActionResult> ExclusaoLogica([FromRoute] long id, [FromServices] IServicoAssunto servicoAssunto)
     {
@@ -55,9 +59,10 @@ public class AssuntoController: BaseController
     }
     
     [HttpGet("pesquisar/{nome}")]
-    [ProducesResponseType(typeof(RetornoBaseDTO), 400)]
-    [ProducesResponseType(typeof(RetornoBaseDTO), 601)]
     [ProducesResponseType(typeof(IdNomeExcluidoAuditavelDTO), 200)]  
+    [ProducesResponseType(typeof(RetornoBaseDTO), 400)]
+    [ProducesResponseType(typeof(RetornoBaseDTO), 403)]
+    [ProducesResponseType(typeof(RetornoBaseDTO), 601)]
     [Permissao(Permissao.ASS_C, Policy = "Bearer")]
     public async Task<IActionResult> PesquisarPorNome([FromRoute] string nome, [FromServices] IServicoAssunto servicoAssunto)
     {
