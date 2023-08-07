@@ -1,6 +1,7 @@
 ﻿using Shouldly;
 using SME.CDEP.Aplicacao.DTOS;
 using SME.CDEP.Dominio.Entidades;
+using SME.CDEP.Dominio.Excecoes;
 using SME.CDEP.Infra.Dominio.Enumerados;
 using SME.CDEP.TesteIntegracao.Setup;
 using SME.CDEP.TesteIntegracao.Constantes;
@@ -22,6 +23,16 @@ namespace SME.CDEP.TesteIntegracao.Usuario
             suporte.ShouldBeGreaterThan(0);
             var obterTodos = ObterTodos<Suporte>();
             obterTodos.Count.ShouldBe(1);
+        }
+        
+        [Fact(DisplayName = "Suporte - Não deve inserir pois já existe cadastro com esse nome")]
+        public async Task Nao_deve_para_cadastros_duplicados()
+        {
+            await InserirSuporte();
+            
+            var servicoSuporte = GetServicoSuporte();
+
+            await servicoSuporte.Inserir(new IdNomeTipoExcluidoDTO(){Nome = ConstantesTestes.PAPEL, Tipo = (int)TipoSuporte.IMAGEM}).ShouldThrowAsync<NegocioException>();
         }
 
         [Fact(DisplayName = "Suporte - Obter todos")]
@@ -62,6 +73,19 @@ namespace SME.CDEP.TesteIntegracao.Usuario
             
             suporteAlterado.ShouldNotBeNull();
             suporteAlterado.Nome = ConstantesTestes.OUTROS;
+        }
+        
+        [Fact(DisplayName = "Suporte - Não deve alterar pois já existe cadastro com esse nome")]
+        public async Task Nao_deve_atualizar_para_cadastros_duplicados()
+        {
+            await InserirSuporte();
+            
+            var servicoSuporte = GetServicoSuporte();
+
+            var suporte = await servicoSuporte.ObterPorId(3);
+            suporte.Nome = ConstantesTestes.PAPEL;
+            
+            await servicoSuporte.Alterar(suporte).ShouldThrowAsync<NegocioException>();
         }
         
         [Fact(DisplayName = "Suporte - Excluir")]

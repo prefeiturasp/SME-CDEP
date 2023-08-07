@@ -12,4 +12,5 @@ public interface IContextoAplicacao
 
     IContextoAplicacao AtribuirContexto(IContextoAplicacao contexto);
     void AdicionarVariaveis(IDictionary<string, object> variaveis);
+    List<Tuple<string, string>> ObterVariavel(string nome);
 }

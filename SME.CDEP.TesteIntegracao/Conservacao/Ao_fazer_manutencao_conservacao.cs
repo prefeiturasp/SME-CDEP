@@ -1,6 +1,7 @@
 ﻿using Shouldly;
 using SME.CDEP.Aplicacao.DTOS;
 using SME.CDEP.Dominio.Entidades;
+using SME.CDEP.Dominio.Excecoes;
 using SME.CDEP.TesteIntegracao.Setup;
 using SME.CDEP.TesteIntegracao.Constantes;
 using Xunit;
@@ -21,6 +22,16 @@ namespace SME.CDEP.TesteIntegracao.Usuario
             conservacaoDTO.ShouldBeGreaterThan(0);
             var obterTodos = ObterTodos<Conservacao>();
             obterTodos.Count.ShouldBe(1);
+        }
+        
+        [Fact(DisplayName = "Conservacao - Não deve inserir pois já existe cadastro com esse nome")]
+        public async Task Nao_deve_para_cadastros_duplicados()
+        {
+            await InserirConservacao();
+            
+            var servicoConservacao = GetServicoConservacao();
+
+            await servicoConservacao.Inserir(new IdNomeExcluidoDTO(){Nome = ConstantesTestes.OTIMO}).ShouldThrowAsync<NegocioException>();
         }
 
         [Fact(DisplayName = "Conservacao - Obter todos")]
@@ -61,6 +72,19 @@ namespace SME.CDEP.TesteIntegracao.Usuario
             
             acessosDocumentosDto.ShouldNotBeNull();
             acessosDocumentosDto.Nome = ConstantesTestes.EXCELENTE;
+        }
+        
+        [Fact(DisplayName = "Conservacao - Não deve alterar pois já existe cadastro com esse nome")]
+        public async Task Nao_deve_atualizar_para_cadastros_duplicados()
+        {
+            await InserirConservacao();
+            
+            var servicoConservacao = GetServicoConservacao();
+
+            var acessoDocumentoDto = await servicoConservacao.ObterPorId(3);
+            acessoDocumentoDto.Nome = ConstantesTestes.OTIMO;
+            
+            await servicoConservacao.Alterar(acessoDocumentoDto).ShouldThrowAsync<NegocioException>();
         }
         
         [Fact(DisplayName = "Conservacao - Excluir")]

@@ -1,4 +1,5 @@
 ﻿using SME.CDEP.Aplicacao.DTOS;
+using SME.CDEP.Infra.Dominio.Enumerados;
 
 namespace SME.CDEP.Aplicacao.Servicos.Interface
 {
@@ -21,5 +22,6 @@ namespace SME.CDEP.Aplicacao.Servicos.Interface
         Task<RetornoPerfilUsuarioDTO?> AlterarSenhaComTokenRecuperacao(RecuperacaoSenhaDto recuperacaoSenhaDto);
         Task<bool> ValidarCpfExistente(string cpf);
         Task<bool> AlterarTipoUsuario(string login, TipoUsuarioExternoDTO tipoUsuario);
+        IEnumerable<Permissao> ObterPermissoes();
     }
 }
