@@ -1,6 +1,7 @@
 ﻿using Shouldly;
 using SME.CDEP.Aplicacao.DTOS;
 using SME.CDEP.Dominio.Entidades;
+using SME.CDEP.Dominio.Excecoes;
 using SME.CDEP.Infra.Dominio.Enumerados;
 using SME.CDEP.TesteIntegracao.Setup;
 using SME.CDEP.TesteIntegracao.Constantes;
@@ -22,6 +23,16 @@ namespace SME.CDEP.TesteIntegracao.Usuario
             material.ShouldBeGreaterThan(0);
             var obterTodos = ObterTodos<Material>();
             obterTodos.Count.ShouldBe(1);
+        }
+        
+        [Fact(DisplayName = "Material - Não deve inserir pois já existe cadastro com esse nome")]
+        public async Task Nao_deve_para_cadastros_duplicados()
+        {
+            await InserirMaterial();
+            
+            var servicoMaterial = GetServicoMaterial();
+
+            await servicoMaterial.Inserir(new IdNomeTipoExcluidoDTO(){Nome = ConstantesTestes.APOSTILA, Tipo = (int)TipoMaterial.DOCUMENTAL}).ShouldThrowAsync<NegocioException>();
         }
 
         [Fact(DisplayName = "Material - Obter todos")]
@@ -62,6 +73,19 @@ namespace SME.CDEP.TesteIntegracao.Usuario
             
             materialAlterado.ShouldNotBeNull();
             materialAlterado.Nome = ConstantesTestes.OUTROS;
+        }
+        
+        [Fact(DisplayName = "Material - Não deve alterar pois já existe cadastro com esse nome")]
+        public async Task Nao_deve_atualizar_para_cadastros_duplicados()
+        {
+            await InserirMaterial();
+            
+            var servicoMaterial = GetServicoMaterial();
+
+            var material = await servicoMaterial.ObterPorId(3);
+            material.Nome = ConstantesTestes.PERIODICO;
+            
+            await servicoMaterial.Alterar(material).ShouldThrowAsync<NegocioException>();
         }
         
         [Fact(DisplayName = "Material - Excluir")]

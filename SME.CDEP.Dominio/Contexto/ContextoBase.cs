@@ -25,4 +25,12 @@ public abstract class ContextoBase : IContextoAplicacao
 
         return default;
     }
+    
+    public List<Tuple<string, string>> ObterVariavel(string nome)
+    {
+        if (Variaveis.TryGetValue(nome, out object valor))
+            return (List<Tuple<string, string>>)valor;
+
+        return default;
+    }
 }
