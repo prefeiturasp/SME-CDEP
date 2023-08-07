@@ -18,7 +18,7 @@ namespace SME.CDEP.TesteIntegracao.Usuario
         {
             var servicoCromia = GetServicoCromia();
 
-            var cromia = await servicoCromia.Inserir(new BaseComNomeDTO(){Nome = ConstantesTestes.PB});
+            var cromia = await servicoCromia.Inserir(new IdNomeExcluidoDTO(){Nome = ConstantesTestes.PB});
             cromia.ShouldBeGreaterThan(0);
             var obterTodos = ObterTodos<Cromia>();
             obterTodos.Count.ShouldBe(1);
@@ -31,7 +31,7 @@ namespace SME.CDEP.TesteIntegracao.Usuario
             
             var servicoCromia = GetServicoCromia();
 
-            await servicoCromia.Inserir(new BaseComNomeDTO(){Nome = ConstantesTestes.PB}).ShouldThrowAsync<NegocioException>();
+            await servicoCromia.Inserir(new IdNomeExcluidoDTO(){Nome = ConstantesTestes.PB}).ShouldThrowAsync<NegocioException>();
         }
 
         [Fact(DisplayName = "Cromia - Obter todos")]

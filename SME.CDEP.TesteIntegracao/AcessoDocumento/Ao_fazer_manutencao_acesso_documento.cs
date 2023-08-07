@@ -18,7 +18,7 @@ namespace SME.CDEP.TesteIntegracao.Usuario
         {
             var servicoAcessoDocumento = GetServicoAcessoDocumento();
 
-            var acessoDocumento = await servicoAcessoDocumento.Inserir(new BaseComNomeDTO(){Nome = ConstantesTestes.DIGITAL_E_FISICO});
+            var acessoDocumento = await servicoAcessoDocumento.Inserir(new IdNomeExcluidoDTO(){Nome = ConstantesTestes.DIGITAL_E_FISICO});
             acessoDocumento.ShouldBeGreaterThan(0);
             var obterTodos = ObterTodos<AcessoDocumento>();
             obterTodos.Count.ShouldBe(1);
@@ -31,7 +31,7 @@ namespace SME.CDEP.TesteIntegracao.Usuario
             
             var servicoAcessoDocumento = GetServicoAcessoDocumento();
 
-            await servicoAcessoDocumento.Inserir(new BaseComNomeDTO(){Nome = ConstantesTestes.DIGITAL_E_FISICO}).ShouldThrowAsync<NegocioException>();
+            await servicoAcessoDocumento.Inserir(new IdNomeExcluidoDTO(){Nome = ConstantesTestes.DIGITAL_E_FISICO}).ShouldThrowAsync<NegocioException>();
         }
 
         [Fact(DisplayName = "Acesso Documento - Obter todos")]

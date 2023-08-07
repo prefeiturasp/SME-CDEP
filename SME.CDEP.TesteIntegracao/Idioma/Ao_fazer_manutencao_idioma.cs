@@ -18,7 +18,7 @@ namespace SME.CDEP.TesteIntegracao.Usuario
         {
             var servicoIdioma = GetServicoIdioma();
 
-            var idioma = await servicoIdioma.Inserir(new BaseComNomeDTO(){Nome = ConstantesTestes.PORTUGUES});
+            var idioma = await servicoIdioma.Inserir(new IdNomeExcluidoDTO(){Nome = ConstantesTestes.PORTUGUES});
             idioma.ShouldBeGreaterThan(0);
             var obterTodos = ObterTodos<Idioma>();
             obterTodos.Count.ShouldBe(1);
@@ -31,7 +31,7 @@ namespace SME.CDEP.TesteIntegracao.Usuario
             
             var servicoIdioma = GetServicoIdioma();
 
-            await servicoIdioma.Inserir(new BaseComNomeDTO(){Nome = ConstantesTestes.PORTUGUES}).ShouldThrowAsync<NegocioException>();
+            await servicoIdioma.Inserir(new IdNomeExcluidoDTO(){Nome = ConstantesTestes.PORTUGUES}).ShouldThrowAsync<NegocioException>();
         }
 
         [Fact(DisplayName = "Idioma - Obter todos")]

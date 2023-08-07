@@ -4,10 +4,10 @@ namespace SME.CDEP.Aplicacao.Servicos.Interface
 {
     public interface IServicoIdNomeExcluido
     {
-        Task<long> Inserir(BaseComNomeDTO baseComNomeDto);
-        Task<IList<BaseComNomeDTO>> ObterTodos();
-        Task<BaseComNomeDTO> Alterar(BaseComNomeDTO baseComNomeDto);
-        Task<BaseComNomeDTO> ObterPorId(long Id);
+        Task<long> Inserir(IdNomeExcluidoDTO idNomeExcluidoDto);
+        Task<IList<IdNomeExcluidoDTO>> ObterTodos();
+        Task<IdNomeExcluidoDTO> Alterar(IdNomeExcluidoDTO idNomeExcluidoDto);
+        Task<IdNomeExcluidoDTO> ObterPorId(long Id);
         Task<bool> Excluir(long Id);
     }
 }

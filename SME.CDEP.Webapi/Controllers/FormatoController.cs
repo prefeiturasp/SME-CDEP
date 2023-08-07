@@ -11,12 +11,12 @@ namespace SME.CDEP.Webapi.Controllers;
 public class FormatoController: BaseController
 {
     [HttpPost]
-    [ProducesResponseType(typeof(BaseComNomeDTO), 200)]
+    [ProducesResponseType(typeof(IdNomeExcluidoDTO), 200)]
     [ProducesResponseType(typeof(RetornoBaseDTO), 400)]
     [ProducesResponseType(typeof(RetornoBaseDTO), 500)]
     [ProducesResponseType(typeof(RetornoBaseDTO), 601)]
     [Authorize("Bearer")]
-    public async Task<IActionResult> CadastrarAlterar([FromBody] BaseComNomeTipoDto formatoDTO, [FromServices] IServicoFormato servicoFormato)
+    public async Task<IActionResult> CadastrarAlterar([FromBody] IdNomeExcluidoTipoDto formatoDTO, [FromServices] IServicoFormato servicoFormato)
     {
         return formatoDTO.Id > 0 ? Ok(await servicoFormato.Alterar(formatoDTO)) : Ok(await servicoFormato.Inserir(formatoDTO));
     }
@@ -24,7 +24,7 @@ public class FormatoController: BaseController
     [HttpGet]
     [ProducesResponseType(typeof(RetornoBaseDTO), 400)]
     [ProducesResponseType(typeof(RetornoBaseDTO), 601)]
-    [ProducesResponseType(typeof(BaseComNomeDTO), 200)]  
+    [ProducesResponseType(typeof(IdNomeExcluidoDTO), 200)]  
     [Authorize("Bearer")]
     public async Task<IActionResult> ObterTodos([FromServices]IServicoFormato servicoFormato)
     {
@@ -34,7 +34,7 @@ public class FormatoController: BaseController
     [HttpGet("{id}")]
     [ProducesResponseType(typeof(RetornoBaseDTO), 400)]
     [ProducesResponseType(typeof(RetornoBaseDTO), 601)]
-    [ProducesResponseType(typeof(BaseComNomeDTO), 200)]  
+    [ProducesResponseType(typeof(IdNomeExcluidoDTO), 200)]  
     [Authorize("Bearer")]
     public async Task<IActionResult> ObterTodos([FromRoute] long id,[FromServices]IServicoFormato servicoFormato)
     {
