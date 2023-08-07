@@ -74,7 +74,7 @@ namespace SME.CDEP.Aplicacao.Servicos
                 Login = usuarioExternoDto.Cpf, Nome = usuarioExternoDto.Nome,
                 Telefone = usuarioExternoDto.Telefone, Endereco = usuarioExternoDto.Endereco, Numero = usuarioExternoDto.Numero,
                 Complemento = usuarioExternoDto.Complemento, Cidade = usuarioExternoDto.Cidade, Estado = usuarioExternoDto.Estado,
-                Cep = usuarioExternoDto.Cep, TipoUsuario = usuarioExternoDto.TipoUsuario, Bairro = usuarioExternoDto.Bairro
+                Cep = usuarioExternoDto.Cep, TipoUsuario = usuarioExternoDto.Tipo, Bairro = usuarioExternoDto.Bairro
             });
 
             return retorno != 0;
@@ -109,7 +109,6 @@ namespace SME.CDEP.Aplicacao.Servicos
                 dadosUsuarioCoreSSO.Cidade = dadosusuarioAcervo.Cidade;
                 dadosUsuarioCoreSSO.Estado = dadosusuarioAcervo.Estado;
                 dadosUsuarioCoreSSO.Tipo = (int)dadosusuarioAcervo.TipoUsuario;
-                dadosUsuarioCoreSSO.TipoDescricao = dadosusuarioAcervo.TipoUsuario.Descricao();
             }
             return dadosUsuarioCoreSSO;
         }

@@ -17,6 +17,5 @@ namespace SME.CDEP.Aplicacao.DTOS
         public string Cidade { get; set; }
         public string Estado { get; set; }
         public int Tipo { get; set; }
-        public string TipoDescricao { get; set; }
     }
 }
