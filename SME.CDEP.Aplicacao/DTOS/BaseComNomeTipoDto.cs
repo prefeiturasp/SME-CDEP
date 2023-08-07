@@ -1,6 +1,6 @@
 ﻿namespace SME.CDEP.Aplicacao.DTOS
 {
-    public class IdNomeTipoExcluidoDTO : IdNomeExcluidoDTO
+    public class BaseComNomeTipoDto : BaseComNomeDTO
     {
         public int Tipo { get; set; }
     }

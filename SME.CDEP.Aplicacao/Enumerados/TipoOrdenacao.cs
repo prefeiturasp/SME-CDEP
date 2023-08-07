@@ -2,6 +2,6 @@
 
 public enum TipoOrdenacao
 {
-    DATA = 1,
-    AZ = 2
+    DATA = 0,
+    AZ = 1
 }

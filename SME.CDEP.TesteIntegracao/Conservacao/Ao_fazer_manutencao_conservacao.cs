@@ -18,7 +18,7 @@ namespace SME.CDEP.TesteIntegracao.Usuario
         {
             var servicoConservacao = GetServicoConservacao();
 
-            var conservacaoDTO = await servicoConservacao.Inserir(new IdNomeExcluidoDTO(){Nome = ConstantesTestes.OTIMO});
+            var conservacaoDTO = await servicoConservacao.Inserir(new BaseComNomeDTO(){Nome = ConstantesTestes.OTIMO});
             conservacaoDTO.ShouldBeGreaterThan(0);
             var obterTodos = ObterTodos<Conservacao>();
             obterTodos.Count.ShouldBe(1);
@@ -31,7 +31,7 @@ namespace SME.CDEP.TesteIntegracao.Usuario
             
             var servicoConservacao = GetServicoConservacao();
 
-            await servicoConservacao.Inserir(new IdNomeExcluidoDTO(){Nome = ConstantesTestes.OTIMO}).ShouldThrowAsync<NegocioException>();
+            await servicoConservacao.Inserir(new BaseComNomeDTO(){Nome = ConstantesTestes.OTIMO}).ShouldThrowAsync<NegocioException>();
         }
 
         [Fact(DisplayName = "Conservacao - Obter todos")]

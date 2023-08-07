@@ -11,12 +11,12 @@ namespace SME.CDEP.Webapi.Controllers;
 public class ConservacaoController: BaseController
 {
     [HttpPost]
-    [ProducesResponseType(typeof(IdNomeExcluidoDTO), 200)]
+    [ProducesResponseType(typeof(BaseComNomeDTO), 200)]
     [ProducesResponseType(typeof(RetornoBaseDTO), 400)]
     [ProducesResponseType(typeof(RetornoBaseDTO), 500)]
     [ProducesResponseType(typeof(RetornoBaseDTO), 601)]
     [Authorize("Bearer")]
-    public async Task<IActionResult> CadastrarAlterar([FromBody] IdNomeExcluidoDTO conservacaoDTO, [FromServices] IServicoConservacao servicoConservacao)
+    public async Task<IActionResult> CadastrarAlterar([FromBody] BaseComNomeDTO conservacaoDTO, [FromServices] IServicoConservacao servicoConservacao)
     {
         return conservacaoDTO.Id > 0 ? Ok(await servicoConservacao.Alterar(conservacaoDTO)) : Ok(await servicoConservacao.Inserir(conservacaoDTO));
     }
@@ -24,7 +24,7 @@ public class ConservacaoController: BaseController
     [HttpGet]
     [ProducesResponseType(typeof(RetornoBaseDTO), 400)]
     [ProducesResponseType(typeof(RetornoBaseDTO), 601)]
-    [ProducesResponseType(typeof(IdNomeExcluidoDTO), 200)]  
+    [ProducesResponseType(typeof(BaseComNomeDTO), 200)]  
     [Authorize("Bearer")]
     public async Task<IActionResult> ObterTodos([FromServices]IServicoConservacao servicoConservacao)
     {
@@ -34,7 +34,7 @@ public class ConservacaoController: BaseController
     [HttpGet("{id}")]
     [ProducesResponseType(typeof(RetornoBaseDTO), 400)]
     [ProducesResponseType(typeof(RetornoBaseDTO), 601)]
-    [ProducesResponseType(typeof(IdNomeExcluidoDTO), 200)]  
+    [ProducesResponseType(typeof(BaseComNomeDTO), 200)]  
     [Authorize("Bearer")]
     public async Task<IActionResult> ObterTodos([FromRoute] long id,[FromServices]IServicoConservacao servicoConservacao)
     {

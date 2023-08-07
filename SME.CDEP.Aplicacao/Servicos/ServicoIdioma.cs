@@ -8,9 +8,9 @@ using SME.CDEP.Infra.Dados.Repositorios.Interfaces;
 
 namespace SME.CDEP.Aplicacao.Servicos
 {
-    public class ServicoIdioma : ServicoAplicacao<Idioma, IdNomeExcluidoDTO>,IServicoIdioma
+    public class ServicoIdioma : ServicoAplicacao<Idioma, BaseComNomeDTO>,IServicoIdioma
     {
-        public ServicoIdioma(IRepositorioIdioma repositorio, IMapper mapper,IContextoAplicacao contextoAplicacao) : base(repositorio, mapper,contextoAplicacao)
+        public ServicoIdioma(IRepositorioIdioma repositorio, IMapper mapper) : base(repositorio, mapper)
         {}
     }
 }

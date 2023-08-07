@@ -10,14 +10,14 @@ namespace SME.CDEP.Aplicacao.Mapeamentos
         {
             CreateMap<UsuarioDTO, Usuario>().ReverseMap();
             CreateMap<UsuarioIdNomeLoginDTO, Usuario>().ReverseMap();
-            CreateMap<IdNomeExcluidoDTO, AcessoDocumento>().ReverseMap();
-            CreateMap<IdNomeExcluidoDTO, Conservacao>().ReverseMap();
-            CreateMap<IdNomeExcluidoDTO, Cromia>().ReverseMap();
-            CreateMap<IdNomeTipoExcluidoDTO, Formato>().ReverseMap();
-            CreateMap<IdNomeExcluidoDTO, Idioma>().ReverseMap();
-            CreateMap<IdNomeTipoExcluidoDTO, Material>().ReverseMap();
-            CreateMap<IdNomeTipoExcluidoDTO, Suporte>().ReverseMap();
-            CreateMap<IdNomeExcluidoDTO, TipoAnexo>().ReverseMap();
+            CreateMap<BaseComNomeDTO, AcessoDocumento>().ReverseMap();
+            CreateMap<BaseComNomeDTO, Conservacao>().ReverseMap();
+            CreateMap<BaseComNomeDTO, Cromia>().ReverseMap();
+            CreateMap<BaseComNomeTipoDto, Formato>().ReverseMap();
+            CreateMap<BaseComNomeDTO, Idioma>().ReverseMap();
+            CreateMap<BaseComNomeTipoDto, Material>().ReverseMap();
+            CreateMap<BaseComNomeTipoDto, Suporte>().ReverseMap();
+            CreateMap<BaseComNomeDTO, TipoAnexo>().ReverseMap();
             CreateMap<IdNomeExcluidoAuditavelDTO, Credito>().ReverseMap();
             CreateMap<IdNomeExcluidoAuditavelDTO, Autor>().ReverseMap();
             CreateMap<IdNomeExcluidoAuditavelDTO, Editora>().ReverseMap();

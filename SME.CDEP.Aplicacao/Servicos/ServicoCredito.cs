@@ -7,7 +7,7 @@ using SME.CDEP.Infra.Dados.Repositorios.Interfaces;
 
 namespace SME.CDEP.Aplicacao.Servicos
 {
-    public class ServicoCredito : ServicoAplicacao<Credito, IdNomeExcluidoAuditavelDTO>,IServicoCredito
+    public class ServicoCredito : ServicoAplicacaoAuditavel<Credito, IdNomeExcluidoAuditavelDTO>,IServicoCredito
     {
         public ServicoCredito(IRepositorioCredito repositorio, IMapper mapper,IContextoAplicacao contextoAplicacao) : base(repositorio, mapper,contextoAplicacao)
         {}

@@ -7,9 +7,9 @@ using SME.CDEP.Infra.Dados.Repositorios.Interfaces;
 
 namespace SME.CDEP.Aplicacao.Servicos
 {
-    public class ServicoConservacao : ServicoAplicacao<Conservacao, IdNomeExcluidoDTO>,IServicoConservacao
+    public class ServicoConservacao : ServicoAplicacao<Conservacao, BaseComNomeDTO>,IServicoConservacao
     {
-        public ServicoConservacao(IRepositorioConservacao repositorio, IMapper mapper,IContextoAplicacao contextoAplicacao) : base(repositorio, mapper,contextoAplicacao)
+        public ServicoConservacao(IRepositorioConservacao repositorio, IMapper mapper) : base(repositorio, mapper)
         {}
     }
 }

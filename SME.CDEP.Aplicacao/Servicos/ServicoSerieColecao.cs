@@ -7,7 +7,7 @@ using SME.CDEP.Infra.Dados.Repositorios.Interfaces;
 
 namespace SME.CDEP.Aplicacao.Servicos
 {
-    public class ServicoSerieColecao : ServicoAplicacao<SerieColecao, IdNomeExcluidoAuditavelDTO>,IServicoSerieColecao
+    public class ServicoSerieColecao : ServicoAplicacaoAuditavel<SerieColecao, IdNomeExcluidoAuditavelDTO>,IServicoSerieColecao
     {
         public ServicoSerieColecao(IRepositorioSerieColecao repositorio, IMapper mapper,IContextoAplicacao contextoAplicacao) : base(repositorio, mapper,contextoAplicacao)
         {}

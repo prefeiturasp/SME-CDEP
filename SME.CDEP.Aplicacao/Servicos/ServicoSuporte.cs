@@ -7,9 +7,9 @@ using SME.CDEP.Infra.Dados.Repositorios.Interfaces;
 
 namespace SME.CDEP.Aplicacao.Servicos
 {
-    public class ServicoSuporte : ServicoAplicacao<Suporte, IdNomeTipoExcluidoDTO>,IServicoSuporte
+    public class ServicoSuporte : ServicoAplicacao<Suporte, BaseComNomeTipoDto>,IServicoSuporte
     {
-        public ServicoSuporte(IRepositorioSuporte repositorio, IMapper mapper,IContextoAplicacao contextoAplicacao) : base(repositorio, mapper,contextoAplicacao)
+        public ServicoSuporte(IRepositorioSuporte repositorio, IMapper mapper) : base(repositorio, mapper)
         {}
     }
 }

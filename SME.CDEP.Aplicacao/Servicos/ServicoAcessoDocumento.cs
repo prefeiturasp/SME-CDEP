@@ -7,9 +7,9 @@ using SME.CDEP.Infra.Dados.Repositorios.Interfaces;
 
 namespace SME.CDEP.Aplicacao.Servicos
 {
-    public class ServicoAcessoDocumento : ServicoAplicacao<AcessoDocumento, IdNomeExcluidoDTO>,IServicoAcessoDocumento
+    public class ServicoAcessoDocumento : ServicoAplicacao<AcessoDocumento, BaseComNomeDTO>,IServicoAcessoDocumento
     {
-        public ServicoAcessoDocumento(IRepositorioAcessoDocumento repositorio, IMapper mapper,IContextoAplicacao contextoAplicacao) : base(repositorio, mapper,contextoAplicacao)
+        public ServicoAcessoDocumento(IRepositorioAcessoDocumento repositorio, IMapper mapper) : base(repositorio, mapper)
         {}
     }
 }
