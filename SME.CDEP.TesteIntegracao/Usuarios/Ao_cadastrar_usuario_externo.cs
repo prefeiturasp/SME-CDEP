@@ -121,7 +121,7 @@ namespace SME.CDEP.TesteIntegracao.Usuario
                 Complemento = ConstantesTestes.COMPLEMENTO_CASA_99, Numero = int.Parse(ConstantesTestes.NUMERO_99),
                 Email = ConstantesTestes.EMAIL_INTERNO, 
                 Endereco = ConstantesTestes.RUA_99999999999, Telefone = ConstantesTestes.TELEFONE_99_99999_9999,
-                TipoUsuario = TipoUsuario.PROFESSOR
+                Tipo = TipoUsuario.PROFESSOR
             };
             var usuario = await GetServicoUsuario().CadastrarUsuarioExterno(usuarioExterno);
             usuario.ShouldBeTrue();
