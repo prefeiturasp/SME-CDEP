@@ -71,6 +71,6 @@ public abstract class RepositorioBase<TEntidade> : IRepositorioBase<TEntidade>
     public async Task<TEntidade> PesquisarPorNome(string nome)
     {
         var tableName = Resolvers.Table(typeof(TEntidade), conexao.Obter());
-        return await conexao.Obter().QueryFirstOrDefaultAsync<TEntidade>($"select * from {tableName} where lower(nome) like '%{nome.ToLower()}%'");
+        return await conexao.Obter().QueryFirstOrDefaultAsync<TEntidade>($"select * from {tableName} where lower(nome) like '%{nome.ToLower()}%' and not excluido ");
     }
 }
