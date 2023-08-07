@@ -26,14 +26,14 @@ public class AssuntoController: BaseController
     }
 
     [HttpGet]
-    [ProducesResponseType(typeof(IdNomeExcluidoAuditavelDTO), 200)]
+    [ProducesResponseType(typeof(PaginacaoResultadoDTO<IdNomeExcluidoAuditavelDTO>), 200)]
     [ProducesResponseType(typeof(RetornoBaseDTO), 400)]
     [ProducesResponseType(typeof(RetornoBaseDTO), 403)]
     [ProducesResponseType(typeof(RetornoBaseDTO), 601)]
     [Permissao(Permissao.ASS_C, Policy = "Bearer")]
     public async Task<IActionResult> ObterTodos([FromServices]IServicoAssunto servicoAssunto)
     {
-        return Ok(await servicoAssunto.ObterTodos());
+        return Ok(await servicoAssunto.ObterPaginado());
     }
     
     [HttpGet("{id}")]
