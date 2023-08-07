@@ -17,7 +17,7 @@ namespace SME.CDEP.TesteIntegracao.Usuario
         {
             var servicoTipoAnexo = GetServicoTipoAnexo();
 
-            var tipoAnexo = await servicoTipoAnexo.Inserir(new BaseComNomeDTO(){Nome = ConstantesTestes.DIGITAL_E_FISICO});
+            var tipoAnexo = await servicoTipoAnexo.Inserir(new IdNomeExcluidoDTO(){Nome = ConstantesTestes.DIGITAL_E_FISICO});
             tipoAnexo.ShouldBeGreaterThan(0);
             var obterTodos = ObterTodos<TipoAnexo>();
             obterTodos.Count.ShouldBe(1);

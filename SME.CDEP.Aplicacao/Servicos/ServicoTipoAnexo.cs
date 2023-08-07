@@ -7,7 +7,7 @@ using SME.CDEP.Infra.Dados.Repositorios.Interfaces;
 
 namespace SME.CDEP.Aplicacao.Servicos
 {
-    public class ServicoTipoAnexo : ServicoAplicacao<TipoAnexo, BaseComNomeDTO>,IServicoTipoAnexo
+    public class ServicoTipoAnexo : ServicoAplicacao<TipoAnexo, IdNomeExcluidoDTO>,IServicoTipoAnexo
     {
         public ServicoTipoAnexo(IRepositorioTipoAnexo repositorio, IMapper mapper) : base(repositorio, mapper)
         {}

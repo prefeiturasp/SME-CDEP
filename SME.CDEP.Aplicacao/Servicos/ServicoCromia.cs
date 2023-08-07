@@ -7,7 +7,7 @@ using SME.CDEP.Infra.Dados.Repositorios.Interfaces;
 
 namespace SME.CDEP.Aplicacao.Servicos
 {
-    public class ServicoCromia  : ServicoAplicacao<Cromia, BaseComNomeDTO>,IServicoCromia
+    public class ServicoCromia  : ServicoAplicacao<Cromia, IdNomeExcluidoDTO>,IServicoCromia
     {
         public ServicoCromia(IRepositorioCromia repositorio, IMapper mapper) : base(repositorio, mapper)
         {}

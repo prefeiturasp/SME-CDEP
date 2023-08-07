@@ -19,7 +19,7 @@ namespace SME.CDEP.TesteIntegracao.Usuario
         {
             var servicoFormato = GetServicoFormato();
 
-            var formato = await servicoFormato.Inserir(new BaseComNomeTipoDto(){Nome = ConstantesTestes.PAPEL});
+            var formato = await servicoFormato.Inserir(new IdNomeTipoExcluidoDTO(){Nome = ConstantesTestes.PAPEL});
             formato.ShouldBeGreaterThan(0);
             var obterTodos = ObterTodos<Formato>();
             obterTodos.Count.ShouldBe(1);
@@ -32,7 +32,7 @@ namespace SME.CDEP.TesteIntegracao.Usuario
             
             var servicoFormato = GetServicoFormato();
 
-            await servicoFormato.Inserir(new BaseComNomeTipoDto(){Nome = ConstantesTestes.VOB,Tipo = (int)TipoFormato.ACERVO_AUDIOVISUAL}).ShouldThrowAsync<NegocioException>();
+            await servicoFormato.Inserir(new IdNomeTipoExcluidoDTO(){Nome = ConstantesTestes.VOB,Tipo = (int)TipoFormato.ACERVO_AUDIOVISUAL}).ShouldThrowAsync<NegocioException>();
         }
 
         [Fact(DisplayName = "Formato - Obter todos")]
