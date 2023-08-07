@@ -46,6 +46,26 @@ namespace SME.CDEP.TesteIntegracao.Usuario
             assuntoDTO.ShouldNotBeNull();
             assuntoDTO.Count.ShouldBe(2);
         }
+        
+        [Fact(DisplayName = "Assunto - Obter paginado")]
+        public async Task Obter_paginado()
+        {
+            for (int i = 1; i <= 30; i++)
+            {
+                await InserirNaBase(new Assunto() 
+                { 
+                    Nome = $"{ConstantesTestes.COLOR}-{i}",
+                    CriadoPor = ConstantesTestes.SISTEMA, 
+                    CriadoEm = DateTimeExtension.HorarioBrasilia().Date, 
+                    CriadoLogin = ConstantesTestes.LOGIN_123456789 
+                });
+            }
+            
+            var servicoAssunto = GetServicoAssunto();
+
+            var assuntoDTO = await servicoAssunto.ObterPaginado();
+            assuntoDTO.ShouldNotBeNull();
+        }
 
         [Fact(DisplayName = "Assunto - Obter por id")]
         public async Task Obter_por_id()

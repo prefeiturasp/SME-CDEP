@@ -16,9 +16,9 @@ public class CromiaController: BaseController
     [ProducesResponseType(typeof(RetornoBaseDTO), 500)]
     [ProducesResponseType(typeof(RetornoBaseDTO), 601)]
     [Authorize("Bearer")]
-    public async Task<IActionResult> CadastrarAlterar([FromBody] IdNomeExcluidoDTO cromiaDTO, [FromServices] IServicoCromia servicoCromia)
+    public async Task<IActionResult> CadastrarAlterar([FromBody] IdNomeExcluidoDTO cromiaExcluidoDto, [FromServices] IServicoCromia servicoCromia)
     {
-        return cromiaDTO.Id > 0 ? Ok(await servicoCromia.Alterar(cromiaDTO)) : Ok(await servicoCromia.Inserir(cromiaDTO));
+        return cromiaExcluidoDto.Id > 0 ? Ok(await servicoCromia.Alterar(cromiaExcluidoDto)) : Ok(await servicoCromia.Inserir(cromiaExcluidoDto));
     }
 
     [HttpGet]

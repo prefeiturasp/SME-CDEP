@@ -16,9 +16,9 @@ public class AcessoDocumentoController: BaseController
     [ProducesResponseType(typeof(RetornoBaseDTO), 500)]
     [ProducesResponseType(typeof(RetornoBaseDTO), 601)]
     [Authorize("Bearer")]
-    public async Task<IActionResult> CadastrarAlterar([FromBody] IdNomeExcluidoDTO acessoDocumentoDTO, [FromServices] IServicoAcessoDocumento servicoAcessoDocumento)
+    public async Task<IActionResult> CadastrarAlterar([FromBody] IdNomeExcluidoDTO acessoDocumentoExcluidoDto, [FromServices] IServicoAcessoDocumento servicoAcessoDocumento)
     {
-        return acessoDocumentoDTO.Id > 0 ? Ok(await servicoAcessoDocumento.Alterar(acessoDocumentoDTO)) : Ok(await servicoAcessoDocumento.Inserir(acessoDocumentoDTO));
+        return acessoDocumentoExcluidoDto.Id > 0 ? Ok(await servicoAcessoDocumento.Alterar(acessoDocumentoExcluidoDto)) : Ok(await servicoAcessoDocumento.Inserir(acessoDocumentoExcluidoDto));
     }
 
     [HttpGet]
