@@ -19,7 +19,7 @@ namespace SME.CDEP.TesteIntegracao.Usuario
         {
             var servicoMaterial = GetServicoMaterial();
 
-            var material = await servicoMaterial.Inserir(new IdNomeTipoExcluidoDTO(){Nome = ConstantesTestes.APOSTILA});
+            var material = await servicoMaterial.Inserir(new BaseComNomeTipoDto(){Nome = ConstantesTestes.APOSTILA});
             material.ShouldBeGreaterThan(0);
             var obterTodos = ObterTodos<Material>();
             obterTodos.Count.ShouldBe(1);
@@ -32,7 +32,7 @@ namespace SME.CDEP.TesteIntegracao.Usuario
             
             var servicoMaterial = GetServicoMaterial();
 
-            await servicoMaterial.Inserir(new IdNomeTipoExcluidoDTO(){Nome = ConstantesTestes.APOSTILA, Tipo = (int)TipoMaterial.DOCUMENTAL}).ShouldThrowAsync<NegocioException>();
+            await servicoMaterial.Inserir(new BaseComNomeTipoDto(){Nome = ConstantesTestes.APOSTILA, Tipo = (int)TipoMaterial.DOCUMENTAL}).ShouldThrowAsync<NegocioException>();
         }
 
         [Fact(DisplayName = "Material - Obter todos")]

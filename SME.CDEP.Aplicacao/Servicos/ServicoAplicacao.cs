@@ -22,7 +22,7 @@ namespace SME.CDEP.Aplicacao.Servicos
             var entidade = mapper.Map<E>(entidadeDto);
             return repositorio.Inserir(entidade);
         }
-
+        
         public async Task<IList<D>> ObterTodos()
         {
             return (await repositorio.ObterTodos()).Where(w=> !w.Excluido).Select(s=> mapper.Map<D>(s)).ToList();

@@ -1,14 +1,15 @@
 ﻿using AutoMapper;
 using SME.CDEP.Aplicacao.DTOS;
 using SME.CDEP.Aplicacao.Servicos.Interface;
+using SME.CDEP.Dominio.Contexto;
 using SME.CDEP.Dominio.Entidades;
 using SME.CDEP.Infra.Dados.Repositorios.Interfaces;
 
 namespace SME.CDEP.Aplicacao.Servicos
 {
-    public class ServicoEditora : ServicoAplicacao<Editora, IdNomeExcluidoAuditavelDTO>,IServicoEditora
+    public class ServicoEditora : ServicoAplicacaoAuditavel<Editora, IdNomeExcluidoAuditavelDTO>,IServicoEditora
     {
-        public ServicoEditora(IRepositorioEditora repositorio, IMapper mapper) : base(repositorio, mapper)
+        public ServicoEditora(IRepositorioEditora repositorio, IMapper mapper,IContextoAplicacao contextoAplicacao) : base(repositorio, mapper,contextoAplicacao)
         {}
     }
 }

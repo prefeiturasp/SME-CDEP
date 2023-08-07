@@ -23,6 +23,9 @@ namespace SME.CDEP.Webapi.Contexto;
             Variaveis.Add("UsuarioLogado", httpContextAccessor.HttpContext?.User?.Identity?.Name ?? "Sistema");
             Variaveis.Add("NomeUsuario", httpContextAccessor.HttpContext?.User?.FindFirst("Nome")?.Value ?? "Sistema");
             Variaveis.Add("PerfilUsuario", ObterPerfilAtual());
+            Variaveis.Add("NumeroPagina", httpContextAccessor.HttpContext?.Request?.Query["NumeroPagina"].FirstOrDefault() ?? "0");
+            Variaveis.Add("NumeroRegistros", httpContextAccessor.HttpContext?.Request?.Query["NumeroRegistros"].FirstOrDefault() ?? "0");
+            Variaveis.Add("Ordenacao", httpContextAccessor.HttpContext?.Request?.Query["Ordenacao"].FirstOrDefault() ?? "0");
             
             var authorizationHeader = httpContextAccessor.HttpContext?.Request?.Headers["authorization"];
 
