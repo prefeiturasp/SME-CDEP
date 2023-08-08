@@ -59,7 +59,7 @@ public class AutorController: BaseController
     }
     
     [HttpGet("pesquisar/{nome}")]
-    [ProducesResponseType(typeof(IdNomeExcluidoAuditavelDTO), 200)] 
+    [ProducesResponseType(typeof(IList<IdNomeExcluidoAuditavelDTO>), 200)]  
     [ProducesResponseType(typeof(RetornoBaseDTO), 400)]
     [ProducesResponseType(typeof(RetornoBaseDTO), 403)]
     [ProducesResponseType(typeof(RetornoBaseDTO), 601)]

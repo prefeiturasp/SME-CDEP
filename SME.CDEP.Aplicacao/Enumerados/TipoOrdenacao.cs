@@ -3,5 +3,6 @@
 public enum TipoOrdenacao
 {
     DATA = 0,
-    AZ = 1
+    AZ = 1,
+    ZA = 2
 }

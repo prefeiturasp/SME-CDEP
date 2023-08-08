@@ -203,16 +203,5 @@ namespace SME.CDEP.TesteIntegracao
             };
             return retorno;
         }
-        
-        protected IdNomeExcluidoAuditavelDTO ObterIdNomeExcluidoAuditavelDTO(string nome)
-        {
-            return new IdNomeExcluidoAuditavelDTO()
-            {
-                Nome = nome,
-                CriadoPor = ConstantesTestes.SISTEMA,
-                CriadoEm = DateTimeExtension.HorarioBrasilia().Date,
-                CriadoLogin = ConstantesTestes.LOGIN_123456789
-            };
-        }
     }
 }

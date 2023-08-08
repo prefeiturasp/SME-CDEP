@@ -19,7 +19,7 @@ namespace SME.CDEP.TesteIntegracao.Usuario
         {
             var servicoAutor = GetServicoAutor();
             
-            var autores = await servicoAutor.Inserir(ObterIdNomeExcluidoAuditavelDTO(ConstantesTestes.PB));
+            var autores = await servicoAutor.Inserir(new IdNomeExcluidoAuditavelDTO() {Nome = ConstantesTestes.PB});
             
             autores.ShouldBeGreaterThan(0);
             var obterTodos = ObterTodos<Autor>();
@@ -33,7 +33,7 @@ namespace SME.CDEP.TesteIntegracao.Usuario
             
             var servicoAutor = GetServicoAutor();
             
-            await servicoAutor.Inserir(ObterIdNomeExcluidoAuditavelDTO(ConstantesTestes.COLOR)).ShouldThrowAsync<NegocioException>();
+            await servicoAutor.Inserir(new IdNomeExcluidoAuditavelDTO() {Nome = ConstantesTestes.PB}).ShouldThrowAsync<NegocioException>();
         }
 
         [Fact(DisplayName = "Autor - Obter todos")]
@@ -106,14 +106,42 @@ namespace SME.CDEP.TesteIntegracao.Usuario
         [Fact(DisplayName = "Autor - Pesquisar por Nome")]
         public async Task Pesquisar_por_nome()
         {
-            await InserirAutor();
-            
             var servicoAutor = GetServicoAutor();
 
-            var retorno = await servicoAutor.PesquisarPorNome(ConstantesTestes.COLOR.Substring(4));
-            retorno.ShouldNotBeNull();
-            retorno.Nome.ShouldBe(ConstantesTestes.COLOR);
-            retorno.Id.ShouldBe(long.Parse(ConstantesTestes.NUMERO_1));
+            await InserirNaBase(new Autor() 
+            { 
+                Nome = ConstantesTestes.LIVRO,
+                CriadoPor = ConstantesTestes.SISTEMA, 
+                CriadoEm = DateTimeExtension.HorarioBrasilia().Date, 
+                CriadoLogin = ConstantesTestes.LOGIN_123456789 
+            });
+            
+            await InserirNaBase(new Autor() 
+            { 
+                Nome = ConstantesTestes.PAPEL,
+                CriadoPor = ConstantesTestes.SISTEMA, 
+                CriadoEm = DateTimeExtension.HorarioBrasilia().Date, 
+                CriadoLogin = ConstantesTestes.LOGIN_123456789 
+            });
+            
+            await InserirNaBase(new Autor() 
+            { 
+                Nome = ConstantesTestes.COLOR,
+                CriadoPor = ConstantesTestes.SISTEMA, 
+                CriadoEm = DateTimeExtension.HorarioBrasilia().Date, 
+                CriadoLogin = ConstantesTestes.LOGIN_123456789 
+            });
+            
+            await InserirNaBase(new Autor() 
+            { 
+                Nome = ConstantesTestes.VOB,
+                CriadoPor = ConstantesTestes.SISTEMA, 
+                CriadoEm = DateTimeExtension.HorarioBrasilia().Date, 
+                CriadoLogin = ConstantesTestes.LOGIN_123456789 
+            });
+            
+            var retorno = await servicoAutor.PesquisarPorNome("o");
+            retorno.Count.ShouldBe(ConstantesTestes.QUANTIDADE_3);
         }
 
         private async Task InserirAutor()
