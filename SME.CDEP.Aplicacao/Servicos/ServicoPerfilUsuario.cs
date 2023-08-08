@@ -2,6 +2,7 @@
 using SME.CDEP.Aplicacao.Servicos.Interface;
 using SME.CDEP.Aplicacao.Integracoes.Interfaces;
 using SME.CDEP.Dominio.Constantes;
+using SME.CDEP.Dominio.Excecoes;
 
 namespace SME.CDEP.Aplicacao.Servicos
 {
@@ -21,7 +22,9 @@ namespace SME.CDEP.Aplicacao.Servicos
             if (retorno.PerfilUsuario == null)
             {
                 await VincularPerfilExternoCoreSSO(login,new Guid(Constantes.PERFIL_EXTERNO_GUID));
-                retorno = await ObterPerfisUsuario(login);
+                retorno = await servicoAcessos.ObterPerfisUsuario(login);
+                if (retorno.PerfilUsuario == null)
+                    throw new NegocioException(MensagemNegocio.NAO_FOI_POSSIVEL_VINCULAR_PERFIL_EXTERNO_CORESSO_USUARIO_SEM_PERFIL);
             }
             
             return retorno;

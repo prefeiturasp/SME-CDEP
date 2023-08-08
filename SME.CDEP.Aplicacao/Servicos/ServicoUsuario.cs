@@ -58,13 +58,7 @@ namespace SME.CDEP.Aplicacao.Servicos
             usuarioExternoDto.Cpf = usuarioExternoDto.Cpf.Replace(".","").Replace("-","");
             ValidarSenha(usuarioExternoDto.Senha, usuarioExternoDto.ConfirmarSenha);
             
-            var usuarioAcervo = await ObterPorLogin(usuarioExternoDto.Cpf);
-            if (usuarioAcervo != null)
-                throw new NegocioException(MensagemNegocio.VOCE_JA_POSSUI_LOGIN_ACERVO);
-            
-            var usuarioCoreSSO = await servicoAcessos.UsuarioCadastradoCoreSSO(usuarioExternoDto.Cpf);
-            if (usuarioCoreSSO)
-                throw new NegocioException(MensagemNegocio.VOCE_JA_POSSUI_LOGIN_CORESSO);
+            await ValidarCpfEmUsuarioAcervoECoreSSO(usuarioExternoDto.Cpf);
 
             var retornoCoreSSO = await servicoAcessos.CadastrarUsuarioCoreSSO(usuarioExternoDto.Cpf, usuarioExternoDto.Nome, usuarioExternoDto.Email, usuarioExternoDto.Senha);
 
@@ -76,12 +70,25 @@ namespace SME.CDEP.Aplicacao.Servicos
                 Login = usuarioExternoDto.Cpf, Nome = usuarioExternoDto.Nome,
                 Telefone = usuarioExternoDto.Telefone, Endereco = usuarioExternoDto.Endereco, Numero = usuarioExternoDto.Numero,
                 Complemento = usuarioExternoDto.Complemento, Cidade = usuarioExternoDto.Cidade, Estado = usuarioExternoDto.Estado,
-                Cep = usuarioExternoDto.Cep, TipoUsuario = usuarioExternoDto.TipoUsuario, Bairro = usuarioExternoDto.Bairro
+                Cep = usuarioExternoDto.Cep, TipoUsuario = usuarioExternoDto.Tipo, Bairro = usuarioExternoDto.Bairro
             });
 
             return retorno != 0;
         }
-        
+
+        private async Task<bool> ValidarCpfEmUsuarioAcervoECoreSSO(string cpf)
+        {
+            var usuarioAcervo = await ObterPorLogin(cpf);
+            if (usuarioAcervo != null)
+                throw new NegocioException(MensagemNegocio.VOCE_JA_POSSUI_LOGIN_ACERVO);
+
+            var usuarioCoreSSO = await servicoAcessos.UsuarioCadastradoCoreSSO(cpf);
+            if (usuarioCoreSSO)
+                throw new NegocioException(MensagemNegocio.VOCE_JA_POSSUI_LOGIN_CORESSO);
+
+            return false;
+        }
+
         public async Task<DadosUsuarioDTO> ObterMeusDados(string login)
         {
             var dadosUsuarioCoreSSO = await servicoAcessos.ObterMeusDados(login);
@@ -233,6 +240,23 @@ namespace SME.CDEP.Aplicacao.Servicos
         {
             var login = await servicoAcessos.AlterarSenhaComTokenRecuperacao(recuperacaoSenhaDto);
             return await servicoPerfilUsuario.ObterPerfisUsuario(login);
+        }
+        
+        public async Task<bool> AlterarTipoUsuario(string login, TipoUsuarioExternoDTO tipoUsuario)
+        {
+            var usuario = await repositorioUsuario.ObterPorLogin(login);
+            
+            ValidarUsuarioExterno(usuario);
+            
+            usuario.TipoUsuario = (TipoUsuario)tipoUsuario.Tipo;
+            await repositorioUsuario.Atualizar(usuario);
+            
+            return true;
+        }
+
+        public async Task<bool> ValidarCpfExistente(string cpf)
+        {
+            return await ValidarCpfEmUsuarioAcervoECoreSSO(cpf);
         }
     }
 }
