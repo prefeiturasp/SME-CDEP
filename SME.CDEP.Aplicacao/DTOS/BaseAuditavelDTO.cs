@@ -1,7 +1,4 @@
-﻿using AutoMapper.Configuration.Annotations;
-
-namespace SME.CDEP.Aplicacao.DTOS;
-
+﻿namespace SME.CDEP.Aplicacao.DTOS;
 public abstract class BaseAuditavelDTO : BaseDTO
 {
     public DateTime? AlteradoEm { get; set; }
