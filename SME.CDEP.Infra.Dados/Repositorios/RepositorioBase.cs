@@ -68,9 +68,9 @@ public abstract class RepositorioBase<TEntidade> : IRepositorioBase<TEntidade>
         throw new NotImplementedException();
     }
 
-    public async Task<TEntidade> PesquisarPorNome(string nome)
+    public async Task<IList<TEntidade>> PesquisarPorNome(string nome)
     {
         var tableName = Resolvers.Table(typeof(TEntidade), conexao.Obter());
-        return await conexao.Obter().QueryFirstOrDefaultAsync<TEntidade>($"select * from {tableName} where lower(nome) like '%{nome.ToLower()}%' and not excluido ");
+        return (await conexao.Obter().QueryAsync<TEntidade>($"select * from {tableName} where lower(nome) like '%{nome.ToLower()}%' and not excluido ")).ToList();
     }
 }

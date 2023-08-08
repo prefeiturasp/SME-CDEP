@@ -19,7 +19,7 @@ namespace SME.CDEP.TesteIntegracao.Usuario
         {
             var servicoAssunto = GetServicoAssunto();
             
-            var assuntos = await servicoAssunto.Inserir(ObterIdNomeExcluidoAuditavelDTO(ConstantesTestes.PB));
+            var assuntos = await servicoAssunto.Inserir(new IdNomeExcluidoAuditavelDTO() {Nome = ConstantesTestes.PB});
             
             assuntos.ShouldBeGreaterThan(0);
             var obterTodos = ObterTodos<Assunto>();
@@ -33,7 +33,7 @@ namespace SME.CDEP.TesteIntegracao.Usuario
             
             var servicoAssunto = GetServicoAssunto();
             
-            await servicoAssunto.Inserir(ObterIdNomeExcluidoAuditavelDTO(ConstantesTestes.COLOR)).ShouldThrowAsync<NegocioException>();
+            await servicoAssunto.Inserir(new IdNomeExcluidoAuditavelDTO() {Nome = ConstantesTestes.COLOR}).ShouldThrowAsync<NegocioException>();
         }
 
         [Fact(DisplayName = "Assunto - Obter todos")]
@@ -126,18 +126,24 @@ namespace SME.CDEP.TesteIntegracao.Usuario
         [Fact(DisplayName = "Assunto - Pesquisar por Nome")]
         public async Task Pesquisar_por_nome()
         {
-            await InserirAssunto();
-            
             var servicoAssunto = GetServicoAssunto();
 
-            var retorno = await servicoAssunto.PesquisarPorNome(ConstantesTestes.COLOR.Substring(4));
-            retorno.ShouldNotBeNull();
-            retorno.Nome.ShouldBe(ConstantesTestes.COLOR);
-            retorno.Id.ShouldBe(long.Parse(ConstantesTestes.NUMERO_1));
-        }
-
-        private async Task InserirAssunto()
-        {
+            await InserirNaBase(new Assunto() 
+            { 
+                Nome = ConstantesTestes.LIVRO,
+                CriadoPor = ConstantesTestes.SISTEMA, 
+                CriadoEm = DateTimeExtension.HorarioBrasilia().Date, 
+                CriadoLogin = ConstantesTestes.LOGIN_123456789 
+            });
+            
+            await InserirNaBase(new Assunto() 
+            { 
+                Nome = ConstantesTestes.PAPEL,
+                CriadoPor = ConstantesTestes.SISTEMA, 
+                CriadoEm = DateTimeExtension.HorarioBrasilia().Date, 
+                CriadoLogin = ConstantesTestes.LOGIN_123456789 
+            });
+            
             await InserirNaBase(new Assunto() 
             { 
                 Nome = ConstantesTestes.COLOR,
@@ -148,9 +154,31 @@ namespace SME.CDEP.TesteIntegracao.Usuario
             
             await InserirNaBase(new Assunto() 
             { 
-                Nome = ConstantesTestes.PB,
+                Nome = ConstantesTestes.VOB,
                 CriadoPor = ConstantesTestes.SISTEMA, 
                 CriadoEm = DateTimeExtension.HorarioBrasilia().Date, 
+                CriadoLogin = ConstantesTestes.LOGIN_123456789 
+            });
+            
+            var retorno = await servicoAssunto.PesquisarPorNome("o");
+            retorno.Count.ShouldBe(ConstantesTestes.QUANTIDADE_3);
+        }
+
+        private async Task InserirAssunto()
+        {
+            await InserirNaBase(new Assunto() 
+            { 
+                Nome = ConstantesTestes.COLOR,
+                CriadoPor = ConstantesTestes.SISTEMA, 
+                CriadoEm = DateTimeExtension.HorarioBrasilia(), 
+                CriadoLogin = ConstantesTestes.LOGIN_123456789 
+            });
+            
+            await InserirNaBase(new Assunto() 
+            { 
+                Nome = ConstantesTestes.PB,
+                CriadoPor = ConstantesTestes.SISTEMA, 
+                CriadoEm = DateTimeExtension.HorarioBrasilia(), 
                 CriadoLogin = ConstantesTestes.LOGIN_123456789 
             });
         }

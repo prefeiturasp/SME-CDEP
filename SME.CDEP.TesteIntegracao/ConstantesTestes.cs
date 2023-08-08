@@ -4,6 +4,7 @@ namespace SME.CDEP.TesteIntegracao.Constantes;
 
 public class ConstantesTestes
 {
+    public const int QUANTIDADE_3 = 3;
     public const string ANEXO = "Anexo";
     public const string AUDIOVISUAL = "Audiovisual";
     public const string CD = "CD";

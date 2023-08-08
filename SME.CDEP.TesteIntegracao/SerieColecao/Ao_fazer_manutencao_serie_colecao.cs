@@ -19,7 +19,7 @@ namespace SME.CDEP.TesteIntegracao.Usuario
         {
             var servicoSerieColecao = GetServicoSerieColecao();
             
-            var serieColecaoInserido = await servicoSerieColecao.Inserir(ObterIdNomeExcluidoAuditavelDTO(ConstantesTestes.PB));
+            var serieColecaoInserido = await servicoSerieColecao.Inserir(new IdNomeExcluidoAuditavelDTO() {Nome = ConstantesTestes.PB});
             
             serieColecaoInserido.ShouldBeGreaterThan(0);
             var seriesColecoes = ObterTodos<SerieColecao>();
@@ -33,7 +33,7 @@ namespace SME.CDEP.TesteIntegracao.Usuario
             
             var servicoSerieColecao = GetServicoSerieColecao();
             
-            await servicoSerieColecao.Inserir(ObterIdNomeExcluidoAuditavelDTO(ConstantesTestes.COLOR)).ShouldThrowAsync<NegocioException>();
+            await servicoSerieColecao.Inserir(new IdNomeExcluidoAuditavelDTO() {Nome = ConstantesTestes.PB}).ShouldThrowAsync<NegocioException>();
         }
 
         [Fact(DisplayName = "Serie/Colecao - Obter todos")]
@@ -106,14 +106,42 @@ namespace SME.CDEP.TesteIntegracao.Usuario
         [Fact(DisplayName = "Serie/Coleca - Pesquisar por Nome")]
         public async Task Pesquisar_por_nome()
         {
-            await InserirSerieColecao();
+            await InserirNaBase(new SerieColecao() 
+            { 
+                Nome = ConstantesTestes.LIVRO,
+                CriadoPor = ConstantesTestes.SISTEMA, 
+                CriadoEm = DateTimeExtension.HorarioBrasilia().Date, 
+                CriadoLogin = ConstantesTestes.LOGIN_123456789 
+            });
+            
+            await InserirNaBase(new SerieColecao() 
+            { 
+                Nome = ConstantesTestes.PAPEL,
+                CriadoPor = ConstantesTestes.SISTEMA, 
+                CriadoEm = DateTimeExtension.HorarioBrasilia().Date, 
+                CriadoLogin = ConstantesTestes.LOGIN_123456789 
+            });
+            
+            await InserirNaBase(new SerieColecao() 
+            { 
+                Nome = ConstantesTestes.COLOR,
+                CriadoPor = ConstantesTestes.SISTEMA, 
+                CriadoEm = DateTimeExtension.HorarioBrasilia().Date, 
+                CriadoLogin = ConstantesTestes.LOGIN_123456789 
+            });
+            
+            await InserirNaBase(new SerieColecao() 
+            { 
+                Nome = ConstantesTestes.VOB,
+                CriadoPor = ConstantesTestes.SISTEMA, 
+                CriadoEm = DateTimeExtension.HorarioBrasilia().Date, 
+                CriadoLogin = ConstantesTestes.LOGIN_123456789 
+            });
             
             var servicoSerieColecao = GetServicoSerieColecao();
 
-            var retorno = await servicoSerieColecao.PesquisarPorNome(ConstantesTestes.COLOR.Substring(4));
-            retorno.ShouldNotBeNull();
-            retorno.Nome.ShouldBe(ConstantesTestes.COLOR);
-            retorno.Id.ShouldBe(long.Parse(ConstantesTestes.NUMERO_1));
+            var retorno = await servicoSerieColecao.PesquisarPorNome("o");
+            retorno.Count.ShouldBe(ConstantesTestes.QUANTIDADE_3);
         }
 
         private async Task InserirSerieColecao()

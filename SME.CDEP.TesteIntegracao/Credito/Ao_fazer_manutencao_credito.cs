@@ -19,7 +19,7 @@ namespace SME.CDEP.TesteIntegracao.Usuario
         {
             var servicoCredito = GetServicoCredito();
             
-            var credito = await servicoCredito.Inserir(ObterIdNomeExcluidoAuditavelDTO(ConstantesTestes.PB));
+            var credito = await servicoCredito.Inserir(new IdNomeExcluidoAuditavelDTO() {Nome = ConstantesTestes.PB});
             
             credito.ShouldBeGreaterThan(0);
             var obterTodos = ObterTodos<Credito>();
@@ -33,7 +33,7 @@ namespace SME.CDEP.TesteIntegracao.Usuario
             
             var servicoCredito = GetServicoCredito();
             
-            await servicoCredito.Inserir(ObterIdNomeExcluidoAuditavelDTO(ConstantesTestes.COLOR)).ShouldThrowAsync<NegocioException>();
+            await servicoCredito.Inserir(new IdNomeExcluidoAuditavelDTO() {Nome = ConstantesTestes.PB}).ShouldThrowAsync<NegocioException>();
         }
 
         [Fact(DisplayName = "Crédito - Obter todos")]
@@ -106,14 +106,42 @@ namespace SME.CDEP.TesteIntegracao.Usuario
         [Fact(DisplayName = "Crédito - Pesquisar por Nome")]
         public async Task Pesquisar_por_nome()
         {
-            await InserirCredito();
-            
             var servicoCredito = GetServicoCredito();
 
-            var retorno = await servicoCredito.PesquisarPorNome(ConstantesTestes.COLOR.Substring(3));
-            retorno.ShouldNotBeNull();
-            retorno.Nome.ShouldBe(ConstantesTestes.COLOR);
-            retorno.Id.ShouldBe(long.Parse(ConstantesTestes.NUMERO_1));
+            await InserirNaBase(new Credito() 
+            { 
+                Nome = ConstantesTestes.LIVRO,
+                CriadoPor = ConstantesTestes.SISTEMA, 
+                CriadoEm = DateTimeExtension.HorarioBrasilia().Date, 
+                CriadoLogin = ConstantesTestes.LOGIN_123456789 
+            });
+            
+            await InserirNaBase(new Credito() 
+            { 
+                Nome = ConstantesTestes.PAPEL,
+                CriadoPor = ConstantesTestes.SISTEMA, 
+                CriadoEm = DateTimeExtension.HorarioBrasilia().Date, 
+                CriadoLogin = ConstantesTestes.LOGIN_123456789 
+            });
+            
+            await InserirNaBase(new Credito() 
+            { 
+                Nome = ConstantesTestes.COLOR,
+                CriadoPor = ConstantesTestes.SISTEMA, 
+                CriadoEm = DateTimeExtension.HorarioBrasilia().Date, 
+                CriadoLogin = ConstantesTestes.LOGIN_123456789 
+            });
+            
+            await InserirNaBase(new Credito() 
+            { 
+                Nome = ConstantesTestes.VOB,
+                CriadoPor = ConstantesTestes.SISTEMA, 
+                CriadoEm = DateTimeExtension.HorarioBrasilia().Date, 
+                CriadoLogin = ConstantesTestes.LOGIN_123456789 
+            });
+            
+            var retorno = await servicoCredito.PesquisarPorNome("o");
+            retorno.Count.ShouldBe(ConstantesTestes.QUANTIDADE_3);
         }
 
         private async Task InserirCredito()

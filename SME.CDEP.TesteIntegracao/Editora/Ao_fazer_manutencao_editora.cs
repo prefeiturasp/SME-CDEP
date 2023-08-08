@@ -19,7 +19,7 @@ namespace SME.CDEP.TesteIntegracao.Usuario
         {
             var servicoEditora = GetServicoEditora();
             
-            var editoras = await servicoEditora.Inserir(ObterIdNomeExcluidoAuditavelDTO(ConstantesTestes.PB));
+            var editoras = await servicoEditora.Inserir(new IdNomeExcluidoAuditavelDTO() {Nome = ConstantesTestes.PB});
             
             editoras.ShouldBeGreaterThan(0);
             var obterTodos = ObterTodos<Editora>();
@@ -33,7 +33,7 @@ namespace SME.CDEP.TesteIntegracao.Usuario
             
             var servicoEditora = GetServicoEditora();
             
-            await servicoEditora.Inserir(ObterIdNomeExcluidoAuditavelDTO(ConstantesTestes.COLOR)).ShouldThrowAsync<NegocioException>();
+            await servicoEditora.Inserir(new IdNomeExcluidoAuditavelDTO() {Nome = ConstantesTestes.PB}).ShouldThrowAsync<NegocioException>();
         }
 
         [Fact(DisplayName = "Editora - Obter todos")]
@@ -106,14 +106,42 @@ namespace SME.CDEP.TesteIntegracao.Usuario
         [Fact(DisplayName = "Editora - Pesquisar por Nome")]
         public async Task Pesquisar_por_nome()
         {
-            await InserirEditora();
+            await InserirNaBase(new Editora() 
+            { 
+                Nome = ConstantesTestes.LIVRO,
+                CriadoPor = ConstantesTestes.SISTEMA, 
+                CriadoEm = DateTimeExtension.HorarioBrasilia().Date, 
+                CriadoLogin = ConstantesTestes.LOGIN_123456789 
+            });
+            
+            await InserirNaBase(new Editora() 
+            { 
+                Nome = ConstantesTestes.PAPEL,
+                CriadoPor = ConstantesTestes.SISTEMA, 
+                CriadoEm = DateTimeExtension.HorarioBrasilia().Date, 
+                CriadoLogin = ConstantesTestes.LOGIN_123456789 
+            });
+            
+            await InserirNaBase(new Editora() 
+            { 
+                Nome = ConstantesTestes.COLOR,
+                CriadoPor = ConstantesTestes.SISTEMA, 
+                CriadoEm = DateTimeExtension.HorarioBrasilia().Date, 
+                CriadoLogin = ConstantesTestes.LOGIN_123456789 
+            });
+            
+            await InserirNaBase(new Editora() 
+            { 
+                Nome = ConstantesTestes.VOB,
+                CriadoPor = ConstantesTestes.SISTEMA, 
+                CriadoEm = DateTimeExtension.HorarioBrasilia().Date, 
+                CriadoLogin = ConstantesTestes.LOGIN_123456789 
+            });
             
             var servicoEditora = GetServicoEditora();
 
-            var retorno = await servicoEditora.PesquisarPorNome(ConstantesTestes.COLOR.Substring(4));
-            retorno.ShouldNotBeNull();
-            retorno.Nome.ShouldBe(ConstantesTestes.COLOR);
-            retorno.Id.ShouldBe(long.Parse(ConstantesTestes.NUMERO_1));
+            var retorno = await servicoEditora.PesquisarPorNome("o");
+            retorno.Count.ShouldBe(ConstantesTestes.QUANTIDADE_3);
         }
 
         private async Task InserirEditora()

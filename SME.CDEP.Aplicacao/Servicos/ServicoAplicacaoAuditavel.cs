@@ -5,6 +5,7 @@ using SME.CDEP.Aplicacao.Servicos.Interface;
 using SME.CDEP.Dominio;
 using SME.CDEP.Dominio.Contexto;
 using SME.CDEP.Dominio.Repositorios;
+using SME.CDEP.Infra.Dominio.Enumerados;
 
 namespace SME.CDEP.Aplicacao.Servicos
 {
@@ -24,6 +25,9 @@ namespace SME.CDEP.Aplicacao.Servicos
         public Task<long> Inserir(D entidadeDto)
         {
             var entidade = mapper.Map<E>(entidadeDto);
+            entidade.CriadoEm = DateTimeExtension.HorarioBrasilia();
+            entidade.CriadoPor = contextoAplicacao.NomeUsuario;
+            entidade.CriadoLogin = contextoAplicacao.UsuarioLogado;
             return repositorio.Inserir(entidade);
         }
         
@@ -37,9 +41,7 @@ namespace SME.CDEP.Aplicacao.Servicos
             var registros = await ObterTodos();
             var totalRegistros = registros.Count;
             var paginacao = Paginacao;
-            var registrosOrdenados = paginacao.Ordenacao == TipoOrdenacao.AZ 
-                ? registros.OrderByDescending(o => o.AlteradoEm.HasValue ? o.AlteradoEm.Value : o.CriadoEm) 
-                : registros.OrderBy(o => o.Nome);
+            var registrosOrdenados = OrdenarRegistros(paginacao, registros);
             
             var retornoPaginado = new PaginacaoResultadoDTO<D>()
             {
@@ -51,9 +53,28 @@ namespace SME.CDEP.Aplicacao.Servicos
             return retornoPaginado;
         }
 
+        private IOrderedEnumerable<D> OrdenarRegistros(Paginacao paginacao, IList<D> registros)
+        {
+            return paginacao.Ordenacao switch
+            {
+                TipoOrdenacao.DATA => registros.OrderByDescending(o => o.AlteradoEm.HasValue ? o.AlteradoEm.Value : o.CriadoEm),
+                TipoOrdenacao.AZ => registros.OrderBy(o => o.Nome),
+                TipoOrdenacao.ZA => registros.OrderByDescending(o => o.Nome),
+            };
+        }
+
         public async Task<D> Alterar(D entidadeDto)
         {
+            var entidadeExistente = await repositorio.ObterPorId(entidadeDto.Id);
+            
             var entidade = mapper.Map<E>(entidadeDto);
+            entidade.CriadoEm = entidadeExistente.CriadoEm;
+            entidade.CriadoLogin = entidadeExistente.CriadoLogin;
+            entidade.CriadoPor = entidadeExistente.CriadoPor;
+            entidade.AlteradoEm = DateTimeExtension.HorarioBrasilia();
+            entidade.AlteradoLogin = contextoAplicacao.UsuarioLogado;
+            entidade.AlteradoPor = contextoAplicacao.NomeUsuario;
+            
             return mapper.Map<D>(await repositorio.Atualizar(entidade));
         }
 
@@ -69,9 +90,9 @@ namespace SME.CDEP.Aplicacao.Servicos
             await Alterar(entidade);
             return true;
         }
-        public async Task<D> PesquisarPorNome(string nome)
+        public async Task<IList<D>> PesquisarPorNome(string nome)
         {
-            return mapper.Map<D>(await repositorio.PesquisarPorNome(nome));
+            return mapper.Map<IList<D>>(await repositorio.PesquisarPorNome(nome));
         }
         
         public Paginacao Paginacao

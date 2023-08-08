@@ -2,6 +2,6 @@
 
 namespace SME.CDEP.Aplicacao.Servicos.Interface
 {
-    public interface IServicoSerieColecao : IServicoAplicacao,IServicoIdNomeTipoExcluidoAuditavel
+    public interface IServicoSerieColecao : IServicoAplicacao,IServicoIdNomeExcluidoAuditavel
     {}
 }
