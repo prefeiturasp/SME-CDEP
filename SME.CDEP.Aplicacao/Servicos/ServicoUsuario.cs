@@ -188,13 +188,16 @@ namespace SME.CDEP.Aplicacao.Servicos
                 throw new NegocioException(erros);
         }
 
-        public async Task<UsuarioAutenticacaoRetornoDTO> Autenticar(string login, string senha)
+        public async Task<RetornoPerfilUsuarioDTO> Autenticar(string login, string senha)
         {
-            var retorno = await servicoAcessos.Autenticar(login, senha);
-
-            await ManutencaoUsuario(login, retorno);
+            var retornoAutenticacao = await servicoAcessos.Autenticar(login, senha);
             
-            return retorno;
+            if (string.IsNullOrEmpty(retornoAutenticacao.Login))
+                throw new NegocioException(MensagemNegocio.USUARIO_OU_SENHA_INVALIDOS);
+
+            await ManutencaoUsuario(login, retornoAutenticacao);
+            
+            return await servicoPerfilUsuario.ObterPerfisUsuario(login);
         }
 
         private async Task ManutencaoUsuario(string login, UsuarioAutenticacaoRetornoDTO retorno)
