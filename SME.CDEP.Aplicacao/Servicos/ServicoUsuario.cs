@@ -57,7 +57,7 @@ namespace SME.CDEP.Aplicacao.Servicos
             return mapper.Map<UsuarioDTO>(await repositorioUsuario.ObterPorLogin(login));
         }
 
-        public async Task<bool> CadastrarUsuarioExterno(UsuarioExternoDTO usuarioExternoDto)
+        public async Task<bool> InserirUsuarioExterno(UsuarioExternoDTO usuarioExternoDto)
         {
             usuarioExternoDto.Cpf = usuarioExternoDto.Cpf.Replace(".","").Replace("-","");
             ValidarSenha(usuarioExternoDto.Senha, usuarioExternoDto.ConfirmarSenha);

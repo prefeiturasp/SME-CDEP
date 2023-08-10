@@ -19,10 +19,21 @@ public class EditoraController: BaseController
     [ProducesResponseType(typeof(RetornoBaseDTO), 500)]
     [ProducesResponseType(typeof(RetornoBaseDTO), 601)]
     [Permissao(Permissao.EDT_I, Policy = "Bearer")]
-    [Permissao(Permissao.EDT_A, Policy = "Bearer")]
-    public async Task<IActionResult> CadastrarAlterar([FromBody] IdNomeExcluidoAuditavelDTO editora, [FromServices] IServicoEditora servicoEditora)
+    public async Task<IActionResult> Inserir([FromBody] NomeDTO editora, [FromServices] IServicoEditora servicoEditora)
     {
-        return editora.Id > 0 ? Ok(await servicoEditora.Alterar(editora)) : Ok(await servicoEditora.Inserir(editora));
+        return Ok(await servicoEditora.Inserir(new IdNomeExcluidoAuditavelDTO() { Nome = editora.Nome}));
+    }
+    
+    [HttpPut]
+    [ProducesResponseType(typeof(IdNomeExcluidoAuditavelDTO), 200)]
+    [ProducesResponseType(typeof(RetornoBaseDTO), 400)]
+    [ProducesResponseType(typeof(RetornoBaseDTO), 403)]
+    [ProducesResponseType(typeof(RetornoBaseDTO), 500)]
+    [ProducesResponseType(typeof(RetornoBaseDTO), 601)]
+    [Permissao(Permissao.EDT_A, Policy = "Bearer")]
+    public async Task<IActionResult> Alterar([FromBody] IdNomeDTO editora, [FromServices] IServicoEditora servicoEditora)
+    {
+        return Ok(await servicoEditora.Alterar(new IdNomeExcluidoAuditavelDTO() {Id = editora.Id, Nome = editora.Nome}));
     }
 
     [HttpGet]

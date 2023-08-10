@@ -15,9 +15,9 @@ public class UsuarioController: BaseController
     [ProducesResponseType(typeof(RetornoBaseDTO), 400)]
     [ProducesResponseType(typeof(RetornoBaseDTO), 500)]
     [ProducesResponseType(typeof(RetornoBaseDTO), 601)]
-    public async Task<IActionResult> CadastrarUsuarioExterno(UsuarioExternoDTO usuarioExternoDto, [FromServices] IServicoUsuario servicoUsuario)
+    public async Task<IActionResult> Inserir(UsuarioExternoDTO usuarioExternoDto, [FromServices] IServicoUsuario servicoUsuario)
     {
-        return Ok(await servicoUsuario.CadastrarUsuarioExterno(usuarioExternoDto));
+        return Ok(await servicoUsuario.InserirUsuarioExterno(usuarioExternoDto));
     }
     
     [HttpPost("{login}/solicitar-recuperacao-senha")] 

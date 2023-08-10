@@ -19,10 +19,21 @@ public class SerieColecaoController: BaseController
     [ProducesResponseType(typeof(RetornoBaseDTO), 500)]
     [ProducesResponseType(typeof(RetornoBaseDTO), 601)]
     [Permissao(Permissao.SRC_I, Policy = "Bearer")]
-    [Permissao(Permissao.SRC_A, Policy = "Bearer")]
-    public async Task<IActionResult> CadastrarAlterar([FromBody] IdNomeExcluidoAuditavelDTO serieColecao, [FromServices] IServicoSerieColecao servicoSerieColecao)
+    public async Task<IActionResult> Inserir([FromBody] NomeDTO serieColecao, [FromServices] IServicoSerieColecao servicoSerieColecao)
     {
-        return serieColecao.Id > 0 ? Ok(await servicoSerieColecao.Alterar(serieColecao)) : Ok(await servicoSerieColecao.Inserir(serieColecao));
+        return Ok(await servicoSerieColecao.Inserir(new IdNomeExcluidoAuditavelDTO() { Nome = serieColecao.Nome}));
+    }
+    
+    [HttpPut]
+    [ProducesResponseType(typeof(IdNomeExcluidoAuditavelDTO), 200)]
+    [ProducesResponseType(typeof(RetornoBaseDTO), 400)]
+    [ProducesResponseType(typeof(RetornoBaseDTO), 403)]
+    [ProducesResponseType(typeof(RetornoBaseDTO), 500)]
+    [ProducesResponseType(typeof(RetornoBaseDTO), 601)]
+    [Permissao(Permissao.SRC_A, Policy = "Bearer")]
+    public async Task<IActionResult> Alterar([FromBody] IdNomeDTO serieColecao, [FromServices] IServicoSerieColecao servicoSerieColecao)
+    {
+        return Ok(await servicoSerieColecao.Alterar(new IdNomeExcluidoAuditavelDTO() {Id = serieColecao.Id, Nome = serieColecao.Nome}));
     }
 
     [HttpGet]

@@ -16,9 +16,20 @@ public class MaterialController: BaseController
     [ProducesResponseType(typeof(RetornoBaseDTO), 500)]
     [ProducesResponseType(typeof(RetornoBaseDTO), 601)]
     [Authorize("Bearer")]
-    public async Task<IActionResult> CadastrarAlterar([FromBody] IdNomeTipoExcluidoDTO materialDTO, [FromServices] IServicoMaterial servicoMaterial)
+    public async Task<IActionResult> Inserir([FromBody] NomeTipoDTO material, [FromServices] IServicoMaterial servicoMaterial)
     {
-        return materialDTO.Id > 0 ? Ok(await servicoMaterial.Alterar(materialDTO)) : Ok(await servicoMaterial.Inserir(materialDTO));
+        return Ok(await servicoMaterial.Inserir(new IdNomeTipoExcluidoDTO() { Nome = material.Nome, Tipo = material.Tipo}));
+    }
+    
+    [HttpPut]
+    [ProducesResponseType(typeof(IdNomeTipoExcluidoDTO), 200)]
+    [ProducesResponseType(typeof(RetornoBaseDTO), 400)]
+    [ProducesResponseType(typeof(RetornoBaseDTO), 500)]
+    [ProducesResponseType(typeof(RetornoBaseDTO), 601)]
+    [Authorize("Bearer")]
+    public async Task<IActionResult> Alterar([FromBody] IdNomeTipoDTO material, [FromServices] IServicoMaterial servicoMaterial)
+    {
+        return Ok(await servicoMaterial.Alterar(new IdNomeTipoExcluidoDTO() {Id = material.Id, Nome = material.Nome, Tipo = material.Tipo}));
     }
 
     [HttpGet]

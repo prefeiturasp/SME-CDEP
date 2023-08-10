@@ -19,10 +19,21 @@ public class CreditoController: BaseController
     [ProducesResponseType(typeof(RetornoBaseDTO), 500)]
     [ProducesResponseType(typeof(RetornoBaseDTO), 601)]
     [Permissao(Permissao.CRD_I, Policy = "Bearer")]
-    [Permissao(Permissao.CRD_A, Policy = "Bearer")]
-    public async Task<IActionResult> CadastrarAlterar([FromBody] IdNomeExcluidoAuditavelDTO creditoDTO, [FromServices] IServicoCredito servicoCredito)
+    public async Task<IActionResult> Inserir([FromBody] NomeDTO credito, [FromServices] IServicoCredito servicoCredito)
     {
-        return creditoDTO.Id > 0 ? Ok(await servicoCredito.Alterar(creditoDTO)) : Ok(await servicoCredito.Inserir(creditoDTO));
+        return Ok(await servicoCredito.Inserir(new IdNomeExcluidoAuditavelDTO() { Nome = credito.Nome}));
+    }
+    
+    [HttpPut]
+    [ProducesResponseType(typeof(IdNomeExcluidoAuditavelDTO), 200)]
+    [ProducesResponseType(typeof(RetornoBaseDTO), 400)]
+    [ProducesResponseType(typeof(RetornoBaseDTO), 403)]
+    [ProducesResponseType(typeof(RetornoBaseDTO), 500)]
+    [ProducesResponseType(typeof(RetornoBaseDTO), 601)]
+    [Permissao(Permissao.CRD_A, Policy = "Bearer")]
+    public async Task<IActionResult> Alterar([FromBody] IdNomeDTO credito, [FromServices] IServicoCredito servicoCredito)
+    {
+        return Ok(await servicoCredito.Alterar(new IdNomeExcluidoAuditavelDTO() {Id = credito.Id, Nome = credito.Nome}));
     }
 
     [HttpGet]

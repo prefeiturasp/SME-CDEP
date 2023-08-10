@@ -16,9 +16,20 @@ public class IdiomaController: BaseController
     [ProducesResponseType(typeof(RetornoBaseDTO), 500)]
     [ProducesResponseType(typeof(RetornoBaseDTO), 601)]
     [Authorize("Bearer")]
-    public async Task<IActionResult> CadastrarAlterar([FromBody] IdNomeExcluidoDTO idiomaExcluidoDto, [FromServices] IServicoIdioma servicoIdioma)
+    public async Task<IActionResult> Inserir([FromBody] NomeDTO idioma, [FromServices] IServicoIdioma servicoIdioma)
     {
-        return idiomaExcluidoDto.Id > 0 ? Ok(await servicoIdioma.Alterar(idiomaExcluidoDto)) : Ok(await servicoIdioma.Inserir(idiomaExcluidoDto));
+        return Ok(await servicoIdioma.Inserir(new IdNomeExcluidoDTO() { Nome = idioma.Nome}));
+    }
+    
+    [HttpPut]
+    [ProducesResponseType(typeof(IdNomeExcluidoDTO), 200)]
+    [ProducesResponseType(typeof(RetornoBaseDTO), 400)]
+    [ProducesResponseType(typeof(RetornoBaseDTO), 500)]
+    [ProducesResponseType(typeof(RetornoBaseDTO), 601)]
+    [Authorize("Bearer")]
+    public async Task<IActionResult> Alterar([FromBody] IdNomeDTO idioma, [FromServices] IServicoIdioma servicoIdioma)
+    {
+        return Ok(await servicoIdioma.Alterar(new IdNomeExcluidoDTO() {Id = idioma.Id, Nome = idioma.Nome}));
     }
 
     [HttpGet]

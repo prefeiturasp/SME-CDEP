@@ -19,10 +19,21 @@ public class AutorController: BaseController
     [ProducesResponseType(typeof(RetornoBaseDTO), 500)]
     [ProducesResponseType(typeof(RetornoBaseDTO), 601)]
     [Permissao(Permissao.AUT_I, Policy = "Bearer")]
-    [Permissao(Permissao.AUT_A, Policy = "Bearer")]
-    public async Task<IActionResult> CadastrarAlterar([FromBody] IdNomeExcluidoAuditavelDTO autor, [FromServices] IServicoAutor servicoAutor)
+    public async Task<IActionResult> Inserir([FromBody] NomeDTO autor, [FromServices] IServicoAutor servicoAutor)
     {
-        return autor.Id > 0 ? Ok(await servicoAutor.Alterar(autor)) : Ok(await servicoAutor.Inserir(autor));
+        return Ok(await servicoAutor.Inserir(new IdNomeExcluidoAuditavelDTO() { Nome = autor.Nome}));
+    }
+    
+    [HttpPut]
+    [ProducesResponseType(typeof(IdNomeExcluidoAuditavelDTO), 200)]
+    [ProducesResponseType(typeof(RetornoBaseDTO), 400)]
+    [ProducesResponseType(typeof(RetornoBaseDTO), 403)]
+    [ProducesResponseType(typeof(RetornoBaseDTO), 500)]
+    [ProducesResponseType(typeof(RetornoBaseDTO), 601)]
+    [Permissao(Permissao.AUT_A, Policy = "Bearer")]
+    public async Task<IActionResult> Alterar([FromBody] IdNomeDTO autor, [FromServices] IServicoAutor servicoAutor)
+    {
+        return Ok(await servicoAutor.Alterar(new IdNomeExcluidoAuditavelDTO() {Id = autor.Id, Nome = autor.Nome}));
     }
 
     [HttpGet]

@@ -16,9 +16,20 @@ public class FormatoController: BaseController
     [ProducesResponseType(typeof(RetornoBaseDTO), 500)]
     [ProducesResponseType(typeof(RetornoBaseDTO), 601)]
     [Authorize("Bearer")]
-    public async Task<IActionResult> CadastrarAlterar([FromBody] IdNomeTipoExcluidoDTO formatoDTO, [FromServices] IServicoFormato servicoFormato)
+    public async Task<IActionResult> Inserir([FromBody] NomeTipoDTO formato, [FromServices] IServicoFormato servicoFormato)
     {
-        return formatoDTO.Id > 0 ? Ok(await servicoFormato.Alterar(formatoDTO)) : Ok(await servicoFormato.Inserir(formatoDTO));
+        return Ok(await servicoFormato.Inserir(new IdNomeTipoExcluidoDTO() { Nome = formato.Nome, Tipo = formato.Tipo}));
+    }
+    
+    [HttpPut]
+    [ProducesResponseType(typeof(IdNomeExcluidoDTO), 200)]
+    [ProducesResponseType(typeof(RetornoBaseDTO), 400)]
+    [ProducesResponseType(typeof(RetornoBaseDTO), 500)]
+    [ProducesResponseType(typeof(RetornoBaseDTO), 601)]
+    [Authorize("Bearer")]
+    public async Task<IActionResult> Alterar([FromBody] IdNomeTipoDTO formato, [FromServices] IServicoFormato servicoFormato)
+    {
+        return Ok(await servicoFormato.Alterar(new IdNomeTipoExcluidoDTO() {Id = formato.Id, Nome = formato.Nome, Tipo = formato.Tipo}));
     }
 
     [HttpGet]

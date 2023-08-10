@@ -16,9 +16,20 @@ public class ConservacaoController: BaseController
     [ProducesResponseType(typeof(RetornoBaseDTO), 500)]
     [ProducesResponseType(typeof(RetornoBaseDTO), 601)]
     [Authorize("Bearer")]
-    public async Task<IActionResult> CadastrarAlterar([FromBody] IdNomeExcluidoDTO conservacaoExcluidoDto, [FromServices] IServicoConservacao servicoConservacao)
+    public async Task<IActionResult> Inserir([FromBody] NomeDTO conservacao, [FromServices] IServicoConservacao servicoConservacao)
     {
-        return conservacaoExcluidoDto.Id > 0 ? Ok(await servicoConservacao.Alterar(conservacaoExcluidoDto)) : Ok(await servicoConservacao.Inserir(conservacaoExcluidoDto));
+        return Ok(await servicoConservacao.Inserir(new IdNomeExcluidoDTO() { Nome = conservacao.Nome}));
+    }
+    
+    [HttpPut]
+    [ProducesResponseType(typeof(IdNomeExcluidoDTO), 200)]
+    [ProducesResponseType(typeof(RetornoBaseDTO), 400)]
+    [ProducesResponseType(typeof(RetornoBaseDTO), 500)]
+    [ProducesResponseType(typeof(RetornoBaseDTO), 601)]
+    [Authorize("Bearer")]
+    public async Task<IActionResult> Alterar([FromBody] IdNomeDTO conservacao, [FromServices] IServicoConservacao servicoConservacao)
+    {
+        return Ok(await servicoConservacao.Alterar(new IdNomeExcluidoDTO() {Id = conservacao.Id, Nome = conservacao.Nome}));
     }
 
     [HttpGet]
