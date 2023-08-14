@@ -36,7 +36,8 @@ namespace SME.CDEP.Aplicacao.Servicos
 
         public async Task<D> ObterPorId(long entidadeId)
         {
-            return mapper.Map<D>(await repositorio.ObterPorId(entidadeId));
+            var retorno = await repositorio.ObterPorId(entidadeId);
+            return mapper.Map<D>(retorno.Excluido ? default : retorno);
         }
 
         public async Task<bool> Excluir(long entidaId)
