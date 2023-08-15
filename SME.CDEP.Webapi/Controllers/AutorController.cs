@@ -37,14 +37,15 @@ public class AutorController: BaseController
     }
 
     [HttpGet]
-    [ProducesResponseType(typeof(IdNomeExcluidoAuditavelDTO), 200)]  
+    [ProducesResponseType(typeof(PaginacaoResultadoDTO<IdNomeExcluidoAuditavelDTO>), 200)]
     [ProducesResponseType(typeof(RetornoBaseDTO), 400)]
     [ProducesResponseType(typeof(RetornoBaseDTO), 403)]
+    [ProducesResponseType(typeof(RetornoBaseDTO), 500)]
     [ProducesResponseType(typeof(RetornoBaseDTO), 601)]
     [Permissao(Permissao.AUT_C, Policy = "Bearer")]
     public async Task<IActionResult> ObterTodos([FromServices]IServicoAutor servicoAutor)
     {
-        return Ok(await servicoAutor.ObterTodos());
+        return Ok(await servicoAutor.ObterPaginado());
     }
     
     [HttpGet("{id}")]

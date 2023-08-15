@@ -37,7 +37,7 @@ public class CreditoController: BaseController
     }
 
     [HttpGet]
-    [ProducesResponseType(typeof(IdNomeExcluidoAuditavelDTO), 200)]
+    [ProducesResponseType(typeof(PaginacaoResultadoDTO<IdNomeExcluidoAuditavelDTO>), 200)]
     [ProducesResponseType(typeof(RetornoBaseDTO), 400)]
     [ProducesResponseType(typeof(RetornoBaseDTO), 403)]
     [ProducesResponseType(typeof(RetornoBaseDTO), 500)]
@@ -45,7 +45,7 @@ public class CreditoController: BaseController
     [Permissao(Permissao.CRD_C, Policy = "Bearer")]
     public async Task<IActionResult> ObterTodos([FromServices]IServicoCredito servicoCredito)
     {
-        return Ok(await servicoCredito.ObterTodos());
+        return Ok(await servicoCredito.ObterPaginado());
     }
     
     [HttpGet("{id}")]

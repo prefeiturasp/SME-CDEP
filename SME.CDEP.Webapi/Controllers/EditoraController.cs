@@ -37,7 +37,7 @@ public class EditoraController: BaseController
     }
 
     [HttpGet]
-    [ProducesResponseType(typeof(IdNomeExcluidoAuditavelDTO), 200)]
+    [ProducesResponseType(typeof(PaginacaoResultadoDTO<IdNomeExcluidoAuditavelDTO>), 200)]
     [ProducesResponseType(typeof(RetornoBaseDTO), 400)]
     [ProducesResponseType(typeof(RetornoBaseDTO), 403)]
     [ProducesResponseType(typeof(RetornoBaseDTO), 500)]
@@ -45,7 +45,7 @@ public class EditoraController: BaseController
     [Permissao(Permissao.EDT_C, Policy = "Bearer")]
     public async Task<IActionResult> ObterTodos([FromServices]IServicoEditora servicoEditora)
     {
-        return Ok(await servicoEditora.ObterTodos());
+        return Ok(await servicoEditora.ObterPaginado());
     }
     
     [HttpGet("{id}")]

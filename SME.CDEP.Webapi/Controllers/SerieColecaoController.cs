@@ -37,7 +37,7 @@ public class SerieColecaoController: BaseController
     }
 
     [HttpGet]
-    [ProducesResponseType(typeof(IdNomeExcluidoAuditavelDTO), 200)]
+    [ProducesResponseType(typeof(PaginacaoResultadoDTO<IdNomeExcluidoAuditavelDTO>), 200)]
     [ProducesResponseType(typeof(RetornoBaseDTO), 400)]
     [ProducesResponseType(typeof(RetornoBaseDTO), 403)]
     [ProducesResponseType(typeof(RetornoBaseDTO), 500)]
@@ -45,7 +45,7 @@ public class SerieColecaoController: BaseController
     [Permissao(Permissao.SRC_C, Policy = "Bearer")]
     public async Task<IActionResult> ObterTodos([FromServices]IServicoSerieColecao servicoSerieColecao)
     {
-        return Ok(await servicoSerieColecao.ObterTodos());
+        return Ok(await servicoSerieColecao.ObterPaginado());
     }
     
     [HttpGet("{id}")]
