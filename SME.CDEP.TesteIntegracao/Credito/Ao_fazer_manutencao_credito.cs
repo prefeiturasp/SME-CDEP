@@ -140,8 +140,8 @@ namespace SME.CDEP.TesteIntegracao.Usuario
                 CriadoLogin = ConstantesTestes.LOGIN_123456789 
             });
             
-            var retorno = await servicoCredito.PesquisarPorNome("o");
-            retorno.Count.ShouldBe(ConstantesTestes.QUANTIDADE_3);
+            var retorno = await servicoCredito.ObterPaginado("o");
+            retorno.Items.Count().ShouldBe(ConstantesTestes.QUANTIDADE_3);
         }
 
         private async Task InserirCredito()

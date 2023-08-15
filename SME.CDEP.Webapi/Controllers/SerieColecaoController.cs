@@ -43,9 +43,9 @@ public class SerieColecaoController: BaseController
     [ProducesResponseType(typeof(RetornoBaseDTO), 500)]
     [ProducesResponseType(typeof(RetornoBaseDTO), 601)] 
     [Permissao(Permissao.SRC_C, Policy = "Bearer")]
-    public async Task<IActionResult> ObterTodos([FromServices]IServicoSerieColecao servicoSerieColecao)
+    public async Task<IActionResult> ObterTodosOuPorNome([FromQuery] string? nome,[FromServices]IServicoSerieColecao servicoSerieColecao)
     {
-        return Ok(await servicoSerieColecao.ObterPaginado());
+        return Ok(await servicoSerieColecao.ObterPaginado(nome));
     }
     
     [HttpGet("{id}")]
@@ -70,17 +70,5 @@ public class SerieColecaoController: BaseController
     public async Task<IActionResult> ExclusaoLogica([FromRoute] long id, [FromServices] IServicoSerieColecao servicoSerieColecao)
     {
         return Ok(await servicoSerieColecao.Excluir(id));
-    }
-    
-    [HttpGet("pesquisar/{nome}")]
-    [ProducesResponseType(typeof(IList<IdNomeExcluidoAuditavelDTO>), 200)]  
-    [ProducesResponseType(typeof(RetornoBaseDTO), 400)]
-    [ProducesResponseType(typeof(RetornoBaseDTO), 403)]
-    [ProducesResponseType(typeof(RetornoBaseDTO), 500)]
-    [ProducesResponseType(typeof(RetornoBaseDTO), 601)] 
-    [Permissao(Permissao.SRC_C, Policy = "Bearer")]
-    public async Task<IActionResult> PesquisarPorNome([FromRoute] string nome, [FromServices] IServicoSerieColecao servicoSerieColecao)
-    {
-        return Ok(await servicoSerieColecao.PesquisarPorNome(nome));
     }
 }

@@ -42,9 +42,9 @@ public class AssuntoController: BaseController
     [ProducesResponseType(typeof(RetornoBaseDTO), 403)]
     [ProducesResponseType(typeof(RetornoBaseDTO), 601)]
     [Permissao(Permissao.ASS_C, Policy = "Bearer")]
-    public async Task<IActionResult> ObterTodos([FromServices]IServicoAssunto servicoAssunto)
+    public async Task<IActionResult> ObterTodosOuPorNome([FromQuery] string? nome,[FromServices]IServicoAssunto servicoAssunto)
     {
-        return Ok(await servicoAssunto.ObterPaginado());
+        return Ok(await servicoAssunto.ObterPaginado(nome));
     }
     
     [HttpGet("{id}")]
@@ -67,16 +67,5 @@ public class AssuntoController: BaseController
     public async Task<IActionResult> ExclusaoLogica([FromRoute] long id, [FromServices] IServicoAssunto servicoAssunto)
     {
         return Ok(await servicoAssunto.Excluir(id));
-    }
-    
-    [HttpGet("pesquisar/{nome}")]
-    [ProducesResponseType(typeof(IList<IdNomeExcluidoAuditavelDTO>), 200)]  
-    [ProducesResponseType(typeof(RetornoBaseDTO), 400)]
-    [ProducesResponseType(typeof(RetornoBaseDTO), 403)]
-    [ProducesResponseType(typeof(RetornoBaseDTO), 601)]
-    [Permissao(Permissao.ASS_C, Policy = "Bearer")]
-    public async Task<IActionResult> PesquisarPorNome([FromRoute] string nome, [FromServices] IServicoAssunto servicoAssunto)
-    {
-        return Ok(await servicoAssunto.PesquisarPorNome(nome));
     }
 }

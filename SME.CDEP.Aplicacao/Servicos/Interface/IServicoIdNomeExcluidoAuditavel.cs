@@ -9,7 +9,6 @@ namespace SME.CDEP.Aplicacao.Servicos.Interface
         Task<IdNomeExcluidoAuditavelDTO> Alterar(IdNomeExcluidoAuditavelDTO idNomeExcluidoAuditavelDTO);
         Task<IdNomeExcluidoAuditavelDTO> ObterPorId(long Id);
         Task<bool> Excluir(long Id);
-        Task<IList<IdNomeExcluidoAuditavelDTO>> PesquisarPorNome(string nome);
-        Task<PaginacaoResultadoDTO<IdNomeExcluidoAuditavelDTO>> ObterPaginado();
+        Task<PaginacaoResultadoDTO<IdNomeExcluidoAuditavelDTO>> ObterPaginado(string? nome = null);
     }
 }

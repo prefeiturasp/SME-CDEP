@@ -140,8 +140,8 @@ namespace SME.CDEP.TesteIntegracao.Usuario
             
             var servicoSerieColecao = GetServicoSerieColecao();
 
-            var retorno = await servicoSerieColecao.PesquisarPorNome("o");
-            retorno.Count.ShouldBe(ConstantesTestes.QUANTIDADE_3);
+            var retorno = await servicoSerieColecao.ObterPaginado("o");
+            retorno.Items.Count().ShouldBe(ConstantesTestes.QUANTIDADE_3);
         }
 
         private async Task InserirSerieColecao()

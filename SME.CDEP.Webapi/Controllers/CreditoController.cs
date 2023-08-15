@@ -43,9 +43,9 @@ public class CreditoController: BaseController
     [ProducesResponseType(typeof(RetornoBaseDTO), 500)]
     [ProducesResponseType(typeof(RetornoBaseDTO), 601)]
     [Permissao(Permissao.CRD_C, Policy = "Bearer")]
-    public async Task<IActionResult> ObterTodos([FromServices]IServicoCredito servicoCredito)
+    public async Task<IActionResult> ObterTodosOuPorNome([FromQuery] string? nome,[FromServices]IServicoCredito servicoCredito)
     {
-        return Ok(await servicoCredito.ObterPaginado());
+        return Ok(await servicoCredito.ObterPaginado(nome));
     }
     
     [HttpGet("{id}")]
@@ -70,17 +70,5 @@ public class CreditoController: BaseController
     public async Task<IActionResult> ExclusaoLogica([FromRoute] long id, [FromServices] IServicoCredito servicoCredito)
     {
         return Ok(await servicoCredito.Excluir(id));
-    }
-    
-    [HttpGet("pesquisar/{nome}")]
-    [ProducesResponseType(typeof(IList<IdNomeExcluidoAuditavelDTO>), 200)]  
-    [ProducesResponseType(typeof(RetornoBaseDTO), 400)]
-    [ProducesResponseType(typeof(RetornoBaseDTO), 403)]
-    [ProducesResponseType(typeof(RetornoBaseDTO), 500)]
-    [ProducesResponseType(typeof(RetornoBaseDTO), 601)] 
-    [Permissao(Permissao.CRD_C, Policy = "Bearer")]
-    public async Task<IActionResult> PesquisarPorNome([FromRoute] string nome, [FromServices]IServicoCredito servicoCredito)
-    {
-        return Ok(await servicoCredito.PesquisarPorNome(nome));
     }
 }

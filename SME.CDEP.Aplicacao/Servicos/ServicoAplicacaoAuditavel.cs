@@ -36,9 +36,9 @@ namespace SME.CDEP.Aplicacao.Servicos
             return (await repositorio.ObterTodos()).Where(w=> !w.Excluido).Select(s=> mapper.Map<D>(s)).ToList();
         }
 
-        public async Task<PaginacaoResultadoDTO<D>> ObterPaginado()
+        public async Task<PaginacaoResultadoDTO<D>> ObterPaginado(string nome)
         {
-            var registros = await ObterTodos();
+            var registros = string.IsNullOrEmpty(nome) ?  await ObterTodos() : await PesquisarPorNome(nome);
             var totalRegistros = registros.Count;
             var paginacao = Paginacao;
             var registrosOrdenados = OrdenarRegistros(paginacao, registros);
@@ -90,7 +90,8 @@ namespace SME.CDEP.Aplicacao.Servicos
             entidade.Excluido = true;
             await Alterar(entidade);
             return true;
-        }
+        } 
+        
         public async Task<IList<D>> PesquisarPorNome(string nome)
         {
             return mapper.Map<IList<D>>(await repositorio.PesquisarPorNome(nome));

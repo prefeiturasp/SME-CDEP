@@ -140,8 +140,8 @@ namespace SME.CDEP.TesteIntegracao.Usuario
             
             var servicoEditora = GetServicoEditora();
 
-            var retorno = await servicoEditora.PesquisarPorNome("o");
-            retorno.Count.ShouldBe(ConstantesTestes.QUANTIDADE_3);
+            var retorno = await servicoEditora.ObterPaginado("o");
+            retorno.Items.Count().ShouldBe(ConstantesTestes.QUANTIDADE_3);
         }
 
         private async Task InserirEditora()

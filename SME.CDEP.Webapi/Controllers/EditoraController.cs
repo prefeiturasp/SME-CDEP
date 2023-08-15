@@ -43,9 +43,9 @@ public class EditoraController: BaseController
     [ProducesResponseType(typeof(RetornoBaseDTO), 500)]
     [ProducesResponseType(typeof(RetornoBaseDTO), 601)] 
     [Permissao(Permissao.EDT_C, Policy = "Bearer")]
-    public async Task<IActionResult> ObterTodos([FromServices]IServicoEditora servicoEditora)
+    public async Task<IActionResult> ObterTodosOuPorNome([FromQuery] string? nome,[FromServices]IServicoEditora servicoEditora)
     {
-        return Ok(await servicoEditora.ObterPaginado());
+        return Ok(await servicoEditora.ObterPaginado(nome));
     }
     
     [HttpGet("{id}")]
@@ -70,17 +70,5 @@ public class EditoraController: BaseController
     public async Task<IActionResult> ExclusaoLogica([FromRoute] long id, [FromServices] IServicoEditora servicoEditora)
     {
         return Ok(await servicoEditora.Excluir(id));
-    }
-    
-    [HttpGet("pesquisar/{nome}")]
-    [ProducesResponseType(typeof(IList<IdNomeExcluidoAuditavelDTO>), 200)]  
-    [ProducesResponseType(typeof(RetornoBaseDTO), 400)]
-    [ProducesResponseType(typeof(RetornoBaseDTO), 403)]
-    [ProducesResponseType(typeof(RetornoBaseDTO), 500)]
-    [ProducesResponseType(typeof(RetornoBaseDTO), 601)] 
-    [Permissao(Permissao.EDT_C, Policy = "Bearer")]
-    public async Task<IActionResult> PesquisarPorNome([FromRoute] string nome, [FromServices] IServicoEditora servicoEditora)
-    {
-        return Ok(await servicoEditora.PesquisarPorNome(nome));
     }
 }

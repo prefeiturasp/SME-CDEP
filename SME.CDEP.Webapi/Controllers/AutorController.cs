@@ -43,9 +43,9 @@ public class AutorController: BaseController
     [ProducesResponseType(typeof(RetornoBaseDTO), 500)]
     [ProducesResponseType(typeof(RetornoBaseDTO), 601)]
     [Permissao(Permissao.AUT_C, Policy = "Bearer")]
-    public async Task<IActionResult> ObterTodos([FromServices]IServicoAutor servicoAutor)
+    public async Task<IActionResult> ObterTodosOuPorNome([FromQuery] string? nome,[FromServices]IServicoAutor servicoAutor)
     {
-        return Ok(await servicoAutor.ObterPaginado());
+        return Ok(await servicoAutor.ObterPaginado(nome));
     }
     
     [HttpGet("{id}")]
@@ -68,17 +68,5 @@ public class AutorController: BaseController
     public async Task<IActionResult> ExclusaoLogica([FromRoute] long id, [FromServices] IServicoAutor servicoAutor)
     {
         return Ok(await servicoAutor.Excluir(id));
-    }
-    
-    [HttpGet("pesquisar/{nome}")]
-    [ProducesResponseType(typeof(IList<IdNomeExcluidoAuditavelDTO>), 200)]  
-    [ProducesResponseType(typeof(RetornoBaseDTO), 400)]
-    [ProducesResponseType(typeof(RetornoBaseDTO), 403)]
-    [ProducesResponseType(typeof(RetornoBaseDTO), 601)]
-     
-    [Permissao(Permissao.AUT_C, Policy = "Bearer")]
-    public async Task<IActionResult> PesquisarPorNome([FromRoute] string nome, [FromServices] IServicoAutor servicoAutor)
-    {
-        return Ok(await servicoAutor.PesquisarPorNome(nome));
     }
 }
