@@ -16,9 +16,20 @@ public class SuporteController: BaseController
     [ProducesResponseType(typeof(RetornoBaseDTO), 500)]
     [ProducesResponseType(typeof(RetornoBaseDTO), 601)]
     [Authorize("Bearer")]
-    public async Task<IActionResult> CadastrarAlterar([FromBody] IdNomeTipoExcluidoDTO suporteDTO, [FromServices] IServicoSuporte servicoSuporte)
+    public async Task<IActionResult> Inserir([FromBody] NomeTipoDTO suporte, [FromServices] IServicoSuporte servicoSuporte)
     {
-        return suporteDTO.Id > 0 ? Ok(await servicoSuporte.Alterar(suporteDTO)) : Ok(await servicoSuporte.Inserir(suporteDTO));
+        return Ok(await servicoSuporte.Inserir(new IdNomeTipoExcluidoDTO() { Nome = suporte.Nome, Tipo = suporte.Tipo}));
+    }
+    
+    [HttpPut]
+    [ProducesResponseType(typeof(IdNomeTipoExcluidoDTO), 200)]
+    [ProducesResponseType(typeof(RetornoBaseDTO), 400)]
+    [ProducesResponseType(typeof(RetornoBaseDTO), 500)]
+    [ProducesResponseType(typeof(RetornoBaseDTO), 601)]
+    [Authorize("Bearer")]
+    public async Task<IActionResult> Alterar([FromBody] IdNomeTipoDTO suporte, [FromServices] IServicoSuporte servicoSuporte)
+    {
+        return Ok(await servicoSuporte.Alterar(new IdNomeTipoExcluidoDTO() {Id = suporte.Id, Nome = suporte.Nome, Tipo = suporte.Tipo}));
     }
 
     [HttpGet]

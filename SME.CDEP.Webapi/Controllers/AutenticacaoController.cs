@@ -21,23 +21,6 @@ public class AutenticacaoController: BaseController
     [AllowAnonymous]
     public async Task<IActionResult> Autenticar(AutenticacaoDTO autenticacaoDto, [FromServices] IServicoUsuario servicoUsuario)
     {
-        var retornoAutenticacao = await servicoUsuario.Autenticar(autenticacaoDto.Login, autenticacaoDto.Senha);
-
-        if (string.IsNullOrEmpty(retornoAutenticacao.Login))
-            throw new NegocioException(MensagemNegocio.USUARIO_OU_SENHA_INVALIDOS);
-
-        return Ok(retornoAutenticacao);
-    }
-    
-    [HttpGet("usuarios/{login}/perfis")]
-    [ProducesResponseType(typeof(RetornoBaseDTO), 400)]
-    [ProducesResponseType(typeof(RetornoBaseDTO), 500)]
-    [ProducesResponseType(typeof(RetornoBaseDTO), 601)]
-    [ProducesResponseType(typeof(RetornoPerfilUsuarioDTO), 200)]        
-    public async Task<IActionResult> ListarPerfisUsuario(string login, [FromServices]IServicoPerfilUsuario servicoPerfilUsuario)
-    {
-        var retorno = await servicoPerfilUsuario.ObterPerfisUsuario(login);
-
-        return Ok(retorno);
+        return Ok(await servicoUsuario.Autenticar(autenticacaoDto.Login, autenticacaoDto.Senha));
     }
 }

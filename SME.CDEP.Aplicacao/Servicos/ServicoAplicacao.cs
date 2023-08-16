@@ -22,7 +22,7 @@ namespace SME.CDEP.Aplicacao.Servicos
             var entidade = mapper.Map<E>(entidadeDto);
             return repositorio.Inserir(entidade);
         }
-
+        
         public async Task<IList<D>> ObterTodos()
         {
             return (await repositorio.ObterTodos()).Where(w=> !w.Excluido).Select(s=> mapper.Map<D>(s)).ToList();
@@ -36,7 +36,8 @@ namespace SME.CDEP.Aplicacao.Servicos
 
         public async Task<D> ObterPorId(long entidadeId)
         {
-            return mapper.Map<D>(await repositorio.ObterPorId(entidadeId));
+            var retorno = await repositorio.ObterPorId(entidadeId);
+            return mapper.Map<D>(retorno.Excluido ? default : retorno);
         }
 
         public async Task<bool> Excluir(long entidaId)
@@ -45,6 +46,10 @@ namespace SME.CDEP.Aplicacao.Servicos
             entidade.Excluido = true;
             await Alterar(entidade);
             return true;
+        }
+        public async Task<D> PesquisarPorNome(string nome)
+        {
+            return mapper.Map<D>(await repositorio.PesquisarPorNome(nome));
         }
     }
 }
