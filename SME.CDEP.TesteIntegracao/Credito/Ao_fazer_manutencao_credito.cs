@@ -35,6 +35,22 @@ namespace SME.CDEP.TesteIntegracao.Usuario
             
             await servicoCredito.Inserir(new IdNomeExcluidoAuditavelDTO() {Nome = ConstantesTestes.PB}).ShouldThrowAsync<NegocioException>();
         }
+        
+        [Fact(DisplayName = "Crédito - Não deve inserir com nome nulo")]
+        public async Task Nao_deve_inserir_nulo()
+        {
+            var servicoCredito = GetServicoCredito();
+            
+            await servicoCredito.Inserir(new IdNomeExcluidoAuditavelDTO()).ShouldThrowAsync<NegocioException>();
+        }
+
+        [Fact(DisplayName = "Crédito - Não deve inserir com nome vazio")]
+        public async Task Nao_deve_inserir_vazio()
+        {
+            var servicoCredito = GetServicoCredito();
+            
+            await servicoCredito.Inserir(new IdNomeExcluidoAuditavelDTO() {Nome = "     "}).ShouldThrowAsync<NegocioException>();
+        }
 
         [Fact(DisplayName = "Crédito - Obter todos")]
         public async Task Obter_todos()
@@ -85,6 +101,32 @@ namespace SME.CDEP.TesteIntegracao.Usuario
 
             var creditoDTO = await servicoCredito.ObterPorId(2);
             creditoDTO.Nome = ConstantesTestes.COLOR;
+            
+            await servicoCredito.Alterar(creditoDTO).ShouldThrowAsync<NegocioException>();
+        }
+        
+        [Fact(DisplayName = "Crédito - Não deve alterar pois já o nome é nulo")]
+        public async Task Nao_deve_atualizar_para_nome_nulo()
+        {
+            await InserirCredito();
+            
+            var servicoCredito = GetServicoCredito();
+
+            var creditoDTO = await servicoCredito.ObterPorId(2);
+            creditoDTO.Nome = null;
+            
+            await servicoCredito.Alterar(creditoDTO).ShouldThrowAsync<NegocioException>();
+        }
+
+        [Fact(DisplayName = "Crédito - Não deve alterar pois já o nome é vazio")]
+        public async Task Nao_deve_atualizar_para_nome_vazio()
+        {
+            await InserirCredito();
+            
+            var servicoCredito = GetServicoCredito();
+
+            var creditoDTO = await servicoCredito.ObterPorId(2);
+            creditoDTO.Nome = "     ";
             
             await servicoCredito.Alterar(creditoDTO).ShouldThrowAsync<NegocioException>();
         }

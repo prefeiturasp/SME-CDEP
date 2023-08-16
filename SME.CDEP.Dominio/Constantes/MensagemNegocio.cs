@@ -2,6 +2,7 @@
 
 public class MensagemNegocio
 {
+    public const string NOME_NAO_INFORMADO = "Nome não informado";
     public const string NAO_FOI_POSSIVEL_VINCULAR_PERFIL_EXTERNO_CORESSO_USUARIO_SEM_PERFIL = "Não foi possível vincular perfil Externo no CoreSSO - Usuário sem perfil";
     public const string REGISTRO_DUPLICADO = "Registro duplicado";
     public const string SO_EH_PERMITIDO_ALTERAR_ENDERECO_TELEFONE_DE_USUARIOS_EXTERNOS = "Só é permitido alterar endereço/telefone de usuários externos";

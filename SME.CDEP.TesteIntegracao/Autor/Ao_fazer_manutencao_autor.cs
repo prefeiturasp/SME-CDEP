@@ -35,6 +35,22 @@ namespace SME.CDEP.TesteIntegracao.Usuario
             
             await servicoAutor.Inserir(new IdNomeExcluidoAuditavelDTO() {Nome = ConstantesTestes.PB}).ShouldThrowAsync<NegocioException>();
         }
+        
+        [Fact(DisplayName = "Autor - Não deve inserir com nome nulo")]
+        public async Task Nao_deve_inserir_nulo()
+        {
+            var servicoAutor = GetServicoAutor();
+            
+            await servicoAutor.Inserir(new IdNomeExcluidoAuditavelDTO()).ShouldThrowAsync<NegocioException>();
+        }
+
+        [Fact(DisplayName = "Autor - Não deve inserir com nome vazio")]
+        public async Task Nao_deve_inserir_vazio()
+        {
+            var servicoAutor = GetServicoAutor();
+            
+            await servicoAutor.Inserir(new IdNomeExcluidoAuditavelDTO(){ Nome = "     "}).ShouldThrowAsync<NegocioException>();
+        }
 
         [Fact(DisplayName = "Autor - Obter todos")]
         public async Task Obter_todos()
@@ -85,6 +101,32 @@ namespace SME.CDEP.TesteIntegracao.Usuario
 
             var autorDTO = await servicoAutor.ObterPorId(2);
             autorDTO.Nome = ConstantesTestes.COLOR;
+            
+            await servicoAutor.Alterar(autorDTO).ShouldThrowAsync<NegocioException>();
+        }
+        
+        [Fact(DisplayName = "Autor - Não deve alterar pois já o nome é nulo")]
+        public async Task Nao_deve_atualizar_para_nome_nulo()
+        {
+            await InserirAutor();
+            
+            var servicoAutor = GetServicoAutor();
+
+            var autorDTO = await servicoAutor.ObterPorId(2);
+            autorDTO.Nome = null;
+            
+            await servicoAutor.Alterar(autorDTO).ShouldThrowAsync<NegocioException>();
+        }
+
+        [Fact(DisplayName = "Autor - Não deve alterar pois já o nome é vazio")]
+        public async Task Nao_deve_atualizar_para_nome_vazio()
+        {
+            await InserirAutor();
+            
+            var servicoAutor = GetServicoAutor();
+
+            var autorDTO = await servicoAutor.ObterPorId(2);
+            autorDTO.Nome = "       ";
             
             await servicoAutor.Alterar(autorDTO).ShouldThrowAsync<NegocioException>();
         }

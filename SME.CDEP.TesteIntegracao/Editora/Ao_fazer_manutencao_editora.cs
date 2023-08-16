@@ -35,6 +35,22 @@ namespace SME.CDEP.TesteIntegracao.Usuario
             
             await servicoEditora.Inserir(new IdNomeExcluidoAuditavelDTO() {Nome = ConstantesTestes.PB}).ShouldThrowAsync<NegocioException>();
         }
+        
+        [Fact(DisplayName = "Editora - Não deve inserir com nome nulo")]
+        public async Task Nao_deve_inserir_nulo()
+        {
+            var servicoEditora = GetServicoEditora();
+            
+            await servicoEditora.Inserir(new IdNomeExcluidoAuditavelDTO()).ShouldThrowAsync<NegocioException>();
+        }
+
+        [Fact(DisplayName = "Editora - Não deve inserir com nome vazio")]
+        public async Task Nao_deve_inserir_vazio()
+        {
+            var servicoEditora = GetServicoEditora();
+	
+            await servicoEditora.Inserir(new IdNomeExcluidoAuditavelDTO() { Nome = "     "}).ShouldThrowAsync<NegocioException>();
+        }
 
         [Fact(DisplayName = "Editora - Obter todos")]
         public async Task Obter_todos()
@@ -85,6 +101,32 @@ namespace SME.CDEP.TesteIntegracao.Usuario
 
             var editoraDTO = await servicoEditora.ObterPorId(2);
             editoraDTO.Nome = ConstantesTestes.COLOR;
+            
+            await servicoEditora.Alterar(editoraDTO).ShouldThrowAsync<NegocioException>();
+        }
+        
+        [Fact(DisplayName = "Editora - Não deve alterar pois já o nome é nulo")]
+        public async Task Nao_deve_atualizar_para_nome_nulo()
+        {
+            await InserirEditora();
+            
+            var servicoEditora = GetServicoEditora();
+
+            var editoraDTO = await servicoEditora.ObterPorId(2);
+            editoraDTO.Nome = null;
+            
+            await servicoEditora.Alterar(editoraDTO).ShouldThrowAsync<NegocioException>();
+        }
+
+        [Fact(DisplayName = "Editora - Não deve alterar pois já o nome é vazio")]
+        public async Task Nao_deve_atualizar_para_nome_vazio()
+        {
+            await InserirEditora();
+            
+            var servicoEditora = GetServicoEditora();
+
+            var editoraDTO = await servicoEditora.ObterPorId(2);
+            editoraDTO.Nome = "            ";
             
             await servicoEditora.Alterar(editoraDTO).ShouldThrowAsync<NegocioException>();
         }

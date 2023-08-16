@@ -26,6 +26,8 @@ namespace SME.CDEP.Aplicacao.Servicos
 
         public async Task<long> Inserir(D entidadeDto)
         {
+            ValidarNome(entidadeDto);
+            
             await ValidarDuplicado(entidadeDto.Nome, entidadeDto.Id);
                 
             var entidade = mapper.Map<E>(entidadeDto);
@@ -33,6 +35,12 @@ namespace SME.CDEP.Aplicacao.Servicos
             entidade.CriadoPor = contextoAplicacao.NomeUsuario;
             entidade.CriadoLogin = contextoAplicacao.UsuarioLogado;
             return await repositorio.Inserir(entidade);
+        }
+
+        private static void ValidarNome(D entidadeDto)
+        {
+            if (entidadeDto.Nome is null || entidadeDto.Nome.Trim().Length == 0)
+                throw new NegocioException(MensagemNegocio.NOME_NAO_INFORMADO);
         }
 
         public async Task<IList<D>> ObterTodos()
@@ -69,6 +77,8 @@ namespace SME.CDEP.Aplicacao.Servicos
 
         public async Task<D> Alterar(D entidadeDto)
         {
+            ValidarNome(entidadeDto);
+            
             await ValidarDuplicado(entidadeDto.Nome, entidadeDto.Id);
             
             var entidadeExistente = await repositorio.ObterPorId(entidadeDto.Id);
