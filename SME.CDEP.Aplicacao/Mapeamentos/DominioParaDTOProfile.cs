@@ -17,7 +17,6 @@ namespace SME.CDEP.Aplicacao.Mapeamentos
             CreateMap<IdNomeExcluidoDTO, Idioma>().ReverseMap();
             CreateMap<IdNomeTipoExcluidoDTO, Material>().ReverseMap();
             CreateMap<IdNomeTipoExcluidoDTO, Suporte>().ReverseMap();
-            CreateMap<IdNomeExcluidoDTO, TipoAnexo>().ReverseMap();
             CreateMap<IdNomeExcluidoAuditavelDTO, Credito>().ReverseMap();
             CreateMap<IdNomeExcluidoAuditavelDTO, Autor>().ReverseMap();
             CreateMap<IdNomeExcluidoAuditavelDTO, Editora>().ReverseMap();

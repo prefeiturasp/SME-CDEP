@@ -67,7 +67,6 @@ namespace SME.CDEP.TesteIntegracao.Setup
             _serviceCollection.TryAddScoped<IServicoIdioma, ServicoIdioma>();
             _serviceCollection.TryAddScoped<IServicoMaterial, ServicoMaterial>();
             _serviceCollection.TryAddScoped<IServicoSuporte, ServicoSuporte>();
-            _serviceCollection.TryAddScoped<IServicoTipoAnexo, ServicoTipoAnexo>();
             _serviceCollection.TryAddScoped<IServicoCredito, ServicoCredito>();
             _serviceCollection.TryAddScoped<IServicoAutor, ServicoAutor>();
             _serviceCollection.TryAddScoped<IServicoEditora, ServicoEditora>();

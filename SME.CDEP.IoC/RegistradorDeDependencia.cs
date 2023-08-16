@@ -82,7 +82,6 @@ public class RegistradorDeDependencia
             config.AddMap(new IdiomaMap());
             config.AddMap(new MaterialMap());
             config.AddMap(new SuporteMap());
-            config.AddMap(new TipoAnexoMap());
             config.AddMap(new CreditoMap());
             config.AddMap(new AutorMap());
             config.AddMap(new EditoraMap());
@@ -119,7 +118,6 @@ public class RegistradorDeDependencia
         _serviceCollection.TryAddScoped<IRepositorioIdioma, RepositorioIdioma>();
         _serviceCollection.TryAddScoped<IRepositorioMaterial, RepositorioMaterial>();
         _serviceCollection.TryAddScoped<IRepositorioSuporte, RepositorioSuporte>();
-        _serviceCollection.TryAddScoped<IRepositorioTipoAnexo, RepositorioTipoAnexo>();
         _serviceCollection.TryAddScoped<IRepositorioCredito, RepositorioCredito>();
         _serviceCollection.TryAddScoped<IRepositorioAutor, RepositorioAutor>();
         _serviceCollection.TryAddScoped<IRepositorioEditora, RepositorioEditora>();
@@ -139,7 +137,7 @@ public class RegistradorDeDependencia
         _serviceCollection.TryAddScoped<IServicoIdioma, ServicoIdioma>();
         _serviceCollection.TryAddScoped<IServicoMaterial, ServicoMaterial>();
         _serviceCollection.TryAddScoped<IServicoSuporte, ServicoSuporte>();
-        _serviceCollection.TryAddScoped<IServicoTipoAnexo, ServicoTipoAnexo>();
+        _serviceCollection.TryAddScoped<IServicoCEP, ServicoCEP>();
         _serviceCollection.TryAddScoped<IServicoCredito, ServicoCredito>();
         _serviceCollection.TryAddScoped<IServicoAutor, ServicoAutor>();
         _serviceCollection.TryAddScoped<IServicoEditora, ServicoEditora>();

@@ -93,4 +93,7 @@ public class ConstantesTestes
     
     public const TipoUsuario TIPO_USUARIO_SERVIDOR_PUBLICO = TipoUsuario.SERVIDOR_PUBLICO;
     public const TipoUsuario TIPO_USUARIO_CORESSO = 0;
+    
+    public const string PERFIL_EXTERNO_DESCRICAO = "Externo";
+    public const string PERFIL_EXTERNO_GUID = "3092428D-CA98-4788-9717-E706DF1945A0";
 }

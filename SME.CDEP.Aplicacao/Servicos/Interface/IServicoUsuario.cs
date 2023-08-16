@@ -20,6 +20,8 @@ namespace SME.CDEP.Aplicacao.Servicos.Interface
         Task<string> SolicitarRecuperacaoSenha(string login);
         Task<bool> TokenRecuperacaoSenhaEstaValido(Guid token);
         Task<RetornoPerfilUsuarioDTO?> AlterarSenhaComTokenRecuperacao(RecuperacaoSenhaDto recuperacaoSenhaDto);
+        Task<bool> ValidarCpfExistente(string cpf);
+        Task<bool> AlterarTipoUsuario(string login, TipoUsuarioExternoDTO tipoUsuario);
         IEnumerable<Permissao> ObterPermissoes();
     }
 }
