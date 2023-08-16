@@ -16,79 +16,79 @@ namespace SME.CDEP.TesteIntegracao.Usuario
         [Fact(DisplayName = "Usuário - A senha e a confirmação da senha devem ser iguais")]
         public async Task ValidarSenhasDiferentes()
         {
-            await GetServicoUsuario().CadastrarUsuarioExterno(new UsuarioExternoDTO(){Cpf = ConstantesTestes.CPF_999_999_999_99, Senha = ConstantesTestes.SENHA_TESTE, ConfirmarSenha = ConstantesTestes.SENHA_TESTE}).ShouldThrowAsync<NegocioException>();
+            await GetServicoUsuario().InserirUsuarioExterno(new UsuarioExternoDTO(){Cpf = ConstantesTestes.CPF_999_999_999_99, Senha = ConstantesTestes.SENHA_TESTE, ConfirmarSenha = ConstantesTestes.SENHA_TESTE}).ShouldThrowAsync<NegocioException>();
         }
         
         [Fact(DisplayName = "Usuário - A senha não pode ser menor que 8 caracteres")]
         public async Task ValidarSenhasMenores8Caracteres()
         {
-            await GetServicoUsuario().CadastrarUsuarioExterno(new UsuarioExternoDTO(){Cpf = ConstantesTestes.CPF_999_999_999_99, Senha = "Cdep@1", ConfirmarSenha = "Cdep@1"}).ShouldThrowAsync<NegocioException>();
+            await GetServicoUsuario().InserirUsuarioExterno(new UsuarioExternoDTO(){Cpf = ConstantesTestes.CPF_999_999_999_99, Senha = "Cdep@1", ConfirmarSenha = "Cdep@1"}).ShouldThrowAsync<NegocioException>();
         }
         
         [Fact(DisplayName = "Usuário - A senha não pode ser maior que 12 caracteres")]
         public async Task ValidarSenhasMaiores12Caracteres()
         {
-            await GetServicoUsuario().CadastrarUsuarioExterno(new UsuarioExternoDTO(){Cpf = ConstantesTestes.CPF_999_999_999_99, Senha = "Cdep@12345678910", ConfirmarSenha = "Cdep@12345678910"}).ShouldThrowAsync<NegocioException>();
+            await GetServicoUsuario().InserirUsuarioExterno(new UsuarioExternoDTO(){Cpf = ConstantesTestes.CPF_999_999_999_99, Senha = "Cdep@12345678910", ConfirmarSenha = "Cdep@12345678910"}).ShouldThrowAsync<NegocioException>();
         }
         
         [Fact(DisplayName = "Usuário - A senha não pode ter espaços em branco")]
         public async Task ValidarSenhasComEspacosEmBranco()
         {
-            await GetServicoUsuario().CadastrarUsuarioExterno(new UsuarioExternoDTO(){Cpf = ConstantesTestes.CPF_999_999_999_99, Senha = "Cdep @12", ConfirmarSenha = "Cdep @12"}).ShouldThrowAsync<NegocioException>();
+            await GetServicoUsuario().InserirUsuarioExterno(new UsuarioExternoDTO(){Cpf = ConstantesTestes.CPF_999_999_999_99, Senha = "Cdep @12", ConfirmarSenha = "Cdep @12"}).ShouldThrowAsync<NegocioException>();
         }
         
         [Fact(DisplayName = "Usuário - A senha deve conter pelo menos 1 letra maiúscula, 1 minúscula, 1 número e/ou 1 caractere especial e não pode conter acentuação")]
         public async Task ValidarSenhasConformeCriterios()
         {
-            await GetServicoUsuario().CadastrarUsuarioExterno(new UsuarioExternoDTO(){Cpf = ConstantesTestes.CPF_999_999_999_99, Senha = ConstantesTestes.SENHA_TESTE, ConfirmarSenha = ConstantesTestes.SENHA_TESTE}).ShouldThrowAsync<NegocioException>();
+            await GetServicoUsuario().InserirUsuarioExterno(new UsuarioExternoDTO(){Cpf = ConstantesTestes.CPF_999_999_999_99, Senha = ConstantesTestes.SENHA_TESTE, ConfirmarSenha = ConstantesTestes.SENHA_TESTE}).ShouldThrowAsync<NegocioException>();
         }
         
         [Fact(DisplayName = "Usuário - A senha não pode conter acentos em letras minusculas")]
         public async Task ValidarSenhasSemAcentosMinusculas()
         {
-            await GetServicoUsuario().CadastrarUsuarioExterno(new UsuarioExternoDTO(){Cpf = ConstantesTestes.CPF_999_999_999_99, Senha = "Cdép@1234", ConfirmarSenha = "Cdép@1234"}).ShouldThrowAsync<NegocioException>();
+            await GetServicoUsuario().InserirUsuarioExterno(new UsuarioExternoDTO(){Cpf = ConstantesTestes.CPF_999_999_999_99, Senha = "Cdép@1234", ConfirmarSenha = "Cdép@1234"}).ShouldThrowAsync<NegocioException>();
         }
         
         [Fact(DisplayName = "Usuário - A senha não pode conter acentos em letras minusculas - várias")]
         public async Task ValidarSenhasSemAcentosMinusculasVarias()
         {
-            await GetServicoUsuario().CadastrarUsuarioExterno(new UsuarioExternoDTO(){Cpf = ConstantesTestes.CPF_999_999_999_99, Senha = "Cdépáêíú@1234", ConfirmarSenha = "Cdépáêíú@1234"}).ShouldThrowAsync<NegocioException>();
+            await GetServicoUsuario().InserirUsuarioExterno(new UsuarioExternoDTO(){Cpf = ConstantesTestes.CPF_999_999_999_99, Senha = "Cdépáêíú@1234", ConfirmarSenha = "Cdépáêíú@1234"}).ShouldThrowAsync<NegocioException>();
         }
         
         [Fact(DisplayName = "Usuário - A senha não pode conter acentos em letras maiúsculas")]
         public async Task ValidarSenhasSemAcentosMaiusculas()
         {
-            await GetServicoUsuario().CadastrarUsuarioExterno(new UsuarioExternoDTO(){Cpf = ConstantesTestes.CPF_999_999_999_99, Senha = "CDÉPe@1234", ConfirmarSenha = "CDÉPe@1234"}).ShouldThrowAsync<NegocioException>();
+            await GetServicoUsuario().InserirUsuarioExterno(new UsuarioExternoDTO(){Cpf = ConstantesTestes.CPF_999_999_999_99, Senha = "CDÉPe@1234", ConfirmarSenha = "CDÉPe@1234"}).ShouldThrowAsync<NegocioException>();
         }
         
         [Fact(DisplayName = "Usuário - A senha não pode conter acentos em letras maiúsculas - várias")]
         public async Task ValidarSenhasSemAcentosMaiusculasVarias()
         {
-            await GetServicoUsuario().CadastrarUsuarioExterno(new UsuarioExternoDTO(){Cpf = ConstantesTestes.CPF_999_999_999_99, Senha = "CDÉPÁÊ@1234", ConfirmarSenha = "CDÉPÁÊ@1234"}).ShouldThrowAsync<NegocioException>();
+            await GetServicoUsuario().InserirUsuarioExterno(new UsuarioExternoDTO(){Cpf = ConstantesTestes.CPF_999_999_999_99, Senha = "CDÉPÁÊ@1234", ConfirmarSenha = "CDÉPÁÊ@1234"}).ShouldThrowAsync<NegocioException>();
         }
         
         [Fact(DisplayName = "Usuário - A senha deve conter letra maiúscula")]
         public async Task ValidarSenhasSemCaracterMaiusculo()
         {
-            await GetServicoUsuario().CadastrarUsuarioExterno(new UsuarioExternoDTO(){Cpf = ConstantesTestes.CPF_999_999_999_99, Senha = "cdep@1234", ConfirmarSenha = "cdep@1234"}).ShouldThrowAsync<NegocioException>();
+            await GetServicoUsuario().InserirUsuarioExterno(new UsuarioExternoDTO(){Cpf = ConstantesTestes.CPF_999_999_999_99, Senha = "cdep@1234", ConfirmarSenha = "cdep@1234"}).ShouldThrowAsync<NegocioException>();
         }
         
         [Fact(DisplayName = "Usuário - A senha deve conter letra minúscula")]
         public async Task ValidarSenhasSemCaracterMinusculo()
         {
-            await GetServicoUsuario().CadastrarUsuarioExterno(new UsuarioExternoDTO(){Cpf = ConstantesTestes.CPF_999_999_999_99, Senha = "CDEP@1234", ConfirmarSenha = "CEDEP@1234"}).ShouldThrowAsync<NegocioException>();
+            await GetServicoUsuario().InserirUsuarioExterno(new UsuarioExternoDTO(){Cpf = ConstantesTestes.CPF_999_999_999_99, Senha = "CDEP@1234", ConfirmarSenha = "CEDEP@1234"}).ShouldThrowAsync<NegocioException>();
         }
         
         [Fact(DisplayName = "Usuário - A senha deve conter números")]
         public async Task ValidarSenhasSemNumeros()
         {
-            await GetServicoUsuario().CadastrarUsuarioExterno(new UsuarioExternoDTO(){Cpf = ConstantesTestes.CPF_999_999_999_99, Senha = "CDEP@&&&&", ConfirmarSenha = "CDEP@&&&&"}).ShouldThrowAsync<NegocioException>();
+            await GetServicoUsuario().InserirUsuarioExterno(new UsuarioExternoDTO(){Cpf = ConstantesTestes.CPF_999_999_999_99, Senha = "CDEP@&&&&", ConfirmarSenha = "CDEP@&&&&"}).ShouldThrowAsync<NegocioException>();
         }
         
         [Fact(DisplayName = "Usuário - A senha deve conter números ou caracteres especiais")]
         public async Task ValidarSenhasSemNumerosECaracteresEspeciais()
         {
-            await GetServicoUsuario().CadastrarUsuarioExterno(new UsuarioExternoDTO(){Cpf = ConstantesTestes.CPF_999_999_999_99, Senha = "CDEPacdep", ConfirmarSenha = "CDEPacdep"}).ShouldThrowAsync<NegocioException>();
+            await GetServicoUsuario().InserirUsuarioExterno(new UsuarioExternoDTO(){Cpf = ConstantesTestes.CPF_999_999_999_99, Senha = "CDEPacdep", ConfirmarSenha = "CDEPacdep"}).ShouldThrowAsync<NegocioException>();
         }
         
         [Fact(DisplayName = "Usuário - O usuário já existe no Acervo")]
@@ -103,7 +103,7 @@ namespace SME.CDEP.TesteIntegracao.Usuario
                 CriadoLogin = ConstantesTestes.SISTEMA, CriadoPor = ConstantesTestes.SISTEMA, CriadoEm = DateTimeExtension.HorarioBrasilia().Date
             });
             
-            await GetServicoUsuario().CadastrarUsuarioExterno(new UsuarioExternoDTO()
+            await GetServicoUsuario().InserirUsuarioExterno(new UsuarioExternoDTO()
             {
                 Senha = "Cdep@1234", ConfirmarSenha = "Cdep@1234", Cpf = ConstantesTestes.CPF_999_999_999_99
             }).ShouldThrowAsync<NegocioException>();
@@ -123,7 +123,7 @@ namespace SME.CDEP.TesteIntegracao.Usuario
                 Endereco = ConstantesTestes.RUA_99999999999, Telefone = ConstantesTestes.TELEFONE_99_99999_9999,
                 Tipo = TipoUsuario.PROFESSOR
             };
-            var usuario = await GetServicoUsuario().CadastrarUsuarioExterno(usuarioExterno);
+            var usuario = await GetServicoUsuario().InserirUsuarioExterno(usuarioExterno);
             usuario.ShouldBeTrue();
             
             var usuarios = ObterTodos<Dominio.Entidades.Usuario>();
@@ -135,7 +135,7 @@ namespace SME.CDEP.TesteIntegracao.Usuario
         [Fact(DisplayName = "Usuário - O usuário já existe no CoreSSO")]
         public async Task ValidarUsuarioExistenteCoreSSO()
         {
-            await GetServicoUsuario().CadastrarUsuarioExterno(new UsuarioExternoDTO()
+            await GetServicoUsuario().InserirUsuarioExterno(new UsuarioExternoDTO()
             {
                 Senha = "Cdep@1234", ConfirmarSenha = "Cdep@1234", Cpf = ConstantesTestes.LOGIN_99999999998,
             }).ShouldThrowAsync<NegocioException>();

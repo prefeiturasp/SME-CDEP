@@ -1,6 +1,7 @@
 ﻿using Shouldly;
 using SME.CDEP.Aplicacao.DTOS;
 using SME.CDEP.Dominio.Entidades;
+using SME.CDEP.Dominio.Excecoes;
 using SME.CDEP.Infra.Dominio.Enumerados;
 using SME.CDEP.TesteIntegracao.Setup;
 using SME.CDEP.TesteIntegracao.Constantes;
@@ -22,6 +23,16 @@ namespace SME.CDEP.TesteIntegracao.Usuario
             formato.ShouldBeGreaterThan(0);
             var obterTodos = ObterTodos<Formato>();
             obterTodos.Count.ShouldBe(1);
+        }
+        
+        [Fact(DisplayName = "Formato - Não deve inserir pois já existe cadastro com esse nome")]
+        public async Task Nao_deve_para_cadastros_duplicados()
+        {
+            await InserirFormatos();
+            
+            var servicoFormato = GetServicoFormato();
+
+            await servicoFormato.Inserir(new IdNomeTipoExcluidoDTO(){Nome = ConstantesTestes.VOB,Tipo = (int)TipoFormato.ACERVO_AUDIOVISUAL}).ShouldThrowAsync<NegocioException>();
         }
 
         [Fact(DisplayName = "Formato - Obter todos")]
@@ -63,6 +74,19 @@ namespace SME.CDEP.TesteIntegracao.Usuario
             
             acessosDocumentosDto.ShouldNotBeNull();
             acessosDocumentosDto.Nome = ConstantesTestes.IMPRESSO;
+        }
+        
+        [Fact(DisplayName = "Formato - Não deve alterar pois já existe cadastro com esse nome")]
+        public async Task Nao_deve_atualizar_para_cadastros_duplicados()
+        {
+            await InserirFormatos();
+            
+            var servicoFormato = GetServicoFormato();
+
+            var formato = await servicoFormato.ObterPorId(3);
+            formato.Nome = ConstantesTestes.VOB;
+            
+            await servicoFormato.Alterar(formato).ShouldThrowAsync<NegocioException>();
         }
         
         [Fact(DisplayName = "Formato - Excluir")]

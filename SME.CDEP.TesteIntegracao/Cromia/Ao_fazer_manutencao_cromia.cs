@@ -1,6 +1,7 @@
 ﻿using Shouldly;
 using SME.CDEP.Aplicacao.DTOS;
 using SME.CDEP.Dominio.Entidades;
+using SME.CDEP.Dominio.Excecoes;
 using SME.CDEP.TesteIntegracao.Setup;
 using SME.CDEP.TesteIntegracao.Constantes;
 using Xunit;
@@ -22,6 +23,16 @@ namespace SME.CDEP.TesteIntegracao.Usuario
             var obterTodos = ObterTodos<Cromia>();
             obterTodos.Count.ShouldBe(1);
         }
+        
+        [Fact(DisplayName = "Cromia - Não deve inserir pois já existe cadastro com esse nome")]
+        public async Task Nao_deve_inserir()
+        {
+            await InserirCromias();
+            
+            var servicoCromia = GetServicoCromia();
+
+            await servicoCromia.Inserir(new IdNomeExcluidoDTO(){Nome = ConstantesTestes.PB}).ShouldThrowAsync<NegocioException>();
+        }
 
         [Fact(DisplayName = "Cromia - Obter todos")]
         public async Task Obter_todos()
@@ -29,9 +40,9 @@ namespace SME.CDEP.TesteIntegracao.Usuario
             await InserirCromias();
             var servicoCromia = GetServicoCromia();
 
-            var acessoDocumentoDtos = await servicoCromia.ObterTodos();
-            acessoDocumentoDtos.ShouldNotBeNull();
-            acessoDocumentoDtos.Count.ShouldBe(2);
+            var cromiaDTO = await servicoCromia.ObterTodos();
+            cromiaDTO.ShouldNotBeNull();
+            cromiaDTO.Count.ShouldBe(2);
         }
 
         [Fact(DisplayName = "Cromia - Obter por id")]
@@ -41,10 +52,10 @@ namespace SME.CDEP.TesteIntegracao.Usuario
             
             var servicoCromia = GetServicoCromia();
 
-            var acessoDocumentoDto = await servicoCromia.ObterPorId(1);
-            acessoDocumentoDto.ShouldNotBeNull();
-            acessoDocumentoDto.Id.ShouldBe(1);
-            acessoDocumentoDto.Nome.ShouldBe(ConstantesTestes.COLOR);
+            var cromiaDTO = await servicoCromia.ObterPorId(1);
+            cromiaDTO.ShouldNotBeNull();
+            cromiaDTO.Id.ShouldBe(1);
+            cromiaDTO.Nome.ShouldBe(ConstantesTestes.COLOR);
         }
 
         [Fact(DisplayName = "Cromia - Atualizar")]
@@ -54,13 +65,26 @@ namespace SME.CDEP.TesteIntegracao.Usuario
             
             var servicoCromia = GetServicoCromia();
 
-            var acessoDocumentoDto = await servicoCromia.ObterPorId(2);
-            acessoDocumentoDto.Nome = ConstantesTestes.TRANSPARENTE;
+            var cromiaDTO = await servicoCromia.ObterPorId(2);
+            cromiaDTO.Nome = ConstantesTestes.TRANSPARENTE;
             
-            var acessosDocumentosDto = await servicoCromia.Alterar(acessoDocumentoDto);
+            var cromiaAlteradaDTO = await servicoCromia.Alterar(cromiaDTO);
             
-            acessosDocumentosDto.ShouldNotBeNull();
-            acessosDocumentosDto.Nome = ConstantesTestes.TRANSPARENTE;
+            cromiaAlteradaDTO.ShouldNotBeNull();
+            cromiaAlteradaDTO.Nome = ConstantesTestes.TRANSPARENTE;
+        }
+        
+        [Fact(DisplayName = "Cromia - Não deve alterar pois já existe cadastro com esse nome")]
+        public async Task Nao_deve_atualizar_para_cadastros_duplicados()
+        {
+            await InserirCromias();
+            
+            var servicoCromia = GetServicoCromia();
+
+            var cromiaDTO = await servicoCromia.ObterPorId(2);
+            cromiaDTO.Nome = ConstantesTestes.COLOR;
+            
+            await servicoCromia.Alterar(cromiaDTO).ShouldThrowAsync<NegocioException>();
         }
         
         [Fact(DisplayName = "Cromia - Excluir")]

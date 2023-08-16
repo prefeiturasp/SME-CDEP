@@ -23,6 +23,9 @@ namespace SME.CDEP.Webapi.Contexto;
             Variaveis.Add("UsuarioLogado", httpContextAccessor.HttpContext?.User?.Identity?.Name ?? "Sistema");
             Variaveis.Add("NomeUsuario", httpContextAccessor.HttpContext?.User?.FindFirst("Nome")?.Value ?? "Sistema");
             Variaveis.Add("PerfilUsuario", ObterPerfilAtual());
+            Variaveis.Add("NumeroPagina", httpContextAccessor.HttpContext?.Request?.Query["NumeroPagina"].FirstOrDefault() ?? "0");
+            Variaveis.Add("NumeroRegistros", httpContextAccessor.HttpContext?.Request?.Query["NumeroRegistros"].FirstOrDefault() ?? "0");
+            Variaveis.Add("Ordenacao", httpContextAccessor.HttpContext?.Request?.Query["Ordenacao"].FirstOrDefault() ?? "0");
             
             var authorizationHeader = httpContextAccessor.HttpContext?.Request?.Headers["authorization"];
 
@@ -38,9 +41,9 @@ namespace SME.CDEP.Webapi.Contexto;
             }
         }
 
-        private IEnumerable<InternalClaim> GetInternalClaim()
+        private List<Tuple<string, string>> GetInternalClaim()
         {
-            return (httpContextAccessor.HttpContext?.User?.Claims ?? Enumerable.Empty<Claim>()).Select(x => new InternalClaim() { Type = x.Type, Value = x.Value }).ToList();
+            return (httpContextAccessor.HttpContext?.User?.Claims ?? default).Select(x => new Tuple<string, string>(x.Type, x.Value)).ToList();
         }
 
         private string ObterPerfilAtual()

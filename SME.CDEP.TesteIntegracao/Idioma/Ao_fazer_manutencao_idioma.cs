@@ -1,6 +1,7 @@
 ﻿using Shouldly;
 using SME.CDEP.Aplicacao.DTOS;
 using SME.CDEP.Dominio.Entidades;
+using SME.CDEP.Dominio.Excecoes;
 using SME.CDEP.TesteIntegracao.Setup;
 using SME.CDEP.TesteIntegracao.Constantes;
 using Xunit;
@@ -21,6 +22,16 @@ namespace SME.CDEP.TesteIntegracao.Usuario
             idioma.ShouldBeGreaterThan(0);
             var obterTodos = ObterTodos<Idioma>();
             obterTodos.Count.ShouldBe(1);
+        }
+        
+        [Fact(DisplayName = "Idioma - Não deve inserir pois já existe cadastro com esse nome")]
+        public async Task Nao_deve_para_cadastros_duplicados()
+        {
+            await InserirIdiomas();
+            
+            var servicoIdioma = GetServicoIdioma();
+
+            await servicoIdioma.Inserir(new IdNomeExcluidoDTO(){Nome = ConstantesTestes.PORTUGUES}).ShouldThrowAsync<NegocioException>();
         }
 
         [Fact(DisplayName = "Idioma - Obter todos")]
@@ -61,6 +72,19 @@ namespace SME.CDEP.TesteIntegracao.Usuario
             
             idiomasAlterados.ShouldNotBeNull();
             idiomasAlterados.Nome = ConstantesTestes.ITALIANO;
+        }
+        
+        [Fact(DisplayName = "Idioma - Não deve alterar pois já existe cadastro com esse nome")]
+        public async Task Nao_deve_atualizar_para_cadastros_duplicados()
+        {
+            await InserirIdiomas();
+            
+            var servicoIdioma = GetServicoIdioma();
+
+            var idioma = await servicoIdioma.ObterPorId(3);
+            idioma.Nome = ConstantesTestes.PORTUGUES;
+            
+            await servicoIdioma.Alterar(idioma).ShouldThrowAsync<NegocioException>();
         }
         
         [Fact(DisplayName = "Idioma - Excluir")]

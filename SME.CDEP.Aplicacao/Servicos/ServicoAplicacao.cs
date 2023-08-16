@@ -2,6 +2,8 @@
 using SME.CDEP.Aplicacao.DTOS;
 using SME.CDEP.Aplicacao.Servicos.Interface;
 using SME.CDEP.Dominio;
+using SME.CDEP.Dominio.Constantes;
+using SME.CDEP.Dominio.Excecoes;
 using SME.CDEP.Dominio.Repositorios;
 
 namespace SME.CDEP.Aplicacao.Servicos
@@ -22,7 +24,7 @@ namespace SME.CDEP.Aplicacao.Servicos
             var entidade = mapper.Map<E>(entidadeDto);
             return repositorio.Inserir(entidade);
         }
-
+        
         public async Task<IList<D>> ObterTodos()
         {
             return (await repositorio.ObterTodos()).Where(w=> !w.Excluido).Select(s=> mapper.Map<D>(s)).ToList();
@@ -36,7 +38,8 @@ namespace SME.CDEP.Aplicacao.Servicos
 
         public async Task<D> ObterPorId(long entidadeId)
         {
-            return mapper.Map<D>(await repositorio.ObterPorId(entidadeId));
+            var retorno = await repositorio.ObterPorId(entidadeId);
+            return mapper.Map<D>(retorno.Excluido ? default : retorno);
         }
 
         public async Task<bool> Excluir(long entidaId)

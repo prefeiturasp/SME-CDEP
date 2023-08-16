@@ -1,4 +1,5 @@
 ﻿using SME.CDEP.Aplicacao.DTOS;
+using SME.CDEP.Infra.Dominio.Enumerados;
 
 namespace SME.CDEP.Aplicacao.Servicos.Interface
 {
@@ -8,9 +9,9 @@ namespace SME.CDEP.Aplicacao.Servicos.Interface
         Task<IList<UsuarioDTO>> ObterTodos();
         Task<UsuarioDTO> Alterar(UsuarioDTO usuarioDTO);
         Task<UsuarioDTO> ObterPorId(long usuarioId);
-        Task<UsuarioAutenticacaoRetornoDTO> Autenticar(string login, string senha);
+        Task<RetornoPerfilUsuarioDTO> Autenticar(string login, string senha);
         Task<UsuarioDTO> ObterPorLogin(string login);
-        Task<bool> CadastrarUsuarioExterno(UsuarioExternoDTO usuarioExternoDto);
+        Task<bool> InserirUsuarioExterno(UsuarioExternoDTO usuarioExternoDto);
         Task<DadosUsuarioDTO> ObterMeusDados(string login);
         Task<bool> AlterarSenha(string login, AlterarSenhaUsuarioDTO alterarSenhaUsuarioDto);
         Task<bool> AlterarEmail(string login, string email);
@@ -21,5 +22,6 @@ namespace SME.CDEP.Aplicacao.Servicos.Interface
         Task<RetornoPerfilUsuarioDTO?> AlterarSenhaComTokenRecuperacao(RecuperacaoSenhaDto recuperacaoSenhaDto);
         Task<bool> ValidarCpfExistente(string cpf);
         Task<bool> AlterarTipoUsuario(string login, TipoUsuarioExternoDTO tipoUsuario);
+        IEnumerable<Permissao> ObterPermissoes();
     }
 }

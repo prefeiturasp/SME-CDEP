@@ -1,5 +1,6 @@
 ﻿using SME.CDEP.Aplicacao.DTOS;
 using SME.CDEP.Aplicacao.Integracoes.Interfaces;
+using SME.CDEP.Infra.Dominio.Enumerados;
 using SME.CDEP.TesteIntegracao.Constantes;
 
 namespace SME.CDEP.TesteIntegracao.ServicosFakes;
@@ -18,7 +19,23 @@ public class ServicoAcessosFake : IServicoAcessos
 
     public Task<RetornoPerfilUsuarioDTO> ObterPerfisUsuario(string login)
     {
-        throw new NotImplementedException();
+        return Task.FromResult(new RetornoPerfilUsuarioDTO()
+        {
+            Email = ConstantesTestes.EMAIL_INTERNO,
+            Autenticado = true,
+            Token = Guid.NewGuid().ToString(),
+            PerfilUsuario = new List<PerfilUsuarioDTO>()
+            {
+                new PerfilUsuarioDTO()
+                {
+                    Perfil = new Guid(ConstantesTestes.PERFIL_EXTERNO_GUID),
+                    PerfilNome = ConstantesTestes.PERFIL_EXTERNO_DESCRICAO
+                }
+            },
+            UsuarioLogin = ConstantesTestes.LOGIN_99999999999,
+            UsuarioNome = ConstantesTestes.USUARIO_INTERNO_99999999999,
+            DataHoraExpiracao = DateTimeExtension.HorarioBrasilia().AddMinutes(20)
+        });
     }
 
     public Task<bool> UsuarioCadastradoCoreSSO(string login)

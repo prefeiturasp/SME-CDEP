@@ -23,7 +23,6 @@ using SME.CDEP.Infra.Servicos.Options;
 using SME.CDEP.Infra.Servicos.Polly;
 using SME.CDEP.Infra.Servicos.Telemetria.IoC;
 using SME.CDEP.IoC.Extensions;
-using Usuario = SME.CDEP.Infra.Dados.Mapeamentos.Usuario;
 
 namespace SME.CDEP.IoC;
 
@@ -75,7 +74,7 @@ public class RegistradorDeDependencia
     {
         FluentMapper.Initialize(config =>
         {
-            config.AddMap(new Usuario());
+            config.AddMap(new UsuarioMap());
             config.AddMap(new AcessoDocumentoMap());
             config.AddMap(new ConservacaoMap());
             config.AddMap(new CromiaMap());
@@ -83,6 +82,11 @@ public class RegistradorDeDependencia
             config.AddMap(new IdiomaMap());
             config.AddMap(new MaterialMap());
             config.AddMap(new SuporteMap());
+            config.AddMap(new CreditoMap());
+            config.AddMap(new AutorMap());
+            config.AddMap(new EditoraMap());
+            config.AddMap(new AssuntoMap());
+            config.AddMap(new SerieColecaoMap());
 
             config.ForDommel();
         });
@@ -114,6 +118,11 @@ public class RegistradorDeDependencia
         _serviceCollection.TryAddScoped<IRepositorioIdioma, RepositorioIdioma>();
         _serviceCollection.TryAddScoped<IRepositorioMaterial, RepositorioMaterial>();
         _serviceCollection.TryAddScoped<IRepositorioSuporte, RepositorioSuporte>();
+        _serviceCollection.TryAddScoped<IRepositorioCredito, RepositorioCredito>();
+        _serviceCollection.TryAddScoped<IRepositorioAutor, RepositorioAutor>();
+        _serviceCollection.TryAddScoped<IRepositorioEditora, RepositorioEditora>();
+        _serviceCollection.TryAddScoped<IRepositorioAssunto, RepositorioAssunto>();
+        _serviceCollection.TryAddScoped<IRepositorioSerieColecao, RepositorioSerieColecao>();
     }
 
     protected virtual void RegistrarServicos()
@@ -127,8 +136,13 @@ public class RegistradorDeDependencia
         _serviceCollection.TryAddScoped<IServicoFormato, ServicoFormato>();
         _serviceCollection.TryAddScoped<IServicoIdioma, ServicoIdioma>();
         _serviceCollection.TryAddScoped<IServicoMaterial, ServicoMaterial>();
-        _serviceCollection.TryAddScoped<IServicoSuporte, ServicoSuporte>();
-        _serviceCollection.TryAddScoped<IServicoCEP, ServicoCEP>();
+        _serviceCollection.TryAddScoped<IServicoSuporte, ServicoSuporte>();        
+        _serviceCollection.TryAddScoped<IServicoCredito, ServicoCredito>();
+        _serviceCollection.TryAddScoped<IServicoAutor, ServicoAutor>();
+        _serviceCollection.TryAddScoped<IServicoEditora, ServicoEditora>();
+        _serviceCollection.TryAddScoped<IServicoAssunto, ServicoAssunto>();
+        _serviceCollection.TryAddScoped<IServicoSerieColecao, ServicoSerieColecao>();
+        _serviceCollection.TryAddScoped<IServicoMenu, ServicoMenu>();
     }
     protected virtual void RegistrarHttpClients()
     {

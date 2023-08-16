@@ -1,6 +1,7 @@
 ﻿using Shouldly;
 using SME.CDEP.Aplicacao.DTOS;
 using SME.CDEP.Dominio.Entidades;
+using SME.CDEP.Dominio.Excecoes;
 using SME.CDEP.TesteIntegracao.Setup;
 using SME.CDEP.TesteIntegracao.Constantes;
 using Xunit;
@@ -21,6 +22,16 @@ namespace SME.CDEP.TesteIntegracao.Usuario
             acessoDocumento.ShouldBeGreaterThan(0);
             var obterTodos = ObterTodos<AcessoDocumento>();
             obterTodos.Count.ShouldBe(1);
+        }
+        
+        [Fact(DisplayName = "Acesso Documento - Não deve inserir pois já existe cadastro com esse nome")]
+        public async Task Nao_deve_inserir_duplicado()
+        {
+            await InserirAcessoDocumentos();
+            
+            var servicoAcessoDocumento = GetServicoAcessoDocumento();
+
+            await servicoAcessoDocumento.Inserir(new IdNomeExcluidoDTO(){Nome = ConstantesTestes.DIGITAL_E_FISICO}).ShouldThrowAsync<NegocioException>();
         }
 
         [Fact(DisplayName = "Acesso Documento - Obter todos")]
@@ -55,12 +66,25 @@ namespace SME.CDEP.TesteIntegracao.Usuario
             var servicoAcessoDocumento = GetServicoAcessoDocumento();
 
             var acessoDocumentoDto = await servicoAcessoDocumento.ObterPorId(3);
-            acessoDocumentoDto.Nome = ConstantesTestes.DIGITAL;
+            acessoDocumentoDto.Nome = ConstantesTestes.VDF;
             
             var acessosDocumentosDto = await servicoAcessoDocumento.Alterar(acessoDocumentoDto);
             
             acessosDocumentosDto.ShouldNotBeNull();
-            acessosDocumentosDto.Nome = ConstantesTestes.DIGITAL;
+            acessosDocumentosDto.Nome = ConstantesTestes.VDF;
+        }
+        
+        [Fact(DisplayName = "Acesso Documento - Não deve alterar pois já existe cadastro com esse nome")]
+        public async Task Nao_deve_atualizar_para_cadastros_duplicados()
+        {
+            await InserirAcessoDocumentos();
+            
+            var servicoAcessoDocumento = GetServicoAcessoDocumento();
+
+            var acessoDocumentoDto = await servicoAcessoDocumento.ObterPorId(3);
+            acessoDocumentoDto.Nome = ConstantesTestes.DIGITAL;
+            
+            await servicoAcessoDocumento.Alterar(acessoDocumentoDto).ShouldThrowAsync<NegocioException>();
         }
         
         [Fact(DisplayName = "Acesso Documento - Excluir")]

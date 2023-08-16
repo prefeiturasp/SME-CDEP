@@ -7,6 +7,7 @@ using SME.CDEP.Dominio.Entidades;
 using SME.CDEP.Dominio.Excecoes;
 using SME.CDEP.Infra.Dados.Repositorios.Interfaces;
 using SME.CDEP.Aplicacao.Integracoes.Interfaces;
+using SME.CDEP.Dominio.Contexto;
 using SME.CDEP.Infra.Dominio.Enumerados;
 
 namespace SME.CDEP.Aplicacao.Servicos
@@ -17,13 +18,16 @@ namespace SME.CDEP.Aplicacao.Servicos
         private readonly IServicoAcessos servicoAcessos;
         private readonly IMapper mapper;
         private readonly IServicoPerfilUsuario servicoPerfilUsuario;
+        private readonly IContextoAplicacao contextoAplicacao;
         
-        public ServicoUsuario(IRepositorioUsuario repositorioUsuario,IServicoAcessos servicoAcessos, IMapper mapper,IServicoPerfilUsuario servicoPerfilUsuario) 
+        public ServicoUsuario(IRepositorioUsuario repositorioUsuario,IServicoAcessos servicoAcessos, 
+            IMapper mapper,IServicoPerfilUsuario servicoPerfilUsuario,IContextoAplicacao contextoAplicacao) 
         {
             this.repositorioUsuario = repositorioUsuario ?? throw new ArgumentNullException(nameof(repositorioUsuario));
             this.servicoAcessos = servicoAcessos ?? throw new ArgumentNullException(nameof(servicoAcessos));
             this.mapper = mapper ?? throw new ArgumentNullException(nameof(mapper));
             this.servicoPerfilUsuario = servicoPerfilUsuario ?? throw new ArgumentNullException(nameof(servicoPerfilUsuario));
+            this.contextoAplicacao = contextoAplicacao ?? throw new ArgumentNullException(nameof(contextoAplicacao));
         }
 
         public async Task<long> Inserir(UsuarioDTO usuarioDto)
@@ -53,7 +57,7 @@ namespace SME.CDEP.Aplicacao.Servicos
             return mapper.Map<UsuarioDTO>(await repositorioUsuario.ObterPorLogin(login));
         }
 
-        public async Task<bool> CadastrarUsuarioExterno(UsuarioExternoDTO usuarioExternoDto)
+        public async Task<bool> InserirUsuarioExterno(UsuarioExternoDTO usuarioExternoDto)
         {
             usuarioExternoDto.Cpf = usuarioExternoDto.Cpf.Replace(".","").Replace("-","");
             ValidarSenha(usuarioExternoDto.Senha, usuarioExternoDto.ConfirmarSenha);
@@ -191,13 +195,16 @@ namespace SME.CDEP.Aplicacao.Servicos
                 throw new NegocioException(erros);
         }
 
-        public async Task<UsuarioAutenticacaoRetornoDTO> Autenticar(string login, string senha)
+        public async Task<RetornoPerfilUsuarioDTO> Autenticar(string login, string senha)
         {
-            var retorno = await servicoAcessos.Autenticar(login, senha);
-
-            await ManutencaoUsuario(login, retorno);
+            var retornoAutenticacao = await servicoAcessos.Autenticar(login, senha);
             
-            return retorno;
+            if (string.IsNullOrEmpty(retornoAutenticacao.Login))
+                throw new NegocioException(MensagemNegocio.USUARIO_OU_SENHA_INVALIDOS);
+
+            await ManutencaoUsuario(login, retornoAutenticacao);
+            
+            return await servicoPerfilUsuario.ObterPerfisUsuario(login);
         }
 
         private async Task ManutencaoUsuario(string login, UsuarioAutenticacaoRetornoDTO retorno)
@@ -257,6 +264,17 @@ namespace SME.CDEP.Aplicacao.Servicos
         public async Task<bool> ValidarCpfExistente(string cpf)
         {
             return await ValidarCpfEmUsuarioAcervoECoreSSO(cpf);
+        }
+
+        public IEnumerable<Permissao> ObterPermissoes()
+        {
+            var claims = contextoAplicacao.ObterVariavel(Constantes.CLAIMS).Where(a => a.Item1 == Constantes.CLAIM_PERMISSAO);
+            var retorno = new List<Permissao>();
+
+            if (claims.Any())
+                retorno.AddRange(claims.Select(claim => (Permissao)Enum.Parse(typeof(Permissao), claim.Item2)));
+            
+            return retorno;
         }
     }
 }

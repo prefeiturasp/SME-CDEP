@@ -127,10 +127,35 @@ namespace SME.CDEP.TesteIntegracao
             return ObterServicoAplicacao<IServicoSuporte>();
         }
         
+        protected IServicoCredito GetServicoCredito()
+        {
+            return ObterServicoAplicacao<IServicoCredito>();
+        }
+        
+        protected IServicoAutor GetServicoAutor()
+        {
+            return ObterServicoAplicacao<IServicoAutor>();
+        }
+        
+        protected IServicoEditora GetServicoEditora()
+        {
+            return ObterServicoAplicacao<IServicoEditora>();
+        }
+        
+        protected IServicoAssunto GetServicoAssunto()
+        {
+            return ObterServicoAplicacao<IServicoAssunto>();
+        }
+        
+        protected IServicoSerieColecao GetServicoSerieColecao()
+        {
+            return ObterServicoAplicacao<IServicoSerieColecao>();
+        }
+        
         public T ObterServicoAplicacao<T>()
             where T : IServicoAplicacao
         {
-            return ServiceProvider.GetService<T>() ?? throw new Exception($"Servi�o {typeof(T).Name} n�o registrado!");
+            return ServiceProvider.GetService<T>() ?? throw new Exception($"Serviço {typeof(T).Name} não registrado!");
         }
         
         protected void CriarClaimUsuario()
@@ -150,10 +175,7 @@ namespace SME.CDEP.TesteIntegracao
                 { ConstantesTestes.USUARIO_LOGADO_CHAVE, ConstantesTestes.LOGIN_123456789 },
                 {
                     ConstantesTestes.USUARIO_CLAIMS_CHAVE,
-                    new List<InternalClaim> {
-                        new InternalClaim { Value = rfLoginPerfil, Type = ConstantesTestes.USUARIO_CLAIM_TIPO_RF },
-                        // new InternalClaim { Value = perfil, Type = USUARIO_CLAIM_TIPO_PERFIL }
-                    }
+                    new Tuple<string, string>(rfLoginPerfil, ConstantesTestes.USUARIO_CLAIM_TIPO_RF)
                 }
             };
         }

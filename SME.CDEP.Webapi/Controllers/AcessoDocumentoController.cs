@@ -16,9 +16,20 @@ public class AcessoDocumentoController: BaseController
     [ProducesResponseType(typeof(RetornoBaseDTO), 500)]
     [ProducesResponseType(typeof(RetornoBaseDTO), 601)]
     [Authorize("Bearer")]
-    public async Task<IActionResult> CadastrarAlterar([FromBody] IdNomeExcluidoDTO acessoDocumentoDTO, [FromServices] IServicoAcessoDocumento servicoAcessoDocumento)
+    public async Task<IActionResult> Inserir([FromBody] NomeDTO acessoDocumento, [FromServices] IServicoAcessoDocumento servicoAcessoDocumento)
     {
-        return acessoDocumentoDTO.Id > 0 ? Ok(await servicoAcessoDocumento.Alterar(acessoDocumentoDTO)) : Ok(await servicoAcessoDocumento.Inserir(acessoDocumentoDTO));
+        return Ok(await servicoAcessoDocumento.Inserir(new IdNomeExcluidoDTO() { Nome = acessoDocumento.Nome}));
+    }
+    
+    [HttpPut]
+    [ProducesResponseType(typeof(IdNomeExcluidoDTO), 200)]
+    [ProducesResponseType(typeof(RetornoBaseDTO), 400)]
+    [ProducesResponseType(typeof(RetornoBaseDTO), 500)]
+    [ProducesResponseType(typeof(RetornoBaseDTO), 601)]
+    [Authorize("Bearer")]
+    public async Task<IActionResult> Alterar([FromBody] IdNomeDTO acessoDocumento, [FromServices] IServicoAcessoDocumento servicoAcessoDocumento)
+    {
+        return Ok(await servicoAcessoDocumento.Alterar(new IdNomeExcluidoDTO() {Id = acessoDocumento.Id, Nome = acessoDocumento.Nome}));
     }
 
     [HttpGet]

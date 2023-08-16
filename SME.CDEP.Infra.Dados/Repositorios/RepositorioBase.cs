@@ -1,6 +1,9 @@
+using Dapper;
 using Dommel;
 using SME.CDEP.Dominio;
+using SME.CDEP.Dominio.Constantes;
 using SME.CDEP.Dominio.Contexto;
+using SME.CDEP.Dominio.Excecoes;
 using SME.CDEP.Dominio.Repositorios;
 using SME.CDEP.Infra.Dominio.Enumerados;
 
@@ -27,14 +30,32 @@ public abstract class RepositorioBase<TEntidade> : IRepositorioBase<TEntidade>
 
     public async Task<long> Inserir(TEntidade entidade)
     {
-        entidade.Id = (long)await conexao.Obter().InsertAsync(entidade);
-        return entidade.Id;
+        try
+        {
+            entidade.Id = (long)await conexao.Obter().InsertAsync(entidade);
+            return entidade.Id;
+        }
+        catch (Exception e)
+        {
+            if (e.Message.Contains(Constantes.VIOLACAO_CONSTRAINT_DUPLICACAO_REGISTROS_CODIGO))
+                throw new NegocioException(Constantes.VIOLACAO_CONSTRAINT_DUPLICACAO_REGISTROS_MENSAGEM);
+            throw;
+        }
     }
 
     public async Task<TEntidade> Atualizar(TEntidade entidade)
     {
-       await conexao.Obter().UpdateAsync(entidade);
-       return entidade;
+        try
+        {
+            await conexao.Obter().UpdateAsync(entidade);
+            return entidade;
+        }
+        catch (Exception e)
+        {
+            if (e.Message.Contains(Constantes.VIOLACAO_CONSTRAINT_DUPLICACAO_REGISTROS_CODIGO))
+                throw new NegocioException(Constantes.VIOLACAO_CONSTRAINT_DUPLICACAO_REGISTROS_MENSAGEM);
+            throw;
+        }
     }
 
     public async Task Remover(TEntidade entidade)
@@ -45,5 +66,11 @@ public abstract class RepositorioBase<TEntidade> : IRepositorioBase<TEntidade>
     public async Task Remover(long id)
     {
         throw new NotImplementedException();
+    }
+
+    public async Task<IList<TEntidade>> PesquisarPorNome(string nome)
+    {
+        var tableName = Resolvers.Table(typeof(TEntidade), conexao.Obter());
+        return (await conexao.Obter().QueryAsync<TEntidade>($"select * from {tableName} where lower(nome) like '%{nome.ToLower()}%' and not excluido ")).ToList();
     }
 }
