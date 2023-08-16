@@ -25,6 +25,22 @@ namespace SME.CDEP.TesteIntegracao.Usuario
             var obterTodos = ObterTodos<Assunto>();
             obterTodos.Count.ShouldBe(1);
         }
+        
+        [Fact(DisplayName = "Assunto - Não deve inserir com nome nulo")]
+        public async Task Nao_deve_inserir_nulo()
+        {
+            var servicoAssunto = GetServicoAssunto();
+            
+            await servicoAssunto.Inserir(new IdNomeExcluidoAuditavelDTO()).ShouldThrowAsync<NegocioException>();
+        }
+        
+        [Fact(DisplayName = "Assunto - Não deve inserir com nome vazio")]
+        public async Task Nao_deve_inserir_vazio()
+        {
+            var servicoAssunto = GetServicoAssunto();
+            
+            await servicoAssunto.Inserir(new IdNomeExcluidoAuditavelDTO() { Nome = "     "}).ShouldThrowAsync<NegocioException>();
+        }
       
         [Fact(DisplayName = "Assunto - Não deve inserir pois já existe cadastro com esse nome")]
         public async Task Nao_deve_inserir()
@@ -105,6 +121,32 @@ namespace SME.CDEP.TesteIntegracao.Usuario
 
             var assuntoDTO = await servicoAssunto.ObterPorId(2);
             assuntoDTO.Nome = ConstantesTestes.COLOR;
+            
+            await servicoAssunto.Alterar(assuntoDTO).ShouldThrowAsync<NegocioException>();
+        }
+        
+        [Fact(DisplayName = "Assunto - Não deve alterar pois já o nome é nulo")]
+        public async Task Nao_deve_atualizar_para_nome_nulo()
+        {
+            await InserirAssunto();
+            
+            var servicoAssunto = GetServicoAssunto();
+
+            var assuntoDTO = await servicoAssunto.ObterPorId(2);
+            assuntoDTO.Nome = null;
+            
+            await servicoAssunto.Alterar(assuntoDTO).ShouldThrowAsync<NegocioException>();
+        }
+        
+        [Fact(DisplayName = "Assunto - Não deve alterar pois já o nome é vazio")]
+        public async Task Nao_deve_atualizar_para_nome_vazio()
+        {
+            await InserirAssunto();
+            
+            var servicoAssunto = GetServicoAssunto();
+
+            var assuntoDTO = await servicoAssunto.ObterPorId(2);
+            assuntoDTO.Nome = "     ";
             
             await servicoAssunto.Alterar(assuntoDTO).ShouldThrowAsync<NegocioException>();
         }

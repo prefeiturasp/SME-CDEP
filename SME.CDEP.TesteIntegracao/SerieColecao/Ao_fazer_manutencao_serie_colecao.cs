@@ -35,6 +35,22 @@ namespace SME.CDEP.TesteIntegracao.Usuario
             
             await servicoSerieColecao.Inserir(new IdNomeExcluidoAuditavelDTO() {Nome = ConstantesTestes.PB}).ShouldThrowAsync<NegocioException>();
         }
+        
+        [Fact(DisplayName = "Serie/Colecao - Não deve inserir com nome nulo")]
+        public async Task Nao_deve_inserir_nulo()
+        {
+            var servicoSerieColecao = GetServicoSerieColecao();
+            
+            await servicoSerieColecao.Inserir(new IdNomeExcluidoAuditavelDTO()).ShouldThrowAsync<NegocioException>();
+        }
+
+        [Fact(DisplayName = "Serie/Colecao - Não deve inserir com nome vazio")]
+        public async Task Nao_deve_inserir_vazio()
+        {
+            var servicoSerieColecao = GetServicoSerieColecao();
+            
+            await servicoSerieColecao.Inserir(new IdNomeExcluidoAuditavelDTO() { Nome = "   "}).ShouldThrowAsync<NegocioException>();
+        }
 
         [Fact(DisplayName = "Serie/Colecao - Obter todos")]
         public async Task Obter_todos()
@@ -85,6 +101,32 @@ namespace SME.CDEP.TesteIntegracao.Usuario
 
             var serieColecaoDTO = await servicoSerieColecao.ObterPorId(2);
             serieColecaoDTO.Nome = ConstantesTestes.COLOR;
+            
+            await servicoSerieColecao.Alterar(serieColecaoDTO).ShouldThrowAsync<NegocioException>();
+        }
+        
+        [Fact(DisplayName = "Serie/Colecao - Não deve alterar pois já o nome é nulo")]
+        public async Task Nao_deve_atualizar_para_nome_nulo()
+        {
+            await InserirSerieColecao();
+            
+            var servicoSerieColecao = GetServicoSerieColecao();
+
+            var serieColecaoDTO = await servicoSerieColecao.ObterPorId(2);
+            serieColecaoDTO.Nome = null;
+            
+            await servicoSerieColecao.Alterar(serieColecaoDTO).ShouldThrowAsync<NegocioException>();
+        }
+
+        [Fact(DisplayName = "Serie/Colecao - Não deve alterar pois já o nome é vazio")]
+        public async Task Nao_deve_atualizar_para_nome_vazio()
+        {
+            await InserirSerieColecao();
+            
+            var servicoSerieColecao = GetServicoSerieColecao();
+
+            var serieColecaoDTO = await servicoSerieColecao.ObterPorId(2);
+            serieColecaoDTO.Nome = "           ";
             
             await servicoSerieColecao.Alterar(serieColecaoDTO).ShouldThrowAsync<NegocioException>();
         }
