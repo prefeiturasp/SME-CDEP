@@ -2,6 +2,7 @@
 
 public class MensagemNegocio
 {
+    public const string REGISTRO_DUPLICADO = "Registro duplicado";
     public const string SO_EH_PERMITIDO_ALTERAR_ENDERECO_TELEFONE_DE_USUARIOS_EXTERNOS = "Só é permitido alterar endereço/telefone de usuários externos";
     public const string LOGIN_NAO_ENCONTRADO = "Login não encontrado";
     public const string LOGIN_OU_SENHA_ATUAL_NAO_COMFEREM = "Login ou senha atual não conferem";

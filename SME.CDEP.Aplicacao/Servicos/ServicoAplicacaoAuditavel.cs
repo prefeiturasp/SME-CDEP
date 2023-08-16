@@ -3,7 +3,9 @@ using SME.CDEP.Aplicacao.DTOS;
 using SME.CDEP.Aplicacao.Enumerados;
 using SME.CDEP.Aplicacao.Servicos.Interface;
 using SME.CDEP.Dominio;
+using SME.CDEP.Dominio.Constantes;
 using SME.CDEP.Dominio.Contexto;
+using SME.CDEP.Dominio.Excecoes;
 using SME.CDEP.Dominio.Repositorios;
 using SME.CDEP.Infra.Dominio.Enumerados;
 
@@ -22,15 +24,17 @@ namespace SME.CDEP.Aplicacao.Servicos
             this.contextoAplicacao = contextoAplicacao ?? throw new ArgumentNullException(nameof(contextoAplicacao));
         }
 
-        public Task<long> Inserir(D entidadeDto)
+        public async Task<long> Inserir(D entidadeDto)
         {
+            await ValidarDuplicado(entidadeDto.Nome, entidadeDto.Id);
+                
             var entidade = mapper.Map<E>(entidadeDto);
             entidade.CriadoEm = DateTimeExtension.HorarioBrasilia();
             entidade.CriadoPor = contextoAplicacao.NomeUsuario;
             entidade.CriadoLogin = contextoAplicacao.UsuarioLogado;
-            return repositorio.Inserir(entidade);
+            return await repositorio.Inserir(entidade);
         }
-        
+
         public async Task<IList<D>> ObterTodos()
         {
             return (await repositorio.ObterTodos()).Where(w=> !w.Excluido).Select(s=> mapper.Map<D>(s)).ToList();
@@ -65,6 +69,8 @@ namespace SME.CDEP.Aplicacao.Servicos
 
         public async Task<D> Alterar(D entidadeDto)
         {
+            await ValidarDuplicado(entidadeDto.Nome, entidadeDto.Id);
+            
             var entidadeExistente = await repositorio.ObterPorId(entidadeDto.Id);
             
             var entidade = mapper.Map<E>(entidadeDto);
@@ -95,6 +101,12 @@ namespace SME.CDEP.Aplicacao.Servicos
         public async Task<IList<D>> PesquisarPorNome(string nome)
         {
             return mapper.Map<IList<D>>(await repositorio.PesquisarPorNome(nome));
+        }
+        
+        public async Task ValidarDuplicado(string nome, long id)
+        {
+            if ((await PesquisarPorNome(nome)).ToList().Any(a => a.Id != id))
+                throw new NegocioException(MensagemNegocio.REGISTRO_DUPLICADO);
         }
         
         public Paginacao Paginacao
