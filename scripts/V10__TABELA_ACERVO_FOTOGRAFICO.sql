@@ -2,6 +2,7 @@
 	id int8 NOT NULL GENERATED ALWAYS AS IDENTITY( NO MINVALUE NO MAXVALUE NO CYCLE),
 	titulo varchar(200) NULL,
 	credito_id int8 NOT NULL,
+	tombo int8 NULL,
 	localizacao varchar(200) NULL,
 	procedencia varchar(200) NULL,
 	data_acervo timestamp NULL,
