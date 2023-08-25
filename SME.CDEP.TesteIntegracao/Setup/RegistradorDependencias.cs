@@ -73,6 +73,7 @@ namespace SME.CDEP.TesteIntegracao.Setup
             _serviceCollection.TryAddScoped<IServicoAssunto, ServicoAssunto>();
             _serviceCollection.TryAddScoped<IServicoSerieColecao, ServicoSerieColecao>();
             _serviceCollection.TryAddScoped<IServicoMenu, ServicoMenu>();
+            _serviceCollection.TryAddScoped<IServicoAcervo, ServicoAcervo>();
         }
         protected override void RegistrarHttpClients()
         {}
