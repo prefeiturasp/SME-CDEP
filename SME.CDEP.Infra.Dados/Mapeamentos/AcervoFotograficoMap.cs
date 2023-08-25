@@ -7,9 +7,6 @@ namespace SME.CDEP.Infra.Dados.Mapeamentos
         public AcervoFotograficoMap()
         {
             ToTable("acervo_fotografico");
-            Map(c => c.Titulo).ToColumn("titulo");
-            Map(c => c.CreditoId).ToColumn("credito_id");
-            Map(c => c.Tombo).ToColumn("tombo");
             Map(c => c.Localizacao).ToColumn("localizacao");
             Map(c => c.Procedencia).ToColumn("procedencia");
             Map(c => c.DataAcervo).ToColumn("data_acervo");

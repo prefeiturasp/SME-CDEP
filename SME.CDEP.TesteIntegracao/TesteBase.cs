@@ -127,14 +127,14 @@ namespace SME.CDEP.TesteIntegracao
             return ObterServicoAplicacao<IServicoSuporte>();
         }
         
-        protected IServicoCredito GetServicoCredito()
+        protected IServicoCreditoAutor GetServicoCreditoAutor()
         {
-            return ObterServicoAplicacao<IServicoCredito>();
+            return ObterServicoAplicacao<IServicoCreditoAutor>();
         }
         
-        protected IServicoAutor GetServicoAutor()
+        protected IServicoAcervo GetServicoAcervo()
         {
-            return ObterServicoAplicacao<IServicoAutor>();
+            return ObterServicoAplicacao<IServicoAcervo>();
         }
         
         protected IServicoEditora GetServicoEditora()

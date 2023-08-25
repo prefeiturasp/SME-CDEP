@@ -2,8 +2,8 @@
 
 namespace SME.CDEP.Aplicacao.Servicos.Interface
 {
-    public interface IServicoIdNome
+    public interface IServicoIdTipoTituloCreditoAutoriaCodigo
     {
-        IList<IdNomeDTO> ObterTodos();
+        
     }
 }

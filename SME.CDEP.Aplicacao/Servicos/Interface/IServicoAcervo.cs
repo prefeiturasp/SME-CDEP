@@ -2,6 +2,6 @@
 
 namespace SME.CDEP.Aplicacao.Servicos.Interface
 {
-    public interface IServicoAcervo : IServicoAplicacao,IServicoIdNome
+    public interface IServicoAcervo : IServicoAcervoTipos, IServicoAcervoPesquisa
     {}
 }

@@ -17,4 +17,10 @@
       <PackageReference Include="Npgsql" Version="6.0.9" />
     </ItemGroup>
 
+    <ItemGroup>
+      <Reference Include="SME.CDEP.Aplicacao">
+        <HintPath>..\SME.CDEP.TesteIntegracao\bin\Debug\net6.0\SME.CDEP.Aplicacao.dll</HintPath>
+      </Reference>
+    </ItemGroup>
+
 </Project>
