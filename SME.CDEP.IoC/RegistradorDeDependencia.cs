@@ -87,6 +87,9 @@ public class RegistradorDeDependencia
             config.AddMap(new EditoraMap());
             config.AddMap(new AssuntoMap());
             config.AddMap(new SerieColecaoMap());
+            config.AddMap(new AcervoFotograficoMap());
+            config.AddMap(new AcervoFotograficoArquivoMap());
+            config.AddMap(new ArquivoMap());
 
             config.ForDommel();
         });
