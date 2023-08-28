@@ -67,13 +67,13 @@ namespace SME.CDEP.TesteIntegracao.Setup
             _serviceCollection.TryAddScoped<IServicoIdioma, ServicoIdioma>();
             _serviceCollection.TryAddScoped<IServicoMaterial, ServicoMaterial>();
             _serviceCollection.TryAddScoped<IServicoSuporte, ServicoSuporte>();
-            _serviceCollection.TryAddScoped<IServicoCredito, ServicoCredito>();
-            _serviceCollection.TryAddScoped<IServicoAutor, ServicoAutor>();
+            _serviceCollection.TryAddScoped<IServicoCreditoAutor, ServicoCreditoAutor>();
             _serviceCollection.TryAddScoped<IServicoEditora, ServicoEditora>();
             _serviceCollection.TryAddScoped<IServicoAssunto, ServicoAssunto>();
             _serviceCollection.TryAddScoped<IServicoSerieColecao, ServicoSerieColecao>();
             _serviceCollection.TryAddScoped<IServicoMenu, ServicoMenu>();
-            _serviceCollection.TryAddScoped<IServicoAcervo, ServicoAcervo>();
+            _serviceCollection.TryAddScoped<IServicoAcervo, ServicoAcervoAuditavel>();
+            _serviceCollection.TryAddScoped<IServicoAcervoFotografico, ServicoAcervoFotografico>();
         }
         protected override void RegistrarHttpClients()
         {}
