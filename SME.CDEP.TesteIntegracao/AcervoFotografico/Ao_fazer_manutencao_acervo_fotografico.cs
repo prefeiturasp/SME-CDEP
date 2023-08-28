@@ -6,6 +6,7 @@ using SME.CDEP.Infra.Dominio.Enumerados;
 using SME.CDEP.TesteIntegracao.Setup;
 using SME.CDEP.TesteIntegracao.Constantes;
 using Xunit;
+using Xunit.Sdk;
 
 namespace SME.CDEP.TesteIntegracao.Usuario
 {
@@ -14,135 +15,27 @@ namespace SME.CDEP.TesteIntegracao.Usuario
         public Ao_fazer_manutencao_acervo_fotografico(CollectionFixture collectionFixture) : base(collectionFixture)
         {}
         
-        [Fact(DisplayName = "Acervo fotográfico - Inserir")]
-        public async Task Inserir()
+        
+        [Fact(DisplayName = "Acervo fotográfico - Obter por Id")]
+        public async Task Obter_por_id()
         {
-            var servicoCreditoAutor = GetServicoCreditoAutor();
-            
-            var credito = await servicoCreditoAutor.Inserir(new IdNomeTipoExcluidoAuditavelDTO() {Nome = ConstantesTestes.PB, Tipo = (int)TipoCreditoAutoria.Credito});
-            
-            credito.ShouldBeGreaterThan(0);
-            var obterTodos = ObterTodos<CreditoAutor>();
-            obterTodos.Count.ShouldBe(1);
-        }
-      
-        [Fact(DisplayName = "Acervo fotográfico - Não deve inserir pois já existe cadastro com esse nome")]
-        public async Task Nao_deve_inserir()
-        {
-            await InserirCredito();
-            
-            var servicoCreditoAutor = GetServicoCreditoAutor();
-            
-            await servicoCreditoAutor.Inserir(new IdNomeTipoExcluidoAuditavelDTO() {Nome = ConstantesTestes.PB, Tipo = (int)TipoCreditoAutoria.Credito}).ShouldThrowAsync<NegocioException>();
+            await InserirDadosBasicos();
+            await InserirAcervoFotografico();
+            var servicoAcervoFotografico = GetServicoAcervoFotografico();
+
+            var acervoFotograficoDtos = await servicoAcervoFotografico.ObterPorId(5);
+            acervoFotograficoDtos.ShouldNotBeNull();
         }
         
-        [Fact(DisplayName = "Acervo fotográfico - Não deve inserir com nome nulo")]
-        public async Task Nao_deve_inserir_nulo()
-        {
-            var servicoCreditoAutor = GetServicoCreditoAutor();
-            
-            await servicoCreditoAutor.Inserir(new IdNomeTipoExcluidoAuditavelDTO()).ShouldThrowAsync<NegocioException>();
-        }
-
-        [Fact(DisplayName = "Acervo fotográfico - Não deve inserir com nome vazio")]
-        public async Task Nao_deve_inserir_vazio()
-        {
-            var servicoCreditoAutor = GetServicoCreditoAutor();
-            
-            await servicoCreditoAutor.Inserir(new IdNomeTipoExcluidoAuditavelDTO() {Nome = "     "}).ShouldThrowAsync<NegocioException>();
-        }
-
         [Fact(DisplayName = "Acervo fotográfico - Obter todos")]
         public async Task Obter_todos()
         {
-            await InserirCredito();
-            var servicoCreditoAutor = GetServicoCreditoAutor();
+            await InserirDadosBasicos();
+            await InserirAcervoFotografico();
+            var servicoAcervoFotografico = GetServicoAcervoFotografico();
 
-            var creditoDTO = await servicoCreditoAutor.ObterTodos();
-            creditoDTO.ShouldNotBeNull();
-            creditoDTO.Count.ShouldBe(2);
-        }
-
-        [Fact(DisplayName = "Acervo fotográfico - Obter por id")]
-        public async Task Obter_por_id()
-        {
-            await InserirCredito();
-            
-            var servicoCreditoAutor = GetServicoCreditoAutor();
-
-            var creditoDTO = await servicoCreditoAutor.ObterPorId(1);
-            creditoDTO.ShouldNotBeNull();
-            creditoDTO.Id.ShouldBe(1);
-            creditoDTO.Nome.ShouldBe(ConstantesTestes.COLOR);
-        }
-
-        [Fact(DisplayName = "Acervo fotográfico - Atualizar")]
-        public async Task Atualizar()
-        {
-            await InserirCredito();
-            
-            var servicoCreditoAutor = GetServicoCreditoAutor();
-
-            var creditoDTO = await servicoCreditoAutor.ObterPorId(2);
-            creditoDTO.Nome = ConstantesTestes.TRANSPARENTE;
-            
-            var creditoAlteradaDTO = await servicoCreditoAutor.Alterar(creditoDTO);
-            
-            creditoAlteradaDTO.ShouldNotBeNull();
-            creditoAlteradaDTO.Nome = ConstantesTestes.TRANSPARENTE;
-        }
-        
-        [Fact(DisplayName = "Acervo fotográfico - Não deve alterar pois já existe cadastro com esse nome")]
-        public async Task Nao_deve_atualizar_para_cadastros_duplicados()
-        {
-            await InserirCredito();
-            
-            var servicoCreditoAutor = GetServicoCreditoAutor();
-
-            var creditoDTO = await servicoCreditoAutor.ObterPorId(2);
-            creditoDTO.Nome = ConstantesTestes.COLOR;
-            
-            await servicoCreditoAutor.Alterar(creditoDTO).ShouldThrowAsync<NegocioException>();
-        }
-        
-        [Fact(DisplayName = "Acervo fotográfico - Não deve alterar pois já o nome é nulo")]
-        public async Task Nao_deve_atualizar_para_nome_nulo()
-        {
-            await InserirCredito();
-            
-            var servicoCreditoAutor = GetServicoCreditoAutor();
-
-            var creditoDTO = await servicoCreditoAutor.ObterPorId(2);
-            creditoDTO.Nome = null;
-            
-            await servicoCreditoAutor.Alterar(creditoDTO).ShouldThrowAsync<NegocioException>();
-        }
-
-        [Fact(DisplayName = "Acervo fotográfico - Não deve alterar pois já o nome é vazio")]
-        public async Task Nao_deve_atualizar_para_nome_vazio()
-        {
-            await InserirCredito();
-            
-            var servicoCreditoAutor = GetServicoCreditoAutor();
-
-            var creditoDTO = await servicoCreditoAutor.ObterPorId(2);
-            creditoDTO.Nome = "     ";
-            
-            await servicoCreditoAutor.Alterar(creditoDTO).ShouldThrowAsync<NegocioException>();
-        }
-        
-        [Fact(DisplayName = "Acervo fotográfico - Excluir")]
-        public async Task Excluir()
-        {
-            await InserirCredito();
-            
-            var servicoCreditoAutor = GetServicoCreditoAutor();
-
-            await servicoCreditoAutor.Excluir(2);
-
-            var creditos = ObterTodos<CreditoAutor>();
-            creditos.Count(a=> a.Excluido).ShouldBeEquivalentTo(1);
-            creditos.Count(a=> !a.Excluido).ShouldBeEquivalentTo(1);
+            var acervoFotograficoDtos = await servicoAcervoFotografico.ObterTodos();
+            acervoFotograficoDtos.ShouldNotBeNull();
         }
         
         [Fact(DisplayName = "Acervo fotográfico - Pesquisar por Nome")]
@@ -186,25 +79,43 @@ namespace SME.CDEP.TesteIntegracao.Usuario
             retorno.Items.Count().ShouldBe(ConstantesTestes.QUANTIDADE_3);
         }
 
-        private async Task InserirCredito()
+        private async Task InserirAcervoFotografico()
         {
-            await InserirNaBase(new CreditoAutor() 
-            { 
-                Nome = ConstantesTestes.COLOR,
-                CriadoPor = ConstantesTestes.SISTEMA, 
-                Tipo = TipoCreditoAutoria.Credito,
-                CriadoEm = DateTimeExtension.HorarioBrasilia().Date, 
-                CriadoLogin = ConstantesTestes.LOGIN_123456789 
-            });
-            
-            await InserirNaBase(new CreditoAutor() 
-            { 
-                Nome = ConstantesTestes.PB,
-                Tipo = TipoCreditoAutoria.Autoria,
-                CriadoPor = ConstantesTestes.SISTEMA, 
-                CriadoEm = DateTimeExtension.HorarioBrasilia().Date, 
-                CriadoLogin = ConstantesTestes.LOGIN_123456789 
-            });
+            var random = new Random();
+
+            for (int j = 1; j <= 35; j++)
+            {
+                await InserirNaBase(new Acervo()
+                {
+                    Codigo = string.Format(ConstantesTestes.CODIGO_X, j),
+                    Titulo = string.Format(ConstantesTestes.TITULO_X, j),
+                    CreditoAutorId = random.Next(1, 5),
+                    TipoAcervoId = (int)TipoAcervo.Fotografico,
+                    CriadoPor = ConstantesTestes.SISTEMA,
+                    CriadoEm = DateTimeExtension.HorarioBrasilia().Date,
+                    CriadoLogin = ConstantesTestes.LOGIN_123456789
+                });
+
+                await InserirNaBase(new AcervoFotografico()
+                {
+                    AcervoId = j,
+                    Localizacao = string.Format(ConstantesTestes.LOCALIZACAO_X, j),
+                    Procedencia = string.Format(ConstantesTestes.PROCEDENCIA_X,j),
+                    DataAcervo = DateTimeExtension.HorarioBrasilia().Date.ToString("dd/MM/yyyy"),
+                    CopiaDigital = true,
+                    PermiteUsoImagem = true,
+                    ConservacaoId = random.Next(1,5),
+                    Descricao = string.Format(ConstantesTestes.DESCRICAO_X,j),
+                    Quantidade = random.Next(15,55),
+                    Largura = random.Next(15,55),
+                    Altura = random.Next(15,55),
+                    SuporteId = random.Next(1,5),
+                    FormatoId = random.Next(1,5),
+                    CromiaId = random.Next(1,5),
+                    Resolucao = string.Format(ConstantesTestes.RESOLUCAO_X,j),
+                    TamanhoArquivo = string.Format(ConstantesTestes.TAMANHO_ARQUIVO_X_MB,j),
+                });
+            }
         }
     }
 }

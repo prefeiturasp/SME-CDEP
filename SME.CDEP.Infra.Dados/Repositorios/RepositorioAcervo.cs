@@ -19,7 +19,7 @@ namespace SME.CDEP.Infra.Dados.Repositorios
 						    where not a.excluido ";
 
             if (!string.IsNullOrEmpty(titulo))
-                query += "and lower(a.titulo) like lower('%@titulo%') ";
+                query += $"and lower(a.titulo) like lower('%{titulo}%') ";
 	
             if (!string.IsNullOrEmpty(codigo))
                 query += "and lower(a.codigo) = lower('@codigo') ";
@@ -32,7 +32,7 @@ namespace SME.CDEP.Infra.Dados.Repositorios
 	
             return (await conexao.Obter().QueryAsync<Acervo, CreditoAutor, Acervo>(query, (acervo, creditoAutor) =>
             {
-                acervo.CreditoAutoria = creditoAutor;
+                acervo.CreditoAutor = creditoAutor;
                 return acervo;
             }, new { titulo, codigo, tipoAcervo, creditoAutorId }, splitOn: "id")).ToList();
         }

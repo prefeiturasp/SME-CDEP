@@ -10,5 +10,5 @@ public interface IRepositorioBase<TEntidade> where TEntidade : EntidadeBase
     Task<TEntidade> Atualizar(TEntidade entidade);
     Task Remover(TEntidade entidade);
     Task Remover(long id);
-    Task<IList<TEntidade>> PesquisarPorNome(string nome);
+    Task<IList<TEntidade>> PesquisarPorNome(string nome, string campo = "nome");
 }

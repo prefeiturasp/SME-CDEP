@@ -1,7 +1,6 @@
 namespace SME.CDEP.Dominio;
 
-public abstract class EntidadeBase
+public abstract class EntidadeBase : EntidadeBaseSomenteId
 {
-    public long Id { get; set; }
     public bool Excluido { get; set; }
 }

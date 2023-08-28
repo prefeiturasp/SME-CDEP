@@ -2,6 +2,7 @@ using Microsoft.Extensions.DependencyInjection;
 using SME.CDEP.Aplicacao.DTOS;
 using SME.CDEP.Aplicacao.Servicos.Interface;
 using SME.CDEP.Dominio.Contexto;
+using SME.CDEP.Dominio.Entidades;
 using SME.CDEP.Infra.Dominio.Enumerados;
 using SME.CDEP.TesteIntegracao.Constantes;
 using SME.CDEP.TesteIntegracao.Setup;
@@ -152,6 +153,11 @@ namespace SME.CDEP.TesteIntegracao
             return ObterServicoAplicacao<IServicoSerieColecao>();
         }
         
+        protected IServicoAcervoFotografico GetServicoAcervoFotografico()
+        {
+            return ObterServicoAplicacao<IServicoAcervoFotografico>();
+        }
+        
         public T ObterServicoAplicacao<T>()
             where T : IServicoAplicacao
         {
@@ -197,6 +203,39 @@ namespace SME.CDEP.TesteIntegracao
                 TipoUsuario = (int)tipoUsuario
             };
             return retorno;
+        }
+
+        protected async Task InserirDadosBasicos()
+        {
+            var random = new Random();
+            
+            for (int i = 1; i <= 5; i++)
+            {
+                await InserirNaBase(new CreditoAutor()
+                {
+                    Nome = string.Format(ConstantesTestes.CREDITO_AUTOR_X,i),
+                    CriadoPor = ConstantesTestes.SISTEMA, 
+                    CriadoEm = DateTimeExtension.HorarioBrasilia().Date, 
+                    CriadoLogin = ConstantesTestes.LOGIN_123456789 
+                });
+                
+                await InserirNaBase(new Suporte()
+                {
+                    Nome = string.Format(ConstantesTestes.SUPORTE_X,i),
+                    Tipo = (TipoSuporte)random.Next(1,2),
+                });
+                
+                await InserirNaBase(new Formato()
+                {
+                    Nome = string.Format(ConstantesTestes.FORMATO_X,i),
+                    Tipo = (TipoFormato)random.Next(1,2),
+                });
+                
+                
+                await InserirNaBase(new Cromia() { Nome = string.Format(ConstantesTestes.CROMIA_X,i)});
+                
+                await InserirNaBase(new Conservacao() { Nome = string.Format(ConstantesTestes.CONSERVACAO_X,i)});
+            }
         }
     }
 }

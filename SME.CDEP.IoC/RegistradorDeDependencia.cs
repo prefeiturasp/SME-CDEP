@@ -148,8 +148,8 @@ public class RegistradorDeDependencia
         _serviceCollection.TryAddScoped<IServicoSerieColecao, ServicoSerieColecao>();
         _serviceCollection.TryAddScoped<IServicoMenu, ServicoMenu>();
         _serviceCollection.TryAddScoped<IServicoMenu, ServicoMenu>();
-        _serviceCollection.TryAddScoped<IServicoAcervo, ServicoAcervo>();
-        // _serviceCollection.TryAddScoped<IServicoAcervoFotografico, ServicoAcervoFotografico>();
+        _serviceCollection.TryAddScoped<IServicoAcervo, ServicoAcervoAuditavel>();
+        _serviceCollection.TryAddScoped<IServicoAcervoFotografico, ServicoAcervoFotografico>();
     }
     protected virtual void RegistrarHttpClients()
     {

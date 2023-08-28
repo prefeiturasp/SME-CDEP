@@ -7,57 +7,63 @@ using SME.CDEP.Dominio.Constantes;
 using SME.CDEP.Dominio.Contexto;
 using SME.CDEP.Dominio.Entidades;
 using SME.CDEP.Dominio.Excecoes;
-using SME.CDEP.Dominio.Repositorios;
+using SME.CDEP.Infra.Dados.Repositorios.Interfaces;
 using SME.CDEP.Infra.Dominio.Enumerados;
 
 namespace SME.CDEP.Aplicacao.Servicos
 {
-    public class ServicoAcervoAuditavel <E,D> : IServicoAplicacao where E : Acervo where D : AcervoDTO
+    public class ServicoAcervoAuditavel : IServicoAcervo
     {
-        private readonly IRepositorioBase<E> repositorio;
+        private readonly IRepositorioAcervo repositorioAcervo;
         private readonly IMapper mapper;
         private readonly IContextoAplicacao contextoAplicacao;
         
-        public ServicoAcervoAuditavel(IRepositorioBase<E> repositorio, IMapper mapper,IContextoAplicacao contextoAplicacao) 
+        public ServicoAcervoAuditavel(IRepositorioAcervo repositorioAcervo, IMapper mapper, IContextoAplicacao contextoAplicacao)
         {
-            this.repositorio = repositorio ?? throw new ArgumentNullException(nameof(repositorio));
+            this.repositorioAcervo = repositorioAcervo ?? throw new ArgumentNullException(nameof(repositorioAcervo));
             this.mapper = mapper ?? throw new ArgumentNullException(nameof(mapper));
             this.contextoAplicacao = contextoAplicacao ?? throw new ArgumentNullException(nameof(contextoAplicacao));
         }
-
-        public async Task<long> Inserir(D entidadeDto)
+        
+        public async Task<long> Inserir(AcervoDTO acervoDto)
         {
-            ValidarTitulo(entidadeDto);
+            ValidarTitulo(acervoDto.Titulo);
             
-            await ValidarDuplicado(entidadeDto.Titulo, entidadeDto.Id);
+            await ValidarDuplicado(acervoDto.Titulo, acervoDto.Id);
                 
-            var entidade = mapper.Map<E>(entidadeDto);
+            var entidade = mapper.Map<Acervo>(acervoDto);
             entidade.CriadoEm = DateTimeExtension.HorarioBrasilia();
             entidade.CriadoPor = contextoAplicacao.NomeUsuario;
             entidade.CriadoLogin = contextoAplicacao.UsuarioLogado;
-            return await repositorio.Inserir(entidade);
+            return await repositorioAcervo.Inserir(entidade);
         }
         
-        private static void ValidarTitulo(D entidadeDto)
+        private static void ValidarTitulo(string titulo)
         {
-            if (entidadeDto.Titulo is null || entidadeDto.Titulo.Trim().Length == 0)
-                throw new NegocioException(MensagemNegocio.NOME_NAO_INFORMADO);
+            if (titulo is null || titulo.Trim().Length == 0)
+                throw new NegocioException(MensagemNegocio.TITULO_NAO_INFORMADO);
         }
         
-        public async Task<IList<D>> ObterTodos()
+        public async Task ValidarDuplicado(string nome, long id)
         {
-            return (await repositorio.ObterTodos()).Where(w=> !w.Excluido).Select(s=> mapper.Map<D>(s)).ToList();
+            if ((await repositorioAcervo.PesquisarPorNome(nome, "titulo")).ToList().Any(a => a.Id != id))
+                throw new NegocioException(MensagemNegocio.REGISTRO_DUPLICADO);
         }
 
-        public async Task<D> Alterar(D entidadeDto)
+        public async Task<IList<AcervoDTO>> ObterTodos()
         {
-            ValidarTitulo(entidadeDto);
+            return (await repositorioAcervo.ObterTodos()).Where(w=> !w.Excluido).Select(s=> mapper.Map<AcervoDTO>(s)).ToList();
+        }
+
+        public async Task<AcervoDTO> Alterar(AcervoDTO acervoDto)
+        {
+           ValidarTitulo(acervoDto.Titulo);
             
-            await ValidarDuplicado(entidadeDto.Titulo, entidadeDto.Id);
+            await ValidarDuplicado(acervoDto.Titulo, acervoDto.Id);
             
-            var entidadeExistente = await repositorio.ObterPorId(entidadeDto.Id);
+            var entidadeExistente = await repositorioAcervo.ObterPorId(acervoDto.Id);
             
-            var entidade = mapper.Map<E>(entidadeDto);
+            var entidade = mapper.Map<Acervo>(acervoDto);
             entidade.CriadoEm = entidadeExistente.CriadoEm;
             entidade.CriadoLogin = entidadeExistente.CriadoLogin;
             entidade.CriadoPor = entidadeExistente.CriadoPor;
@@ -65,32 +71,69 @@ namespace SME.CDEP.Aplicacao.Servicos
             entidade.AlteradoLogin = contextoAplicacao.UsuarioLogado;
             entidade.AlteradoPor = contextoAplicacao.NomeUsuario;
             
-            return mapper.Map<D>(await repositorio.Atualizar(entidade));
+            return mapper.Map<AcervoDTO>(await repositorioAcervo.Atualizar(entidade));
         }
 
-        public async Task<D> ObterPorId(long entidadeId)
+        public async Task<AcervoDTO> ObterPorId(long acervoId)
         {
-            var retorno = await repositorio.ObterPorId(entidadeId);
-            return mapper.Map<D>(retorno.Excluido ? default : retorno);
+            return mapper.Map<AcervoDTO>(await repositorioAcervo.ObterPorId(acervoId));
         }
 
+        public IList<IdNomeDTO> ObterTodosTipos()
+        {
+            return Enum.GetValues(typeof(TipoAcervo))
+                .Cast<TipoAcervo>()
+                .Select(v => new IdNomeDTO
+                {
+                    Id = (int)v,
+                    Nome = v.ObterAtributo<DisplayAttribute>().Name,
+                })
+                .ToList();
+        }
+        
         public async Task<bool> Excluir(long entidaId)
         {
-            var entidade = await ObterPorId(entidaId);
+            var entidade = await repositorioAcervo.ObterPorId(entidaId);
             entidade.Excluido = true;
-            await Alterar(entidade);
+            entidade.AlteradoEm = DateTimeExtension.HorarioBrasilia();
+            entidade.AlteradoLogin = contextoAplicacao.UsuarioLogado;
+            entidade.AlteradoPor = contextoAplicacao.NomeUsuario;
+            await repositorioAcervo.Atualizar(entidade);
             return true;
-        } 
-        
-        public async Task<IList<D>> PesquisarPorNome(string nome)
-        {
-            return mapper.Map<IList<D>>(await repositorio.PesquisarPorNome(nome));
         }
-        
-        public async Task ValidarDuplicado(string nome, long id)
+
+        public async Task<PaginacaoResultadoDTO<IdTipoTituloCreditoAutoriaCodigoAcervoDTO>> ObterPorFiltro(int? tipoAcervo, string titulo, long? creditoAutorId, string codigo)
         {
-            if ((await PesquisarPorNome(nome)).ToList().Any(a => a.Id != id))
-                throw new NegocioException(MensagemNegocio.REGISTRO_DUPLICADO);
+            var registros = await repositorioAcervo.PesquisarPorFiltro(tipoAcervo, titulo, creditoAutorId, codigo);
+            var totalRegistros = registros.Count;
+            var paginacao = Paginacao;
+            var registrosOrdenados = OrdenarRegistros(paginacao, registros);
+            
+            var retornoPaginado = new PaginacaoResultadoDTO<IdTipoTituloCreditoAutoriaCodigoAcervoDTO>()
+            {
+                Items = registrosOrdenados.Select(s=> new IdTipoTituloCreditoAutoriaCodigoAcervoDTO
+                {
+                    Titulo = s.Titulo,
+                    AcervoId = s.TipoAcervoId,
+                    Codigo = s.Codigo,
+                    CreditoAutoria = s.CreditoAutor.Nome,
+                    TipoAcervo = ((TipoAcervo)s.TipoAcervoId).Name(),
+                }).ToList().Skip(paginacao.QuantidadeRegistrosIgnorados).Take(paginacao.QuantidadeRegistros),
+                TotalRegistros = totalRegistros,
+                TotalPaginas = (int)Math.Ceiling((double)totalRegistros / paginacao.QuantidadeRegistros)
+            };
+                
+            return retornoPaginado;
+        }
+
+        private IOrderedEnumerable<Acervo> OrdenarRegistros(Paginacao paginacao, IList<Acervo> registros)
+        {
+            return paginacao.Ordenacao switch
+            {
+                TipoOrdenacao.DATA => registros.OrderByDescending(o => o.AlteradoEm.HasValue ? o.AlteradoEm.Value : o.CriadoEm),
+                TipoOrdenacao.AZ => registros.OrderBy(o => o.Titulo),
+                TipoOrdenacao.ZA => registros.OrderByDescending(o => o.Titulo),
+            };
         }
         
         public Paginacao Paginacao
@@ -112,10 +155,4 @@ namespace SME.CDEP.Aplicacao.Servicos
             }
         }
     }
-}
-
-  
-        
-       
-        
-       
+}  

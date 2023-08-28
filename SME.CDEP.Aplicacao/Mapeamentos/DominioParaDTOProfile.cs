@@ -22,6 +22,8 @@ namespace SME.CDEP.Aplicacao.Mapeamentos
             CreateMap<IdNomeExcluidoAuditavelDTO, Assunto>().ReverseMap();
             CreateMap<IdNomeExcluidoAuditavelDTO, SerieColecao>().ReverseMap();
             CreateMap<AcervoDTO, Acervo>().ReverseMap();
+            CreateMap<AcervoFotograficoDTO, AcervoFotografico>().ReverseMap();
+            CreateMap<CreditoAutorDTO, CreditoAutor>().ReverseMap();
         }
     }
 }
