@@ -43,35 +43,11 @@ namespace SME.CDEP.Aplicacao.Servicos
 
         public async Task<AcervoFotograficoDTO> Alterar(AcervoFotograficoDTO acervoFotograficoDto)
         {
-            var retornoAcervo = await servicoAcervo.Alterar(new AcervoDTO()
-            {
-                Titulo = acervoFotograficoDto.Acervo.Titulo,
-                Codigo = acervoFotograficoDto.Acervo.Codigo,
-                CreditoAutorId = acervoFotograficoDto.Acervo.CreditoAutorId,
-                TipoAcervoId = (int)TipoAcervo.Fotografico
-            });
+            var retornoAcervo = await servicoAcervo.Alterar(acervoFotograficoDto.Acervo);
             
             if (retornoAcervo != null)
             {
-                var entidadeExistente = await repositorioAcervoFotografico.ObterPorId(acervoFotograficoDto.Id);
-
-                entidadeExistente.Localizacao = acervoFotograficoDto.Localizacao;
-                entidadeExistente.Procedencia = acervoFotograficoDto.Procedencia;
-                entidadeExistente.DataAcervo = acervoFotograficoDto.DataAcervo;
-                entidadeExistente.CopiaDigital = acervoFotograficoDto.CopiaDigital;
-                entidadeExistente.PermiteUsoImagem = acervoFotograficoDto.PermiteUsoImagem;
-                entidadeExistente.ConservacaoId = acervoFotograficoDto.ConservacaoId;
-                entidadeExistente.Descricao = acervoFotograficoDto.Descricao;
-                entidadeExistente.Quantidade = acervoFotograficoDto.Quantidade;
-                entidadeExistente.Largura = acervoFotograficoDto.Largura;
-                entidadeExistente.Altura = acervoFotograficoDto.Altura;
-                entidadeExistente.SuporteId = acervoFotograficoDto.SuporteId;
-                entidadeExistente.FormatoId = acervoFotograficoDto.FormatoId;
-                entidadeExistente.CromiaId = acervoFotograficoDto.CromiaId;
-                entidadeExistente.Resolucao = acervoFotograficoDto.Resolucao;
-                entidadeExistente.TamanhoArquivo = acervoFotograficoDto.TamanhoArquivo;
-                entidadeExistente = mapper.Map<AcervoFotografico>(acervoFotograficoDto);
-                
+                var entidadeExistente = mapper.Map<AcervoFotografico>(acervoFotograficoDto);
                 return mapper.Map<AcervoFotograficoDTO>(await repositorioAcervoFotografico.Atualizar(entidadeExistente));
             }
             return default;

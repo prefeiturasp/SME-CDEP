@@ -61,10 +61,7 @@ namespace SME.CDEP.Aplicacao.Servicos
             
             await ValidarDuplicado(acervoDto.Titulo, acervoDto.Id);
             
-            var entidadeExistente = await repositorioAcervo.ObterPorId(acervoDto.Id);
-            entidadeExistente.Titulo = acervoDto.Titulo;
-            entidadeExistente.Codigo = acervoDto.Codigo;
-            entidadeExistente.CreditoAutorId = acervoDto.CreditoAutorId;
+            var entidadeExistente = mapper.Map<Acervo>(acervoDto);
             entidadeExistente.AlteradoEm = DateTimeExtension.HorarioBrasilia();
             entidadeExistente.AlteradoLogin = contextoAplicacao.UsuarioLogado;
             entidadeExistente.AlteradoPor = contextoAplicacao.NomeUsuario;
