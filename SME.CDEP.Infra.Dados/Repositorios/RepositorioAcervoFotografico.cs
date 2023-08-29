@@ -72,6 +72,12 @@ namespace SME.CDEP.Infra.Dados.Repositorios
                                   a.titulo,
                                   a.codigo,
                                   a.tipo,
+                                  a.criado_em,
+                                  a.criado_por,
+                                  a.criado_login,
+                                  a.alterado_em,
+                                  a.alterado_por,
+                                  a.alterado_login,
                                   ca.id,
                                   ca.nome
                         from acervo_fotografico af
