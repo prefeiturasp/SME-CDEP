@@ -78,6 +78,24 @@ namespace SME.CDEP.TesteIntegracao.Usuario
             var retorno = await servicoCreditoAutor.ObterPaginado("o");
             retorno.Items.Count().ShouldBe(ConstantesTestes.QUANTIDADE_3);
         }
+        
+        [Fact(DisplayName = "Acervo fotográfico - Atualizar")]
+        public async Task Atualizar()
+        {
+            await InserirDadosBasicos();
+
+            await InserirAcervoFotografico();
+            
+            var servicoAcervoFotografico = GetServicoAcervoFotografico();
+
+            var acervoFotograficoDto = await servicoAcervoFotografico.ObterPorId(3);
+            acervoFotograficoDto.Acervo.Titulo = string.Format(ConstantesTestes.TITULO_X, 100);
+            
+            var acervoFotograficoAlterado = await servicoAcervoFotografico.Alterar(acervoFotograficoDto);
+            
+            acervoFotograficoAlterado.ShouldNotBeNull();
+            acervoFotograficoAlterado.Acervo.Titulo = string.Format(ConstantesTestes.TITULO_X, 100);
+        }
 
         private async Task InserirAcervoFotografico()
         {
@@ -92,8 +110,11 @@ namespace SME.CDEP.TesteIntegracao.Usuario
                     CreditoAutorId = random.Next(1, 5),
                     TipoAcervoId = (int)TipoAcervo.Fotografico,
                     CriadoPor = ConstantesTestes.SISTEMA,
-                    CriadoEm = DateTimeExtension.HorarioBrasilia().Date,
-                    CriadoLogin = ConstantesTestes.LOGIN_123456789
+                    CriadoEm = DateTimeExtension.HorarioBrasilia().AddMinutes(-15),
+                    CriadoLogin = ConstantesTestes.LOGIN_123456789,
+                    AlteradoEm = DateTimeExtension.HorarioBrasilia(),
+                    AlteradoPor = ConstantesTestes.SISTEMA,
+                    AlteradoLogin = ConstantesTestes.LOGIN_123456789
                 });
 
                 await InserirNaBase(new AcervoFotografico()
