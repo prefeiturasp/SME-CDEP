@@ -22,7 +22,7 @@ namespace SME.CDEP.Infra.Dados.Repositorios
                 query += $"and lower(a.titulo) like lower('%{titulo}%') ";
 	
             if (!string.IsNullOrEmpty(codigo))
-                query += "and lower(a.codigo) = lower('@codigo') ";
+                query += $"and lower(a.codigo) = lower('{codigo}') ";
 	
             if (tipoAcervo > 0)
                 query += "and a.Tipo = @tipoAcervo ";
@@ -34,7 +34,7 @@ namespace SME.CDEP.Infra.Dados.Repositorios
             {
                 acervo.CreditoAutor = creditoAutor;
                 return acervo;
-            }, new { titulo, codigo, tipoAcervo, creditoAutorId }, splitOn: "id")).ToList();
+            }, new { tipoAcervo, creditoAutorId }, splitOn: "id")).ToList();
         }
     }
 }

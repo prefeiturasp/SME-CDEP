@@ -61,17 +61,12 @@ namespace SME.CDEP.Aplicacao.Servicos
             
             await ValidarDuplicado(acervoDto.Titulo, acervoDto.Id);
             
-            var entidadeExistente = await repositorioAcervo.ObterPorId(acervoDto.Id);
+            var entidadeExistente = mapper.Map<Acervo>(acervoDto);
+            entidadeExistente.AlteradoEm = DateTimeExtension.HorarioBrasilia();
+            entidadeExistente.AlteradoLogin = contextoAplicacao.UsuarioLogado;
+            entidadeExistente.AlteradoPor = contextoAplicacao.NomeUsuario;
             
-            var entidade = mapper.Map<Acervo>(acervoDto);
-            entidade.CriadoEm = entidadeExistente.CriadoEm;
-            entidade.CriadoLogin = entidadeExistente.CriadoLogin;
-            entidade.CriadoPor = entidadeExistente.CriadoPor;
-            entidade.AlteradoEm = DateTimeExtension.HorarioBrasilia();
-            entidade.AlteradoLogin = contextoAplicacao.UsuarioLogado;
-            entidade.AlteradoPor = contextoAplicacao.NomeUsuario;
-            
-            return mapper.Map<AcervoDTO>(await repositorioAcervo.Atualizar(entidade));
+            return mapper.Map<AcervoDTO>(await repositorioAcervo.Atualizar(entidadeExistente));
         }
 
         public async Task<AcervoDTO> ObterPorId(long acervoId)

@@ -141,7 +141,7 @@ namespace SME.CDEP.TesteIntegracao.Usuario
                     CreditoAutorId = random.Next(1, 5),
                     TipoAcervoId = (int)TipoAcervo.Fotografico,
                     CriadoPor = ConstantesTestes.SISTEMA,
-                    CriadoEm = DateTimeExtension.HorarioBrasilia().Date,
+                    CriadoEm = DateTimeExtension.HorarioBrasilia(),
                     CriadoLogin = ConstantesTestes.LOGIN_123456789
                 });
             }

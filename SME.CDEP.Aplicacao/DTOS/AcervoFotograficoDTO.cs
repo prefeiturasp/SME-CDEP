@@ -1,17 +1,14 @@
-﻿using SME.CDEP.Infra.Dominio.Enumerados;
+﻿using System.Runtime.CompilerServices;
+using SME.CDEP.Dominio.Entidades;
+using SME.CDEP.Infra.Dominio.Enumerados;
 
 namespace SME.CDEP.Aplicacao.DTOS;
 
 public class AcervoFotograficoDTO
 {
     public long Id { get; set; }
-    public AcervoDTO Acervo { get; set; }
     public long AcervoId { get; set; }
-    public string Titulo { get; set; }
-    public long TipoAcervoId { get; set; }
-    public string Codigo { get; set; }
-    public long CreditoAutorId { get; set; }
-    public string CreditoAutorNome { get; set; }
+    public AcervoDTO Acervo { get; set; }
     public string Localizacao { get; set; }
     public string Procedencia { get; set; }
     public string DataAcervo { get; set; }
