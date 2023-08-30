@@ -109,7 +109,7 @@ namespace SME.CDEP.Aplicacao.Servicos
                 Items = registrosOrdenados.Select(s=> new IdTipoTituloCreditoAutoriaCodigoAcervoDTO
                 {
                     Titulo = s.Titulo,
-                    AcervoId = s.TipoAcervoId,
+                    AcervoId = s.Id,
                     Codigo = s.Codigo,
                     CreditoAutoria = s.CreditoAutor.Nome,
                     TipoAcervo = ((TipoAcervo)s.TipoAcervoId).Name(),
