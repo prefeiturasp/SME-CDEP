@@ -3,6 +3,8 @@ pipeline {
       branchname =  env.BRANCH_NAME.toLowerCase()
       kubeconfig = getKubeconf(env.branchname)
       registryCredential = 'jenkins_registry'
+      namespace = "${env.branchname == 'development' ? 'cdep-dev' : env.branchname == 'release' ? 'sme-cdep' : env.branchname == 'release-r2' ? 'cdep-hom2' : 'sme-cdep' }"
+    }	    
     }
   
     agent {
@@ -49,7 +51,7 @@ pipeline {
                         withCredentials([file(credentialsId: "${kubeconfig}", variable: 'config')]){
                                 sh('if [ -f '+"$home"+'/.kube/config ];then rm -f '+"$home"+'/.kube/config; fi')
                                 sh('cp $config '+"$home"+'/.kube/config')
-                                sh "kubectl rollout restart deployment/sme-cdep-api -n sme-cdep"
+                                sh "kubectl rollout restart deployment/sme-cdep-api -n ${namespace}"
                                 sh('rm -f '+"$home"+'/.kube/config')
                         }
                 }
@@ -77,6 +79,6 @@ def getKubeconf(branchName) {
     else if ("homolog".equals(branchName)) { return "config_hom"; }
     else if ("homolog-r2".equals(branchName)) { return "config_hom"; }
     else if ("release".equals(branchName)) { return "config_hom"; }
-    else if ("development".equals(branchName)) { return "config_dev"; }
-    else if ("develop".equals(branchName)) { return "config_dev"; }
+    else if ("development".equals(branchName)) { return "config_release"; }
+    else if ("develop".equals(branchName)) { return "config_release"; }
 }
