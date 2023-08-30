@@ -5,8 +5,7 @@ pipeline {
       registryCredential = 'jenkins_registry'
       namespace = "${env.branchname == 'development' ? 'cdep-dev' : env.branchname == 'release' ? 'sme-cdep' : env.branchname == 'release-r2' ? 'cdep-hom2' : 'sme-cdep' }"
     }	    
-    }
-  
+      
     agent {
       node { label 'AGENT-NODES' }
     }
@@ -72,7 +71,7 @@ pipeline {
 post {
     always { sh('if [ -f '+"$home"+'/.kube/config ];then rm -f '+"$home"+'/.kube/config; fi')}
   }
-
+}
 def getKubeconf(branchName) {
     if("main".equals(branchName)) { return "config_prd"; }
     else if ("master".equals(branchName)) { return "config_prd"; }
