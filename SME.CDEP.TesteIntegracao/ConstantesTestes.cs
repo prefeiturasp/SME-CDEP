@@ -96,4 +96,20 @@ public class ConstantesTestes
     
     public const string PERFIL_EXTERNO_DESCRICAO = "Externo";
     public const string PERFIL_EXTERNO_GUID = "3092428D-CA98-4788-9717-E706DF1945A0";
+    
+    public const string CODIGO_X = "Código {0}";
+    public const string TITULO_X = "Título {0}";
+    
+    public const string LOCALIZACAO_X = "Localização {0}";
+    public const string PROCEDENCIA_X = "Procedencia {0}";
+    public const string DESCRICAO_X = "Acervo: {0} As descrições de coleções são uma ferramenta essencial para compreender o conteúdo e o significado de uma coleção. Uma descrição da coleção fornece informações sobre os atributos físicos da coleção, seu significado histórico e políticas de acesso e uso. Este ensaio explorará essas três áreas principais da descrição da coleção com mais detalhes.";
+    public const string RESOLUCAO_X = "Resolução {0}";
+    public const string TAMANHO_ARQUIVO_X_MB = "{0}2MB";
+
+    public const string CREDITO_AUTOR_X = "Crédito Autor {0}";
+    public const string SUPORTE_X = "Suporte {0}";
+    public const string FORMATO_X = "Formato {0}";
+    public const string CROMIA_X = "Cromia {0}";
+    public const string CONSERVACAO_X = "Conservação {0}";
+
 }
