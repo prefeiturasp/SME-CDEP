@@ -48,6 +48,18 @@ public class CreditoAutorController: BaseController
         return Ok(await servicoCreditoAutor.ObterPaginado(nome));
     }
     
+    [HttpGet("resumido")]
+    [ProducesResponseType(typeof(IdNomeDTO), 200)]
+    [ProducesResponseType(typeof(RetornoBaseDTO), 400)]
+    [ProducesResponseType(typeof(RetornoBaseDTO), 403)]
+    [ProducesResponseType(typeof(RetornoBaseDTO), 500)]
+    [ProducesResponseType(typeof(RetornoBaseDTO), 601)]
+    [Permissao(Permissao.CRD_C, Policy = "Bearer")]
+    public async Task<IActionResult> ObterTodos([FromServices]IServicoCreditoAutor servicoCreditoAutor)
+    {
+        return Ok((await servicoCreditoAutor.ObterTodos()).Select(s=> new IdNomeDTO {Id = s.Id, Nome = s.Nome}));
+    }
+    
     [HttpGet("{id}")]
     [ProducesResponseType(typeof(IdNomeTipoExcluidoAuditavelDTO), 200)]
     [ProducesResponseType(typeof(RetornoBaseDTO), 400)]
