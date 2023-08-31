@@ -112,7 +112,7 @@ namespace SME.CDEP.Aplicacao.Servicos
                     AcervoId = s.Id,
                     Codigo = s.Codigo,
                     CreditoAutoria = s.CreditoAutor.Nome,
-                    TipoAcervo = ((TipoAcervo)s.TipoAcervoId).Name(),
+                    TipoAcervo = ((TipoAcervo)s.TipoAcervoId).Nome(),
                 }).ToList().Skip(paginacao.QuantidadeRegistrosIgnorados).Take(paginacao.QuantidadeRegistros),
                 TotalRegistros = totalRegistros,
                 TotalPaginas = (int)Math.Ceiling((double)totalRegistros / paginacao.QuantidadeRegistros)
