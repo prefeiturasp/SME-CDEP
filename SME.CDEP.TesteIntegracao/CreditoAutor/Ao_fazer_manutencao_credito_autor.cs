@@ -9,148 +9,148 @@ using Xunit;
 
 namespace SME.CDEP.TesteIntegracao.Usuario
 {
-    public class Ao_fazer_manutencao_credito : TesteBase
+    public class Ao_fazer_manutencao_credito_autor : TesteBase
     {
-        public Ao_fazer_manutencao_credito(CollectionFixture collectionFixture) : base(collectionFixture)
+        public Ao_fazer_manutencao_credito_autor(CollectionFixture collectionFixture) : base(collectionFixture)
         {}
         
-        [Fact(DisplayName = "Crédito - Inserir")]
+        [Fact(DisplayName = "CréditoAutor - Inserir")]
         public async Task Inserir()
         {
-            var servicoCredito = GetServicoCredito();
+            var servicoCreditoAutor = GetServicoCreditoAutor();
             
-            var credito = await servicoCredito.Inserir(new IdNomeExcluidoAuditavelDTO() {Nome = ConstantesTestes.PB});
+            var credito = await servicoCreditoAutor.Inserir(new IdNomeTipoExcluidoAuditavelDTO() {Nome = ConstantesTestes.PB, Tipo = (int)TipoCreditoAutoria.Credito});
             
             credito.ShouldBeGreaterThan(0);
-            var obterTodos = ObterTodos<Credito>();
+            var obterTodos = ObterTodos<CreditoAutor>();
             obterTodos.Count.ShouldBe(1);
         }
       
-        [Fact(DisplayName = "Crédito - Não deve inserir pois já existe cadastro com esse nome")]
+        [Fact(DisplayName = "CréditoAutor - Não deve inserir pois já existe cadastro com esse nome")]
         public async Task Nao_deve_inserir()
         {
             await InserirCredito();
             
-            var servicoCredito = GetServicoCredito();
+            var servicoCreditoAutor = GetServicoCreditoAutor();
             
-            await servicoCredito.Inserir(new IdNomeExcluidoAuditavelDTO() {Nome = ConstantesTestes.PB}).ShouldThrowAsync<NegocioException>();
+            await servicoCreditoAutor.Inserir(new IdNomeTipoExcluidoAuditavelDTO() {Nome = ConstantesTestes.PB, Tipo = (int)TipoCreditoAutoria.Credito}).ShouldThrowAsync<NegocioException>();
         }
         
-        [Fact(DisplayName = "Crédito - Não deve inserir com nome nulo")]
+        [Fact(DisplayName = "CréditoAutor - Não deve inserir com nome nulo")]
         public async Task Nao_deve_inserir_nulo()
         {
-            var servicoCredito = GetServicoCredito();
+            var servicoCreditoAutor = GetServicoCreditoAutor();
             
-            await servicoCredito.Inserir(new IdNomeExcluidoAuditavelDTO()).ShouldThrowAsync<NegocioException>();
+            await servicoCreditoAutor.Inserir(new IdNomeTipoExcluidoAuditavelDTO()).ShouldThrowAsync<NegocioException>();
         }
 
-        [Fact(DisplayName = "Crédito - Não deve inserir com nome vazio")]
+        [Fact(DisplayName = "CréditoAutor - Não deve inserir com nome vazio")]
         public async Task Nao_deve_inserir_vazio()
         {
-            var servicoCredito = GetServicoCredito();
+            var servicoCreditoAutor = GetServicoCreditoAutor();
             
-            await servicoCredito.Inserir(new IdNomeExcluidoAuditavelDTO() {Nome = "     "}).ShouldThrowAsync<NegocioException>();
+            await servicoCreditoAutor.Inserir(new IdNomeTipoExcluidoAuditavelDTO() {Nome = "     "}).ShouldThrowAsync<NegocioException>();
         }
 
-        [Fact(DisplayName = "Crédito - Obter todos")]
+        [Fact(DisplayName = "CréditoAutor - Obter todos")]
         public async Task Obter_todos()
         {
             await InserirCredito();
-            var servicoCredito = GetServicoCredito();
+            var servicoCreditoAutor = GetServicoCreditoAutor();
 
-            var creditoDTO = await servicoCredito.ObterTodos();
+            var creditoDTO = await servicoCreditoAutor.ObterTodos();
             creditoDTO.ShouldNotBeNull();
             creditoDTO.Count.ShouldBe(2);
         }
 
-        [Fact(DisplayName = "Crédito - Obter por id")]
+        [Fact(DisplayName = "CréditoAutor - Obter por id")]
         public async Task Obter_por_id()
         {
             await InserirCredito();
             
-            var servicoCredito = GetServicoCredito();
+            var servicoCreditoAutor = GetServicoCreditoAutor();
 
-            var creditoDTO = await servicoCredito.ObterPorId(1);
+            var creditoDTO = await servicoCreditoAutor.ObterPorId(1);
             creditoDTO.ShouldNotBeNull();
             creditoDTO.Id.ShouldBe(1);
             creditoDTO.Nome.ShouldBe(ConstantesTestes.COLOR);
         }
 
-        [Fact(DisplayName = "Crédito - Atualizar")]
+        [Fact(DisplayName = "CréditoAutor - Atualizar")]
         public async Task Atualizar()
         {
             await InserirCredito();
             
-            var servicoCredito = GetServicoCredito();
+            var servicoCreditoAutor = GetServicoCreditoAutor();
 
-            var creditoDTO = await servicoCredito.ObterPorId(2);
+            var creditoDTO = await servicoCreditoAutor.ObterPorId(2);
             creditoDTO.Nome = ConstantesTestes.TRANSPARENTE;
             
-            var creditoAlteradaDTO = await servicoCredito.Alterar(creditoDTO);
+            var creditoAlteradaDTO = await servicoCreditoAutor.Alterar(creditoDTO);
             
             creditoAlteradaDTO.ShouldNotBeNull();
             creditoAlteradaDTO.Nome = ConstantesTestes.TRANSPARENTE;
         }
         
-        [Fact(DisplayName = "Crédito - Não deve alterar pois já existe cadastro com esse nome")]
+        [Fact(DisplayName = "CréditoAutor - Não deve alterar pois já existe cadastro com esse nome")]
         public async Task Nao_deve_atualizar_para_cadastros_duplicados()
         {
             await InserirCredito();
             
-            var servicoCredito = GetServicoCredito();
+            var servicoCreditoAutor = GetServicoCreditoAutor();
 
-            var creditoDTO = await servicoCredito.ObterPorId(2);
+            var creditoDTO = await servicoCreditoAutor.ObterPorId(2);
             creditoDTO.Nome = ConstantesTestes.COLOR;
             
-            await servicoCredito.Alterar(creditoDTO).ShouldThrowAsync<NegocioException>();
+            await servicoCreditoAutor.Alterar(creditoDTO).ShouldThrowAsync<NegocioException>();
         }
         
-        [Fact(DisplayName = "Crédito - Não deve alterar pois já o nome é nulo")]
+        [Fact(DisplayName = "CréditoAutor - Não deve alterar pois já o nome é nulo")]
         public async Task Nao_deve_atualizar_para_nome_nulo()
         {
             await InserirCredito();
             
-            var servicoCredito = GetServicoCredito();
+            var servicoCreditoAutor = GetServicoCreditoAutor();
 
-            var creditoDTO = await servicoCredito.ObterPorId(2);
+            var creditoDTO = await servicoCreditoAutor.ObterPorId(2);
             creditoDTO.Nome = null;
             
-            await servicoCredito.Alterar(creditoDTO).ShouldThrowAsync<NegocioException>();
+            await servicoCreditoAutor.Alterar(creditoDTO).ShouldThrowAsync<NegocioException>();
         }
 
-        [Fact(DisplayName = "Crédito - Não deve alterar pois já o nome é vazio")]
+        [Fact(DisplayName = "CréditoAutor - Não deve alterar pois já o nome é vazio")]
         public async Task Nao_deve_atualizar_para_nome_vazio()
         {
             await InserirCredito();
             
-            var servicoCredito = GetServicoCredito();
+            var servicoCreditoAutor = GetServicoCreditoAutor();
 
-            var creditoDTO = await servicoCredito.ObterPorId(2);
+            var creditoDTO = await servicoCreditoAutor.ObterPorId(2);
             creditoDTO.Nome = "     ";
             
-            await servicoCredito.Alterar(creditoDTO).ShouldThrowAsync<NegocioException>();
+            await servicoCreditoAutor.Alterar(creditoDTO).ShouldThrowAsync<NegocioException>();
         }
         
-        [Fact(DisplayName = "Crédito - Excluir")]
+        [Fact(DisplayName = "CréditoAutor - Excluir")]
         public async Task Excluir()
         {
             await InserirCredito();
             
-            var servicoCredito = GetServicoCredito();
+            var servicoCreditoAutor = GetServicoCreditoAutor();
 
-            await servicoCredito.Excluir(2);
+            await servicoCreditoAutor.Excluir(2);
 
-            var creditos = ObterTodos<Credito>();
+            var creditos = ObterTodos<CreditoAutor>();
             creditos.Count(a=> a.Excluido).ShouldBeEquivalentTo(1);
             creditos.Count(a=> !a.Excluido).ShouldBeEquivalentTo(1);
         }
         
-        [Fact(DisplayName = "Crédito - Pesquisar por Nome")]
+        [Fact(DisplayName = "CréditoAutor - Pesquisar por Nome")]
         public async Task Pesquisar_por_nome()
         {
-            var servicoCredito = GetServicoCredito();
+            var servicoCreditoAutor = GetServicoCreditoAutor();
 
-            await InserirNaBase(new Credito() 
+            await InserirNaBase(new CreditoAutor() 
             { 
                 Nome = ConstantesTestes.LIVRO,
                 CriadoPor = ConstantesTestes.SISTEMA, 
@@ -158,7 +158,7 @@ namespace SME.CDEP.TesteIntegracao.Usuario
                 CriadoLogin = ConstantesTestes.LOGIN_123456789 
             });
             
-            await InserirNaBase(new Credito() 
+            await InserirNaBase(new CreditoAutor() 
             { 
                 Nome = ConstantesTestes.PAPEL,
                 CriadoPor = ConstantesTestes.SISTEMA, 
@@ -166,7 +166,7 @@ namespace SME.CDEP.TesteIntegracao.Usuario
                 CriadoLogin = ConstantesTestes.LOGIN_123456789 
             });
             
-            await InserirNaBase(new Credito() 
+            await InserirNaBase(new CreditoAutor() 
             { 
                 Nome = ConstantesTestes.COLOR,
                 CriadoPor = ConstantesTestes.SISTEMA, 
@@ -174,7 +174,7 @@ namespace SME.CDEP.TesteIntegracao.Usuario
                 CriadoLogin = ConstantesTestes.LOGIN_123456789 
             });
             
-            await InserirNaBase(new Credito() 
+            await InserirNaBase(new CreditoAutor() 
             { 
                 Nome = ConstantesTestes.VOB,
                 CriadoPor = ConstantesTestes.SISTEMA, 
@@ -182,23 +182,25 @@ namespace SME.CDEP.TesteIntegracao.Usuario
                 CriadoLogin = ConstantesTestes.LOGIN_123456789 
             });
             
-            var retorno = await servicoCredito.ObterPaginado("o");
+            var retorno = await servicoCreditoAutor.ObterPaginado("o");
             retorno.Items.Count().ShouldBe(ConstantesTestes.QUANTIDADE_3);
         }
 
         private async Task InserirCredito()
         {
-            await InserirNaBase(new Credito() 
+            await InserirNaBase(new CreditoAutor() 
             { 
                 Nome = ConstantesTestes.COLOR,
                 CriadoPor = ConstantesTestes.SISTEMA, 
+                Tipo = TipoCreditoAutoria.Credito,
                 CriadoEm = DateTimeExtension.HorarioBrasilia().Date, 
                 CriadoLogin = ConstantesTestes.LOGIN_123456789 
             });
             
-            await InserirNaBase(new Credito() 
+            await InserirNaBase(new CreditoAutor() 
             { 
                 Nome = ConstantesTestes.PB,
+                Tipo = TipoCreditoAutoria.Autoria,
                 CriadoPor = ConstantesTestes.SISTEMA, 
                 CriadoEm = DateTimeExtension.HorarioBrasilia().Date, 
                 CriadoLogin = ConstantesTestes.LOGIN_123456789 

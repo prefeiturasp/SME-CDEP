@@ -16,5 +16,8 @@ namespace SME.CDEP.Infra.Dominio.Enumerados
 
         public static string Descricao(this Enum enumValue)
             => enumValue.ObterAtributo<DisplayAttribute>().Description;
+        
+        public static string Nome(this Enum enumValue)
+            => enumValue.ObterAtributo<DisplayAttribute>().Name;
     }
 }
