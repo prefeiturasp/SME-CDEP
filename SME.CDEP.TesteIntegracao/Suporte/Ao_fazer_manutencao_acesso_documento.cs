@@ -22,7 +22,7 @@ namespace SME.CDEP.TesteIntegracao.Usuario
             var suporte = await servicoSuporte.Inserir(new IdNomeTipoExcluidoDTO(){Nome = ConstantesTestes.DIGITAL_E_FISICO, Tipo = (int)TipoSuporte.VIDEO});
             suporte.ShouldBeGreaterThan(0);
             var obterTodos = ObterTodos<Suporte>();
-            obterTodos.Count.ShouldBe(1);
+            obterTodos.Count().ShouldBe(1);
         }
         
         [Fact(DisplayName = "Suporte - Não deve inserir pois já existe cadastro com esse nome")]
@@ -43,7 +43,7 @@ namespace SME.CDEP.TesteIntegracao.Usuario
 
             var suporteDtos = await servicoSuporte.ObterTodos();
             suporteDtos.ShouldNotBeNull();
-            suporteDtos.Count.ShouldBe(5);
+            suporteDtos.Count().ShouldBe(5);
         }
 
         [Fact(DisplayName = "Suporte - Obter por id")]

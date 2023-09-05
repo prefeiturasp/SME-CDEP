@@ -23,9 +23,9 @@ namespace SME.CDEP.Aplicacao.Servicos
             return repositorio.Inserir(entidade);
         }
         
-        public async Task<IList<D>> ObterTodos()
+        public async Task<IEnumerable<D>> ObterTodos()
         {
-            return (await repositorio.ObterTodos()).Where(w=> !w.Excluido).Select(s=> mapper.Map<D>(s)).ToList();
+            return (await repositorio.ObterTodos()).Where(w=> !w.Excluido).Select(s=> mapper.Map<D>(s));
         }
 
         public async Task<D> Alterar(D entidadeDto)

@@ -22,7 +22,7 @@ namespace SME.CDEP.TesteIntegracao.Usuario
             var formato = await servicoFormato.Inserir(new IdNomeTipoExcluidoDTO(){Nome = ConstantesTestes.PAPEL});
             formato.ShouldBeGreaterThan(0);
             var obterTodos = ObterTodos<Formato>();
-            obterTodos.Count.ShouldBe(1);
+            obterTodos.Count().ShouldBe(1);
         }
         
         [Fact(DisplayName = "Formato - Não deve inserir pois já existe cadastro com esse nome")]
@@ -43,7 +43,7 @@ namespace SME.CDEP.TesteIntegracao.Usuario
 
             var formatos = await servicoFormato.ObterTodos();
             formatos.ShouldNotBeNull();
-            formatos.Count.ShouldBe(4);
+            formatos.Count().ShouldBe(4);
         }
 
         [Fact(DisplayName = "Formato - Obter por id")]

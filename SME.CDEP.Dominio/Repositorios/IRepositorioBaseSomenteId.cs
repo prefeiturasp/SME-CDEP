@@ -2,7 +2,7 @@ using SME.CDEP.Infra.Dominio.Enumerados;
 
 namespace SME.CDEP.Dominio.Repositorios;
 
-public interface IRepositorioBase<TEntidade> where TEntidade : EntidadeBase    
+public interface IRepositorioBaseSomenteId<TEntidade> where TEntidade : EntidadeBaseSomenteId    
 {
     Task<TEntidade> ObterPorId(long id);
     Task<IEnumerable<TEntidade>> ObterTodos();
@@ -10,5 +10,4 @@ public interface IRepositorioBase<TEntidade> where TEntidade : EntidadeBase
     Task<TEntidade> Atualizar(TEntidade entidade);
     Task Remover(TEntidade entidade);
     Task Remover(long id);
-    Task<IEnumerable<TEntidade>> PesquisarPorNome(string nome, string campo = "nome");
 }

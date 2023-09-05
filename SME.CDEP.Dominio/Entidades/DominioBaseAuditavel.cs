@@ -17,7 +17,7 @@ public abstract class DominioBaseAuditavel<TEntidade> : IDominioBaseAuditavel<TE
         return _repositorio.ObterPorId(id);
     }
 
-    public Task<IList<TEntidade>> ObterTodos()
+    public Task<IEnumerable<TEntidade>> ObterTodos()
     {
         return _repositorio.ObterTodos();
     }

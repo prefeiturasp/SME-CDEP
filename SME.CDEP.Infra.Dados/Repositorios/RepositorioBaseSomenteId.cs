@@ -9,13 +9,13 @@ using SME.CDEP.Infra.Dominio.Enumerados;
 
 namespace SME.CDEP.Infra.Dados.Repositorios;
 
-public abstract class RepositorioBase<TEntidade> : IRepositorioBase<TEntidade>
-    where TEntidade : EntidadeBase    
+public abstract class RepositorioBaseSomenteId<TEntidade> : IRepositorioBaseSomenteId<TEntidade>
+    where TEntidade : EntidadeBaseSomenteId    
 {
     protected readonly IContextoAplicacao contexto;
     protected readonly ICdepConexao conexao;
 
-    public RepositorioBase(IContextoAplicacao contexto,ICdepConexao conexao)
+    public RepositorioBaseSomenteId(IContextoAplicacao contexto,ICdepConexao conexao)
     {
         this.contexto = contexto;
         this.conexao = conexao;
@@ -65,11 +65,5 @@ public abstract class RepositorioBase<TEntidade> : IRepositorioBase<TEntidade>
     public async Task Remover(long id)
     {
         throw new NotImplementedException();
-    }
-
-    public async Task<IEnumerable<TEntidade>> PesquisarPorNome(string nome, string campo)
-    {
-        var tableName = Resolvers.Table(typeof(TEntidade), conexao.Obter());
-        return await conexao.Obter().QueryAsync<TEntidade>($"select * from {tableName} where lower({campo}) like '%{nome.ToLower()}%' and not excluido ");
     }
 }

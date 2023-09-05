@@ -5,6 +5,6 @@ namespace SME.CDEP.Infra.Dados.Repositorios.Interfaces
 {
     public interface IRepositorioAcervo : IRepositorioBase<Acervo>
     {
-        Task<IList<Acervo>> PesquisarPorFiltro(int? tipoAcervo, string titulo, long? creditoAutorId, string codigo);
+        Task<IEnumerable<Acervo>> PesquisarPorFiltro(int? tipoAcervo, string titulo, long? creditoAutorId, string codigo);
     }
 }
