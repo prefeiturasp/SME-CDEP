@@ -94,24 +94,6 @@ namespace SME.CDEP.TesteIntegracao.Usuario
             acervo.Titulo.ShouldBe(string.Format(ConstantesTestes.TITULO_X, 1));
         }
         
-        [Fact(DisplayName = "Acervo - Atualizar")]
-        public async Task Atualizar()
-        {
-            // await InserirDadosBasicos();
-            //
-            // await InserirAcervo();
-            //
-            // var servicoAcervo = GetServicoAcervo();
-            //
-            // var acervoDto = await servicoAcervo.ObterPorId(3);
-            // acervoDto.Titulo = string.Format(ConstantesTestes.TITULO_X, 100);
-            //
-            // var acervoAlterado = await servicoAcervo.Alterar(acervoDto);
-            //
-            // acervoAlterado.ShouldNotBeNull();
-            // acervoAlterado.Titulo = string.Format(ConstantesTestes.TITULO_X, 100);
-        }
-        
         [Fact(DisplayName = "Acervo - Excluir")]
         public async Task Excluir()
         {
