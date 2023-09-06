@@ -7,8 +7,11 @@ namespace SME.CDEP.Infra.Dominio.Enumerados
     {
         [Display(Name ="temp")] 
         Temp = 1,
+        
+        [Display(Name ="temp")] 
+        Editor = 2,
 
         [Display(Name ="acervo-fotografico")] 
-        AcervoFotografico = 2,
+        AcervoFotografico = 3,
     }
 }

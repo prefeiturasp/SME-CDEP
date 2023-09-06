@@ -1,26 +1,25 @@
 ﻿using Dapper.FluentMap;
 using Dapper.FluentMap.Dommel;
-using Elastic.Apm.Api;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 using Microsoft.Extensions.ObjectPool;
 using Microsoft.Extensions.Options;
-using SME.CDEP.Aplicacao.DTOS;
 using SME.CDEP.Aplicacao.Integracoes;
 using SME.CDEP.Aplicacao.Integracoes.Interfaces;
 using SME.CDEP.Aplicacao.Mapeamentos;
 using SME.CDEP.Aplicacao.Servicos;
 using SME.CDEP.Aplicacao.Servicos.Interface;
-using SME.CDEP.Dominio.Contexto;
-using SME.CDEP.Dominio.Entidades;
 using SME.CDEP.Infra.Dados;
 using SME.CDEP.Infra.Dados.Mapeamentos;
 using SME.CDEP.Infra.Dados.Repositorios;
 using SME.CDEP.Infra.Dados.Repositorios.Interfaces;
-using SME.CDEP.Infra.Servicos.Log;
+using SME.CDEP.Infra.Servicos.Mensageria;
+using SME.CDEP.Infra.Servicos.Mensageria.Log;
 using SME.CDEP.Infra.Servicos.Options;
 using SME.CDEP.Infra.Servicos.Polly;
+using SME.CDEP.Infra.Servicos.ServicoArmazenamento;
+using SME.CDEP.Infra.Servicos.ServicoArmazenamento.Interface;
 using SME.CDEP.Infra.Servicos.Telemetria.IoC;
 using SME.CDEP.IoC.Extensions;
 
@@ -127,6 +126,7 @@ public class RegistradorDeDependencia
         _serviceCollection.TryAddScoped<IRepositorioSerieColecao, RepositorioSerieColecao>();
         _serviceCollection.TryAddScoped<IRepositorioAcervo, RepositorioAcervo>();
         _serviceCollection.TryAddScoped<IRepositorioAcervoFotografico, RepositorioAcervoFotografico>();
+        _serviceCollection.TryAddScoped<IRepositorioArquivo, RepositorioArquivo>();
     }
 
     protected virtual void RegistrarServicos()
@@ -150,6 +150,13 @@ public class RegistradorDeDependencia
         _serviceCollection.TryAddScoped<IServicoMenu, ServicoMenu>();
         _serviceCollection.TryAddScoped<IServicoAcervo, ServicoAcervoAuditavel>();
         _serviceCollection.TryAddScoped<IServicoAcervoFotografico, ServicoAcervoFotografico>();
+        _serviceCollection.TryAddScoped<IServicoUploadArquivo, ServicoUploadArquivo>();
+        _serviceCollection.TryAddScoped<IServicoExcluirArquivo, ServicoExcluirArquivo>();
+        _serviceCollection.TryAddScoped<IServicoArmazenamentoArquivoFisico, ServicoArmazenamentoArquivoFisico>();
+        _serviceCollection.TryAddScoped<IServicoArmazenamento, ServicoArmazenamento>();
+        _serviceCollection.TryAddScoped<IServicoDownloadArquivo, ServicoDownloadArquivo>();
+        _serviceCollection.TryAddScoped<IServicoMoverArquivoTemporario, ServicoMoverArquivoTemporario>();
+        _serviceCollection.TryAddScoped<IServicoMensageria, ServicoMensageria>();
     }
     protected virtual void RegistrarHttpClients()
     {

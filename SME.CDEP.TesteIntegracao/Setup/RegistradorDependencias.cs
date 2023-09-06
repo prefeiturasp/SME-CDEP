@@ -10,6 +10,9 @@ using SME.CDEP.TesteIntegracao.ServicosFakes;
 using SME.CDEP.Aplicacao.Integracoes.Interfaces;
 using SME.CDEP.Aplicacao.Mapeamentos;
 using SME.CDEP.Dominio.Contexto;
+using SME.CDEP.Infra.Servicos.Mensageria;
+using SME.CDEP.Infra.Servicos.ServicoArmazenamento;
+using SME.CDEP.Infra.Servicos.ServicoArmazenamento.Interface;
 using SME.CDEP.Webapi.Contexto;
 
 namespace SME.CDEP.TesteIntegracao.Setup
@@ -74,6 +77,13 @@ namespace SME.CDEP.TesteIntegracao.Setup
             _serviceCollection.TryAddScoped<IServicoMenu, ServicoMenu>();
             _serviceCollection.TryAddScoped<IServicoAcervo, ServicoAcervoAuditavel>();
             _serviceCollection.TryAddScoped<IServicoAcervoFotografico, ServicoAcervoFotografico>();
+            _serviceCollection.TryAddScoped<IServicoUploadArquivo, ServicoUploadArquivo>();
+            _serviceCollection.TryAddScoped<IServicoExcluirArquivo, ServicoExcluirArquivo>();
+            _serviceCollection.TryAddScoped<IServicoArmazenamentoArquivoFisico, ServicoArmazenamentoArquivoFisico>();
+            _serviceCollection.TryAddScoped<IServicoArmazenamento, ServicoArmazenamento>();
+            _serviceCollection.TryAddScoped<IServicoDownloadArquivo, ServicoDownloadArquivo>();
+            _serviceCollection.TryAddScoped<IServicoMoverArquivoTemporario, ServicoMoverArquivoTemporario>();
+            _serviceCollection.TryAddScoped<IServicoMensageria, ServicoMensageria>();
         }
         protected override void RegistrarHttpClients()
         {}
