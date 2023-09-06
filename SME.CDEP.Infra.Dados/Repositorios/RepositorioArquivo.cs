@@ -59,7 +59,10 @@ namespace SME.CDEP.Infra.Dados.Repositorios
 
         public async Task SalvarAsync(Arquivo arquivo)
         {
-            await conexao.Obter().InsertAsync(arquivo);
+            if (arquivo.Id > 0)
+                await conexao.Obter().UpdateAsync(arquivo);
+            else
+                await conexao.Obter().InsertAsync(arquivo);
         }
 
         public async Task<long> ObterIdPorCodigo(Guid arquivoCodigo)

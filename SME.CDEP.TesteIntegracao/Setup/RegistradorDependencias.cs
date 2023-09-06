@@ -14,6 +14,7 @@ using SME.CDEP.Infra.Servicos.Mensageria;
 using SME.CDEP.Infra.Servicos.ServicoArmazenamento;
 using SME.CDEP.Infra.Servicos.ServicoArmazenamento.Interface;
 using SME.CDEP.Webapi.Contexto;
+using SSME.CDEP.TesteIntegracao.ServicosFakes;
 
 namespace SME.CDEP.TesteIntegracao.Setup
 {
@@ -80,10 +81,10 @@ namespace SME.CDEP.TesteIntegracao.Setup
             _serviceCollection.TryAddScoped<IServicoUploadArquivo, ServicoUploadArquivo>();
             _serviceCollection.TryAddScoped<IServicoExcluirArquivo, ServicoExcluirArquivo>();
             _serviceCollection.TryAddScoped<IServicoArmazenamentoArquivoFisico, ServicoArmazenamentoArquivoFisico>();
-            _serviceCollection.TryAddScoped<IServicoArmazenamento, ServicoArmazenamento>();
+            _serviceCollection.TryAddScoped<IServicoArmazenamento, ServicoArmazenamentoFake>();
             _serviceCollection.TryAddScoped<IServicoDownloadArquivo, ServicoDownloadArquivo>();
             _serviceCollection.TryAddScoped<IServicoMoverArquivoTemporario, ServicoMoverArquivoTemporario>();
-            _serviceCollection.TryAddScoped<IServicoMensageria, ServicoMensageria>();
+            _serviceCollection.TryAddScoped<IServicoMensageria, ServicoMensageriaFake>();
         }
         protected override void RegistrarHttpClients()
         {}

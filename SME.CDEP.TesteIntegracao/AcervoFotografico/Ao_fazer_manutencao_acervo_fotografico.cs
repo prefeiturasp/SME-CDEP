@@ -8,7 +8,7 @@ using SME.CDEP.TesteIntegracao.Constantes;
 using Xunit;
 using Xunit.Sdk;
 
-namespace SME.CDEP.TesteIntegracao.Usuario
+namespace SME.CDEP.TesteIntegracao
 {
     public class Ao_fazer_manutencao_acervo_fotografico : TesteBase
     {
