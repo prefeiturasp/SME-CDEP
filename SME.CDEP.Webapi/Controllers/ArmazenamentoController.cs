@@ -15,7 +15,7 @@ public class ArmazenamentoController: BaseController
     [ProducesResponseType(401)]
     [ProducesResponseType(typeof(RetornoBaseDTO), 500)]
     [Authorize("Bearer")]
-    public async Task<IActionResult> Upload([FromForm] IFormFile file, [FromServices] IServicoUploadArquivo servicoUploadArquivo)
+    public async Task<IActionResult> Upload(IFormFile file, [FromServices] IServicoUploadArquivo servicoUploadArquivo)
     {
         return Ok(await servicoUploadArquivo.Upload(file));
     }

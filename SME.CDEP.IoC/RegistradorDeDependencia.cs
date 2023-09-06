@@ -46,6 +46,12 @@ public class RegistradorDeDependencia
         RegistrarServicos();
         RegistrarProfiles();
         RegistrarHttpClients();
+        RegistrarServicoArmazenamento(_serviceCollection, _configuration);
+    }
+    
+    protected virtual void RegistrarServicoArmazenamento(IServiceCollection services, IConfiguration configuration)
+    {
+        services.ConfigurarArmazenamento(configuration);
     }
     
     protected virtual void RegistrarProfiles()
