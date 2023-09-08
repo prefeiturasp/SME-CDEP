@@ -50,7 +50,7 @@ namespace SME.CDEP.TesteIntegracao.Usuario
 
             var acervo = await servicoAcervo.Inserir(new Acervo()
             {
-                Codigo = string.Format(ConstantesTestes.CODIGO_X,1),
+                Codigo = "1",
                 Titulo = string.Format(ConstantesTestes.TITULO_X,1),
                 CreditoAutorId = new Random().Next(1, 5),
                 TipoAcervoId = (int)TipoAcervo.Fotografico,    
@@ -72,7 +72,7 @@ namespace SME.CDEP.TesteIntegracao.Usuario
 
             await servicoAcervo.Inserir(new Acervo()
             {
-                Codigo = string.Format(ConstantesTestes.CODIGO_X,1),
+                Codigo = "1",
                 Titulo = string.Format(ConstantesTestes.TITULO_X,1),
                 CreditoAutorId = new Random().Next(1, 5),
                 TipoAcervoId = (int)TipoAcervo.Fotografico,    
@@ -118,7 +118,7 @@ namespace SME.CDEP.TesteIntegracao.Usuario
             {
                 await InserirNaBase(new Acervo()
                 {
-                    Codigo = string.Format(ConstantesTestes.CODIGO_X, j),
+                    Codigo = j.ToString(),
                     Titulo = string.Format(ConstantesTestes.TITULO_X, j),
                     CreditoAutorId = random.Next(1, 5),
                     TipoAcervoId = (int)TipoAcervo.Fotografico,

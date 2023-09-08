@@ -49,7 +49,7 @@ namespace SME.CDEP.Aplicacao.Servicos
         }
         public async Task<D> PesquisarPorNome(string nome)
         {
-            return mapper.Map<D>(await repositorio.PesquisarPor(nome));
+            return mapper.Map<D>(await repositorio.PesquisarParcialPor(nome));
         }
     }
 }
