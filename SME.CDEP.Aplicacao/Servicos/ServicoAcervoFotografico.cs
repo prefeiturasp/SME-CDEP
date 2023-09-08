@@ -41,11 +41,13 @@ namespace SME.CDEP.Aplicacao.Servicos
             var arquivosCompletos =  Enumerable.Empty<Arquivo>();
 
             if (acervoFotograficoCadastroDto.Arquivos != null)
-                arquivosCompletos = await repositorioArquivo.ObterPorCodigos(acervoFotograficoCadastroDto.Arquivos);
+                arquivosCompletos = await repositorioArquivo.ObterPorCodigos(acervoFotograficoCadastroDto.Arquivos.Select(s=> new Guid(s)).ToArray());
             
             var acervo = mapper.Map<Acervo>(acervoFotograficoCadastroDto);
             acervo.TipoAcervoId = (int)TipoAcervo.Fotografico;
-            acervo.Codigo = $"{acervo.Codigo}FT";
+            acervo.Codigo = acervo.Codigo.ContemSigla() 
+                ? acervo.Codigo
+                : $"{acervo.Codigo}{Constantes.SIGLA_ACERVO_FOTOGRAFICO}";
             
             var acervoFotografico = mapper.Map<AcervoFotografico>(acervoFotograficoCadastroDto);
             
@@ -101,7 +103,7 @@ namespace SME.CDEP.Aplicacao.Servicos
             
             var arquivosExistentes = await repositorioAcervoFotograficoArquivo.ObterPorAcervoFotograficoId(acervoFotograficoAlteracaoDto.Id);
             
-            var arquivosAlteradosCompletos = await repositorioArquivo.ObterPorCodigos(arquivosAlterados);
+            var arquivosAlteradosCompletos = await repositorioArquivo.ObterPorCodigos(arquivosAlterados.Select(s=> new Guid(s)).ToArray());
             arquivosIdsInserir = arquivosAlteradosCompletos.Select(a => a.Id).Except(arquivosExistentes.Select(b => b.ArquivoId));
             arquivosIdsExcluir = arquivosExistentes.Select(b => b.ArquivoId).Except(arquivosAlteradosCompletos.Select(a => a.Id));
             

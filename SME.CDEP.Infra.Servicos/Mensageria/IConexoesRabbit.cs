@@ -1,6 +1,6 @@
 ﻿using RabbitMQ.Client;
 
-namespace SME.CDEP.Infra.Servicos.Log
+namespace SME.CDEP.Infra.Servicos.Mensageria
 {
     public interface IConexoesRabbit
     {

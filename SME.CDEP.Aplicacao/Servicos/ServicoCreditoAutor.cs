@@ -2,8 +2,10 @@
 using SME.CDEP.Aplicacao.DTOS;
 using SME.CDEP.Aplicacao.Enumerados;
 using SME.CDEP.Aplicacao.Servicos.Interface;
+using SME.CDEP.Dominio.Constantes;
 using SME.CDEP.Dominio.Contexto;
 using SME.CDEP.Dominio.Entidades;
+using SME.CDEP.Dominio.Excecoes;
 using SME.CDEP.Infra.Dados.Repositorios.Interfaces;
 using SME.CDEP.Infra.Dominio.Enumerados;
 
@@ -18,6 +20,20 @@ namespace SME.CDEP.Aplicacao.Servicos
         {
             this.repositorioCreditoAutor = repositorioCreditoAutor ?? throw new ArgumentNullException(nameof(repositorioCreditoAutor));
             this.mapper = mapper ?? throw new ArgumentNullException(nameof(mapper));
+        }
+
+        public async Task<long> Inserir(IdNomeTipoExcluidoAuditavelDTO idNomeExcluidoAuditavelDTO)
+        {
+            ValidarNome(idNomeExcluidoAuditavelDTO);
+            await ValidarDuplicado(idNomeExcluidoAuditavelDTO.Nome, idNomeExcluidoAuditavelDTO.Id,idNomeExcluidoAuditavelDTO.Tipo);
+            return await base.Inserir(idNomeExcluidoAuditavelDTO);
+        }
+        
+        public async Task<IdNomeTipoExcluidoAuditavelDTO> Alterar(IdNomeTipoExcluidoAuditavelDTO idNomeExcluidoAuditavelDTO)
+        {
+            ValidarNome(idNomeExcluidoAuditavelDTO);
+            await ValidarDuplicado(idNomeExcluidoAuditavelDTO.Nome, idNomeExcluidoAuditavelDTO.Id,idNomeExcluidoAuditavelDTO.Tipo);
+            return await base.Alterar(idNomeExcluidoAuditavelDTO);
         }
 
         public async Task<PaginacaoResultadoDTO<IdNomeTipoExcluidoAuditavelDTO>> ObterPaginado(NomeTipoCreditoAutoriaDTO nomeTipoDto)
@@ -48,6 +64,18 @@ namespace SME.CDEP.Aplicacao.Servicos
                 TipoOrdenacao.AZ => registros.OrderBy(o => o.Nome),
                 TipoOrdenacao.ZA => registros.OrderByDescending(o => o.Nome),
             };
+        }
+        
+        private async Task ValidarDuplicado(string nome, long id, int tipo)
+        {
+            if (await repositorioCreditoAutor.Existe(nome, id, tipo))
+                throw new NegocioException(MensagemNegocio.REGISTRO_DUPLICADO);
+        }
+        
+        private void ValidarNome(IdNomeExcluidoAuditavelDTO idNomeExcluidoAuditavelDTO)
+        {
+            if (idNomeExcluidoAuditavelDTO.Nome is null || idNomeExcluidoAuditavelDTO.Nome.Trim().Length == 0)
+                throw new NegocioException(MensagemNegocio.NOME_NAO_INFORMADO);
         }
     }
 }

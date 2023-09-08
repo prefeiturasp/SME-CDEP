@@ -2,7 +2,7 @@
 using RabbitMQ.Client;
 using SME.CDEP.Infra.Servicos.Options;
 
-namespace SME.CDEP.Infra.Servicos.Log
+namespace SME.CDEP.Infra.Servicos.Mensageria
 {
     public class ConexoesRabbit : IConexoesRabbit
     {

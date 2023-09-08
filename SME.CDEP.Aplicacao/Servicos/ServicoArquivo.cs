@@ -7,7 +7,7 @@ using SME.CDEP.Infra.Dados.Repositorios.Interfaces;
 
 namespace SME.CDEP.Aplicacao.Servicos
 {
-    public class ServicoArquivo : ServicoAplicacaoAuditavel<Arquivo, IdNomeTipoExcluidoAuditavelDTO>,IServicoCreditoAutor
+    public class ServicoArquivo : ServicoAplicacaoAuditavel<Arquivo, ArquivoDTO>,IServicoArquivo
     {
         public ServicoArquivo(IRepositorioArquivo repositorio, IMapper mapper,IContextoAplicacao contextoAplicacao) : base(repositorio, mapper,contextoAplicacao)
         {}

@@ -9,7 +9,7 @@ using SME.CDEP.TesteIntegracao.Constantes;
 using Xunit;
 using Xunit.Sdk;
 
-namespace SME.CDEP.TesteIntegracao.Usuario
+namespace SME.CDEP.TesteIntegracao
 {
     public class Ao_fazer_manutencao_acervo_fotografico : TesteBase
     {
@@ -36,47 +36,6 @@ namespace SME.CDEP.TesteIntegracao.Usuario
 
             var acervoFotograficoDtos = await servicoAcervoFotografico.ObterTodos();
             acervoFotograficoDtos.ShouldNotBeNull();
-        }
-        
-        [Fact(DisplayName = "Acervo fotográfico - Pesquisar por Nome")]
-        public async Task Pesquisar_por_nome()
-        {
-            var servicoCreditoAutor = GetServicoCreditoAutor();
-
-            await InserirNaBase(new CreditoAutor() 
-            { 
-                Nome = ConstantesTestes.LIVRO,
-                CriadoPor = ConstantesTestes.SISTEMA, 
-                CriadoEm = DateTimeExtension.HorarioBrasilia().Date, 
-                CriadoLogin = ConstantesTestes.LOGIN_123456789 
-            });
-            
-            await InserirNaBase(new CreditoAutor() 
-            { 
-                Nome = ConstantesTestes.PAPEL,
-                CriadoPor = ConstantesTestes.SISTEMA, 
-                CriadoEm = DateTimeExtension.HorarioBrasilia().Date, 
-                CriadoLogin = ConstantesTestes.LOGIN_123456789 
-            });
-            
-            await InserirNaBase(new CreditoAutor() 
-            { 
-                Nome = ConstantesTestes.COLOR,
-                CriadoPor = ConstantesTestes.SISTEMA, 
-                CriadoEm = DateTimeExtension.HorarioBrasilia().Date, 
-                CriadoLogin = ConstantesTestes.LOGIN_123456789 
-            });
-            
-            await InserirNaBase(new CreditoAutor() 
-            { 
-                Nome = ConstantesTestes.VOB,
-                CriadoPor = ConstantesTestes.SISTEMA, 
-                CriadoEm = DateTimeExtension.HorarioBrasilia().Date, 
-                CriadoLogin = ConstantesTestes.LOGIN_123456789 
-            });
-            
-            var retorno = await servicoCreditoAutor.ObterPaginado("o");
-            retorno.Items.Count().ShouldBe(ConstantesTestes.QUANTIDADE_3);
         }
         
         [Fact(DisplayName = "Acervo fotográfico - Atualizar (Adicionando 4 novos arquivos, sendo 1 existente)")]

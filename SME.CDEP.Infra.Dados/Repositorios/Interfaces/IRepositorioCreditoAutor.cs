@@ -6,7 +6,9 @@ namespace SME.CDEP.Infra.Dados.Repositorios.Interfaces
 {
     public interface IRepositorioCreditoAutor : IRepositorioBase<CreditoAutor>
     {
-        Task<IList<CreditoAutor>> ObterTodosPorTipo(TipoCreditoAutoria tipo);
-        Task<IList<CreditoAutor>> PesquisarPorNomeTipo(string nome, TipoCreditoAutoria tipo);
+        Task<IEnumerable<CreditoAutor>> ObterTodosPorTipo(TipoCreditoAutoria tipo);
+        Task<IEnumerable<CreditoAutor>> PesquisarPorNomeTipo(string nome, TipoCreditoAutoria tipo);
+        Task<bool> Existe(string nome, long id, int tipo);
+        Task<IEnumerable<CreditoAutor>> PesquisarPorNome(string nome, int tipo);
     }
 }

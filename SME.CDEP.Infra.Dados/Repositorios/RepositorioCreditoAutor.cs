@@ -11,8 +11,8 @@ namespace SME.CDEP.Infra.Dados.Repositorios
         public RepositorioCreditoAutor(IContextoAplicacao contexto, ICdepConexao conexao) : base(contexto,conexao)
         { }
 
-        public async Task<IList<CreditoAutor>> ObterTodosPorTipo(TipoCreditoAutoria tipo)
-        => (await conexao.Obter()
+        public async Task<IEnumerable<CreditoAutor>> ObterTodosPorTipo(TipoCreditoAutoria tipo)
+        => await conexao.Obter()
                 .QueryAsync<CreditoAutor>(@"select id, 
                                                        criado_em, 
                                                        criado_por, 
@@ -26,10 +26,10 @@ namespace SME.CDEP.Infra.Dados.Repositorios
                                                 from credito_autor
                                                 where tipo = @tipo
                                                   and not excluido", 
-                    new { tipo })).ToList();
+                    new { tipo });
 
-        public async Task<IList<CreditoAutor>> PesquisarPorNomeTipo(string nome, TipoCreditoAutoria tipo)
-        => (await conexao.Obter()
+        public async Task<IEnumerable<CreditoAutor>> PesquisarPorNomeTipo(string nome, TipoCreditoAutoria tipo)
+        => await conexao.Obter()
                 .QueryAsync<CreditoAutor>($@"select id, 
                                                        criado_em, 
                                                        criado_por, 
@@ -43,6 +43,24 @@ namespace SME.CDEP.Infra.Dados.Repositorios
                                                 from credito_autor
                                                 where tipo = @tipo
                                                   and lower(nome) like '%{nome.ToLower()}%' and not excluido ",
-                    new { tipo })).ToList();
+                    new { tipo });
+    
+    public async Task<bool> Existe(string nome, long id, int tipo)
+        => await conexao.Obter().QueryFirstOrDefaultAsync<bool>("select 1 from credito_autor where lower(nome) = @nome and tipo = @tipo and not excluido and id != @id",new { id, nome = nome.ToLower(), tipo });
+
+    public async Task<IEnumerable<CreditoAutor>> PesquisarPorNome(string nome, int tipo)
+    => await conexao.Obter().QueryAsync<CreditoAutor>($@"select id, 
+                                                                    nome,
+                                                                    excluido, 
+                                                                    criado_em, 
+                                                                    alterado_em, 
+                                                                    criado_por, 
+                                                                    alterado_por, 
+                                                                    criado_login, 
+                                                                    alterado_login 
+                                                            from credito_autor 
+                                                            where lower(nome) like '%{nome.ToLower()}%' 
+                                                              and tipo = @tipo
+                                                              and not excluido ", new { tipo });
     }
 }

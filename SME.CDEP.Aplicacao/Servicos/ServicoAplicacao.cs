@@ -47,9 +47,5 @@ namespace SME.CDEP.Aplicacao.Servicos
             await Alterar(entidade);
             return true;
         }
-        public async Task<D> PesquisarPorNome(string nome)
-        {
-            return mapper.Map<D>(await repositorio.PesquisarParcialPor(nome));
-        }
     }
 }

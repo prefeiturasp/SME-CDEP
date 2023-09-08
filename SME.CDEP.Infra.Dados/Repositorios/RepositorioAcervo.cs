@@ -5,7 +5,7 @@ using SME.CDEP.Infra.Dados.Repositorios.Interfaces;
 
 namespace SME.CDEP.Infra.Dados.Repositorios
 {
-    public class RepositorioAcervo : RepositorioBase<Acervo>, IRepositorioAcervo
+    public class RepositorioAcervo : RepositorioBaseAuditavel<Acervo>, IRepositorioAcervo
     {
         public RepositorioAcervo(IContextoAplicacao contexto, ICdepConexao conexao) : base(contexto,conexao)
         { }
@@ -35,6 +35,16 @@ namespace SME.CDEP.Infra.Dados.Repositorios
                 acervo.CreditoAutor = creditoAutor;
                 return acervo;
             }, new { tipoAcervo, creditoAutorId }, splitOn: "id"));
+        }
+        
+        public Task<bool> ExisteCodigo(string codigo, long id)
+        {
+            return conexao.Obter().QueryFirstOrDefaultAsync<bool>("select 1 from acervo where lower(codigo) = @codigo and not excluido and id != @id",new { id, codigo = codigo.ToLower() });
+        }
+        
+        public Task<bool> ExisteTitulo(string titulo, long id)
+        {
+            return conexao.Obter().QueryFirstOrDefaultAsync<bool>("select 1 from acervo where lower(titulo) = @titulo and not excluido and id != @id",new { id, titulo = titulo.ToLower() });
         }
     }
 }

@@ -10,6 +10,4 @@ public interface IRepositorioBase<TEntidade> where TEntidade : EntidadeBase
     Task<TEntidade> Atualizar(TEntidade entidade);
     Task Remover(TEntidade entidade);
     Task Remover(long id);
-    Task<IEnumerable<TEntidade>> PesquisarParcialPor(string valorCampo, string campo = "nome");
-    Task<IEnumerable<TEntidade>> PesquisarExatoPor(string valorCampo, string campo);
 }

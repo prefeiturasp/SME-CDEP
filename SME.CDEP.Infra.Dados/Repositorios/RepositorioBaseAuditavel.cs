@@ -1,3 +1,4 @@
+using Dapper;
 using Dommel;
 using SME.CDEP.Dominio;
 using SME.CDEP.Dominio.Contexto;

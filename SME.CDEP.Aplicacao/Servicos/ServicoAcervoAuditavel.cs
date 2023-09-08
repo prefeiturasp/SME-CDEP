@@ -39,14 +39,14 @@ namespace SME.CDEP.Aplicacao.Servicos
         
         public async Task ValidarTomboDuplicado(string codigo, long id)
         {
-            if ((await repositorioAcervo.PesquisarExatoPor(codigo, "codigo")).Any(a => a.Id != id))
-                throw new NegocioException(MensagemNegocio.REGISTRO_DUPLICADO);
+            if (await repositorioAcervo.ExisteCodigo(codigo, id))
+                throw new NegocioException(string.Format(MensagemNegocio.REGISTRO_X_DUPLICADO,"Codigo"));
         }
         
-        public async Task ValidarTituloDuplicado(string valorCampo, long id)
+        public async Task ValidarTituloDuplicado(string titulo, long id)
         {
-            if ((await repositorioAcervo.PesquisarParcialPor(valorCampo, "titulo")).Any(a => a.Id != id))
-                throw new NegocioException(MensagemNegocio.REGISTRO_DUPLICADO);
+            if (await repositorioAcervo.ExisteTitulo(titulo, id))
+                throw new NegocioException(string.Format(MensagemNegocio.REGISTRO_X_DUPLICADO, "Título"));
         }
 
         public async Task<IEnumerable<AcervoDTO>> ObterTodos()

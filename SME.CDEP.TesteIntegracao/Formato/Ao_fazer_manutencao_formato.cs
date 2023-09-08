@@ -7,7 +7,7 @@ using SME.CDEP.TesteIntegracao.Setup;
 using SME.CDEP.TesteIntegracao.Constantes;
 using Xunit;
 
-namespace SME.CDEP.TesteIntegracao.Usuario
+namespace SME.CDEP.TesteIntegracao
 {
     public class Ao_fazer_manutencao_formato : TesteBase
     {

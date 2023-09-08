@@ -164,6 +164,21 @@ namespace SME.CDEP.TesteIntegracao
             return ServiceProvider.GetService<IMapper>();
         }
         
+        protected IServicoExcluirArquivo GetServicoExcluirArquivo()
+        {
+            return ServiceProvider.GetService<IServicoExcluirArquivo>();
+        }
+        
+        protected IServicoMoverArquivoTemporario GetServicoMoverArquivoTemporario()
+        {
+            return ServiceProvider.GetService<IServicoMoverArquivoTemporario>();
+        }
+        
+        protected IServicoUploadArquivo GetServicoUploadArquivo()
+        {
+            return ServiceProvider.GetService<IServicoUploadArquivo>();
+        }
+        
         public T ObterServicoAplicacao<T>()
             where T : IServicoAplicacao
         {
