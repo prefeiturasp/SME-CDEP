@@ -16,13 +16,17 @@ namespace SME.CDEP.Aplicacao.Servicos
             this.repositorioArquivo = repositorioArquivo?? throw new ArgumentNullException(nameof(repositorioArquivo));
         }
         
-        public async Task Mover(TipoArquivo tipoArquivo, string codigoArquivo)
+        public async Task Mover(TipoArquivo tipoArquivo, Guid codigoArquivo)
         {
-            await servicoArmazenamento.Mover(codigoArquivo);
+            var arquivo = await repositorioArquivo.ObterPorCodigo(codigoArquivo);
             
-            var arquivo = await repositorioArquivo.ObterPorCodigo(new Guid(codigoArquivo));
-            if (arquivo != null)
+            if (arquivo != null )
             {
+                var extensao = Path.GetExtension(arquivo.Nome);
+                var nomeArquivoBucket= $"{arquivo.Codigo.ToString()}{extensao}";
+             
+                await servicoArmazenamento.Mover(nomeArquivoBucket);
+                
                 arquivo.Tipo = tipoArquivo;
                 await repositorioArquivo.SalvarAsync(arquivo);
             }

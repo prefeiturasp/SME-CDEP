@@ -36,7 +36,7 @@ namespace SME.CDEP.TesteIntegracao
             var servicoExcluirArquivoTemporario = GetServicoMoverArquivoTemporario();
 
             var arquivos = ObterTodos<Arquivo>();
-            var codigoAMover = arquivos.FirstOrDefault().Codigo.ToString();
+            var codigoAMover = arquivos.FirstOrDefault().Codigo;
             
             await servicoExcluirArquivoTemporario.Mover(TipoArquivo.AcervoFotografico,codigoAMover);
             
