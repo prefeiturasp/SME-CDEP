@@ -75,7 +75,7 @@ namespace SME.CDEP.Aplicacao.Servicos
                 foreach (var arquivo in arquivosCompletos)
                     await servicoMoverArquivoTemporario.Mover(TipoArquivo.AcervoFotografico, arquivo.Codigo);
                 
-                return retorno;
+                return acervoFotografico.AcervoId;
             }
             catch
             {
@@ -136,7 +136,7 @@ namespace SME.CDEP.Aplicacao.Servicos
                 foreach (var arquivoAMover in arquivosMover)
                     await servicoMoverArquivoTemporario.Mover(TipoArquivo.AcervoFotografico, arquivoAMover.Codigo);
 
-                return await ObterPorId(acervoFotograficoAlteracaoDto.Id);
+                return await ObterPorId(acervoFotograficoAlteracaoDto.AcervoId);
             }
             catch
             {
