@@ -28,10 +28,5 @@ public class AcervoFotograficoDTO
     public string Resolucao { get; set; }
     public string TamanhoArquivo { get; set; }
     public ArquivoResumidoDTO[]? Arquivos { get; set; }
-    public DateTime? AlteradoEm { get; set; }
-    public string? AlteradoPor { get; set; }
-    public string? AlteradoLogin { get; set; }
-    public DateTime CriadoEm { get; set; }
-    public string CriadoPor { get; set; }
-    public string CriadoLogin { get; set; }
+    public AuditoriaDTO Auditoria { get; set; }
 }

@@ -55,9 +55,9 @@ public class CreditoAutorController: BaseController
     [ProducesResponseType(typeof(RetornoBaseDTO), 500)]
     [ProducesResponseType(typeof(RetornoBaseDTO), 601)]
     [Permissao(Permissao.CRD_C, Policy = "Bearer")]
-    public async Task<IActionResult> ObterTodos([FromServices]IServicoCreditoAutor servicoCreditoAutor)
+    public async Task<IActionResult> ObterTodos([FromQuery] TipoCreditoAutoria? tipo, [FromServices]IServicoCreditoAutor servicoCreditoAutor)
     {
-        return Ok((await servicoCreditoAutor.ObterTodos()).Select(s=> new IdNomeDTO {Id = s.Id, Nome = s.Nome}));
+        return Ok((await servicoCreditoAutor.ObterTodos(tipo)).Select(s=> new IdNomeDTO(){Id = s.Id, Nome = s.Nome}));
     }
     
     [HttpGet("{id}")]
