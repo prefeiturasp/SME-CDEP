@@ -154,6 +154,7 @@ namespace SME.CDEP.TesteIntegracao
             await InserirNaBase(new CreditoAutor() 
             { 
                 Nome = ConstantesTestes.LIVRO,
+                Tipo = TipoCreditoAutoria.Credito,
                 CriadoPor = ConstantesTestes.SISTEMA, 
                 CriadoEm = DateTimeExtension.HorarioBrasilia().Date, 
                 CriadoLogin = ConstantesTestes.LOGIN_123456789 
@@ -162,6 +163,7 @@ namespace SME.CDEP.TesteIntegracao
             await InserirNaBase(new CreditoAutor() 
             { 
                 Nome = ConstantesTestes.PAPEL,
+                Tipo = TipoCreditoAutoria.Autoria,
                 CriadoPor = ConstantesTestes.SISTEMA, 
                 CriadoEm = DateTimeExtension.HorarioBrasilia().Date, 
                 CriadoLogin = ConstantesTestes.LOGIN_123456789 
@@ -170,6 +172,7 @@ namespace SME.CDEP.TesteIntegracao
             await InserirNaBase(new CreditoAutor() 
             { 
                 Nome = ConstantesTestes.COLOR,
+                Tipo = TipoCreditoAutoria.Credito,
                 CriadoPor = ConstantesTestes.SISTEMA, 
                 CriadoEm = DateTimeExtension.HorarioBrasilia().Date, 
                 CriadoLogin = ConstantesTestes.LOGIN_123456789 
@@ -178,13 +181,14 @@ namespace SME.CDEP.TesteIntegracao
             await InserirNaBase(new CreditoAutor() 
             { 
                 Nome = ConstantesTestes.VOB,
+                Tipo = TipoCreditoAutoria.Autoria,
                 CriadoPor = ConstantesTestes.SISTEMA, 
                 CriadoEm = DateTimeExtension.HorarioBrasilia().Date, 
                 CriadoLogin = ConstantesTestes.LOGIN_123456789 
             });
             
-            // var retorno = await servicoCreditoAutor.ObterPaginado("o");
-            // retorno.Items.Count().ShouldBe(ConstantesTestes.QUANTIDADE_3);
+            var retorno = await servicoCreditoAutor.ObterPaginado(new NomeTipoCreditoAutoriaDTO(){ Nome = "o", Tipo = TipoCreditoAutoria.Credito});
+            retorno.Items.Count().ShouldBe(2);
         }
 
         private async Task InserirCredito()
