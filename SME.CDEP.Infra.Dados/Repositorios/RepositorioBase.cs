@@ -67,7 +67,7 @@ public abstract class RepositorioBase<TEntidade> : IRepositorioBase<TEntidade>
         throw new NotImplementedException();
     }
 
-    public async Task<IEnumerable<TEntidade>> PesquisarPorNome(string nome, string campo)
+    public async Task<IEnumerable<TEntidade>> PesquisarPor(string nome, string campo)
     {
         var tableName = Resolvers.Table(typeof(TEntidade), conexao.Obter());
         return await conexao.Obter().QueryAsync<TEntidade>($"select * from {tableName} where lower({campo}) like '%{nome.ToLower()}%' and not excluido ");

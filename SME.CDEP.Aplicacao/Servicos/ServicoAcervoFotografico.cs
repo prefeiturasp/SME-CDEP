@@ -48,6 +48,7 @@ namespace SME.CDEP.Aplicacao.Servicos
             {
                 var acervo = mapper.Map<Acervo>(acervoFotograficoCadastroDto);
                 acervo.TipoAcervoId = (int)TipoAcervo.Fotografico;
+                acervo.Codigo = $"{acervo.Codigo}FT";
                 
                 var retornoAcervo = await servicoAcervo.Inserir(acervo);
 

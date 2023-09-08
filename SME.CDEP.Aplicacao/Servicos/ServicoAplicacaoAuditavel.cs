@@ -110,7 +110,7 @@ namespace SME.CDEP.Aplicacao.Servicos
         
         public async Task<IEnumerable<D>> PesquisarPorNome(string nome)
         {
-            return mapper.Map<IEnumerable<D>>(await repositorio.PesquisarPorNome(nome));
+            return mapper.Map<IEnumerable<D>>(await repositorio.PesquisarPor(nome));
         }
         
         public async Task ValidarDuplicado(string nome, long id)

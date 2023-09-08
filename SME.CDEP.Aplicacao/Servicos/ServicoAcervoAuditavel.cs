@@ -27,9 +27,7 @@ namespace SME.CDEP.Aplicacao.Servicos
         
         public async Task<long> Inserir(Acervo acervo)
         {
-            ValidarTitulo(acervo.Titulo);
-            
-            await ValidarDuplicado(acervo.Titulo, acervo.Id);
+            await ValidarDuplicado(acervo.Codigo, acervo.Id);
                 
             acervo.CriadoEm = DateTimeExtension.HorarioBrasilia();
             acervo.CriadoPor = contextoAplicacao.NomeUsuario;
@@ -37,15 +35,9 @@ namespace SME.CDEP.Aplicacao.Servicos
             return await repositorioAcervo.Inserir(acervo);
         }
         
-        private static void ValidarTitulo(string titulo)
-        {
-            if (titulo is null || titulo.Trim().Length == 0)
-                throw new NegocioException(MensagemNegocio.TITULO_NAO_INFORMADO);
-        }
-        
         public async Task ValidarDuplicado(string nome, long id)
         {
-            if ((await repositorioAcervo.PesquisarPorNome(nome, "titulo")).Any(a => a.Id != id))
+            if ((await repositorioAcervo.PesquisarPor(nome, "codigo")).Any(a => a.Id != id))
                 throw new NegocioException(MensagemNegocio.REGISTRO_DUPLICADO);
         }
 
@@ -56,9 +48,7 @@ namespace SME.CDEP.Aplicacao.Servicos
 
         public async Task<AcervoDTO> Alterar(Acervo acervo)
         {
-           ValidarTitulo(acervo.Titulo);
-            
-            await ValidarDuplicado(acervo.Titulo, acervo.Id);
+            await ValidarDuplicado(acervo.Codigo, acervo.Id);
             
             acervo.AlteradoEm = DateTimeExtension.HorarioBrasilia();
             acervo.AlteradoLogin = contextoAplicacao.UsuarioLogado;
