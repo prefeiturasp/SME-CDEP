@@ -67,9 +67,15 @@ public abstract class RepositorioBase<TEntidade> : IRepositorioBase<TEntidade>
         throw new NotImplementedException();
     }
 
-    public async Task<IEnumerable<TEntidade>> PesquisarPor(string nome, string campo)
+    public async Task<IEnumerable<TEntidade>> PesquisarParcialPor(string valorCampo, string campo)
     {
         var tableName = Resolvers.Table(typeof(TEntidade), conexao.Obter());
-        return await conexao.Obter().QueryAsync<TEntidade>($"select * from {tableName} where lower({campo}) like '%{nome.ToLower()}%' and not excluido ");
+        return await conexao.Obter().QueryAsync<TEntidade>($"select * from {tableName} where lower({campo}) like '%{valorCampo.ToLower()}%' and not excluido ");
+    }
+    
+    public async Task<IEnumerable<TEntidade>> PesquisarExatoPor(string valorCampo, string campo)
+    {
+        var tableName = Resolvers.Table(typeof(TEntidade), conexao.Obter());
+        return await conexao.Obter().QueryAsync<TEntidade>($"select * from {tableName} where lower({campo}) = '{valorCampo.ToLower()}' and not excluido ");
     }
 }

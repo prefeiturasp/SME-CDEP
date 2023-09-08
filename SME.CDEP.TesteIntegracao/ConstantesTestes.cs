@@ -97,7 +97,6 @@ public class ConstantesTestes
     public const string PERFIL_EXTERNO_DESCRICAO = "Externo";
     public const string PERFIL_EXTERNO_GUID = "3092428D-CA98-4788-9717-E706DF1945A0";
     
-    public const string CODIGO_X = "Código {0}";
     public const string TITULO_X = "Título {0}";
     
     public const string LOCALIZACAO_X = "Localização {0}";

@@ -43,16 +43,16 @@ namespace SME.CDEP.Aplicacao.Servicos
             if (acervoFotograficoCadastroDto.Arquivos != null)
                 arquivosCompletos = await repositorioArquivo.ObterPorCodigos(acervoFotograficoCadastroDto.Arquivos);
             
+            var acervo = mapper.Map<Acervo>(acervoFotograficoCadastroDto);
+            acervo.TipoAcervoId = (int)TipoAcervo.Fotografico;
+            acervo.Codigo = $"{acervo.Codigo}FT";
+            
+            var acervoFotografico = mapper.Map<AcervoFotografico>(acervoFotograficoCadastroDto);
+            
             var tran = transacao.Iniciar();
             try
             {
-                var acervo = mapper.Map<Acervo>(acervoFotograficoCadastroDto);
-                acervo.TipoAcervoId = (int)TipoAcervo.Fotografico;
-                acervo.Codigo = $"{acervo.Codigo}FT";
-                
                 var retornoAcervo = await servicoAcervo.Inserir(acervo);
-
-                var acervoFotografico = mapper.Map<AcervoFotografico>(acervoFotograficoCadastroDto);
                 acervoFotografico.AcervoId = retornoAcervo;
                 
                 var retorno = await repositorioAcervoFotografico.Inserir(acervoFotografico);
