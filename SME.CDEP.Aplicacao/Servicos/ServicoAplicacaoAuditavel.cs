@@ -43,21 +43,21 @@ namespace SME.CDEP.Aplicacao.Servicos
                 throw new NegocioException(MensagemNegocio.NOME_NAO_INFORMADO);
         }
 
-        public async Task<IList<D>> ObterTodos()
+        public async Task<IEnumerable<D>> ObterTodos()
         {
-            return (await repositorio.ObterTodos()).Where(w=> !w.Excluido).Select(s=> mapper.Map<D>(s)).ToList();
+            return (await repositorio.ObterTodos()).Where(w=> !w.Excluido).Select(s=> mapper.Map<D>(s));
         }
 
         public async Task<PaginacaoResultadoDTO<D>> ObterPaginado(string nome)
         {
             var registros = string.IsNullOrEmpty(nome) ?  await ObterTodos() : await PesquisarPorNome(nome);
-            var totalRegistros = registros.Count;
+            var totalRegistros = registros.Count();
             var paginacao = Paginacao;
             var registrosOrdenados = OrdenarRegistros(paginacao, registros);
             
             var retornoPaginado = new PaginacaoResultadoDTO<D>()
             {
-                Items = registrosOrdenados.ToList().Skip(paginacao.QuantidadeRegistrosIgnorados).Take(paginacao.QuantidadeRegistros),
+                Items = registrosOrdenados.Skip(paginacao.QuantidadeRegistrosIgnorados).Take(paginacao.QuantidadeRegistros),
                 TotalRegistros = totalRegistros,
                 TotalPaginas = (int)Math.Ceiling((double)totalRegistros / paginacao.QuantidadeRegistros)
             };
@@ -65,7 +65,7 @@ namespace SME.CDEP.Aplicacao.Servicos
             return retornoPaginado;
         }
 
-        private IOrderedEnumerable<D> OrdenarRegistros(Paginacao paginacao, IList<D> registros)
+        private IOrderedEnumerable<D> OrdenarRegistros(Paginacao paginacao, IEnumerable<D> registros)
         {
             return paginacao.Ordenacao switch
             {
@@ -108,14 +108,14 @@ namespace SME.CDEP.Aplicacao.Servicos
             return true;
         } 
         
-        public async Task<IList<D>> PesquisarPorNome(string nome)
+        public async Task<IEnumerable<D>> PesquisarPorNome(string nome)
         {
-            return mapper.Map<IList<D>>(await repositorio.PesquisarPorNome(nome));
+            return mapper.Map<IEnumerable<D>>(await repositorio.PesquisarPor(nome));
         }
         
         public async Task ValidarDuplicado(string nome, long id)
         {
-            if ((await PesquisarPorNome(nome)).ToList().Any(a => a.Id != id))
+            if ((await PesquisarPorNome(nome)).Any(a => a.Id != id))
                 throw new NegocioException(MensagemNegocio.REGISTRO_DUPLICADO);
         }
         

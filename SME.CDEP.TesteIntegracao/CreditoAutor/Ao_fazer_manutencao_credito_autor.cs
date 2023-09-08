@@ -23,7 +23,7 @@ namespace SME.CDEP.TesteIntegracao.Usuario
             
             credito.ShouldBeGreaterThan(0);
             var obterTodos = ObterTodos<CreditoAutor>();
-            obterTodos.Count.ShouldBe(1);
+            obterTodos.Count().ShouldBe(1);
         }
       
         [Fact(DisplayName = "CréditoAutor - Não deve inserir pois já existe cadastro com esse nome")]
@@ -60,7 +60,7 @@ namespace SME.CDEP.TesteIntegracao.Usuario
 
             var creditoDTO = await servicoCreditoAutor.ObterTodos();
             creditoDTO.ShouldNotBeNull();
-            creditoDTO.Count.ShouldBe(2);
+            creditoDTO.Count().ShouldBe(2);
         }
 
         [Fact(DisplayName = "CréditoAutor - Obter por id")]

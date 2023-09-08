@@ -12,7 +12,7 @@ namespace SME.CDEP.Webapi.Controllers;
 public class AcervoController: BaseController
 {
     [HttpGet("tipos")]
-    [ProducesResponseType(typeof(IList<IdNomeDTO>), 200)]
+    [ProducesResponseType(typeof(IEnumerable<IdNomeDTO>), 200)]
     [ProducesResponseType(typeof(RetornoBaseDTO), 400)]
     [ProducesResponseType(typeof(RetornoBaseDTO), 403)]
     [ProducesResponseType(typeof(RetornoBaseDTO), 601)]

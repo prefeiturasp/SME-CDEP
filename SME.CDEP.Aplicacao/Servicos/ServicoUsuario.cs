@@ -36,9 +36,9 @@ namespace SME.CDEP.Aplicacao.Servicos
             return await repositorioUsuario.Inserir(usuario);
         }
 
-        public async Task<IList<UsuarioDTO>> ObterTodos()
+        public async Task<IEnumerable<UsuarioDTO>> ObterTodos()
         {
-            return (await repositorioUsuario.ObterTodos()).ToList().Select(s=> mapper.Map<UsuarioDTO>(s)).ToList();
+            return (await repositorioUsuario.ObterTodos()).ToList().Select(s=> mapper.Map<UsuarioDTO>(s));
         }
 
         public async Task<UsuarioDTO> Alterar(UsuarioDTO usuarioDTO)

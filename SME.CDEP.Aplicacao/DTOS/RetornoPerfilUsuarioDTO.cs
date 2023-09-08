@@ -7,5 +7,5 @@
         public string Token { get; set; }
         public string Email { get; set; }
         public bool Autenticado { get; set; }
-        public IList<PerfilUsuarioDTO> PerfilUsuario { get; set; }
+        public IEnumerable<PerfilUsuarioDTO> PerfilUsuario { get; set; }
     }

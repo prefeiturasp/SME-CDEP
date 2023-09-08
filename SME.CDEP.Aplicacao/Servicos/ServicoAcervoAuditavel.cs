@@ -25,48 +25,36 @@ namespace SME.CDEP.Aplicacao.Servicos
             this.contextoAplicacao = contextoAplicacao ?? throw new ArgumentNullException(nameof(contextoAplicacao));
         }
         
-        public async Task<long> Inserir(AcervoDTO acervoDto)
+        public async Task<long> Inserir(Acervo acervo)
         {
-            ValidarTitulo(acervoDto.Titulo);
-            
-            await ValidarDuplicado(acervoDto.Titulo, acervoDto.Id);
+            await ValidarDuplicado(acervo.Codigo, acervo.Id);
                 
-            var entidade = mapper.Map<Acervo>(acervoDto);
-            entidade.CriadoEm = DateTimeExtension.HorarioBrasilia();
-            entidade.CriadoPor = contextoAplicacao.NomeUsuario;
-            entidade.CriadoLogin = contextoAplicacao.UsuarioLogado;
-            return await repositorioAcervo.Inserir(entidade);
-        }
-        
-        private static void ValidarTitulo(string titulo)
-        {
-            if (titulo is null || titulo.Trim().Length == 0)
-                throw new NegocioException(MensagemNegocio.TITULO_NAO_INFORMADO);
+            acervo.CriadoEm = DateTimeExtension.HorarioBrasilia();
+            acervo.CriadoPor = contextoAplicacao.NomeUsuario;
+            acervo.CriadoLogin = contextoAplicacao.UsuarioLogado;
+            return await repositorioAcervo.Inserir(acervo);
         }
         
         public async Task ValidarDuplicado(string nome, long id)
         {
-            if ((await repositorioAcervo.PesquisarPorNome(nome, "titulo")).ToList().Any(a => a.Id != id))
+            if ((await repositorioAcervo.PesquisarPor(nome, "codigo")).Any(a => a.Id != id))
                 throw new NegocioException(MensagemNegocio.REGISTRO_DUPLICADO);
         }
 
-        public async Task<IList<AcervoDTO>> ObterTodos()
+        public async Task<IEnumerable<AcervoDTO>> ObterTodos()
         {
-            return (await repositorioAcervo.ObterTodos()).Where(w=> !w.Excluido).Select(s=> mapper.Map<AcervoDTO>(s)).ToList();
+            return (await repositorioAcervo.ObterTodos()).Where(w=> !w.Excluido).Select(s=> mapper.Map<AcervoDTO>(s));
         }
 
-        public async Task<AcervoDTO> Alterar(AcervoDTO acervoDto)
+        public async Task<AcervoDTO> Alterar(Acervo acervo)
         {
-           ValidarTitulo(acervoDto.Titulo);
+            await ValidarDuplicado(acervo.Codigo, acervo.Id);
             
-            await ValidarDuplicado(acervoDto.Titulo, acervoDto.Id);
+            acervo.AlteradoEm = DateTimeExtension.HorarioBrasilia();
+            acervo.AlteradoLogin = contextoAplicacao.UsuarioLogado;
+            acervo.AlteradoPor = contextoAplicacao.NomeUsuario;
             
-            var entidadeExistente = mapper.Map<Acervo>(acervoDto);
-            entidadeExistente.AlteradoEm = DateTimeExtension.HorarioBrasilia();
-            entidadeExistente.AlteradoLogin = contextoAplicacao.UsuarioLogado;
-            entidadeExistente.AlteradoPor = contextoAplicacao.NomeUsuario;
-            
-            return mapper.Map<AcervoDTO>(await repositorioAcervo.Atualizar(entidadeExistente));
+            return mapper.Map<AcervoDTO>(await repositorioAcervo.Atualizar(acervo));
         }
 
         public async Task<AcervoDTO> ObterPorId(long acervoId)
@@ -74,7 +62,7 @@ namespace SME.CDEP.Aplicacao.Servicos
             return mapper.Map<AcervoDTO>(await repositorioAcervo.ObterPorId(acervoId));
         }
 
-        public IList<IdNomeDTO> ObterTodosTipos()
+        public IEnumerable<IdNomeDTO> ObterTodosTipos()
         {
             return Enum.GetValues(typeof(TipoAcervo))
                 .Cast<TipoAcervo>()
@@ -82,8 +70,7 @@ namespace SME.CDEP.Aplicacao.Servicos
                 {
                     Id = (int)v,
                     Nome = v.ObterAtributo<DisplayAttribute>().Name,
-                })
-                .ToList();
+                });
         }
         
         public async Task<bool> Excluir(long entidaId)
@@ -100,7 +87,7 @@ namespace SME.CDEP.Aplicacao.Servicos
         public async Task<PaginacaoResultadoDTO<IdTipoTituloCreditoAutoriaCodigoAcervoDTO>> ObterPorFiltro(int? tipoAcervo, string titulo, long? creditoAutorId, string codigo)
         {
             var registros = await repositorioAcervo.PesquisarPorFiltro(tipoAcervo, titulo, creditoAutorId, codigo);
-            var totalRegistros = registros.Count;
+            var totalRegistros = registros.Count();
             var paginacao = Paginacao;
             var registrosOrdenados = OrdenarRegistros(paginacao, registros);
             
@@ -113,7 +100,7 @@ namespace SME.CDEP.Aplicacao.Servicos
                     Codigo = s.Codigo,
                     CreditoAutoria = s.CreditoAutor.Nome,
                     TipoAcervo = ((TipoAcervo)s.TipoAcervoId).Nome(),
-                }).ToList().Skip(paginacao.QuantidadeRegistrosIgnorados).Take(paginacao.QuantidadeRegistros),
+                }).Skip(paginacao.QuantidadeRegistrosIgnorados).Take(paginacao.QuantidadeRegistros),
                 TotalRegistros = totalRegistros,
                 TotalPaginas = (int)Math.Ceiling((double)totalRegistros / paginacao.QuantidadeRegistros)
             };
@@ -121,7 +108,7 @@ namespace SME.CDEP.Aplicacao.Servicos
             return retornoPaginado;
         }
 
-        private IOrderedEnumerable<Acervo> OrdenarRegistros(Paginacao paginacao, IList<Acervo> registros)
+        private IOrderedEnumerable<Acervo> OrdenarRegistros(Paginacao paginacao, IEnumerable<Acervo> registros)
         {
             return paginacao.Ordenacao switch
             {

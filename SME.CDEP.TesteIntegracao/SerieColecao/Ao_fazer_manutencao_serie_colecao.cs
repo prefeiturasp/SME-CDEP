@@ -23,7 +23,7 @@ namespace SME.CDEP.TesteIntegracao.Usuario
             
             serieColecaoInserido.ShouldBeGreaterThan(0);
             var seriesColecoes = ObterTodos<SerieColecao>();
-            seriesColecoes.Count.ShouldBe(1);
+            seriesColecoes.Count().ShouldBe(1);
         }
       
         [Fact(DisplayName = "Serie/Colecao - Não deve inserir pois já existe cadastro com esse nome")]
@@ -60,7 +60,7 @@ namespace SME.CDEP.TesteIntegracao.Usuario
 
             var serieColecoes = await servicoSerieColecao.ObterTodos();
             serieColecoes.ShouldNotBeNull();
-            serieColecoes.Count.ShouldBe(2);
+            serieColecoes.Count().ShouldBe(2);
         }
 
         [Fact(DisplayName = "Serie/Colecao - Obter por id")]
