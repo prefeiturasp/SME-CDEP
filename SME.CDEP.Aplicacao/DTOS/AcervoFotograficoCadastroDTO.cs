@@ -13,6 +13,7 @@ public class AcervoFotograficoCadastroDTO
     public string Codigo { get; set; }
     
     [Required(ErrorMessage = "É necessário informar o crédito ou autoria do acervo fotográfico")]
+    [Range(1, long.MaxValue, ErrorMessage = "O crédito ou autoria do acervo fotográfico deve ser maior que zero")]
     public long CreditoAutorId { get; set; }
     
     [MaxLength(100, ErrorMessage = "A localização do acervo fotográfico não pode conter mais que 100 caracteres")]
@@ -30,22 +31,25 @@ public class AcervoFotograficoCadastroDTO
     public bool PermiteUsoImagem { get; set; }
     
     [Required(ErrorMessage = "É necessário informar o identificador da conservação do acervo fotografico")]
+    [Range(1, long.MaxValue, ErrorMessage = "O identificador da conservação do acervo fotográfico deve ser maior que zero")]
     public long ConservacaoId { get; set; }
     
     [Required(ErrorMessage = "É necessário informar a descrição do acervo fotografico")]
     public string Descricao { get; set; }
     
     [Required(ErrorMessage = "É necessário informar a quantidade do acervo fotografico")]
-    [MaxLength(4, ErrorMessage = "A quantidade do acervo fotográfico não pode conter mais que 4 caracteres")]
+    [Range(1, long.MaxValue, ErrorMessage = "A quantidade do acervo fotográfico deve ser maior que zero")]
     public long Quantidade { get; set; }
     
     public float? Largura { get; set; }
     public float? Altura { get; set; }
     
     [Required(ErrorMessage = "É necessário informar o identificador do suporte do acervo fotografico")]
+    [Range(1, long.MaxValue, ErrorMessage = "O identificador do suporte do acervo fotográfico deve ser maior que zero")]
     public long SuporteId { get; set; }
     
     [Required(ErrorMessage = "É necessário informar o identificador do formato do acervo fotografico")]
+    [Range(1, long.MaxValue, ErrorMessage = "O identificador do formato do acervo fotográfico deve ser maior que zero")]
     public long FormatoId { get; set; }
     
     [Required(ErrorMessage = "É necessário informar o tamanho do arquivo do acervo fotografico")]
@@ -53,6 +57,7 @@ public class AcervoFotograficoCadastroDTO
     public string TamanhoArquivo { get; set; }
     
     [Required(ErrorMessage = "É necessário informar o identificador da cromia do acervo fotografico")]
+    [Range(1, long.MaxValue, ErrorMessage = "O identificador da cromia do acervo fotográfico deve ser maior que zero")]
     public long CromiaId { get; set; }
     
     [Required(ErrorMessage = "É necessário informar a resolução do acervo fotografico")]

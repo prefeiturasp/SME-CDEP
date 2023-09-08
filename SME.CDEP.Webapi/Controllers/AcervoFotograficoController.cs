@@ -37,25 +37,25 @@ public class AcervoFotograficoController: BaseController
         return Ok(await servicoAssuntoAcervoFotografico.Alterar(acervoFotografico));
     }
     
-    [HttpGet("{id}")]
+    [HttpGet("{acervoId}")]
     [ProducesResponseType(typeof(AcervoFotograficoDTO), 200)]
     [ProducesResponseType(typeof(RetornoBaseDTO), 400)]
     [ProducesResponseType(typeof(RetornoBaseDTO), 403)]
     [ProducesResponseType(typeof(RetornoBaseDTO), 601)]
     [Permissao(Permissao.ACR_C, Policy = "Bearer")]
-    public async Task<IActionResult> ObterPorId([FromRoute] long id,[FromServices] IServicoAcervoFotografico servicoAssuntoAcervoFotografico)
+    public async Task<IActionResult> ObterPorId([FromRoute] long acervoId,[FromServices] IServicoAcervoFotografico servicoAssuntoAcervoFotografico)
     {
-        return Ok(await servicoAssuntoAcervoFotografico.ObterPorId(id));
+        return Ok(await servicoAssuntoAcervoFotografico.ObterPorId(acervoId));
     }
     
-    [HttpDelete("{id}")]
+    [HttpDelete("{acervoId}")]
     [ProducesResponseType(typeof(bool), 200)]
     [ProducesResponseType(typeof(RetornoBaseDTO), 400)]
     [ProducesResponseType(typeof(RetornoBaseDTO), 403)]
     [ProducesResponseType(typeof(RetornoBaseDTO), 601)]
     [Permissao(Permissao.ACR_E, Policy = "Bearer")]
-    public async Task<IActionResult> ExclusaoLogica([FromRoute] long id, [FromServices] IServicoAcervoFotografico servicoAssuntoAcervoFotografico)
+    public async Task<IActionResult> ExclusaoLogica([FromRoute] long acervoId, [FromServices] IServicoAcervoFotografico servicoAssuntoAcervoFotografico)
     {
-        return Ok(await servicoAssuntoAcervoFotografico.Excluir(id));
+        return Ok(await servicoAssuntoAcervoFotografico.Excluir(acervoId));
     }
 }

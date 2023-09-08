@@ -56,6 +56,13 @@ namespace SME.CDEP.Aplicacao.Servicos
             return retornoPaginado;
         }
 
+        public async Task<IEnumerable<IdNomeTipoExcluidoAuditavelDTO>> ObterTodos(TipoCreditoAutoria? tipo)
+        {
+            return tipo.HasValue 
+                ? mapper.Map<IEnumerable<IdNomeTipoExcluidoAuditavelDTO>>(await repositorioCreditoAutor.ObterTodosPorTipo(tipo.Value)) 
+                : mapper.Map<IEnumerable<IdNomeTipoExcluidoAuditavelDTO>>(await repositorioCreditoAutor.ObterTodos());
+        }
+
         private IOrderedEnumerable<IdNomeTipoExcluidoAuditavelDTO> OrdenarRegistros(Paginacao paginacao, IList<IdNomeTipoExcluidoAuditavelDTO> registros)
         {
             return paginacao.Ordenacao switch
