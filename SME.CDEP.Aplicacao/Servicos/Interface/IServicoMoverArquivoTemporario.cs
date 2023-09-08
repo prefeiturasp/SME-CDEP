@@ -4,6 +4,6 @@ namespace SME.CDEP.Aplicacao.Servicos.Interface
 {
     public interface IServicoMoverArquivoTemporario
     {
-        Task Mover(TipoArquivo tipoArquivo, string codigoArquivo);
+        Task Mover(TipoArquivo tipoArquivo, Guid codigoArquivo);
     }
 }
