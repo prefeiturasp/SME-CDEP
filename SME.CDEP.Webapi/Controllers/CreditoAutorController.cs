@@ -43,9 +43,9 @@ public class CreditoAutorController: BaseController
     [ProducesResponseType(typeof(RetornoBaseDTO), 500)]
     [ProducesResponseType(typeof(RetornoBaseDTO), 601)]
     [Permissao(Permissao.CRD_C, Policy = "Bearer")]
-    public async Task<IActionResult> ObterTodosOuPorNome([FromQuery] string? nome,[FromServices]IServicoCreditoAutor servicoCreditoAutor)
+    public async Task<IActionResult> ObterTodosOuPorNome([FromQuery] NomeTipoCreditoAutoriaDTO nomeTipoDto,[FromServices]IServicoCreditoAutor servicoCreditoAutor)
     {
-        return Ok(await servicoCreditoAutor.ObterPaginado(nome));
+        return Ok(await servicoCreditoAutor.ObterPaginado(nomeTipoDto));
     }
     
     [HttpGet("resumido")]

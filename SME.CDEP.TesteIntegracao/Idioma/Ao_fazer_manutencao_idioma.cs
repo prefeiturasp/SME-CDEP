@@ -21,7 +21,7 @@ namespace SME.CDEP.TesteIntegracao
             var idioma = await servicoIdioma.Inserir(new IdNomeExcluidoDTO(){Nome = ConstantesTestes.PORTUGUES});
             idioma.ShouldBeGreaterThan(0);
             var obterTodos = ObterTodos<Idioma>();
-            obterTodos.Count.ShouldBe(1);
+            obterTodos.Count().ShouldBe(1);
         }
         
         [Fact(DisplayName = "Idioma - Não deve inserir pois já existe cadastro com esse nome")]
@@ -42,7 +42,7 @@ namespace SME.CDEP.TesteIntegracao
 
             var idiomas = await servicoIdioma.ObterTodos();
             idiomas.ShouldNotBeNull();
-            idiomas.Count.ShouldBe(5);
+            idiomas.Count().ShouldBe(5);
         }
 
         [Fact(DisplayName = "Idioma - Obter por id")]

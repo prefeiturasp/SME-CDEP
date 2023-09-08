@@ -21,7 +21,7 @@ namespace SME.CDEP.TesteIntegracao
             var cromia = await servicoCromia.Inserir(new IdNomeExcluidoDTO(){Nome = ConstantesTestes.PB});
             cromia.ShouldBeGreaterThan(0);
             var obterTodos = ObterTodos<Cromia>();
-            obterTodos.Count.ShouldBe(1);
+            obterTodos.Count().ShouldBe(1);
         }
         
         [Fact(DisplayName = "Cromia - Não deve inserir pois já existe cadastro com esse nome")]
@@ -42,7 +42,7 @@ namespace SME.CDEP.TesteIntegracao
 
             var cromiaDTO = await servicoCromia.ObterTodos();
             cromiaDTO.ShouldNotBeNull();
-            cromiaDTO.Count.ShouldBe(2);
+            cromiaDTO.Count().ShouldBe(2);
         }
 
         [Fact(DisplayName = "Cromia - Obter por id")]

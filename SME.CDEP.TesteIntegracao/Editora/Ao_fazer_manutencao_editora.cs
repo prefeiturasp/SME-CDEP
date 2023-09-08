@@ -23,7 +23,7 @@ namespace SME.CDEP.TesteIntegracao
             
             editoras.ShouldBeGreaterThan(0);
             var obterTodos = ObterTodos<Editora>();
-            obterTodos.Count.ShouldBe(1);
+            obterTodos.Count().ShouldBe(1);
         }
       
         [Fact(DisplayName = "Editora - Não deve inserir pois já existe cadastro com esse nome")]
@@ -60,7 +60,7 @@ namespace SME.CDEP.TesteIntegracao
 
             var editoraDTO = await servicoEditora.ObterTodos();
             editoraDTO.ShouldNotBeNull();
-            editoraDTO.Count.ShouldBe(2);
+            editoraDTO.Count().ShouldBe(2);
         }
 
         [Fact(DisplayName = "Editora - Obter por id")]

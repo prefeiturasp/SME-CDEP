@@ -73,6 +73,15 @@ namespace SME.CDEP.Infra.Dados.Repositorios
 
             return await conexao.Obter().QueryFirstOrDefaultAsync<long>(query, new { arquivoCodigo });
         }
-        
+
+        public Task<IEnumerable<Arquivo>> PesquisarParcialPor(string valorCampo, string campo = "nome")
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task<IEnumerable<Arquivo>> PesquisarExatoPor(string valorCampo, string campo)
+        {
+            throw new NotImplementedException();
+        }
     }
 }

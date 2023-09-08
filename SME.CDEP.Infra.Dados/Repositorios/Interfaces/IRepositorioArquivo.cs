@@ -1,7 +1,9 @@
 ﻿using SME.CDEP.Dominio.Entidades;
+using SME.CDEP.Dominio.Repositorios;
+
 namespace SME.CDEP.Infra.Dados.Repositorios.Interfaces
 {
-    public interface IRepositorioArquivo
+    public interface IRepositorioArquivo : IRepositorioBase<Arquivo>
     {
         Task<Arquivo> ObterPorCodigo(Guid codigo);
         Task<IEnumerable<Arquivo>> ObterPorCodigos(Guid[] codigos);

@@ -132,6 +132,7 @@ public class RegistradorDeDependencia
         _serviceCollection.TryAddScoped<IRepositorioSerieColecao, RepositorioSerieColecao>();
         _serviceCollection.TryAddScoped<IRepositorioAcervo, RepositorioAcervo>();
         _serviceCollection.TryAddScoped<IRepositorioAcervoFotografico, RepositorioAcervoFotografico>();
+        _serviceCollection.TryAddScoped<IRepositorioAcervoFotograficoArquivo, RepositorioAcervoFotograficoArquivo>();
         _serviceCollection.TryAddScoped<IRepositorioArquivo, RepositorioArquivo>();
     }
 

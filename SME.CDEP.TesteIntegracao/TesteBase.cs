@@ -1,3 +1,4 @@
+using AutoMapper;
 using Microsoft.Extensions.DependencyInjection;
 using SME.CDEP.Aplicacao.DTOS;
 using SME.CDEP.Aplicacao.Servicos.Interface;
@@ -76,7 +77,7 @@ namespace SME.CDEP.TesteIntegracao
             return Task.CompletedTask;
         }
 
-        public List<T> ObterTodos<T>() where T : class, new()
+        public IEnumerable<T> ObterTodos<T>() where T : class, new()
         {
             return _collectionFixture.Database.ObterTodos<T>();
         }
@@ -158,6 +159,11 @@ namespace SME.CDEP.TesteIntegracao
             return ObterServicoAplicacao<IServicoAcervoFotografico>();
         }
         
+        protected IMapper GetServicoMapper()
+        {
+            return ServiceProvider.GetService<IMapper>();
+        }
+        
         protected IServicoExcluirArquivo GetServicoExcluirArquivo()
         {
             return ServiceProvider.GetService<IServicoExcluirArquivo>();
@@ -226,7 +232,7 @@ namespace SME.CDEP.TesteIntegracao
             
             for (int i = 1; i <= 5; i++)
             {
-                await InserirNaBase(new Dominio.Entidades.CreditoAutor()
+                await InserirNaBase(new CreditoAutor()
                 {
                     Nome = string.Format(ConstantesTestes.CREDITO_AUTOR_X,i),
                     CriadoPor = ConstantesTestes.SISTEMA, 
@@ -240,16 +246,15 @@ namespace SME.CDEP.TesteIntegracao
                     Tipo = (TipoSuporte)random.Next(1,2),
                 });
                 
-                await InserirNaBase(new Dominio.Entidades.Formato()
+                await InserirNaBase(new Formato()
                 {
                     Nome = string.Format(ConstantesTestes.FORMATO_X,i),
                     Tipo = (TipoFormato)random.Next(1,2),
                 });
                 
+                await InserirNaBase(new Cromia() { Nome = string.Format(ConstantesTestes.CROMIA_X,i)});
                 
-                await InserirNaBase(new Dominio.Entidades.Cromia() { Nome = string.Format(ConstantesTestes.CROMIA_X,i)});
-                
-                await InserirNaBase(new Dominio.Entidades.Conservacao() { Nome = string.Format(ConstantesTestes.CONSERVACAO_X,i)});
+                await InserirNaBase(new Conservacao() { Nome = string.Format(ConstantesTestes.CONSERVACAO_X,i)});
             }
         }
     }

@@ -21,7 +21,7 @@ namespace SME.CDEP.TesteIntegracao
             var acessoDocumento = await servicoAcessoDocumento.Inserir(new IdNomeExcluidoDTO(){Nome = ConstantesTestes.DIGITAL_E_FISICO});
             acessoDocumento.ShouldBeGreaterThan(0);
             var obterTodos = ObterTodos<AcessoDocumento>();
-            obterTodos.Count.ShouldBe(1);
+            obterTodos.Count().ShouldBe(1);
         }
         
         [Fact(DisplayName = "Acesso Documento - Não deve inserir pois já existe cadastro com esse nome")]
@@ -42,7 +42,7 @@ namespace SME.CDEP.TesteIntegracao
 
             var acessoDocumentoDtos = await servicoAcessoDocumento.ObterTodos();
             acessoDocumentoDtos.ShouldNotBeNull();
-            acessoDocumentoDtos.Count.ShouldBe(3);
+            acessoDocumentoDtos.Count().ShouldBe(3);
         }
 
         [Fact(DisplayName = "Acesso Documento - Obter por id")]
