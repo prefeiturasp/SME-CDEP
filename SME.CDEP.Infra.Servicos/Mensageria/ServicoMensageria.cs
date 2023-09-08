@@ -2,34 +2,33 @@
 using Polly;
 using Polly.Registry;
 using System.Text;
-using SME.CDEP.Infra.Dominio.Enumerados;
 using SME.CDEP.Infra.Servicos.Polly;
 
-namespace SME.CDEP.Infra.Servicos.Log
+namespace SME.CDEP.Infra.Servicos.Mensageria
 {
-    public class ServicoLogs : IServicoLogs
+    public class ServicoMensageria : IServicoMensageria
     {
         private readonly IConexoesRabbitLogs conexoesRabbit;
         private readonly IAsyncPolicy policy;
 
-        public ServicoLogs(IConexoesRabbitLogs conexoesRabbit, IReadOnlyPolicyRegistry<string> registry)
+        public ServicoMensageria(IConexoesRabbitLogs conexoesRabbit, IReadOnlyPolicyRegistry<string> registry)
         {
             this.conexoesRabbit = conexoesRabbit ?? throw new ArgumentNullException(nameof(conexoesRabbit));
             this.policy = registry.Get<IAsyncPolicy>(ConstsPoliticaPolly.PublicaFila);
         }
 
-        public async Task Enviar(string mensagem, LogContexto contexto = LogContexto.Geral, LogNivel nivel = LogNivel.Critico, string observacao = "", string rastreamento = "")
+        public async Task Enviar(string mensagem, string rota, string exchange)
         {
-            var logMensagem = JsonConvert.SerializeObject(new LogMensagem(mensagem, contexto.ToString(), nivel.ToString(), observacao, rastreamento),
+            var logMensagem = JsonConvert.SerializeObject(new MensagemRabbit(mensagem),
                 new JsonSerializerSettings { NullValueHandling = NullValueHandling.Ignore });
 
             var body = Encoding.UTF8.GetBytes(logMensagem);
 
             await policy.ExecuteAsync(async () 
-                => await PublicarMensagem(body));
+                => await PublicarMensagem(rota, body, exchange));
         }
 
-        private Task PublicarMensagem(byte[] body)
+        private Task PublicarMensagem(string rota, byte[] body, string exchange = null)
         {
             var channel = conexoesRabbit.Get();
             try
@@ -37,7 +36,7 @@ namespace SME.CDEP.Infra.Servicos.Log
                 var props = channel.CreateBasicProperties();
                 props.Persistent = true;
 
-                channel.BasicPublish(ExchangeRabbit.Logs, RotasRabbitLogs.RotaLogs, true, props, body);
+                channel.BasicPublish(exchange, rota, true, props, body);
             }
             finally
             {

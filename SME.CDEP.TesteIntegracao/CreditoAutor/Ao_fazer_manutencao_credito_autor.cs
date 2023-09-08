@@ -7,7 +7,7 @@ using SME.CDEP.TesteIntegracao.Setup;
 using SME.CDEP.TesteIntegracao.Constantes;
 using Xunit;
 
-namespace SME.CDEP.TesteIntegracao.Usuario
+namespace SME.CDEP.TesteIntegracao
 {
     public class Ao_fazer_manutencao_credito_autor : TesteBase
     {
@@ -23,7 +23,7 @@ namespace SME.CDEP.TesteIntegracao.Usuario
             
             credito.ShouldBeGreaterThan(0);
             var obterTodos = ObterTodos<CreditoAutor>();
-            obterTodos.Count.ShouldBe(1);
+            obterTodos.Count().ShouldBe(1);
         }
       
         [Fact(DisplayName = "CréditoAutor - Não deve inserir pois já existe cadastro com esse nome")]
@@ -33,7 +33,7 @@ namespace SME.CDEP.TesteIntegracao.Usuario
             
             var servicoCreditoAutor = GetServicoCreditoAutor();
             
-            await servicoCreditoAutor.Inserir(new IdNomeTipoExcluidoAuditavelDTO() {Nome = ConstantesTestes.PB, Tipo = (int)TipoCreditoAutoria.Credito}).ShouldThrowAsync<NegocioException>();
+            await servicoCreditoAutor.Inserir(new IdNomeTipoExcluidoAuditavelDTO() {Nome = ConstantesTestes.PB, Tipo = (int)TipoCreditoAutoria.Autoria}).ShouldThrowAsync<NegocioException>();
         }
         
         [Fact(DisplayName = "CréditoAutor - Não deve inserir com nome nulo")]
@@ -60,7 +60,7 @@ namespace SME.CDEP.TesteIntegracao.Usuario
 
             var creditoDTO = await servicoCreditoAutor.ObterTodos();
             creditoDTO.ShouldNotBeNull();
-            creditoDTO.Count.ShouldBe(2);
+            creditoDTO.Count().ShouldBe(2);
         }
 
         [Fact(DisplayName = "CréditoAutor - Obter por id")]
@@ -100,6 +100,7 @@ namespace SME.CDEP.TesteIntegracao.Usuario
             var servicoCreditoAutor = GetServicoCreditoAutor();
 
             var creditoDTO = await servicoCreditoAutor.ObterPorId(2);
+            creditoDTO.Tipo = (int)TipoCreditoAutoria.Credito;
             creditoDTO.Nome = ConstantesTestes.COLOR;
             
             await servicoCreditoAutor.Alterar(creditoDTO).ShouldThrowAsync<NegocioException>();
@@ -153,6 +154,7 @@ namespace SME.CDEP.TesteIntegracao.Usuario
             await InserirNaBase(new CreditoAutor() 
             { 
                 Nome = ConstantesTestes.LIVRO,
+                Tipo = TipoCreditoAutoria.Credito,
                 CriadoPor = ConstantesTestes.SISTEMA, 
                 CriadoEm = DateTimeExtension.HorarioBrasilia().Date, 
                 CriadoLogin = ConstantesTestes.LOGIN_123456789 
@@ -161,6 +163,7 @@ namespace SME.CDEP.TesteIntegracao.Usuario
             await InserirNaBase(new CreditoAutor() 
             { 
                 Nome = ConstantesTestes.PAPEL,
+                Tipo = TipoCreditoAutoria.Autoria,
                 CriadoPor = ConstantesTestes.SISTEMA, 
                 CriadoEm = DateTimeExtension.HorarioBrasilia().Date, 
                 CriadoLogin = ConstantesTestes.LOGIN_123456789 
@@ -169,6 +172,7 @@ namespace SME.CDEP.TesteIntegracao.Usuario
             await InserirNaBase(new CreditoAutor() 
             { 
                 Nome = ConstantesTestes.COLOR,
+                Tipo = TipoCreditoAutoria.Credito,
                 CriadoPor = ConstantesTestes.SISTEMA, 
                 CriadoEm = DateTimeExtension.HorarioBrasilia().Date, 
                 CriadoLogin = ConstantesTestes.LOGIN_123456789 
@@ -177,13 +181,14 @@ namespace SME.CDEP.TesteIntegracao.Usuario
             await InserirNaBase(new CreditoAutor() 
             { 
                 Nome = ConstantesTestes.VOB,
+                Tipo = TipoCreditoAutoria.Autoria,
                 CriadoPor = ConstantesTestes.SISTEMA, 
                 CriadoEm = DateTimeExtension.HorarioBrasilia().Date, 
                 CriadoLogin = ConstantesTestes.LOGIN_123456789 
             });
             
-            var retorno = await servicoCreditoAutor.ObterPaginado("o");
-            retorno.Items.Count().ShouldBe(ConstantesTestes.QUANTIDADE_3);
+            var retorno = await servicoCreditoAutor.ObterPaginado(new NomeTipoCreditoAutoriaDTO(){ Nome = "o", Tipo = TipoCreditoAutoria.Credito});
+            retorno.Items.Count().ShouldBe(2);
         }
 
         private async Task InserirCredito()

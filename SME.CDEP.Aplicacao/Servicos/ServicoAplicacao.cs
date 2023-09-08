@@ -23,9 +23,9 @@ namespace SME.CDEP.Aplicacao.Servicos
             return repositorio.Inserir(entidade);
         }
         
-        public async Task<IList<D>> ObterTodos()
+        public async Task<IEnumerable<D>> ObterTodos()
         {
-            return (await repositorio.ObterTodos()).Where(w=> !w.Excluido).Select(s=> mapper.Map<D>(s)).ToList();
+            return (await repositorio.ObterTodos()).Where(w=> !w.Excluido).Select(s=> mapper.Map<D>(s));
         }
 
         public async Task<D> Alterar(D entidadeDto)
@@ -46,10 +46,6 @@ namespace SME.CDEP.Aplicacao.Servicos
             entidade.Excluido = true;
             await Alterar(entidade);
             return true;
-        }
-        public async Task<D> PesquisarPorNome(string nome)
-        {
-            return mapper.Map<D>(await repositorio.PesquisarPorNome(nome));
         }
     }
 }

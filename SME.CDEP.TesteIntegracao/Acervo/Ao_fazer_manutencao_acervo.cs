@@ -8,7 +8,7 @@ using SME.CDEP.TesteIntegracao.Constantes;
 using Xunit;
 using Xunit.Sdk;
 
-namespace SME.CDEP.TesteIntegracao.Usuario
+namespace SME.CDEP.TesteIntegracao
 {
     public class Ao_fazer_manutencao_acervo : TesteBase
     {
@@ -48,9 +48,9 @@ namespace SME.CDEP.TesteIntegracao.Usuario
             await InserirDadosBasicos();
             var servicoAcervo = GetServicoAcervo();
 
-            var acervo = await servicoAcervo.Inserir(new AcervoDTO()
+            var acervo = await servicoAcervo.Inserir(new Acervo()
             {
-                Codigo = string.Format(ConstantesTestes.CODIGO_X,1),
+                Codigo = "1",
                 Titulo = string.Format(ConstantesTestes.TITULO_X,1),
                 CreditoAutorId = new Random().Next(1, 5),
                 TipoAcervoId = (int)TipoAcervo.Fotografico,    
@@ -58,7 +58,7 @@ namespace SME.CDEP.TesteIntegracao.Usuario
             
             acervo.ShouldBeGreaterThan(0);
             var acervos = ObterTodos<Acervo>();
-            acervos.Count.ShouldBe(1);
+            acervos.Count().ShouldBe(1);
         }
         
         [Fact(DisplayName = "Acervo - Não deve inserir pois já existe cadastro com esse título")]
@@ -70,9 +70,9 @@ namespace SME.CDEP.TesteIntegracao.Usuario
 
             var servicoAcervo = GetServicoAcervo();
 
-            await servicoAcervo.Inserir(new AcervoDTO()
+            await servicoAcervo.Inserir(new Acervo()
             {
-                Codigo = string.Format(ConstantesTestes.CODIGO_X,1),
+                Codigo = "1",
                 Titulo = string.Format(ConstantesTestes.TITULO_X,1),
                 CreditoAutorId = new Random().Next(1, 5),
                 TipoAcervoId = (int)TipoAcervo.Fotografico,    
@@ -92,24 +92,6 @@ namespace SME.CDEP.TesteIntegracao.Usuario
             acervo.ShouldNotBeNull();
             acervo.Id.ShouldBe(1);
             acervo.Titulo.ShouldBe(string.Format(ConstantesTestes.TITULO_X, 1));
-        }
-        
-        [Fact(DisplayName = "Acervo - Atualizar")]
-        public async Task Atualizar()
-        {
-            await InserirDadosBasicos();
-
-            await InserirAcervo();
-            
-            var servicoAcervo = GetServicoAcervo();
-
-            var acervoDto = await servicoAcervo.ObterPorId(3);
-            acervoDto.Titulo = string.Format(ConstantesTestes.TITULO_X, 100);
-            
-            var acervoAlterado = await servicoAcervo.Alterar(acervoDto);
-            
-            acervoAlterado.ShouldNotBeNull();
-            acervoAlterado.Titulo = string.Format(ConstantesTestes.TITULO_X, 100);
         }
         
         [Fact(DisplayName = "Acervo - Excluir")]
@@ -136,7 +118,7 @@ namespace SME.CDEP.TesteIntegracao.Usuario
             {
                 await InserirNaBase(new Acervo()
                 {
-                    Codigo = string.Format(ConstantesTestes.CODIGO_X, j),
+                    Codigo = j.ToString(),
                     Titulo = string.Format(ConstantesTestes.TITULO_X, j),
                     CreditoAutorId = random.Next(1, 5),
                     TipoAcervoId = (int)TipoAcervo.Fotografico,

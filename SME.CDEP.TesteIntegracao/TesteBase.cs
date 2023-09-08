@@ -1,3 +1,4 @@
+using AutoMapper;
 using Microsoft.Extensions.DependencyInjection;
 using SME.CDEP.Aplicacao.DTOS;
 using SME.CDEP.Aplicacao.Servicos.Interface;
@@ -76,7 +77,7 @@ namespace SME.CDEP.TesteIntegracao
             return Task.CompletedTask;
         }
 
-        public List<T> ObterTodos<T>() where T : class, new()
+        public IEnumerable<T> ObterTodos<T>() where T : class, new()
         {
             return _collectionFixture.Database.ObterTodos<T>();
         }
@@ -158,6 +159,26 @@ namespace SME.CDEP.TesteIntegracao
             return ObterServicoAplicacao<IServicoAcervoFotografico>();
         }
         
+        protected IMapper GetServicoMapper()
+        {
+            return ServiceProvider.GetService<IMapper>();
+        }
+        
+        protected IServicoExcluirArquivo GetServicoExcluirArquivo()
+        {
+            return ServiceProvider.GetService<IServicoExcluirArquivo>();
+        }
+        
+        protected IServicoMoverArquivoTemporario GetServicoMoverArquivoTemporario()
+        {
+            return ServiceProvider.GetService<IServicoMoverArquivoTemporario>();
+        }
+        
+        protected IServicoUploadArquivo GetServicoUploadArquivo()
+        {
+            return ServiceProvider.GetService<IServicoUploadArquivo>();
+        }
+        
         public T ObterServicoAplicacao<T>()
             where T : IServicoAplicacao
         {
@@ -230,7 +251,6 @@ namespace SME.CDEP.TesteIntegracao
                     Nome = string.Format(ConstantesTestes.FORMATO_X,i),
                     Tipo = (TipoFormato)random.Next(1,2),
                 });
-                
                 
                 await InserirNaBase(new Cromia() { Nome = string.Format(ConstantesTestes.CROMIA_X,i)});
                 

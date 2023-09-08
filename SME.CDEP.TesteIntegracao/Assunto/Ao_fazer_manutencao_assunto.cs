@@ -7,7 +7,7 @@ using SME.CDEP.TesteIntegracao.Setup;
 using SME.CDEP.TesteIntegracao.Constantes;
 using Xunit;
 
-namespace SME.CDEP.TesteIntegracao.Usuario
+namespace SME.CDEP.TesteIntegracao
 {
     public class Ao_fazer_manutencao_assunto : TesteBase
     {
@@ -23,7 +23,7 @@ namespace SME.CDEP.TesteIntegracao.Usuario
             
             assuntos.ShouldBeGreaterThan(0);
             var obterTodos = ObterTodos<Assunto>();
-            obterTodos.Count.ShouldBe(1);
+            obterTodos.Count().ShouldBe(1);
         }
         
         [Fact(DisplayName = "Assunto - Não deve inserir com nome nulo")]
@@ -60,7 +60,7 @@ namespace SME.CDEP.TesteIntegracao.Usuario
 
             var assuntoDTO = await servicoAssunto.ObterTodos();
             assuntoDTO.ShouldNotBeNull();
-            assuntoDTO.Count.ShouldBe(2);
+            assuntoDTO.Count().ShouldBe(2);
         }
         
         [Fact(DisplayName = "Assunto - Obter paginado")]

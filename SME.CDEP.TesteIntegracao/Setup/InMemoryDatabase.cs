@@ -48,9 +48,9 @@ namespace SME.CDEP.TesteIntegracao.Setup
             Conexao.Update(objeto);
         }
 
-        public List<T> ObterTodos<T>() where T : class, new()
+        public IEnumerable<T> ObterTodos<T>() where T : class, new()
         {
-            return Conexao.GetAll<T>().ToList();
+            return Conexao.GetAll<T>();
         }
 
         public T ObterPorId<T, K>(K id)

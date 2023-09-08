@@ -65,6 +65,7 @@ CREATE TABLE if not exists public.arquivo (
 	codigo uuid NOT NULL,
 	tipo int4 NOT NULL,
 	tipo_conteudo varchar NOT NULL,
+	excluido bool NOT NULL DEFAULT false,
 	criado_em timestamp NOT NULL,
 	criado_por varchar(200) NOT NULL,
 	alterado_em timestamp NULL,

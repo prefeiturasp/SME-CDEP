@@ -7,7 +7,7 @@ using SME.CDEP.TesteIntegracao.Setup;
 using SME.CDEP.TesteIntegracao.Constantes;
 using Xunit;
 
-namespace SME.CDEP.TesteIntegracao.Usuario
+namespace SME.CDEP.TesteIntegracao
 {
     public class Ao_fazer_manutencao_material : TesteBase
     {
@@ -22,7 +22,7 @@ namespace SME.CDEP.TesteIntegracao.Usuario
             var material = await servicoMaterial.Inserir(new IdNomeTipoExcluidoDTO(){Nome = ConstantesTestes.APOSTILA});
             material.ShouldBeGreaterThan(0);
             var obterTodos = ObterTodos<Material>();
-            obterTodos.Count.ShouldBe(1);
+            obterTodos.Count().ShouldBe(1);
         }
         
         [Fact(DisplayName = "Material - Não deve inserir pois já existe cadastro com esse nome")]
@@ -43,7 +43,7 @@ namespace SME.CDEP.TesteIntegracao.Usuario
 
             var materiais = await servicoMaterial.ObterTodos();
             materiais.ShouldNotBeNull();
-            materiais.Count.ShouldBe(8);
+            materiais.Count().ShouldBe(8);
         }
 
         [Fact(DisplayName = "Material - Obter por id")]

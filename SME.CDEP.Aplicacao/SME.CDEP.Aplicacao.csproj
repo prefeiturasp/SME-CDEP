@@ -9,6 +9,7 @@
     <ItemGroup>
       <ProjectReference Include="..\SME.CDEP.Dominio\SME.CDEP.Dominio.csproj" />
       <ProjectReference Include="..\SME.CDEP.Infra.Dados\SME.CDEP.Infra.Dados.csproj" />
+      <ProjectReference Include="..\SME.CDEP.Infra.Servicos\SME.CDEP.Infra.Servicos.csproj" />
     </ItemGroup>
 
     <ItemGroup>

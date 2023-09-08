@@ -30,7 +30,7 @@ namespace SME.CDEP.TesteIntegracao.Usuario
 
             var usuarios = await servicoUsuario.ObterTodos();
             usuarios.ShouldNotBeNull();
-            usuarios.Count.ShouldBe(11);
+            usuarios.Count().ShouldBe(11);
         }
 
         [Fact(DisplayName = "Usuário - Obter por id")]
