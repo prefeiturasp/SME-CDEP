@@ -1,4 +1,6 @@
-﻿using SME.CDEP.Aplicacao.Servicos.Interface;
+﻿using System.Text.Json;
+using SME.CDEP.Aplicacao.DTOS;
+using SME.CDEP.Aplicacao.Servicos.Interface;
 using SME.CDEP.Dominio.Constantes;
 using SME.CDEP.Dominio.Excecoes;
 using SME.CDEP.Infra.Dados.Repositorios.Interfaces;
@@ -33,8 +35,9 @@ namespace SME.CDEP.Aplicacao.Servicos
             {
                 var extencao = Path.GetExtension(arquivo.Nome);
 
-                await servicoMensageria.Enviar(arquivo.Codigo + extencao, RotasRabbitSgp.RemoverArquivoArmazenamento, ExchangeRabbit.Sgp);
-
+                var mensagem = new FiltroExcluirArquivoArmazenamentoDto() { ArquivoNome = arquivo.Codigo + extencao};
+                
+                await servicoMensageria.Enviar(JsonSerializer.Serialize(mensagem) , RotasRabbitSgp.RemoverArquivoArmazenamento, ExchangeRabbit.Sgp);
             }
             
             return true;
