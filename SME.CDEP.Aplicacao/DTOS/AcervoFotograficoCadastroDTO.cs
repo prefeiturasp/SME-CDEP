@@ -64,5 +64,5 @@ public class AcervoFotograficoCadastroDTO
     [MaxLength(15, ErrorMessage = "A resolução do acervo fotográfico não pode conter mais que 15 caracteres")]
     public string Resolucao { get; set; }
     
-    public string[]? Arquivos { get; set; }
+    public long[]? Arquivos { get; set; }
 }

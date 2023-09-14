@@ -41,7 +41,7 @@ namespace SME.CDEP.Aplicacao.Servicos
             var arquivosCompletos =  Enumerable.Empty<Arquivo>();
 
             if (acervoFotograficoCadastroDto.Arquivos != null)
-                arquivosCompletos = await repositorioArquivo.ObterPorCodigos(acervoFotograficoCadastroDto.Arquivos.Select(s=> new Guid(s)).ToArray());
+                arquivosCompletos = await repositorioArquivo.ObterPorIds(acervoFotograficoCadastroDto.Arquivos);
             
             var acervo = mapper.Map<Acervo>(acervoFotograficoCadastroDto);
             acervo.TipoAcervoId = (int)TipoAcervo.Fotografico;
@@ -57,7 +57,7 @@ namespace SME.CDEP.Aplicacao.Servicos
                 var retornoAcervo = await servicoAcervo.Inserir(acervo);
                 acervoFotografico.AcervoId = retornoAcervo;
                 
-                var retorno = await repositorioAcervoFotografico.Inserir(acervoFotografico);
+                await repositorioAcervoFotografico.Inserir(acervoFotografico);
                 
                 foreach (var arquivo in arquivosCompletos)
                 {
@@ -66,16 +66,9 @@ namespace SME.CDEP.Aplicacao.Servicos
                         ArquivoId = arquivo.Id, 
                         AcervoFotograficoId = acervoFotografico.Id
                     });
-
-                    await servicoMoverArquivoTemporario.Mover(TipoArquivo.AcervoFotografico, arquivo.Codigo);
                 }
                 
                 tran.Commit();
-
-                foreach (var arquivo in arquivosCompletos)
-                    await servicoMoverArquivoTemporario.Mover(TipoArquivo.AcervoFotografico, arquivo.Codigo);
-                
-                return acervoFotografico.AcervoId;
             }
             catch
             {
@@ -86,7 +79,12 @@ namespace SME.CDEP.Aplicacao.Servicos
             {
                 tran.Dispose();
             }
-        } 
+
+            foreach (var arquivo in arquivosCompletos)
+                await servicoMoverArquivoTemporario.Mover(TipoArquivo.AcervoFotografico, arquivo);
+
+            return acervoFotografico.AcervoId;
+        }
 
         public async Task<IEnumerable<AcervoFotograficoDTO>> ObterTodos()
         {
@@ -108,7 +106,7 @@ namespace SME.CDEP.Aplicacao.Servicos
             
             var arquivosExistentes = await repositorioAcervoFotograficoArquivo.ObterPorAcervoFotograficoId(acervoFotograficoAlteracaoDto.Id);
             
-            var arquivosAlteradosCompletos = await repositorioArquivo.ObterPorCodigos(arquivosAlterados.Select(s=> new Guid(s)).ToArray());
+            var arquivosAlteradosCompletos = await repositorioArquivo.ObterPorIds(arquivosAlterados);
             arquivosIdsInserir = arquivosAlteradosCompletos.Select(a => a.Id).Except(arquivosExistentes.Select(b => b.ArquivoId));
             arquivosIdsExcluir = arquivosExistentes.Select(b => b.ArquivoId).Except(arquivosAlteradosCompletos.Select(a => a.Id));
             var arquivosMover = arquivosAlteradosCompletos.Where(w => arquivosIdsInserir.Contains(w.Id)).Select(s => s);
@@ -129,14 +127,9 @@ namespace SME.CDEP.Aplicacao.Servicos
                     });
                 }
 
-                await repositorioAcervoFotograficoArquivo.Excluir(arquivosIdsExcluir.ToArray(),acervoFotografico.Id);
+                await repositorioAcervoFotograficoArquivo.Excluir(arquivosIdsExcluir.ToArray(), acervoFotografico.Id);
                 
                 tran.Commit();
-
-                foreach (var arquivoAMover in arquivosMover)
-                    await servicoMoverArquivoTemporario.Mover(TipoArquivo.AcervoFotografico, arquivoAMover.Codigo);
-
-                return await ObterPorId(acervoFotograficoAlteracaoDto.AcervoId);
             }
             catch
             {
@@ -147,11 +140,16 @@ namespace SME.CDEP.Aplicacao.Servicos
             {
                 tran.Dispose();
             }
+
+            foreach (var arquivoAMover in arquivosMover)
+                await servicoMoverArquivoTemporario.Mover(TipoArquivo.AcervoFotografico, arquivoAMover);
+
+            return await ObterPorId(acervoFotograficoAlteracaoDto.AcervoId);
         }
 
-        private static string[] TratamentoArquivosAlterados(AcervoFotograficoAlteracaoDTO acervoFotograficoAlteracaoDto)
+        private static long[] TratamentoArquivosAlterados(AcervoFotograficoAlteracaoDTO acervoFotograficoAlteracaoDto)
         {
-            return acervoFotograficoAlteracaoDto.Arquivos != null ? acervoFotograficoAlteracaoDto.Arquivos : Array.Empty<string>();
+            return acervoFotograficoAlteracaoDto.Arquivos != null ? acervoFotograficoAlteracaoDto.Arquivos : Array.Empty<long>();
         }
 
         public async Task<AcervoFotograficoDTO> ObterPorId(long id)

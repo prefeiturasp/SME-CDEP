@@ -47,7 +47,7 @@ namespace SME.CDEP.TesteIntegracao
             
             var arquivos = ObterTodos<Arquivo>();
 
-            var arquivosSelecionados = arquivos.Take(5).Select(s => s.Codigo.ToString()).ToArray();
+            var arquivosSelecionados = arquivos.Take(5).Select(s => s.Id).ToArray();
             
             var servicoAcervoFotografico = GetServicoAcervoFotografico();
 
@@ -59,6 +59,7 @@ namespace SME.CDEP.TesteIntegracao
             acervoFotograficoAlteracaoDto.Codigo = "100";
             acervoFotograficoAlteracaoDto.Descricao = string.Format(ConstantesTestes.DESCRICAO_X, 100);
             acervoFotograficoAlteracaoDto.Localizacao = string.Format(ConstantesTestes.LOCALIZACAO_X, 100);
+            acervoFotograficoAlteracaoDto.Procedencia = string.Format(ConstantesTestes.PROCEDENCIA_X, "Teste Alteração");
             acervoFotograficoAlteracaoDto.Largura = 100;
             acervoFotograficoAlteracaoDto.Arquivos = arquivosSelecionados;
             
@@ -106,7 +107,7 @@ namespace SME.CDEP.TesteIntegracao
             
             var arquivos = ObterTodos<Arquivo>();
 
-            var arquivosSelecionados = arquivos.OrderByDescending(o=> o.Id).Take(5).Select(s => s.Codigo.ToString()).ToArray();
+            var arquivosSelecionados = arquivos.OrderByDescending(o=> o.Id).Take(5).Select(s => s.Id).ToArray();
             
             var servicoAcervoFotografico = GetServicoAcervoFotografico();
 
@@ -165,7 +166,7 @@ namespace SME.CDEP.TesteIntegracao
             
             var arquivos = ObterTodos<Arquivo>();
 
-            var arquivosSelecionados = Array.Empty<string>();
+            var arquivosSelecionados = Array.Empty<long>();
             
             var servicoAcervoFotografico = GetServicoAcervoFotografico();
 
@@ -228,7 +229,7 @@ namespace SME.CDEP.TesteIntegracao
 
             var arquivos = ObterTodos<Arquivo>();
 
-            var arquivosSelecionados = arquivos.Take(5).Select(s => s.Codigo.ToString()).ToArray();
+            var arquivosSelecionados = arquivos.Take(5).Select(s => s.Id).ToArray();
 
             var acervoFotograficoDto = new AcervoFotograficoCadastroDTO()
             {
@@ -302,7 +303,7 @@ namespace SME.CDEP.TesteIntegracao
 
             var arquivos = ObterTodos<Arquivo>();
 
-            var arquivosSelecionados = arquivos.Take(5).Select(s => s.Codigo.ToString()).ToArray();
+            var arquivosSelecionados = arquivos.Take(5).Select(s => s.Id).ToArray();
 
             var acervoFotograficoDto = new AcervoFotograficoCadastroDTO()
             {
