@@ -58,8 +58,8 @@ namespace SME.CDEP.Infra.Servicos.ServicoArmazenamento
 
             await minioClient.PutObjectAsync(args);
 
-            if (bucket.Equals(configuracaoArmazenamentoOptions.BucketArquivos))
-                await OtimizarArquivos(nomeArquivo);
+            // if (bucket.Equals(configuracaoArmazenamentoOptions.BucketArquivos))
+            //     await OtimizarArquivos(nomeArquivo);
 
             return await ObterUrl(nomeArquivo, bucket);
         }
@@ -91,20 +91,20 @@ namespace SME.CDEP.Infra.Servicos.ServicoArmazenamento
 
                 await Excluir(nomeArquivo, configuracaoArmazenamentoOptions.BucketTemp);
                 
-                await OtimizarArquivos(nomeArquivo);
+                // await OtimizarArquivos(nomeArquivo);
             }
 
             return $"{configuracaoArmazenamentoOptions.BucketArquivos}/{nomeArquivo}";
         }
 
-        private async Task OtimizarArquivos(string nomeArquivo)
-        {
-            if (nomeArquivo.EhArquivoImagemParaOtimizar())
-            {
-                var nomeFila = RotasRabbitSgp.OtimizarArquivoImagem;
-                await servicoMensageria.Enviar(nomeArquivo, nomeFila, ExchangeRabbit.Sgp);
-            }
-        }
+        // private async Task OtimizarArquivos(string nomeArquivo)
+        // {
+        //     if (nomeArquivo.EhArquivoImagemParaOtimizar())
+        //     {
+        //         var nomeFila = RotasRabbitSgp.OtimizarArquivoImagem;
+        //         await servicoMensageria.Enviar(nomeArquivo, nomeFila, ExchangeRabbit.Sgp);
+        //     }
+        // }
 
         public async Task<bool> Excluir(string nomeArquivo, string nomeBucket = "")
         {
