@@ -133,7 +133,7 @@ namespace SME.CDEP.Aplicacao.Servicos
                     await repositorioAcervoFotograficoArquivo.Inserir(new AcervoFotograficoArquivo()
                     {
                         ArquivoId = arquivo, 
-                        AcervoFotograficoId = acervoFotografico.Id
+                        AcervoFotograficoId = acervoFotografico.Id 
                     });
                 }
 
