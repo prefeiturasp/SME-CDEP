@@ -93,6 +93,7 @@ public class RegistradorDeDependencia
             config.AddMap(new SerieColecaoMap());
             config.AddMap(new AcervoMap());
             config.AddMap(new AcervoFotograficoMap());
+            config.AddMap(new AcervoCreditoAutorMap());
             config.AddMap(new AcervoFotograficoArquivoMap());
             config.AddMap(new ArquivoMap());
 
@@ -131,6 +132,7 @@ public class RegistradorDeDependencia
         _serviceCollection.TryAddScoped<IRepositorioAssunto, RepositorioAssunto>();
         _serviceCollection.TryAddScoped<IRepositorioSerieColecao, RepositorioSerieColecao>();
         _serviceCollection.TryAddScoped<IRepositorioAcervo, RepositorioAcervo>();
+        _serviceCollection.TryAddScoped<IRepositorioAcervoCreditoAutor, RepositorioAcervoCreditoAutor>();
         _serviceCollection.TryAddScoped<IRepositorioAcervoFotografico, RepositorioAcervoFotografico>();
         _serviceCollection.TryAddScoped<IRepositorioAcervoFotograficoArquivo, RepositorioAcervoFotograficoArquivo>();
         _serviceCollection.TryAddScoped<IRepositorioArquivo, RepositorioArquivo>();

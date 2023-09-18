@@ -20,6 +20,7 @@ namespace SME.CDEP.Aplicacao.Servicos
         private readonly IRepositorioAcervo repositorioAcervo;
         private readonly IMapper mapper;
         private readonly IServicoAcervo servicoAcervo;
+        private readonly IServicoAcervo servicoAcervoCreditoAutor;
         private readonly ITransacao transacao;
         private readonly IServicoMoverArquivoTemporario servicoMoverArquivoTemporario;
         private readonly IServicoArmazenamento servicoArmazenamento;
@@ -104,7 +105,7 @@ namespace SME.CDEP.Aplicacao.Servicos
             var acervo = await repositorioAcervo.ObterPorId(acervoFotograficoAlteracaoDto.AcervoId);
             acervo.Titulo = acervoFotograficoAlteracaoDto.Titulo;
             acervo.Codigo = acervoFotograficoAlteracaoDto.Codigo;
-            acervo.CreditoAutorId = acervoFotograficoAlteracaoDto.CreditoAutorId;
+            acervo.CreditosAutoresIds = acervoFotograficoAlteracaoDto.CreditosAutoresIds;
             
             var acervoFotografico = mapper.Map<AcervoFotografico>(acervoFotograficoAlteracaoDto);
             acervo.Codigo = acervo.Codigo.ContemSigla() 
@@ -114,10 +115,11 @@ namespace SME.CDEP.Aplicacao.Servicos
             var arquivosExistentes = await repositorioAcervoFotograficoArquivo.ObterPorAcervoFotograficoId(acervoFotograficoAlteracaoDto.Id);
             
             var arquivosAlteradosCompletos = await repositorioArquivo.ObterPorIds(arquivosAlterados);
+            var arquivosExistentesCompletos = await repositorioArquivo.ObterPorIds(arquivosExistentes.Select(s=> s.ArquivoId).ToArray());
             arquivosIdsInserir = arquivosAlteradosCompletos.Select(a => a.Id).Except(arquivosExistentes.Select(b => b.ArquivoId));
             arquivosIdsExcluir = arquivosExistentes.Select(b => b.ArquivoId).Except(arquivosAlteradosCompletos.Select(a => a.Id));
             var arquivosMover = arquivosAlteradosCompletos.Where(w => arquivosIdsInserir.Contains(w.Id)).Select(s => s);
-            var arquivosExcluir = arquivosAlteradosCompletos.Where(w => arquivosIdsExcluir.Contains(w.Id)).Select(s => s);
+            var arquivosExcluir = arquivosExistentesCompletos.Where(w => arquivosIdsExcluir.Contains(w.Id)).Select(s => s);
             
             var tran = transacao.Iniciar();
             try
@@ -153,7 +155,11 @@ namespace SME.CDEP.Aplicacao.Servicos
                 await servicoMoverArquivoTemporario.Mover(TipoArquivo.AcervoFotografico, arquivoAMover);
 
             foreach (var arquivoAExcluir in arquivosExcluir)
-                await servicoArmazenamento.Excluir(arquivoAExcluir.Nome);
+            {
+                var extensao = Path.GetExtension(arquivoAExcluir.Nome);
+                var nomeArquivoBucket= $"{arquivoAExcluir.Codigo.ToString()}{extensao}";
+                await servicoArmazenamento.Excluir(nomeArquivoBucket);
+            }
 
             return await ObterPorId(acervoFotograficoAlteracaoDto.AcervoId);
         }
@@ -166,7 +172,7 @@ namespace SME.CDEP.Aplicacao.Servicos
         public async Task<AcervoFotograficoDTO> ObterPorId(long id)
         {
             var acervoFotograficoSimples = await repositorioAcervoFotografico.ObterPorId(id);
-            var acervoFotograficoDto = mapper.Map<AcervoFotograficoDTO>(await repositorioAcervoFotografico.ObterPorId(id));
+            var acervoFotograficoDto = mapper.Map<AcervoFotograficoDTO>(acervoFotograficoSimples);
             acervoFotograficoDto.Auditoria = mapper.Map<AuditoriaDTO>(acervoFotograficoSimples);
             return acervoFotograficoDto;
         }

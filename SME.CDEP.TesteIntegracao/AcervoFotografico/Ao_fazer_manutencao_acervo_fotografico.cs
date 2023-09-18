@@ -53,19 +53,34 @@ namespace SME.CDEP.TesteIntegracao
 
             var mapper = GetServicoMapper();
 
-            var acervoFotograficoDto = await servicoAcervoFotografico.ObterPorId(3);
-            var acervoFotograficoAlteracaoDto =  mapper.Map<AcervoFotograficoAlteracaoDTO>(acervoFotograficoDto);
-            acervoFotograficoAlteracaoDto.Titulo = string.Format(ConstantesTestes.TITULO_X, 100);
-            acervoFotograficoAlteracaoDto.Codigo = "100";
-            acervoFotograficoAlteracaoDto.Descricao = string.Format(ConstantesTestes.DESCRICAO_X, 100);
-            acervoFotograficoAlteracaoDto.Localizacao = string.Format(ConstantesTestes.LOCALIZACAO_X, 100);
-            acervoFotograficoAlteracaoDto.Procedencia = string.Format(ConstantesTestes.PROCEDENCIA_X, "Teste Alteração");
-            acervoFotograficoAlteracaoDto.Largura = 100;
-            acervoFotograficoAlteracaoDto.Arquivos = arquivosSelecionados;
+            var acervoFotograficoAlteracaoDto = new AcervoFotograficoAlteracaoDTO()
+            {
+                Id = 3,
+                AcervoId = 3,
+                Codigo = "100FT",
+                Titulo = string.Format(ConstantesTestes.TITULO_X, 100),
+                CreditosAutoresIds = new long[]{1,2,3,4,5},
+                Descricao = string.Format(ConstantesTestes.DESCRICAO_X, 100),
+                Localizacao = string.Format(ConstantesTestes.LOCALIZACAO_X, 100),
+                Procedencia = string.Format(ConstantesTestes.PROCEDENCIA_X, 100),
+                DataAcervo = DateTimeExtension.HorarioBrasilia().Date.ToString("dd/MM/yyyy"),
+                CopiaDigital = true,
+                PermiteUsoImagem = true,
+                ConservacaoId = 1,
+                Quantidade = 25,
+                Largura = 35,
+                Altura = 45,
+                SuporteId = 2,
+                FormatoId = 3,
+                CromiaId = 4,
+                Resolucao = string.Format(ConstantesTestes.RESOLUCAO_X, 100),
+                TamanhoArquivo = string.Format(ConstantesTestes.TAMANHO_ARQUIVO_X_MB, 100),
+                Arquivos = arquivosSelecionados
+            };
             
             await servicoAcervoFotografico.Alterar(acervoFotograficoAlteracaoDto);
             
-            var acervo = ObterTodos<Acervo>().LastOrDefault();
+            var acervo = ObterTodos<Acervo>().FirstOrDefault(w=> w.Id == 3);
             acervo.Titulo.Equals(acervoFotograficoAlteracaoDto.Titulo).ShouldBeTrue();
             acervo.Codigo.Equals(acervoFotograficoAlteracaoDto.Codigo).ShouldBeTrue();
             acervo.TipoAcervoId.ShouldBe((int)TipoAcervo.Fotografico);
@@ -76,7 +91,7 @@ namespace SME.CDEP.TesteIntegracao
             acervo.AlteradoEm.HasValue.ShouldBeTrue();
             acervo.AlteradoPor.ShouldNotBeNull();
             
-            var acervoFotografico = ObterTodos<AcervoFotografico>().LastOrDefault();
+            var acervoFotografico = ObterTodos<AcervoFotografico>().FirstOrDefault(w=> w.AcervoId == 3);
             acervoFotografico.Descricao.ShouldBe(acervoFotograficoAlteracaoDto.Descricao);
             acervoFotografico.Localizacao.ShouldBe(acervoFotograficoAlteracaoDto.Localizacao);
             acervoFotografico.Procedencia.ShouldBe(acervoFotograficoAlteracaoDto.Procedencia);
@@ -96,6 +111,9 @@ namespace SME.CDEP.TesteIntegracao
             var acervoFotograficoArquivos = ObterTodos<AcervoFotograficoArquivo>();
             var acervoFotograficoArquivosInseridos = acervoFotograficoArquivos.Where(w => w.AcervoFotograficoId == acervoFotografico.Id);
             acervoFotograficoArquivosInseridos.Count().ShouldBe(arquivosSelecionados.Count());
+            
+            var acervoCreditoAutor = ObterTodos<AcervoCreditoAutor>().Where(w=> w.AcervoId == 3);
+            acervoCreditoAutor.Count().ShouldBe(5);
         }
         
         [Fact(DisplayName = "Acervo fotográfico - Atualizar (Removendo 1 arquivo, adicionando 5 novos)")]
@@ -111,20 +129,34 @@ namespace SME.CDEP.TesteIntegracao
             
             var servicoAcervoFotografico = GetServicoAcervoFotografico();
 
-            var mapper = GetServicoMapper();
-
-            var acervoFotograficoDto = await servicoAcervoFotografico.ObterPorId(3);
-            var acervoFotograficoAlteracaoDto =  mapper.Map<AcervoFotograficoAlteracaoDTO>(acervoFotograficoDto);
-            acervoFotograficoAlteracaoDto.Titulo = string.Format(ConstantesTestes.TITULO_X, 100);
-            acervoFotograficoAlteracaoDto.Codigo = "100";
-            acervoFotograficoAlteracaoDto.Descricao = string.Format(ConstantesTestes.DESCRICAO_X, 100);
-            acervoFotograficoAlteracaoDto.Localizacao = string.Format(ConstantesTestes.LOCALIZACAO_X, 100);
-            acervoFotograficoAlteracaoDto.Largura = 100;
-            acervoFotograficoAlteracaoDto.Arquivos = arquivosSelecionados;
+            var acervoFotograficoAlteracaoDto = new AcervoFotograficoAlteracaoDTO()
+            {
+                Id = 3,
+                AcervoId = 3,
+                Codigo = "100FT",
+                Titulo = string.Format(ConstantesTestes.TITULO_X, 100),
+                CreditosAutoresIds = new long[]{3,4,5},
+                Descricao = string.Format(ConstantesTestes.DESCRICAO_X, 100),
+                Localizacao = string.Format(ConstantesTestes.LOCALIZACAO_X, 100),
+                Procedencia = string.Format(ConstantesTestes.PROCEDENCIA_X, 100),
+                DataAcervo = DateTimeExtension.HorarioBrasilia().Date.ToString("dd/MM/yyyy"),
+                CopiaDigital = true,
+                PermiteUsoImagem = true,
+                ConservacaoId = 1,
+                Quantidade = 25,
+                Largura = 35,
+                Altura = 45,
+                SuporteId = 2,
+                FormatoId = 3,
+                CromiaId = 4,
+                Resolucao = string.Format(ConstantesTestes.RESOLUCAO_X, 100),
+                TamanhoArquivo = string.Format(ConstantesTestes.TAMANHO_ARQUIVO_X_MB, 100),
+                Arquivos = arquivosSelecionados
+            };
             
             await servicoAcervoFotografico.Alterar(acervoFotograficoAlteracaoDto);
             
-            var acervo = ObterTodos<Acervo>().LastOrDefault();
+            var acervo = ObterTodos<Acervo>().FirstOrDefault(w=> w.Id == 3);
             acervo.Titulo.Equals(acervoFotograficoAlteracaoDto.Titulo).ShouldBeTrue();
             acervo.Codigo.Equals(acervoFotograficoAlteracaoDto.Codigo).ShouldBeTrue();
             acervo.TipoAcervoId.ShouldBe((int)TipoAcervo.Fotografico);
@@ -135,7 +167,7 @@ namespace SME.CDEP.TesteIntegracao
             acervo.AlteradoEm.HasValue.ShouldBeTrue();
             acervo.AlteradoPor.ShouldNotBeNull();
             
-            var acervoFotografico = ObterTodos<AcervoFotografico>().LastOrDefault();
+            var acervoFotografico = ObterTodos<AcervoFotografico>().FirstOrDefault(w=> w.AcervoId == 3);
             acervoFotografico.Descricao.ShouldBe(acervoFotograficoAlteracaoDto.Descricao);
             acervoFotografico.Localizacao.ShouldBe(acervoFotograficoAlteracaoDto.Localizacao);
             acervoFotografico.Procedencia.ShouldBe(acervoFotograficoAlteracaoDto.Procedencia);
@@ -155,6 +187,9 @@ namespace SME.CDEP.TesteIntegracao
             var acervoFotograficoArquivos = ObterTodos<AcervoFotograficoArquivo>();
             var acervoFotograficoArquivosInseridos = acervoFotograficoArquivos.Where(w => w.AcervoFotograficoId == acervoFotografico.Id);
             acervoFotograficoArquivosInseridos.Count().ShouldBe(arquivosSelecionados.Count());
+            
+            var acervoCreditoAutor = ObterTodos<AcervoCreditoAutor>().Where(w=> w.AcervoId == 3);
+            acervoCreditoAutor.Count().ShouldBe(3);
         }
         
         [Fact(DisplayName = "Acervo fotográfico - Atualizar (Removendo todos)")]
@@ -164,26 +199,38 @@ namespace SME.CDEP.TesteIntegracao
 
             await InserirAcervoFotografico();
             
-            var arquivos = ObterTodos<Arquivo>();
-
             var arquivosSelecionados = Array.Empty<long>();
             
             var servicoAcervoFotografico = GetServicoAcervoFotografico();
 
-            var mapper = GetServicoMapper();
-
-            var acervoFotograficoDto = await servicoAcervoFotografico.ObterPorId(3);
-            var acervoFotograficoAlteracaoDto =  mapper.Map<AcervoFotograficoAlteracaoDTO>(acervoFotograficoDto);
-            acervoFotograficoAlteracaoDto.Titulo = string.Format(ConstantesTestes.TITULO_X, 100);
-            acervoFotograficoAlteracaoDto.Codigo = "100";
-            acervoFotograficoAlteracaoDto.Descricao = string.Format(ConstantesTestes.DESCRICAO_X, 100);
-            acervoFotograficoAlteracaoDto.Localizacao = string.Format(ConstantesTestes.LOCALIZACAO_X, 100);
-            acervoFotograficoAlteracaoDto.Largura = 100;
-            acervoFotograficoAlteracaoDto.Arquivos = arquivosSelecionados;
-            
+            var acervoFotograficoAlteracaoDto = new AcervoFotograficoAlteracaoDTO()
+            {
+                Id = 3,
+                AcervoId = 3,
+                Codigo = "100FT",
+                Titulo = string.Format(ConstantesTestes.TITULO_X, 100),
+                CreditosAutoresIds = new long[]{4,5},
+                Descricao = string.Format(ConstantesTestes.DESCRICAO_X, 100),
+                Localizacao = string.Format(ConstantesTestes.LOCALIZACAO_X, 100),
+                Procedencia = string.Format(ConstantesTestes.PROCEDENCIA_X, 100),
+                DataAcervo = DateTimeExtension.HorarioBrasilia().Date.ToString("dd/MM/yyyy"),
+                CopiaDigital = true,
+                PermiteUsoImagem = true,
+                ConservacaoId = 1,
+                Quantidade = 25,
+                Largura = 35,
+                Altura = 45,
+                SuporteId = 2,
+                FormatoId = 3,
+                CromiaId = 4,
+                Resolucao = string.Format(ConstantesTestes.RESOLUCAO_X, 100),
+                TamanhoArquivo = string.Format(ConstantesTestes.TAMANHO_ARQUIVO_X_MB, 100),
+                Arquivos = arquivosSelecionados
+            };
+                
             await servicoAcervoFotografico.Alterar(acervoFotograficoAlteracaoDto);
             
-            var acervo = ObterTodos<Acervo>().LastOrDefault();
+            var acervo = ObterTodos<Acervo>().FirstOrDefault(w=> w.Id == 3);
             acervo.Titulo.Equals(acervoFotograficoAlteracaoDto.Titulo).ShouldBeTrue();
             acervo.Codigo.Equals(acervoFotograficoAlteracaoDto.Codigo).ShouldBeTrue();
             acervo.TipoAcervoId.ShouldBe((int)TipoAcervo.Fotografico);
@@ -194,7 +241,7 @@ namespace SME.CDEP.TesteIntegracao
             acervo.AlteradoEm.HasValue.ShouldBeTrue();
             acervo.AlteradoPor.ShouldNotBeNull();
             
-            var acervoFotografico = ObterTodos<AcervoFotografico>().LastOrDefault();
+            var acervoFotografico = ObterTodos<AcervoFotografico>().FirstOrDefault(w=> w.AcervoId == 3);
             acervoFotografico.Descricao.ShouldBe(acervoFotograficoAlteracaoDto.Descricao);
             acervoFotografico.Localizacao.ShouldBe(acervoFotograficoAlteracaoDto.Localizacao);
             acervoFotografico.Procedencia.ShouldBe(acervoFotograficoAlteracaoDto.Procedencia);
@@ -214,6 +261,11 @@ namespace SME.CDEP.TesteIntegracao
             var acervoFotograficoArquivos = ObterTodos<AcervoFotograficoArquivo>();
             var acervoFotograficoArquivosInseridos = acervoFotograficoArquivos.Where(w => w.AcervoFotograficoId == acervoFotografico.Id);
             acervoFotograficoArquivosInseridos.Count().ShouldBe(arquivosSelecionados.Count());
+            
+            var acervoCreditoAutor = ObterTodos<AcervoCreditoAutor>().Where(w=> w.AcervoId == 3);
+            acervoCreditoAutor.Count().ShouldBe(2);
+            acervoCreditoAutor.FirstOrDefault().CreditoAutorId.ShouldBe(4);
+            acervoCreditoAutor.LastOrDefault().CreditoAutorId.ShouldBe(5);
         }
         
         [Fact(DisplayName = "Acervo fotográfico - Inserir")]
@@ -235,7 +287,7 @@ namespace SME.CDEP.TesteIntegracao
             {
                 Codigo = "100",
                 Titulo = string.Format(ConstantesTestes.TITULO_X, 100),
-                CreditoAutorId = 1,
+                CreditosAutoresIds = new long[]{new Random().Next(1, 5),new Random().Next(1, 5)},
                 Descricao = string.Format(ConstantesTestes.DESCRICAO_X, 100),
                 Localizacao = string.Format(ConstantesTestes.LOCALIZACAO_X, 100),
                 Procedencia = string.Format(ConstantesTestes.PROCEDENCIA_X, 100),
@@ -309,7 +361,7 @@ namespace SME.CDEP.TesteIntegracao
             {
                 Codigo = "1",
                 Titulo = string.Format(ConstantesTestes.TITULO_X, 100),
-                CreditoAutorId = 1,
+                CreditosAutoresIds = new long[]{new Random().Next(1, 5),new Random().Next(1, 5)},
                 Descricao = string.Format(ConstantesTestes.DESCRICAO_X, 100),
                 Localizacao = string.Format(ConstantesTestes.LOCALIZACAO_X, 100),
                 Procedencia = string.Format(ConstantesTestes.PROCEDENCIA_X, 100),
@@ -342,7 +394,7 @@ namespace SME.CDEP.TesteIntegracao
                 {
                     Codigo = $"{j.ToString()}FT",
                     Titulo = string.Format(ConstantesTestes.TITULO_X, j),
-                    CreditoAutorId = random.Next(1, 5),
+                    CreditosAutoresIds = new long[]{new Random().Next(1, 5),new Random().Next(1, 5)},
                     TipoAcervoId = (int)TipoAcervo.Fotografico,
                     CriadoPor = ConstantesTestes.SISTEMA,
                     CriadoEm = DateTimeExtension.HorarioBrasilia().AddMinutes(-15),
@@ -350,6 +402,24 @@ namespace SME.CDEP.TesteIntegracao
                     AlteradoEm = DateTimeExtension.HorarioBrasilia(),
                     AlteradoPor = ConstantesTestes.SISTEMA,
                     AlteradoLogin = ConstantesTestes.LOGIN_123456789
+                });
+                
+                await InserirNaBase(new AcervoCreditoAutor()
+                {
+                    AcervoId = j,
+                    CreditoAutorId = 1
+                });
+                
+                await InserirNaBase(new AcervoCreditoAutor()
+                {
+                    AcervoId = j,
+                    CreditoAutorId = 2
+                });
+                
+                await InserirNaBase(new AcervoCreditoAutor()
+                {
+                    AcervoId = j,
+                    CreditoAutorId = 3
                 });
 
                 await InserirNaBase(new AcervoFotografico()
