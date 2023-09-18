@@ -36,7 +36,8 @@ namespace SME.CDEP.Infra.Dados.Repositorios
                                   ca.nome
                         from acervo_fotografico af
                         join acervo a on a.id = af.acervo_id 
-                        join credito_autor ca on ca.id = a.credito_autor_id
+                        join acervo_credito_autor aca on aca.acervo_id = a.id
+                        join credito_autor ca on aca.credito_autor_id = ca.id
                         where not a.excluido ";
 
             var retorno = await conexao.Obter().QueryAsync<AcervoFotografico, Acervo, CreditoAutor,  AcervoFotografico>(
@@ -85,7 +86,8 @@ namespace SME.CDEP.Infra.Dados.Repositorios
                                   arq.codigo as ArquivoCodigo
                         from acervo_fotografico af
                         join acervo a on a.id = af.acervo_id 
-                        join credito_autor ca on ca.id = a.credito_autor_id
+                        join acervo_credito_autor aca on aca.acervo_id = a.id
+                        join credito_autor ca on aca.credito_autor_id = ca.id
                         left join acervo_fotografico_arquivo afa on afa.acervo_fotografico_id = af.id
                         left join arquivo arq on arq.id = afa.arquivo_id 
                         where not a.excluido 
@@ -96,7 +98,7 @@ namespace SME.CDEP.Infra.Dados.Repositorios
             {
                 var acervoFotografico = retorno.FirstOrDefault();
                 acervoFotografico.Arquivos = retorno.Where(w=> w.ArquivoId > 0).Select(s => new ArquivoResumido() { Id = s.ArquivoId, Codigo = s.ArquivoCodigo, Nome = s.ArquivoNome }).ToArray();
-            
+                acervoFotografico.CreditosAutoresIds = retorno.Select(s => s.CreditoAutorId).ToArray();
                 return acervoFotografico;    
             }
 

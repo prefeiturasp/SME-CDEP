@@ -12,9 +12,8 @@ public class AcervoFotograficoCadastroDTO
     [MaxLength(13, ErrorMessage = "O Tombo do acervo fotográfico não pode conter mais que 13 caracteres")]
     public string Codigo { get; set; }
     
-    [Required(ErrorMessage = "É necessário informar o crédito ou autoria do acervo fotográfico")]
-    [Range(1, long.MaxValue, ErrorMessage = "O crédito ou autoria do acervo fotográfico deve ser maior que zero")]
-    public long CreditoAutorId { get; set; }
+    [Required(ErrorMessage = "É necessário informar ao menos um crédito ou autoria do acervo fotográfico")]
+    public long[] CreditosAutoresIds { get; set; }
     
     [MaxLength(100, ErrorMessage = "A localização do acervo fotográfico não pode conter mais que 100 caracteres")]
     public string? Localizacao { get; set; }

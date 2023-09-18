@@ -15,14 +15,17 @@ namespace SME.CDEP.Aplicacao.Servicos
     public class ServicoAcervoAuditavel : IServicoAcervo
     {
         private readonly IRepositorioAcervo repositorioAcervo;
+        private readonly IRepositorioAcervoCreditoAutor repositorioAcervoCreditoAutor;
         private readonly IMapper mapper;
         private readonly IContextoAplicacao contextoAplicacao;
         
-        public ServicoAcervoAuditavel(IRepositorioAcervo repositorioAcervo, IMapper mapper, IContextoAplicacao contextoAplicacao)
+        public ServicoAcervoAuditavel(IRepositorioAcervo repositorioAcervo, IMapper mapper, IContextoAplicacao contextoAplicacao,
+            IRepositorioAcervoCreditoAutor repositorioAcervoCreditoAutor)
         {
             this.repositorioAcervo = repositorioAcervo ?? throw new ArgumentNullException(nameof(repositorioAcervo));
             this.mapper = mapper ?? throw new ArgumentNullException(nameof(mapper));
             this.contextoAplicacao = contextoAplicacao ?? throw new ArgumentNullException(nameof(contextoAplicacao));
+            this.repositorioAcervoCreditoAutor = repositorioAcervoCreditoAutor ?? throw new ArgumentNullException(nameof(repositorioAcervoCreditoAutor));
         }
         
         public async Task<long> Inserir(Acervo acervo)
@@ -34,7 +37,16 @@ namespace SME.CDEP.Aplicacao.Servicos
             acervo.CriadoEm = DateTimeExtension.HorarioBrasilia();
             acervo.CriadoPor = contextoAplicacao.NomeUsuario;
             acervo.CriadoLogin = contextoAplicacao.UsuarioLogado;
-            return await repositorioAcervo.Inserir(acervo);
+            var acervoId = await repositorioAcervo.Inserir(acervo);
+
+            foreach (var creditoAutorId in acervo.CreditosAutoresIds)
+                await repositorioAcervoCreditoAutor.Inserir(new AcervoCreditoAutor()
+                {
+                    AcervoId = acervoId,
+                    CreditoAutorId = creditoAutorId
+                });
+
+            return acervoId;
         }
         
         public async Task ValidarTomboDuplicado(string codigo, long id)
@@ -62,7 +74,23 @@ namespace SME.CDEP.Aplicacao.Servicos
             acervo.AlteradoLogin = contextoAplicacao.UsuarioLogado;
             acervo.AlteradoPor = contextoAplicacao.NomeUsuario;
             
-            return mapper.Map<AcervoDTO>(await repositorioAcervo.Atualizar(acervo));
+            var acervoAlterado = mapper.Map<AcervoDTO>(await repositorioAcervo.Atualizar(acervo));
+
+            var creditosAutoresPropostos = acervo.CreditosAutoresIds.ToList();
+            var acervoCreditoAutorAtuais = await repositorioAcervoCreditoAutor.ObterPorAcervoId(acervoAlterado.Id);
+            var acervoCreditoAutorAInserir = creditosAutoresPropostos.Select(a => a).Except(acervoCreditoAutorAtuais.Select(b => b.CreditoAutorId));
+            var arquivosIdsExcluir = acervoCreditoAutorAtuais.Select(a => a.CreditoAutorId).Except(creditosAutoresPropostos.Select(b => b)).ToArray();
+                
+            foreach (var creditoAutorId in acervoCreditoAutorAInserir)
+                await repositorioAcervoCreditoAutor.Inserir(new AcervoCreditoAutor()
+                {
+                    AcervoId = acervo.Id,
+                    CreditoAutorId = creditoAutorId
+                });
+            
+            await repositorioAcervoCreditoAutor.Excluir(arquivosIdsExcluir,acervo.Id);
+
+            return acervoAlterado;
         }
 
         public async Task<AcervoDTO> ObterPorId(long acervoId)
@@ -94,22 +122,29 @@ namespace SME.CDEP.Aplicacao.Servicos
 
         public async Task<PaginacaoResultadoDTO<IdTipoTituloCreditoAutoriaCodigoAcervoDTO>> ObterPorFiltro(int? tipoAcervo, string titulo, long? creditoAutorId, string codigo)
         {
-            var registros = await repositorioAcervo.PesquisarPorFiltro(tipoAcervo, titulo, creditoAutorId, codigo);
-            var totalRegistros = registros.Count();
             var paginacao = Paginacao;
+            
+            var registros = await repositorioAcervo.PesquisarPorFiltro(tipoAcervo, titulo, creditoAutorId, codigo);
+            
             var registrosOrdenados = OrdenarRegistros(paginacao, registros);
+            
+            var acervosAgrupandoCreditoAutor = registros
+                .GroupBy(g => new { g.Id, g.Titulo, g.Codigo, g.TipoAcervoId })
+                .Select(s => new IdTipoTituloCreditoAutoriaCodigoAcervoDTO
+                {
+                    Titulo = s.Key.Titulo,
+                    AcervoId = s.Key.Id,
+                    Codigo = s.Key.Codigo,
+                    CreditoAutoria = string.Join(", ", s.Select(ca=> ca.CreditoAutor.Nome)),
+                    TipoAcervo = ((TipoAcervo)s.Key.TipoAcervoId).Nome(),
+                    TipoAcervoId = (TipoAcervo)s.Key.TipoAcervoId,
+                });
+            
+            var totalRegistros = acervosAgrupandoCreditoAutor.Count();
             
             var retornoPaginado = new PaginacaoResultadoDTO<IdTipoTituloCreditoAutoriaCodigoAcervoDTO>()
             {
-                Items = registrosOrdenados.Select(s=> new IdTipoTituloCreditoAutoriaCodigoAcervoDTO
-                {
-                    Titulo = s.Titulo,
-                    AcervoId = s.Id,
-                    Codigo = s.Codigo,
-                    CreditoAutoria = s.CreditoAutor.Nome,
-                    TipoAcervo = ((TipoAcervo)s.TipoAcervoId).Nome(),
-                    TipoAcervoId = (TipoAcervo)s.TipoAcervoId,
-                }).Skip(paginacao.QuantidadeRegistrosIgnorados).Take(paginacao.QuantidadeRegistros),
+                Items = acervosAgrupandoCreditoAutor.Skip(paginacao.QuantidadeRegistrosIgnorados).Take(paginacao.QuantidadeRegistros),
                 TotalRegistros = totalRegistros,
                 TotalPaginas = (int)Math.Ceiling((double)totalRegistros / paginacao.QuantidadeRegistros)
             };

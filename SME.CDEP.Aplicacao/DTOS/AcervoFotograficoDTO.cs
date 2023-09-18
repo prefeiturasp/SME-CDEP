@@ -11,7 +11,6 @@ public class AcervoFotograficoDTO
     public string Titulo { get; set; }
     public long TipoAcervoId { get; set; }
     public string Codigo { get; set; }
-    public long CreditoAutorId { get; set; }
     public string Localizacao { get; set; }
     public string Procedencia { get; set; }
     public string DataAcervo { get; set; }
@@ -29,4 +28,5 @@ public class AcervoFotograficoDTO
     public string TamanhoArquivo { get; set; }
     public ArquivoResumidoDTO[]? Arquivos { get; set; }
     public AuditoriaDTO Auditoria { get; set; }
+    public long[] CreditosAutoresIds { get; set; }
 }

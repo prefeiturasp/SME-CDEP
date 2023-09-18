@@ -37,4 +37,5 @@ public class AcervoFotograficoCompleto: EntidadeBase
     public long ArquivoId { get; set; }
     public string ArquivoNome { get; set; }
     public Guid ArquivoCodigo { get; set; }
+    public long[] CreditosAutoresIds { get; set; }
 }
