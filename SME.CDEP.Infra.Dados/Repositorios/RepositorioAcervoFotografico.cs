@@ -80,6 +80,7 @@ namespace SME.CDEP.Infra.Dados.Repositorios
                                   a.alterado_login as AlteradoLogin,
                                   ca.id as CreditoAutorId,
                                   ca.nome as CreditoAutorNome,
+                                  arq.id as arquivoId,
                                   arq.nome as ArquivoNome,
                                   arq.codigo as ArquivoCodigo
                         from acervo_fotografico af
@@ -94,7 +95,7 @@ namespace SME.CDEP.Infra.Dados.Repositorios
             if (retorno.Any())
             {
                 var acervoFotografico = retorno.FirstOrDefault();
-                acervoFotografico.Arquivos = retorno.Where(w=> !string.IsNullOrEmpty(w.ArquivoNome)).Select(s => new ArquivoResumido() { Codigo = s.ArquivoCodigo, Nome = s.ArquivoNome }).ToArray();
+                acervoFotografico.Arquivos = retorno.Where(w=> w.ArquivoId > 0).Select(s => new ArquivoResumido() { Id = s.ArquivoId, Codigo = s.ArquivoCodigo, Nome = s.ArquivoNome }).ToArray();
             
                 return acervoFotografico;    
             }
