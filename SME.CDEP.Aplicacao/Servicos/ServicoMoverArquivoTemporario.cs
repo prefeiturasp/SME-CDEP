@@ -1,4 +1,5 @@
 ﻿using SME.CDEP.Aplicacao.Servicos.Interface;
+using SME.CDEP.Dominio.Entidades;
 using SME.CDEP.Infra.Dados.Repositorios.Interfaces;
 using SME.CDEP.Infra.Dominio.Enumerados;
 using SME.CDEP.Infra.Servicos.ServicoArmazenamento.Interface;
@@ -16,20 +17,15 @@ namespace SME.CDEP.Aplicacao.Servicos
             this.repositorioArquivo = repositorioArquivo?? throw new ArgumentNullException(nameof(repositorioArquivo));
         }
         
-        public async Task Mover(TipoArquivo tipoArquivo, Guid codigoArquivo)
+        public async Task Mover(TipoArquivo tipoArquivo, Arquivo arquivo)
         {
-            var arquivo = await repositorioArquivo.ObterPorCodigo(codigoArquivo);
-            
-            if (arquivo != null )
-            {
-                var extensao = Path.GetExtension(arquivo.Nome);
-                var nomeArquivoBucket= $"{arquivo.Codigo.ToString()}{extensao}";
+            var extensao = Path.GetExtension(arquivo.Nome);
+            var nomeArquivoBucket= $"{arquivo.Codigo.ToString()}{extensao}";
              
-                await servicoArmazenamento.Mover(nomeArquivoBucket);
+            await servicoArmazenamento.Mover(nomeArquivoBucket);
                 
-                arquivo.Tipo = tipoArquivo;
-                await repositorioArquivo.SalvarAsync(arquivo);
-            }
+            arquivo.Tipo = tipoArquivo;
+            await repositorioArquivo.SalvarAsync(arquivo);
         }
     }
 }

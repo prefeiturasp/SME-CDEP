@@ -36,12 +36,15 @@ namespace SME.CDEP.TesteIntegracao
             var servicoExcluirArquivoTemporario = GetServicoMoverArquivoTemporario();
 
             var arquivos = ObterTodos<Arquivo>();
-            var codigoAMover = arquivos.FirstOrDefault().Codigo;
+            var arquivoAMover = arquivos.First();
             
-            await servicoExcluirArquivoTemporario.Mover(TipoArquivo.AcervoFotografico,codigoAMover);
+            await servicoExcluirArquivoTemporario.Mover(TipoArquivo.AcervoFotografico, arquivoAMover);
             
             arquivos = ObterTodos<Arquivo>();
-            arquivos.Where(w=> w.Codigo.ToString().Equals(codigoAMover)).Any(a=> a.Tipo == TipoArquivo.AcervoFotografico).ShouldBeTrue();
+            arquivos
+                .Any(a => a.Id.ToString().Equals(arquivoAMover.Id)
+                    && a.Tipo == TipoArquivo.AcervoFotografico)
+                .ShouldBeTrue();
         }
         
         [Fact(DisplayName = "Acervo - Upload")]
