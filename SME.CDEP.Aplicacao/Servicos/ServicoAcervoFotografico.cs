@@ -107,6 +107,9 @@ namespace SME.CDEP.Aplicacao.Servicos
             acervo.CreditoAutorId = acervoFotograficoAlteracaoDto.CreditoAutorId;
             
             var acervoFotografico = mapper.Map<AcervoFotografico>(acervoFotograficoAlteracaoDto);
+            acervo.Codigo = acervo.Codigo.ContemSigla() 
+                ? acervo.Codigo
+                : $"{acervo.Codigo}{Constantes.SIGLA_ACERVO_FOTOGRAFICO}";
             
             var arquivosExistentes = await repositorioAcervoFotograficoArquivo.ObterPorAcervoFotograficoId(acervoFotograficoAlteracaoDto.Id);
             

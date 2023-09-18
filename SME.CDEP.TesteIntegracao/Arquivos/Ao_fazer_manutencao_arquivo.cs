@@ -22,7 +22,7 @@ namespace SME.CDEP.TesteIntegracao
             var servicoExcluirArquivo = GetServicoExcluirArquivo();
 
             var arquivos = ObterTodos<Arquivo>();
-            await servicoExcluirArquivo.Excluir(arquivos.Take(30).Select(s => s.Codigo).ToArray());
+            await servicoExcluirArquivo.Excluir(arquivos.Take(30).Select(s => s.Id).ToArray());
             
             arquivos = ObterTodos<Arquivo>();
             arquivos.Count().ShouldBe(20);
