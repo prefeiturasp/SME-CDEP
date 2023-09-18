@@ -34,7 +34,7 @@ namespace SME.CDEP.Aplicacao.Servicos
                 CriadoPor = contextoAplicacao.NomeUsuario,
             };
 
-            await repositorioArquivo.SalvarAsync(arquivo);
+            arquivo.Id = await repositorioArquivo.SalvarAsync(arquivo);
             
             var path = await servicoArmazenamentoArquivoFisico.Armazenar(formFile, arquivo.Codigo.ToString(), tipoArquivo);
 

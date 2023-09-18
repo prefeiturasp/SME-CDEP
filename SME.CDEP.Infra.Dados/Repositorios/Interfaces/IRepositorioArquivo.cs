@@ -12,6 +12,6 @@ namespace SME.CDEP.Infra.Dados.Repositorios.Interfaces
         Task<bool> ExcluirArquivoPorId(long id);
         Task<long> ObterIdPorCodigo(Guid arquivoCodigo);
         Task<bool> ExcluirArquivosPorIds(long[] ids);
-        Task SalvarAsync(Arquivo arquivo);
+        Task<long> SalvarAsync(Arquivo arquivo);
     }
 }
