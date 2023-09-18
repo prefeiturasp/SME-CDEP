@@ -1,44 +1,35 @@
-﻿using System.Text.Json;
-using SME.CDEP.Aplicacao.DTOS;
-using SME.CDEP.Aplicacao.Servicos.Interface;
+﻿using SME.CDEP.Aplicacao.Servicos.Interface;
 using SME.CDEP.Dominio.Constantes;
 using SME.CDEP.Dominio.Excecoes;
 using SME.CDEP.Infra.Dados.Repositorios.Interfaces;
-using SME.CDEP.Infra.Servicos.Mensageria;
-using SME.CDEP.Infra.Servicos.Mensageria.Exchange;
-using SME.CDEP.Infra.Servicos.Mensageria.Rotas;
+using SME.CDEP.Infra.Servicos.ServicoArmazenamento;
+using SME.CDEP.Infra.Servicos.ServicoArmazenamento.Interface;
 
 namespace SME.CDEP.Aplicacao.Servicos
 {
     public class ServicoExcluirArquivo : IServicoExcluirArquivo
     {
         private readonly IRepositorioArquivo repositorioArquivo;
-        private readonly IServicoMensageria servicoMensageria;
+        private readonly IServicoArmazenamento servicoArmazenamento;
         
-        public ServicoExcluirArquivo(IRepositorioArquivo repositorioArquivo,IServicoMensageria servicoMensageria)
+        public ServicoExcluirArquivo(IRepositorioArquivo repositorioArquivo,IServicoArmazenamento servicoArmazenamento)
         {
             this.repositorioArquivo = repositorioArquivo ?? throw new ArgumentNullException(nameof(repositorioArquivo));
-            this.servicoMensageria = servicoMensageria ?? throw new ArgumentNullException(nameof(servicoMensageria));
+            this.servicoArmazenamento = servicoArmazenamento ?? throw new ArgumentNullException(nameof(servicoArmazenamento));
         }
        
-        public async Task<bool> Excluir(Guid[] codigos)
+        public async Task<bool> Excluir(long[] ids)
         {
-            var arquivos = await repositorioArquivo.ObterPorCodigos(codigos);
-            if (arquivos == null)
-                throw new NegocioException(MensagemNegocio.ARQUIVO_INF0RMADO_NAO_ENCONTRADO);
+             var arquivos = await repositorioArquivo.ObterPorIds(ids);
+             if (arquivos == null)
+                 throw new NegocioException(MensagemNegocio.ARQUIVO_INF0RMADO_NAO_ENCONTRADO);
             
-            var arquivosIds = arquivos.Select(s => s.Id).ToArray();
+             var arquivosIds = arquivos.Select(s => s.Id).ToArray();
             
-            await repositorioArquivo.ExcluirArquivosPorIds(arquivosIds);
-
-            foreach (var arquivo in arquivos)
-            {
-                var extencao = Path.GetExtension(arquivo.Nome);
-
-                var mensagem = new FiltroExcluirArquivoArmazenamentoDto() { ArquivoNome = arquivo.Codigo + extencao};
-                
-                await servicoMensageria.Enviar(JsonSerializer.Serialize(mensagem) , RotasRabbitSgp.RemoverArquivoArmazenamento, ExchangeRabbit.Sgp);
-            }
+             await repositorioArquivo.ExcluirArquivosPorIds(arquivosIds);
+            
+             foreach (var arquivo in arquivos)
+                 await servicoArmazenamento.Excluir(arquivo.Nome);
             
             return true;
         }
