@@ -98,7 +98,7 @@ namespace SME.CDEP.Infra.Dados.Repositorios
             {
                 var acervoFotografico = retorno.FirstOrDefault();
                 acervoFotografico.Arquivos = retorno.Where(w=> w.ArquivoId > 0).Select(s => new ArquivoResumido() { Id = s.ArquivoId, Codigo = s.ArquivoCodigo, Nome = s.ArquivoNome }).DistinctBy(d=> d.Id).ToArray();
-                acervoFotografico.CreditosAutoresIds = retorno.Select(s => s.CreditoAutorId).ToArray();
+                acervoFotografico.CreditosAutoresIds = retorno.Select(s => s.CreditoAutorId).Distinct().ToArray();
                 return acervoFotografico;    
             }
 
