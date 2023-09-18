@@ -6,4 +6,5 @@ public class ArquivoResumidoDTO
 {
     public string? Nome { get; set; }
     public Guid Codigo { get; set; }
+    public long Id { get; set; }
 }

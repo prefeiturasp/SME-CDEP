@@ -6,5 +6,6 @@ namespace SME.CDEP.Dominio.Entidades
     {
         public string Nome { get; set; }
         public Guid Codigo { get; set; }
+        public long Id { get; set; }
     }
 }
