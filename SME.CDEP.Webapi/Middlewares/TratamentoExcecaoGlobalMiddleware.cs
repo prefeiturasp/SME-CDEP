@@ -1,11 +1,9 @@
 ﻿using Newtonsoft.Json;
 using System.Net;
-using System.Text;
-using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json.Serialization;
 using SME.CDEP.Aplicacao.DTOS;
 using SME.CDEP.Dominio.Excecoes;
-using SME.CDEP.Infra.Servicos.Log;
+using SME.CDEP.Infra.Servicos.Mensageria.Log;
 
 namespace SME.CDEP.Webapi.Middlewares
 {

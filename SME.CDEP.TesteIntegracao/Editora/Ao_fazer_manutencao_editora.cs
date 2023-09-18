@@ -7,7 +7,7 @@ using SME.CDEP.TesteIntegracao.Setup;
 using SME.CDEP.TesteIntegracao.Constantes;
 using Xunit;
 
-namespace SME.CDEP.TesteIntegracao.Usuario
+namespace SME.CDEP.TesteIntegracao
 {
     public class Ao_fazer_manutencao_editora : TesteBase
     {
@@ -23,7 +23,7 @@ namespace SME.CDEP.TesteIntegracao.Usuario
             
             editoras.ShouldBeGreaterThan(0);
             var obterTodos = ObterTodos<Editora>();
-            obterTodos.Count.ShouldBe(1);
+            obterTodos.Count().ShouldBe(1);
         }
       
         [Fact(DisplayName = "Editora - Não deve inserir pois já existe cadastro com esse nome")]
@@ -60,7 +60,7 @@ namespace SME.CDEP.TesteIntegracao.Usuario
 
             var editoraDTO = await servicoEditora.ObterTodos();
             editoraDTO.ShouldNotBeNull();
-            editoraDTO.Count.ShouldBe(2);
+            editoraDTO.Count().ShouldBe(2);
         }
 
         [Fact(DisplayName = "Editora - Obter por id")]

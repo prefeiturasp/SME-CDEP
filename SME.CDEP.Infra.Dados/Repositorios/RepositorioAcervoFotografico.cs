@@ -10,7 +10,7 @@ namespace SME.CDEP.Infra.Dados.Repositorios
         public RepositorioAcervoFotografico(IContextoAplicacao contexto, ICdepConexao conexao) : base(contexto,conexao)
         { }
         
-        public async Task<IList<AcervoFotografico>> ObterTodos()
+        public async Task<IEnumerable<AcervoFotografico>> ObterTodos()
         {
             var query = @"select  af.id,
                                   af.localizacao,
@@ -36,29 +36,30 @@ namespace SME.CDEP.Infra.Dados.Repositorios
                                   ca.nome
                         from acervo_fotografico af
                         join acervo a on a.id = af.acervo_id 
-                        join credito_autor ca on ca.id = a.credito_autor_id
+                        join acervo_credito_autor aca on aca.acervo_id = a.id
+                        join credito_autor ca on aca.credito_autor_id = ca.id
                         where not a.excluido ";
 
-            var retorno = (await conexao.Obter().QueryAsync<AcervoFotografico, Acervo, CreditoAutor,  AcervoFotografico>(
+            var retorno = await conexao.Obter().QueryAsync<AcervoFotografico, Acervo, CreditoAutor,  AcervoFotografico>(
                 query, (acervoFotografico, acervo, creditoAutor) =>
                 {
                     acervo.CreditoAutor = creditoAutor;
                     acervoFotografico.Acervo = acervo;
                     return acervoFotografico;
-                })).ToList();
+                });
             
             return retorno;
         }
         
-        public async Task<AcervoFotografico> ObterPorId(long id)
+        public async Task<AcervoFotograficoCompleto> ObterPorId(long id)
         {
             var query = @"select  af.id,
                                   af.localizacao,
                                   af.procedencia,
-                                  af.data_acervo,
-                                  af.copia_digital,
-                                  af.permite_uso_imagem,
-                                  af.conservacao_id,
+                                  af.data_acervo as DataAcervo,
+                                  af.copia_digital as CopiaDigital,
+                                  af.permite_uso_imagem as PermiteUsoImagem,
+                                  af.conservacao_id as ConservacaoId,
                                   af.descricao,
                                   af.quantidade,
                                   af.largura,
@@ -67,34 +68,41 @@ namespace SME.CDEP.Infra.Dados.Repositorios
                                   af.formato_id as formatoId,
                                   af.cromia_id as cromiaId,
                                   af.resolucao,
-                                  af.tamanho_arquivo,
-                                  a.id,
+                                  af.tamanho_arquivo as TamanhoArquivo,
+                                  a.id as AcervoId,
                                   a.titulo,
                                   a.codigo,
-                                  a.tipo,
-                                  a.criado_em,
-                                  a.criado_por,
-                                  a.criado_login,
-                                  a.alterado_em,
-                                  a.alterado_por,
-                                  a.alterado_login,
-                                  ca.id,
-                                  ca.nome
+                                  a.tipo as TipoAcervoId,
+                                  a.criado_em as CriadoEm,
+                                  a.criado_por as CriadoPor,
+                                  a.criado_login as CriadoLogin,
+                                  a.alterado_em as AlteradoEm,
+                                  a.alterado_por as AlteradoPor,
+                                  a.alterado_login as AlteradoLogin,
+                                  ca.id as CreditoAutorId,
+                                  ca.nome as CreditoAutorNome,
+                                  arq.id as arquivoId,
+                                  arq.nome as ArquivoNome,
+                                  arq.codigo as ArquivoCodigo
                         from acervo_fotografico af
                         join acervo a on a.id = af.acervo_id 
-                        join credito_autor ca on ca.id = a.credito_autor_id
+                        join acervo_credito_autor aca on aca.acervo_id = a.id
+                        join credito_autor ca on aca.credito_autor_id = ca.id
+                        left join acervo_fotografico_arquivo afa on afa.acervo_fotografico_id = af.id
+                        left join arquivo arq on arq.id = afa.arquivo_id 
                         where not a.excluido 
-                        and af.id = @id";
+                        and a.id = @id";
 
-            var retorno = (await conexao.Obter().QueryAsync<AcervoFotografico, Acervo, CreditoAutor,  AcervoFotografico>(
-                query, (acervoFotografico, acervo, creditoAutor) =>
-                {
-                    acervo.CreditoAutor = creditoAutor;
-                    acervoFotografico.Acervo = acervo;
-                    return acervoFotografico;
-                },new {id})).FirstOrDefault();
-            
-            return retorno;
+            var retorno = (await conexao.Obter().QueryAsync<AcervoFotograficoCompleto>(query, new { id }));
+            if (retorno.Any())
+            {
+                var acervoFotografico = retorno.FirstOrDefault();
+                acervoFotografico.Arquivos = retorno.Where(w=> w.ArquivoId > 0).Select(s => new ArquivoResumido() { Id = s.ArquivoId, Codigo = s.ArquivoCodigo, Nome = s.ArquivoNome }).DistinctBy(d=> d.Id).ToArray();
+                acervoFotografico.CreditosAutoresIds = retorno.Select(s => s.CreditoAutorId).Distinct().ToArray();
+                return acervoFotografico;    
+            }
+
+            return default;
         }
         
     }

@@ -15,7 +15,7 @@ namespace SME.CDEP.Aplicacao.DTOS
         public bool PodeConsultar { get; set; }
         public bool PodeExcluir { get; set; }
         public bool PodeIncluir { get; set; }
-        public IList<MenuPermissaoDTO> SubMenus { get; set; }
+        public List<MenuPermissaoDTO> SubMenus { get; set; }
         public string Url { get; set; }
         public int Ordem { get; set; }
         public string AjudaDoSistema { get; set; }

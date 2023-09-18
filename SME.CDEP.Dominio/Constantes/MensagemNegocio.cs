@@ -2,10 +2,12 @@
 
 public class MensagemNegocio
 {
-    public const string TITULO_NAO_INFORMADO = "Título não informado";
-    public const string NOME_NAO_INFORMADO = "Nome não informado";
+    public const string IMAGEM_NAO_ENCONTRADO = "A imagem não foi encontrada";
+    public const string ARQUIVO_INF0RMADO_NAO_ENCONTRADO = "O arquivo informado não foi encontrado";
     public const string NAO_FOI_POSSIVEL_VINCULAR_PERFIL_EXTERNO_CORESSO_USUARIO_SEM_PERFIL = "Não foi possível vincular perfil Externo no CoreSSO - Usuário sem perfil";
+    public const string REGISTRO_X_DUPLICADO = "Registro '{0}' duplicado";
     public const string REGISTRO_DUPLICADO = "Registro duplicado";
+    public const string NOME_NAO_INFORMADO = "Nome não informado";
     public const string SO_EH_PERMITIDO_ALTERAR_ENDERECO_TELEFONE_DE_USUARIOS_EXTERNOS = "Só é permitido alterar endereço/telefone de usuários externos";
     public const string LOGIN_NAO_ENCONTRADO = "Login não encontrado";
     public const string LOGIN_OU_SENHA_ATUAL_NAO_COMFEREM = "Login ou senha atual não conferem";

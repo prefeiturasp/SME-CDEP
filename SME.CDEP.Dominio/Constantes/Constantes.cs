@@ -2,6 +2,7 @@
 
 public class Constantes
 {
+    public const string SIGLA_ACERVO_FOTOGRAFICO = "FT";
     public const string VIOLACAO_CONSTRAINT_DUPLICACAO_REGISTROS_CODIGO = "23505";
     public const string VIOLACAO_CONSTRAINT_DUPLICACAO_REGISTROS_MENSAGEM = "Registro duplicado";
     public const string NOME_DUPLICADO = "Nome duplicado";

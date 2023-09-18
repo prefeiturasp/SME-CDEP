@@ -3,9 +3,10 @@ using Polly;
 using Polly.Registry;
 using System.Text;
 using SME.CDEP.Infra.Dominio.Enumerados;
+using SME.CDEP.Infra.Servicos.Mensageria.Exchange;
 using SME.CDEP.Infra.Servicos.Polly;
 
-namespace SME.CDEP.Infra.Servicos.Log
+namespace SME.CDEP.Infra.Servicos.Mensageria.Log
 {
     public class ServicoLogs : IServicoLogs
     {

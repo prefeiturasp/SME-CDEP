@@ -22,7 +22,7 @@ namespace SME.CDEP.Aplicacao.Servicos
             {
                 Descricao = item.ObterAtributo<PermissaoMenuAttribute>().Agrupamento,
                 Ordem = item.ObterAtributo<PermissaoMenuAttribute>().OrdemAgrupamento
-            }).OrderBy(a => a.Key.Ordem).ToList();
+            }).OrderBy(a => a.Key.Ordem);
 
             var listaRetorno = new List<MenuRetornoDTO>();
 
@@ -43,7 +43,7 @@ namespace SME.CDEP.Aplicacao.Servicos
                 {
                     item.ObterAtributo<PermissaoMenuAttribute>().Menu,
                     Ordem = item.ObterAtributo<PermissaoMenuAttribute>().OrdemMenu
-                }).OrderBy(a => a.Key.Ordem).ToList();
+                }).OrderBy(a => a.Key.Ordem);
 
                 foreach (var permissaoMenu in permissoesMenu)
                 {
@@ -69,7 +69,7 @@ namespace SME.CDEP.Aplicacao.Servicos
                             var url = ObterUrlComRedirect(menuSubEnumeradoComAtributo);
 
                             var permissoesSubMenu = permissaoMenu.Where(c =>
-                                c.ObterAtributo<PermissaoMenuAttribute>().Url == subMenu.Key).ToList();
+                                c.ObterAtributo<PermissaoMenuAttribute>().Url == subMenu.Key);
 
                             menuPai.SubMenus.Add(new MenuPermissaoDTO()
                             {

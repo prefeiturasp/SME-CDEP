@@ -24,9 +24,8 @@ public abstract class RepositorioBase<TEntidade> : IRepositorioBase<TEntidade>
     public Task<TEntidade> ObterPorId(long id)
         => conexao.Obter().GetAsync<TEntidade>(id);
 
-    public async Task<IList<TEntidade>> ObterTodos()
-        => (await conexao.Obter().GetAllAsync<TEntidade>())
-            .ToList();
+    public async Task<IEnumerable<TEntidade>> ObterTodos()
+        => await conexao.Obter().GetAllAsync<TEntidade>();
 
     public async Task<long> Inserir(TEntidade entidade)
     {
@@ -66,11 +65,5 @@ public abstract class RepositorioBase<TEntidade> : IRepositorioBase<TEntidade>
     public async Task Remover(long id)
     {
         throw new NotImplementedException();
-    }
-
-    public async Task<IList<TEntidade>> PesquisarPorNome(string nome, string campo)
-    {
-        var tableName = Resolvers.Table(typeof(TEntidade), conexao.Obter());
-        return (await conexao.Obter().QueryAsync<TEntidade>($"select * from {tableName} where lower({campo}) like '%{nome.ToLower()}%' and not excluido ")).ToList();
     }
 }

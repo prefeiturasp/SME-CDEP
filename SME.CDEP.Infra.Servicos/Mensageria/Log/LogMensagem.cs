@@ -1,6 +1,6 @@
-﻿namespace SME.CDEP.Infra.Servicos.Log
+﻿namespace SME.CDEP.Infra.Servicos.Mensageria.Log
 {
-    public class LogMensagem
+    public class LogMensagem 
     {
         public LogMensagem(string mensagem, string contexto = "", string nivel = "", string observacao = "", string rastreamento = "", string projeto = "CDEP")
         {

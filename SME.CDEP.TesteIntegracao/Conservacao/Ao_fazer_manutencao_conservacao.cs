@@ -6,7 +6,7 @@ using SME.CDEP.TesteIntegracao.Setup;
 using SME.CDEP.TesteIntegracao.Constantes;
 using Xunit;
 
-namespace SME.CDEP.TesteIntegracao.Usuario
+namespace SME.CDEP.TesteIntegracao
 {
     public class Ao_fazer_manutencao_conservacao : TesteBase
     {
@@ -21,7 +21,7 @@ namespace SME.CDEP.TesteIntegracao.Usuario
             var conservacaoDTO = await servicoConservacao.Inserir(new IdNomeExcluidoDTO(){Nome = ConstantesTestes.OTIMO});
             conservacaoDTO.ShouldBeGreaterThan(0);
             var obterTodos = ObterTodos<Conservacao>();
-            obterTodos.Count.ShouldBe(1);
+            obterTodos.Count().ShouldBe(1);
         }
         
         [Fact(DisplayName = "Conservacao - Não deve inserir pois já existe cadastro com esse nome")]
@@ -42,7 +42,7 @@ namespace SME.CDEP.TesteIntegracao.Usuario
 
             var conservacaoDTOs = await servicoConservacao.ObterTodos();
             conservacaoDTOs.ShouldNotBeNull();
-            conservacaoDTOs.Count.ShouldBe(4);
+            conservacaoDTOs.Count().ShouldBe(4);
         }
 
         [Fact(DisplayName = "Conservacao - Obter por id")]

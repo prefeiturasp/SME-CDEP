@@ -8,7 +8,7 @@ using SME.CDEP.TesteIntegracao.Constantes;
 using Xunit;
 using Xunit.Sdk;
 
-namespace SME.CDEP.TesteIntegracao.Usuario
+namespace SME.CDEP.TesteIntegracao
 {
     public class Ao_fazer_manutencao_acervo : TesteBase
     {
@@ -42,23 +42,100 @@ namespace SME.CDEP.TesteIntegracao.Usuario
             acervoFotograficoDtos.Items.Count().ShouldBe(10);
         }
         
+        [Fact(DisplayName = "Acervo - Alterar")]
+        public async Task Alterar()
+        {
+            await InserirDadosBasicos();
+            await InserirAcervo();
+            var servicoAcervo = GetServicoAcervo();
+
+            var acervo = await servicoAcervo.Alterar(new Acervo()
+            {
+                Id = 1,
+                Codigo = "150",
+                Titulo = string.Format(ConstantesTestes.TITULO_X,150),
+                CreditosAutoresIds = new long[]{1,2},
+                TipoAcervoId = (int)TipoAcervo.Fotografico,  
+                CriadoPor = ConstantesTestes.SISTEMA,
+                CriadoEm = DateTimeExtension.HorarioBrasilia(),
+                CriadoLogin = ConstantesTestes.LOGIN_123456789
+            });
+            
+            acervo.ShouldNotBeNull();
+            var acervosCreditosAutores = ObterTodos<AcervoCreditoAutor>();
+            acervosCreditosAutores.Where(w=> w.AcervoId == 1).Count().ShouldBe(2);
+            acervosCreditosAutores.Where(w=> w.AcervoId == 1).FirstOrDefault().CreditoAutorId.ShouldBe(1);
+            acervosCreditosAutores.Where(w=> w.AcervoId == 1).LastOrDefault().CreditoAutorId.ShouldBe(2);
+        }
+        
+        [Fact(DisplayName = "Acervo - Alterar adicionando mais créditos/autores")]
+        public async Task Alterar_adicionando_mais_creditos_autores()
+        {
+            await InserirDadosBasicos();
+            await InserirAcervo();
+            var servicoAcervo = GetServicoAcervo();
+
+            var acervo = await servicoAcervo.Alterar(new Acervo()
+            {
+                Id = 1,
+                Codigo = "150",
+                Titulo = string.Format(ConstantesTestes.TITULO_X,150),
+                CreditosAutoresIds = new long[]{1,2,3,4,5},
+                TipoAcervoId = (int)TipoAcervo.Fotografico,  
+                CriadoPor = ConstantesTestes.SISTEMA,
+                CriadoEm = DateTimeExtension.HorarioBrasilia(),
+                CriadoLogin = ConstantesTestes.LOGIN_123456789
+            });
+            
+            acervo.ShouldNotBeNull();
+            var acervosCreditosAutores = ObterTodos<AcervoCreditoAutor>();
+            acervosCreditosAutores.Where(w=> w.AcervoId == 1).Count().ShouldBe(5);
+        }
+        
+        [Fact(DisplayName = "Acervo - Alterar excluindo todos e adicionando um créditos/autores")]
+        public async Task Alterar_excluindo_todos_adicionando_um_creditos_autores()
+        {
+            await InserirDadosBasicos();
+            await InserirAcervo();
+            var servicoAcervo = GetServicoAcervo();
+
+            var acervo = await servicoAcervo.Alterar(new Acervo()
+            {
+                Id = 1,
+                Codigo = "150",
+                Titulo = string.Format(ConstantesTestes.TITULO_X,150),
+                CreditosAutoresIds = new long[]{5},
+                TipoAcervoId = (int)TipoAcervo.Fotografico,  
+                CriadoPor = ConstantesTestes.SISTEMA,
+                CriadoEm = DateTimeExtension.HorarioBrasilia(),
+                CriadoLogin = ConstantesTestes.LOGIN_123456789
+            });
+            
+            acervo.ShouldNotBeNull();
+            var acervosCreditosAutores = ObterTodos<AcervoCreditoAutor>();
+            acervosCreditosAutores.Where(w=> w.AcervoId == 1).Count().ShouldBe(1);
+        }
+        
         [Fact(DisplayName = "Acervo - Inserir")]
         public async Task Inserir()
         {
             await InserirDadosBasicos();
             var servicoAcervo = GetServicoAcervo();
 
-            var acervo = await servicoAcervo.Inserir(new AcervoDTO()
+            var acervo = await servicoAcervo.Inserir(new Acervo()
             {
-                Codigo = string.Format(ConstantesTestes.CODIGO_X,1),
+                Codigo = "1",
                 Titulo = string.Format(ConstantesTestes.TITULO_X,1),
-                CreditoAutorId = new Random().Next(1, 5),
+                CreditosAutoresIds = new long[]{1,2},
                 TipoAcervoId = (int)TipoAcervo.Fotografico,    
             });
             
             acervo.ShouldBeGreaterThan(0);
             var acervos = ObterTodos<Acervo>();
-            acervos.Count.ShouldBe(1);
+            acervos.Count().ShouldBe(1);
+            
+            var acervosCreditosAutores = ObterTodos<AcervoCreditoAutor>();
+            acervosCreditosAutores.Count().ShouldBe(2);
         }
         
         [Fact(DisplayName = "Acervo - Não deve inserir pois já existe cadastro com esse título")]
@@ -69,12 +146,12 @@ namespace SME.CDEP.TesteIntegracao.Usuario
             await InserirAcervo();
 
             var servicoAcervo = GetServicoAcervo();
-
-            await servicoAcervo.Inserir(new AcervoDTO()
+            
+            await servicoAcervo.Inserir(new Acervo()
             {
-                Codigo = string.Format(ConstantesTestes.CODIGO_X,1),
+                Codigo = "1",
                 Titulo = string.Format(ConstantesTestes.TITULO_X,1),
-                CreditoAutorId = new Random().Next(1, 5),
+                CreditosAutoresIds = new long[]{1,2},
                 TipoAcervoId = (int)TipoAcervo.Fotografico,    
             }).ShouldThrowAsync<NegocioException>();
         }
@@ -92,24 +169,6 @@ namespace SME.CDEP.TesteIntegracao.Usuario
             acervo.ShouldNotBeNull();
             acervo.Id.ShouldBe(1);
             acervo.Titulo.ShouldBe(string.Format(ConstantesTestes.TITULO_X, 1));
-        }
-        
-        [Fact(DisplayName = "Acervo - Atualizar")]
-        public async Task Atualizar()
-        {
-            await InserirDadosBasicos();
-
-            await InserirAcervo();
-            
-            var servicoAcervo = GetServicoAcervo();
-
-            var acervoDto = await servicoAcervo.ObterPorId(3);
-            acervoDto.Titulo = string.Format(ConstantesTestes.TITULO_X, 100);
-            
-            var acervoAlterado = await servicoAcervo.Alterar(acervoDto);
-            
-            acervoAlterado.ShouldNotBeNull();
-            acervoAlterado.Titulo = string.Format(ConstantesTestes.TITULO_X, 100);
         }
         
         [Fact(DisplayName = "Acervo - Excluir")]
@@ -130,19 +189,34 @@ namespace SME.CDEP.TesteIntegracao.Usuario
 
         private async Task InserirAcervo()
         {
-            var random = new Random();
-
             for (int j = 1; j <= 35; j++)
             {
                 await InserirNaBase(new Acervo()
                 {
-                    Codigo = string.Format(ConstantesTestes.CODIGO_X, j),
+                    Codigo = j.ToString(),
                     Titulo = string.Format(ConstantesTestes.TITULO_X, j),
-                    CreditoAutorId = random.Next(1, 5),
                     TipoAcervoId = (int)TipoAcervo.Fotografico,
                     CriadoPor = ConstantesTestes.SISTEMA,
                     CriadoEm = DateTimeExtension.HorarioBrasilia(),
                     CriadoLogin = ConstantesTestes.LOGIN_123456789
+                });
+                
+                await InserirNaBase(new AcervoCreditoAutor()
+                {
+                    AcervoId = j,
+                    CreditoAutorId = 1
+                });
+                
+                await InserirNaBase(new AcervoCreditoAutor()
+                {
+                    AcervoId = j,
+                    CreditoAutorId = 2
+                });
+                
+                await InserirNaBase(new AcervoCreditoAutor()
+                {
+                    AcervoId = j,
+                    CreditoAutorId = 3
                 });
             }
         }
