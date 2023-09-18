@@ -41,7 +41,7 @@ namespace SME.CDEP.Webapi.Middlewares
             {
                 var mensagem = "Houve um comportamento inesperado do sistema CDEP. Por favor, contate a SME.";
                 await servicoLogs.Enviar(mensagem, observacao: ex.Message, rastreamento: ex.StackTrace);
-                await TratarExcecao(context, new List<string>() {mensagem});
+                await TratarExcecao(context, new List<string>() {$"{mensagem}-{ex.Message}"});
             }
         }
 
