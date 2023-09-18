@@ -20,16 +20,6 @@ public class ArmazenamentoController: BaseController
         return Ok(await servicoUploadArquivo.Upload(file));
     }
     
-    [HttpDelete]
-    [ProducesResponseType(200)]
-    [ProducesResponseType(401)]
-    [ProducesResponseType(typeof(RetornoBaseDTO), 500)]
-    [Authorize("Bearer")]
-    public async Task<IActionResult> Excluir([FromBody] Guid[] codigos, [FromServices] IServicoExcluirArquivo servicoExcluirArquivo)
-    {
-        return Ok(await servicoExcluirArquivo.Excluir(codigos));
-    }
-    
     [HttpGet("{codigoArquivo}")]
     [ProducesResponseType(200)]
     [ProducesResponseType(401)]

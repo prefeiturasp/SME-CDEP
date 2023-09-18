@@ -7,6 +7,8 @@ using SME.CDEP.Dominio.Excecoes;
 using SME.CDEP.Infra.Dados;
 using SME.CDEP.Infra.Dados.Repositorios.Interfaces;
 using SME.CDEP.Infra.Dominio.Enumerados;
+using SME.CDEP.Infra.Servicos.ServicoArmazenamento;
+using SME.CDEP.Infra.Servicos.ServicoArmazenamento.Interface;
 
 namespace SME.CDEP.Aplicacao.Servicos
 {
@@ -20,11 +22,12 @@ namespace SME.CDEP.Aplicacao.Servicos
         private readonly IServicoAcervo servicoAcervo;
         private readonly ITransacao transacao;
         private readonly IServicoMoverArquivoTemporario servicoMoverArquivoTemporario;
+        private readonly IServicoArmazenamento servicoArmazenamento;
         
         public ServicoAcervoFotografico(IRepositorioAcervoFotografico repositorioAcervoFotografico, 
             IMapper mapper, ITransacao transacao,IServicoAcervo servicoAcervo,IRepositorioArquivo repositorioArquivo,
             IRepositorioAcervoFotograficoArquivo repositorioAcervoFotograficoArquivo,
-            IRepositorioAcervo repositorioAcervo,IServicoMoverArquivoTemporario servicoMoverArquivoTemporario)
+            IRepositorioAcervo repositorioAcervo,IServicoMoverArquivoTemporario servicoMoverArquivoTemporario,IServicoArmazenamento servicoArmazenamento)
         {
             this.repositorioAcervoFotografico = repositorioAcervoFotografico ?? throw new ArgumentNullException(nameof(repositorioAcervoFotografico));
             this.mapper = mapper ?? throw new ArgumentNullException(nameof(mapper));
@@ -34,6 +37,7 @@ namespace SME.CDEP.Aplicacao.Servicos
             this.repositorioAcervoFotograficoArquivo = repositorioAcervoFotograficoArquivo ?? throw new ArgumentNullException(nameof(repositorioAcervoFotograficoArquivo));
             this.repositorioAcervo = repositorioAcervo ?? throw new ArgumentNullException(nameof(repositorioAcervo));
             this.servicoMoverArquivoTemporario = servicoMoverArquivoTemporario ?? throw new ArgumentNullException(nameof(servicoMoverArquivoTemporario));
+            this.servicoArmazenamento = servicoArmazenamento ?? throw new ArgumentNullException(nameof(servicoArmazenamento));
         }
 
         public async Task<long> Inserir(AcervoFotograficoCadastroDTO acervoFotograficoCadastroDto)
@@ -110,6 +114,7 @@ namespace SME.CDEP.Aplicacao.Servicos
             arquivosIdsInserir = arquivosAlteradosCompletos.Select(a => a.Id).Except(arquivosExistentes.Select(b => b.ArquivoId));
             arquivosIdsExcluir = arquivosExistentes.Select(b => b.ArquivoId).Except(arquivosAlteradosCompletos.Select(a => a.Id));
             var arquivosMover = arquivosAlteradosCompletos.Where(w => arquivosIdsInserir.Contains(w.Id)).Select(s => s);
+            var arquivosExcluir = arquivosAlteradosCompletos.Where(w => arquivosIdsExcluir.Contains(w.Id)).Select(s => s);
             
             var tran = transacao.Iniciar();
             try
@@ -143,6 +148,9 @@ namespace SME.CDEP.Aplicacao.Servicos
 
             foreach (var arquivoAMover in arquivosMover)
                 await servicoMoverArquivoTemporario.Mover(TipoArquivo.AcervoFotografico, arquivoAMover);
+
+            foreach (var arquivoAExcluir in arquivosExcluir)
+                await servicoArmazenamento.Excluir(arquivoAExcluir.Nome);
 
             return await ObterPorId(acervoFotograficoAlteracaoDto.AcervoId);
         }
