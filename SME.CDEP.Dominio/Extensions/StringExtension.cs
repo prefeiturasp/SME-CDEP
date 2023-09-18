@@ -15,7 +15,7 @@ namespace SME.CDEP.Dominio.Excecoes
         
         public static bool ContemSigla(this string valor)
         {
-            return valor.ToUpper().Equals("FT");
+            return valor.ToUpper().Contains("FT");
         }
     }
 }

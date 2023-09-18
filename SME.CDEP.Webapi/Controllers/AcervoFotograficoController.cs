@@ -18,7 +18,7 @@ public class AcervoFotograficoController: BaseController
     [ProducesResponseType(typeof(RetornoBaseDTO), 422)]
     [ProducesResponseType(typeof(RetornoBaseDTO), 500)]
     [ProducesResponseType(typeof(RetornoBaseDTO), 601)]
-    [Permissao(Permissao.ACR_I, Policy = "Bearer")]
+    // [Permissao(Permissao.ACR_I, Policy = "Bearer")]
     public async Task<IActionResult> Inserir([FromBody] AcervoFotograficoCadastroDTO acervoFotografico, [FromServices] IServicoAcervoFotografico servicoAssuntoAcervoFotografico)
     {
         return Ok(await servicoAssuntoAcervoFotografico.Inserir(acervoFotografico));
