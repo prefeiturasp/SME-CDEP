@@ -128,7 +128,7 @@ namespace SME.CDEP.Aplicacao.Servicos
             
             var registrosOrdenados = OrdenarRegistros(paginacao, registros);
             
-            var acervosAgrupandoCreditoAutor = registros
+            var acervosAgrupandoCreditoAutor = registrosOrdenados
                 .GroupBy(g => new { g.Id, g.Titulo, g.Codigo, g.TipoAcervoId })
                 .Select(s => new IdTipoTituloCreditoAutoriaCodigoAcervoDTO
                 {
