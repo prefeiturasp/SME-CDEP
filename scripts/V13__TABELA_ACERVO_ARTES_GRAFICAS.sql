@@ -36,3 +36,13 @@ CREATE INDEX acervo_arte_grafica_arquivo_acervo_arte_grafica_idx ON public.acerv
 
 drop index if exists acervo_arte_grafica_arquivo_arquivo_idx;
 CREATE INDEX acervo_arte_grafica_arquivo_arquivo_idx ON public.acervo_arte_grafica_arquivo USING btree (arquivo_id);
+
+drop index if exists acervo_fotografico_acervo_idx;
+CREATE INDEX acervo_fotografico_acervo_idx ON public.acervo_fotografico USING btree (acervo_id);
+
+drop index if exists acervo_fotografico_arquivo_acervo_fotografico_idx;
+CREATE INDEX acervo_fotografico_arquivo_acervo_fotografico_idx ON public.acervo_fotografico_arquivo USING btree (acervo_fotografico_id);
+
+drop index if exists acervo_fotografico_arquivo_arquivo_idx;
+CREATE INDEX acervo_fotografico_arquivo_arquivo_idx ON public.acervo_fotografico_arquivo USING btree (arquivo_id);
+
