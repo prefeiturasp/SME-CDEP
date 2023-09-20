@@ -35,21 +35,30 @@ public abstract class RepositorioBaseAuditavel<TEntidade> : IRepositorioBaseAudi
     }
 
     public async Task<TEntidade> Atualizar(TEntidade entidade)
-    {
-        entidade.AlteradoEm = DateTimeExtension.HorarioBrasilia();
-        entidade.AlteradoPor = contexto.NomeUsuario;
-        entidade.AlteradoLogin = contexto.UsuarioLogado;
-       await conexao.Obter().UpdateAsync(entidade);
-       return entidade;
+    { 
+        DefinirAtualização(entidade);
+        await conexao.Obter().UpdateAsync(entidade);
+        return entidade;
     }
 
     public async Task Remover(TEntidade entidade)
     {
-        throw new NotImplementedException();
+        DefinirAtualização(entidade, true);
+        await conexao.Obter().UpdateAsync(entidade);
     }
 
     public async Task Remover(long id)
     {
-        throw new NotImplementedException();
+        var entidade = await ObterPorId(id);
+        DefinirAtualização(entidade,true);
+        await conexao.Obter().UpdateAsync(entidade);
+    }
+
+    private void DefinirAtualização(TEntidade entidade, bool excluir = false)
+    {
+        entidade.AlteradoEm = DateTimeExtension.HorarioBrasilia();
+        entidade.AlteradoPor = contexto.NomeUsuario;
+        entidade.AlteradoLogin = contexto.UsuarioLogado;
+        entidade.Excluido = excluir;
     }
 }
