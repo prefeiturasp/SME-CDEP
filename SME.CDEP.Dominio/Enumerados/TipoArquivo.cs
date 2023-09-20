@@ -13,5 +13,8 @@ namespace SME.CDEP.Infra.Dominio.Enumerados
 
         [Display(Name ="acervo-fotografico")] 
         AcervoFotografico = 3,
+        
+        [Display(Name ="acervo-arte-grafica")] 
+        AcervoArteGrafica = 4,
     }
 }

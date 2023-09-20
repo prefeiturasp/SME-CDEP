@@ -59,15 +59,14 @@ namespace SME.CDEP.Infra.Dados.Repositorios
                                   ag.copia_digital as CopiaDigital,
                                   ag.permite_uso_imagem as PermiteUsoImagem,
                                   ag.conservacao_id as ConservacaoId,
-                                  ag.descricao,
-                                  ag.quantidade,
+                                  ag.cromia_id as cromiaId,
                                   ag.largura,
                                   ag.altura,
+                                  ag.diametro,
+                                  ag.tecnica,
                                   ag.suporte_id as suporteId,
-                                  ag.formato_id as formatoId,
-                                  ag.cromia_id as cromiaId,
-                                  ag.resolucao,
-                                  ag.tamanho_arquivo as TamanhoArquivo,
+                                  ag.quantidade,
+                                  ag.descricao,
                                   a.id as AcervoId,
                                   a.titulo,
                                   a.codigo,
@@ -87,7 +86,7 @@ namespace SME.CDEP.Infra.Dados.Repositorios
                         join acervo a on a.id = ag.acervo_id 
                         join acervo_credito_autor aca on aca.acervo_id = a.id
                         join credito_autor ca on aca.credito_autor_id = ca.id
-                        left join acervo_arte_grafica_arquivo aga on aga.acervo_fotografico_id = ag.id
+                        left join acervo_arte_grafica_arquivo aga on aga.acervo_arte_grafica_id = ag.id
                         left join arquivo arq on arq.id = aga.arquivo_id 
                         where not a.excluido 
                         and a.id = @id";
