@@ -3,7 +3,7 @@ using SME.CDEP.Dominio.Entidades;
 
 namespace SME.CDEP.Aplicacao.Servicos.Interface
 {
-    public interface IServicoAcervoArteGraficaDTO
+    public interface IServicoAcervoArteGraficaManutencao
     {
         Task<long> Inserir(AcervoArteGraficaCadastroDTO acervoArteGraficaCadastroDto);
         Task<IEnumerable<AcervoArteGraficaDTO>> ObterTodos();
