@@ -57,7 +57,7 @@ namespace SME.CDEP.TesteIntegracao
             {
                 Id = 3,
                 AcervoId = 3,
-                Codigo = "100AG",
+                Codigo = "100.AG",
                 Titulo = string.Format(ConstantesTestes.TITULO_X, 100),
                 CreditosAutoresIds = new long[]{4,5},
                 Localizacao = string.Format(ConstantesTestes.LOCALIZACAO_X, 100),
@@ -135,7 +135,7 @@ namespace SME.CDEP.TesteIntegracao
             {
                 Id = 3,
                 AcervoId = 3,
-                Codigo = "100AG",
+                Codigo = "100.AG",
                 Titulo = string.Format(ConstantesTestes.TITULO_X, 100),
                 CreditosAutoresIds = new long[]{2,3},
                 Localizacao = string.Format(ConstantesTestes.LOCALIZACAO_X, 100),
@@ -211,7 +211,7 @@ namespace SME.CDEP.TesteIntegracao
             {
                 Id = 3,
                 AcervoId = 3,
-                Codigo = "100AG",
+                Codigo = "100.AG",
                 Titulo = string.Format(ConstantesTestes.TITULO_X, 100),
                 CreditosAutoresIds = new long[]{1,5},
                 Localizacao = string.Format(ConstantesTestes.LOCALIZACAO_X, 100),
@@ -312,7 +312,7 @@ namespace SME.CDEP.TesteIntegracao
 
             var acervo = ObterTodos<Acervo>().LastOrDefault();
             acervo.Titulo.Equals(acervoArteGraficaCadastroDto.Titulo).ShouldBeTrue();
-            acervo.Codigo.Equals($"{acervoArteGraficaCadastroDto.Codigo}AG").ShouldBeTrue();
+            acervo.Codigo.Equals($"{acervoArteGraficaCadastroDto.Codigo}.AG").ShouldBeTrue();
             acervo.TipoAcervoId.ShouldBe((int)TipoAcervo.ArtesGraficas);
             acervo.CriadoLogin.ShouldNotBeEmpty();
             acervo.CriadoEm.Date.ShouldBe(DateTimeExtension.HorarioBrasilia().Date);
@@ -396,7 +396,7 @@ namespace SME.CDEP.TesteIntegracao
             {
                 await InserirNaBase(new Acervo()
                 {
-                    Codigo = $"{j.ToString()}AG",
+                    Codigo = $"{j.ToString()}.AG",
                     Titulo = string.Format(ConstantesTestes.TITULO_X, j),
                     TipoAcervoId = (int)TipoAcervo.ArtesGraficas,
                     CriadoPor = ConstantesTestes.SISTEMA,

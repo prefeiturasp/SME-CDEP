@@ -17,5 +17,13 @@ namespace SME.CDEP.Dominio.Excecoes
         {
             return valor.ToUpper().EndsWith(sigla);
         }
+        
+        public static string RemoverSufixo(this string str)
+        {
+            if (str.Length < 3) 
+                return string.Empty;
+ 
+            return str[..^3];
+        }
     }
 }
