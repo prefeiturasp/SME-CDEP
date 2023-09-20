@@ -32,6 +32,14 @@ namespace SME.CDEP.Aplicacao.Mapeamentos
             CreateMap<AcervoFotograficoAlteracaoDTO, AcervoFotografico>().ReverseMap();
             CreateMap<AcervoFotograficoAlteracaoDTO, AcervoFotograficoDTO>().ReverseMap();
             CreateMap<AcervoFotograficoCadastroDTO, Acervo>().ReverseMap();
+            CreateMap<AcervoArteGraficaCadastroDTO, AcervoArteGrafica>().ReverseMap();
+            CreateMap<AcervoArteGraficaAlteracaoDTO, AcervoArteGrafica>().ReverseMap();
+            CreateMap<AcervoArteGraficaAlteracaoDTO, AcervoArteGraficaDTO>().ReverseMap();
+            CreateMap<AcervoArteGraficaCadastroDTO, Acervo>().ReverseMap();
+            CreateMap<AcervoArteGraficaDTO, AcervoArteGraficaCompleto>().ReverseMap();
+            CreateMap<AuditoriaDTO, AcervoArteGraficaCompleto>().ReverseMap();
+            CreateMap<AcervoArteGraficaDTO, Acervo>().ReverseMap();
+            CreateMap<AcervoArteGraficaDTO, AcervoArteGrafica>().ReverseMap();
         }
     }
 }

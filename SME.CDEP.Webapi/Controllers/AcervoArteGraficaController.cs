@@ -9,43 +9,43 @@ namespace SME.CDEP.Webapi.Controllers;
 
 [ApiController]
 [ValidaDto]
-public class AcervoFotograficoController: BaseController
+public class AcervoArteGraficaController: BaseController
 {
     [HttpPost]
-    [ProducesResponseType(typeof(AcervoFotograficoCadastroDTO), 200)]
+    [ProducesResponseType(typeof(AcervoArteGraficaCadastroDTO), 200)]
     [ProducesResponseType(typeof(RetornoBaseDTO), 400)]
     [ProducesResponseType(typeof(RetornoBaseDTO), 403)]
     [ProducesResponseType(typeof(RetornoBaseDTO), 422)]
     [ProducesResponseType(typeof(RetornoBaseDTO), 500)]
     [ProducesResponseType(typeof(RetornoBaseDTO), 601)]
     [Permissao(Permissao.ACR_I, Policy = "Bearer")]
-    public async Task<IActionResult> Inserir([FromBody] AcervoFotograficoCadastroDTO acervoFotografico, [FromServices] IServicoAcervoFotografico servicoAcervoFotografico)
+    public async Task<IActionResult> Inserir([FromBody] AcervoArteGraficaCadastroDTO acervoArteGrafica, [FromServices] IServicoAcervoArteGrafica servicoAcervoArteGrafica)
     {
-        return Ok(await servicoAcervoFotografico.Inserir(acervoFotografico));
+        return Ok(await servicoAcervoArteGrafica.Inserir(acervoArteGrafica));
     }
     
     [HttpPut]
-    [ProducesResponseType(typeof(AcervoFotograficoDTO), 200)]
+    [ProducesResponseType(typeof(AcervoArteGraficaDTO), 200)]
     [ProducesResponseType(typeof(RetornoBaseDTO), 400)]
     [ProducesResponseType(typeof(RetornoBaseDTO), 403)]
     [ProducesResponseType(typeof(RetornoBaseDTO), 422)]
     [ProducesResponseType(typeof(RetornoBaseDTO), 500)]
     [ProducesResponseType(typeof(RetornoBaseDTO), 601)]
     [Permissao(Permissao.ACR_A, Policy = "Bearer")]
-    public async Task<IActionResult> Alterar([FromBody] AcervoFotograficoAlteracaoDTO acervoFotografico, [FromServices] IServicoAcervoFotografico servicoAcervoFotografico)
+    public async Task<IActionResult> Alterar([FromBody] AcervoArteGraficaAlteracaoDTO acervoArteGrafica, [FromServices] IServicoAcervoArteGrafica servicoAcervoArteGrafica)
     {
-        return Ok(await servicoAcervoFotografico.Alterar(acervoFotografico));
+        return Ok(await servicoAcervoArteGrafica.Alterar(acervoArteGrafica));
     }
     
     [HttpGet("{acervoId}")]
-    [ProducesResponseType(typeof(AcervoFotograficoDTO), 200)]
+    [ProducesResponseType(typeof(AcervoArteGraficaDTO), 200)]
     [ProducesResponseType(typeof(RetornoBaseDTO), 400)]
     [ProducesResponseType(typeof(RetornoBaseDTO), 403)]
     [ProducesResponseType(typeof(RetornoBaseDTO), 601)]
     [Permissao(Permissao.ACR_C, Policy = "Bearer")]
-    public async Task<IActionResult> ObterPorId([FromRoute] long acervoId,[FromServices] IServicoAcervoFotografico servicoAcervoFotografico)
+    public async Task<IActionResult> ObterPorId([FromRoute] long acervoId,[FromServices] IServicoAcervoArteGrafica servicoAcervoArteGrafica)
     {
-        return Ok(await servicoAcervoFotografico.ObterPorId(acervoId));
+        return Ok(await servicoAcervoArteGrafica.ObterPorId(acervoId));
     }
     
     [HttpDelete("{acervoId}")]
@@ -54,8 +54,8 @@ public class AcervoFotograficoController: BaseController
     [ProducesResponseType(typeof(RetornoBaseDTO), 403)]
     [ProducesResponseType(typeof(RetornoBaseDTO), 601)]
     [Permissao(Permissao.ACR_E, Policy = "Bearer")]
-    public async Task<IActionResult> ExclusaoLogica([FromRoute] long acervoId, [FromServices] IServicoAcervoFotografico servicoAcervoFotografico)
+    public async Task<IActionResult> ExclusaoLogica([FromRoute] long acervoId, [FromServices] IServicoAcervoArteGrafica servicoAcervoArteGrafica)
     {
-        return Ok(await servicoAcervoFotografico.Excluir(acervoId));
+        return Ok(await servicoAcervoArteGrafica.Excluir(acervoId));
     }
 }

@@ -13,9 +13,9 @@ namespace SME.CDEP.Dominio.Excecoes
             return EhExtensaoImagemParaOtimizar(Path.GetExtension(nomeArquivo));
         }
         
-        public static bool ContemSigla(this string valor)
+        public static bool ContemSigla(this string valor, string sigla)
         {
-            return valor.ToUpper().EndsWith("FT");
+            return valor.ToUpper().EndsWith(sigla);
         }
     }
 }

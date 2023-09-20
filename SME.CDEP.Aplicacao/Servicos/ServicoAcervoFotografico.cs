@@ -93,7 +93,7 @@ namespace SME.CDEP.Aplicacao.Servicos
 
         private string ObterCodigoAcervo(string codigo)
         {
-            return codigo.ContemSigla() 
+            return codigo.ContemSigla(Constantes.SIGLA_ACERVO_FOTOGRAFICO) 
                 ? codigo
                 : $"{codigo}{Constantes.SIGLA_ACERVO_FOTOGRAFICO}";
         }
