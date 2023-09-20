@@ -19,6 +19,9 @@
 	CONSTRAINT acervo_arte_grafica_acervo_fk FOREIGN KEY (acervo_id) REFERENCES public.acervo(id)
 );
 
+drop index if exists acervo_arte_grafica_acervo_idx;
+CREATE INDEX acervo_arte_grafica_acervo_idx ON public.acervo_arte_grafica USING btree (acervo_id);
+
 CREATE TABLE if not exists public.acervo_arte_grafica_arquivo (
 	id int8 NOT NULL GENERATED ALWAYS AS IDENTITY( INCREMENT BY 1 MINVALUE 1 MAXVALUE 9223372036854775807 START 1 CACHE 1 NO CYCLE),
 	acervo_arte_grafica_id int8 NOT NULL,
@@ -27,3 +30,9 @@ CREATE TABLE if not exists public.acervo_arte_grafica_arquivo (
 	CONSTRAINT acervo_arte_grafica_arquivo_arquivo_fk FOREIGN KEY (arquivo_id) REFERENCES public.arquivo(id),
 	CONSTRAINT acervo_arte_grafica_arquivo_acervo_arte_grafica_fk FOREIGN KEY (acervo_arte_grafica_id) REFERENCES public.acervo_arte_grafica(id)
 );
+
+drop index if exists acervo_arte_grafica_arquivo_acervo_arte_grafica_idx;
+CREATE INDEX acervo_arte_grafica_arquivo_acervo_arte_grafica_idx ON public.acervo_arte_grafica_arquivo USING btree (acervo_arte_grafica_id);
+
+drop index if exists acervo_arte_grafica_arquivo_arquivo_idx;
+CREATE INDEX acervo_arte_grafica_arquivo_arquivo_idx ON public.acervo_arte_grafica_arquivo USING btree (arquivo_id);
