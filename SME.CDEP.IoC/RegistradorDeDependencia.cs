@@ -174,6 +174,7 @@ public class RegistradorDeDependencia
         _serviceCollection.TryAddScoped<IServicoMoverArquivoTemporario, ServicoMoverArquivoTemporario>();
         _serviceCollection.TryAddScoped<IServicoMensageria, ServicoMensageria>();
         _serviceCollection.TryAddScoped<IServicoAcervoArteGrafica, ServicoAcervoArteGrafica>();
+        _serviceCollection.TryAddScoped<IServicoAcervoTridimensional, ServicoAcervoTridimensional>();
     }
     protected virtual void RegistrarHttpClients()
     {

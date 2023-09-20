@@ -21,7 +21,7 @@ namespace SME.CDEP.TesteIntegracao
         {
             await InserirDadosBasicos();
             await InserirAcervoArteGrafica();
-            var servicoAcervoArteGrafica = getServicoAcervoArteGrafica();
+            var servicoAcervoArteGrafica = GetServicoAcervoArteGrafica();
 
             var acervoArteGraficaDto = await servicoAcervoArteGrafica.ObterPorId(5);
             acervoArteGraficaDto.ShouldNotBeNull();
@@ -32,7 +32,7 @@ namespace SME.CDEP.TesteIntegracao
         {
             await InserirDadosBasicos();
             await InserirAcervoArteGrafica();
-            var servicoAcervoArteGrafica = getServicoAcervoArteGrafica();
+            var servicoAcervoArteGrafica = GetServicoAcervoArteGrafica();
 
             var acervoArteGraficaDtos = await servicoAcervoArteGrafica.ObterTodos();
             acervoArteGraficaDtos.ShouldNotBeNull();
@@ -51,7 +51,7 @@ namespace SME.CDEP.TesteIntegracao
 
             var arquivosSelecionados = arquivos.Take(5).Select(s => s.Id).ToArray();
             
-            var servicoAcervoArteGrafica = getServicoAcervoArteGrafica();
+            var servicoAcervoArteGrafica = GetServicoAcervoArteGrafica();
 
             var acervoArteGraficaAlteracaoDto = new AcervoArteGraficaAlteracaoDTO()
             {
@@ -107,8 +107,8 @@ namespace SME.CDEP.TesteIntegracao
             acervoArteGrafica.Descricao.ShouldBe(acervoArteGraficaAlteracaoDto.Descricao);
             
             var acervoArteGraficaArquivos = ObterTodos<AcervoArteGraficaArquivo>();
-            var acervoFotograficoArquivosInseridos = acervoArteGraficaArquivos.Where(w => w.AcervoArteGraficaId == acervoArteGrafica.Id);
-            acervoFotograficoArquivosInseridos.Count().ShouldBe(arquivosSelecionados.Count());
+            var acervoArteGraficaArquivosInseridos = acervoArteGraficaArquivos.Where(w => w.AcervoArteGraficaId == acervoArteGrafica.Id);
+            acervoArteGraficaArquivosInseridos.Count().ShouldBe(arquivosSelecionados.Count());
             
             var acervoCreditoAutor = ObterTodos<AcervoCreditoAutor>().Where(w=> w.AcervoId == 3);
             acervoCreditoAutor.Count().ShouldBe(2);
@@ -129,7 +129,7 @@ namespace SME.CDEP.TesteIntegracao
             
             var random = new Random();
             
-            var servicoAcervoArteGrafica = getServicoAcervoArteGrafica();
+            var servicoAcervoArteGrafica = GetServicoAcervoArteGrafica();
 
             var acervoArteGraficaAlteracaoDto = new AcervoArteGraficaAlteracaoDTO()
             {
@@ -185,8 +185,8 @@ namespace SME.CDEP.TesteIntegracao
             acervoArteGrafica.Descricao.ShouldBe(acervoArteGraficaAlteracaoDto.Descricao);
             
             var acervoArteGraficaArquivos = ObterTodos<AcervoArteGraficaArquivo>();
-            var acervoFotograficoArquivosInseridos = acervoArteGraficaArquivos.Where(w => w.AcervoArteGraficaId == acervoArteGrafica.Id);
-            acervoFotograficoArquivosInseridos.Count().ShouldBe(arquivosSelecionados.Count());
+            var acervoArteGraficaArquivosInseridos = acervoArteGraficaArquivos.Where(w => w.AcervoArteGraficaId == acervoArteGrafica.Id);
+            acervoArteGraficaArquivosInseridos.Count().ShouldBe(arquivosSelecionados.Count());
             
             var acervoCreditoAutor = ObterTodos<AcervoCreditoAutor>().Where(w=> w.AcervoId == 3);
             acervoCreditoAutor.Count().ShouldBe(2);
@@ -205,7 +205,7 @@ namespace SME.CDEP.TesteIntegracao
             
             var arquivosSelecionados = Array.Empty<long>();
 
-            var servicoAcervoArteGrafica = getServicoAcervoArteGrafica();
+            var servicoAcervoArteGrafica = GetServicoAcervoArteGrafica();
 
             var acervoArteGraficaAlteracaoDto = new AcervoArteGraficaAlteracaoDTO()
             {
@@ -261,8 +261,8 @@ namespace SME.CDEP.TesteIntegracao
             acervoArteGrafica.Descricao.ShouldBe(acervoArteGraficaAlteracaoDto.Descricao);
             
             var acervoArteGraficaArquivos = ObterTodos<AcervoArteGraficaArquivo>();
-            var acervoFotograficoArquivosInseridos = acervoArteGraficaArquivos.Where(w => w.AcervoArteGraficaId == acervoArteGrafica.Id);
-            acervoFotograficoArquivosInseridos.Count().ShouldBe(arquivosSelecionados.Count());
+            var acervoArteGraficaArquivosInseridos = acervoArteGraficaArquivos.Where(w => w.AcervoArteGraficaId == acervoArteGrafica.Id);
+            acervoArteGraficaArquivosInseridos.Count().ShouldBe(arquivosSelecionados.Count());
             
             var acervoCreditoAutor = ObterTodos<AcervoCreditoAutor>().Where(w=> w.AcervoId == 3);
             acervoCreditoAutor.Count().ShouldBe(2);
@@ -277,7 +277,7 @@ namespace SME.CDEP.TesteIntegracao
 
             await InserirAcervoArteGrafica();
 
-            var servicoAcervoArteGrafica = getServicoAcervoArteGrafica();
+            var servicoAcervoArteGrafica = GetServicoAcervoArteGrafica();
             
             var random = new Random();
 
@@ -354,7 +354,7 @@ namespace SME.CDEP.TesteIntegracao
 
             await InserirAcervoArteGrafica();
 
-            var servicoAcervoArteGrafica = getServicoAcervoArteGrafica();
+            var servicoAcervoArteGrafica = GetServicoAcervoArteGrafica();
             
             var random = new Random();
 
@@ -445,7 +445,7 @@ namespace SME.CDEP.TesteIntegracao
                 {
                     Nome = string.Format(ConstantesTestes.ARQUIVO_X,j),
                     Codigo = Guid.NewGuid(),
-                    Tipo = TipoArquivo.AcervoFotografico,
+                    Tipo = TipoArquivo.AcervoArteGrafica,
                     TipoConteudo = ConstantesTestes.MIME_TYPE_JPG,
                     CriadoPor = ConstantesTestes.SISTEMA,
                     CriadoEm = DateTimeExtension.HorarioBrasilia().AddMinutes(-15),
