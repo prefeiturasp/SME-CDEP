@@ -157,10 +157,14 @@ namespace SME.CDEP.Aplicacao.Servicos
         public async Task<AcervoTridimensionalDTO> ObterPorId(long id)
         {
             var acervoTridimensionalSimples = await repositorioAcervoTridimensional.ObterPorId(id);
-            acervoTridimensionalSimples.Codigo = acervoTridimensionalSimples.Codigo.RemoverSufixo();
-            var acervoTridimensionalDto = mapper.Map<AcervoTridimensionalDTO>(acervoTridimensionalSimples);
-            acervoTridimensionalDto.Auditoria = mapper.Map<AuditoriaDTO>(acervoTridimensionalSimples);
-            return acervoTridimensionalDto;
+            if (acervoTridimensionalSimples != null)
+            {
+                acervoTridimensionalSimples.Codigo = acervoTridimensionalSimples.Codigo.RemoverSufixo();
+                var acervoTridimensionalDto = mapper.Map<AcervoTridimensionalDTO>(acervoTridimensionalSimples);
+                acervoTridimensionalDto.Auditoria = mapper.Map<AuditoriaDTO>(acervoTridimensionalSimples);
+                return acervoTridimensionalDto;
+            }
+            return default;
         }
 
         public async Task<bool> Excluir(long id)

@@ -157,10 +157,14 @@ namespace SME.CDEP.Aplicacao.Servicos
         public async Task<AcervoFotograficoDTO> ObterPorId(long id)
         {
             var acervoFotograficoSimples = await repositorioAcervoFotografico.ObterPorId(id);
-            acervoFotograficoSimples.Codigo = acervoFotograficoSimples.Codigo.RemoverSufixo();
-            var acervoFotograficoDto = mapper.Map<AcervoFotograficoDTO>(acervoFotograficoSimples);
-            acervoFotograficoDto.Auditoria = mapper.Map<AuditoriaDTO>(acervoFotograficoSimples);
-            return acervoFotograficoDto;
+            if (acervoFotograficoSimples != null)
+            {
+               acervoFotograficoSimples.Codigo = acervoFotograficoSimples.Codigo.RemoverSufixo();
+               var acervoFotograficoDto = mapper.Map<AcervoFotograficoDTO>(acervoFotograficoSimples);
+               acervoFotograficoDto.Auditoria = mapper.Map<AuditoriaDTO>(acervoFotograficoSimples);
+               return acervoFotograficoDto; 
+            }
+            return default;
         }
 
         public async Task<bool> Excluir(long id)
