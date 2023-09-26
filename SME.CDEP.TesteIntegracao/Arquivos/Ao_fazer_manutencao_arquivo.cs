@@ -33,16 +33,16 @@ namespace SME.CDEP.TesteIntegracao
         {
             await InserirArquivos();
             
-            var servicoExcluirArquivoTemporario = GetServicoMoverArquivoTemporario();
+            var servicoMoverArquivoTemporario = GetServicoMoverArquivoTemporario();
 
             var arquivos = ObterTodos<Arquivo>();
             var arquivoAMover = arquivos.First();
             
-            await servicoExcluirArquivoTemporario.Mover(TipoArquivo.AcervoFotografico, arquivoAMover);
+            await servicoMoverArquivoTemporario.Mover(TipoArquivo.AcervoFotografico, arquivoAMover);
             
             arquivos = ObterTodos<Arquivo>();
             arquivos
-                .Any(a => a.Id.ToString().Equals(arquivoAMover.Id)
+                .Any(a => a.Id == arquivoAMover.Id
                     && a.Tipo == TipoArquivo.AcervoFotografico)
                 .ShouldBeTrue();
         }

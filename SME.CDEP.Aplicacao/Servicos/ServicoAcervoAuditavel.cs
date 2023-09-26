@@ -76,11 +76,13 @@ namespace SME.CDEP.Aplicacao.Servicos
             
             var acervoAlterado = mapper.Map<AcervoDTO>(await repositorioAcervo.Atualizar(acervo));
 
-            var creditosAutoresPropostos = acervo.CreditosAutoresIds.ToList();
+            var creditosAutoresPropostos = acervo.CreditosAutoresIds != null ? acervo.CreditosAutoresIds.ToList() : Enumerable.Empty<long>();
             var acervoCreditoAutorAtuais = await repositorioAcervoCreditoAutor.ObterPorAcervoId(acervoAlterado.Id);
-            var acervoCreditoAutorAInserir = creditosAutoresPropostos.Select(a => a).Except(acervoCreditoAutorAtuais.Select(b => b.CreditoAutorId));
-            var arquivosIdsExcluir = acervoCreditoAutorAtuais.Select(a => a.CreditoAutorId).Except(creditosAutoresPropostos.Select(b => b)).ToArray();
-                
+            var acervoCreditoAutorAInserir = creditosAutoresPropostos.Select(a => a)
+                                         .Except(acervoCreditoAutorAtuais.Select(b => b.CreditoAutorId));
+            var arquivosIdsExcluir = acervoCreditoAutorAtuais.Select(a => a.CreditoAutorId)
+                                 .Except(creditosAutoresPropostos.Select(b => b)).ToArray();
+
             foreach (var creditoAutorId in acervoCreditoAutorAInserir)
                 await repositorioAcervoCreditoAutor.Inserir(new AcervoCreditoAutor()
                 {

@@ -1,5 +1,4 @@
-﻿using AutoMapper;
-using Shouldly;
+﻿using Shouldly;
 using SME.CDEP.Aplicacao.DTOS;
 using SME.CDEP.Dominio.Entidades;
 using SME.CDEP.Dominio.Excecoes;
@@ -7,7 +6,6 @@ using SME.CDEP.Infra.Dominio.Enumerados;
 using SME.CDEP.TesteIntegracao.Setup;
 using SME.CDEP.TesteIntegracao.Constantes;
 using Xunit;
-using Xunit.Sdk;
 
 namespace SME.CDEP.TesteIntegracao
 {
@@ -59,7 +57,6 @@ namespace SME.CDEP.TesteIntegracao
                 AcervoId = 3,
                 Codigo = "100.TD",
                 Titulo = string.Format(ConstantesTestes.TITULO_X, 100),
-                CreditosAutoresIds = new long[]{4,5},
                 Procedencia = string.Format(ConstantesTestes.PROCEDENCIA_X, 100),
                 DataAcervo = DateTimeExtension.HorarioBrasilia().Date.ToString("dd/MM/yyyy"),
                 ConservacaoId = random.Next(1, 5),
@@ -99,11 +96,6 @@ namespace SME.CDEP.TesteIntegracao
             var acervoTridimensionalArquivos = ObterTodos<AcervoTridimensionalArquivo>();
             var acervoTridimensionalArquivosInseridos = acervoTridimensionalArquivos.Where(w => w.AcervoTridimensionalId == acervoTridimensional.Id);
             acervoTridimensionalArquivosInseridos.Count().ShouldBe(arquivosSelecionados.Count());
-            
-            var acervoCreditoAutor = ObterTodos<AcervoCreditoAutor>().Where(w=> w.AcervoId == 3);
-            acervoCreditoAutor.Count().ShouldBe(2);
-            acervoCreditoAutor.FirstOrDefault().CreditoAutorId.ShouldBe(4);
-            acervoCreditoAutor.LastOrDefault().CreditoAutorId.ShouldBe(5);
         }
         
         [Fact(DisplayName = "Acervo Tridimensional - Atualizar (Removendo 1 arquivo, adicionando 5 novos)")]
@@ -127,7 +119,6 @@ namespace SME.CDEP.TesteIntegracao
                 AcervoId = 3,
                 Codigo = "100.TD",
                 Titulo = string.Format(ConstantesTestes.TITULO_X, 100),
-                CreditosAutoresIds = new long[]{2,3},
                 Procedencia = string.Format(ConstantesTestes.PROCEDENCIA_X, 100),
                 DataAcervo = DateTimeExtension.HorarioBrasilia().Date.ToString("dd/MM/yyyy"),
                 ConservacaoId = random.Next(1, 5),
@@ -167,11 +158,6 @@ namespace SME.CDEP.TesteIntegracao
             var acervoTridimensionalArquivos = ObterTodos<AcervoTridimensionalArquivo>();
             var acervoTridimensionalArquivosInseridos = acervoTridimensionalArquivos.Where(w => w.AcervoTridimensionalId == acervoTridimensional.Id);
             acervoTridimensionalArquivosInseridos.Count().ShouldBe(arquivosSelecionados.Count());
-            
-            var acervoCreditoAutor = ObterTodos<AcervoCreditoAutor>().Where(w=> w.AcervoId == 3);
-            acervoCreditoAutor.Count().ShouldBe(2);
-            acervoCreditoAutor.FirstOrDefault().CreditoAutorId.ShouldBe(2);
-            acervoCreditoAutor.LastOrDefault().CreditoAutorId.ShouldBe(3);
         }
         
         [Fact(DisplayName = "Acervo Tridimensional - Atualizar (Removendo todos)")]
@@ -193,7 +179,6 @@ namespace SME.CDEP.TesteIntegracao
                 AcervoId = 3,
                 Codigo = "100.TD",
                 Titulo = string.Format(ConstantesTestes.TITULO_X, 100),
-                CreditosAutoresIds = new long[]{1,5},
                 Procedencia = string.Format(ConstantesTestes.PROCEDENCIA_X, 100),
                 DataAcervo = DateTimeExtension.HorarioBrasilia().Date.ToString("dd/MM/yyyy"),
                 ConservacaoId = random.Next(1, 5),
@@ -233,11 +218,6 @@ namespace SME.CDEP.TesteIntegracao
             var acervoTridimensionalArquivos = ObterTodos<AcervoTridimensionalArquivo>();
             var acervoTridimensionalArquivosInseridos = acervoTridimensionalArquivos.Where(w => w.AcervoTridimensionalId == acervoTridimensional.Id);
             acervoTridimensionalArquivosInseridos.Count().ShouldBe(arquivosSelecionados.Count());
-            
-            var acervoCreditoAutor = ObterTodos<AcervoCreditoAutor>().Where(w=> w.AcervoId == 3);
-            acervoCreditoAutor.Count().ShouldBe(2);
-            acervoCreditoAutor.FirstOrDefault().CreditoAutorId.ShouldBe(1);
-            acervoCreditoAutor.LastOrDefault().CreditoAutorId.ShouldBe(5);
         }
         
         [Fact(DisplayName = "Acervo Tridimensional - Inserir")]
@@ -259,7 +239,6 @@ namespace SME.CDEP.TesteIntegracao
             {
                 Codigo = "100",
                 Titulo = string.Format(ConstantesTestes.TITULO_X, 100),
-                CreditosAutoresIds = new long[]{3,4},
                 Procedencia = string.Format(ConstantesTestes.PROCEDENCIA_X, 100),
                 DataAcervo = DateTimeExtension.HorarioBrasilia().Date.ToString("dd/MM/yyyy"),
                 ConservacaoId = random.Next(1, 5),
@@ -300,11 +279,6 @@ namespace SME.CDEP.TesteIntegracao
             var acervoTridimensionalArquivos = ObterTodos<AcervoTridimensionalArquivo>();
             var acervoTridimensionalArquivosInseridos = acervoTridimensionalArquivos.Where(w => w.AcervoTridimensionalId == acervoTridimensional.Id);
             acervoTridimensionalArquivosInseridos.Count().ShouldBe(arquivosSelecionados.Count());
-            
-            var acervoCreditoAutor = ObterTodos<AcervoCreditoAutor>().Where(w=> w.AcervoId == acervoTridimensional.AcervoId);
-            acervoCreditoAutor.Count().ShouldBe(2);
-            acervoCreditoAutor.FirstOrDefault().CreditoAutorId.ShouldBe(3);
-            acervoCreditoAutor.LastOrDefault().CreditoAutorId.ShouldBe(4);
         }
         
         [Fact(DisplayName = "Acervo Tridimensional - Não deve inserir Tombo duplicado")]
@@ -326,7 +300,6 @@ namespace SME.CDEP.TesteIntegracao
             {
                 Codigo = "1",
                 Titulo = string.Format(ConstantesTestes.TITULO_X, 100),
-                CreditosAutoresIds = new long[]{new Random().Next(1, 5),new Random().Next(1, 5)},
                 Procedencia = string.Format(ConstantesTestes.PROCEDENCIA_X, 100),
                 DataAcervo = DateTimeExtension.HorarioBrasilia().Date.ToString("dd/MM/yyyy"),
                 ConservacaoId = random.Next(1, 5),
@@ -357,24 +330,6 @@ namespace SME.CDEP.TesteIntegracao
                     CriadoPor = ConstantesTestes.SISTEMA,
                     CriadoEm = DateTimeExtension.HorarioBrasilia().AddMinutes(-15),
                     CriadoLogin = ConstantesTestes.LOGIN_123456789,
-                });
-                
-                await InserirNaBase(new AcervoCreditoAutor()
-                {
-                    AcervoId = j,
-                    CreditoAutorId = 1
-                });
-                
-                await InserirNaBase(new AcervoCreditoAutor()
-                {
-                    AcervoId = j,
-                    CreditoAutorId = 2
-                });
-                
-                await InserirNaBase(new AcervoCreditoAutor()
-                {
-                    AcervoId = j,
-                    CreditoAutorId = 3
                 });
 
                 await InserirNaBase(new AcervoTridimensional()

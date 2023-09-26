@@ -2,6 +2,7 @@
 
 public class MensagemNegocio
 {
+    public const string CREDITO_OU_AUTORES_SAO_OBRIGATORIOS = "O crédito/autor deve ser informado para esse tipo de acervo";
     public const string IMAGEM_NAO_ENCONTRADO = "A imagem não foi encontrada";
     public const string ARQUIVO_INF0RMADO_NAO_ENCONTRADO = "O arquivo informado não foi encontrado";
     public const string NAO_FOI_POSSIVEL_VINCULAR_PERFIL_EXTERNO_CORESSO_USUARIO_SEM_PERFIL = "Não foi possível vincular perfil Externo no CoreSSO - Usuário sem perfil";

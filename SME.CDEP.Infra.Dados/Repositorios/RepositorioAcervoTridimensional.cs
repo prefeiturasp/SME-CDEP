@@ -66,16 +66,12 @@ namespace SME.CDEP.Infra.Dados.Repositorios
                                   a.criado_login as CriadoLogin,
                                   a.alterado_em as AlteradoEm,
                                   a.alterado_por as AlteradoPor,
-                                  a.alterado_login as AlteradoLogin,
-                                  ca.id as CreditoAutorId,
-                                  ca.nome as CreditoAutorNome,
+                                  a.alterado_login as AlteradoLogin,                                  
                                   arq.id as arquivoId,
                                   arq.nome as ArquivoNome,
                                   arq.codigo as ArquivoCodigo
                         from acervo_tridimensional at
                         join acervo a on a.id = at.acervo_id 
-                        join acervo_credito_autor aca on aca.acervo_id = a.id
-                        join credito_autor ca on aca.credito_autor_id = ca.id
                         left join acervo_tridimensional_arquivo ata on ata.acervo_tridimensional_id = at.id
                         left join arquivo arq on arq.id = ata.arquivo_id 
                         where not a.excluido 
@@ -86,7 +82,6 @@ namespace SME.CDEP.Infra.Dados.Repositorios
             {
                 var acervoTridimensionalCompleto = retorno.FirstOrDefault();
                 acervoTridimensionalCompleto.Arquivos = retorno.Where(w=> w.ArquivoId > 0).Select(s => new ArquivoResumido() { Id = s.ArquivoId, Codigo = s.ArquivoCodigo, Nome = s.ArquivoNome }).DistinctBy(d=> d.Id).ToArray();
-                acervoTridimensionalCompleto.CreditosAutoresIds = retorno.Select(s => s.CreditoAutorId).Distinct().ToArray();
                 return acervoTridimensionalCompleto;    
             }
 

@@ -51,8 +51,6 @@ namespace SME.CDEP.TesteIntegracao
             
             var servicoAcervoFotografico = GetServicoAcervoFotografico();
 
-            var mapper = GetServicoMapper();
-
             var acervoFotograficoAlteracaoDto = new AcervoFotograficoAlteracaoDTO()
             {
                 Id = 3,

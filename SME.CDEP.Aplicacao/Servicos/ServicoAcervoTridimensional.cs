@@ -119,8 +119,8 @@ namespace SME.CDEP.Aplicacao.Servicos
             {
                 await servicoAcervo.Alterar(acervoTridimensionalAlteracaoDto.AcervoId,
                     acervoTridimensionalAlteracaoDto.Titulo, 
-                    codigo, 
-                    acervoTridimensionalAlteracaoDto.CreditosAutoresIds);
+                    codigo 
+                    );
                 
                 await repositorioAcervoTridimensional.Atualizar(acervoTridimensional);
                 
