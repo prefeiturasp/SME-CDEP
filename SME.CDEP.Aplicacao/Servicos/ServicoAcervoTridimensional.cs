@@ -47,6 +47,9 @@ namespace SME.CDEP.Aplicacao.Servicos
 
         public async Task<long> Inserir(AcervoTridimensionalCadastroDTO acervoTridimensionalCadastroDto)
         {
+            if (acervoTridimensionalCadastroDto.CreditosAutoresIds != null)
+                throw new NegocioException(MensagemNegocio.ESSE_ACERVO_NAO_POSSUI_CREDITO_OU_AUTOR);
+            
             var arquivosCompletos =  acervoTridimensionalCadastroDto.Arquivos != null
                 ? await ObterArquivosPorIds(acervoTridimensionalCadastroDto.Arquivos) 
                 : Enumerable.Empty<Arquivo>();
@@ -105,6 +108,9 @@ namespace SME.CDEP.Aplicacao.Servicos
 
         public async Task<AcervoTridimensionalDTO> Alterar(AcervoTridimensionalAlteracaoDTO acervoTridimensionalAlteracaoDto)
         {
+            if (acervoTridimensionalAlteracaoDto.CreditosAutoresIds != null)
+                throw new NegocioException(MensagemNegocio.ESSE_ACERVO_NAO_POSSUI_CREDITO_OU_AUTOR);
+            
             var arquivosIdsInserir =  Enumerable.Empty<long>();
             var arquivosIdsExcluir =  Enumerable.Empty<long>();
             
