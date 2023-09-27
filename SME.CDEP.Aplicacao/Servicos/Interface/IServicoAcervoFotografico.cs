@@ -2,6 +2,6 @@
 
 namespace SME.CDEP.Aplicacao.Servicos.Interface
 {
-    public interface IServicoAcervoFotografico : IServicoAcervoAuditavel,IServicoAcervoFotograficoDTO
+    public interface IServicoAcervoFotografico : IServicoAcervoAuditavel,IServicoAcervoFotograficoManutencao
     {}
 }

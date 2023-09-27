@@ -93,6 +93,15 @@ namespace SME.CDEP.Aplicacao.Servicos
             return acervoAlterado;
         }
 
+        public async Task<AcervoDTO> Alterar(long id, string titulo, string codigo, long[] creditosAutoresIds)
+        {
+            var acervo = await repositorioAcervo.ObterPorId(id);
+            acervo.Titulo = titulo;
+            acervo.Codigo = codigo;
+            acervo.CreditosAutoresIds = creditosAutoresIds;
+            return await Alterar(acervo);
+        }
+
         public async Task<AcervoDTO> ObterPorId(long acervoId)
         {
             return mapper.Map<AcervoDTO>(await repositorioAcervo.ObterPorId(acervoId));
@@ -111,12 +120,7 @@ namespace SME.CDEP.Aplicacao.Servicos
         
         public async Task<bool> Excluir(long entidaId)
         {
-            var entidade = await repositorioAcervo.ObterPorId(entidaId);
-            entidade.Excluido = true;
-            entidade.AlteradoEm = DateTimeExtension.HorarioBrasilia();
-            entidade.AlteradoLogin = contextoAplicacao.UsuarioLogado;
-            entidade.AlteradoPor = contextoAplicacao.NomeUsuario;
-            await repositorioAcervo.Atualizar(entidade);
+            await repositorioAcervo.Remover(entidaId);
             return true;
         }
 

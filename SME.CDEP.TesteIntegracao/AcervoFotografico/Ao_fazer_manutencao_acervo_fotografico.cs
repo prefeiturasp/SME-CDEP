@@ -57,7 +57,7 @@ namespace SME.CDEP.TesteIntegracao
             {
                 Id = 3,
                 AcervoId = 3,
-                Codigo = "100FT",
+                Codigo = "100.FT",
                 Titulo = string.Format(ConstantesTestes.TITULO_X, 100),
                 CreditosAutoresIds = new long[]{1,2,3,4,5},
                 Descricao = string.Format(ConstantesTestes.DESCRICAO_X, 100),
@@ -133,7 +133,7 @@ namespace SME.CDEP.TesteIntegracao
             {
                 Id = 3,
                 AcervoId = 3,
-                Codigo = "100FT",
+                Codigo = "100.FT",
                 Titulo = string.Format(ConstantesTestes.TITULO_X, 100),
                 CreditosAutoresIds = new long[]{3,4,5},
                 Descricao = string.Format(ConstantesTestes.DESCRICAO_X, 100),
@@ -207,7 +207,7 @@ namespace SME.CDEP.TesteIntegracao
             {
                 Id = 3,
                 AcervoId = 3,
-                Codigo = "100FT",
+                Codigo = "100.FT",
                 Titulo = string.Format(ConstantesTestes.TITULO_X, 100),
                 CreditosAutoresIds = new long[]{4,5},
                 Descricao = string.Format(ConstantesTestes.DESCRICAO_X, 100),
@@ -311,7 +311,7 @@ namespace SME.CDEP.TesteIntegracao
 
             var acervo = ObterTodos<Acervo>().LastOrDefault();
             acervo.Titulo.Equals(acervoFotograficoDto.Titulo).ShouldBeTrue();
-            acervo.Codigo.Equals($"{acervoFotograficoDto.Codigo}FT").ShouldBeTrue();
+            acervo.Codigo.Equals($"{acervoFotograficoDto.Codigo}.FT").ShouldBeTrue();
             acervo.TipoAcervoId.ShouldBe((int)TipoAcervo.Fotografico);
             acervo.CriadoLogin.ShouldNotBeEmpty();
             acervo.CriadoEm.Date.ShouldBe(DateTimeExtension.HorarioBrasilia().Date);
@@ -392,7 +392,7 @@ namespace SME.CDEP.TesteIntegracao
             {
                 await InserirNaBase(new Acervo()
                 {
-                    Codigo = $"{j.ToString()}FT",
+                    Codigo = $"{j.ToString()}.FT",
                     Titulo = string.Format(ConstantesTestes.TITULO_X, j),
                     CreditosAutoresIds = new long[]{new Random().Next(1, 5),new Random().Next(1, 5)},
                     TipoAcervoId = (int)TipoAcervo.Fotografico,
