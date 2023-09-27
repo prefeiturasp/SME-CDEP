@@ -141,7 +141,7 @@ namespace SME.CDEP.Aplicacao.Servicos
                     Titulo = s.Key.Titulo,
                     AcervoId = s.Key.Id,
                     Codigo = s.Key.Codigo,
-                    CreditoAutoria = string.Join(", ", s.Select(ca=> ca.CreditoAutor.Nome)),
+                    CreditoAutoria = s.Any(w=> w.CreditoAutor != null ) ? string.Join(", ", s.Select(ca=> ca.CreditoAutor.Nome)) : string.Empty,
                     TipoAcervo = ((TipoAcervo)s.Key.TipoAcervoId).Nome(),
                     TipoAcervoId = (TipoAcervo)s.Key.TipoAcervoId,
                 });

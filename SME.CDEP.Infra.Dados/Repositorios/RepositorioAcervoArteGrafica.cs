@@ -35,8 +35,8 @@ namespace SME.CDEP.Infra.Dados.Repositorios
                                   ca.nome
                         from acervo_arte_grafica ag
                         join acervo a on a.id = ag.acervo_id 
-                        join acervo_credito_autor aca on aca.acervo_id = a.id
-                        join credito_autor ca on aca.credito_autor_id = ca.id
+                        left join acervo_credito_autor aca on aca.acervo_id = a.id
+                        left join credito_autor ca on aca.credito_autor_id = ca.id
                         where not a.excluido ";
 
             var retorno = await conexao.Obter().QueryAsync<AcervoArteGrafica, Acervo, CreditoAutor,  AcervoArteGrafica>(

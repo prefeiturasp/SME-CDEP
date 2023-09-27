@@ -36,6 +36,7 @@ namespace SME.CDEP.TesteIntegracao
 
             var acervoFotograficoDtos = await servicoAcervoFotografico.ObterTodos();
             acervoFotograficoDtos.ShouldNotBeNull();
+            // acervoFotograficoDtos.FirstOrDefault().CreditosAutoresIds.Any().ShouldBeTrue(); //Agrupar conforme ServicoAcervoAuditavel
         }
         
         [Fact(DisplayName = "Acervo fotográfico - Atualizar (Adicionando 4 novos arquivos, sendo 1 existente)")]
