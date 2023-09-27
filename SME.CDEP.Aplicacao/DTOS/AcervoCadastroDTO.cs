@@ -12,5 +12,5 @@ public class AcervoCadastroDTO
     [MaxLength(12, ErrorMessage = "O Tombo do acervo fotográfico não pode conter mais que 12 caracteres")]
     public string Codigo { get; set; }
     
-    public long[] CreditosAutoresIds { get; set; }
+    public long[]? CreditosAutoresIds { get; set; }
 }
