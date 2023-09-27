@@ -35,8 +35,8 @@ namespace SME.CDEP.Infra.Dados.Repositorios
                                   ca.nome
                         from acervo_arte_grafica ag
                         join acervo a on a.id = ag.acervo_id 
-                        join acervo_credito_autor aca on aca.acervo_id = a.id
-                        join credito_autor ca on aca.credito_autor_id = ca.id
+                        left join acervo_credito_autor aca on aca.acervo_id = a.id
+                        left join credito_autor ca on aca.credito_autor_id = ca.id
                         where not a.excluido ";
 
             var retorno = await conexao.Obter().QueryAsync<AcervoArteGrafica, Acervo, CreditoAutor,  AcervoArteGrafica>(
@@ -84,8 +84,8 @@ namespace SME.CDEP.Infra.Dados.Repositorios
                                   arq.codigo as ArquivoCodigo
                         from acervo_arte_grafica ag
                         join acervo a on a.id = ag.acervo_id 
-                        join acervo_credito_autor aca on aca.acervo_id = a.id
-                        join credito_autor ca on aca.credito_autor_id = ca.id
+                        left join acervo_credito_autor aca on aca.acervo_id = a.id
+                        left join credito_autor ca on aca.credito_autor_id = ca.id
                         left join acervo_arte_grafica_arquivo aga on aga.acervo_arte_grafica_id = ag.id
                         left join arquivo arq on arq.id = aga.arquivo_id 
                         where not a.excluido 
@@ -96,7 +96,7 @@ namespace SME.CDEP.Infra.Dados.Repositorios
             {
                 var acervoArteGrafica = retorno.FirstOrDefault();
                 acervoArteGrafica.Arquivos = retorno.Where(w=> w.ArquivoId > 0).Select(s => new ArquivoResumido() { Id = s.ArquivoId, Codigo = s.ArquivoCodigo, Nome = s.ArquivoNome }).DistinctBy(d=> d.Id).ToArray();
-                acervoArteGrafica.CreditosAutoresIds = retorno.Select(s => s.CreditoAutorId).Distinct().ToArray();
+                acervoArteGrafica.CreditosAutoresIds = acervoArteGrafica.CreditoAutorId > 0 ? retorno.Select(s => s.CreditoAutorId).Distinct().ToArray() : Array.Empty<long>();
                 return acervoArteGrafica;    
             }
 

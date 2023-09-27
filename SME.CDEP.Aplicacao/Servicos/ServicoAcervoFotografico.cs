@@ -47,6 +47,9 @@ namespace SME.CDEP.Aplicacao.Servicos
 
         public async Task<long> Inserir(AcervoFotograficoCadastroDTO acervoFotograficoCadastroDto)
         {
+            if (acervoFotograficoCadastroDto.CreditosAutoresIds == null)
+                throw new NegocioException(MensagemNegocio.CREDITO_OU_AUTORES_SAO_OBRIGATORIOS);
+            
             var arquivosCompletos =  acervoFotograficoCadastroDto.Arquivos != null
                 ? await ObterArquivosPorIds(acervoFotograficoCadastroDto.Arquivos) 
                 : Enumerable.Empty<Arquivo>();
@@ -105,6 +108,9 @@ namespace SME.CDEP.Aplicacao.Servicos
 
         public async Task<AcervoFotograficoDTO> Alterar(AcervoFotograficoAlteracaoDTO acervoFotograficoAlteracaoDto)
         {
+            if (acervoFotograficoAlteracaoDto.CreditosAutoresIds == null)
+                throw new NegocioException(MensagemNegocio.CREDITO_OU_AUTORES_SAO_OBRIGATORIOS);
+            
             var arquivosIdsInserir =  Enumerable.Empty<long>();
             var arquivosIdsExcluir =  Enumerable.Empty<long>();
             
@@ -157,10 +163,14 @@ namespace SME.CDEP.Aplicacao.Servicos
         public async Task<AcervoFotograficoDTO> ObterPorId(long id)
         {
             var acervoFotograficoSimples = await repositorioAcervoFotografico.ObterPorId(id);
-            acervoFotograficoSimples.Codigo = acervoFotograficoSimples.Codigo.RemoverSufixo();
-            var acervoFotograficoDto = mapper.Map<AcervoFotograficoDTO>(acervoFotograficoSimples);
-            acervoFotograficoDto.Auditoria = mapper.Map<AuditoriaDTO>(acervoFotograficoSimples);
-            return acervoFotograficoDto;
+            if (acervoFotograficoSimples != null)
+            {
+               acervoFotograficoSimples.Codigo = acervoFotograficoSimples.Codigo.RemoverSufixo();
+               var acervoFotograficoDto = mapper.Map<AcervoFotograficoDTO>(acervoFotograficoSimples);
+               acervoFotograficoDto.Auditoria = mapper.Map<AuditoriaDTO>(acervoFotograficoSimples);
+               return acervoFotograficoDto; 
+            }
+            return default;
         }
 
         public async Task<bool> Excluir(long id)

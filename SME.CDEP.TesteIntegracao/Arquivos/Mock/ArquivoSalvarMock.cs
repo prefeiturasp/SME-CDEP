@@ -10,7 +10,7 @@ namespace SME.CDEP.TesteIntegracao.Arquivos.Mock
         public static Arquivo GerarArquivoValido(TipoArquivo tipoArquivo)
         {
             var faker = new Faker<Arquivo>("pt_BR");
-            faker.RuleFor(x => x.Nome, f => f.Name.FirstName());
+            faker.RuleFor(x => x.Nome, f => $"{f.Name.FirstName()}.jpeg");
             faker.RuleFor(x => x.Tipo, f => tipoArquivo != null ? tipoArquivo : f.PickRandom<TipoArquivo>());
             faker.RuleFor(x => x.TipoConteudo, f => "image/jpeg");
             faker.RuleFor(x => x.Codigo, f => Guid.NewGuid());

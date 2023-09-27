@@ -159,9 +159,14 @@ namespace SME.CDEP.TesteIntegracao
             return ObterServicoAplicacao<IServicoAcervoFotografico>();
         }
         
-        protected IServicoAcervoArteGrafica getServicoAcervoArteGrafica()
+        protected IServicoAcervoArteGrafica GetServicoAcervoArteGrafica()
         {
             return ObterServicoAplicacao<IServicoAcervoArteGrafica>();
+        }
+        
+        protected IServicoAcervoTridimensional GetServicoAcervoTridimensional()
+        {
+            return ObterServicoAplicacao<IServicoAcervoTridimensional>();
         }
         
         protected IMapper GetServicoMapper()
