@@ -24,7 +24,20 @@ namespace SME.CDEP.TesteIntegracao
             var servicoAcervoArteGrafica = GetServicoAcervoArteGrafica();
 
             var acervoArteGraficaDto = await servicoAcervoArteGrafica.ObterPorId(5);
+            acervoArteGraficaDto.CreditosAutoresIds.Any().ShouldBeTrue();
             acervoArteGraficaDto.ShouldNotBeNull();
+        }
+        
+        [Fact(DisplayName = "Acervo Arte Gráfica - Obter por Id sem credor")]
+        public async Task Obter_por_id_sem_credor()
+        {
+            await InserirDadosBasicos();
+            await InserirAcervoArteGrafica(false);
+            var servicoAcervoArteGrafica = GetServicoAcervoArteGrafica();
+
+            var acervoArteGraficaDto = await servicoAcervoArteGrafica.ObterPorId(5);
+            acervoArteGraficaDto.ShouldNotBeNull();
+            acervoArteGraficaDto.CreditosAutoresIds.Any().ShouldBeFalse();
         }
         
         [Fact(DisplayName = "Acervo Arte Gráfica - Obter todos")]
@@ -36,6 +49,7 @@ namespace SME.CDEP.TesteIntegracao
 
             var acervoArteGraficaDtos = await servicoAcervoArteGrafica.ObterTodos();
             acervoArteGraficaDtos.ShouldNotBeNull();
+            acervoArteGraficaDtos.FirstOrDefault().CreditosAutoresIds.Any().ShouldBeTrue();
         }
         
         [Fact(DisplayName = "Acervo Arte Gráfica - Atualizar (Adicionando 4 novos arquivos, sendo 1 existente)")]
@@ -388,7 +402,7 @@ namespace SME.CDEP.TesteIntegracao
            
         }
 
-        private async Task InserirAcervoArteGrafica()
+        private async Task InserirAcervoArteGrafica(bool inserirCredor = true)
         {
             var random = new Random();
 
@@ -403,24 +417,27 @@ namespace SME.CDEP.TesteIntegracao
                     CriadoEm = DateTimeExtension.HorarioBrasilia().AddMinutes(-15),
                     CriadoLogin = ConstantesTestes.LOGIN_123456789,
                 });
-                
-                await InserirNaBase(new AcervoCreditoAutor()
+
+                if (inserirCredor)
                 {
-                    AcervoId = j,
-                    CreditoAutorId = 1
-                });
-                
-                await InserirNaBase(new AcervoCreditoAutor()
-                {
-                    AcervoId = j,
-                    CreditoAutorId = 2
-                });
-                
-                await InserirNaBase(new AcervoCreditoAutor()
-                {
-                    AcervoId = j,
-                    CreditoAutorId = 3
-                });
+                    await InserirNaBase(new AcervoCreditoAutor()
+                    {
+                        AcervoId = j,
+                        CreditoAutorId = 1
+                    });
+
+                    await InserirNaBase(new AcervoCreditoAutor()
+                    {
+                        AcervoId = j,
+                        CreditoAutorId = 2
+                    });
+
+                    await InserirNaBase(new AcervoCreditoAutor()
+                    {
+                        AcervoId = j,
+                        CreditoAutorId = 3
+                    });
+                }
 
                 await InserirNaBase(new AcervoArteGrafica()
                 {
