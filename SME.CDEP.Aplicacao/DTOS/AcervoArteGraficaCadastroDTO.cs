@@ -31,7 +31,7 @@ public class AcervoArteGraficaCadastroDTO : AcervoCadastroDTO
     public float? Diametro { get; set; }
     
     [MaxLength(100, ErrorMessage = "A técnica do acervo arte gráfica não pode conter mais que 100 caracteres")]
-    public string Tecnica { get; set; }
+    public string? Tecnica { get; set; }
     
     [Required(ErrorMessage = "É necessário informar o identificador do suporte do acervo arte gráfica")]
     [Range(1, long.MaxValue, ErrorMessage = "O identificador do suporte do acervo arte gráfica deve ser maior que zero")]
