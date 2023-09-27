@@ -29,7 +29,7 @@ namespace SME.CDEP.Infra.Dados.Repositorios
                 query += "and a.Tipo = @tipoAcervo ";
 	
             if (creditoAutorId > 0)
-                query += "and a.credito_autor_id = @creditoAutorId ";
+                query += "and aca.credito_autor_id = @creditoAutorId ";
 	
             return (await conexao.Obter().QueryAsync<Acervo, CreditoAutor, Acervo>(query, (acervo, creditoAutor) =>
             {
