@@ -18,9 +18,9 @@ public class AcervoArteGraficaDTO
     public bool PermiteUsoImagem { get; set; }
     public long ConservacaoId { get; set; }
     public long CromiaId { get; set; }
-    public float Largura { get; set; }
-    public float Altura { get; set; }
-    public float Diametro { get; set; }
+    public float? Largura { get; set; }
+    public float? Altura { get; set; }
+    public float? Diametro { get; set; }
     public string Tecnica { get; set; }
     public long SuporteId { get; set; }
     public long Quantidade { get; set; }

@@ -16,11 +16,10 @@ public class AcervoTridimensionalDTO
     public long ConservacaoId { get; set; }
     public long Quantidade { get; set; }
     public string Descricao { get; set; }
-    public float Largura { get; set; }
-    public float Altura { get; set; }
-    public float Profundidade { get; set; }
-    public float Diametro { get; set; }
+    public float? Largura { get; set; }
+    public float? Altura { get; set; }
+    public float? Profundidade { get; set; }
+    public float? Diametro { get; set; }
     public ArquivoResumidoDTO[]? Arquivos { get; set; }
     public AuditoriaDTO Auditoria { get; set; }
-    public long[] CreditosAutoresIds { get; set; }
 }

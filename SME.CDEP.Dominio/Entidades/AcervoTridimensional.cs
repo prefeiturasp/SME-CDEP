@@ -9,9 +9,9 @@
         public long ConservacaoId { get; set; }
         public long Quantidade { get; set; }
         public string Descricao { get; set; }
-        public float Largura { get; set; }
-        public float Altura { get; set; }
-        public float Profundidade { get; set; }
-        public float Diametro { get; set; }
+        public float? Largura { get; set; }
+        public float? Altura { get; set; }
+        public float? Profundidade { get; set; }
+        public float? Diametro { get; set; }
     }
 }

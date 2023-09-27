@@ -13,10 +13,10 @@ public class AcervoTridimensionalCompleto: EntidadeBase
     public long ConservacaoId { get; set; }
     public long Quantidade { get; set; }
     public string Descricao { get; set; }
-    public float Largura { get; set; }
-    public float Altura { get; set; }
-    public float Profundidade { get; set; }
-    public float Diametro { get; set; }
+    public float? Largura { get; set; }
+    public float? Altura { get; set; }
+    public float? Profundidade { get; set; }
+    public float? Diametro { get; set; }
     public DateTime? AlteradoEm { get; set; }
     public string? AlteradoPor { get; set; }
     public string? AlteradoLogin { get; set; }
