@@ -6,8 +6,8 @@ pipeline {
     }
   
    agent { kubernetes { 
-                  label 'flyway'
-                  defaultContainer 'flyway'
+                  label 'builder'
+                  defaultContainer 'builder'
                 }
               }
 
