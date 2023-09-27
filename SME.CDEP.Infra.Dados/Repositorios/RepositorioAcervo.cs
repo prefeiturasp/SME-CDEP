@@ -15,8 +15,8 @@ namespace SME.CDEP.Infra.Dados.Repositorios
             var query = @"select a.id, a.tipo, a.titulo, a.codigo, a.criado_em, a.criado_por, a.criado_login, a.alterado_em, a.alterado_por, a.alterado_login, 
                                  ca.id, ca.nome, ca.tipo 
 							from acervo a
-							    join acervo_credito_autor aca on aca.acervo_id = a.id
-						        join credito_autor ca on aca.credito_autor_id = ca.id
+							    left join acervo_credito_autor aca on aca.acervo_id = a.id
+						        left join credito_autor ca on aca.credito_autor_id = ca.id
 						    where not a.excluido ";
 
             if (!string.IsNullOrEmpty(titulo))
