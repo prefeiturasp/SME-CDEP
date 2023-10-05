@@ -23,7 +23,7 @@ public class AcervoAudiovisualDTO
     public long? CromiaId { get; set; }
     public string? TamanhoArquivo { get; set; }
     public string? Acessibilidade { get; set; }
-    public string? Disponibilização { get; set; }
+    public string? Disponibilizacao { get; set; }
     public AuditoriaDTO Auditoria { get; set; }
     public long[] CreditosAutoresIds { get; set; }
 }

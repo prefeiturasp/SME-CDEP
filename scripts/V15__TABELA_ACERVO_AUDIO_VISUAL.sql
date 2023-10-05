@@ -16,11 +16,10 @@
 	disponibilizacao varchar(100) NULL,
 	CONSTRAINT acervo_audiovisual_pk PRIMARY KEY (id),
 	CONSTRAINT acervo_audiovisual_acervo_fk FOREIGN KEY (acervo_id) REFERENCES public.acervo(id),
-	CONSTRAINT acervo_audiovisual_suporte_fk FOREIGN KEY (suporte_id) REFERENCES public.suporte(id),
-	CONSTRAINT acervo_audiovisual_cromia_fk FOREIGN KEY (cromia_id) REFERENCES public.cromia(id),
-	CONSTRAINT acervo_audiovisual_conservacao_fk FOREIGN KEY (conservacao_id) REFERENCES public.conservacao(id)
+	CONSTRAINT acervo_audiovisual_suporte_fk FOREIGN KEY (suporte_id) REFERENCES public.suporte(id)	
 );
 
+--> Índices audiovisual
 drop index if exists acervo_audiovisual_acervo_idx;
 CREATE INDEX acervo_audiovisual_acervo_idx ON public.acervo_audiovisual USING btree (acervo_id);
 
@@ -33,12 +32,14 @@ CREATE INDEX acervo_audiovisual_cromia_idx ON public.acervo_audiovisual USING bt
 drop index if exists acervo_audiovisual_conservacao_idx;
 CREATE INDEX acervo_audiovisual_conservacao_idx ON public.acervo_audiovisual USING btree (conservacao_id);
 
+--> Constraints e índices do acervo tridimensional
 ALTER TABLE acervo_tridimensional DROP CONSTRAINT IF EXISTS acervo_tridimensional_conservacao_fk;
 alter table acervo_tridimensional add constraint acervo_tridimensional_conservacao_fk FOREIGN KEY (conservacao_id) REFERENCES conservacao(id);
 
 drop index if exists acervo_tridimensional_conservacao_idx;
 CREATE INDEX acervo_tridimensional_conservacao_idx ON public.acervo_tridimensional USING btree (conservacao_id);
 
+--> Constraints e índices do acervo artes gráficas
 ALTER TABLE acervo_arte_grafica DROP CONSTRAINT IF EXISTS acervo_arte_grafica_conservacao_fk;
 alter table acervo_arte_grafica add constraint acervo_arte_grafica_conservacao_fk FOREIGN KEY (conservacao_id) REFERENCES conservacao(id);
 
@@ -57,6 +58,7 @@ CREATE INDEX acervo_arte_grafica_cromia_idx ON public.acervo_arte_grafica USING 
 drop index if exists acervo_arte_grafica_conservacao_idx;
 CREATE INDEX acervo_arte_grafica_conservacao_idx ON public.acervo_arte_grafica USING btree (conservacao_id);
 
+--> Constraints e índices do acervo artes fotográfico
 ALTER TABLE acervo_fotografico DROP CONSTRAINT IF EXISTS acervo_fotografico_conservacao_fk;
 alter table acervo_fotografico add constraint acervo_fotografico_conservacao_fk FOREIGN KEY (conservacao_id) REFERENCES conservacao(id);
 
@@ -84,6 +86,7 @@ CREATE INDEX acervo_fotografico_conservacao_idx ON public.acervo_fotografico USI
 drop index if exists acervo_fotografico_arquivo_acervo_fotografico_idx;
 CREATE INDEX acervo_fotografico_arquivo_acervo_fotografico_idx ON public.acervo_fotografico_arquivo USING btree (acervo_fotografico_id);
 
+--> Constraints e índices do acervo artes gráfica
 drop index if exists acervo_arte_grafica_arquivo_acervo_arte_grafica_idx;
 CREATE INDEX acervo_arte_grafica_arquivo_acervo_arte_grafica_idx ON public.acervo_arte_grafica_arquivo USING btree (acervo_arte_grafica_id);
 
