@@ -9,5 +9,14 @@ namespace SME.CDEP.Infra.Dados.Repositorios
     {
         public RepositorioAcessoDocumento(IContextoAplicacao contexto, ICdepConexao conexao) : base(contexto,conexao)
         { }
+
+        public async Task<IEnumerable<AcessoDocumento>> ObterPorIds(long[] ids)
+        {
+            const string query = @"select * 
+                                    from acesso_documento
+                                    where id = ANY(@ids)";
+
+            return await conexao.Obter().QueryAsync<AcessoDocumento>(query, new { ids });
+        }
     }
 }

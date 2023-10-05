@@ -7,4 +7,5 @@ public class AcervoDTO : BaseAuditavelDTO
     public string Codigo { get; set; }
     public long CreditoAutorId { get; set; }
     public CreditoAutorDTO CreditoAutor { get; set; }
+    public string CodigoNovo { get; set; }
 }

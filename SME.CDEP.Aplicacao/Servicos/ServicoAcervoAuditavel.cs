@@ -33,6 +33,9 @@ namespace SME.CDEP.Aplicacao.Servicos
             await ValidarTituloDuplicado(acervo.Titulo, acervo.Id);
             
             await ValidarTomboDuplicado(acervo.Codigo, acervo.Id);
+            
+            if (!string.IsNullOrEmpty(acervo.CodigoNovo) && acervo.TipoAcervoId != (long)TipoAcervo.DocumentacaoHistorica)
+                throw new NegocioException(MensagemNegocio.SOMENTE_ACERVO_DOCUMENTAL_POSSUI_CODIGO_NOVO);
                 
             acervo.CriadoEm = DateTimeExtension.HorarioBrasilia();
             acervo.CriadoPor = contextoAplicacao.NomeUsuario;
@@ -74,6 +77,9 @@ namespace SME.CDEP.Aplicacao.Servicos
             acervo.AlteradoLogin = contextoAplicacao.UsuarioLogado;
             acervo.AlteradoPor = contextoAplicacao.NomeUsuario;
             
+            if (!string.IsNullOrEmpty(acervo.CodigoNovo) && acervo.TipoAcervoId != (long)TipoAcervo.DocumentacaoHistorica)
+                throw new NegocioException(MensagemNegocio.SOMENTE_ACERVO_DOCUMENTAL_POSSUI_CODIGO_NOVO);
+            
             var acervoAlterado = mapper.Map<AcervoDTO>(await repositorioAcervo.Atualizar(acervo));
 
             var creditosAutoresPropostos = acervo.CreditosAutoresIds != null ? acervo.CreditosAutoresIds.ToList() : Enumerable.Empty<long>();
@@ -95,9 +101,13 @@ namespace SME.CDEP.Aplicacao.Servicos
             return acervoAlterado;
         }
 
-        public async Task<AcervoDTO> Alterar(long id, string titulo, string codigo, long[] creditosAutoresIds)
+        public async Task<AcervoDTO> Alterar(long id, string titulo, string codigo, long[] creditosAutoresIds, string codigoNovo = "")
         {
             var acervo = await repositorioAcervo.ObterPorId(id);
+
+            if (!string.IsNullOrEmpty(codigoNovo) && acervo.TipoAcervoId != (long)TipoAcervo.DocumentacaoHistorica)
+                throw new NegocioException(MensagemNegocio.SOMENTE_ACERVO_DOCUMENTAL_POSSUI_CODIGO_NOVO);
+            
             acervo.Titulo = titulo;
             acervo.Codigo = codigo;
             acervo.CreditosAutoresIds = creditosAutoresIds;
