@@ -63,7 +63,7 @@ namespace SME.CDEP.Infra.Dados.Repositorios
                                   av.suporte_id as suporteId,
                                   av.duracao,                                  
                                   av.cromia_id as cromiaId,                                  
-                                  av.tamanho_arquivo,
+                                  av.tamanho_arquivo as tamanhoArquivo,
                                   av.acessibilidade,
                                   av.disponibilizacao,
                                   a.id as AcervoId,
