@@ -20,7 +20,7 @@ public class AcervoDocumentalDTO
     public bool Digitalizado { get; set; }
     public long? ConservacaoId { get; set; }
     public ArquivoResumidoDTO[]? Arquivos { get; set; }
-    public AcessoDocumentoResumido[]? AcessoDocumentos { get; set; }
+    public AcessoDocumentoResumido[] AcessoDocumentos { get; set; }
     public AuditoriaDTO Auditoria { get; set; }
     public long[] CreditosAutoresIds { get; set; }
 }

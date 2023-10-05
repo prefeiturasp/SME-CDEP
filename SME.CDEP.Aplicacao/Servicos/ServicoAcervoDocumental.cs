@@ -86,7 +86,7 @@ namespace SME.CDEP.Aplicacao.Servicos
                     await repositorioAcervoDocumentalAcessoDocumento.Inserir(new AcervoDocumentalAcessoDocumento()
                     {
                         AcessoDocumentoId = acessoDocumento.Id, 
-                        AcessoDocumentalId= acervoDocumental.Id
+                        AcervoDocumentalId= acervoDocumental.Id
                     });
                 }
                 
