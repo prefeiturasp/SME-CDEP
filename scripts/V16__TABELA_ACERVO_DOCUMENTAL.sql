@@ -13,7 +13,8 @@ CREATE TABLE if not exists public.acervo_documental (
 	tamanho_arquivo varchar(15) NULL,
 	localizacao varchar(100) NULL,
 	digitalizado bool NOT NULL DEFAULT false,
-	conservacao_id int8 null,		
+	conservacao_id int8 null,	
+	descricao text NOT NULL,
 	CONSTRAINT acervo_documental_pk PRIMARY KEY (id),
 	CONSTRAINT acervo_documental_acervo_fk FOREIGN KEY (acervo_id) REFERENCES public.acervo(id),
 	CONSTRAINT acervo_documental_idioma_fk FOREIGN KEY (idioma_id) REFERENCES public.idioma(id)
