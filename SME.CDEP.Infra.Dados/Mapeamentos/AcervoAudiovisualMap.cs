@@ -19,8 +19,8 @@ namespace SME.CDEP.Infra.Dados.Mapeamentos
             Map(c => c.Duracao).ToColumn("duracao");
             Map(c => c.CromiaId).ToColumn("cromia_id");
             Map(c => c.TamanhoArquivo).ToColumn("tamanho_arquivo");
-            Map(c => c.Acessibilidade ).ToColumn("acessibilidade ");
-            Map(c => c.Disponibilizacao ).ToColumn("disponibilizacao  ");
+            Map(c => c.Acessibilidade ).ToColumn("acessibilidade");
+            Map(c => c.Disponibilizacao ).ToColumn("disponibilizacao");
             Map(c => c.Excluido).Ignore();
         }
     }

@@ -42,5 +42,5 @@ public class AcervoAudiovisualCadastroDTO : AcervoCadastroDTO
     public string? Acessibilidade { get; set; }
     
     [MaxLength(200, ErrorMessage = "A localização do acervo audiovisual não pode conter mais que 100 caracteres")]
-    public string? Disponibilização { get; set; }
+    public string? Disponibilizacao { get; set; }
 }

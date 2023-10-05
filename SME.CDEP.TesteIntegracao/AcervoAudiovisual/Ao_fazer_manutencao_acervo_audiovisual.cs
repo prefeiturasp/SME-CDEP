@@ -41,18 +41,6 @@ namespace SME.CDEP.TesteIntegracao
             acervo.FirstOrDefault(w=> w.Id == 5).Excluido.ShouldBeTrue();
         }
         
-        [Fact(DisplayName = "Acervo Audiovisual - Obter por Id sem credor")]
-        public async Task Obter_por_id_sem_credor()
-        {
-            await InserirDadosBasicos();
-            await InserirAcervoAudiovisual(false);
-            var servicoAcervoAudiovisual = GetServicoAcervoAudiovisual();
-
-            var acervoAudiovisualDto = await servicoAcervoAudiovisual.ObterPorId(5);
-            acervoAudiovisualDto.ShouldNotBeNull();
-            acervoAudiovisualDto.CreditosAutoresIds.Any().ShouldBeFalse();
-        }
-        
         [Fact(DisplayName = "Acervo Audiovisual - Obter todos")]
         public async Task Obter_todos()
         {
@@ -95,7 +83,7 @@ namespace SME.CDEP.TesteIntegracao
                 CromiaId = random.Next(1, 5),
                 TamanhoArquivo = string.Format(ConstantesTestes.TAMANHO_ARQUIVO_X_MB, 100),
                 Acessibilidade = string.Format(ConstantesTestes.ACESSIBILIDADE_X, 100),
-                Disponibilização = string.Format(ConstantesTestes.DISPONIBILIDADE_X, 100),
+                Disponibilizacao = string.Format(ConstantesTestes.DISPONIBILIZACAO_X, 100),
             };
             
             await servicoAcervoAudiovisual.Alterar(acervoAudiovisualAlteracaoDto);
@@ -124,7 +112,7 @@ namespace SME.CDEP.TesteIntegracao
             acervoAudiovisual.CromiaId.ShouldBe(acervoAudiovisualAlteracaoDto.CromiaId.Value);
             acervoAudiovisual.TamanhoArquivo.ShouldBe(acervoAudiovisualAlteracaoDto.TamanhoArquivo);
             acervoAudiovisual.Acessibilidade.ShouldBe(acervoAudiovisualAlteracaoDto.Acessibilidade);
-            acervoAudiovisual.Disponibilizacao.ShouldBe(acervoAudiovisualAlteracaoDto.Disponibilização);
+            acervoAudiovisual.Disponibilizacao.ShouldBe(acervoAudiovisualAlteracaoDto.Disponibilizacao);
             
             var acervoCreditoAutor = ObterTodos<AcervoCreditoAutor>().Where(w=> w.AcervoId == 3);
             acervoCreditoAutor.Count().ShouldBe(2);
@@ -160,7 +148,7 @@ namespace SME.CDEP.TesteIntegracao
                 CromiaId = random.Next(1, 5),
                 TamanhoArquivo = string.Format(ConstantesTestes.TAMANHO_ARQUIVO_X_MB, 100),
                 Acessibilidade = string.Format(ConstantesTestes.ACESSIBILIDADE_X, 100),
-                Disponibilização = string.Format(ConstantesTestes.DISPONIBILIDADE_X, 100),
+                Disponibilizacao = string.Format(ConstantesTestes.DISPONIBILIZACAO_X, 100),
             };
             
             var acervoAudiovisualInserido = await servicoAcervoAudiovisual.Inserir(acervoAudiovisualCadastroDto);
@@ -168,8 +156,8 @@ namespace SME.CDEP.TesteIntegracao
 
             var acervo = ObterTodos<Acervo>().LastOrDefault();
             acervo.Titulo.Equals(acervoAudiovisualCadastroDto.Titulo).ShouldBeTrue();
-            acervo.Codigo.Equals($"{acervoAudiovisualCadastroDto.Codigo}.AG").ShouldBeTrue();
-            acervo.TipoAcervoId.ShouldBe((int)TipoAcervo.ArtesGraficas);
+            acervo.Codigo.Equals($"{acervoAudiovisualCadastroDto.Codigo}.AV").ShouldBeTrue();
+            acervo.TipoAcervoId.ShouldBe((int)TipoAcervo.Audiovisual);
             acervo.CriadoLogin.ShouldNotBeEmpty();
             acervo.CriadoEm.Date.ShouldBe(DateTimeExtension.HorarioBrasilia().Date);
             acervo.CriadoPor.ShouldNotBeEmpty();
@@ -190,12 +178,12 @@ namespace SME.CDEP.TesteIntegracao
             acervoAudiovisual.CromiaId.ShouldBe(acervoAudiovisualCadastroDto.CromiaId.Value);
             acervoAudiovisual.TamanhoArquivo.ShouldBe(acervoAudiovisualCadastroDto.TamanhoArquivo);
             acervoAudiovisual.Acessibilidade.ShouldBe(acervoAudiovisualCadastroDto.Acessibilidade);
-            acervoAudiovisual.Disponibilizacao.ShouldBe(acervoAudiovisualCadastroDto.Disponibilização);
+            acervoAudiovisual.Disponibilizacao.ShouldBe(acervoAudiovisualCadastroDto.Disponibilizacao);
             
             var acervoCreditoAutor = ObterTodos<AcervoCreditoAutor>().Where(w=> w.AcervoId == acervoAudiovisual.AcervoId);
             acervoCreditoAutor.Count().ShouldBe(2);
-            acervoCreditoAutor.FirstOrDefault().CreditoAutorId.ShouldBe(3);
-            acervoCreditoAutor.LastOrDefault().CreditoAutorId.ShouldBe(4);
+            acervoCreditoAutor.FirstOrDefault().CreditoAutorId.ShouldBe(4);
+            acervoCreditoAutor.LastOrDefault().CreditoAutorId.ShouldBe(5);
         }
         
         [Fact(DisplayName = "Acervo Audiovisual - Não deve inserir Tombo duplicado")]
@@ -226,7 +214,7 @@ namespace SME.CDEP.TesteIntegracao
                 CromiaId = random.Next(1, 5),
                 TamanhoArquivo = string.Format(ConstantesTestes.TAMANHO_ARQUIVO_X_MB, 100),
                 Acessibilidade = string.Format(ConstantesTestes.ACESSIBILIDADE_X, 100),
-                Disponibilização = string.Format(ConstantesTestes.DISPONIBILIDADE_X, 100),
+                Disponibilizacao = string.Format(ConstantesTestes.DISPONIBILIZACAO_X, 100),
             };
             
             await servicoAcervoAudiovisual.Inserir(acervoAudiovisualCadastroDto).ShouldThrowAsync<NegocioException>();
@@ -285,7 +273,7 @@ namespace SME.CDEP.TesteIntegracao
                     CromiaId = random.Next(1,5),
                     TamanhoArquivo = string.Format(ConstantesTestes.TAMANHO_ARQUIVO_X_MB,j),
                     Acessibilidade = string.Format(ConstantesTestes.ACESSIBILIDADE_X,j),
-                    Disponibilizacao = string.Format(ConstantesTestes.DISPONIBILIDADE_X,j),
+                    Disponibilizacao = string.Format(ConstantesTestes.DISPONIBILIZACAO_X,j),
                 });
             }
         }

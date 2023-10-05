@@ -117,5 +117,5 @@ public class ConstantesTestes
     public const string COPIA_X = "Cópia {0}";
     public const string DURACAO_X = "Duração {0}";
     public const string ACESSIBILIDADE_X = "Acessibilidade {0}";
-    public const string DISPONIBILIDADE_X = "Disponibilidade {0}";
+    public const string DISPONIBILIZACAO_X = "Disponibilidade {0}";
 }
