@@ -80,8 +80,8 @@ namespace SME.CDEP.Infra.Dados.Repositorios
                                   ca.nome as CreditoAutorNome                                  
                         from acervo_audiovisual av
                         join acervo a on a.id = av.acervo_id 
-                        join acervo_credito_autor aca on aca.acervo_id = a.id
-                        join credito_autor ca on aca.credito_autor_id = ca.id                         
+                        left join acervo_credito_autor aca on aca.acervo_id = a.id
+                        left join credito_autor ca on aca.credito_autor_id = ca.id                         
                         where not a.excluido 
                         and a.id = @id";
 
@@ -89,7 +89,9 @@ namespace SME.CDEP.Infra.Dados.Repositorios
             if (retorno.Any())
             {
                 var audiovisualCompleto = retorno.FirstOrDefault();
-                audiovisualCompleto.CreditosAutoresIds = retorno.Select(s => s.CreditoAutorId).Distinct().ToArray();
+                audiovisualCompleto.CreditosAutoresIds = audiovisualCompleto.CreditoAutorId.HasValue 
+                    ? retorno.Select(s => s.CreditoAutorId.Value).Distinct().ToArray() 
+                    : Array.Empty<long>();
                 return audiovisualCompleto;    
             }
 

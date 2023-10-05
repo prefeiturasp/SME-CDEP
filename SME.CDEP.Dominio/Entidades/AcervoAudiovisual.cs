@@ -9,7 +9,7 @@
         public string DataAcervo { get; set; }
         public string Copia { get; set; }
         public bool PermiteUsoImagem { get; set; }
-        public long ConservacaoId { get; set; }
+        public long? ConservacaoId { get; set; }
         public string Descricao { get; set; }
         public long SuporteId { get; set; }
         public string Duracao { get; set; }
