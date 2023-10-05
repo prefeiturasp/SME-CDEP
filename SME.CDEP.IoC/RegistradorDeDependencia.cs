@@ -100,6 +100,9 @@ public class RegistradorDeDependencia
             config.AddMap(new AcervoArteGraficaArquivoMap());
             config.AddMap(new AcervoTridimensionalMap());
             config.AddMap(new AcervoTridimensionalArquivoMap());
+            config.AddMap(new AcervoDocumentalMap());
+            config.AddMap(new AcervoDocumentalArquivoMap());
+            config.AddMap(new AcervoDocumentalAcessoDocumentoMap());
             config.ForDommel();
         });
     }
@@ -143,6 +146,9 @@ public class RegistradorDeDependencia
         _serviceCollection.TryAddScoped<IRepositorioAcervoArteGraficaArquivo, RepositorioAcervoArteGraficaArquivo>();
         _serviceCollection.TryAddScoped<IRepositorioAcervoTridimensional, RepositorioAcervoTridimensional>();
         _serviceCollection.TryAddScoped<IRepositorioAcervoTridimensionalArquivo, RepositorioAcervoTridimensionalArquivo>();
+        _serviceCollection.TryAddScoped<IRepositorioAcervoDocumental, RepositorioAcervoDocumental>();
+        _serviceCollection.TryAddScoped<IRepositorioAcervoDocumentalArquivo, RepositorioAcervoDocumentalArquivo>();
+        _serviceCollection.TryAddScoped<IRepositorioAcervoDocumentalAcessoDocumento, RepositorioAcervoDocumentalAcessoDocumento>();
     }
 
     protected virtual void RegistrarServicos()
