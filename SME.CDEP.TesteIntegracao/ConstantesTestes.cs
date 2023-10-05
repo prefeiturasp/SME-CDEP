@@ -113,4 +113,9 @@ public class ConstantesTestes
     public const string CROMIA_X = "Cromia {0}";
     public const string CONSERVACAO_X = "Conservação {0}";
     public const string MIME_TYPE_JPG = "image/jpg";
+    
+    public const string COPIA_X = "Cópia {0}";
+    public const string DURACAO_X = "Duração {0}";
+    public const string ACESSIBILIDADE_X = "Acessibilidade {0}";
+    public const string DISPONIBILIDADE_X = "Disponibilidade {0}";
 }
