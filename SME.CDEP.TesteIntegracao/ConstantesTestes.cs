@@ -122,4 +122,9 @@ public class ConstantesTestes
     public const string IDIOMA_X = "Idioma {0}";
     public const string MATERIAL_X = "Material {0}";
     public const string ACESSO_DOCUMENTO_X = "Acesso Documento {0}";
+    
+    public const string COPIA_X = "Cópia {0}";
+    public const string DURACAO_X = "Duração {0}";
+    public const string ACESSIBILIDADE_X = "Acessibilidade {0}";
+    public const string DISPONIBILIZACAO_X = "Disponibilidade {0}";
 }
