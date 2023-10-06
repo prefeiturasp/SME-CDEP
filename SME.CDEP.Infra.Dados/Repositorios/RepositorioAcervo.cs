@@ -40,7 +40,7 @@ namespace SME.CDEP.Infra.Dados.Repositorios
         
         public Task<bool> ExisteCodigo(string codigo, long id)
         {
-            return conexao.Obter().QueryFirstOrDefaultAsync<bool>("select 1 from acervo where lower(codigo) = @codigo and not excluido and id != @id",new { id, codigo = codigo.ToLower() });
+            return conexao.Obter().QueryFirstOrDefaultAsync<bool>("select 1 from acervo where (lower(codigo) = @codigo or lower(codigo_novo) = @codigo) and not excluido and id != @id",new { id, codigo = codigo.ToLower() });
         }
         
         public Task<bool> ExisteTitulo(string titulo, long id)
