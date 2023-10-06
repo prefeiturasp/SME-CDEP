@@ -2,6 +2,7 @@
 
 public class MensagemNegocio
 {
+    public const string SOMENTE_ACERVO_DOCUMENTAL_POSSUI_CODIGO_NOVO = "Somente acervo documental possui código novo";
     public const string ESSE_ACERVO_NAO_POSSUI_CREDITO_OU_AUTOR = "Esse acervo não possui crédito ou autor";
     public const string CREDITO_OU_AUTORES_SAO_OBRIGATORIOS = "O crédito/autor deve ser informado para esse tipo de acervo";
     public const string IMAGEM_NAO_ENCONTRADO = "A imagem não foi encontrada";

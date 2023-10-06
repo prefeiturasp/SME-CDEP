@@ -49,6 +49,15 @@ namespace SME.CDEP.Aplicacao.Mapeamentos
             CreateMap<AuditoriaDTO, AcervoTridimensionalCompleto>().ReverseMap();
             CreateMap<AcervoTridimensionalDTO, Acervo>().ReverseMap();
             CreateMap<AcervoTridimensionalDTO, AcervoTridimensional>().ReverseMap();
+            
+            CreateMap<AcervoDocumentalCadastroDTO, AcervoDocumental>().ReverseMap();
+            CreateMap<AcervoDocumentalAlteracaoDTO, AcervoDocumental>().ReverseMap();
+            CreateMap<AcervoDocumentalAlteracaoDTO, AcervoDocumentalDTO>().ReverseMap();
+            CreateMap<AcervoDocumentalCadastroDTO, Acervo>().ReverseMap();
+            CreateMap<AcervoDocumentalDTO, AcervoDocumentalCompleto>().ReverseMap();
+            CreateMap<AuditoriaDTO, AcervoDocumentalCompleto>().ReverseMap();
+            CreateMap<AcervoDocumentalDTO, Acervo>().ReverseMap();
+            CreateMap<AcervoDocumentalDTO, AcervoDocumental>().ReverseMap();
         }
     }
 }

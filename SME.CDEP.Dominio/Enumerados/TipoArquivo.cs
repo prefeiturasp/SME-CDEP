@@ -19,5 +19,8 @@ namespace SME.CDEP.Infra.Dominio.Enumerados
         
         [Display(Name ="acervo-tridimensional")] 
         AcervoTridimensional = 5,
+        
+        [Display(Name ="acervo-documental")] 
+        AcervoDocumental = 6,
     }
 }
