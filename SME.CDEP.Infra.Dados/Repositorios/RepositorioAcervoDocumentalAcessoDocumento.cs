@@ -18,11 +18,11 @@ namespace SME.CDEP.Infra.Dados.Repositorios
                                                             from acervo_documental_acesso_documento 
                                                             where acervo_documental_id = @id", new { id });
 
-        public async Task Excluir(long[] arquivosIdsExcluir, long acervoDocumentalId)
+        public async Task Excluir(long[] acessoDocumentosIdsExcluir, long acervoDocumentalId)
         {
             await conexao.Obter()
-                .ExecuteAsync(@"Delete from acervo_documental_acesso_documento where acervo_documental_id = @acervoDocumentalId and arquivo_id = any(@arquivosIdsExcluir)", 
-                new { acervoDocumentalId, arquivosIdsExcluir });
+                .ExecuteAsync(@"Delete from acervo_documental_acesso_documento where acervo_documental_id = @acervoDocumentalId and acesso_documento_id = any(@arquivosIdsExcluir)", 
+                new { acervoDocumentalId, arquivosIdsExcluir = acessoDocumentosIdsExcluir });
         }
     }
 }

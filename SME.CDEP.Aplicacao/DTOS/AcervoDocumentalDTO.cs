@@ -6,6 +6,12 @@ namespace SME.CDEP.Aplicacao.DTOS;
 
 public class AcervoDocumentalDTO
 {
+    public long Id { get; set; }
+    public long AcervoId { get; set; }
+    public string Titulo { get; set; }
+    public long TipoAcervoId { get; set; }
+    public string Codigo { get; set; }
+    public string CodigoNovo { get; set; }
     public long? MaterialId { get; set; }
     public long IdiomaId { get; set; }
     public string? Ano { get; set; }

@@ -1,5 +1,4 @@
-﻿using AutoMapper;
-using Shouldly;
+﻿using Shouldly;
 using SME.CDEP.Aplicacao.DTOS;
 using SME.CDEP.Dominio.Entidades;
 using SME.CDEP.Dominio.Excecoes;
@@ -7,7 +6,6 @@ using SME.CDEP.Infra.Dominio.Enumerados;
 using SME.CDEP.TesteIntegracao.Setup;
 using SME.CDEP.TesteIntegracao.Constantes;
 using Xunit;
-using Xunit.Sdk;
 
 namespace SME.CDEP.TesteIntegracao
 {
@@ -26,6 +24,7 @@ namespace SME.CDEP.TesteIntegracao
             var acervoDocumentalDto = await servicoAcervoDocumental.ObterPorId(5);
             acervoDocumentalDto.ShouldNotBeNull();
             acervoDocumentalDto.CreditosAutoresIds.Any().ShouldBeTrue();
+            acervoDocumentalDto.Arquivos.Any().ShouldBeTrue();
             acervoDocumentalDto.AcessoDocumentos.Any().ShouldBeTrue();
         }
         
@@ -39,7 +38,8 @@ namespace SME.CDEP.TesteIntegracao
             var acervo = await acervoDocumental.ObterPorId(5);
             acervo.ShouldNotBeNull();
             acervo.CreditosAutoresIds.Any().ShouldBeFalse();
-            acervo.AcessoDocumentos.Any().ShouldBeFalse();
+            acervo.Arquivos.Any().ShouldBeTrue();
+            acervo.AcessoDocumentos.Any().ShouldBeTrue();
         }
         
         [Fact(DisplayName = "Acervo documental - Obter todos")]
@@ -90,7 +90,7 @@ namespace SME.CDEP.TesteIntegracao
                 MaterialId = random.Next(1,5),
                 IdiomaId = random.Next(1,5),
                 Ano = string.Format(ConstantesTestes.ANO_X, 100),
-                NumeroPagina = string.Format(ConstantesTestes.NUMERO_PAGINA_X, 100),
+                NumeroPagina = string.Format(ConstantesTestes.NUMERO_PAGINA_X, 99),
                 Volume = string.Format(ConstantesTestes.VOLUME_X, 100),
                 TipoAnexo = string.Format(ConstantesTestes.TIPO_ANEXO_X, 100),
                 TamanhoArquivo = string.Format(ConstantesTestes.TAMANHO_ARQUIVO_X_MB,100),
@@ -102,6 +102,7 @@ namespace SME.CDEP.TesteIntegracao
             var acervo = ObterTodos<Acervo>().FirstOrDefault(w=> w.Id == 3);
             acervo.Titulo.Equals(acervoDocumentalAlteracaoDto.Titulo).ShouldBeTrue();
             acervo.Codigo.Equals(acervoDocumentalAlteracaoDto.Codigo).ShouldBeTrue();
+            acervo.CodigoNovo.Equals(acervoDocumentalAlteracaoDto.CodigoNovo).ShouldBeTrue();
             acervo.TipoAcervoId.ShouldBe((int)TipoAcervo.DocumentacaoHistorica);
             acervo.CriadoLogin.ShouldNotBeEmpty();
             acervo.CriadoEm.Date.ShouldBe(DateTimeExtension.HorarioBrasilia().Date);
@@ -137,8 +138,8 @@ namespace SME.CDEP.TesteIntegracao
             var acervoDocumentalAcessoDocumentos = ObterTodos<AcervoDocumentalAcessoDocumento>();
             var acervoDocumentalAcessoDocumentosInseridos = acervoDocumentalAcessoDocumentos.Where(w => w.AcervoDocumentalId == acervoDocumental.Id);
             acervoDocumentalAcessoDocumentosInseridos.Count().ShouldBe(acessoDocumentosSelecionados.Count());
-            acervoCreditoAutor.FirstOrDefault().CreditoAutorId.ShouldBe(1);
-            acervoCreditoAutor.LastOrDefault().CreditoAutorId.ShouldBe(5);
+            acervoDocumentalAcessoDocumentosInseridos.FirstOrDefault().AcessoDocumentoId.ShouldBe(1);
+            acervoDocumentalAcessoDocumentosInseridos.LastOrDefault().AcessoDocumentoId.ShouldBe(5);
         }
         
         [Fact(DisplayName = "Acervo documental - Atualizar (Removendo 1 arquivo/documento, adicionando 5 novos)")]
@@ -176,7 +177,7 @@ namespace SME.CDEP.TesteIntegracao
                 MaterialId = random.Next(1,5),
                 IdiomaId = random.Next(1,5),
                 Ano = string.Format(ConstantesTestes.ANO_X, 100),
-                NumeroPagina = string.Format(ConstantesTestes.NUMERO_PAGINA_X, 100),
+                NumeroPagina = string.Format(ConstantesTestes.NUMERO_PAGINA_X, 99),
                 Volume = string.Format(ConstantesTestes.VOLUME_X, 100),
                 TipoAnexo = string.Format(ConstantesTestes.TIPO_ANEXO_X, 100),
                 TamanhoArquivo = string.Format(ConstantesTestes.TAMANHO_ARQUIVO_X_MB,100),
@@ -188,6 +189,7 @@ namespace SME.CDEP.TesteIntegracao
             var acervo = ObterTodos<Acervo>().FirstOrDefault(w=> w.Id == 3);
             acervo.Titulo.Equals(acervoDocumentalAlteracaoDto.Titulo).ShouldBeTrue();
             acervo.Codigo.Equals(acervoDocumentalAlteracaoDto.Codigo).ShouldBeTrue();
+            acervo.CodigoNovo.Equals(acervoDocumentalAlteracaoDto.CodigoNovo).ShouldBeTrue();
             acervo.TipoAcervoId.ShouldBe((int)TipoAcervo.DocumentacaoHistorica);
             acervo.CriadoLogin.ShouldNotBeEmpty();
             acervo.CriadoEm.Date.ShouldBe(DateTimeExtension.HorarioBrasilia().Date);
@@ -223,8 +225,8 @@ namespace SME.CDEP.TesteIntegracao
             var acervoDocumentalAcessoDocumentos = ObterTodos<AcervoDocumentalAcessoDocumento>();
             var acervoDocumentalAcessoDocumentosInseridos = acervoDocumentalAcessoDocumentos.Where(w => w.AcervoDocumentalId == acervoDocumental.Id);
             acervoDocumentalAcessoDocumentosInseridos.Count().ShouldBe(acessoDocumentosSelecionados.Count());
-            acervoCreditoAutor.FirstOrDefault().CreditoAutorId.ShouldBe(1);
-            acervoCreditoAutor.LastOrDefault().CreditoAutorId.ShouldBe(5);
+            acervoDocumentalAcessoDocumentosInseridos.FirstOrDefault().AcessoDocumentoId.ShouldBe(1);
+            acervoDocumentalAcessoDocumentosInseridos.LastOrDefault().AcessoDocumentoId.ShouldBe(5);
         }
         
         [Fact(DisplayName = "Acervo documental - Atualizar (Removendo todos)")]
@@ -259,7 +261,7 @@ namespace SME.CDEP.TesteIntegracao
                 MaterialId = random.Next(1,5),
                 IdiomaId = random.Next(1,5),
                 Ano = string.Format(ConstantesTestes.ANO_X, 100),
-                NumeroPagina = string.Format(ConstantesTestes.NUMERO_PAGINA_X, 100),
+                NumeroPagina = string.Format(ConstantesTestes.NUMERO_PAGINA_X, 99),
                 Volume = string.Format(ConstantesTestes.VOLUME_X, 100),
                 TipoAnexo = string.Format(ConstantesTestes.TIPO_ANEXO_X, 100),
                 TamanhoArquivo = string.Format(ConstantesTestes.TAMANHO_ARQUIVO_X_MB,100),
@@ -271,6 +273,7 @@ namespace SME.CDEP.TesteIntegracao
             var acervo = ObterTodos<Acervo>().FirstOrDefault(w=> w.Id == 3);
             acervo.Titulo.Equals(acervoDocumentalAlteracaoDto.Titulo).ShouldBeTrue();
             acervo.Codigo.Equals(acervoDocumentalAlteracaoDto.Codigo).ShouldBeTrue();
+            acervo.CodigoNovo.Equals(acervoDocumentalAlteracaoDto.CodigoNovo).ShouldBeTrue();
             acervo.TipoAcervoId.ShouldBe((int)TipoAcervo.DocumentacaoHistorica);
             acervo.CriadoLogin.ShouldNotBeEmpty();
             acervo.CriadoEm.Date.ShouldBe(DateTimeExtension.HorarioBrasilia().Date);
@@ -306,8 +309,6 @@ namespace SME.CDEP.TesteIntegracao
             var acervoDocumentalAcessoDocumentos = ObterTodos<AcervoDocumentalAcessoDocumento>();
             var acervoDocumentalAcessoDocumentosInseridos = acervoDocumentalAcessoDocumentos.Where(w => w.AcervoDocumentalId == acervoDocumental.Id);
             acervoDocumentalAcessoDocumentosInseridos.Count().ShouldBe(acessoDocumentosSelecionados.Count());
-            acervoCreditoAutor.FirstOrDefault().CreditoAutorId.ShouldBe(1);
-            acervoCreditoAutor.LastOrDefault().CreditoAutorId.ShouldBe(5);
         }
         
         [Fact(DisplayName = "Acervo documental - Inserir")]
@@ -343,7 +344,7 @@ namespace SME.CDEP.TesteIntegracao
                 MaterialId = random.Next(1,5),
                 IdiomaId = random.Next(1,5),
                 Ano = string.Format(ConstantesTestes.ANO_X, 100),
-                NumeroPagina = string.Format(ConstantesTestes.NUMERO_PAGINA_X, 100),
+                NumeroPagina = string.Format(ConstantesTestes.NUMERO_PAGINA_X, 99),
                 Volume = string.Format(ConstantesTestes.VOLUME_X, 100),
                 TipoAnexo = string.Format(ConstantesTestes.TIPO_ANEXO_X, 100),
                 TamanhoArquivo = string.Format(ConstantesTestes.TAMANHO_ARQUIVO_X_MB,100),
@@ -355,8 +356,9 @@ namespace SME.CDEP.TesteIntegracao
 
             var acervo = ObterTodos<Acervo>().LastOrDefault();
             acervo.Titulo.Equals(acervoDocumentalCadastroDto.Titulo).ShouldBeTrue();
-            acervo.Codigo.Equals($"{acervoDocumentalCadastroDto.Codigo}.AG").ShouldBeTrue();
-            acervo.TipoAcervoId.ShouldBe((int)TipoAcervo.ArtesGraficas);
+            acervo.Codigo.Equals(acervoDocumentalCadastroDto.Codigo).ShouldBeTrue();
+            acervo.CodigoNovo.Equals(acervoDocumentalCadastroDto.CodigoNovo).ShouldBeTrue();
+            acervo.TipoAcervoId.ShouldBe((int)TipoAcervo.DocumentacaoHistorica);
             acervo.CriadoLogin.ShouldNotBeEmpty();
             acervo.CriadoEm.Date.ShouldBe(DateTimeExtension.HorarioBrasilia().Date);
             acervo.CriadoPor.ShouldNotBeEmpty();
@@ -379,9 +381,9 @@ namespace SME.CDEP.TesteIntegracao
             acervoDocumental.TamanhoArquivo.ShouldBe(acervoDocumentalCadastroDto.TamanhoArquivo);
             acervoDocumental.Digitalizado.ShouldBe(acervoDocumentalCadastroDto.Digitalizado);
             
-            var acervoArteGraficaArquivos = ObterTodos<AcervoArteGraficaArquivo>();
-            var acervoArteGraficaArquivosInseridos = acervoArteGraficaArquivos.Where(w => w.AcervoArteGraficaId == acervoDocumental.Id);
-            acervoArteGraficaArquivosInseridos.Count().ShouldBe(arquivosSelecionados.Count());
+            var acervoDocumentalArquivos = ObterTodos<AcervoDocumentalArquivo>();
+            var acervoDocumentalArquivosInseridos = acervoDocumentalArquivos.Where(w => w.AcervoDocumentalId == acervoDocumental.Id);
+            acervoDocumentalArquivosInseridos.Count().ShouldBe(arquivosSelecionados.Count());
             
             var acervoCreditoAutor = ObterTodos<AcervoCreditoAutor>().Where(w=> w.AcervoId == acervoDocumental.AcervoId);
             acervoCreditoAutor.Count().ShouldBe(2);
@@ -391,12 +393,12 @@ namespace SME.CDEP.TesteIntegracao
             var acervoDocumentalAcessoDocumentos = ObterTodos<AcervoDocumentalAcessoDocumento>();
             var acervoDocumentalAcessoDocumentosInseridos = acervoDocumentalAcessoDocumentos.Where(w => w.AcervoDocumentalId == acervoDocumental.Id);
             acervoDocumentalAcessoDocumentosInseridos.Count().ShouldBe(acessoDocumentosSelecionados.Count());
-            acervoCreditoAutor.FirstOrDefault().CreditoAutorId.ShouldBe(1);
-            acervoCreditoAutor.LastOrDefault().CreditoAutorId.ShouldBe(5);
+            acervoDocumentalAcessoDocumentosInseridos.FirstOrDefault().AcessoDocumentoId.ShouldBe(1);
+            acervoDocumentalAcessoDocumentosInseridos.LastOrDefault().AcessoDocumentoId.ShouldBe(5);
         }
         
-        [Fact(DisplayName = "Acervo documental - Não deve inserir Tombo duplicado")]
-        public async Task Nao_deve_inserir_duplicado()
+        [Fact(DisplayName = "Acervo documental - Não deve inserir código duplicado")]
+        public async Task Nao_deve_inserir_codigo_duplicado()
         {
             await InserirDadosBasicos();
 
@@ -414,7 +416,7 @@ namespace SME.CDEP.TesteIntegracao
 
             var acervoDocumentalCadastroDto = new AcervoDocumentalCadastroDTO()
             {
-                Codigo = "100",
+                Codigo = "1",
                 CodigoNovo = "100.NOVO",
                 Titulo = string.Format(ConstantesTestes.TITULO_X, 100),
                 CreditosAutoresIds = new long[]{4,5},
@@ -428,7 +430,7 @@ namespace SME.CDEP.TesteIntegracao
                 MaterialId = random.Next(1,5),
                 IdiomaId = random.Next(1,5),
                 Ano = string.Format(ConstantesTestes.ANO_X, 100),
-                NumeroPagina = string.Format(ConstantesTestes.NUMERO_PAGINA_X, 100),
+                NumeroPagina = string.Format(ConstantesTestes.NUMERO_PAGINA_X, 99),
                 Volume = string.Format(ConstantesTestes.VOLUME_X, 100),
                 TipoAnexo = string.Format(ConstantesTestes.TIPO_ANEXO_X, 100),
                 TamanhoArquivo = string.Format(ConstantesTestes.TAMANHO_ARQUIVO_X_MB,100),
@@ -436,6 +438,142 @@ namespace SME.CDEP.TesteIntegracao
             };
             
             await servicoAcervoDocumental.Inserir(acervoDocumentalCadastroDto).ShouldThrowAsync<NegocioException>();
+           
+        }
+        
+        [Fact(DisplayName = "Acervo documental - Não deve inserir código novo a código existente")]
+        public async Task Nao_deve_inserir_codigo_novo_a_codigo_existente()
+        {
+            await InserirDadosBasicos();
+
+            await InserirAcervoDocumental();
+
+            var servicoAcervoDocumental = GetServicoAcervoDocumental();
+            
+            var random = new Random();
+
+            var arquivos = ObterTodos<Arquivo>();
+            var arquivosSelecionados = arquivos.Take(5).Select(s => s.Id).ToArray();
+            
+            var acessoDocumentos = ObterTodos<AcessoDocumento>();
+            var acessoDocumentosSelecionados = acessoDocumentos.Take(5).Select(s => s.Id).ToArray();
+
+            var acervoDocumentalCadastroDto = new AcervoDocumentalCadastroDTO()
+            {
+                Codigo = "1",
+                CodigoNovo = "1",
+                Titulo = string.Format(ConstantesTestes.TITULO_X, 100),
+                CreditosAutoresIds = new long[]{4,5},
+                Localizacao = string.Format(ConstantesTestes.LOCALIZACAO_X, 100),
+                ConservacaoId = random.Next(1, 5),
+                Largura = random.Next(15, 55),
+                Altura = random.Next(15, 55),
+                Descricao = string.Format(ConstantesTestes.DESCRICAO_X, 100),
+                Arquivos = arquivosSelecionados,
+                AcessoDocumentos = acessoDocumentosSelecionados,
+                MaterialId = random.Next(1,5),
+                IdiomaId = random.Next(1,5),
+                Ano = string.Format(ConstantesTestes.ANO_X, 100),
+                NumeroPagina = string.Format(ConstantesTestes.NUMERO_PAGINA_X, 99),
+                Volume = string.Format(ConstantesTestes.VOLUME_X, 100),
+                TipoAnexo = string.Format(ConstantesTestes.TIPO_ANEXO_X, 100),
+                TamanhoArquivo = string.Format(ConstantesTestes.TAMANHO_ARQUIVO_X_MB,100),
+                Digitalizado = true,
+            };
+            
+            await servicoAcervoDocumental.Inserir(acervoDocumentalCadastroDto).ShouldThrowAsync<NegocioException>();
+           
+        }
+        
+        [Fact(DisplayName = "Acervo documental - Não deve alterar para código existente")]
+        public async Task Nao_deve_alterar_para_codigo_existente()
+        {
+            await InserirDadosBasicos();
+
+            await InserirAcervoDocumental();
+
+            var servicoAcervoDocumental = GetServicoAcervoDocumental();
+            
+            var random = new Random();
+
+            var arquivos = ObterTodos<Arquivo>();
+            var arquivosSelecionados = arquivos.Take(5).Select(s => s.Id).ToArray();
+            
+            var acessoDocumentos = ObterTodos<AcessoDocumento>();
+            var acessoDocumentosSelecionados = acessoDocumentos.Take(5).Select(s => s.Id).ToArray();
+
+           var acervoDocumentalAlteracaoDto = new AcervoDocumentalAlteracaoDTO()
+            {
+                Id = 3,
+                AcervoId = 3,
+                Codigo = "1",
+                CodigoNovo = "100.NOVO",
+                Titulo = string.Format(ConstantesTestes.TITULO_X, 100),
+                CreditosAutoresIds = new long[]{1,5},
+                Localizacao = string.Format(ConstantesTestes.LOCALIZACAO_X, 100),
+                ConservacaoId = random.Next(1, 5),
+                Largura = random.Next(15, 55),
+                Altura = random.Next(15, 55),
+                Descricao = string.Format(ConstantesTestes.DESCRICAO_X, 100),
+                Arquivos = arquivosSelecionados,
+                AcessoDocumentos = acessoDocumentosSelecionados,
+                MaterialId = random.Next(1,5),
+                IdiomaId = random.Next(1,5),
+                Ano = string.Format(ConstantesTestes.ANO_X, 100),
+                NumeroPagina = string.Format(ConstantesTestes.NUMERO_PAGINA_X, 99),
+                Volume = string.Format(ConstantesTestes.VOLUME_X, 100),
+                TipoAnexo = string.Format(ConstantesTestes.TIPO_ANEXO_X, 100),
+                TamanhoArquivo = string.Format(ConstantesTestes.TAMANHO_ARQUIVO_X_MB,100),
+                Digitalizado = true,
+            };
+                
+            await servicoAcervoDocumental.Alterar(acervoDocumentalAlteracaoDto).ShouldThrowAsync<NegocioException>();
+           
+        }
+        
+        [Fact(DisplayName = "Acervo documental - Não deve alterar para código novo existente")]
+        public async Task Nao_deve_alterar_para_codigo_novo_existente()
+        {
+            await InserirDadosBasicos();
+
+            await InserirAcervoDocumental();
+
+            var servicoAcervoDocumental = GetServicoAcervoDocumental();
+            
+            var random = new Random();
+
+            var arquivos = ObterTodos<Arquivo>();
+            var arquivosSelecionados = arquivos.Take(5).Select(s => s.Id).ToArray();
+            
+            var acessoDocumentos = ObterTodos<AcessoDocumento>();
+            var acessoDocumentosSelecionados = acessoDocumentos.Take(5).Select(s => s.Id).ToArray();
+
+           var acervoDocumentalAlteracaoDto = new AcervoDocumentalAlteracaoDTO()
+            {
+                Id = 3,
+                AcervoId = 3,
+                Codigo = "100",
+                CodigoNovo = "1.NOVO",
+                Titulo = string.Format(ConstantesTestes.TITULO_X, 100),
+                CreditosAutoresIds = new long[]{1,5},
+                Localizacao = string.Format(ConstantesTestes.LOCALIZACAO_X, 100),
+                ConservacaoId = random.Next(1, 5),
+                Largura = random.Next(15, 55),
+                Altura = random.Next(15, 55),
+                Descricao = string.Format(ConstantesTestes.DESCRICAO_X, 100),
+                Arquivos = arquivosSelecionados,
+                AcessoDocumentos = acessoDocumentosSelecionados,
+                MaterialId = random.Next(1,5),
+                IdiomaId = random.Next(1,5),
+                Ano = string.Format(ConstantesTestes.ANO_X, 100),
+                NumeroPagina = string.Format(ConstantesTestes.NUMERO_PAGINA_X, 99),
+                Volume = string.Format(ConstantesTestes.VOLUME_X, 100),
+                TipoAnexo = string.Format(ConstantesTestes.TIPO_ANEXO_X, 100),
+                TamanhoArquivo = string.Format(ConstantesTestes.TAMANHO_ARQUIVO_X_MB,100),
+                Digitalizado = true,
+            };
+                
+            await servicoAcervoDocumental.Alterar(acervoDocumentalAlteracaoDto).ShouldThrowAsync<NegocioException>();
            
         }
 
@@ -506,10 +644,10 @@ namespace SME.CDEP.TesteIntegracao
                     CriadoLogin = ConstantesTestes.LOGIN_123456789,
                 });
                 
-                await InserirNaBase(new AcervoArteGraficaArquivo()
+                await InserirNaBase(new AcervoDocumentalArquivo()
                 {
                     ArquivoId = j,
-                    AcervoArteGraficaId = j
+                    AcervoDocumentalId = j
                 });
 
                 if (inserirAcessoDocumento)

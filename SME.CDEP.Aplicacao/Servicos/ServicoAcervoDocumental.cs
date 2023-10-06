@@ -102,7 +102,7 @@ namespace SME.CDEP.Aplicacao.Servicos
                 tran.Dispose();
             }
 
-            await MoverArquivosTemporarios(TipoArquivo.AcervoArteGrafica,arquivosCompletos);
+            await MoverArquivosTemporarios(TipoArquivo.AcervoDocumental,arquivosCompletos);
           
             return acervoDocumental.AcervoId;
         }
@@ -120,7 +120,7 @@ namespace SME.CDEP.Aplicacao.Servicos
             var acessosDocumentosIdsInserir =  Enumerable.Empty<long>();
             var acessosDocumentosIdsExcluir =  Enumerable.Empty<long>();
             
-            var acervoArteGrafica = mapper.Map<AcervoDocumental>(acervoDocumentalAlteracaoDto);
+            var acervoDocumental = mapper.Map<AcervoDocumental>(acervoDocumentalAlteracaoDto);
             
             var arquivosExistentes = (await repositorioAcervoDocumentalArquivo.ObterPorAcervoDocumentalId(acervoDocumentalAlteracaoDto.Id)).Select(s => s.ArquivoId).ToArray();
             (arquivosIdsInserir, arquivosIdsExcluir) = await ObterArquivosInseridosExcluidosMovidos(acervoDocumentalAlteracaoDto.Arquivos, arquivosExistentes);
@@ -137,18 +137,29 @@ namespace SME.CDEP.Aplicacao.Servicos
                     acervoDocumentalAlteracaoDto.CreditosAutoresIds,
                     acervoDocumentalAlteracaoDto.CodigoNovo);
                 
-                await repositorioAcervoDocumental.Atualizar(acervoArteGrafica);
+                await repositorioAcervoDocumental.Atualizar(acervoDocumental);
                 
                 foreach (var arquivo in arquivosIdsInserir)
                 {
                     await repositorioAcervoDocumentalArquivo.Inserir(new AcervoDocumentalArquivo()
                     {
                         ArquivoId = arquivo, 
-                        AcervoDocumentalId = acervoArteGrafica.Id 
+                        AcervoDocumentalId = acervoDocumental.Id 
+                    });
+                }
+                
+                foreach (var acessoDocumento in acessosDocumentosIdsInserir)
+                {
+                    await repositorioAcervoDocumentalAcessoDocumento.Inserir(new AcervoDocumentalAcessoDocumento()
+                    {
+                        AcessoDocumentoId = acessoDocumento, 
+                        AcervoDocumentalId= acervoDocumental.Id
                     });
                 }
 
-                await repositorioAcervoDocumentalArquivo.Excluir(arquivosIdsExcluir.ToArray(), acervoArteGrafica.Id);
+                await repositorioAcervoDocumentalArquivo.Excluir(arquivosIdsExcluir.ToArray(), acervoDocumental.Id);
+                
+                await repositorioAcervoDocumentalAcessoDocumento.Excluir(acessosDocumentosIdsExcluir.ToArray(), acervoDocumental.Id);
                 
                 tran.Commit();
             }
@@ -162,7 +173,7 @@ namespace SME.CDEP.Aplicacao.Servicos
                 tran.Dispose();
             }
 
-            await MoverArquivosTemporarios(TipoArquivo.AcervoArteGrafica);
+            await MoverArquivosTemporarios(TipoArquivo.AcervoDocumental);
 
             await ExcluirArquivosArmazenamento();
 

@@ -270,6 +270,10 @@ namespace SME.CDEP.TesteIntegracao
                 await InserirNaBase(new Cromia() { Nome = string.Format(ConstantesTestes.CROMIA_X,i)});
                 
                 await InserirNaBase(new Conservacao() { Nome = string.Format(ConstantesTestes.CONSERVACAO_X,i)});
+                
+                await InserirNaBase(new Idioma() { Nome = string.Format(ConstantesTestes.IDIOMA_X,i)});
+                await InserirNaBase(new Material() { Nome = string.Format(ConstantesTestes.MATERIAL_X,i)});
+                await InserirNaBase(new AcessoDocumento() { Nome = string.Format(ConstantesTestes.ACESSO_DOCUMENTO_X,i)});
             }
         }
     }

@@ -39,11 +39,11 @@ namespace SME.CDEP.Infra.Dados.Repositorios
                         where not a.excluido ";
 
             var retorno = await conexao.Obter().QueryAsync<AcervoDocumental, Acervo, CreditoAutor,  AcervoDocumental>(
-                query, (acervoArteGrafica, acervo, creditoAutor) =>
+                query, (acervoDocumental, acervo, creditoAutor) =>
                 {
                     acervo.CreditoAutor = creditoAutor;
-                    acervoArteGrafica.Acervo = acervo;
-                    return acervoArteGrafica;
+                    acervoDocumental.Acervo = acervo;
+                    return acervoDocumental;
                 });
             
             return retorno;
@@ -65,13 +65,14 @@ namespace SME.CDEP.Infra.Dados.Repositorios
                                   a.id as AcervoId,
                                   a.titulo,
                                   a.codigo,
+                                  a.codigo_novo CodigoNovo,                                  
                                   a.tipo as TipoAcervoId,
                                   a.criado_em as CriadoEm,
                                   a.criado_por as CriadoPor,
                                   a.criado_login as CriadoLogin,
                                   a.alterado_em as AlteradoEm,
                                   a.alterado_por as AlteradoPor,
-                                  a.alterado_login as AlteradoLogin,
+                                  a.alterado_login as AlteradoLogin,  
                                   ca.id as CreditoAutorId,
                                   ca.nome as CreditoAutorNome,
                                   arq.id as arquivoId,
@@ -82,18 +83,18 @@ namespace SME.CDEP.Infra.Dados.Repositorios
                                   m.id as materialId,
                                   m.nome as materialNome,
                                   c.id as conservacaoId,
-                                  c.nome as conservacaoId,
+                                  c.nome as conservacaoNome,
                                   adoc.id as acessoDocumentoId,
                                   adoc.nome as acessoDocumentoNome
                         from acervo_documental ad
                         join acervo a on a.id = ad.acervo_id 
                         join idioma i on i.id = ad.idioma_id 
-                        join acervo_documental_acesso_documento adad on adad.acesso_documento_id = ad.id
+                        join acervo_documental_acesso_documento adad on adad.acervo_documental_id = ad.id
                         join acesso_documento adoc on adoc.id = adad.acesso_documento_id
                         left join acervo_credito_autor aca on aca.acervo_id = a.id
                         left join credito_autor ca on aca.credito_autor_id = ca.id
-                        left join acervo_arte_grafica_arquivo aga on aga.acervo_arte_grafica_id = ad.id
-                        left join arquivo arq on arq.id = aga.arquivo_id 
+                        left join acervo_documental_arquivo ada on ada.acervo_documental_id = ad.id
+                        left join arquivo arq on arq.id = ada.arquivo_id 
                         left join material m on m.id = ad.material_id
                         left join conservacao c on c.id = ad.conservacao_id                         
                         where not a.excluido 
@@ -102,11 +103,11 @@ namespace SME.CDEP.Infra.Dados.Repositorios
             var retorno = (await conexao.Obter().QueryAsync<AcervoDocumentalCompleto>(query, new { id }));
             if (retorno.Any())
             {
-                var acervoArteGrafica = retorno.FirstOrDefault();
-                acervoArteGrafica.Arquivos = retorno.Where(w=> w.ArquivoId > 0).Select(s => new ArquivoResumido() { Id = s.ArquivoId.Value, Codigo = s.ArquivoCodigo, Nome = s.ArquivoNome }).DistinctBy(d=> d.Id).ToArray();
-                acervoArteGrafica.AcessoDocumentos = retorno.Select(s => new AcessoDocumentoResumido() { Id = s.AcessoDocumentoId, Nome = s.AcessoDocumentoNome }).DistinctBy(d=> d.Id).ToArray();
-                acervoArteGrafica.CreditosAutoresIds = acervoArteGrafica.CreditoAutorId > 0 ? retorno.Select(s => s.CreditoAutorId).Distinct().ToArray() : Array.Empty<long>();
-                return acervoArteGrafica;    
+                var acervoDocumental = retorno.FirstOrDefault();
+                acervoDocumental.Arquivos = retorno.Where(w=> w.ArquivoId > 0).Select(s => new ArquivoResumido() { Id = s.ArquivoId.Value, Codigo = s.ArquivoCodigo, Nome = s.ArquivoNome }).DistinctBy(d=> d.Id).ToArray();
+                acervoDocumental.AcessoDocumentos = retorno.Select(s => new AcessoDocumentoResumido() { Id = s.AcessoDocumentoId, Nome = s.AcessoDocumentoNome }).DistinctBy(d=> d.Id).ToArray();
+                acervoDocumental.CreditosAutoresIds = acervoDocumental.CreditoAutorId > 0 ? retorno.Select(s => s.CreditoAutorId).Distinct().ToArray() : Array.Empty<long>();
+                return acervoDocumental;    
             }
 
             return default;
