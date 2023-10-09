@@ -61,4 +61,4 @@ drop index if exists acervo_documental_arquivo_arquivo_idx;
 CREATE INDEX acervo_documental_arquivo_arquivo_idx ON public.acervo_documental_arquivo USING btree (arquivo_id);
 
 --> adicionando 'codigo_novo' no acervo
-ALTER TABLE acervo ADD COLUMN IF NOT EXISTS codigo_novo varchar(50) NULL; 
+ALTER TABLE acervo ADD COLUMN IF NOT EXISTS codigo_novo varchar(50) NULL default null; 

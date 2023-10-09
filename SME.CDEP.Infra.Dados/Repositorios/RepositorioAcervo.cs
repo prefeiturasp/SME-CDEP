@@ -12,8 +12,19 @@ namespace SME.CDEP.Infra.Dados.Repositorios
 
         public async Task<IEnumerable<Acervo>> PesquisarPorFiltro(int? tipoAcervo, string titulo, long? creditoAutorId, string codigo)
         {
-            var query = @"select a.id, a.tipo, a.titulo, a.codigo, a.criado_em, a.criado_por, a.criado_login, a.alterado_em, a.alterado_por, a.alterado_login, 
-                                 ca.id, ca.nome, ca.tipo 
+            var query = @"select a.id, 
+                                 a.tipo, 
+                                 a.titulo, 
+                                 case when a.codigo_novo is not null then concat(a.codigo,'/',a.codigo_novo) else a.codigo end codigo,
+                                 a.criado_em, 
+                                 a.criado_por, 
+                                 a.criado_login, 
+                                 a.alterado_em, 
+                                 a.alterado_por, 
+                                 a.alterado_login, 
+                                 ca.id, 
+                                 ca.nome, 
+                                 ca.tipo 
 							from acervo a
 							    left join acervo_credito_autor aca on aca.acervo_id = a.id
 						        left join credito_autor ca on aca.credito_autor_id = ca.id
@@ -23,7 +34,7 @@ namespace SME.CDEP.Infra.Dados.Repositorios
                 query += $"and lower(a.titulo) like lower('%{titulo}%') ";
 	
             if (!string.IsNullOrEmpty(codigo))
-                query += $"and lower(a.codigo) = lower('{codigo}') ";
+                query += $"and (lower(a.codigo) = lower('{codigo}') or lower(a.codigo_novo) = lower('{codigo}') )";
 	
             if (tipoAcervo > 0)
                 query += "and a.Tipo = @tipoAcervo ";
