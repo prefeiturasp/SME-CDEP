@@ -15,7 +15,11 @@ namespace SME.CDEP.Infra.Dados.Repositorios
             var query = @"select a.id, 
                                  a.tipo, 
                                  a.titulo, 
-                                 case when a.codigo_novo is not null then concat(a.codigo,'/',a.codigo_novo) else a.codigo end codigo,
+                                 case when length(a.codigo_novo) > 0 then 
+     	                                case when length(a.codigo) > 0 then concat(a.codigo,'/',a.codigo_novo) 
+     	                                else a.codigo_novo 
+     	                                end
+                                     else a.codigo end codigo,
                                  a.criado_em, 
                                  a.criado_por, 
                                  a.criado_login, 
