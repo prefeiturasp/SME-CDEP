@@ -59,13 +59,19 @@ namespace SME.CDEP.Aplicacao.Servicos
 
         private static void ValidarCodigoTomboCodigoNovo(Acervo acervo)
         {
-            if (string.IsNullOrEmpty(acervo.Codigo) && string.IsNullOrEmpty(acervo.CodigoNovo))
+            var codigoNaoPreenchido = string.IsNullOrEmpty(acervo.Codigo);
+            var codigoNovoNaoPreenchido = string.IsNullOrEmpty(acervo.CodigoNovo);
+            
+            if (codigoNaoPreenchido && codigoNovoNaoPreenchido)
                 throw new NegocioException(string.Format(MensagemNegocio.CAMPO_NAO_INFORMADO, "Código/Tombo/Código Novo"));
+            
+            if ((!codigoNaoPreenchido && !codigoNovoNaoPreenchido) && acervo.Codigo.Equals(acervo.CodigoNovo))
+                throw new NegocioException(string.Format(MensagemNegocio.REGISTRO_X_DUPLICADO, "Código"));
         }
 
         public async Task ValidarCodigoTomboCodigoNovoDuplicado(string codigo, long id, string nomeCampo = "codigo")
         {
-            if (await repositorioAcervo.ExisteCodigo(codigo, id))
+            if (codigo.EstaPreenchido() && await repositorioAcervo.ExisteCodigo(codigo, id))
                 throw new NegocioException(string.Format(MensagemNegocio.REGISTRO_X_DUPLICADO,nomeCampo));
         }
         

@@ -163,7 +163,7 @@ namespace SME.CDEP.Aplicacao.Servicos
 
         private void ValidarUsuarioExterno(Usuario usuario)
         {
-            if (usuario == null)
+            if (usuario.EhNulo())
                 throw new NegocioException(MensagemNegocio.LOGIN_NAO_ENCONTRADO);
 
             if (!usuario.EhCadastroExterno())

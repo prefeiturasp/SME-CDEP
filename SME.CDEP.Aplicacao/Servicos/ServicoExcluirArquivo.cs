@@ -21,7 +21,7 @@ namespace SME.CDEP.Aplicacao.Servicos
         public async Task<bool> Excluir(long[] ids)
         {
              var arquivos = await repositorioArquivo.ObterPorIds(ids);
-             if (arquivos == null)
+             if (arquivos.EhNulo())
                  throw new NegocioException(MensagemNegocio.ARQUIVO_INF0RMADO_NAO_ENCONTRADO);
             
              var arquivosIds = arquivos.Select(s => s.Id).ToArray();

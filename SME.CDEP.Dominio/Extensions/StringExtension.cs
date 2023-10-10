@@ -25,5 +25,15 @@ namespace SME.CDEP.Dominio.Excecoes
  
             return str[..^3];
         }
+
+        public static bool EstaPreenchido(this string str)
+        {
+            return !string.IsNullOrEmpty(str);
+        }
+        
+        public static bool NaoEstaPreenchido(this string str)
+        {
+            return string.IsNullOrEmpty(str);
+        }
     }
 }

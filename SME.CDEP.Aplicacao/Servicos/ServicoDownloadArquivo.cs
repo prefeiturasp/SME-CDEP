@@ -30,7 +30,7 @@ namespace SME.CDEP.Aplicacao.Servicos
 
             var arquivoFisico = Array.Empty<byte>();
 
-            if (!string.IsNullOrEmpty(enderecoArquivo))
+            if (enderecoArquivo.EstaPreenchido())
             {
                 var response = await new HttpClient().GetAsync(enderecoArquivo);
 

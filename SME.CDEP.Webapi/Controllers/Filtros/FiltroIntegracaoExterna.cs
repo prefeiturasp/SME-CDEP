@@ -1,5 +1,6 @@
 ﻿
 using Microsoft.OpenApi.Models;
+using SME.CDEP.Dominio.Excecoes;
 using SME.CDEP.Webapi.Middlewares;
 using Swashbuckle.AspNetCore.SwaggerGen;
 
@@ -14,7 +15,7 @@ namespace SME.CDEP.Webapi.Filtros
                                     .Union(context.MethodInfo.GetCustomAttributes(true))
                                     .OfType<ChaveIntegracaoCdepApi>();
 
-            if (attributes != null && attributes.Any())
+            if (attributes.NaoEhNulo() && attributes.Any())
             {
 
                 operation.Parameters.Add(new OpenApiParameter

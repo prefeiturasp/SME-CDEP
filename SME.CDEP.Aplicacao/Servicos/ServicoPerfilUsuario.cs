@@ -19,11 +19,11 @@ namespace SME.CDEP.Aplicacao.Servicos
         {
             var retorno = await servicoAcessos.ObterPerfisUsuario(login);
             
-            if (retorno.PerfilUsuario == null)
+            if (retorno.PerfilUsuario.EhNulo())
             {
                 await VincularPerfilExternoCoreSSO(login,new Guid(Constantes.PERFIL_EXTERNO_GUID));
                 retorno = await servicoAcessos.ObterPerfisUsuario(login);
-                if (retorno.PerfilUsuario == null)
+                if (retorno.PerfilUsuario.EhNulo())
                     throw new NegocioException(MensagemNegocio.NAO_FOI_POSSIVEL_VINCULAR_PERFIL_EXTERNO_CORESSO_USUARIO_SEM_PERFIL);
             }
             
