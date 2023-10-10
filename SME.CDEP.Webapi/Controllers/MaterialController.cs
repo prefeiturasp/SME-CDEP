@@ -38,9 +38,10 @@ public class MaterialController: BaseController
     [ProducesResponseType(typeof(RetornoBaseDTO), 601)]
     [ProducesResponseType(typeof(IdNomeTipoExcluidoDTO), 200)]  
     [Authorize("Bearer")]
-    public async Task<IActionResult> ObterTodos([FromServices]IServicoMaterial servicoMaterial)
+    public async Task<IActionResult> ObterTodos(TipoMaterial tipoMaterial, [FromServices]IServicoMaterial servicoMaterial)
     {
-        return Ok(await servicoMaterial.ObterTodos());
+        var materiais = await servicoMaterial.ObterTodos();
+        return Ok(tipoMaterial == TipoMaterial.NAO_DEFINIDO ? materiais : materiais.Where(w=> w.Tipo == (int)tipoMaterial));
     }
     
     [HttpGet("{id}")]
@@ -48,10 +49,9 @@ public class MaterialController: BaseController
     [ProducesResponseType(typeof(RetornoBaseDTO), 601)]
     [ProducesResponseType(typeof(IdNomeTipoExcluidoDTO), 200)]  
     [Authorize("Bearer")]
-    public async Task<IActionResult> ObterTodos(TipoMaterial tipoMaterial, [FromRoute] long id,[FromServices]IServicoMaterial servicoMaterial)
+    public async Task<IActionResult> ObterTodos([FromRoute] long id,[FromServices]IServicoMaterial servicoMaterial)
     {
-        var materiais = await servicoMaterial.ObterTodos();
-        return Ok(tipoMaterial == TipoMaterial.NAO_DEFINIDO ? materiais : materiais.Where(w=> w.Tipo == (int)tipoMaterial));
+        return Ok(await servicoMaterial.ObterPorId(id));
     }
     
     [HttpDelete("{id}")]
