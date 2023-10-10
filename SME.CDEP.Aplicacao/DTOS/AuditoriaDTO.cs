@@ -1,6 +1,7 @@
 ﻿using System.Runtime.CompilerServices;
 using SME.CDEP.Dominio;
 using SME.CDEP.Dominio.Entidades;
+using SME.CDEP.Dominio.Excecoes;
 using SME.CDEP.Infra.Dominio.Enumerados;
 
 namespace SME.CDEP.Aplicacao.DTOS;
@@ -15,7 +16,7 @@ public class AuditoriaDTO
     public string CriadoLogin { get; set; }
     
     public static explicit operator AuditoriaDTO(EntidadeBaseAuditavel entidade)
-        => entidade == null ? null :
+        => entidade.EhNulo() ? null :
             new AuditoriaDTO()
             {
                 CriadoEm = entidade.CriadoEm,

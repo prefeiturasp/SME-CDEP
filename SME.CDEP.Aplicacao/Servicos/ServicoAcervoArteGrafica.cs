@@ -157,7 +157,7 @@ namespace SME.CDEP.Aplicacao.Servicos
         public async Task<AcervoArteGraficaDTO> ObterPorId(long id)
         {
             var acervoArteGraficaSimples = await repositorioAcervoArteGrafica.ObterPorId(id);
-            if (acervoArteGraficaSimples != null)
+            if (acervoArteGraficaSimples.NaoEhNulo())
             {
                 acervoArteGraficaSimples.Codigo = acervoArteGraficaSimples.Codigo.RemoverSufixo();
                 var acervoArteGraficaDto = mapper.Map<AcervoArteGraficaDTO>(acervoArteGraficaSimples);
