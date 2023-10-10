@@ -2,7 +2,7 @@
 
 public enum TipoMaterial
 {
-    NA_DEFINIDO = 0,
+    NAO_DEFINIDO = 0,
     DOCUMENTAL = 1,
     BIBLIOGRAFICO = 2
 }
