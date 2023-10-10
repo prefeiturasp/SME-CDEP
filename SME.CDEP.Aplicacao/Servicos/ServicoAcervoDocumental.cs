@@ -57,7 +57,7 @@ namespace SME.CDEP.Aplicacao.Servicos
                 ? await ObterArquivosPorIds(acervoDocumentalCadastroDto.Arquivos) 
                 : Enumerable.Empty<Arquivo>();
             
-            var acessoDocumentosCompletos =  await repositorioAcessoDocumento.ObterPorIds(acervoDocumentalCadastroDto.AcessoDocumentos);
+            var acessoDocumentosCompletos =  await repositorioAcessoDocumento.ObterPorIds(acervoDocumentalCadastroDto.AcessoDocumentosIds);
             
             var acervo = mapper.Map<Acervo>(acervoDocumentalCadastroDto);
             acervo.TipoAcervoId = (int)TipoAcervo.DocumentacaoHistorica;
@@ -126,7 +126,7 @@ namespace SME.CDEP.Aplicacao.Servicos
             (arquivosIdsInserir, arquivosIdsExcluir) = await ObterArquivosInseridosExcluidosMovidos(acervoDocumentalAlteracaoDto.Arquivos, arquivosExistentes);
             
             var acessoDocumentosExistentes = (await repositorioAcervoDocumentalAcessoDocumento.ObterPorAcervoDocumentalId(acervoDocumentalAlteracaoDto.Id)).Select(s => s.AcessoDocumentoId).ToArray();
-            (acessosDocumentosIdsInserir, acessosDocumentosIdsExcluir) = await ObterAcessoDocumentosInseridosExcluidos(acervoDocumentalAlteracaoDto.AcessoDocumentos, acessoDocumentosExistentes);
+            (acessosDocumentosIdsInserir, acessosDocumentosIdsExcluir) = await ObterAcessoDocumentosInseridosExcluidos(acervoDocumentalAlteracaoDto.AcessoDocumentosIds, acessoDocumentosExistentes);
             
             var tran = transacao.Iniciar();
             try

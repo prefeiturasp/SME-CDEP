@@ -23,10 +23,10 @@ public class AcervoDocumentalDTO
     public double? Altura { get; set; }
     public string? TamanhoArquivo { get; set; }
     public string? Localizacao { get; set; }
-    public bool Digitalizado { get; set; }
+    public bool CopiaDigital { get; set; }
     public long? ConservacaoId { get; set; }
     public ArquivoResumidoDTO[]? Arquivos { get; set; }
-    public AcessoDocumentoResumido[] AcessoDocumentos { get; set; }
+    public long[] AcessoDocumentosIds { get; set; }
     public AuditoriaDTO Auditoria { get; set; }
     public long[] CreditosAutoresIds { get; set; }
 }

@@ -35,11 +35,11 @@ public class AcervoDocumentalCadastroDTO : AcervoCadastroDTO
     [MaxLength(100, ErrorMessage = "A localização do acervo documental não pode conter mais que 100 caracteres")]
     public string? Localizacao { get; set; }
     
-    public bool Digitalizado { get; set; }
+    public bool CopiaDigital { get; set; }
     
     public long? ConservacaoId { get; set; }
     
     public long[]? Arquivos { get; set; }
     
-    public long[] AcessoDocumentos { get; set; }
+    public long[] AcessoDocumentosIds { get; set; }
 }

@@ -12,7 +12,7 @@ CREATE TABLE if not exists public.acervo_documental (
 	altura float NULL,
 	tamanho_arquivo varchar(15) NULL,
 	localizacao varchar(100) NULL,
-	digitalizado bool NOT NULL DEFAULT false,
+	copia_digital bool NOT NULL DEFAULT false,
 	conservacao_id int8 null,	
 	descricao text NOT NULL,
 	CONSTRAINT acervo_documental_pk PRIMARY KEY (id),

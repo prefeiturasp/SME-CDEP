@@ -25,7 +25,7 @@ namespace SME.CDEP.TesteIntegracao
             acervoDocumentalDto.ShouldNotBeNull();
             acervoDocumentalDto.CreditosAutoresIds.Any().ShouldBeTrue();
             acervoDocumentalDto.Arquivos.Any().ShouldBeTrue();
-            acervoDocumentalDto.AcessoDocumentos.Any().ShouldBeTrue();
+            acervoDocumentalDto.AcessoDocumentosIds.Any().ShouldBeTrue();
         }
         
         [Fact(DisplayName = "Acervo documental - Obter por Id sem credor")]
@@ -39,7 +39,7 @@ namespace SME.CDEP.TesteIntegracao
             acervo.ShouldNotBeNull();
             acervo.CreditosAutoresIds.Any().ShouldBeFalse();
             acervo.Arquivos.Any().ShouldBeTrue();
-            acervo.AcessoDocumentos.Any().ShouldBeTrue();
+            acervo.AcessoDocumentosIds.Any().ShouldBeTrue();
         }
         
         [Fact(DisplayName = "Acervo documental - Obter todos")]
@@ -86,7 +86,7 @@ namespace SME.CDEP.TesteIntegracao
                 Altura = random.Next(15, 55),
                 Descricao = string.Format(ConstantesTestes.DESCRICAO_X, 100),
                 Arquivos = arquivosSelecionados,
-                AcessoDocumentos = acessoDocumentosSelecionados,
+                AcessoDocumentosIds = acessoDocumentosSelecionados,
                 MaterialId = random.Next(1,5),
                 IdiomaId = random.Next(1,5),
                 Ano = string.Format(ConstantesTestes.ANO_X, 100),
@@ -94,7 +94,7 @@ namespace SME.CDEP.TesteIntegracao
                 Volume = string.Format(ConstantesTestes.VOLUME_X, 100),
                 TipoAnexo = string.Format(ConstantesTestes.TIPO_ANEXO_X, 100),
                 TamanhoArquivo = string.Format(ConstantesTestes.TAMANHO_ARQUIVO_X_MB,100),
-                Digitalizado = true,
+                CopiaDigital = true,
             };
             
             await servicoAcervoDocumental.Alterar(acervoDocumentalAlteracaoDto);
@@ -124,7 +124,7 @@ namespace SME.CDEP.TesteIntegracao
             acervoDocumental.Volume.ShouldBe(acervoDocumentalAlteracaoDto.Volume);
             acervoDocumental.TipoAnexo.ShouldBe(acervoDocumentalAlteracaoDto.TipoAnexo);
             acervoDocumental.TamanhoArquivo.ShouldBe(acervoDocumentalAlteracaoDto.TamanhoArquivo);
-            acervoDocumental.Digitalizado.ShouldBe(acervoDocumentalAlteracaoDto.Digitalizado);
+            acervoDocumental.CopiaDigital.ShouldBe(acervoDocumentalAlteracaoDto.CopiaDigital);
             
             var acervoDocumentalArquivos = ObterTodos<AcervoDocumentalArquivo>();
             var acervoDocumentalArquivosInseridos = acervoDocumentalArquivos.Where(w => w.AcervoDocumentalId == acervoDocumental.Id);
@@ -173,7 +173,7 @@ namespace SME.CDEP.TesteIntegracao
                 Altura = random.Next(15, 55),
                 Descricao = string.Format(ConstantesTestes.DESCRICAO_X, 100),
                 Arquivos = arquivosSelecionados,
-                AcessoDocumentos = acessoDocumentosSelecionados,
+                AcessoDocumentosIds = acessoDocumentosSelecionados,
                 MaterialId = random.Next(1,5),
                 IdiomaId = random.Next(1,5),
                 Ano = string.Format(ConstantesTestes.ANO_X, 100),
@@ -181,7 +181,7 @@ namespace SME.CDEP.TesteIntegracao
                 Volume = string.Format(ConstantesTestes.VOLUME_X, 100),
                 TipoAnexo = string.Format(ConstantesTestes.TIPO_ANEXO_X, 100),
                 TamanhoArquivo = string.Format(ConstantesTestes.TAMANHO_ARQUIVO_X_MB,100),
-                Digitalizado = true,
+                CopiaDigital = true,
             };
                 
             await servicoAcervoDocumental.Alterar(acervoDocumentalAlteracaoDto);
@@ -211,7 +211,7 @@ namespace SME.CDEP.TesteIntegracao
             acervoDocumental.Volume.ShouldBe(acervoDocumentalAlteracaoDto.Volume);
             acervoDocumental.TipoAnexo.ShouldBe(acervoDocumentalAlteracaoDto.TipoAnexo);
             acervoDocumental.TamanhoArquivo.ShouldBe(acervoDocumentalAlteracaoDto.TamanhoArquivo);
-            acervoDocumental.Digitalizado.ShouldBe(acervoDocumentalAlteracaoDto.Digitalizado);
+            acervoDocumental.CopiaDigital.ShouldBe(acervoDocumentalAlteracaoDto.CopiaDigital);
             
             var acervoDocumentalArquivos = ObterTodos<AcervoDocumentalArquivo>();
             var acervoDocumentalArquivosInseridos = acervoDocumentalArquivos.Where(w => w.AcervoDocumentalId == acervoDocumental.Id);
@@ -257,7 +257,7 @@ namespace SME.CDEP.TesteIntegracao
                 Altura = random.Next(15, 55),
                 Descricao = string.Format(ConstantesTestes.DESCRICAO_X, 100),
                 Arquivos = arquivosSelecionados,
-                AcessoDocumentos = acessoDocumentosSelecionados,
+                AcessoDocumentosIds = acessoDocumentosSelecionados,
                 MaterialId = random.Next(1,5),
                 IdiomaId = random.Next(1,5),
                 Ano = string.Format(ConstantesTestes.ANO_X, 100),
@@ -265,7 +265,7 @@ namespace SME.CDEP.TesteIntegracao
                 Volume = string.Format(ConstantesTestes.VOLUME_X, 100),
                 TipoAnexo = string.Format(ConstantesTestes.TIPO_ANEXO_X, 100),
                 TamanhoArquivo = string.Format(ConstantesTestes.TAMANHO_ARQUIVO_X_MB,100),
-                Digitalizado = true,
+                CopiaDigital = true,
             };
                 
             await servicoAcervoDocumental.Alterar(acervoDocumentalAlteracaoDto);
@@ -295,7 +295,7 @@ namespace SME.CDEP.TesteIntegracao
             acervoDocumental.Volume.ShouldBe(acervoDocumentalAlteracaoDto.Volume);
             acervoDocumental.TipoAnexo.ShouldBe(acervoDocumentalAlteracaoDto.TipoAnexo);
             acervoDocumental.TamanhoArquivo.ShouldBe(acervoDocumentalAlteracaoDto.TamanhoArquivo);
-            acervoDocumental.Digitalizado.ShouldBe(acervoDocumentalAlteracaoDto.Digitalizado);
+            acervoDocumental.CopiaDigital.ShouldBe(acervoDocumentalAlteracaoDto.CopiaDigital);
             
             var acervoDocumentalArquivos = ObterTodos<AcervoDocumentalArquivo>();
             var acervoDocumentalArquivosInseridos = acervoDocumentalArquivos.Where(w => w.AcervoDocumentalId == acervoDocumental.Id);
@@ -340,7 +340,7 @@ namespace SME.CDEP.TesteIntegracao
                 Altura = random.Next(15, 55),
                 Descricao = string.Format(ConstantesTestes.DESCRICAO_X, 100),
                 Arquivos = arquivosSelecionados,
-                AcessoDocumentos = acessoDocumentosSelecionados,
+                AcessoDocumentosIds = acessoDocumentosSelecionados,
                 MaterialId = random.Next(1,5),
                 IdiomaId = random.Next(1,5),
                 Ano = string.Format(ConstantesTestes.ANO_X, 100),
@@ -348,7 +348,7 @@ namespace SME.CDEP.TesteIntegracao
                 Volume = string.Format(ConstantesTestes.VOLUME_X, 100),
                 TipoAnexo = string.Format(ConstantesTestes.TIPO_ANEXO_X, 100),
                 TamanhoArquivo = string.Format(ConstantesTestes.TAMANHO_ARQUIVO_X_MB,100),
-                Digitalizado = true,
+                CopiaDigital = true,
             };
             
             var acervoDocumentalInserido = await servicoAcervodocumental.Inserir(acervoDocumentalCadastroDto);
@@ -379,7 +379,7 @@ namespace SME.CDEP.TesteIntegracao
             acervoDocumental.Volume.ShouldBe(acervoDocumentalCadastroDto.Volume);
             acervoDocumental.TipoAnexo.ShouldBe(acervoDocumentalCadastroDto.TipoAnexo);
             acervoDocumental.TamanhoArquivo.ShouldBe(acervoDocumentalCadastroDto.TamanhoArquivo);
-            acervoDocumental.Digitalizado.ShouldBe(acervoDocumentalCadastroDto.Digitalizado);
+            acervoDocumental.CopiaDigital.ShouldBe(acervoDocumentalCadastroDto.CopiaDigital);
             
             var acervoDocumentalArquivos = ObterTodos<AcervoDocumentalArquivo>();
             var acervoDocumentalArquivosInseridos = acervoDocumentalArquivos.Where(w => w.AcervoDocumentalId == acervoDocumental.Id);
@@ -426,7 +426,7 @@ namespace SME.CDEP.TesteIntegracao
                 Altura = random.Next(15, 55),
                 Descricao = string.Format(ConstantesTestes.DESCRICAO_X, 100),
                 Arquivos = arquivosSelecionados,
-                AcessoDocumentos = acessoDocumentosSelecionados,
+                AcessoDocumentosIds = acessoDocumentosSelecionados,
                 MaterialId = random.Next(1,5),
                 IdiomaId = random.Next(1,5),
                 Ano = string.Format(ConstantesTestes.ANO_X, 100),
@@ -434,7 +434,7 @@ namespace SME.CDEP.TesteIntegracao
                 Volume = string.Format(ConstantesTestes.VOLUME_X, 100),
                 TipoAnexo = string.Format(ConstantesTestes.TIPO_ANEXO_X, 100),
                 TamanhoArquivo = string.Format(ConstantesTestes.TAMANHO_ARQUIVO_X_MB,100),
-                Digitalizado = true,
+                CopiaDigital = true,
             };
             
             await servicoAcervoDocumental.Inserir(acervoDocumentalCadastroDto).ShouldThrowAsync<NegocioException>();
@@ -468,7 +468,7 @@ namespace SME.CDEP.TesteIntegracao
                 Altura = random.Next(15, 55),
                 Descricao = string.Format(ConstantesTestes.DESCRICAO_X, 100),
                 Arquivos = arquivosSelecionados,
-                AcessoDocumentos = acessoDocumentosSelecionados,
+                AcessoDocumentosIds = acessoDocumentosSelecionados,
                 MaterialId = random.Next(1,5),
                 IdiomaId = random.Next(1,5),
                 Ano = string.Format(ConstantesTestes.ANO_X, 100),
@@ -476,7 +476,7 @@ namespace SME.CDEP.TesteIntegracao
                 Volume = string.Format(ConstantesTestes.VOLUME_X, 100),
                 TipoAnexo = string.Format(ConstantesTestes.TIPO_ANEXO_X, 100),
                 TamanhoArquivo = string.Format(ConstantesTestes.TAMANHO_ARQUIVO_X_MB,100),
-                Digitalizado = true,
+                CopiaDigital = true,
             };
             
             await servicoAcervoDocumental.Inserir(acervoDocumentalCadastroDto).ShouldThrowAsync<NegocioException>();
@@ -510,7 +510,7 @@ namespace SME.CDEP.TesteIntegracao
                 Altura = random.Next(15, 55),
                 Descricao = string.Format(ConstantesTestes.DESCRICAO_X, 100),
                 Arquivos = arquivosSelecionados,
-                AcessoDocumentos = acessoDocumentosSelecionados,
+                AcessoDocumentosIds = acessoDocumentosSelecionados,
                 MaterialId = random.Next(1,5),
                 IdiomaId = random.Next(1,5),
                 Ano = string.Format(ConstantesTestes.ANO_X, 100),
@@ -518,7 +518,7 @@ namespace SME.CDEP.TesteIntegracao
                 Volume = string.Format(ConstantesTestes.VOLUME_X, 100),
                 TipoAnexo = string.Format(ConstantesTestes.TIPO_ANEXO_X, 100),
                 TamanhoArquivo = string.Format(ConstantesTestes.TAMANHO_ARQUIVO_X_MB,100),
-                Digitalizado = true,
+                CopiaDigital = true,
             };
             
             await servicoAcervoDocumental.Inserir(acervoDocumentalCadastroDto).ShouldThrowAsync<NegocioException>();
@@ -554,7 +554,7 @@ namespace SME.CDEP.TesteIntegracao
                 Altura = random.Next(15, 55),
                 Descricao = string.Format(ConstantesTestes.DESCRICAO_X, 100),
                 Arquivos = arquivosSelecionados,
-                AcessoDocumentos = acessoDocumentosSelecionados,
+                AcessoDocumentosIds = acessoDocumentosSelecionados,
                 MaterialId = random.Next(1,5),
                 IdiomaId = random.Next(1,5),
                 Ano = string.Format(ConstantesTestes.ANO_X, 100),
@@ -562,7 +562,7 @@ namespace SME.CDEP.TesteIntegracao
                 Volume = string.Format(ConstantesTestes.VOLUME_X, 100),
                 TipoAnexo = string.Format(ConstantesTestes.TIPO_ANEXO_X, 100),
                 TamanhoArquivo = string.Format(ConstantesTestes.TAMANHO_ARQUIVO_X_MB,100),
-                Digitalizado = true,
+                CopiaDigital = true,
             };
             
             await servicoAcervoDocumental.Inserir(acervoDocumentalCadastroDto).ShouldThrowAsync<NegocioException>();
@@ -600,7 +600,7 @@ namespace SME.CDEP.TesteIntegracao
                 Altura = random.Next(15, 55),
                 Descricao = string.Format(ConstantesTestes.DESCRICAO_X, 100),
                 Arquivos = arquivosSelecionados,
-                AcessoDocumentos = acessoDocumentosSelecionados,
+                AcessoDocumentosIds = acessoDocumentosSelecionados,
                 MaterialId = random.Next(1,5),
                 IdiomaId = random.Next(1,5),
                 Ano = string.Format(ConstantesTestes.ANO_X, 100),
@@ -608,7 +608,7 @@ namespace SME.CDEP.TesteIntegracao
                 Volume = string.Format(ConstantesTestes.VOLUME_X, 100),
                 TipoAnexo = string.Format(ConstantesTestes.TIPO_ANEXO_X, 100),
                 TamanhoArquivo = string.Format(ConstantesTestes.TAMANHO_ARQUIVO_X_MB,100),
-                Digitalizado = true,
+                CopiaDigital = true,
             };
                 
             await servicoAcervoDocumental.Alterar(acervoDocumentalAlteracaoDto).ShouldThrowAsync<NegocioException>();
@@ -646,7 +646,7 @@ namespace SME.CDEP.TesteIntegracao
                 Altura = random.Next(15, 55),
                 Descricao = string.Format(ConstantesTestes.DESCRICAO_X, 100),
                 Arquivos = arquivosSelecionados,
-                AcessoDocumentos = acessoDocumentosSelecionados,
+                AcessoDocumentosIds = acessoDocumentosSelecionados,
                 MaterialId = random.Next(1,5),
                 IdiomaId = random.Next(1,5),
                 Ano = string.Format(ConstantesTestes.ANO_X, 100),
@@ -654,7 +654,7 @@ namespace SME.CDEP.TesteIntegracao
                 Volume = string.Format(ConstantesTestes.VOLUME_X, 100),
                 TipoAnexo = string.Format(ConstantesTestes.TIPO_ANEXO_X, 100),
                 TamanhoArquivo = string.Format(ConstantesTestes.TAMANHO_ARQUIVO_X_MB,100),
-                Digitalizado = true,
+                CopiaDigital = true,
             };
                 
             await servicoAcervoDocumental.Alterar(acervoDocumentalAlteracaoDto).ShouldThrowAsync<NegocioException>();
@@ -690,7 +690,7 @@ namespace SME.CDEP.TesteIntegracao
                 Altura = random.Next(15, 55),
                 Descricao = string.Format(ConstantesTestes.DESCRICAO_X, 100),
                 Arquivos = arquivosSelecionados,
-                AcessoDocumentos = acessoDocumentosSelecionados,
+                AcessoDocumentosIds = acessoDocumentosSelecionados,
                 MaterialId = random.Next(1,5),
                 IdiomaId = random.Next(1,5),
                 Ano = string.Format(ConstantesTestes.ANO_X, 100),
@@ -698,7 +698,7 @@ namespace SME.CDEP.TesteIntegracao
                 Volume = string.Format(ConstantesTestes.VOLUME_X, 100),
                 TipoAnexo = string.Format(ConstantesTestes.TIPO_ANEXO_X, 100),
                 TamanhoArquivo = string.Format(ConstantesTestes.TAMANHO_ARQUIVO_X_MB,100),
-                Digitalizado = true,
+                CopiaDigital = true,
             };
                 
             await servicoAcervoDocumental.Alterar(acervoDocumentalAlteracaoDto).ShouldThrowAsync<NegocioException>();
@@ -734,7 +734,7 @@ namespace SME.CDEP.TesteIntegracao
                 Altura = random.Next(15, 55),
                 Descricao = string.Format(ConstantesTestes.DESCRICAO_X, 100),
                 Arquivos = arquivosSelecionados,
-                AcessoDocumentos = acessoDocumentosSelecionados,
+                AcessoDocumentosIds = acessoDocumentosSelecionados,
                 MaterialId = random.Next(1,5),
                 IdiomaId = random.Next(1,5),
                 Ano = string.Format(ConstantesTestes.ANO_X, 100),
@@ -742,7 +742,7 @@ namespace SME.CDEP.TesteIntegracao
                 Volume = string.Format(ConstantesTestes.VOLUME_X, 100),
                 TipoAnexo = string.Format(ConstantesTestes.TIPO_ANEXO_X, 100),
                 TamanhoArquivo = string.Format(ConstantesTestes.TAMANHO_ARQUIVO_X_MB,100),
-                Digitalizado = true,
+                CopiaDigital = true,
             };
                 
             await servicoAcervoDocumental.Alterar(acervoDocumentalAlteracaoDto).ShouldThrowAsync<NegocioException>();
@@ -800,7 +800,7 @@ namespace SME.CDEP.TesteIntegracao
                     Altura = random.Next(15,55),
                     TamanhoArquivo = string.Format(ConstantesTestes.TAMANHO_ARQUIVO_X_MB,j),
                     Localizacao = string.Format(ConstantesTestes.LOCALIZACAO_X, j),
-                    Digitalizado = true,
+                    CopiaDigital = true,
                     ConservacaoId = random.Next(1,5),
                     Descricao = string.Format(ConstantesTestes.DESCRICAO_X,j)
                 });
