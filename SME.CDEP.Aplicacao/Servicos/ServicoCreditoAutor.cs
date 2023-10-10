@@ -82,7 +82,7 @@ namespace SME.CDEP.Aplicacao.Servicos
         private void ValidarNome(IdNomeExcluidoAuditavelDTO idNomeExcluidoAuditavelDTO)
         {
             if (idNomeExcluidoAuditavelDTO.Nome is null || idNomeExcluidoAuditavelDTO.Nome.Trim().Length == 0)
-                throw new NegocioException(MensagemNegocio.NOME_NAO_INFORMADO);
+                throw new NegocioException(string.Format(MensagemNegocio.CAMPO_NAO_INFORMADO,"Nome"));
         }
     }
 }

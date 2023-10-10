@@ -30,6 +30,8 @@ namespace SME.CDEP.Aplicacao.Servicos
         
         public async Task<long> Inserir(Acervo acervo)
         {
+            ValidarCodigoTomboCodigoNovo(acervo);
+            
             await ValidarTituloDuplicado(acervo.Titulo, acervo.Id);
             
             await ValidarCodigoTomboCodigoNovoDuplicado(acervo.Codigo, acervo.Id);
@@ -54,7 +56,13 @@ namespace SME.CDEP.Aplicacao.Servicos
 
             return acervoId;
         }
-        
+
+        private static void ValidarCodigoTomboCodigoNovo(Acervo acervo)
+        {
+            if (string.IsNullOrEmpty(acervo.Codigo) && string.IsNullOrEmpty(acervo.CodigoNovo))
+                throw new NegocioException(string.Format(MensagemNegocio.CAMPO_NAO_INFORMADO, "Código/Tombo/Código Novo"));
+        }
+
         public async Task ValidarCodigoTomboCodigoNovoDuplicado(string codigo, long id, string nomeCampo = "codigo")
         {
             if (await repositorioAcervo.ExisteCodigo(codigo, id))
@@ -74,6 +82,8 @@ namespace SME.CDEP.Aplicacao.Servicos
 
         public async Task<AcervoDTO> Alterar(Acervo acervo)
         {
+            ValidarCodigoTomboCodigoNovo(acervo);
+            
             await ValidarTituloDuplicado(acervo.Titulo, acervo.Id);
             
             await ValidarCodigoTomboCodigoNovoDuplicado(acervo.Codigo, acervo.Id);
