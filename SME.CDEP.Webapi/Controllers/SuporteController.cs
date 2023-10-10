@@ -41,7 +41,7 @@ public class SuporteController: BaseController
     public async Task<IActionResult> ObterTodos(TipoSuporte tipoSuporte, [FromServices]IServicoSuporte servicoSuporte)
     {
         var suportes = await servicoSuporte.ObterTodos();
-        return Ok(tipoSuporte == TipoSuporte.NA_DEFINIDO ? suportes : suportes.Where(w=> w.Tipo == (int)tipoSuporte));
+        return Ok(tipoSuporte == TipoSuporte.NAO_DEFINIDO ? suportes : suportes.Where(w=> w.Tipo == (int)tipoSuporte));
 
     }
     

@@ -7,5 +7,6 @@
         public string Codigo { get; set; }
         public CreditoAutor? CreditoAutor { get; set; }
         public long[]? CreditosAutoresIds { get; set; }
+        public string CodigoNovo { get; set; }
     }
 }

@@ -2,6 +2,7 @@
 
 public class MensagemNegocio
 {
+    public const string SOMENTE_ACERVO_DOCUMENTAL_POSSUI_CODIGO_NOVO = "Somente acervo documental possui código novo";
     public const string ESSE_ACERVO_NAO_POSSUI_CREDITO_OU_AUTOR = "Esse acervo não possui crédito ou autor";
     public const string CREDITO_OU_AUTORES_SAO_OBRIGATORIOS = "O crédito/autor deve ser informado para esse tipo de acervo";
     public const string IMAGEM_NAO_ENCONTRADO = "A imagem não foi encontrada";
@@ -9,7 +10,7 @@ public class MensagemNegocio
     public const string NAO_FOI_POSSIVEL_VINCULAR_PERFIL_EXTERNO_CORESSO_USUARIO_SEM_PERFIL = "Não foi possível vincular perfil Externo no CoreSSO - Usuário sem perfil";
     public const string REGISTRO_X_DUPLICADO = "Registro '{0}' duplicado";
     public const string REGISTRO_DUPLICADO = "Registro duplicado";
-    public const string NOME_NAO_INFORMADO = "Nome não informado";
+    public const string CAMPO_NAO_INFORMADO = "{0} não informado";
     public const string SO_EH_PERMITIDO_ALTERAR_ENDERECO_TELEFONE_DE_USUARIOS_EXTERNOS = "Só é permitido alterar endereço/telefone de usuários externos";
     public const string LOGIN_NAO_ENCONTRADO = "Login não encontrado";
     public const string LOGIN_OU_SENHA_ATUAL_NAO_COMFEREM = "Login ou senha atual não conferem";

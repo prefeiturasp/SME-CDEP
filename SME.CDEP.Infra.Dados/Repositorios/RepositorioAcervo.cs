@@ -12,8 +12,23 @@ namespace SME.CDEP.Infra.Dados.Repositorios
 
         public async Task<IEnumerable<Acervo>> PesquisarPorFiltro(int? tipoAcervo, string titulo, long? creditoAutorId, string codigo)
         {
-            var query = @"select a.id, a.tipo, a.titulo, a.codigo, a.criado_em, a.criado_por, a.criado_login, a.alterado_em, a.alterado_por, a.alterado_login, 
-                                 ca.id, ca.nome, ca.tipo 
+            var query = @"select a.id, 
+                                 a.tipo, 
+                                 a.titulo, 
+                                 case when length(a.codigo_novo) > 0 then 
+     	                                case when length(a.codigo) > 0 then concat(a.codigo,'/',a.codigo_novo) 
+     	                                else a.codigo_novo 
+     	                                end
+                                     else a.codigo end codigo,
+                                 a.criado_em, 
+                                 a.criado_por, 
+                                 a.criado_login, 
+                                 a.alterado_em, 
+                                 a.alterado_por, 
+                                 a.alterado_login, 
+                                 ca.id, 
+                                 ca.nome, 
+                                 ca.tipo 
 							from acervo a
 							    left join acervo_credito_autor aca on aca.acervo_id = a.id
 						        left join credito_autor ca on aca.credito_autor_id = ca.id
@@ -23,7 +38,7 @@ namespace SME.CDEP.Infra.Dados.Repositorios
                 query += $"and lower(a.titulo) like lower('%{titulo}%') ";
 	
             if (!string.IsNullOrEmpty(codigo))
-                query += $"and lower(a.codigo) = lower('{codigo}') ";
+                query += $"and (lower(a.codigo) = lower('{codigo}') or lower(a.codigo_novo) = lower('{codigo}') )";
 	
             if (tipoAcervo > 0)
                 query += "and a.Tipo = @tipoAcervo ";
@@ -40,7 +55,7 @@ namespace SME.CDEP.Infra.Dados.Repositorios
         
         public Task<bool> ExisteCodigo(string codigo, long id)
         {
-            return conexao.Obter().QueryFirstOrDefaultAsync<bool>("select 1 from acervo where lower(codigo) = @codigo and not excluido and id != @id",new { id, codigo = codigo.ToLower() });
+            return conexao.Obter().QueryFirstOrDefaultAsync<bool>("select 1 from acervo where (lower(codigo) = @codigo or lower(codigo_novo) = @codigo) and not excluido and id != @id",new { id, codigo = codigo.ToLower() });
         }
         
         public Task<bool> ExisteTitulo(string titulo, long id)
