@@ -441,6 +441,90 @@ namespace SME.CDEP.TesteIntegracao
            
         }
         
+        [Fact(DisplayName = "Acervo documental - Não deve inserir sem código")]
+        public async Task Nao_deve_inserir_sem_codigo()
+        {
+            await InserirDadosBasicos();
+
+            await InserirAcervoDocumental();
+
+            var servicoAcervoDocumental = GetServicoAcervoDocumental();
+            
+            var random = new Random();
+
+            var arquivos = ObterTodos<Arquivo>();
+            var arquivosSelecionados = arquivos.Take(5).Select(s => s.Id).ToArray();
+            
+            var acessoDocumentos = ObterTodos<AcessoDocumento>();
+            var acessoDocumentosSelecionados = acessoDocumentos.Take(5).Select(s => s.Id).ToArray();
+
+            var acervoDocumentalCadastroDto = new AcervoDocumentalCadastroDTO()
+            {
+                Titulo = string.Format(ConstantesTestes.TITULO_X, 100),
+                CreditosAutoresIds = new long[]{4,5},
+                Localizacao = string.Format(ConstantesTestes.LOCALIZACAO_X, 100),
+                ConservacaoId = random.Next(1, 5),
+                Largura = random.Next(15, 55),
+                Altura = random.Next(15, 55),
+                Descricao = string.Format(ConstantesTestes.DESCRICAO_X, 100),
+                Arquivos = arquivosSelecionados,
+                AcessoDocumentos = acessoDocumentosSelecionados,
+                MaterialId = random.Next(1,5),
+                IdiomaId = random.Next(1,5),
+                Ano = string.Format(ConstantesTestes.ANO_X, 100),
+                NumeroPagina = string.Format(ConstantesTestes.NUMERO_PAGINA_X, 99),
+                Volume = string.Format(ConstantesTestes.VOLUME_X, 100),
+                TipoAnexo = string.Format(ConstantesTestes.TIPO_ANEXO_X, 100),
+                TamanhoArquivo = string.Format(ConstantesTestes.TAMANHO_ARQUIVO_X_MB,100),
+                Digitalizado = true,
+            };
+            
+            await servicoAcervoDocumental.Inserir(acervoDocumentalCadastroDto).ShouldThrowAsync<NegocioException>();
+           
+        }
+        
+        [Fact(DisplayName = "Acervo documental - Não deve inserir sem código novo")]
+        public async Task Nao_deve_inserir_sem_codigo_novo()
+        {
+            await InserirDadosBasicos();
+
+            await InserirAcervoDocumental();
+
+            var servicoAcervoDocumental = GetServicoAcervoDocumental();
+            
+            var random = new Random();
+
+            var arquivos = ObterTodos<Arquivo>();
+            var arquivosSelecionados = arquivos.Take(5).Select(s => s.Id).ToArray();
+            
+            var acessoDocumentos = ObterTodos<AcessoDocumento>();
+            var acessoDocumentosSelecionados = acessoDocumentos.Take(5).Select(s => s.Id).ToArray();
+
+            var acervoDocumentalCadastroDto = new AcervoDocumentalCadastroDTO()
+            {
+                Titulo = string.Format(ConstantesTestes.TITULO_X, 100),
+                CreditosAutoresIds = new long[]{4,5},
+                Localizacao = string.Format(ConstantesTestes.LOCALIZACAO_X, 100),
+                ConservacaoId = random.Next(1, 5),
+                Largura = random.Next(15, 55),
+                Altura = random.Next(15, 55),
+                Descricao = string.Format(ConstantesTestes.DESCRICAO_X, 100),
+                Arquivos = arquivosSelecionados,
+                AcessoDocumentos = acessoDocumentosSelecionados,
+                MaterialId = random.Next(1,5),
+                IdiomaId = random.Next(1,5),
+                Ano = string.Format(ConstantesTestes.ANO_X, 100),
+                NumeroPagina = string.Format(ConstantesTestes.NUMERO_PAGINA_X, 99),
+                Volume = string.Format(ConstantesTestes.VOLUME_X, 100),
+                TipoAnexo = string.Format(ConstantesTestes.TIPO_ANEXO_X, 100),
+                TamanhoArquivo = string.Format(ConstantesTestes.TAMANHO_ARQUIVO_X_MB,100),
+                Digitalizado = true,
+            };
+            
+            await servicoAcervoDocumental.Inserir(acervoDocumentalCadastroDto).ShouldThrowAsync<NegocioException>();
+           
+        }
+        
         [Fact(DisplayName = "Acervo documental - Não deve inserir código novo a código existente")]
         public async Task Nao_deve_inserir_codigo_novo_a_codigo_existente()
         {
@@ -554,6 +638,94 @@ namespace SME.CDEP.TesteIntegracao
                 AcervoId = 3,
                 Codigo = "100",
                 CodigoNovo = "1.NOVO",
+                Titulo = string.Format(ConstantesTestes.TITULO_X, 100),
+                CreditosAutoresIds = new long[]{1,5},
+                Localizacao = string.Format(ConstantesTestes.LOCALIZACAO_X, 100),
+                ConservacaoId = random.Next(1, 5),
+                Largura = random.Next(15, 55),
+                Altura = random.Next(15, 55),
+                Descricao = string.Format(ConstantesTestes.DESCRICAO_X, 100),
+                Arquivos = arquivosSelecionados,
+                AcessoDocumentos = acessoDocumentosSelecionados,
+                MaterialId = random.Next(1,5),
+                IdiomaId = random.Next(1,5),
+                Ano = string.Format(ConstantesTestes.ANO_X, 100),
+                NumeroPagina = string.Format(ConstantesTestes.NUMERO_PAGINA_X, 99),
+                Volume = string.Format(ConstantesTestes.VOLUME_X, 100),
+                TipoAnexo = string.Format(ConstantesTestes.TIPO_ANEXO_X, 100),
+                TamanhoArquivo = string.Format(ConstantesTestes.TAMANHO_ARQUIVO_X_MB,100),
+                Digitalizado = true,
+            };
+                
+            await servicoAcervoDocumental.Alterar(acervoDocumentalAlteracaoDto).ShouldThrowAsync<NegocioException>();
+           
+        }
+        
+        [Fact(DisplayName = "Acervo documental - Não deve alterar sem código")]
+        public async Task Nao_deve_alterar_sem_codigo()
+        {
+            await InserirDadosBasicos();
+
+            await InserirAcervoDocumental();
+
+            var servicoAcervoDocumental = GetServicoAcervoDocumental();
+            
+            var random = new Random();
+
+            var arquivos = ObterTodos<Arquivo>();
+            var arquivosSelecionados = arquivos.Take(5).Select(s => s.Id).ToArray();
+            
+            var acessoDocumentos = ObterTodos<AcessoDocumento>();
+            var acessoDocumentosSelecionados = acessoDocumentos.Take(5).Select(s => s.Id).ToArray();
+
+           var acervoDocumentalAlteracaoDto = new AcervoDocumentalAlteracaoDTO()
+            {
+                Id = 3,
+                AcervoId = 3,
+                Titulo = string.Format(ConstantesTestes.TITULO_X, 100),
+                CreditosAutoresIds = new long[]{1,5},
+                Localizacao = string.Format(ConstantesTestes.LOCALIZACAO_X, 100),
+                ConservacaoId = random.Next(1, 5),
+                Largura = random.Next(15, 55),
+                Altura = random.Next(15, 55),
+                Descricao = string.Format(ConstantesTestes.DESCRICAO_X, 100),
+                Arquivos = arquivosSelecionados,
+                AcessoDocumentos = acessoDocumentosSelecionados,
+                MaterialId = random.Next(1,5),
+                IdiomaId = random.Next(1,5),
+                Ano = string.Format(ConstantesTestes.ANO_X, 100),
+                NumeroPagina = string.Format(ConstantesTestes.NUMERO_PAGINA_X, 99),
+                Volume = string.Format(ConstantesTestes.VOLUME_X, 100),
+                TipoAnexo = string.Format(ConstantesTestes.TIPO_ANEXO_X, 100),
+                TamanhoArquivo = string.Format(ConstantesTestes.TAMANHO_ARQUIVO_X_MB,100),
+                Digitalizado = true,
+            };
+                
+            await servicoAcervoDocumental.Alterar(acervoDocumentalAlteracaoDto).ShouldThrowAsync<NegocioException>();
+           
+        }
+        
+        [Fact(DisplayName = "Acervo documental - Não deve alterar sem código novo")]
+        public async Task Nao_deve_alterar_sem_codigo_novo()
+        {
+            await InserirDadosBasicos();
+
+            await InserirAcervoDocumental();
+
+            var servicoAcervoDocumental = GetServicoAcervoDocumental();
+            
+            var random = new Random();
+
+            var arquivos = ObterTodos<Arquivo>();
+            var arquivosSelecionados = arquivos.Take(5).Select(s => s.Id).ToArray();
+            
+            var acessoDocumentos = ObterTodos<AcessoDocumento>();
+            var acessoDocumentosSelecionados = acessoDocumentos.Take(5).Select(s => s.Id).ToArray();
+
+           var acervoDocumentalAlteracaoDto = new AcervoDocumentalAlteracaoDTO()
+            {
+                Id = 3,
+                AcervoId = 3,
                 Titulo = string.Format(ConstantesTestes.TITULO_X, 100),
                 CreditosAutoresIds = new long[]{1,5},
                 Localizacao = string.Format(ConstantesTestes.LOCALIZACAO_X, 100),
