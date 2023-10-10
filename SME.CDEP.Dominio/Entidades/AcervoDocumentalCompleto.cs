@@ -21,7 +21,7 @@ public class AcervoDocumentalCompleto : EntidadeBase
     public float? Altura { get; set; }
     public string TamanhoArquivo { get; set; }
     public string Localizacao { get; set; }
-    public bool Digitalizado { get; set; }
+    public bool CopiaDigital { get; set; }
     public long? ConservacaoId { get; set; }
     public string ConservacaoNome { get; set; }
     public string Descricao { get; set; }
@@ -36,7 +36,6 @@ public class AcervoDocumentalCompleto : EntidadeBase
     public string ArquivoNome { get; set; }
     public Guid ArquivoCodigo { get; set; }
     public long[] CreditosAutoresIds { get; set; }
-    public AcessoDocumentoResumido[] AcessoDocumentos  { get; set; }
+    public long[] AcessoDocumentosIds  { get; set; }
     public long AcessoDocumentoId { get; set; }
-    public string AcessoDocumentoNome { get; set; }
 }

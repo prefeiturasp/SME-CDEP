@@ -23,7 +23,7 @@ namespace SME.CDEP.Infra.Dados.Repositorios
                                   ad.altura,
                                   ad.tamanho_arquivo as tamanhoArquivo,
                                   ad.localizacao,
-                                  ad.digitalizado,
+                                  ad.copia_digital,
                                   ad.conservacao_id as conservacaoId,
                                   ad.descricao,
                                   a.id,
@@ -60,7 +60,7 @@ namespace SME.CDEP.Infra.Dados.Repositorios
                                   ad.altura,
                                   ad.tamanho_arquivo as tamanhoArquivo,
                                   ad.localizacao,
-                                  ad.digitalizado,
+                                  ad.copia_digital,
                                   ad.descricao,
                                   a.id as AcervoId,
                                   a.titulo,
@@ -105,7 +105,7 @@ namespace SME.CDEP.Infra.Dados.Repositorios
             {
                 var acervoDocumental = retorno.FirstOrDefault();
                 acervoDocumental.Arquivos = retorno.Where(w=> w.ArquivoId > 0).Select(s => new ArquivoResumido() { Id = s.ArquivoId.Value, Codigo = s.ArquivoCodigo, Nome = s.ArquivoNome }).DistinctBy(d=> d.Id).ToArray();
-                acervoDocumental.AcessoDocumentos = retorno.Select(s => new AcessoDocumentoResumido() { Id = s.AcessoDocumentoId, Nome = s.AcessoDocumentoNome }).DistinctBy(d=> d.Id).ToArray();
+                acervoDocumental.AcessoDocumentosIds = retorno.Select(s => s.AcessoDocumentoId).Distinct().ToArray();
                 acervoDocumental.CreditosAutoresIds = acervoDocumental.CreditoAutorId > 0 ? retorno.Select(s => s.CreditoAutorId).Distinct().ToArray() : Array.Empty<long>();
                 return acervoDocumental;    
             }
