@@ -1,8 +1,5 @@
-﻿using System.Runtime.CompilerServices;
-using SME.CDEP.Dominio;
-using SME.CDEP.Dominio.Entidades;
-using SME.CDEP.Dominio.Excecoes;
-using SME.CDEP.Infra.Dominio.Enumerados;
+﻿using SME.CDEP.Dominio;
+using SME.CDEP.Dominio.Extensions;
 
 namespace SME.CDEP.Aplicacao.DTOS;
 

@@ -3,6 +3,7 @@ using SME.CDEP.Aplicacao.Servicos.Interface;
 using SME.CDEP.Aplicacao.Integracoes.Interfaces;
 using SME.CDEP.Dominio.Constantes;
 using SME.CDEP.Dominio.Excecoes;
+using SME.CDEP.Dominio.Extensions;
 
 namespace SME.CDEP.Aplicacao.Servicos
 {

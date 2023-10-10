@@ -8,6 +8,7 @@ using SME.CDEP.Dominio.Excecoes;
 using SME.CDEP.Infra.Dados.Repositorios.Interfaces;
 using SME.CDEP.Aplicacao.Integracoes.Interfaces;
 using SME.CDEP.Dominio.Contexto;
+using SME.CDEP.Dominio.Extensions;
 using SME.CDEP.Infra.Dominio.Enumerados;
 
 namespace SME.CDEP.Aplicacao.Servicos
