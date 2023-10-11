@@ -4,6 +4,7 @@ using SME.CDEP.Aplicacao.Servicos.Interface;
 using SME.CDEP.Dominio.Constantes;
 using SME.CDEP.Dominio.Entidades;
 using SME.CDEP.Dominio.Excecoes;
+using SME.CDEP.Dominio.Extensions;
 using SME.CDEP.Infra.Dados;
 using SME.CDEP.Infra.Dados.Repositorios.Interfaces;
 using SME.CDEP.Infra.Dominio.Enumerados;
@@ -47,7 +48,7 @@ namespace SME.CDEP.Aplicacao.Servicos
 
         public async Task<long> Inserir(AcervoFotograficoCadastroDTO acervoFotograficoCadastroDto)
         {
-            if (acervoFotograficoCadastroDto.CreditosAutoresIds == null)
+            if (acervoFotograficoCadastroDto.CreditosAutoresIds.EhNulo())
                 throw new NegocioException(MensagemNegocio.CREDITO_OU_AUTORES_SAO_OBRIGATORIOS);
             
             var arquivosCompletos =  acervoFotograficoCadastroDto.Arquivos != null
@@ -108,7 +109,7 @@ namespace SME.CDEP.Aplicacao.Servicos
 
         public async Task<AcervoFotograficoDTO> Alterar(AcervoFotograficoAlteracaoDTO acervoFotograficoAlteracaoDto)
         {
-            if (acervoFotograficoAlteracaoDto.CreditosAutoresIds == null)
+            if (acervoFotograficoAlteracaoDto.CreditosAutoresIds.EhNulo())
                 throw new NegocioException(MensagemNegocio.CREDITO_OU_AUTORES_SAO_OBRIGATORIOS);
             
             var arquivosIdsInserir =  Enumerable.Empty<long>();

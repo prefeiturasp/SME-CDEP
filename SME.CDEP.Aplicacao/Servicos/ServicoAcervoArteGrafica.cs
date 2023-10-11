@@ -3,7 +3,7 @@ using SME.CDEP.Aplicacao.DTOS;
 using SME.CDEP.Aplicacao.Servicos.Interface;
 using SME.CDEP.Dominio.Constantes;
 using SME.CDEP.Dominio.Entidades;
-using SME.CDEP.Dominio.Excecoes;
+using SME.CDEP.Dominio.Extensions;
 using SME.CDEP.Infra.Dados;
 using SME.CDEP.Infra.Dados.Repositorios.Interfaces;
 using SME.CDEP.Infra.Dominio.Enumerados;
@@ -157,7 +157,7 @@ namespace SME.CDEP.Aplicacao.Servicos
         public async Task<AcervoArteGraficaDTO> ObterPorId(long id)
         {
             var acervoArteGraficaSimples = await repositorioAcervoArteGrafica.ObterPorId(id);
-            if (acervoArteGraficaSimples != null)
+            if (acervoArteGraficaSimples.NaoEhNulo())
             {
                 acervoArteGraficaSimples.Codigo = acervoArteGraficaSimples.Codigo.RemoverSufixo();
                 var acervoArteGraficaDto = mapper.Map<AcervoArteGraficaDTO>(acervoArteGraficaSimples);

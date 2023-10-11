@@ -1,7 +1,7 @@
 using Microsoft.Extensions.PlatformAbstractions;
 using Npgsql;
-using System.Data;
 using System.Text;
+using SME.CDEP.Dominio.Extensions;
 
 namespace SME.CDEP.TesteIntegracao.Setup
 {
@@ -46,7 +46,7 @@ namespace SME.CDEP.TesteIntegracao.Setup
 
         private string ReadFileAndGetEncoding(Byte[] docBytes, ref Encoding encoding)
         {
-            if (encoding == null)
+            if (encoding.EhNulo())
                 encoding = Encoding.GetEncoding(1252);
             Int32 len = docBytes.Length;
             // byte order mark for utf-8. Easiest way of detecting encoding.

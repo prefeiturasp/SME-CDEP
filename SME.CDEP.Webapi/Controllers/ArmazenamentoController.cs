@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Mvc;
 using SME.CDEP.Aplicacao.DTOS;
 using SME.CDEP.Aplicacao.Servicos.Interface;
+using SME.CDEP.Dominio.Extensions;
 using SME.CDEP.Webapi.Filtros;
 
 namespace SME.CDEP.Webapi.Controllers;
@@ -28,7 +29,7 @@ public class ArmazenamentoController: BaseController
     public async Task<IActionResult> Download(Guid codigoArquivo, [FromServices] IServicoDownloadArquivo servicoDownloadArquivo)
     {
         var (arquivo, contentType, nomeArquivo) = await servicoDownloadArquivo.Download(codigoArquivo);
-        if (arquivo == null) return NoContent();
+        if (arquivo.EhNulo()) return NoContent();
 
         return File(arquivo, contentType, nomeArquivo);
     }
