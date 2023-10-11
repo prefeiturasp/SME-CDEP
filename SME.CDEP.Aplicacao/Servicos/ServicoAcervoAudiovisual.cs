@@ -105,7 +105,7 @@ namespace SME.CDEP.Aplicacao.Servicos
         public async Task<AcervoAudiovisualDTO> ObterPorId(long id)
         {
             var acervoAudiovisualSimples = await repositorioAcervoAcervoAudiovisual.ObterPorId(id);
-            if (acervoAudiovisualSimples != null)
+            if (acervoAudiovisualSimples.NaoEhNulo())
             {
                 acervoAudiovisualSimples.Codigo = acervoAudiovisualSimples.Codigo.RemoverSufixo();
                 var acervoAudiovisualDto = mapper.Map<AcervoAudiovisualDTO>(acervoAudiovisualSimples);

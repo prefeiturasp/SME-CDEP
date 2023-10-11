@@ -84,7 +84,7 @@ namespace SME.CDEP.Aplicacao.Servicos
         private async Task<bool> ValidarCpfEmUsuarioAcervoECoreSSO(string cpf)
         {
             var usuarioAcervo = await ObterPorLogin(cpf);
-            if (usuarioAcervo != null)
+            if (usuarioAcervo.NaoEhNulo())
                 throw new NegocioException(MensagemNegocio.VOCE_JA_POSSUI_LOGIN_ACERVO);
 
             var usuarioCoreSSO = await servicoAcessos.UsuarioCadastradoCoreSSO(cpf);
@@ -211,7 +211,7 @@ namespace SME.CDEP.Aplicacao.Servicos
         private async Task ManutencaoUsuario(string login, UsuarioAutenticacaoRetornoDTO retorno)
         {
             var usuario = await repositorioUsuario.ObterPorLogin(login);
-            if (usuario != null)
+            if (usuario.NaoEhNulo())
             {
                 usuario.UltimoLogin = DateTimeExtension.HorarioBrasilia();
                 usuario.Nome = retorno.Nome;

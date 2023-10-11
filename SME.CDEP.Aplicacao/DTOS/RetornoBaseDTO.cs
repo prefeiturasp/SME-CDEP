@@ -1,5 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using FluentValidation.Results;
+using SME.CDEP.Dominio.Extensions;
 
 namespace SME.CDEP.Aplicacao.DTOS;
 
@@ -7,7 +8,7 @@ namespace SME.CDEP.Aplicacao.DTOS;
     {
         public RetornoBaseDTO(IEnumerable<ValidationFailure> validationFailures)
         {
-            if (validationFailures != null && validationFailures.Any())
+            if (validationFailures.NaoEhNulo() && validationFailures.Any())
                 Mensagens = validationFailures.Select(c => c.ErrorMessage).ToList();
         }
         public RetornoBaseDTO()
