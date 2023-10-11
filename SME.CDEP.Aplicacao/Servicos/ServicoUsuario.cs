@@ -200,7 +200,7 @@ namespace SME.CDEP.Aplicacao.Servicos
         {
             var retornoAutenticacao = await servicoAcessos.Autenticar(login, senha);
             
-            if (string.IsNullOrEmpty(retornoAutenticacao.Login))
+            if (retornoAutenticacao.Login.NaoEstaPreenchido())
                 throw new NegocioException(MensagemNegocio.USUARIO_OU_SENHA_INVALIDOS);
 
             await ManutencaoUsuario(login, retornoAutenticacao);
