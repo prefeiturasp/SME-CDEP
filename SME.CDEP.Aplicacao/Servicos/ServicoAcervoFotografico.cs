@@ -51,7 +51,7 @@ namespace SME.CDEP.Aplicacao.Servicos
             if (acervoFotograficoCadastroDto.CreditosAutoresIds.EhNulo())
                 throw new NegocioException(MensagemNegocio.CREDITO_OU_AUTORES_SAO_OBRIGATORIOS);
             
-            var arquivosCompletos =  acervoFotograficoCadastroDto.Arquivos != null
+            var arquivosCompletos =  acervoFotograficoCadastroDto.Arquivos.NaoEhNulo()
                 ? await ObterArquivosPorIds(acervoFotograficoCadastroDto.Arquivos) 
                 : Enumerable.Empty<Arquivo>();
             
@@ -164,7 +164,7 @@ namespace SME.CDEP.Aplicacao.Servicos
         public async Task<AcervoFotograficoDTO> ObterPorId(long id)
         {
             var acervoFotograficoSimples = await repositorioAcervoFotografico.ObterPorId(id);
-            if (acervoFotograficoSimples != null)
+            if (acervoFotograficoSimples.NaoEhNulo())
             {
                acervoFotograficoSimples.Codigo = acervoFotograficoSimples.Codigo.RemoverSufixo();
                var acervoFotograficoDto = mapper.Map<AcervoFotograficoDTO>(acervoFotograficoSimples);

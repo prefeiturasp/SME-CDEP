@@ -47,7 +47,7 @@ namespace SME.CDEP.Aplicacao.Servicos
 
         public async Task<long> Inserir(AcervoArteGraficaCadastroDTO acervoArteGraficaCadastroDto)
         {
-            var arquivosCompletos =  acervoArteGraficaCadastroDto.Arquivos != null
+            var arquivosCompletos =  acervoArteGraficaCadastroDto.Arquivos.NaoEhNulo()
                 ? await ObterArquivosPorIds(acervoArteGraficaCadastroDto.Arquivos) 
                 : Enumerable.Empty<Arquivo>();
             

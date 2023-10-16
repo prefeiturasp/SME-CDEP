@@ -1,5 +1,6 @@
 ﻿using Elastic.Apm;
 using Elastic.Apm.Api;
+using SME.CDEP.Dominio.Extensions;
 using SME.CDEP.Infra.Servicos.Telemetria.Options;
 
 namespace SME.CDEP.Infra.Servicos.Telemetria
@@ -83,7 +84,7 @@ namespace SME.CDEP.Infra.Servicos.Telemetria
             {
                 var transactionElk = Agent.Tracer.CurrentTransaction;
 
-                if (transactionElk != null)
+                if (transactionElk.NaoEhNulo())
                 {
                     await transactionElk.CaptureSpan(telemetriaNome, acaoNome, async (span) =>
                     {
