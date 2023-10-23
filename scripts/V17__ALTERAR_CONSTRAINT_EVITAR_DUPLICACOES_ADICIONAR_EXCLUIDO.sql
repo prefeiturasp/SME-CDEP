@@ -7,14 +7,11 @@ ALTER TABLE public.assunto ADD CONSTRAINT assunto_un UNIQUE (nome,excluido);
 ALTER TABLE public.acesso_documento DROP CONSTRAINT IF EXISTS acesso_documento_un;
 ALTER TABLE public.acesso_documento ADD CONSTRAINT acesso_documento_un UNIQUE (nome,excluido);
 
-ALTER TABLE public.autor DROP CONSTRAINT IF EXISTS autor_un;
-ALTER TABLE public.autor ADD CONSTRAINT autor_un UNIQUE (nome,excluido);
+ALTER TABLE public.credito_autor DROP CONSTRAINT IF EXISTS credito_autor_un;
+ALTER TABLE public.credito_autor ADD CONSTRAINT credito_autor_un UNIQUE (nome,tipo, excluido);
 
 ALTER TABLE public.conservacao DROP CONSTRAINT IF EXISTS conservacao_un;
 ALTER TABLE public.conservacao ADD CONSTRAINT conservacao_un UNIQUE (nome,excluido);
-
-ALTER TABLE public.credito DROP CONSTRAINT IF EXISTS credito_un;
-ALTER TABLE public.credito ADD CONSTRAINT credito_un UNIQUE (nome,excluido);
 
 ALTER TABLE public.editora DROP CONSTRAINT IF EXISTS editora_un;
 ALTER TABLE public.editora ADD CONSTRAINT editora_un UNIQUE (nome,excluido);
