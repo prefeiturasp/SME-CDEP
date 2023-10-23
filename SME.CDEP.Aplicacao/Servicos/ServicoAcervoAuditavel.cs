@@ -33,7 +33,7 @@ namespace SME.CDEP.Aplicacao.Servicos
         {
             ValidarCodigoTomboCodigoNovo(acervo);
             
-            await ValidarTituloDuplicado(acervo.Titulo, acervo.Id);
+            await ValidarTituloDuplicado(acervo.Titulo, acervo.Id, acervo.Codigo, acervo.TipoAcervoId.EhAcervoDocumental() ? acervo.CodigoNovo : string.Empty);
             
             await ValidarCodigoTomboCodigoNovoDuplicado(acervo.Codigo, acervo.Id);
             
@@ -76,9 +76,9 @@ namespace SME.CDEP.Aplicacao.Servicos
                 throw new NegocioException(string.Format(MensagemNegocio.REGISTRO_X_DUPLICADO,nomeCampo));
         }
         
-        public async Task ValidarTituloDuplicado(string titulo, long id)
+        public async Task ValidarTituloDuplicado(string titulo, long id, string codigo, string codigoNovo)
         {
-            if (await repositorioAcervo.ExisteTitulo(titulo, id))
+            if (await repositorioAcervo.ExisteTitulo(titulo, id,codigo,codigoNovo))
                 throw new NegocioException(string.Format(MensagemNegocio.REGISTRO_X_DUPLICADO, "Título"));
         }
 
@@ -91,7 +91,7 @@ namespace SME.CDEP.Aplicacao.Servicos
         {
             ValidarCodigoTomboCodigoNovo(acervo);
             
-            await ValidarTituloDuplicado(acervo.Titulo, acervo.Id);
+            await ValidarTituloDuplicado(acervo.Titulo, acervo.Id, acervo.Codigo, acervo.TipoAcervoId.EhAcervoDocumental() ? acervo.CodigoNovo : string.Empty);
             
             await ValidarCodigoTomboCodigoNovoDuplicado(acervo.Codigo, acervo.Id, acervo.TipoAcervoId.EhAcervoDocumental() ? "Código antigo" : "Código");
 

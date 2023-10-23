@@ -7,6 +7,6 @@ namespace SME.CDEP.Infra.Dados.Repositorios.Interfaces
     {
         Task<IEnumerable<Acervo>> PesquisarPorFiltro(int? tipoAcervo, string titulo, long? creditoAutorId, string codigo);
         Task<bool> ExisteCodigo(string codigo, long id);
-        Task<bool> ExisteTitulo(string titulo, long id);
+        Task<bool> ExisteTitulo(string titulo, long id, string codigo, string codigoNovo);
     }
 }
