@@ -33,14 +33,14 @@ CREATE INDEX acervo_bibliografico_acervo_idx ON public.acervo_bibliografico USIN
 --> Acervo Bibliográfico Assunto
 CREATE TABLE if not exists public.acervo_bibliografico_assunto (
 	id int8 NOT NULL GENERATED ALWAYS AS IDENTITY( INCREMENT BY 1 MINVALUE 1 MAXVALUE 9223372036854775807 START 1 CACHE 1 NO CYCLE),
-	acervo_id int8 NOT NULL,
+	acervo_bibliografico_id int8 NOT NULL,
 	assunto_id int8 NOT NULL,
 	CONSTRAINT acervo_bibliografico_assunto_pk PRIMARY KEY (id),
-	CONSTRAINT acervo_bibliografico_assunto_acervo_fk FOREIGN KEY (acervo_id) REFERENCES public.acervo(id),
+	CONSTRAINT acervo_bibliografico_assunto_acervo_bibliografico_fk FOREIGN KEY (acervo_bibliografico_id) REFERENCES public.acervo_bibliografico(id),
 	CONSTRAINT acervo_bibliografico_assunto_assunto_fk FOREIGN KEY (assunto_id) REFERENCES public.assunto(id)
 );
 drop index if exists acervo_bibliografico_assunto_acervo_idx;
-CREATE INDEX acervo_bibliografico_assunto_acervo_idx ON public.acervo_bibliografico_assunto USING btree (acervo_id);
+CREATE INDEX acervo_bibliografico_assunto_acervo_bibliografico_idx ON public.acervo_bibliografico_assunto USING btree (acervo_bibliografico_id);
 
 drop index if exists acervo_bibliografico_assunto_assunto_idx;
 CREATE INDEX acervo_bibliografico_assunto_assunto_idx ON public.acervo_bibliografico_assunto USING btree (assunto_id);
