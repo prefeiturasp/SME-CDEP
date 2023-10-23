@@ -4,6 +4,7 @@ using SME.CDEP.Aplicacao.Servicos.Interface;
 using SME.CDEP.Dominio.Constantes;
 using SME.CDEP.Dominio.Entidades;
 using SME.CDEP.Dominio.Excecoes;
+using SME.CDEP.Dominio.Extensions;
 using SME.CDEP.Infra.Dados;
 using SME.CDEP.Infra.Dados.Repositorios.Interfaces;
 using SME.CDEP.Infra.Dominio.Enumerados;
@@ -53,7 +54,7 @@ namespace SME.CDEP.Aplicacao.Servicos
 
         public async Task<long> Inserir(AcervoDocumentalCadastroDTO acervoDocumentalCadastroDto)
         {
-            var arquivosCompletos =  acervoDocumentalCadastroDto.Arquivos != null
+            var arquivosCompletos =  acervoDocumentalCadastroDto.Arquivos.NaoEhNulo()
                 ? await ObterArquivosPorIds(acervoDocumentalCadastroDto.Arquivos) 
                 : Enumerable.Empty<Arquivo>();
             
@@ -191,7 +192,7 @@ namespace SME.CDEP.Aplicacao.Servicos
         public async Task<AcervoDocumentalDTO> ObterPorId(long id)
         {
             var acervoDocumentalSimples = await repositorioAcervoDocumental.ObterPorId(id);
-            if (acervoDocumentalSimples != null)
+            if (acervoDocumentalSimples.NaoEhNulo())
             {
                 var acervoDocumentalDto = mapper.Map<AcervoDocumentalDTO>(acervoDocumentalSimples);
                 acervoDocumentalDto.Auditoria = mapper.Map<AuditoriaDTO>(acervoDocumentalSimples);

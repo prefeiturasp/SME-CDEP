@@ -6,6 +6,7 @@ using SME.CDEP.Dominio.Constantes;
 using SME.CDEP.Dominio.Contexto;
 using SME.CDEP.Dominio.Entidades;
 using SME.CDEP.Dominio.Excecoes;
+using SME.CDEP.Dominio.Extensions;
 using SME.CDEP.Infra.Dados.Repositorios.Interfaces;
 using SME.CDEP.Infra.Dominio.Enumerados;
 
@@ -38,7 +39,7 @@ namespace SME.CDEP.Aplicacao.Servicos
 
         public async Task<PaginacaoResultadoDTO<IdNomeTipoExcluidoAuditavelDTO>> ObterPaginado(NomeTipoCreditoAutoriaDTO nomeTipoDto)
         {
-            var registros = string.IsNullOrEmpty(nomeTipoDto.Nome) 
+            var registros = nomeTipoDto.Nome.NaoEstaPreenchido() 
                 ? mapper.Map<IEnumerable<IdNomeTipoExcluidoAuditavelDTO>>(await repositorioCreditoAutor.ObterTodosPorTipo(nomeTipoDto.Tipo)) 
                 : mapper.Map<IEnumerable<IdNomeTipoExcluidoAuditavelDTO>>(await repositorioCreditoAutor.PesquisarPorNomeTipo(nomeTipoDto.Nome, nomeTipoDto.Tipo));
             

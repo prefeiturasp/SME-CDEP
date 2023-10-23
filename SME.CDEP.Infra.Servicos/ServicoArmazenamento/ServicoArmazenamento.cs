@@ -1,10 +1,8 @@
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Options;
 using Minio;
-using SME.CDEP.Dominio.Excecoes;
+using SME.CDEP.Dominio.Extensions;
 using SME.CDEP.Infra.Servicos.Mensageria;
-using SME.CDEP.Infra.Servicos.Mensageria.Exchange;
-using SME.CDEP.Infra.Servicos.Mensageria.Rotas;
 using SME.CDEP.Infra.Servicos.ServicoArmazenamento.Interface;
 
 namespace SME.CDEP.Infra.Servicos.ServicoArmazenamento

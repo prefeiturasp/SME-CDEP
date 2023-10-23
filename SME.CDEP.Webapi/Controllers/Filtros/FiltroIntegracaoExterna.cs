@@ -1,6 +1,5 @@
-﻿
-using Microsoft.OpenApi.Models;
-using SME.CDEP.Dominio.Excecoes;
+﻿using Microsoft.OpenApi.Models;
+using SME.CDEP.Dominio.Extensions;
 using SME.CDEP.Webapi.Middlewares;
 using Swashbuckle.AspNetCore.SwaggerGen;
 

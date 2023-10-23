@@ -7,6 +7,7 @@ using SME.CDEP.Dominio.Constantes;
 using SME.CDEP.Dominio.Contexto;
 using SME.CDEP.Dominio.Entidades;
 using SME.CDEP.Dominio.Excecoes;
+using SME.CDEP.Dominio.Extensions;
 using SME.CDEP.Infra.Dados.Repositorios.Interfaces;
 using SME.CDEP.Infra.Dominio.Enumerados;
 
@@ -36,10 +37,10 @@ namespace SME.CDEP.Aplicacao.Servicos
             
             await ValidarCodigoTomboCodigoNovoDuplicado(acervo.Codigo, acervo.Id);
             
-            if (!string.IsNullOrEmpty(acervo.CodigoNovo))
+            if (acervo.CodigoNovo.EstaPreenchido())
                 await ValidarCodigoTomboCodigoNovoDuplicado(acervo.CodigoNovo, acervo.Id, "Código Novo");
             
-            if (!string.IsNullOrEmpty(acervo.CodigoNovo) && acervo.TipoAcervoId != (long)TipoAcervo.DocumentacaoHistorica)
+            if (acervo.CodigoNovo.EstaPreenchido() && acervo.TipoAcervoId != (long)TipoAcervo.DocumentacaoHistorica)
                 throw new NegocioException(MensagemNegocio.SOMENTE_ACERVO_DOCUMENTAL_POSSUI_CODIGO_NOVO);
                 
             acervo.CriadoEm = DateTimeExtension.HorarioBrasilia();
@@ -59,8 +60,8 @@ namespace SME.CDEP.Aplicacao.Servicos
 
         private static void ValidarCodigoTomboCodigoNovo(Acervo acervo)
         {
-            var codigoNaoPreenchido = string.IsNullOrEmpty(acervo.Codigo);
-            var codigoNovoNaoPreenchido = string.IsNullOrEmpty(acervo.CodigoNovo);
+            var codigoNaoPreenchido = acervo.Codigo.NaoEstaPreenchido();
+            var codigoNovoNaoPreenchido = acervo.CodigoNovo.NaoEstaPreenchido();
             
             if (codigoNaoPreenchido && codigoNovoNaoPreenchido)
                 throw new NegocioException(string.Format(MensagemNegocio.CAMPO_NAO_INFORMADO, "Código/Tombo/Código Novo"));
@@ -94,19 +95,19 @@ namespace SME.CDEP.Aplicacao.Servicos
             
             await ValidarCodigoTomboCodigoNovoDuplicado(acervo.Codigo, acervo.Id);
 
-            if (!string.IsNullOrEmpty(acervo.CodigoNovo))
+            if (acervo.CodigoNovo.EstaPreenchido())
                 await ValidarCodigoTomboCodigoNovoDuplicado(acervo.CodigoNovo, acervo.Id, "Código Novo");
             
             acervo.AlteradoEm = DateTimeExtension.HorarioBrasilia();
             acervo.AlteradoLogin = contextoAplicacao.UsuarioLogado;
             acervo.AlteradoPor = contextoAplicacao.NomeUsuario;
             
-            if (!string.IsNullOrEmpty(acervo.CodigoNovo) && acervo.TipoAcervoId != (long)TipoAcervo.DocumentacaoHistorica)
+            if (acervo.CodigoNovo.EstaPreenchido() && acervo.TipoAcervoId != (long)TipoAcervo.DocumentacaoHistorica)
                 throw new NegocioException(MensagemNegocio.SOMENTE_ACERVO_DOCUMENTAL_POSSUI_CODIGO_NOVO);
             
             var acervoAlterado = mapper.Map<AcervoDTO>(await repositorioAcervo.Atualizar(acervo));
 
-            var creditosAutoresPropostos = acervo.CreditosAutoresIds != null ? acervo.CreditosAutoresIds.ToList() : Enumerable.Empty<long>();
+            var creditosAutoresPropostos = acervo.CreditosAutoresIds.NaoEhNulo() ? acervo.CreditosAutoresIds.ToList() : Enumerable.Empty<long>();
             var acervoCreditoAutorAtuais = await repositorioAcervoCreditoAutor.ObterPorAcervoId(acervoAlterado.Id);
             var acervoCreditoAutorAInserir = creditosAutoresPropostos.Select(a => a)
                                          .Except(acervoCreditoAutorAtuais.Select(b => b.CreditoAutorId));
@@ -129,7 +130,7 @@ namespace SME.CDEP.Aplicacao.Servicos
         {
             var acervo = await repositorioAcervo.ObterPorId(id);
 
-            if (!string.IsNullOrEmpty(codigoNovo) && acervo.TipoAcervoId != (long)TipoAcervo.DocumentacaoHistorica)
+            if (codigoNovo.EstaPreenchido() && acervo.TipoAcervoId != (long)TipoAcervo.DocumentacaoHistorica)
                 throw new NegocioException(MensagemNegocio.SOMENTE_ACERVO_DOCUMENTAL_POSSUI_CODIGO_NOVO);
             
             acervo.Titulo = titulo;
@@ -176,7 +177,7 @@ namespace SME.CDEP.Aplicacao.Servicos
                     Titulo = s.Key.Titulo,
                     AcervoId = s.Key.Id,
                     Codigo = s.Key.Codigo,
-                    CreditoAutoria = s.Any(w=> w.CreditoAutor != null ) ? string.Join(", ", s.Select(ca=> ca.CreditoAutor.Nome)) : string.Empty,
+                    CreditoAutoria = s.Any(w=> w.CreditoAutor.NaoEhNulo() ) ? string.Join(", ", s.Select(ca=> ca.CreditoAutor.Nome)) : string.Empty,
                     TipoAcervo = ((TipoAcervo)s.Key.TipoAcervoId).Nome(),
                     TipoAcervoId = (TipoAcervo)s.Key.TipoAcervoId,
                 });
@@ -211,7 +212,7 @@ namespace SME.CDEP.Aplicacao.Servicos
                 var numeroRegistrosQueryString = contextoAplicacao.ObterVariavel<string>("NumeroRegistros");
                 var ordenacaoQueryString = contextoAplicacao.ObterVariavel<string>("Ordenacao");
 
-                if (string.IsNullOrWhiteSpace(numeroPaginaQueryString) || string.IsNullOrWhiteSpace(numeroRegistrosQueryString)|| string.IsNullOrWhiteSpace(ordenacaoQueryString))
+                if (numeroPaginaQueryString.NaoEstaPreenchido() || numeroRegistrosQueryString.NaoEstaPreenchido()|| ordenacaoQueryString.NaoEstaPreenchido())
                     return new Paginacao(0, 0,0);
 
                 var numeroPagina = int.Parse(numeroPaginaQueryString);

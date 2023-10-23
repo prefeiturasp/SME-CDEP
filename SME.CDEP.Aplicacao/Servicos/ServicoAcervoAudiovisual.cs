@@ -3,7 +3,7 @@ using SME.CDEP.Aplicacao.DTOS;
 using SME.CDEP.Aplicacao.Servicos.Interface;
 using SME.CDEP.Dominio.Constantes;
 using SME.CDEP.Dominio.Entidades;
-using SME.CDEP.Dominio.Excecoes;
+using SME.CDEP.Dominio.Extensions;
 using SME.CDEP.Infra.Dados;
 using SME.CDEP.Infra.Dados.Repositorios.Interfaces;
 using SME.CDEP.Infra.Dominio.Enumerados;
@@ -105,7 +105,7 @@ namespace SME.CDEP.Aplicacao.Servicos
         public async Task<AcervoAudiovisualDTO> ObterPorId(long id)
         {
             var acervoAudiovisualSimples = await repositorioAcervoAcervoAudiovisual.ObterPorId(id);
-            if (acervoAudiovisualSimples != null)
+            if (acervoAudiovisualSimples.NaoEhNulo())
             {
                 acervoAudiovisualSimples.Codigo = acervoAudiovisualSimples.Codigo.RemoverSufixo();
                 var acervoAudiovisualDto = mapper.Map<AcervoAudiovisualDTO>(acervoAudiovisualSimples);

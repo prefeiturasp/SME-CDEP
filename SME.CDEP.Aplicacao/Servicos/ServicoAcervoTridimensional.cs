@@ -4,6 +4,7 @@ using SME.CDEP.Aplicacao.Servicos.Interface;
 using SME.CDEP.Dominio.Constantes;
 using SME.CDEP.Dominio.Entidades;
 using SME.CDEP.Dominio.Excecoes;
+using SME.CDEP.Dominio.Extensions;
 using SME.CDEP.Infra.Dados;
 using SME.CDEP.Infra.Dados.Repositorios.Interfaces;
 using SME.CDEP.Infra.Dominio.Enumerados;
@@ -47,10 +48,10 @@ namespace SME.CDEP.Aplicacao.Servicos
 
         public async Task<long> Inserir(AcervoTridimensionalCadastroDTO acervoTridimensionalCadastroDto)
         {
-            if (acervoTridimensionalCadastroDto.CreditosAutoresIds != null)
+            if (acervoTridimensionalCadastroDto.CreditosAutoresIds.NaoEhNulo())
                 throw new NegocioException(MensagemNegocio.ESSE_ACERVO_NAO_POSSUI_CREDITO_OU_AUTOR);
             
-            var arquivosCompletos =  acervoTridimensionalCadastroDto.Arquivos != null
+            var arquivosCompletos =  acervoTridimensionalCadastroDto.Arquivos.NaoEhNulo()
                 ? await ObterArquivosPorIds(acervoTridimensionalCadastroDto.Arquivos) 
                 : Enumerable.Empty<Arquivo>();
             
@@ -108,7 +109,7 @@ namespace SME.CDEP.Aplicacao.Servicos
 
         public async Task<AcervoTridimensionalDTO> Alterar(AcervoTridimensionalAlteracaoDTO acervoTridimensionalAlteracaoDto)
         {
-            if (acervoTridimensionalAlteracaoDto.CreditosAutoresIds != null)
+            if (acervoTridimensionalAlteracaoDto.CreditosAutoresIds.NaoEhNulo())
                 throw new NegocioException(MensagemNegocio.ESSE_ACERVO_NAO_POSSUI_CREDITO_OU_AUTOR);
             
             var arquivosIdsInserir =  Enumerable.Empty<long>();
@@ -163,7 +164,7 @@ namespace SME.CDEP.Aplicacao.Servicos
         public async Task<AcervoTridimensionalDTO> ObterPorId(long id)
         {
             var acervoTridimensionalSimples = await repositorioAcervoTridimensional.ObterPorId(id);
-            if (acervoTridimensionalSimples != null)
+            if (acervoTridimensionalSimples.NaoEhNulo())
             {
                 acervoTridimensionalSimples.Codigo = acervoTridimensionalSimples.Codigo.RemoverSufixo();
                 var acervoTridimensionalDto = mapper.Map<AcervoTridimensionalDTO>(acervoTridimensionalSimples);

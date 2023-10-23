@@ -1,8 +1,7 @@
 using Microsoft.Extensions.PlatformAbstractions;
 using Npgsql;
-using System.Data;
 using System.Text;
-using SME.CDEP.Dominio.Excecoes;
+using SME.CDEP.Dominio.Extensions;
 
 namespace SME.CDEP.TesteIntegracao.Setup
 {

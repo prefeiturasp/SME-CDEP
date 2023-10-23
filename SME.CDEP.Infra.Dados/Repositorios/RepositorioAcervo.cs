@@ -1,6 +1,7 @@
 ﻿using Dapper;
 using SME.CDEP.Dominio.Contexto;
 using SME.CDEP.Dominio.Entidades;
+using SME.CDEP.Dominio.Extensions;
 using SME.CDEP.Infra.Dados.Repositorios.Interfaces;
 
 namespace SME.CDEP.Infra.Dados.Repositorios
@@ -34,10 +35,10 @@ namespace SME.CDEP.Infra.Dados.Repositorios
 						        left join credito_autor ca on aca.credito_autor_id = ca.id
 						    where not a.excluido ";
 
-            if (!string.IsNullOrEmpty(titulo))
+            if (titulo.EstaPreenchido())
                 query += $"and lower(a.titulo) like lower('%{titulo}%') ";
 	
-            if (!string.IsNullOrEmpty(codigo))
+            if (codigo.EstaPreenchido())
                 query += $"and (lower(a.codigo) = lower('{codigo}') or lower(a.codigo_novo) = lower('{codigo}') )";
 	
             if (tipoAcervo > 0)

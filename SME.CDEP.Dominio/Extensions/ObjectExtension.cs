@@ -1,4 +1,4 @@
-﻿namespace SME.CDEP.Dominio.Excecoes
+﻿namespace SME.CDEP.Dominio.Extensions
 {
     public static class ObjectExtension
     {
