@@ -93,7 +93,7 @@ namespace SME.CDEP.Aplicacao.Servicos
             
             await ValidarTituloDuplicado(acervo.Titulo, acervo.Id);
             
-            await ValidarCodigoTomboCodigoNovoDuplicado(acervo.Codigo, acervo.Id);
+            await ValidarCodigoTomboCodigoNovoDuplicado(acervo.Codigo, acervo.Id, acervo.TipoAcervoId.EhAcervoDocumental() ? "Código antigo" : "Código");
 
             if (acervo.CodigoNovo.EstaPreenchido())
                 await ValidarCodigoTomboCodigoNovoDuplicado(acervo.CodigoNovo, acervo.Id, "Código Novo");
