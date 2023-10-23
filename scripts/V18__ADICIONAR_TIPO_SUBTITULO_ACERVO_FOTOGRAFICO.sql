@@ -42,7 +42,7 @@ CREATE TABLE if not exists public.acervo_bibliografico_assunto (
 	CONSTRAINT acervo_bibliografico_assunto_acervo_bibliografico_fk FOREIGN KEY (acervo_bibliografico_id) REFERENCES public.acervo_bibliografico(id),
 	CONSTRAINT acervo_bibliografico_assunto_assunto_fk FOREIGN KEY (assunto_id) REFERENCES public.assunto(id)
 );
-drop index if exists acervo_bibliografico_assunto_acervo_idx;
+drop index if exists acervo_bibliografico_assunto_acervo_bibliografico_idx;
 CREATE INDEX acervo_bibliografico_assunto_acervo_bibliografico_idx ON public.acervo_bibliografico_assunto USING btree (acervo_bibliografico_id);
 
 drop index if exists acervo_bibliografico_assunto_assunto_idx;
