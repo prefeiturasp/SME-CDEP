@@ -105,6 +105,7 @@ public class RegistradorDeDependencia
             config.AddMap(new AcervoDocumentalArquivoMap());
             config.AddMap(new AcervoDocumentalAcessoDocumentoMap());
             config.AddMap(new AcervoBibliograficoMap());
+            config.AddMap(new AcervoBibliograficoAssuntoMap());
             config.ForDommel();
         });
     }
