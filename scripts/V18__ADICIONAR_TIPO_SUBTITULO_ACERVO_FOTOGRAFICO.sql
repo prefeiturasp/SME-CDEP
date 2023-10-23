@@ -1,6 +1,3 @@
-﻿--> Adicionando tipo na tabela Crédito Autor
-alter table public.acervo_credito_autor add column IF NOT EXISTS tipo_autoria varchar(15) null;
-
 --> Adicionando subtitulo na tabela acervo
 alter table public.acervo add column IF NOT EXISTS subtitulo varchar(500) NULL;
 
@@ -33,7 +30,7 @@ CREATE TABLE if not exists public.acervo_bibliografico (
 drop index if exists acervo_bibliografico_acervo_idx;
 CREATE INDEX acervo_bibliografico_acervo_idx ON public.acervo_bibliografico USING btree (acervo_id);
 
-
+--> Acervo Bibliográfico Assunto
 CREATE TABLE if not exists public.acervo_bibliografico_assunto (
 	id int8 NOT NULL GENERATED ALWAYS AS IDENTITY( INCREMENT BY 1 MINVALUE 1 MAXVALUE 9223372036854775807 START 1 CACHE 1 NO CYCLE),
 	acervo_id int8 NOT NULL,
@@ -47,3 +44,19 @@ CREATE INDEX acervo_bibliografico_assunto_acervo_idx ON public.acervo_bibliograf
 
 drop index if exists acervo_bibliografico_assunto_assunto_idx;
 CREATE INDEX acervo_bibliografico_assunto_assunto_idx ON public.acervo_bibliografico_assunto USING btree (assunto_id);
+
+--> Acervo CoAutor
+CREATE TABLE if not exists public.acervo_coautor (
+	id int8 NOT NULL GENERATED ALWAYS AS IDENTITY( INCREMENT BY 1 MINVALUE 1 MAXVALUE 9223372036854775807 START 1 CACHE 1 NO CYCLE),
+	acervo_id int8 NOT NULL,
+	credito_autor_id int8 NOT NULL,
+	tipo_autoria varchar(15) NULL,
+	CONSTRAINT acervo_coautor_pk PRIMARY KEY (id),
+	CONSTRAINT acervo_coautor_fk FOREIGN KEY (acervo_id) REFERENCES public.acervo(id),
+	CONSTRAINT acervo_coautor_credito_autor_fk FOREIGN KEY (credito_autor_id) REFERENCES public.credito_autor(id)
+);
+drop index if exists acervo_coautor_acervo_idx;
+CREATE INDEX acervo_coautor_acervo_idx ON public.acervo_coautor USING btree (acervo_id);
+
+drop index if exists acervo_credito_autor_idx;
+CREATE INDEX acervo_credito_autor_idx ON public.acervo_credito_autor USING btree (credito_autor_id);
