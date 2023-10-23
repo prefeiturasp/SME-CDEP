@@ -59,9 +59,14 @@ namespace SME.CDEP.Infra.Dados.Repositorios
             return conexao.Obter().QueryFirstOrDefaultAsync<bool>("select 1 from acervo where (lower(codigo) = @codigo or lower(codigo_novo) = @codigo) and not excluido and id != @id",new { id, codigo = codigo.ToLower() });
         }
         
-        public Task<bool> ExisteTitulo(string titulo, long id)
+        public Task<bool> ExisteTitulo(string titulo, long id, string codigo, string codigoNovo)
         {
-            return conexao.Obter().QueryFirstOrDefaultAsync<bool>("select 1 from acervo where lower(titulo) = @titulo and not excluido and id != @id",new { id, titulo = titulo.ToLower() });
+            return conexao.Obter().QueryFirstOrDefaultAsync<bool>($"select 1 from acervo where lower(titulo) = @titulo and not excluido and id != @id and codigo = @codigo {IncluirCodigoNovo(codigoNovo)}",new { id, titulo = titulo.ToLower(), codigo, codigoNovo });
+        }
+
+        private string IncluirCodigoNovo(string codigoNovo)
+        {
+            return codigoNovo.EstaPreenchido() ? " and codigo_novo = @codigoNovo " : string.Empty;
         }
     }
 }
