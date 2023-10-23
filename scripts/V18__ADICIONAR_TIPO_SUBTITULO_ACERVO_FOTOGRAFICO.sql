@@ -1,5 +1,4 @@
 ﻿--> Adicionando tipo na tabela Crédito Autor
-alter table public.acervo_credito_autor add column IF NOT EXISTS tipo integer not null default 1;
 alter table public.acervo_credito_autor add column IF NOT EXISTS tipo_autoria varchar(15) null;
 
 --> Adicionando subtitulo na tabela acervo
