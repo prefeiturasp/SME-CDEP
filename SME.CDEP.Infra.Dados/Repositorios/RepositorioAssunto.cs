@@ -30,5 +30,14 @@ namespace SME.CDEP.Infra.Dados.Repositorios
                                                             where lower(nome) like '%{nome.ToLower()}%' 
                                                               and not excluido ");
         }
+        
+        public async Task<IEnumerable<Assunto>> ObterPorIds(long[] ids)
+        {
+            const string query = @"select * 
+                                    from assunto
+                                    where id = ANY(@ids)";
+
+            return await conexao.Obter().QueryAsync<Assunto>(query, new { ids });
+        }
     }
 }

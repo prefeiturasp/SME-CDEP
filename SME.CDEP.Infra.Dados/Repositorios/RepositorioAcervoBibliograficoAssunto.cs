@@ -21,7 +21,7 @@ namespace SME.CDEP.Infra.Dados.Repositorios
         public async Task Excluir(long[] acessoBibliograficoAssuntoIdsExcluir, long acervoBibliograficoId)
         {
             await conexao.Obter()
-                .ExecuteAsync(@"Delete from acervo_bibliografico_assunto where acervo_bibliografico_id = @acervoBibliograficoId and acesso_id = any(@acessoBibliograficoAssuntoIdsExcluir)", 
+                .ExecuteAsync(@"Delete from acervo_bibliografico_assunto where acervo_bibliografico_id = @acervoBibliograficoId and assunto_id = any(@acessoBibliograficoAssuntoIdsExcluir)", 
                 new { acervoBibliograficoId, acessoBibliograficoAssuntoIdsExcluir });
         }
     }

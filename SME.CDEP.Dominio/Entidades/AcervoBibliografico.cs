@@ -11,7 +11,6 @@
         public double? NumeroPagina { get; set; }
         public double? Largura { get; set; }
         public double? Altura { get; set; }
-        
         public long? SerieColecaoId { get; set; }
         public string? Volume { get; set; }
         public long IdiomaId { get; set; }
@@ -19,6 +18,5 @@
         public string LocalizacaoPHA { get; set; }
         public string? NotasGerais { get; set; }
         public string? Isbn { get; set; }
-        public Assunto Assunto { get; set; }
     }
 }

@@ -54,6 +54,14 @@ namespace SME.CDEP.Aplicacao.Servicos
                     AcervoId = acervoId,
                     CreditoAutorId = creditoAutorId
                 });
+            
+            foreach (var coAutor in acervo.CoAutores)
+                await repositorioAcervoCreditoAutor.Inserir(new AcervoCreditoAutor()
+                {
+                    AcervoId = acervoId,
+                    CreditoAutorId = coAutor.CreditoAutorId,
+                    TipoAutoria = coAutor.TipoAutoria
+                });
 
             return acervoId;
         }
@@ -107,11 +115,11 @@ namespace SME.CDEP.Aplicacao.Servicos
             
             var acervoAlterado = mapper.Map<AcervoDTO>(await repositorioAcervo.Atualizar(acervo));
 
-            var creditosAutoresPropostos = acervo.CreditosAutoresIds.NaoEhNulo() ? acervo.CreditosAutoresIds.ToList() : Enumerable.Empty<long>();
+            var creditosAutoresPropostos = acervo.CreditosAutoresIds.NaoEhNulo() ? acervo.CreditosAutoresIds : Enumerable.Empty<long>();
             var acervoCreditoAutorAtuais = await repositorioAcervoCreditoAutor.ObterPorAcervoId(acervoAlterado.Id);
             var acervoCreditoAutorAInserir = creditosAutoresPropostos.Select(a => a)
                                          .Except(acervoCreditoAutorAtuais.Select(b => b.CreditoAutorId));
-            var arquivosIdsExcluir = acervoCreditoAutorAtuais.Select(a => a.CreditoAutorId)
+            var creditosAutoresIdsExcluir = acervoCreditoAutorAtuais.Select(a => a.CreditoAutorId)
                                  .Except(creditosAutoresPropostos.Select(b => b)).ToArray();
 
             foreach (var creditoAutorId in acervoCreditoAutorAInserir)
@@ -121,9 +129,38 @@ namespace SME.CDEP.Aplicacao.Servicos
                     CreditoAutorId = creditoAutorId
                 });
             
-            await repositorioAcervoCreditoAutor.Excluir(arquivosIdsExcluir,acervo.Id);
+            await repositorioAcervoCreditoAutor.Excluir(creditosAutoresIdsExcluir,acervo.Id);
+            
+            var coAutoresPropostos = acervo.CoAutores.NaoEhNulo() ? acervo.CoAutores : Enumerable.Empty<CoAutor>();
+            var coAutoresAtuais = await repositorioAcervoCreditoAutor.ObterPorAcervoId(acervoAlterado.Id, true);
+            var coAutoresAInserir = coAutoresPropostos.Select(a => a).Except(coAutoresAtuais.Select(b => new CoAutor() { CreditoAutorId = b.CreditoAutorId, TipoAutoria = b.TipoAutoria}));
+            var coAutoresIdsExcluir = coAutoresAtuais.Select(b => new CoAutor() { CreditoAutorId = b.CreditoAutorId, TipoAutoria = b.TipoAutoria}).Except(coAutoresPropostos.Select(b => b)).ToArray();
+            
+            foreach (var creditoAutor in coAutoresAInserir)
+                await repositorioAcervoCreditoAutor.Inserir(new AcervoCreditoAutor()
+                {
+                    AcervoId = acervo.Id,
+                    CreditoAutorId = creditoAutor.CreditoAutorId,
+                    TipoAutoria = creditoAutor.TipoAutoria
+                });
+
+            foreach (var coAutorExcluir in coAutoresIdsExcluir)
+                await repositorioAcervoCreditoAutor.Excluir(coAutorExcluir.CreditoAutorId, coAutorExcluir.TipoAutoria,acervo.Id);
+            
 
             return acervoAlterado;
+        }
+       
+        public async Task<AcervoDTO> Alterar(long id, string titulo, string codigo, long[] creditosAutoresIds, string subTitulo, CoAutorDTO[] coAutores)
+        {
+            var acervo = await repositorioAcervo.ObterPorId(id);
+
+            acervo.Titulo = titulo;
+            acervo.Codigo = codigo;
+            acervo.CreditosAutoresIds = creditosAutoresIds;
+            acervo.CoAutores = coAutores.NaoEhNulo() ? coAutores.Select(s=> new CoAutor() { CreditoAutorId = s.CreditoAutorId, TipoAutoria = s.TipoAutoria}) : null;
+            acervo.SubTitulo = subTitulo;
+            return await Alterar(acervo);
         }
 
         public async Task<AcervoDTO> Alterar(long id, string titulo, string codigo, long[] creditosAutoresIds, string codigoNovo = "")

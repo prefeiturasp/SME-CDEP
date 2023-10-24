@@ -9,8 +9,7 @@ public class AcervoBibliograficoCompleto : EntidadeBase
     public string Codigo { get; set; }
     public long CreditoAutorId { get; set; }
     public string CreditoAutorNome { get; set; }
-    public long CreditoCoAutorId { get; set; }
-    public string CreditoCoAutorNome { get; set; }
+    public string TipoAutoria { get; set; }
     public long? MaterialId { get; set; }
     public string MaterialNome { get; set; }
     public long EditoraId { get; set; }
@@ -30,5 +29,5 @@ public class AcervoBibliograficoCompleto : EntidadeBase
     public string NotasGerais { get; set; }
     public string Isbn { get; set; }
     public long[] CreditosAutoresIds { get; set; }
-    public long[] CreditosCoAutores { get; set; } //Aqui passa o tipo
+    public CoAutor[]? CoAutores { get; set; }
 }

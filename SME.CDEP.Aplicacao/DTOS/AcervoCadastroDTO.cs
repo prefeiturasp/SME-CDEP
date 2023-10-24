@@ -10,4 +10,6 @@ public class AcervoCadastroDTO
     public string? Codigo { get; set; }
     public string? CodigoNovo { get; set; }
     public long[]? CreditosAutoresIds { get; set; }
+    public CoAutorDTO[]? CoAutores { get; set; }
+    public string? SubTitulo { get; set; }
 }
