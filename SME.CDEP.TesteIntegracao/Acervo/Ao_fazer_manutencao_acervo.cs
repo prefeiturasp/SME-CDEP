@@ -51,7 +51,6 @@ namespace SME.CDEP.TesteIntegracao
             await InserirDadosBasicos();
             await InserirAcervo();
             var servicoAcervo = GetServicoAcervo();
-            var faker = new Faker("pt_BR");
 
             var acervoAlterar = (ObterTodos<Acervo>()).FirstOrDefault();
             acervoAlterar.Titulo = faker.Lorem.Sentence();
@@ -84,7 +83,6 @@ namespace SME.CDEP.TesteIntegracao
             await InserirDadosBasicos();
             await InserirAcervo();
             var servicoAcervo = GetServicoAcervo();
-            var faker = new Faker("pt_BR");
 
             var acervoAlterar = (ObterTodos<Acervo>()).FirstOrDefault();
             acervoAlterar.Titulo = faker.Lorem.Sentence();
@@ -115,7 +113,6 @@ namespace SME.CDEP.TesteIntegracao
             await InserirDadosBasicos();
             await InserirAcervo();
             var servicoAcervo = GetServicoAcervo();
-            var faker = new Faker("pt_BR");
 
             var acervos = ObterTodos<Acervo>();
             var acervoAlterar = (acervos).FirstOrDefault();
@@ -136,7 +133,6 @@ namespace SME.CDEP.TesteIntegracao
             await InserirDadosBasicos();
             await InserirAcervo();
             var servicoAcervo = GetServicoAcervo();
-            var faker = new Faker("pt_BR");
             
             var acervos = ObterTodos<Acervo>();
             var acervoAlterar = (acervos).FirstOrDefault();
@@ -171,7 +167,6 @@ namespace SME.CDEP.TesteIntegracao
             await InserirDadosBasicos();
             await InserirAcervo();
             var servicoAcervo = GetServicoAcervo();
-            var faker = new Faker("pt_BR");
             
             var acervos = ObterTodos<Acervo>();
             var acervoAlterar = (acervos).FirstOrDefault();
@@ -206,7 +201,6 @@ namespace SME.CDEP.TesteIntegracao
             await InserirDadosBasicos();
             await InserirAcervo();
             var servicoAcervo = GetServicoAcervo();
-            var faker = new Faker("pt_BR");
             
             var acervos = ObterTodos<Acervo>();
             var acervoAlterar = (acervos).FirstOrDefault();
@@ -240,7 +234,6 @@ namespace SME.CDEP.TesteIntegracao
         {
             await InserirDadosBasicos();
             var servicoAcervo = GetServicoAcervo();
-            var faker = new Faker("pt_BR");
             var random = new Random();
             
             var acervoInserir = GerarAcervo(TipoAcervo.Bibliografico).Generate();
@@ -292,7 +285,6 @@ namespace SME.CDEP.TesteIntegracao
             await InserirDadosBasicos();
             await InserirAcervo();
             var servicoAcervo = GetServicoAcervo();
-            var faker = new Faker("pt_BR");
             
             var acervoInserir = GerarAcervo(TipoAcervo.Bibliografico).Generate();
             acervoInserir.CreditosAutoresIds = new long []{1,2,3,4,5};
@@ -312,7 +304,6 @@ namespace SME.CDEP.TesteIntegracao
             await InserirDadosBasicos();
             await InserirAcervo();
             var servicoAcervo = GetServicoAcervo();
-            var faker = new Faker("pt_BR");
             
             var acervoInserir = GerarAcervo(TipoAcervo.Bibliografico).Generate();
             acervoInserir.CreditosAutoresIds = new long []{1,2,3,4,5};
