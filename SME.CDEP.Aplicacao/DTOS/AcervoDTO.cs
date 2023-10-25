@@ -3,6 +3,7 @@
 public class AcervoDTO : BaseAuditavelDTO
 {
     public string Titulo { get; set; }
+    public string Descricao { get; set; }
     public long TipoAcervoId { get; set; }
     public string Codigo { get; set; }
     public long CreditoAutorId { get; set; }

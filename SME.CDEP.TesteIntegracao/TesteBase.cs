@@ -318,6 +318,7 @@ namespace SME.CDEP.TesteIntegracao
             var random = new Random();
             var faker = new Faker<Acervo>("pt_BR");
             faker.RuleFor(x => x.Titulo, f => f.Lorem.Text().Limite(500));
+            faker.RuleFor(x => x.Descricao, f => f.Lorem.Text());
             faker.RuleFor(x => x.Codigo, f => random.Next(1,499).ToString());
             
             if (((long)tipoAcervo).EhAcervoDocumental())

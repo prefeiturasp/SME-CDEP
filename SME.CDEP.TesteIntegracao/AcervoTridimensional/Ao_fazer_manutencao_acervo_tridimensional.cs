@@ -61,7 +61,7 @@ namespace SME.CDEP.TesteIntegracao
                 DataAcervo = DateTimeExtension.HorarioBrasilia().Date.ToString("dd/MM/yyyy"),
                 ConservacaoId = random.Next(1, 5),
                 Quantidade = random.Next(15, 55),
-                Descricao = string.Format(ConstantesTestes.DESCRICAO_X, 100),
+                Descricao = faker.Lorem.Text(),
                 Largura = random.Next(15, 55),
                 Altura = random.Next(15, 55),
                 Diametro = random.Next(15, 55),
@@ -73,6 +73,7 @@ namespace SME.CDEP.TesteIntegracao
             
             var acervo = ObterTodos<Acervo>().FirstOrDefault(w=> w.Id == 3);
             acervo.Titulo.Equals(acervoTridimensionalAlteracaoDto.Titulo).ShouldBeTrue();
+            acervo.Descricao.Equals(acervoTridimensionalAlteracaoDto.Descricao).ShouldBeTrue();
             acervo.Codigo.Equals(acervoTridimensionalAlteracaoDto.Codigo).ShouldBeTrue();
             acervo.TipoAcervoId.ShouldBe((int)TipoAcervo.Tridimensional);
             acervo.CriadoLogin.ShouldNotBeEmpty();
@@ -87,7 +88,6 @@ namespace SME.CDEP.TesteIntegracao
             acervoTridimensional.DataAcervo.ShouldBe(acervoTridimensionalAlteracaoDto.DataAcervo);
             acervoTridimensional.ConservacaoId.ShouldBe(acervoTridimensionalAlteracaoDto.ConservacaoId);
             acervoTridimensional.Quantidade.ShouldBe(acervoTridimensionalAlteracaoDto.Quantidade);
-            acervoTridimensional.Descricao.ShouldBe(acervoTridimensionalAlteracaoDto.Descricao);
             acervoTridimensional.Largura.ShouldBe(acervoTridimensionalAlteracaoDto.Largura.Value);
             acervoTridimensional.Altura.ShouldBe(acervoTridimensionalAlteracaoDto.Altura.Value);
             acervoTridimensional.Profundidade.ShouldBe(acervoTridimensionalAlteracaoDto.Profundidade.Value);
@@ -123,7 +123,7 @@ namespace SME.CDEP.TesteIntegracao
                 DataAcervo = DateTimeExtension.HorarioBrasilia().Date.ToString("dd/MM/yyyy"),
                 ConservacaoId = random.Next(1, 5),
                 Quantidade = random.Next(15, 55),
-                Descricao = string.Format(ConstantesTestes.DESCRICAO_X, 100),
+                Descricao = faker.Lorem.Text(),
                 Largura = random.Next(15, 55),
                 Altura = random.Next(15, 55),
                 Profundidade = random.Next(15, 55),
@@ -135,6 +135,7 @@ namespace SME.CDEP.TesteIntegracao
             
             var acervo = ObterTodos<Acervo>().FirstOrDefault(w=> w.Id == 3);
             acervo.Titulo.Equals(acervoTridimensionalAlteracaoDto.Titulo).ShouldBeTrue();
+            acervo.Descricao.Equals(acervoTridimensionalAlteracaoDto.Descricao).ShouldBeTrue();
             acervo.Codigo.Equals(acervoTridimensionalAlteracaoDto.Codigo).ShouldBeTrue();
             acervo.TipoAcervoId.ShouldBe((int)TipoAcervo.Tridimensional);
             acervo.CriadoLogin.ShouldNotBeEmpty();
@@ -149,7 +150,6 @@ namespace SME.CDEP.TesteIntegracao
             acervoTridimensional.DataAcervo.ShouldBe(acervoTridimensionalAlteracaoDto.DataAcervo);
             acervoTridimensional.ConservacaoId.ShouldBe(acervoTridimensionalAlteracaoDto.ConservacaoId);
             acervoTridimensional.Quantidade.ShouldBe(acervoTridimensionalAlteracaoDto.Quantidade);
-            acervoTridimensional.Descricao.ShouldBe(acervoTridimensionalAlteracaoDto.Descricao);
             acervoTridimensional.Largura.ShouldBe(acervoTridimensionalAlteracaoDto.Largura.Value);
             acervoTridimensional.Altura.ShouldBe(acervoTridimensionalAlteracaoDto.Altura.Value);
             acervoTridimensional.Profundidade.ShouldBe(acervoTridimensionalAlteracaoDto.Profundidade.Value);
@@ -183,7 +183,7 @@ namespace SME.CDEP.TesteIntegracao
                 DataAcervo = DateTimeExtension.HorarioBrasilia().Date.ToString("dd/MM/yyyy"),
                 ConservacaoId = random.Next(1, 5),
                 Quantidade = random.Next(15, 55),
-                Descricao = string.Format(ConstantesTestes.DESCRICAO_X, 100),
+                Descricao = faker.Lorem.Text(),
                 Largura = random.Next(15, 55),
                 Altura = random.Next(15, 55),
                 Profundidade = random.Next(15, 55),
@@ -195,6 +195,7 @@ namespace SME.CDEP.TesteIntegracao
             
             var acervo = ObterTodos<Acervo>().FirstOrDefault(w=> w.Id == 3);
             acervo.Titulo.Equals(acervoTridimensionalAlteracaoDto.Titulo).ShouldBeTrue();
+            acervo.Descricao.Equals(acervoTridimensionalAlteracaoDto.Descricao).ShouldBeTrue();
             acervo.Codigo.Equals(acervoTridimensionalAlteracaoDto.Codigo).ShouldBeTrue();
             acervo.TipoAcervoId.ShouldBe((int)TipoAcervo.Tridimensional);
             acervo.CriadoLogin.ShouldNotBeEmpty();
@@ -209,7 +210,6 @@ namespace SME.CDEP.TesteIntegracao
             acervoTridimensional.DataAcervo.ShouldBe(acervoTridimensionalAlteracaoDto.DataAcervo);
             acervoTridimensional.ConservacaoId.ShouldBe(acervoTridimensionalAlteracaoDto.ConservacaoId);
             acervoTridimensional.Quantidade.ShouldBe(acervoTridimensionalAlteracaoDto.Quantidade);
-            acervoTridimensional.Descricao.ShouldBe(acervoTridimensionalAlteracaoDto.Descricao);
             acervoTridimensional.Largura.ShouldBe(acervoTridimensionalAlteracaoDto.Largura.Value);
             acervoTridimensional.Altura.ShouldBe(acervoTridimensionalAlteracaoDto.Altura.Value);
             acervoTridimensional.Profundidade.ShouldBe(acervoTridimensionalAlteracaoDto.Profundidade.Value);
@@ -243,7 +243,7 @@ namespace SME.CDEP.TesteIntegracao
                 DataAcervo = DateTimeExtension.HorarioBrasilia().Date.ToString("dd/MM/yyyy"),
                 ConservacaoId = random.Next(1, 5),
                 Quantidade = random.Next(15, 55),
-                Descricao = string.Format(ConstantesTestes.DESCRICAO_X, 100),
+                Descricao = faker.Lorem.Text(),
                 Largura = random.Next(15, 55),
                 Altura = random.Next(15, 55),
                 Profundidade = random.Next(15, 55),
@@ -256,6 +256,7 @@ namespace SME.CDEP.TesteIntegracao
 
             var acervo = ObterTodos<Acervo>().LastOrDefault();
             acervo.Titulo.Equals(acervoTridimensionalCadastroDto.Titulo).ShouldBeTrue();
+            acervo.Descricao.Equals(acervoTridimensionalCadastroDto.Descricao).ShouldBeTrue();
             acervo.Codigo.Equals($"{acervoTridimensionalCadastroDto.Codigo}.TD").ShouldBeTrue();
             acervo.TipoAcervoId.ShouldBe((int)TipoAcervo.Tridimensional);
             acervo.CriadoLogin.ShouldNotBeEmpty();
@@ -270,7 +271,6 @@ namespace SME.CDEP.TesteIntegracao
             acervoTridimensional.DataAcervo.ShouldBe(acervoTridimensionalCadastroDto.DataAcervo);
             acervoTridimensional.ConservacaoId.ShouldBe(acervoTridimensionalCadastroDto.ConservacaoId);
             acervoTridimensional.Quantidade.ShouldBe(acervoTridimensionalCadastroDto.Quantidade);
-            acervoTridimensional.Descricao.ShouldBe(acervoTridimensionalCadastroDto.Descricao);
             acervoTridimensional.Largura.ShouldBe(acervoTridimensionalCadastroDto.Largura.Value);
             acervoTridimensional.Altura.ShouldBe(acervoTridimensionalCadastroDto.Altura.Value);
             acervoTridimensional.Profundidade.ShouldBe(acervoTridimensionalCadastroDto.Profundidade.Value);
@@ -304,7 +304,7 @@ namespace SME.CDEP.TesteIntegracao
                 DataAcervo = DateTimeExtension.HorarioBrasilia().Date.ToString("dd/MM/yyyy"),
                 ConservacaoId = random.Next(1, 5),
                 Quantidade = random.Next(15, 55),
-                Descricao = string.Format(ConstantesTestes.DESCRICAO_X, 100),
+                Descricao = faker.Lorem.Text(),
                 Largura = random.Next(15, 55),
                 Altura = random.Next(15, 55),
                 Profundidade = random.Next(15, 55),
@@ -326,6 +326,7 @@ namespace SME.CDEP.TesteIntegracao
                 {
                     Codigo = $"{j.ToString()}.TD",
                     Titulo = string.Format(ConstantesTestes.TITULO_X, j),
+                    Descricao = faker.Lorem.Text(),
                     TipoAcervoId = (int)TipoAcervo.Tridimensional,
                     CriadoPor = ConstantesTestes.SISTEMA,
                     CriadoEm = DateTimeExtension.HorarioBrasilia().AddMinutes(-15),
@@ -339,7 +340,6 @@ namespace SME.CDEP.TesteIntegracao
                     DataAcervo = DateTimeExtension.HorarioBrasilia().Date.ToString("dd/MM/yyyy"),
                     ConservacaoId = random.Next(1,5),
                     Quantidade = random.Next(15,55),
-                    Descricao = string.Format(ConstantesTestes.DESCRICAO_X,j),
                     Largura = random.Next(15,55),
                     Altura = random.Next(15,55),
                     Profundidade = random.Next(15,55),

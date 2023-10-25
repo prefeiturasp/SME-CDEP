@@ -126,6 +126,7 @@ namespace SME.CDEP.Aplicacao.Servicos
             {
                 await servicoAcervo.Alterar(acervoTridimensionalAlteracaoDto.AcervoId,
                     acervoTridimensionalAlteracaoDto.Titulo, 
+                    acervoTridimensionalAlteracaoDto.Descricao, 
                     codigo 
                     );
                 

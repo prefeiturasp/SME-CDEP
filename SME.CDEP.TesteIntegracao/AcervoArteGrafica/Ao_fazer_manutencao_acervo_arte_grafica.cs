@@ -49,7 +49,6 @@ namespace SME.CDEP.TesteIntegracao
 
             var acervoArteGraficaDtos = await servicoAcervoArteGrafica.ObterTodos();
             acervoArteGraficaDtos.ShouldNotBeNull();
-            // acervoArteGraficaDtos.FirstOrDefault().CreditosAutoresIds.Any().ShouldBeTrue(); //Agrupar conforme ServicoAcervoAuditavel
         }
         
         [Fact(DisplayName = "Acervo Arte Gráfica - Atualizar (Adicionando 4 novos arquivos, sendo 1 existente)")]
@@ -87,7 +86,7 @@ namespace SME.CDEP.TesteIntegracao
                 Tecnica = string.Format(ConstantesTestes.TECNICA_X, 100),
                 SuporteId = random.Next(1, 5),
                 Quantidade = random.Next(15, 55),
-                Descricao = string.Format(ConstantesTestes.DESCRICAO_X, 100),
+                Descricao = faker.Lorem.Text(),
                 Arquivos = arquivosSelecionados
             };
             
@@ -95,6 +94,7 @@ namespace SME.CDEP.TesteIntegracao
             
             var acervo = ObterTodos<Acervo>().FirstOrDefault(w=> w.Id == 3);
             acervo.Titulo.Equals(acervoArteGraficaAlteracaoDto.Titulo).ShouldBeTrue();
+            acervo.Descricao.Equals(acervoArteGraficaAlteracaoDto.Descricao).ShouldBeTrue();
             acervo.Codigo.Equals(acervoArteGraficaAlteracaoDto.Codigo).ShouldBeTrue();
             acervo.TipoAcervoId.ShouldBe((int)TipoAcervo.ArtesGraficas);
             acervo.CriadoLogin.ShouldNotBeEmpty();
@@ -118,7 +118,6 @@ namespace SME.CDEP.TesteIntegracao
             acervoArteGrafica.Tecnica.ShouldBe(acervoArteGraficaAlteracaoDto.Tecnica);
             acervoArteGrafica.SuporteId.ShouldBe(acervoArteGraficaAlteracaoDto.SuporteId);
             acervoArteGrafica.Quantidade.ShouldBe(acervoArteGraficaAlteracaoDto.Quantidade);
-            acervoArteGrafica.Descricao.ShouldBe(acervoArteGraficaAlteracaoDto.Descricao);
             
             var acervoArteGraficaArquivos = ObterTodos<AcervoArteGraficaArquivo>();
             var acervoArteGraficaArquivosInseridos = acervoArteGraficaArquivos.Where(w => w.AcervoArteGraficaId == acervoArteGrafica.Id);
@@ -165,7 +164,7 @@ namespace SME.CDEP.TesteIntegracao
                 Tecnica = string.Format(ConstantesTestes.TECNICA_X, 100),
                 SuporteId = random.Next(1, 5),
                 Quantidade = random.Next(15, 55),
-                Descricao = string.Format(ConstantesTestes.DESCRICAO_X, 100),
+                Descricao = faker.Lorem.Text(),
                 Arquivos = arquivosSelecionados
             };
                 
@@ -173,6 +172,7 @@ namespace SME.CDEP.TesteIntegracao
             
             var acervo = ObterTodos<Acervo>().FirstOrDefault(w=> w.Id == 3);
             acervo.Titulo.Equals(acervoArteGraficaAlteracaoDto.Titulo).ShouldBeTrue();
+            acervo.Descricao.Equals(acervoArteGraficaAlteracaoDto.Descricao).ShouldBeTrue();
             acervo.Codigo.Equals(acervoArteGraficaAlteracaoDto.Codigo).ShouldBeTrue();
             acervo.TipoAcervoId.ShouldBe((int)TipoAcervo.ArtesGraficas);
             acervo.CriadoLogin.ShouldNotBeEmpty();
@@ -196,7 +196,6 @@ namespace SME.CDEP.TesteIntegracao
             acervoArteGrafica.Tecnica.ShouldBe(acervoArteGraficaAlteracaoDto.Tecnica);
             acervoArteGrafica.SuporteId.ShouldBe(acervoArteGraficaAlteracaoDto.SuporteId);
             acervoArteGrafica.Quantidade.ShouldBe(acervoArteGraficaAlteracaoDto.Quantidade);
-            acervoArteGrafica.Descricao.ShouldBe(acervoArteGraficaAlteracaoDto.Descricao);
             
             var acervoArteGraficaArquivos = ObterTodos<AcervoArteGraficaArquivo>();
             var acervoArteGraficaArquivosInseridos = acervoArteGraficaArquivos.Where(w => w.AcervoArteGraficaId == acervoArteGrafica.Id);
@@ -241,7 +240,7 @@ namespace SME.CDEP.TesteIntegracao
                 Tecnica = string.Format(ConstantesTestes.TECNICA_X, 100),
                 SuporteId = random.Next(1, 5),
                 Quantidade = random.Next(15, 55),
-                Descricao = string.Format(ConstantesTestes.DESCRICAO_X, 100),
+                Descricao = faker.Lorem.Text(),
                 Arquivos = arquivosSelecionados
             };
                 
@@ -249,6 +248,7 @@ namespace SME.CDEP.TesteIntegracao
             
             var acervo = ObterTodos<Acervo>().FirstOrDefault(w=> w.Id == 3);
             acervo.Titulo.Equals(acervoArteGraficaAlteracaoDto.Titulo).ShouldBeTrue();
+            acervo.Descricao.Equals(acervoArteGraficaAlteracaoDto.Descricao).ShouldBeTrue();
             acervo.Codigo.Equals(acervoArteGraficaAlteracaoDto.Codigo).ShouldBeTrue();
             acervo.TipoAcervoId.ShouldBe((int)TipoAcervo.ArtesGraficas);
             acervo.CriadoLogin.ShouldNotBeEmpty();
@@ -272,7 +272,6 @@ namespace SME.CDEP.TesteIntegracao
             acervoArteGrafica.Tecnica.ShouldBe(acervoArteGraficaAlteracaoDto.Tecnica);
             acervoArteGrafica.SuporteId.ShouldBe(acervoArteGraficaAlteracaoDto.SuporteId);
             acervoArteGrafica.Quantidade.ShouldBe(acervoArteGraficaAlteracaoDto.Quantidade);
-            acervoArteGrafica.Descricao.ShouldBe(acervoArteGraficaAlteracaoDto.Descricao);
             
             var acervoArteGraficaArquivos = ObterTodos<AcervoArteGraficaArquivo>();
             var acervoArteGraficaArquivosInseridos = acervoArteGraficaArquivos.Where(w => w.AcervoArteGraficaId == acervoArteGrafica.Id);
@@ -317,7 +316,7 @@ namespace SME.CDEP.TesteIntegracao
                 Tecnica = string.Format(ConstantesTestes.TECNICA_X, 100),
                 SuporteId = random.Next(1, 5),
                 Quantidade = random.Next(15, 55),
-                Descricao = string.Format(ConstantesTestes.DESCRICAO_X, 100),
+                Descricao = faker.Lorem.Text(),
                 Arquivos = arquivosSelecionados
             };
             
@@ -326,6 +325,7 @@ namespace SME.CDEP.TesteIntegracao
 
             var acervo = ObterTodos<Acervo>().LastOrDefault();
             acervo.Titulo.Equals(acervoArteGraficaCadastroDto.Titulo).ShouldBeTrue();
+            acervo.Descricao.Equals(acervoArteGraficaCadastroDto.Descricao).ShouldBeTrue();
             acervo.Codigo.Equals($"{acervoArteGraficaCadastroDto.Codigo}.AG").ShouldBeTrue();
             acervo.TipoAcervoId.ShouldBe((int)TipoAcervo.ArtesGraficas);
             acervo.CriadoLogin.ShouldNotBeEmpty();
@@ -349,7 +349,6 @@ namespace SME.CDEP.TesteIntegracao
             acervoArteGrafica.Tecnica.ShouldBe(acervoArteGraficaCadastroDto.Tecnica);
             acervoArteGrafica.SuporteId.ShouldBe(acervoArteGraficaCadastroDto.SuporteId);
             acervoArteGrafica.Quantidade.ShouldBe(acervoArteGraficaCadastroDto.Quantidade);
-            acervoArteGrafica.Descricao.ShouldBe(acervoArteGraficaCadastroDto.Descricao);
             
             var acervoArteGraficaArquivos = ObterTodos<AcervoArteGraficaArquivo>();
             var acervoArteGraficaArquivosInseridos = acervoArteGraficaArquivos.Where(w => w.AcervoArteGraficaId == acervoArteGrafica.Id);
@@ -394,7 +393,7 @@ namespace SME.CDEP.TesteIntegracao
                 Tecnica = string.Format(ConstantesTestes.TECNICA_X, 100),
                 SuporteId = random.Next(1, 5),
                 Quantidade = random.Next(15, 55),
-                Descricao = string.Format(ConstantesTestes.DESCRICAO_X, 100),
+                Descricao = faker.Lorem.Text(),
                 Arquivos = arquivosSelecionados
             };
             
@@ -412,6 +411,7 @@ namespace SME.CDEP.TesteIntegracao
                 {
                     Codigo = $"{j.ToString()}.AG",
                     Titulo = string.Format(ConstantesTestes.TITULO_X, j),
+                    Descricao = faker.Lorem.Text(),
                     TipoAcervoId = (int)TipoAcervo.ArtesGraficas,
                     CriadoPor = ConstantesTestes.SISTEMA,
                     CriadoEm = DateTimeExtension.HorarioBrasilia().AddMinutes(-15),
@@ -455,7 +455,6 @@ namespace SME.CDEP.TesteIntegracao
                     Tecnica = string.Format(ConstantesTestes.TECNICA_X,j),
                     SuporteId = random.Next(1,5),
                     Quantidade = random.Next(15,55),
-                    Descricao = string.Format(ConstantesTestes.DESCRICAO_X,j)
                 });
                 
                 await InserirNaBase(new Arquivo()
