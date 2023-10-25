@@ -1,6 +1,6 @@
 ﻿namespace SME.CDEP.Dominio.Entidades;
 
-public class AcervoBibliograficoCompleto : EntidadeBase
+public class AcervoBibliograficoCompleto : EntidadeBaseAuditavel
 {
     public long AcervoId { get; set; }
     public string Titulo { get; set; }
@@ -9,6 +9,7 @@ public class AcervoBibliograficoCompleto : EntidadeBase
     public string Codigo { get; set; }
     public long CreditoAutorId { get; set; }
     public string CreditoAutorNome { get; set; }
+    public long AssuntoId { get; set; }
     public string TipoAutoria { get; set; }
     public long? MaterialId { get; set; }
     public string MaterialNome { get; set; }
@@ -30,4 +31,5 @@ public class AcervoBibliograficoCompleto : EntidadeBase
     public string Isbn { get; set; }
     public long[] CreditosAutoresIds { get; set; }
     public CoAutor[]? CoAutores { get; set; }
+    public long[] AssuntosIds { get; set; }
 }

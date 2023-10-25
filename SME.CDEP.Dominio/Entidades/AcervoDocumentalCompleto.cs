@@ -1,6 +1,6 @@
 ﻿namespace SME.CDEP.Dominio.Entidades;
 
-public class AcervoDocumentalCompleto : EntidadeBase
+public class AcervoDocumentalCompleto : EntidadeBaseAuditavel
 {
     public long AcervoId { get; set; }
     public string Titulo { get; set; }
@@ -25,12 +25,6 @@ public class AcervoDocumentalCompleto : EntidadeBase
     public long? ConservacaoId { get; set; }
     public string ConservacaoNome { get; set; }
     public string Descricao { get; set; }
-    public DateTime? AlteradoEm { get; set; }
-    public string? AlteradoPor { get; set; }
-    public string? AlteradoLogin { get; set; }
-    public DateTime CriadoEm { get; set; }
-    public string CriadoPor { get; set; }
-    public string CriadoLogin { get; set; }
     public ArquivoResumido[] Arquivos  { get; set; }
     public long? ArquivoId { get; set; }
     public string ArquivoNome { get; set; }
