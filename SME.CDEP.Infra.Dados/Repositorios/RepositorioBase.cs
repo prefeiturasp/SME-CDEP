@@ -56,14 +56,22 @@ public abstract class RepositorioBase<TEntidade> : IRepositorioBase<TEntidade>
             throw;
         }
     }
-
+    
     public async Task Remover(TEntidade entidade)
     {
-        throw new NotImplementedException();
+        DefinirAtualização(entidade, true);
+        await conexao.Obter().UpdateAsync(entidade);
     }
 
     public async Task Remover(long id)
     {
-        throw new NotImplementedException();
+        var entidade = await ObterPorId(id);
+        DefinirAtualização(entidade,true);
+        await conexao.Obter().UpdateAsync(entidade);
+    }
+
+    private void DefinirAtualização(TEntidade entidade, bool excluir = false)
+    {
+        entidade.Excluido = excluir;
     }
 }

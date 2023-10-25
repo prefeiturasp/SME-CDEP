@@ -8,5 +8,7 @@
         public CreditoAutor? CreditoAutor { get; set; }
         public long[]? CreditosAutoresIds { get; set; }
         public string CodigoNovo { get; set; }
+        public string SubTitulo { get; set; }
+        public IEnumerable<CoAutor>? CoAutores { get; set; }
     }
 }

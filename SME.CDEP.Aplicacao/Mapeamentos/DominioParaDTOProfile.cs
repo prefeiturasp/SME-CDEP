@@ -67,6 +67,21 @@ namespace SME.CDEP.Aplicacao.Mapeamentos
             CreateMap<AuditoriaDTO, AcervoDocumentalCompleto>().ReverseMap();
             CreateMap<AcervoDocumentalDTO, Acervo>().ReverseMap();
             CreateMap<AcervoDocumentalDTO, AcervoDocumental>().ReverseMap();
+            
+            CreateMap<CoAutorDTO, CoAutor>().ReverseMap();
+            
+            CreateMap<AcervoBibliograficoCadastroDTO, AcervoBibliografico>().ReverseMap();
+            CreateMap<AcervoBibliograficoAlteracaoDTO, AcervoBibliografico>().ReverseMap();
+            CreateMap<AcervoBibliograficoAlteracaoDTO, AcervoBibliograficoDTO>().ReverseMap();
+            CreateMap<AcervoBibliograficoCadastroDTO, Acervo>().ReverseMap();
+            CreateMap<AcervoBibliograficoDTO, AcervoBibliograficoCompleto>().ReverseMap();
+            CreateMap<AuditoriaDTO, AcervoBibliograficoCompleto>().ReverseMap();
+            CreateMap<AcervoBibliograficoDTO, Acervo>().ReverseMap();
+            CreateMap<AcervoBibliograficoDTO, AcervoBibliografico>().ReverseMap();
+            
+            CreateMap<AcervoBibliograficoCompleto, AcervoBibliograficoDTO>()
+                .ForMember(dest => dest.CoAutores, opt => opt.MapFrom(o => o.CoAutores))
+                .ReverseMap();
         }
     }
 }
