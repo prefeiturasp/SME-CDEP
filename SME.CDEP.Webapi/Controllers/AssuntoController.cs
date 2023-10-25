@@ -47,7 +47,7 @@ public class AssuntoController: BaseController
         return Ok(await servicoAssunto.ObterPaginado(nome));
     }
     
-    [HttpGet("todos")]
+    [HttpGet("resumido")]
     [ProducesResponseType(typeof(RetornoBaseDTO), 400)]
     [ProducesResponseType(typeof(RetornoBaseDTO), 601)]
     [ProducesResponseType(typeof(IdNomeDTO), 200)]  
