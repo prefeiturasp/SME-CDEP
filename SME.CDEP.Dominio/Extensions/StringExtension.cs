@@ -35,5 +35,11 @@ namespace SME.CDEP.Dominio.Extensions
         {
             return string.IsNullOrEmpty(str);
         }
+        
+        public static string Limite(this string str, int limite)
+        {
+            var tamanhoString = str.Length;
+            return tamanhoString > limite ? str.Substring(0,limite) : str;
+        }
     }
 }

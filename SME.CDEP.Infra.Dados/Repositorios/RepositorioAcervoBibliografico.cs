@@ -1,6 +1,7 @@
 ﻿using Dapper;
 using SME.CDEP.Dominio.Contexto;
 using SME.CDEP.Dominio.Entidades;
+using SME.CDEP.Dominio.Extensions;
 using SME.CDEP.Infra.Dados.Repositorios.Interfaces;
 
 namespace SME.CDEP.Infra.Dados.Repositorios
@@ -33,24 +34,18 @@ namespace SME.CDEP.Infra.Dados.Repositorios
                                   a.codigo,
                                   a.tipo,
                                   ca.id,
-                                  ca.nome,
-                                  aba.assunto_id,
-                                  ass.nome
+                                  ca.nome
                         from acervo_bibliografico ab
                         join acervo a on a.id = ab.acervo_id     
                         join acervo_credito_autor aca on aca.acervo_id = a.id
                         join credito_autor ca on aca.credito_autor_id = ca.id
-                        join acervo_bibliografico_assunto aba on aba.acervo_bibliografico_id = ab.id
-                        join assunto ass on ass.id = aba.assunto_id
                         where not a.excluido ";
 
-            var retorno = await conexao.Obter().QueryAsync<AcervoBibliografico, Acervo, CreditoAutor,  Assunto, AcervoBibliografico>(
-                query, (acervoBibliografico, acervo, creditoAutor, assunto) =>
+            var retorno = await conexao.Obter().QueryAsync<AcervoBibliografico, Acervo, CreditoAutor,  AcervoBibliografico>(
+                query, (acervoBibliografico, acervo, creditoAutor) =>
                 {
                     acervo.CreditoAutor = creditoAutor;
                     acervoBibliografico.Acervo = acervo;
-                    
-                    acervoBibliografico.Assunto = assunto;
                     
                     return acervoBibliografico;
                 });
@@ -82,7 +77,8 @@ namespace SME.CDEP.Infra.Dados.Repositorios
                                   a.alterado_por as AlteradoPor,
                                   a.alterado_login as AlteradoLogin,  
                                   ca.id as CreditoAutorId,
-                                  ca.nome as CreditoAutorNome,                                                                   
+                                  ca.nome as CreditoAutorNome,    
+                                  aca.tipo_autoria as TipoAutoria,
                                   i.id as IdiomaId,
                                   i.nome as IdiomaNome,
                                   m.id as materialId,
@@ -110,8 +106,8 @@ namespace SME.CDEP.Infra.Dados.Repositorios
             if (retorno.Any())
             {
                 var acervoBi = retorno.FirstOrDefault();
-                // acervoBi.AcessoDocumentosIds = retorno.Select(s => s.AcessoDocumentoId).Distinct().ToArray();
-                acervoBi.CreditosAutoresIds = acervoBi.CreditoAutorId > 0 ? retorno.Select(s => s.CreditoAutorId).Distinct().ToArray() : Array.Empty<long>();
+                acervoBi.CreditosAutoresIds = acervoBi.CreditoAutorId.EhMaiorQueZero() ? retorno.Where(w=> w.TipoAutoria.EhNulo()).Select(s => s.CreditoAutorId).Distinct().ToArray() : Array.Empty<long>();
+                acervoBi.CoAutores = acervoBi.CreditoAutorId.EhMaiorQueZero() ? retorno.Where(w=> w.TipoAutoria.NaoEhNulo()).Select(s => new CoAutor() { CreditoAutorId = s.CreditoAutorId, TipoAutoria = s.TipoAutoria}).Distinct().ToArray() : Array.Empty<CoAutor>();
                 return acervoBi;    
             }
 

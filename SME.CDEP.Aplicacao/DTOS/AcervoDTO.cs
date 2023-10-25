@@ -8,4 +8,6 @@ public class AcervoDTO : BaseAuditavelDTO
     public long CreditoAutorId { get; set; }
     public CreditoAutorDTO CreditoAutor { get; set; }
     public string CodigoNovo { get; set; }
+    public string SubTitulo { get; set; }
+    public IEnumerable<CoAutorDTO> CoAutores { get; set; }
 }

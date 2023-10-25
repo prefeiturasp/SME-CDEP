@@ -189,6 +189,7 @@ public class RegistradorDeDependencia
         _serviceCollection.TryAddScoped<IServicoAcervoTridimensional, ServicoAcervoTridimensional>();
         _serviceCollection.TryAddScoped<IServicoAcervoAudiovisual, ServicoAcervoAudiovisual>();
         _serviceCollection.TryAddScoped<IServicoAcervoDocumental, ServicoAcervoDocumental>();
+        _serviceCollection.TryAddScoped<IServicoAcervoBibliografico, ServicoAcervoBibliografico>();
     }
     protected virtual void RegistrarHttpClients()
     {
