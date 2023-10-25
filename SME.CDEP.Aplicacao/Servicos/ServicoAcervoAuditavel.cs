@@ -35,7 +35,7 @@ namespace SME.CDEP.Aplicacao.Servicos
             
             await ValidarTituloDuplicado(acervo.Titulo, acervo.Id, acervo.Codigo, acervo.TipoAcervoId.EhAcervoDocumental() ? acervo.CodigoNovo : string.Empty);
             
-            await ValidarCodigoTomboCodigoNovoDuplicado(acervo.Codigo, acervo.Id);
+            await ValidarCodigoTomboCodigoNovoDuplicado(acervo.Codigo, acervo.Id, acervo.TipoAcervoId.EhAcervoDocumental() ? "Código antigo" : "Código");
             
             if (acervo.CodigoNovo.EstaPreenchido())
                 await ValidarCodigoTomboCodigoNovoDuplicado(acervo.CodigoNovo, acervo.Id, "Código Novo");
@@ -163,7 +163,7 @@ namespace SME.CDEP.Aplicacao.Servicos
             return await Alterar(acervo);
         }
 
-        public async Task<AcervoDTO> Alterar(long id, string titulo, string codigo, long[] creditosAutoresIds, string codigoNovo = "")
+        public async Task<AcervoDTO> Alterar(long id, string titulo, string descricao, string codigo, long[] creditosAutoresIds, string codigoNovo = "")
         {
             var acervo = await repositorioAcervo.ObterPorId(id);
 
@@ -171,6 +171,7 @@ namespace SME.CDEP.Aplicacao.Servicos
                 throw new NegocioException(MensagemNegocio.SOMENTE_ACERVO_DOCUMENTAL_POSSUI_CODIGO_NOVO);
             
             acervo.Titulo = titulo;
+            acervo.Descricao = descricao;
             acervo.Codigo = codigo;
             acervo.CreditosAutoresIds = creditosAutoresIds;
             acervo.CodigoNovo = codigoNovo;

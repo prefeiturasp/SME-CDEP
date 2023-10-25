@@ -21,7 +21,6 @@ namespace SME.CDEP.Infra.Dados.Mapeamentos
             Map(c => c.Tecnica).ToColumn("tecnica");
             Map(c => c.SuporteId).ToColumn("suporte_id");
             Map(c => c.Quantidade).ToColumn("quantidade");
-            Map(c => c.Descricao).ToColumn("descricao");
             Map(c => c.Excluido).Ignore();
         }
     }

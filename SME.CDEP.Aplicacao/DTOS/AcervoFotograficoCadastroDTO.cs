@@ -22,9 +22,6 @@ public class AcervoFotograficoCadastroDTO : AcervoCadastroDTO
     [Range(1, long.MaxValue, ErrorMessage = "O identificador da conservação do acervo fotográfico deve ser maior que zero")]
     public long ConservacaoId { get; set; }
     
-    [Required(ErrorMessage = "É necessário informar a descrição do acervo fotografico")]
-    public string Descricao { get; set; }
-    
     [Required(ErrorMessage = "É necessário informar a quantidade do acervo fotografico")]
     [Range(1, long.MaxValue, ErrorMessage = "A quantidade do acervo fotográfico deve ser maior que zero")]
     public long Quantidade { get; set; }

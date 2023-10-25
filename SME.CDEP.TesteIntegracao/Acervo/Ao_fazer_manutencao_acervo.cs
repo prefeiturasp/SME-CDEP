@@ -53,6 +53,7 @@ namespace SME.CDEP.TesteIntegracao
             var servicoAcervo = GetServicoAcervo();
 
             var acervoAlterar = (ObterTodos<Acervo>()).FirstOrDefault();
+            acervoAlterar.Descricao = faker.Lorem.Text();
             acervoAlterar.Titulo = faker.Lorem.Sentence();
             acervoAlterar.SubTitulo = faker.Lorem.Sentence();
             
@@ -65,6 +66,7 @@ namespace SME.CDEP.TesteIntegracao
             acervoAlterado.Codigo.ShouldBe(acervoAlterar.Codigo);
             acervoAlterado.CodigoNovo.ShouldBe(acervoAlterar.CodigoNovo);
             acervoAlterado.Titulo.ShouldBe(acervoAlterar.Titulo);
+            acervoAlterado.Descricao.ShouldBe(acervoAlterar.Descricao);
             acervoAlterado.SubTitulo.ShouldBe(acervoAlterar.SubTitulo);
             
             var acervosCreditosAutores = (ObterTodos<AcervoCreditoAutor>()).Where(w=> w.AcervoId == acervoAlterar.Id);
@@ -85,6 +87,7 @@ namespace SME.CDEP.TesteIntegracao
             var servicoAcervo = GetServicoAcervo();
 
             var acervoAlterar = (ObterTodos<Acervo>()).FirstOrDefault();
+            acervoAlterar.Descricao = faker.Lorem.Text();
             acervoAlterar.Titulo = faker.Lorem.Sentence();
             acervoAlterar.SubTitulo = faker.Lorem.Sentence();
             
@@ -97,6 +100,7 @@ namespace SME.CDEP.TesteIntegracao
             acervoAlterado.Codigo.ShouldBe(acervoAlterar.Codigo);
             acervoAlterado.CodigoNovo.ShouldBe(acervoAlterar.CodigoNovo);
             acervoAlterado.Titulo.ShouldBe(acervoAlterar.Titulo);
+            acervoAlterado.Descricao.ShouldBe(acervoAlterar.Descricao);
             acervoAlterado.SubTitulo.ShouldBe(acervoAlterar.SubTitulo);
             acervoAlterar.CoAutores.Count().ShouldBe(0);
             var acervosCreditosAutores = (ObterTodos<AcervoCreditoAutor>()).Where(w=> w.AcervoId == acervoAlterar.Id);
@@ -137,6 +141,7 @@ namespace SME.CDEP.TesteIntegracao
             var acervos = ObterTodos<Acervo>();
             var acervoAlterar = (acervos).FirstOrDefault();
             acervoAlterar.Titulo = acervos.LastOrDefault().Titulo;
+            acervoAlterar.Descricao = faker.Lorem.Text();
             acervoAlterar.SubTitulo = acervos.LastOrDefault().SubTitulo;
             acervoAlterar.Codigo = "196";
             
@@ -149,6 +154,7 @@ namespace SME.CDEP.TesteIntegracao
             acervoAlterado.Codigo.ShouldBe(acervoAlterar.Codigo);
             acervoAlterado.CodigoNovo.ShouldBe(acervoAlterar.CodigoNovo);
             acervoAlterado.Titulo.ShouldBe(acervoAlterar.Titulo);
+            acervoAlterado.Descricao.ShouldBe(acervoAlterar.Descricao);
             acervoAlterado.SubTitulo.ShouldBe(acervoAlterar.SubTitulo);
             
             var acervosCreditosAutores = (ObterTodos<AcervoCreditoAutor>()).Where(w=> w.AcervoId == acervoAlterar.Id);
@@ -219,6 +225,7 @@ namespace SME.CDEP.TesteIntegracao
             var acervos = ObterTodos<Acervo>();
             var acervoAlterar = (acervos).FirstOrDefault();
             acervoAlterar.Titulo = acervos.LastOrDefault().Titulo;
+            acervoAlterar.Descricao = faker.Lorem.Text();
             acervoAlterar.SubTitulo = acervos.LastOrDefault().SubTitulo;
             acervoAlterar.Codigo = "196";
             
@@ -231,6 +238,7 @@ namespace SME.CDEP.TesteIntegracao
             acervoAlterado.Codigo.ShouldBe(acervoAlterar.Codigo);
             acervoAlterado.CodigoNovo.ShouldBe(acervoAlterar.CodigoNovo);
             acervoAlterado.Titulo.ShouldBe(acervoAlterar.Titulo);
+            acervoAlterado.Descricao.ShouldBe(acervoAlterar.Descricao);
             acervoAlterado.SubTitulo.ShouldBe(acervoAlterar.SubTitulo);
             
             var acervosCreditosAutores = (ObterTodos<AcervoCreditoAutor>()).Where(w=> w.AcervoId == acervoAlterar.Id);
@@ -253,6 +261,7 @@ namespace SME.CDEP.TesteIntegracao
             var acervos = ObterTodos<Acervo>();
             var acervoAlterar = (acervos).FirstOrDefault();
             acervoAlterar.Titulo = acervos.LastOrDefault().Titulo;
+            acervoAlterar.Descricao = faker.Lorem.Text();
             acervoAlterar.SubTitulo = acervos.LastOrDefault().SubTitulo;
             acervoAlterar.Codigo = "196";
             
@@ -265,6 +274,7 @@ namespace SME.CDEP.TesteIntegracao
             acervoAlterado.Codigo.ShouldBe(acervoAlterar.Codigo);
             acervoAlterado.CodigoNovo.ShouldBe(acervoAlterar.CodigoNovo);
             acervoAlterado.Titulo.ShouldBe(acervoAlterar.Titulo);
+            acervoAlterado.Descricao.ShouldBe(acervoAlterar.Descricao);
             acervoAlterado.SubTitulo.ShouldBe(acervoAlterar.SubTitulo);
             
             var acervosCreditosAutores = (ObterTodos<AcervoCreditoAutor>()).Where(w=> w.AcervoId == acervoAlterar.Id);
@@ -292,6 +302,7 @@ namespace SME.CDEP.TesteIntegracao
             var acervoinserido = (ObterTodos<Acervo>()).FirstOrDefault(w=> w.Id == acervoId);
             acervoinserido.Codigo.ShouldBe(acervoInserir.Codigo);
             acervoinserido.Titulo.ShouldBe(acervoInserir.Titulo);
+            acervoinserido.Descricao.ShouldBe(acervoInserir.Descricao);
             acervoinserido.SubTitulo.ShouldBe(acervoInserir.SubTitulo);
             
             var acervosCreditosAutores = (ObterTodos<AcervoCreditoAutor>()).Where(w=> w.AcervoId == acervoId);
@@ -318,6 +329,7 @@ namespace SME.CDEP.TesteIntegracao
             var acervoinserido = (ObterTodos<Acervo>()).FirstOrDefault(w=> w.Id == acervoId);
             acervoinserido.Codigo.ShouldBe(acervoInserir.Codigo);
             acervoinserido.Titulo.ShouldBe(acervoInserir.Titulo);
+            acervoinserido.Descricao.ShouldBe(acervoInserir.Descricao);
             acervoinserido.SubTitulo.ShouldBe(acervoInserir.SubTitulo);
             
             var acervosCreditosAutores = (ObterTodos<AcervoCreditoAutor>()).Where(w=> w.AcervoId == acervoId);
@@ -359,6 +371,7 @@ namespace SME.CDEP.TesteIntegracao
 
             var acervos = ObterTodos<Acervo>();
             acervoInserir.Titulo = acervos.LastOrDefault().Titulo;
+            acervoInserir.Descricao = faker.Lorem.Text();
             acervoInserir.SubTitulo = acervos.LastOrDefault().SubTitulo;
             acervoInserir.Codigo = faker.Random.Number(100, 150).ToString();
 
@@ -366,6 +379,7 @@ namespace SME.CDEP.TesteIntegracao
             var acervoinserido = (ObterTodos<Acervo>()).FirstOrDefault(w=> w.Id == acervoId);
             acervoinserido.Codigo.ShouldBe(acervoInserir.Codigo);
             acervoinserido.Titulo.ShouldBe(acervoInserir.Titulo);
+            acervoinserido.Descricao.ShouldBe(acervoInserir.Descricao);
             acervoinserido.SubTitulo.ShouldBe(acervoInserir.SubTitulo);
             
             var acervosCreditosAutores = (ObterTodos<AcervoCreditoAutor>()).Where(w=> w.AcervoId == acervoId);
@@ -444,6 +458,7 @@ namespace SME.CDEP.TesteIntegracao
                 {
                     Codigo = j.ToString(),
                     Titulo = faker.Lorem.Sentence(),
+                    Descricao = faker.Lorem.Text(),
                     SubTitulo = faker.Lorem.Sentence(),
                     TipoAcervoId = (int)TipoAcervo.Bibliografico,
                     CriadoPor = ConstantesTestes.SISTEMA,
