@@ -200,24 +200,23 @@ namespace SME.CDEP.Aplicacao.Servicos
             return true;
         }
 
-        public Task<PaginacaoResultadoDTO<PesquisaAcervoDTO>> ObterPorTextoLivreETipoAcervo(FiltroTextoLivreTipoAcervoDTO filtroTextoLivreTipoAcervo)
+        public async Task<PaginacaoResultadoDTO<PesquisaAcervoDTO>> ObterPorTextoLivreETipoAcervo(FiltroTextoLivreTipoAcervoDTO filtroTextoLivreTipoAcervo)
         {
             var paginacao = Paginacao;
             
             var registros = await repositorioAcervo.ObterPorTextoLivreETipoAcervo(filtroTextoLivreTipoAcervo.TextoLivre, filtroTextoLivreTipoAcervo.TipoAcervo);
             
-            var registrosOrdenados = OrdenarRegistros(paginacao, registros);
-            
-            var acervosAgrupandoCreditoAutor = registrosOrdenados
-                .GroupBy(g => new { g.Id, g.Titulo, g.Codigo, g.TipoAcervoId })
+            var acervosAgrupandoCreditoAutor = registros
+                .GroupBy(g => new { g.Codigo, g.Titulo, g.Tipo, g.Assunto, g.Descricao, g.TipoAcervoTag })
                 .Select(s => new PesquisaAcervoDTO
                 {
-                    Titulo = s.Key.Titulo,
-                    AcervoId = s.Key.Id,
                     Codigo = s.Key.Codigo,
-                    CreditoAutoria = s.Any(w=> w.CreditoAutor.NaoEhNulo() ) ? string.Join(", ", s.Select(ca=> ca.CreditoAutor.Nome)) : string.Empty,
-                    TipoAcervo = ((TipoAcervo)s.Key.TipoAcervoId).Nome(),
-                    TipoAcervoId = (TipoAcervo)s.Key.TipoAcervoId,
+                    Tipo = s.Key.Tipo,
+                    Titulo = s.Key.Titulo,
+                    Assunto = s.Key.Assunto,
+                    Descricao = s.Key.Descricao,
+                    TipoAcervoTag = s.Key.TipoAcervoTag,
+                    CreditoAutoria = s.Any(w=> w.CreditoAutoria.NaoEhNulo() ) ? string.Join(", ", s.Select(ca=> ca.CreditoAutoria)) : string.Empty,
                 });
             
             var totalRegistros = acervosAgrupandoCreditoAutor.Count();

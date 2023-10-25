@@ -4,8 +4,8 @@ namespace SME.CDEP.Aplicacao.DTOS;
 
 public class PesquisaAcervoDTO
 {
-    public long Id { get; set; }
-    public TipoAcervo TipoAcervoId { get; set; }
+    public string Codigo { get; set; }
+    public TipoAcervo Tipo { get; set; }
     public string Titulo { get; set; }
     public string CreditoAutoria { get; set; }
     public string Assunto { get; set; }

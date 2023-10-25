@@ -66,79 +66,35 @@ namespace SME.CDEP.Infra.Dados.Repositorios
             return conexao.Obter().QueryFirstOrDefaultAsync<bool>($"select 1 from acervo where lower(titulo) = @titulo and not excluido and id != @id and codigo = @codigo {IncluirCodigoNovo(codigoNovo)}",new { id, titulo = titulo.ToLower(), codigo, codigoNovo });
         }
 
-        public Task<IEnumerable<Acervo>> ObterPorTextoLivreETipoAcervo(string? textoLivre, TipoAcervo? tipoAcervo)
-        {
-            var query = @"
-/*CREATE OR REPLACE FUNCTION public.f_unaccent(text)
- RETURNS text
- LANGUAGE sql
- IMMUTABLE
-AS $function$
-SELECT public.unaccent('public.unaccent', $1)  -- schema-qualify function and dictionary
-$function$
-;*/
-
-;with pesquisa as 
-(
-select    coalesce(a.codigo,a.codigo_novo)  codigo,              
-			 a.tipo, 
-             a.titulo,              
-             ca.nome,
-             ass.nome 
-from acervo a
-    left join acervo_credito_autor aca on aca.acervo_id = a.id
-    left join credito_autor ca on aca.credito_autor_id = ca.id
-    left join acervo_bibliografico ab on a.id = ab.acervo_id 
-    left join acervo_bibliografico_assunto aba on aba.acervo_bibliografico_id = ab.id
-    left join assunto ass on ass.id = aba.assunto_id      
-where not a.excluido
-and ( lower(a.titulo) like '%es%' Or lower(ca.nome) like '%es%'  Or lower(ass.nome) like '%es%')
-)
-select * from pesquisa
-
-
-
-
-    left join acervo_fotografico af on a.id = af.acervo_id 
-    left join acervo_arte_grafica aag on a.id = aag.acervo_id 
-    left join acervo_audiovisual aav on a.id = aav.acervo_id 
-    left join acervo_audiovisual ad on a.id = ad.acervo_id 
-    left join acervo_tridimensional at on a.id = at.acervo_id
-    
-    
-select * from acervo_fotografico --descricao e data_acervo
-select * from acervo_arte_grafica aag --descricao e data_acervo
-select * from acervo_audiovisual aa --descricao e data_acervo
-select * from acervo_documental ad --descricao
-select * from acervo_tridimensional at2 --descricao e data_acervo
-select * from acervo_bibliografico --subtitulo
-select * from acervo
-
---> mover descrição e data_acervo para acervo
---> mantém subtitulo em campo separado ";
-
-            if (titulo.EstaPreenchido())
-                query += $"and lower(a.titulo) like lower('%{titulo}%') ";
-	
-            if (codigo.EstaPreenchido())
-                query += $"and (lower(a.codigo) = lower('{codigo}') or lower(a.codigo_novo) = lower('{codigo}') )";
-	
-            if (tipoAcervo > 0)
-                query += "and a.Tipo = @tipoAcervo ";
-	
-            if (creditoAutorId > 0)
-                query += "and aca.credito_autor_id = @creditoAutorId ";
-	
-            return (await conexao.Obter().QueryAsync<Acervo, CreditoAutor, Acervo>(query, (acervo, creditoAutor) =>
-            {
-                acervo.CreditoAutor = creditoAutor;
-                return acervo;
-            }, new { tipoAcervo, creditoAutorId }, splitOn: "id"));
-        }
-
         private string IncluirCodigoNovo(string codigoNovo)
         {
             return codigoNovo.EstaPreenchido() ? " and codigo_novo = @codigoNovo " : string.Empty;
+        }
+        
+        public async Task<IEnumerable<PesquisaAcervo>> ObterPorTextoLivreETipoAcervo(string? textoLivre, TipoAcervo? tipoAcervo)
+        {
+            var query = @"  select   coalesce(a.codigo,a.codigo_novo)  codigo,              
+                                     a.tipo, 
+                                     a.titulo,              
+                                     ca.nome as creditoAutoria,
+                                     ast.nome as assunto,
+                                     a.descricao
+                            from acervo a
+                                left join acervo_credito_autor aca on aca.acervo_id = a.id
+                                left join credito_autor ca on aca.credito_autor_id = ca.id
+                                left join acervo_bibliografico ab on a.id = ab.acervo_id 
+                                left join acervo_bibliografico_assunto aba on aba.acervo_bibliografico_id = ab.id
+                                left join assunto ast on ast.id = aba.assunto_id      
+                            where not a.excluido
+                         ";
+
+            if (tipoAcervo.NaoEhNulo())
+                query += $"and a.tipo = @tipoAcervo ";
+
+            if (textoLivre.EstaPreenchido())
+                query += " and ( lower(f_unaccent(a.titulo)) LIKE ('%' || @textoLivre || '%') Or lower(f_unaccent(ca.nome)) LIKE ('%' || @textoLivre || '%')  Or lower(f_unaccent(ast.nome)) LIKE ('%' || @textoLivre || '%'))";
+	
+            return await conexao.Obter().QueryAsync<PesquisaAcervo>(query, new { tipoAcervo, textoLivre });
         }
     }
 }
