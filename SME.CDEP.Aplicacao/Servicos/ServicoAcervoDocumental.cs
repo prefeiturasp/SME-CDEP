@@ -134,6 +134,7 @@ namespace SME.CDEP.Aplicacao.Servicos
             {
                 await servicoAcervo.Alterar(acervoDocumentalAlteracaoDto.AcervoId,
                     acervoDocumentalAlteracaoDto.Titulo, 
+                    acervoDocumentalAlteracaoDto.Descricao, 
                     acervoDocumentalAlteracaoDto.Codigo,
                     acervoDocumentalAlteracaoDto.CreditosAutoresIds,
                     acervoDocumentalAlteracaoDto.CodigoNovo);

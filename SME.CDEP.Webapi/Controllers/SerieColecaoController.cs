@@ -48,6 +48,16 @@ public class SerieColecaoController: BaseController
         return Ok(await servicoSerieColecao.ObterPaginado(nome));
     }
     
+    [HttpGet("resumido")]
+    [ProducesResponseType(typeof(RetornoBaseDTO), 400)]
+    [ProducesResponseType(typeof(RetornoBaseDTO), 601)]
+    [ProducesResponseType(typeof(IdNomeDTO), 200)]  
+    [Authorize("Bearer")]
+    public async Task<IActionResult> ObterTodos([FromServices]IServicoSerieColecao servicoSerieColecao)
+    {
+        return Ok((await servicoSerieColecao.ObterTodos()).Select(s=> new IdNomeDTO() { Id = s.Id, Nome = s.Nome}));
+    }
+    
     [HttpGet("{id}")]
     [ProducesResponseType(typeof(IdNomeExcluidoAuditavelDTO), 200)]
     [ProducesResponseType(typeof(RetornoBaseDTO), 400)]

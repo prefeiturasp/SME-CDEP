@@ -50,7 +50,6 @@ namespace SME.CDEP.TesteIntegracao
 
             var acervoAudiovisualDtos = await servicoAcervoAudiovisual.ObterTodos();
             acervoAudiovisualDtos.ShouldNotBeNull();
-            // acervoArteGraficaDtos.FirstOrDefault().CreditosAutoresIds.Any().ShouldBeTrue(); //Agrupar conforme ServicoAcervoAuditavel
         }
         
         [Fact(DisplayName = "Acervo Audiovisual - Atualizar")]
@@ -77,7 +76,7 @@ namespace SME.CDEP.TesteIntegracao
                 Copia = string.Format(ConstantesTestes.COPIA_X, 100),
                 PermiteUsoImagem = true,
                 ConservacaoId = random.Next(1, 5),
-                Descricao = string.Format(ConstantesTestes.DESCRICAO_X, 100),
+                Descricao = faker.Lorem.Text(),
                 SuporteId = random.Next(1, 5),
                 Duracao = string.Format(ConstantesTestes.DURACAO_X, 100),
                 CromiaId = random.Next(1, 5),
@@ -90,6 +89,7 @@ namespace SME.CDEP.TesteIntegracao
             
             var acervo = ObterTodos<Acervo>().FirstOrDefault(w=> w.Id == 3);
             acervo.Titulo.Equals(acervoAudiovisualAlteracaoDto.Titulo).ShouldBeTrue();
+            acervo.Descricao.Equals(acervoAudiovisualAlteracaoDto.Descricao).ShouldBeTrue();
             acervo.Codigo.Equals(acervoAudiovisualAlteracaoDto.Codigo).ShouldBeTrue();
             acervo.TipoAcervoId.ShouldBe((int)TipoAcervo.Audiovisual);
             acervo.CriadoLogin.ShouldNotBeEmpty();
@@ -106,7 +106,6 @@ namespace SME.CDEP.TesteIntegracao
             acervoAudiovisual.Copia.ShouldBe(acervoAudiovisualAlteracaoDto.Copia);
             acervoAudiovisual.PermiteUsoImagem.ShouldBe(acervoAudiovisualAlteracaoDto.PermiteUsoImagem);
             acervoAudiovisual.ConservacaoId.ShouldBe(acervoAudiovisualAlteracaoDto.ConservacaoId);
-            acervoAudiovisual.Descricao.ShouldBe(acervoAudiovisualAlteracaoDto.Descricao);
             acervoAudiovisual.SuporteId.ShouldBe(acervoAudiovisualAlteracaoDto.SuporteId);
             acervoAudiovisual.Duracao.ShouldBe(acervoAudiovisualAlteracaoDto.Duracao);
             acervoAudiovisual.CromiaId.ShouldBe(acervoAudiovisualAlteracaoDto.CromiaId.Value);
@@ -142,7 +141,7 @@ namespace SME.CDEP.TesteIntegracao
                 Copia = string.Format(ConstantesTestes.COPIA_X, 100),
                 PermiteUsoImagem = true,
                 ConservacaoId = random.Next(1, 5),
-                Descricao = string.Format(ConstantesTestes.DESCRICAO_X, 100),
+                Descricao = faker.Lorem.Text(),
                 SuporteId = random.Next(1, 5),
                 Duracao = string.Format(ConstantesTestes.DURACAO_X, 100),
                 CromiaId = random.Next(1, 5),
@@ -156,6 +155,7 @@ namespace SME.CDEP.TesteIntegracao
 
             var acervo = ObterTodos<Acervo>().LastOrDefault();
             acervo.Titulo.Equals(acervoAudiovisualCadastroDto.Titulo).ShouldBeTrue();
+            acervo.Descricao.Equals(acervoAudiovisualCadastroDto.Descricao).ShouldBeTrue();
             acervo.Codigo.Equals($"{acervoAudiovisualCadastroDto.Codigo}.AV").ShouldBeTrue();
             acervo.TipoAcervoId.ShouldBe((int)TipoAcervo.Audiovisual);
             acervo.CriadoLogin.ShouldNotBeEmpty();
@@ -172,7 +172,6 @@ namespace SME.CDEP.TesteIntegracao
             acervoAudiovisual.Copia.ShouldBe(acervoAudiovisualCadastroDto.Copia);
             acervoAudiovisual.PermiteUsoImagem.ShouldBe(acervoAudiovisualCadastroDto.PermiteUsoImagem);
             acervoAudiovisual.ConservacaoId.ShouldBe(acervoAudiovisualCadastroDto.ConservacaoId);
-            acervoAudiovisual.Descricao.ShouldBe(acervoAudiovisualCadastroDto.Descricao);
             acervoAudiovisual.SuporteId.ShouldBe(acervoAudiovisualCadastroDto.SuporteId);
             acervoAudiovisual.Duracao.ShouldBe(acervoAudiovisualCadastroDto.Duracao);
             acervoAudiovisual.CromiaId.ShouldBe(acervoAudiovisualCadastroDto.CromiaId.Value);
@@ -208,7 +207,7 @@ namespace SME.CDEP.TesteIntegracao
                 Copia = string.Format(ConstantesTestes.COPIA_X, 100),
                 PermiteUsoImagem = true,
                 ConservacaoId = random.Next(1, 5),
-                Descricao = string.Format(ConstantesTestes.DESCRICAO_X, 100),
+                Descricao = faker.Lorem.Text(),
                 SuporteId = random.Next(1, 5),
                 Duracao = string.Format(ConstantesTestes.DURACAO_X, 100),
                 CromiaId = random.Next(1, 5),
@@ -231,6 +230,7 @@ namespace SME.CDEP.TesteIntegracao
                 {
                     Codigo = $"{j.ToString()}.AV",
                     Titulo = string.Format(ConstantesTestes.TITULO_X, j),
+                    Descricao = faker.Lorem.Text(),
                     TipoAcervoId = (int)TipoAcervo.Audiovisual,
                     CriadoPor = ConstantesTestes.SISTEMA,
                     CriadoEm = DateTimeExtension.HorarioBrasilia().AddMinutes(-15),
@@ -267,7 +267,6 @@ namespace SME.CDEP.TesteIntegracao
                     Copia = string.Format(ConstantesTestes.COPIA_X,j),
                     PermiteUsoImagem = true,
                     ConservacaoId = random.Next(1,5),
-                    Descricao = string.Format(ConstantesTestes.DESCRICAO_X,j),
                     SuporteId = random.Next(1,5),
                     Duracao = string.Format(ConstantesTestes.DURACAO_X,j),
                     CromiaId = random.Next(1,5),

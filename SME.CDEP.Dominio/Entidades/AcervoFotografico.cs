@@ -10,7 +10,6 @@
         public bool CopiaDigital { get; set; }
         public bool PermiteUsoImagem { get; set; }
         public long ConservacaoId { get; set; }
-        public string Descricao { get; set; }
         public long Quantidade { get; set; }
         public float? Largura { get; set; }
         public float? Altura { get; set; }

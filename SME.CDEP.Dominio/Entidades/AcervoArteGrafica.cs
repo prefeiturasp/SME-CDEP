@@ -17,6 +17,5 @@
         public string Tecnica { get; set; }
         public long SuporteId { get; set; }
         public long Quantidade { get; set; }
-        public string Descricao { get; set; }
     }
 }

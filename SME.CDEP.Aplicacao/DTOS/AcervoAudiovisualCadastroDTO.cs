@@ -21,9 +21,6 @@ public class AcervoAudiovisualCadastroDTO : AcervoCadastroDTO
     
     public long? ConservacaoId { get; set; }
     
-    [Required(ErrorMessage = "É necessário informar a descrição do acervo audiovisual")]
-    public string Descricao { get; set; }
-    
     [Required(ErrorMessage = "É necessário informar o suporte do acervo audiovisual")]
     [Range(1, long.MaxValue, ErrorMessage = "O identificador do suporte do acervo audiovisual deve ser maior que zero")]
     public long SuporteId { get; set; }

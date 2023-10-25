@@ -11,6 +11,8 @@ namespace SME.CDEP.Infra.Dados.Mapeamentos
             Map(c => c.TipoAcervoId).ToColumn("tipo");
             Map(c => c.Codigo).ToColumn("codigo");
             Map(c => c.CodigoNovo).ToColumn("codigo_novo");
+            Map(c => c.SubTitulo).ToColumn("subtitulo");
+            Map(c => c.Descricao).ToColumn("descricao");
         }
     }
 }
