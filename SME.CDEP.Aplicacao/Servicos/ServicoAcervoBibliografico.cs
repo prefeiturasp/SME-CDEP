@@ -153,8 +153,7 @@ namespace SME.CDEP.Aplicacao.Servicos
 
         public async Task<bool> Excluir(long id)
         {
-            await repositorioAcervoBibliografico.Remover(id);
-            return true;
+            return await servicoAcervo.Excluir(id);
         }
     }
 }
