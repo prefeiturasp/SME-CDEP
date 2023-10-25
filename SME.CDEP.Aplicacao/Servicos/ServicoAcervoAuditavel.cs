@@ -162,6 +162,38 @@ namespace SME.CDEP.Aplicacao.Servicos
             return true;
         }
 
+        public Task<PaginacaoResultadoDTO<PesquisaAcervoDTO>> ObterPorTextoLivreETipoAcervo(FiltroTextoLivreTipoAcervoDTO filtroTextoLivreTipoAcervo)
+        {
+            var paginacao = Paginacao;
+            
+            var registros = await repositorioAcervo.ObterPorTextoLivreETipoAcervo(filtroTextoLivreTipoAcervo.TextoLivre, filtroTextoLivreTipoAcervo.TipoAcervo);
+            
+            var registrosOrdenados = OrdenarRegistros(paginacao, registros);
+            
+            var acervosAgrupandoCreditoAutor = registrosOrdenados
+                .GroupBy(g => new { g.Id, g.Titulo, g.Codigo, g.TipoAcervoId })
+                .Select(s => new PesquisaAcervoDTO
+                {
+                    Titulo = s.Key.Titulo,
+                    AcervoId = s.Key.Id,
+                    Codigo = s.Key.Codigo,
+                    CreditoAutoria = s.Any(w=> w.CreditoAutor.NaoEhNulo() ) ? string.Join(", ", s.Select(ca=> ca.CreditoAutor.Nome)) : string.Empty,
+                    TipoAcervo = ((TipoAcervo)s.Key.TipoAcervoId).Nome(),
+                    TipoAcervoId = (TipoAcervo)s.Key.TipoAcervoId,
+                });
+            
+            var totalRegistros = acervosAgrupandoCreditoAutor.Count();
+            
+            var retornoPaginado = new PaginacaoResultadoDTO<PesquisaAcervoDTO>()
+            {
+                Items = acervosAgrupandoCreditoAutor.Skip(paginacao.QuantidadeRegistrosIgnorados).Take(paginacao.QuantidadeRegistros),
+                TotalRegistros = totalRegistros,
+                TotalPaginas = (int)Math.Ceiling((double)totalRegistros / paginacao.QuantidadeRegistros)
+            };
+                
+            return retornoPaginado;
+        }
+
         public async Task<PaginacaoResultadoDTO<IdTipoTituloCreditoAutoriaCodigoAcervoDTO>> ObterPorFiltro(int? tipoAcervo, string titulo, long? creditoAutorId, string codigo)
         {
             var paginacao = Paginacao;

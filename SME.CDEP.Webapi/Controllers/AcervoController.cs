@@ -32,4 +32,15 @@ public class AcervoController: BaseController
     {
         return Ok(await servicoAcervo.ObterPorFiltro(filtro.TipoAcervo, filtro.Titulo, filtro.CreditoAutorId, filtro.Codigo));
     }
+    
+    [HttpGet]
+    [ProducesResponseType(typeof(PaginacaoResultadoDTO<PesquisaAcervoDTO>), 200)]
+    [ProducesResponseType(typeof(RetornoBaseDTO), 400)]
+    [ProducesResponseType(typeof(RetornoBaseDTO), 403)]
+    [ProducesResponseType(typeof(RetornoBaseDTO), 601)]
+    [AllowAnonymous]
+    public async Task<IActionResult> ObterPorTextoLivreETipoAcervo([FromQuery] FiltroTextoLivreTipoAcervoDTO filtroTextoLivreTipoAcervo,[FromServices]IServicoAcervo servicoAcervo)
+    {
+        return Ok(await servicoAcervo.ObterPorTextoLivreETipoAcervo(filtroTextoLivreTipoAcervo));
+    }
 }
