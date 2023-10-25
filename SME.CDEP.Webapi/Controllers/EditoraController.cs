@@ -48,7 +48,7 @@ public class EditoraController: BaseController
         return Ok(await servicoEditora.ObterPaginado(nome));
     }
     
-    [HttpGet("todos")]
+    [HttpGet("resumido")]
     [ProducesResponseType(typeof(RetornoBaseDTO), 400)]
     [ProducesResponseType(typeof(RetornoBaseDTO), 601)]
     [ProducesResponseType(typeof(IdNomeDTO), 200)]  
