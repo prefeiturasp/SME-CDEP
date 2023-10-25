@@ -64,7 +64,8 @@ namespace SME.CDEP.Infra.Dados.Repositorios
                                   ab.volume,
                                   ab.localizacao_cdd as localizacaoCDD,
                                   ab.localizacao_pha as localizacaoPHA,                                  
-                                  ab.notas_gerais as notasGerais,                                  
+                                  ab.notas_gerais as notasGerais,
+                                  ab.isbn, 
                                   a.id as AcervoId,
                                   a.titulo,
                                   a.subTitulo,
@@ -85,15 +86,13 @@ namespace SME.CDEP.Infra.Dados.Repositorios
                                   m.nome as materialNome,
                                   e.id as editoraId,
                                   e.nome as editoraNome,
-                                  ass.id as acessoDocumentoId,
-                                  ass.nome as acessoDocumentoNome,
+                                  aba.assunto_id as assuntoId,
                                   sc.id as serieColecaoId,
                                   sc.nome as serieColecaoNome
                         from acervo_bibliografico ab
                         join acervo a on a.id = ab.acervo_id 
                         join idioma i on i.id = ab.idioma_id 
-                        join acervo_bibliografico_assunto aba on aba.acervo_bibliografico_id = ab.id
-                        join assunto ass on ass.id = aba.assunto_id      
+                        join acervo_bibliografico_assunto aba on aba.acervo_bibliografico_id = ab.id                              
                         join acervo_credito_autor aca on aca.acervo_id = a.id
                         join credito_autor ca on aca.credito_autor_id = ca.id                        
                         join material m on m.id = ab.material_id
@@ -108,6 +107,7 @@ namespace SME.CDEP.Infra.Dados.Repositorios
                 var acervoBi = retorno.FirstOrDefault();
                 acervoBi.CreditosAutoresIds = acervoBi.CreditoAutorId.EhMaiorQueZero() ? retorno.Where(w=> w.TipoAutoria.EhNulo()).Select(s => s.CreditoAutorId).Distinct().ToArray() : Array.Empty<long>();
                 acervoBi.CoAutores = acervoBi.CreditoAutorId.EhMaiorQueZero() ? retorno.Where(w=> w.TipoAutoria.NaoEhNulo()).Select(s => new CoAutor() { CreditoAutorId = s.CreditoAutorId, TipoAutoria = s.TipoAutoria}).Distinct().ToArray() : Array.Empty<CoAutor>();
+                acervoBi.AssuntosIds = acervoBi.AssuntoId.EhMaiorQueZero() ? retorno.Select(s => s.AssuntoId).Distinct().ToArray() : Array.Empty<long>();
                 return acervoBi;    
             }
 
