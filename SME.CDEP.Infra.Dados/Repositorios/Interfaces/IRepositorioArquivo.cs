@@ -13,5 +13,6 @@ namespace SME.CDEP.Infra.Dados.Repositorios.Interfaces
         Task<long> ObterIdPorCodigo(Guid arquivoCodigo);
         Task<bool> ExcluirArquivosPorIds(long[] ids);
         Task<long> SalvarAsync(Arquivo arquivo);
+        Task<IEnumerable<AcervoCodigoNomeResumido>> ObterAcervoCodigoNomeArquivoPorAcervoId(long[] acervosIds);
     }
 }

@@ -33,7 +33,7 @@ public class AcervoController: BaseController
         return Ok(await servicoAcervo.ObterPorFiltro(filtro.TipoAcervo, filtro.Titulo, filtro.CreditoAutorId, filtro.Codigo));
     }
     
-    [HttpGet]
+    [HttpGet("pesquisar-acervos")]
     [ProducesResponseType(typeof(PaginacaoResultadoDTO<PesquisaAcervoDTO>), 200)]
     [ProducesResponseType(typeof(RetornoBaseDTO), 400)]
     [ProducesResponseType(typeof(RetornoBaseDTO), 403)]

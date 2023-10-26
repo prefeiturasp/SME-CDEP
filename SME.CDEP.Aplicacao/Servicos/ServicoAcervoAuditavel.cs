@@ -1,5 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using AutoMapper;
+using Microsoft.Extensions.Configuration;
 using SME.CDEP.Aplicacao.DTOS;
 using SME.CDEP.Aplicacao.Enumerados;
 using SME.CDEP.Aplicacao.Servicos.Interface;
@@ -19,14 +20,18 @@ namespace SME.CDEP.Aplicacao.Servicos
         private readonly IRepositorioAcervoCreditoAutor repositorioAcervoCreditoAutor;
         private readonly IMapper mapper;
         private readonly IContextoAplicacao contextoAplicacao;
+        private readonly IRepositorioArquivo repositorioArquivo;
+        private readonly IConfiguration configuration;
         
         public ServicoAcervoAuditavel(IRepositorioAcervo repositorioAcervo, IMapper mapper, IContextoAplicacao contextoAplicacao,
-            IRepositorioAcervoCreditoAutor repositorioAcervoCreditoAutor)
+            IRepositorioAcervoCreditoAutor repositorioAcervoCreditoAutor,IRepositorioArquivo repositorioArquivo, IConfiguration configuration)
         {
             this.repositorioAcervo = repositorioAcervo ?? throw new ArgumentNullException(nameof(repositorioAcervo));
             this.mapper = mapper ?? throw new ArgumentNullException(nameof(mapper));
             this.contextoAplicacao = contextoAplicacao ?? throw new ArgumentNullException(nameof(contextoAplicacao));
             this.repositorioAcervoCreditoAutor = repositorioAcervoCreditoAutor ?? throw new ArgumentNullException(nameof(repositorioAcervoCreditoAutor));
+            this.repositorioArquivo = repositorioArquivo ?? throw new ArgumentNullException(nameof(repositorioArquivo));
+            this.configuration = configuration ?? throw new ArgumentNullException(nameof(configuration));
         }
         
         public async Task<long> Inserir(Acervo acervo)
@@ -204,31 +209,42 @@ namespace SME.CDEP.Aplicacao.Servicos
         {
             var paginacao = Paginacao;
             
-            var registros = await repositorioAcervo.ObterPorTextoLivreETipoAcervo(filtroTextoLivreTipoAcervo.TextoLivre, filtroTextoLivreTipoAcervo.TipoAcervo);
-            
-            var acervosAgrupandoCreditoAutor = registros
-                .GroupBy(g => new { g.Codigo, g.Titulo, g.Tipo, g.Assunto, g.Descricao, g.TipoAcervoTag })
-                .Select(s => new PesquisaAcervoDTO
-                {
-                    Codigo = s.Key.Codigo,
-                    Tipo = s.Key.Tipo,
-                    Titulo = s.Key.Titulo,
-                    Assunto = s.Key.Assunto,
-                    Descricao = s.Key.Descricao,
-                    TipoAcervoTag = s.Key.TipoAcervoTag,
-                    CreditoAutoria = s.Any(w=> w.CreditoAutoria.NaoEhNulo() ) ? string.Join(", ", s.Select(ca=> ca.CreditoAutoria)) : string.Empty,
-                });
-            
-            var totalRegistros = acervosAgrupandoCreditoAutor.Count();
-            
-            var retornoPaginado = new PaginacaoResultadoDTO<PesquisaAcervoDTO>()
+            var acervos = await repositorioAcervo.ObterPorTextoLivreETipoAcervo(filtroTextoLivreTipoAcervo.TextoLivre, filtroTextoLivreTipoAcervo.TipoAcervo);
+
+            if (acervos.Any())
             {
-                Items = acervosAgrupandoCreditoAutor.Skip(paginacao.QuantidadeRegistrosIgnorados).Take(paginacao.QuantidadeRegistros),
-                TotalRegistros = totalRegistros,
-                TotalPaginas = (int)Math.Ceiling((double)totalRegistros / paginacao.QuantidadeRegistros)
-            };
-                
-            return retornoPaginado;
+                var acervosIds = acervos.Where(w=> w.Tipo.EhAcervoArteGraficaOuFotografico()).Select(s => s.AcervoId).Distinct().ToArray();
+
+                var acervosCodigoNomeResumidos = await repositorioArquivo.ObterAcervoCodigoNomeArquivoPorAcervoId(acervosIds);
+            
+                var hostAplicacao = configuration["UrlFrontEnd"];
+            
+                var acervosAgrupandoCreditoAutor = acervos
+                    .GroupBy(g => new { g.AcervoId,g.Codigo, g.Titulo, g.Tipo, g.Descricao, g.TipoAcervoTag })
+                    .Select(s => new PesquisaAcervoDTO
+                    {
+                        Codigo = s.Key.Codigo,
+                        Tipo = s.Key.Tipo,
+                        Titulo = s.Key.Titulo,
+                        Descricao = s.Key.Descricao,
+                        TipoAcervoTag = s.Key.TipoAcervoTag,
+                        CreditoAutoria = s.Any(w=> w.CreditoAutoria.NaoEhNulo() ) ? string.Join(", ", s.Select(ca=> ca.CreditoAutoria).Distinct()) : string.Empty,
+                        Assunto = s.Any(w=> w.Assunto.NaoEhNulo() ) ? string.Join(", ", s.Select(ca=> ca.Assunto).Distinct()) : string.Empty,
+                        EnderecoImagem = acervosCodigoNomeResumidos.Any(f=> f.AcervoId == s.Key.AcervoId) 
+                            ? $"{hostAplicacao}{Constantes.BUCKET_CDEP}/{acervosCodigoNomeResumidos.FirstOrDefault(f=> f.AcervoId == s.Key.AcervoId).NomeArquivo}"
+                            : string.Empty
+                    });
+            
+                var totalRegistros = acervosAgrupandoCreditoAutor.Count();
+            
+                return new PaginacaoResultadoDTO<PesquisaAcervoDTO>()
+                {
+                    Items = acervosAgrupandoCreditoAutor.Skip(paginacao.QuantidadeRegistrosIgnorados).Take(paginacao.QuantidadeRegistros),
+                    TotalRegistros = totalRegistros,
+                    TotalPaginas = (int)Math.Ceiling((double)totalRegistros / paginacao.QuantidadeRegistros)
+                };
+            }
+            return default;
         }
 
         public async Task<PaginacaoResultadoDTO<IdTipoTituloCreditoAutoriaCodigoAcervoDTO>> ObterPorFiltro(int? tipoAcervo, string titulo, long? creditoAutorId, string codigo)

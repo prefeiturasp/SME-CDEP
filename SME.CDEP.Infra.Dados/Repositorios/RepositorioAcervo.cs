@@ -73,7 +73,8 @@ namespace SME.CDEP.Infra.Dados.Repositorios
         
         public async Task<IEnumerable<PesquisaAcervo>> ObterPorTextoLivreETipoAcervo(string? textoLivre, TipoAcervo? tipoAcervo)
         {
-            var query = @"  select   coalesce(a.codigo,a.codigo_novo)  codigo,              
+            var query = @"  select   distinct a.id as acervoId,
+                                     coalesce(a.codigo,a.codigo_novo)  codigo,              
                                      a.tipo, 
                                      a.titulo,              
                                      ca.nome as creditoAutoria,
