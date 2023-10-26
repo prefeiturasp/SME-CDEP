@@ -5,6 +5,7 @@ namespace SME.CDEP.Dominio.Entidades
     {
         public long CreditoAutorId { get; set; }
         public string TipoAutoria { get; set; }
+        public string CreditoAutorNome { get; set; }
 
         public bool Equals(CoAutor? other)
         {
