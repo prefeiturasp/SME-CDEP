@@ -16,6 +16,5 @@
         public string Localizacao { get; set; }
         public bool CopiaDigital { get; set; }
         public long? ConservacaoId { get; set; }
-        public string Descricao { get; set; }
     }
 }

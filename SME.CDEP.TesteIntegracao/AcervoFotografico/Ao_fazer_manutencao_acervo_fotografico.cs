@@ -36,7 +36,6 @@ namespace SME.CDEP.TesteIntegracao
 
             var acervoFotograficoDtos = await servicoAcervoFotografico.ObterTodos();
             acervoFotograficoDtos.ShouldNotBeNull();
-            // acervoFotograficoDtos.FirstOrDefault().CreditosAutoresIds.Any().ShouldBeTrue(); //Agrupar conforme ServicoAcervoAuditavel
         }
         
         [Fact(DisplayName = "Acervo fotográfico - Atualizar (Adicionando 4 novos arquivos, sendo 1 existente)")]
@@ -59,7 +58,7 @@ namespace SME.CDEP.TesteIntegracao
                 Codigo = "100.FT",
                 Titulo = string.Format(ConstantesTestes.TITULO_X, 100),
                 CreditosAutoresIds = new long[]{1,2,3,4,5},
-                Descricao = string.Format(ConstantesTestes.DESCRICAO_X, 100),
+                Descricao = faker.Lorem.Text(),
                 Localizacao = string.Format(ConstantesTestes.LOCALIZACAO_X, 100),
                 Procedencia = string.Format(ConstantesTestes.PROCEDENCIA_X, 100),
                 DataAcervo = DateTimeExtension.HorarioBrasilia().Date.ToString("dd/MM/yyyy"),
@@ -81,6 +80,7 @@ namespace SME.CDEP.TesteIntegracao
             
             var acervo = ObterTodos<Acervo>().FirstOrDefault(w=> w.Id == 3);
             acervo.Titulo.Equals(acervoFotograficoAlteracaoDto.Titulo).ShouldBeTrue();
+            acervo.Descricao.Equals(acervoFotograficoAlteracaoDto.Descricao).ShouldBeTrue();
             acervo.Codigo.Equals(acervoFotograficoAlteracaoDto.Codigo).ShouldBeTrue();
             acervo.TipoAcervoId.ShouldBe((int)TipoAcervo.Fotografico);
             acervo.CriadoLogin.ShouldNotBeEmpty();
@@ -91,7 +91,6 @@ namespace SME.CDEP.TesteIntegracao
             acervo.AlteradoPor.ShouldNotBeNull();
             
             var acervoFotografico = ObterTodos<AcervoFotografico>().FirstOrDefault(w=> w.AcervoId == 3);
-            acervoFotografico.Descricao.ShouldBe(acervoFotograficoAlteracaoDto.Descricao);
             acervoFotografico.Localizacao.ShouldBe(acervoFotograficoAlteracaoDto.Localizacao);
             acervoFotografico.Procedencia.ShouldBe(acervoFotograficoAlteracaoDto.Procedencia);
             acervoFotografico.DataAcervo.ShouldBe(acervoFotograficoAlteracaoDto.DataAcervo);
@@ -135,7 +134,7 @@ namespace SME.CDEP.TesteIntegracao
                 Codigo = "100.FT",
                 Titulo = string.Format(ConstantesTestes.TITULO_X, 100),
                 CreditosAutoresIds = new long[]{3,4,5},
-                Descricao = string.Format(ConstantesTestes.DESCRICAO_X, 100),
+                Descricao = faker.Lorem.Text(),
                 Localizacao = string.Format(ConstantesTestes.LOCALIZACAO_X, 100),
                 Procedencia = string.Format(ConstantesTestes.PROCEDENCIA_X, 100),
                 DataAcervo = DateTimeExtension.HorarioBrasilia().Date.ToString("dd/MM/yyyy"),
@@ -157,6 +156,7 @@ namespace SME.CDEP.TesteIntegracao
             
             var acervo = ObterTodos<Acervo>().FirstOrDefault(w=> w.Id == 3);
             acervo.Titulo.Equals(acervoFotograficoAlteracaoDto.Titulo).ShouldBeTrue();
+            acervo.Descricao.Equals(acervoFotograficoAlteracaoDto.Descricao).ShouldBeTrue();
             acervo.Codigo.Equals(acervoFotograficoAlteracaoDto.Codigo).ShouldBeTrue();
             acervo.TipoAcervoId.ShouldBe((int)TipoAcervo.Fotografico);
             acervo.CriadoLogin.ShouldNotBeEmpty();
@@ -167,7 +167,6 @@ namespace SME.CDEP.TesteIntegracao
             acervo.AlteradoPor.ShouldNotBeNull();
             
             var acervoFotografico = ObterTodos<AcervoFotografico>().FirstOrDefault(w=> w.AcervoId == 3);
-            acervoFotografico.Descricao.ShouldBe(acervoFotograficoAlteracaoDto.Descricao);
             acervoFotografico.Localizacao.ShouldBe(acervoFotograficoAlteracaoDto.Localizacao);
             acervoFotografico.Procedencia.ShouldBe(acervoFotograficoAlteracaoDto.Procedencia);
             acervoFotografico.DataAcervo.ShouldBe(acervoFotograficoAlteracaoDto.DataAcervo);
@@ -209,7 +208,7 @@ namespace SME.CDEP.TesteIntegracao
                 Codigo = "100.FT",
                 Titulo = string.Format(ConstantesTestes.TITULO_X, 100),
                 CreditosAutoresIds = new long[]{4,5},
-                Descricao = string.Format(ConstantesTestes.DESCRICAO_X, 100),
+                Descricao = faker.Lorem.Text(),
                 Localizacao = string.Format(ConstantesTestes.LOCALIZACAO_X, 100),
                 Procedencia = string.Format(ConstantesTestes.PROCEDENCIA_X, 100),
                 DataAcervo = DateTimeExtension.HorarioBrasilia().Date.ToString("dd/MM/yyyy"),
@@ -231,6 +230,7 @@ namespace SME.CDEP.TesteIntegracao
             
             var acervo = ObterTodos<Acervo>().FirstOrDefault(w=> w.Id == 3);
             acervo.Titulo.Equals(acervoFotograficoAlteracaoDto.Titulo).ShouldBeTrue();
+            acervo.Descricao.Equals(acervoFotograficoAlteracaoDto.Descricao).ShouldBeTrue();
             acervo.Codigo.Equals(acervoFotograficoAlteracaoDto.Codigo).ShouldBeTrue();
             acervo.TipoAcervoId.ShouldBe((int)TipoAcervo.Fotografico);
             acervo.CriadoLogin.ShouldNotBeEmpty();
@@ -241,7 +241,6 @@ namespace SME.CDEP.TesteIntegracao
             acervo.AlteradoPor.ShouldNotBeNull();
             
             var acervoFotografico = ObterTodos<AcervoFotografico>().FirstOrDefault(w=> w.AcervoId == 3);
-            acervoFotografico.Descricao.ShouldBe(acervoFotograficoAlteracaoDto.Descricao);
             acervoFotografico.Localizacao.ShouldBe(acervoFotograficoAlteracaoDto.Localizacao);
             acervoFotografico.Procedencia.ShouldBe(acervoFotograficoAlteracaoDto.Procedencia);
             acervoFotografico.DataAcervo.ShouldBe(acervoFotograficoAlteracaoDto.DataAcervo);
@@ -287,7 +286,7 @@ namespace SME.CDEP.TesteIntegracao
                 Codigo = "100",
                 Titulo = string.Format(ConstantesTestes.TITULO_X, 100),
                 CreditosAutoresIds = new long[]{new Random().Next(1, 5),new Random().Next(1, 5)},
-                Descricao = string.Format(ConstantesTestes.DESCRICAO_X, 100),
+                Descricao = faker.Lorem.Text(),
                 Localizacao = string.Format(ConstantesTestes.LOCALIZACAO_X, 100),
                 Procedencia = string.Format(ConstantesTestes.PROCEDENCIA_X, 100),
                 DataAcervo = DateTimeExtension.HorarioBrasilia().Date.ToString("dd/MM/yyyy"),
@@ -310,6 +309,7 @@ namespace SME.CDEP.TesteIntegracao
 
             var acervo = ObterTodos<Acervo>().LastOrDefault();
             acervo.Titulo.Equals(acervoFotograficoDto.Titulo).ShouldBeTrue();
+            acervo.Descricao.Equals(acervoFotograficoDto.Descricao).ShouldBeTrue();
             acervo.Codigo.Equals($"{acervoFotograficoDto.Codigo}.FT").ShouldBeTrue();
             acervo.TipoAcervoId.ShouldBe((int)TipoAcervo.Fotografico);
             acervo.CriadoLogin.ShouldNotBeEmpty();
@@ -320,7 +320,6 @@ namespace SME.CDEP.TesteIntegracao
             acervo.AlteradoPor.ShouldBeNull();
             
             var acervoFotografico = ObterTodos<AcervoFotografico>().LastOrDefault();
-            acervoFotografico.Descricao.ShouldBe(acervoFotograficoDto.Descricao);
             acervoFotografico.Localizacao.ShouldBe(acervoFotograficoDto.Localizacao);
             acervoFotografico.Procedencia.ShouldBe(acervoFotograficoDto.Procedencia);
             acervoFotografico.DataAcervo.ShouldBe(acervoFotograficoDto.DataAcervo);
@@ -361,7 +360,7 @@ namespace SME.CDEP.TesteIntegracao
                 Codigo = "1",
                 Titulo = string.Format(ConstantesTestes.TITULO_X, 100),
                 CreditosAutoresIds = new long[]{new Random().Next(1, 5),new Random().Next(1, 5)},
-                Descricao = string.Format(ConstantesTestes.DESCRICAO_X, 100),
+                Descricao = faker.Lorem.Text(),
                 Localizacao = string.Format(ConstantesTestes.LOCALIZACAO_X, 100),
                 Procedencia = string.Format(ConstantesTestes.PROCEDENCIA_X, 100),
                 DataAcervo = DateTimeExtension.HorarioBrasilia().Date.ToString("dd/MM/yyyy"),
@@ -393,6 +392,7 @@ namespace SME.CDEP.TesteIntegracao
                 {
                     Codigo = $"{j.ToString()}.FT",
                     Titulo = string.Format(ConstantesTestes.TITULO_X, j),
+                    Descricao = faker.Lorem.Text(),
                     CreditosAutoresIds = new long[]{new Random().Next(1, 5),new Random().Next(1, 5)},
                     TipoAcervoId = (int)TipoAcervo.Fotografico,
                     CriadoPor = ConstantesTestes.SISTEMA,
@@ -430,7 +430,6 @@ namespace SME.CDEP.TesteIntegracao
                     CopiaDigital = true,
                     PermiteUsoImagem = true,
                     ConservacaoId = random.Next(1,5),
-                    Descricao = string.Format(ConstantesTestes.DESCRICAO_X,j),
                     Quantidade = random.Next(15,55),
                     Largura = random.Next(15,55),
                     Altura = random.Next(15,55),

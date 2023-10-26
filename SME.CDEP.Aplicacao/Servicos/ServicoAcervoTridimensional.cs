@@ -126,6 +126,7 @@ namespace SME.CDEP.Aplicacao.Servicos
             {
                 await servicoAcervo.Alterar(acervoTridimensionalAlteracaoDto.AcervoId,
                     acervoTridimensionalAlteracaoDto.Titulo, 
+                    acervoTridimensionalAlteracaoDto.Descricao, 
                     codigo 
                     );
                 
@@ -176,7 +177,7 @@ namespace SME.CDEP.Aplicacao.Servicos
 
         public async Task<bool> Excluir(long id)
         {
-            return await base.Excluir(id);
+            return await servicoAcervo.Excluir(id);
         }
     }
 }

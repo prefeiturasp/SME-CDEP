@@ -51,7 +51,6 @@ namespace SME.CDEP.TesteIntegracao
 
             var acervoDocumentalDtos = await acervoDocumental.ObterTodos();
             acervoDocumentalDtos.ShouldNotBeNull();
-            // acervoArteGraficaDtos.FirstOrDefault().CreditosAutoresIds.Any().ShouldBeTrue(); //Agrupar conforme ServicoAcervoAuditavel
         }
         
         [Fact(DisplayName = "Acervo documental - Atualizar (Adicionando 4 novos arquivos/documentos, sendo 1 existente)")]
@@ -84,7 +83,7 @@ namespace SME.CDEP.TesteIntegracao
                 ConservacaoId = random.Next(1, 5),
                 Largura = random.Next(15, 55),
                 Altura = random.Next(15, 55),
-                Descricao = string.Format(ConstantesTestes.DESCRICAO_X, 100),
+                Descricao = faker.Lorem.Text(),
                 Arquivos = arquivosSelecionados,
                 AcessoDocumentosIds = acessoDocumentosSelecionados,
                 MaterialId = random.Next(1,5),
@@ -101,6 +100,7 @@ namespace SME.CDEP.TesteIntegracao
             
             var acervo = ObterTodos<Acervo>().FirstOrDefault(w=> w.Id == 3);
             acervo.Titulo.Equals(acervoDocumentalAlteracaoDto.Titulo).ShouldBeTrue();
+            acervo.Descricao.Equals(acervoDocumentalAlteracaoDto.Descricao).ShouldBeTrue();
             acervo.Codigo.Equals(acervoDocumentalAlteracaoDto.Codigo).ShouldBeTrue();
             acervo.CodigoNovo.Equals(acervoDocumentalAlteracaoDto.CodigoNovo).ShouldBeTrue();
             acervo.TipoAcervoId.ShouldBe((int)TipoAcervo.DocumentacaoHistorica);
@@ -116,7 +116,6 @@ namespace SME.CDEP.TesteIntegracao
             acervoDocumental.ConservacaoId.ShouldBe(acervoDocumentalAlteracaoDto.ConservacaoId);
             acervoDocumental.Largura.ShouldBe(acervoDocumentalAlteracaoDto.Largura.Value);
             acervoDocumental.Altura.ShouldBe(acervoDocumentalAlteracaoDto.Altura.Value);
-            acervoDocumental.Descricao.ShouldBe(acervoDocumentalAlteracaoDto.Descricao);
             acervoDocumental.MaterialId.ShouldBe(acervoDocumentalAlteracaoDto.MaterialId);
             acervoDocumental.IdiomaId.ShouldBe(acervoDocumentalAlteracaoDto.IdiomaId);
             acervoDocumental.Ano.ShouldBe(acervoDocumentalAlteracaoDto.Ano);
@@ -171,7 +170,7 @@ namespace SME.CDEP.TesteIntegracao
                 ConservacaoId = random.Next(1, 5),
                 Largura = random.Next(15, 55),
                 Altura = random.Next(15, 55),
-                Descricao = string.Format(ConstantesTestes.DESCRICAO_X, 100),
+                Descricao = faker.Lorem.Text(),
                 Arquivos = arquivosSelecionados,
                 AcessoDocumentosIds = acessoDocumentosSelecionados,
                 MaterialId = random.Next(1,5),
@@ -188,6 +187,7 @@ namespace SME.CDEP.TesteIntegracao
             
             var acervo = ObterTodos<Acervo>().FirstOrDefault(w=> w.Id == 3);
             acervo.Titulo.Equals(acervoDocumentalAlteracaoDto.Titulo).ShouldBeTrue();
+            acervo.Descricao.Equals(acervoDocumentalAlteracaoDto.Descricao).ShouldBeTrue();
             acervo.Codigo.ShouldBeNull();
             acervo.CodigoNovo.Equals(acervoDocumentalAlteracaoDto.CodigoNovo).ShouldBeTrue();
             acervo.TipoAcervoId.ShouldBe((int)TipoAcervo.DocumentacaoHistorica);
@@ -203,7 +203,6 @@ namespace SME.CDEP.TesteIntegracao
             acervoDocumental.ConservacaoId.ShouldBe(acervoDocumentalAlteracaoDto.ConservacaoId);
             acervoDocumental.Largura.ShouldBe(acervoDocumentalAlteracaoDto.Largura.Value);
             acervoDocumental.Altura.ShouldBe(acervoDocumentalAlteracaoDto.Altura.Value);
-            acervoDocumental.Descricao.ShouldBe(acervoDocumentalAlteracaoDto.Descricao);
             acervoDocumental.MaterialId.ShouldBe(acervoDocumentalAlteracaoDto.MaterialId);
             acervoDocumental.IdiomaId.ShouldBe(acervoDocumentalAlteracaoDto.IdiomaId);
             acervoDocumental.Ano.ShouldBe(acervoDocumentalAlteracaoDto.Ano);
@@ -258,7 +257,7 @@ namespace SME.CDEP.TesteIntegracao
                 ConservacaoId = random.Next(1, 5),
                 Largura = random.Next(15, 55),
                 Altura = random.Next(15, 55),
-                Descricao = string.Format(ConstantesTestes.DESCRICAO_X, 100),
+                Descricao = faker.Lorem.Text(),
                 Arquivos = arquivosSelecionados,
                 AcessoDocumentosIds = acessoDocumentosSelecionados,
                 MaterialId = random.Next(1,5),
@@ -275,6 +274,7 @@ namespace SME.CDEP.TesteIntegracao
             
             var acervo = ObterTodos<Acervo>().FirstOrDefault(w=> w.Id == 3);
             acervo.Titulo.Equals(acervoDocumentalAlteracaoDto.Titulo).ShouldBeTrue();
+            acervo.Descricao.Equals(acervoDocumentalAlteracaoDto.Descricao).ShouldBeTrue();
             acervo.CodigoNovo.ShouldBeNull();
             acervo.Codigo.Equals(acervoDocumentalAlteracaoDto.Codigo).ShouldBeTrue();
             acervo.TipoAcervoId.ShouldBe((int)TipoAcervo.DocumentacaoHistorica);
@@ -290,7 +290,6 @@ namespace SME.CDEP.TesteIntegracao
             acervoDocumental.ConservacaoId.ShouldBe(acervoDocumentalAlteracaoDto.ConservacaoId);
             acervoDocumental.Largura.ShouldBe(acervoDocumentalAlteracaoDto.Largura.Value);
             acervoDocumental.Altura.ShouldBe(acervoDocumentalAlteracaoDto.Altura.Value);
-            acervoDocumental.Descricao.ShouldBe(acervoDocumentalAlteracaoDto.Descricao);
             acervoDocumental.MaterialId.ShouldBe(acervoDocumentalAlteracaoDto.MaterialId);
             acervoDocumental.IdiomaId.ShouldBe(acervoDocumentalAlteracaoDto.IdiomaId);
             acervoDocumental.Ano.ShouldBe(acervoDocumentalAlteracaoDto.Ano);
@@ -345,7 +344,7 @@ namespace SME.CDEP.TesteIntegracao
                 ConservacaoId = random.Next(1, 5),
                 Largura = random.Next(15, 55),
                 Altura = random.Next(15, 55),
-                Descricao = string.Format(ConstantesTestes.DESCRICAO_X, 100),
+                Descricao = faker.Lorem.Text(),
                 Arquivos = arquivosSelecionados,
                 AcessoDocumentosIds = acessoDocumentosSelecionados,
                 MaterialId = random.Next(1,5),
@@ -362,6 +361,7 @@ namespace SME.CDEP.TesteIntegracao
 	
             var acervo = ObterTodos<Acervo>().FirstOrDefault(w=> w.Id == 3);
             acervo.Titulo.Equals(acervoDocumentalAlteracaoDto.Titulo).ShouldBeTrue();
+            acervo.Descricao.Equals(acervoDocumentalAlteracaoDto.Descricao).ShouldBeTrue();
             acervo.Codigo.Equals(acervoDocumentalAlteracaoDto.Codigo).ShouldBeTrue();
             acervo.CodigoNovo.Equals(acervoDocumentalAlteracaoDto.CodigoNovo).ShouldBeTrue();
             acervo.TipoAcervoId.ShouldBe((int)TipoAcervo.DocumentacaoHistorica);
@@ -377,7 +377,6 @@ namespace SME.CDEP.TesteIntegracao
             acervoDocumental.ConservacaoId.ShouldBe(acervoDocumentalAlteracaoDto.ConservacaoId);
             acervoDocumental.Largura.ShouldBe(acervoDocumentalAlteracaoDto.Largura.Value);
             acervoDocumental.Altura.ShouldBe(acervoDocumentalAlteracaoDto.Altura.Value);
-            acervoDocumental.Descricao.ShouldBe(acervoDocumentalAlteracaoDto.Descricao);
             acervoDocumental.MaterialId.ShouldBe(acervoDocumentalAlteracaoDto.MaterialId);
             acervoDocumental.IdiomaId.ShouldBe(acervoDocumentalAlteracaoDto.IdiomaId);
             acervoDocumental.Ano.ShouldBe(acervoDocumentalAlteracaoDto.Ano);
@@ -429,7 +428,7 @@ namespace SME.CDEP.TesteIntegracao
                 ConservacaoId = random.Next(1, 5),
                 Largura = random.Next(15, 55),
                 Altura = random.Next(15, 55),
-                Descricao = string.Format(ConstantesTestes.DESCRICAO_X, 100),
+                Descricao = faker.Lorem.Text(),
                 Arquivos = arquivosSelecionados,
                 AcessoDocumentosIds = acessoDocumentosSelecionados,
                 MaterialId = random.Next(1,5),
@@ -446,6 +445,7 @@ namespace SME.CDEP.TesteIntegracao
 	
             var acervo = ObterTodos<Acervo>().FirstOrDefault(w=> w.Id == 3);
             acervo.Titulo.Equals(acervoDocumentalAlteracaoDto.Titulo).ShouldBeTrue();
+            acervo.Descricao.Equals(acervoDocumentalAlteracaoDto.Descricao).ShouldBeTrue();
             acervo.Codigo.Equals(acervoDocumentalAlteracaoDto.Codigo).ShouldBeTrue();
             acervo.CodigoNovo.Equals(acervoDocumentalAlteracaoDto.CodigoNovo).ShouldBeTrue();
             acervo.TipoAcervoId.ShouldBe((int)TipoAcervo.DocumentacaoHistorica);
@@ -461,7 +461,6 @@ namespace SME.CDEP.TesteIntegracao
             acervoDocumental.ConservacaoId.ShouldBe(acervoDocumentalAlteracaoDto.ConservacaoId);
             acervoDocumental.Largura.ShouldBe(acervoDocumentalAlteracaoDto.Largura.Value);
             acervoDocumental.Altura.ShouldBe(acervoDocumentalAlteracaoDto.Altura.Value);
-            acervoDocumental.Descricao.ShouldBe(acervoDocumentalAlteracaoDto.Descricao);
             acervoDocumental.MaterialId.ShouldBe(acervoDocumentalAlteracaoDto.MaterialId);
             acervoDocumental.IdiomaId.ShouldBe(acervoDocumentalAlteracaoDto.IdiomaId);
             acervoDocumental.Ano.ShouldBe(acervoDocumentalAlteracaoDto.Ano);
@@ -512,7 +511,7 @@ namespace SME.CDEP.TesteIntegracao
                 ConservacaoId = random.Next(1, 5),
                 Largura = random.Next(15, 55),
                 Altura = random.Next(15, 55),
-                Descricao = string.Format(ConstantesTestes.DESCRICAO_X, 100),
+                Descricao = faker.Lorem.Text(),
                 Arquivos = arquivosSelecionados,
                 AcessoDocumentosIds = acessoDocumentosSelecionados,
                 MaterialId = random.Next(1,5),
@@ -530,6 +529,7 @@ namespace SME.CDEP.TesteIntegracao
 
             var acervo = ObterTodos<Acervo>().LastOrDefault();
             acervo.Titulo.Equals(acervoDocumentalCadastroDto.Titulo).ShouldBeTrue();
+            acervo.Descricao.Equals(acervoDocumentalCadastroDto.Descricao).ShouldBeTrue();
             acervo.Codigo.Equals(acervoDocumentalCadastroDto.Codigo).ShouldBeTrue();
             acervo.CodigoNovo.Equals(acervoDocumentalCadastroDto.CodigoNovo).ShouldBeTrue();
             acervo.TipoAcervoId.ShouldBe((int)TipoAcervo.DocumentacaoHistorica);
@@ -545,7 +545,6 @@ namespace SME.CDEP.TesteIntegracao
             acervoDocumental.ConservacaoId.ShouldBe(acervoDocumentalCadastroDto.ConservacaoId);
             acervoDocumental.Largura.ShouldBe(acervoDocumentalCadastroDto.Largura.Value);
             acervoDocumental.Altura.ShouldBe(acervoDocumentalCadastroDto.Altura.Value);
-            acervoDocumental.Descricao.ShouldBe(acervoDocumentalCadastroDto.Descricao);
             acervoDocumental.MaterialId.ShouldBe(acervoDocumentalCadastroDto.MaterialId);
             acervoDocumental.IdiomaId.ShouldBe(acervoDocumentalCadastroDto.IdiomaId);
             acervoDocumental.Ano.ShouldBe(acervoDocumentalCadastroDto.Ano);
@@ -598,7 +597,7 @@ namespace SME.CDEP.TesteIntegracao
                 ConservacaoId = random.Next(1, 5),
                 Largura = random.Next(15, 55),
                 Altura = random.Next(15, 55),
-                Descricao = string.Format(ConstantesTestes.DESCRICAO_X, 100),
+                Descricao = faker.Lorem.Text(),
                 Arquivos = arquivosSelecionados,
                 AcessoDocumentosIds = acessoDocumentosSelecionados,
                 MaterialId = random.Next(1,5),
@@ -640,7 +639,7 @@ namespace SME.CDEP.TesteIntegracao
                 ConservacaoId = random.Next(1, 5),
                 Largura = random.Next(15, 55),
                 Altura = random.Next(15, 55),
-                Descricao = string.Format(ConstantesTestes.DESCRICAO_X, 100),
+                Descricao = faker.Lorem.Text(),
                 Arquivos = arquivosSelecionados,
                 AcessoDocumentosIds = acessoDocumentosSelecionados,
                 MaterialId = random.Next(1,5),
@@ -682,7 +681,7 @@ namespace SME.CDEP.TesteIntegracao
                 ConservacaoId = random.Next(1, 5),
                 Largura = random.Next(15, 55),
                 Altura = random.Next(15, 55),
-                Descricao = string.Format(ConstantesTestes.DESCRICAO_X, 100),
+                Descricao = faker.Lorem.Text(),
                 Arquivos = arquivosSelecionados,
                 AcessoDocumentosIds = acessoDocumentosSelecionados,
                 MaterialId = random.Next(1,5),
@@ -726,7 +725,7 @@ namespace SME.CDEP.TesteIntegracao
                 ConservacaoId = random.Next(1, 5),
                 Largura = random.Next(15, 55),
                 Altura = random.Next(15, 55),
-                Descricao = string.Format(ConstantesTestes.DESCRICAO_X, 100),
+                Descricao = faker.Lorem.Text(),
                 Arquivos = arquivosSelecionados,
                 AcessoDocumentosIds = acessoDocumentosSelecionados,
                 MaterialId = random.Next(1,5),
@@ -772,7 +771,7 @@ namespace SME.CDEP.TesteIntegracao
                 ConservacaoId = random.Next(1, 5),
                 Largura = random.Next(15, 55),
                 Altura = random.Next(15, 55),
-                Descricao = string.Format(ConstantesTestes.DESCRICAO_X, 100),
+                Descricao = faker.Lorem.Text(),
                 Arquivos = arquivosSelecionados,
                 AcessoDocumentosIds = acessoDocumentosSelecionados,
                 MaterialId = random.Next(1,5),
@@ -818,7 +817,7 @@ namespace SME.CDEP.TesteIntegracao
                 ConservacaoId = random.Next(1, 5),
                 Largura = random.Next(15, 55),
                 Altura = random.Next(15, 55),
-                Descricao = string.Format(ConstantesTestes.DESCRICAO_X, 100),
+                Descricao = faker.Lorem.Text(),
                 Arquivos = arquivosSelecionados,
                 AcessoDocumentosIds = acessoDocumentosSelecionados,
                 MaterialId = random.Next(1,5),
@@ -862,7 +861,7 @@ namespace SME.CDEP.TesteIntegracao
                 ConservacaoId = random.Next(1, 5),
                 Largura = random.Next(15, 55),
                 Altura = random.Next(15, 55),
-                Descricao = string.Format(ConstantesTestes.DESCRICAO_X, 100),
+                Descricao = faker.Lorem.Text(),
                 Arquivos = arquivosSelecionados,
                 AcessoDocumentosIds = acessoDocumentosSelecionados,
                 MaterialId = random.Next(1,5),
@@ -906,7 +905,7 @@ namespace SME.CDEP.TesteIntegracao
                 ConservacaoId = random.Next(1, 5),
                 Largura = random.Next(15, 55),
                 Altura = random.Next(15, 55),
-                Descricao = string.Format(ConstantesTestes.DESCRICAO_X, 100),
+                Descricao = faker.Lorem.Text(),
                 Arquivos = arquivosSelecionados,
                 AcessoDocumentosIds = acessoDocumentosSelecionados,
                 MaterialId = random.Next(1,5),
@@ -952,7 +951,7 @@ namespace SME.CDEP.TesteIntegracao
                 ConservacaoId = random.Next(1, 5),
                 Largura = random.Next(15, 55),
                 Altura = random.Next(15, 55),
-                Descricao = string.Format(ConstantesTestes.DESCRICAO_X, 100),
+                Descricao = faker.Lorem.Text(),
                 Arquivos = arquivosSelecionados,
                 AcessoDocumentosIds = acessoDocumentosSelecionados,
                 MaterialId = random.Next(1,5),
@@ -980,6 +979,7 @@ namespace SME.CDEP.TesteIntegracao
                     Codigo = j.ToString(),
                     CodigoNovo = $"{j.ToString()}.NOVO",
                     Titulo = string.Format(ConstantesTestes.TITULO_X, j),
+                    Descricao = faker.Lorem.Text(),
                     TipoAcervoId = (int)TipoAcervo.DocumentacaoHistorica,
                     CriadoPor = ConstantesTestes.SISTEMA,
                     CriadoEm = DateTimeExtension.HorarioBrasilia().AddMinutes(-15),
@@ -1022,7 +1022,6 @@ namespace SME.CDEP.TesteIntegracao
                     Localizacao = string.Format(ConstantesTestes.LOCALIZACAO_X, j),
                     CopiaDigital = true,
                     ConservacaoId = random.Next(1,5),
-                    Descricao = string.Format(ConstantesTestes.DESCRICAO_X,j)
                 });
                 
                 await InserirNaBase(new Arquivo()

@@ -134,6 +134,7 @@ namespace SME.CDEP.Aplicacao.Servicos
             {
                 await servicoAcervo.Alterar(acervoDocumentalAlteracaoDto.AcervoId,
                     acervoDocumentalAlteracaoDto.Titulo, 
+                    acervoDocumentalAlteracaoDto.Descricao, 
                     acervoDocumentalAlteracaoDto.Codigo,
                     acervoDocumentalAlteracaoDto.CreditosAutoresIds,
                     acervoDocumentalAlteracaoDto.CodigoNovo);
@@ -204,7 +205,7 @@ namespace SME.CDEP.Aplicacao.Servicos
 
         public async Task<bool> Excluir(long id)
         {
-            return await base.Excluir(id);
+            return await servicoAcervo.Excluir(id);
         }
     }
 }

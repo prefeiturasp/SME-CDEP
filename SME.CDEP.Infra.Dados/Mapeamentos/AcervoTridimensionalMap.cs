@@ -12,7 +12,6 @@ namespace SME.CDEP.Infra.Dados.Mapeamentos
             Map(c => c.DataAcervo).ToColumn("data_acervo");
             Map(c => c.ConservacaoId).ToColumn("conservacao_id");
             Map(c => c.Quantidade).ToColumn("quantidade");
-            Map(c => c.Descricao).ToColumn("descricao");
             Map(c => c.Largura).ToColumn("largura");
             Map(c => c.Altura).ToColumn("altura");
             Map(c => c.Profundidade).ToColumn("profundidade");

@@ -14,7 +14,6 @@ namespace SME.CDEP.Infra.Dados.Mapeamentos
             Map(c => c.CopiaDigital).ToColumn("copia_digital");
             Map(c => c.PermiteUsoImagem).ToColumn("permite_uso_imagem");
             Map(c => c.ConservacaoId).ToColumn("conservacao_id");
-            Map(c => c.Descricao).ToColumn("descricao");
             Map(c => c.Quantidade).ToColumn("quantidade");
             Map(c => c.Largura).ToColumn("largura");
             Map(c => c.Altura).ToColumn("altura");
