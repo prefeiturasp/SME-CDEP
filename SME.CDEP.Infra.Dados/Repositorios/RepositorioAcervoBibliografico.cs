@@ -106,7 +106,7 @@ namespace SME.CDEP.Infra.Dados.Repositorios
             {
                 var acervoBi = retorno.FirstOrDefault();
                 acervoBi.CreditosAutoresIds = acervoBi.CreditoAutorId.EhMaiorQueZero() ? retorno.Where(w=> w.TipoAutoria.EhNulo()).Select(s => s.CreditoAutorId).Distinct().ToArray() : Array.Empty<long>();
-                acervoBi.CoAutores = acervoBi.CreditoAutorId.EhMaiorQueZero() ? retorno.Where(w=> w.TipoAutoria.NaoEhNulo()).Select(s => new CoAutor() { CreditoAutorId = s.CreditoAutorId, TipoAutoria = s.TipoAutoria}).Distinct().ToArray() : Array.Empty<CoAutor>();
+                acervoBi.CoAutores = acervoBi.CreditoAutorId.EhMaiorQueZero() ? retorno.Where(w=> w.TipoAutoria.NaoEhNulo()).Select(s => new CoAutor() { CreditoAutorId = s.CreditoAutorId, TipoAutoria = s.TipoAutoria, CreditoAutorNome = s.CreditoAutorNome}).Distinct().ToArray() : Array.Empty<CoAutor>();
                 acervoBi.AssuntosIds = acervoBi.AssuntoId.EhMaiorQueZero() ? retorno.Select(s => s.AssuntoId).Distinct().ToArray() : Array.Empty<long>();
                 return acervoBi;    
             }
