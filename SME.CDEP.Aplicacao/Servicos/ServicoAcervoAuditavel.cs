@@ -163,7 +163,7 @@ namespace SME.CDEP.Aplicacao.Servicos
             acervo.Titulo = titulo;
             acervo.Codigo = codigo;
             acervo.CreditosAutoresIds = creditosAutoresIds;
-            acervo.CoAutores = coAutores.NaoEhNulo() ? coAutores.Select(s=> new CoAutor() { CreditoAutorId = s.CreditoAutorId, TipoAutoria = s.TipoAutoria}) : null;
+            acervo.CoAutores = coAutores.NaoEhNulo() ? coAutores.Select(s=> new CoAutor() { CreditoAutorId = s.CreditoAutorId.Value, TipoAutoria = s.TipoAutoria}) : null;
             acervo.SubTitulo = subTitulo;
             return await Alterar(acervo);
         }
