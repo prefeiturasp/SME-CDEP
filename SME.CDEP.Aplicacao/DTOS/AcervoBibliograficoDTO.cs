@@ -13,7 +13,7 @@ public class AcervoBibliograficoDTO
     public long TipoAcervoId { get; set; }
     public string Codigo { get; set; }
     public long MaterialId { get; set; }
-    public long EditoraId { get; set; }
+    public long? EditoraId { get; set; }
     public long[] AssuntosIds { get; set; }
     public string? Ano { get; set; }
     public string? Edicao { get; set; }
