@@ -67,6 +67,23 @@ namespace SME.CDEP.Infra.Dados.Repositorios
             return arquivo.Id;
         }
 
+        public async Task<IEnumerable<AcervoCodigoNomeResumido>> ObterAcervoCodigoNomeArquivoPorAcervoId(long[] acervosIds)
+        {
+            var query = @"select ag.acervo_id as acervoId, a.codigo, a.nome 
+                            from acervo_arte_grafica ag 
+                                join acervo_arte_grafica_arquivo aga on aga.acervo_arte_grafica_id = ag.id 
+                                join arquivo a on a.id = aga.arquivo_id 
+                            where permite_uso_imagem and ag.acervo_id = any(@acervosIds)
+                            union all
+                            select af.acervo_id as acervoId, a.codigo, a.nome 
+                                from acervo_fotografico af 
+                                    join acervo_fotografico_arquivo afa on afa.acervo_fotografico_id = af.id 
+                                    join arquivo a on a.id = afa.arquivo_id 
+                            where permite_uso_imagem and af.acervo_id = any(@acervosIds) ";
+
+            return await conexao.Obter().QueryAsync<AcervoCodigoNomeResumido>(query, new { acervosIds });
+        }
+
         public async Task<long> ObterIdPorCodigo(Guid arquivoCodigo)
         {
             var query = @"select id
@@ -74,16 +91,6 @@ namespace SME.CDEP.Infra.Dados.Repositorios
                            where codigo = @arquivoCodigo";
 
             return await conexao.Obter().QueryFirstOrDefaultAsync<long>(query, new { arquivoCodigo });
-        }
-
-        public Task<IEnumerable<Arquivo>> PesquisarParcialPor(string valorCampo, string campo = "nome")
-        {
-            throw new NotImplementedException();
-        }
-
-        public Task<IEnumerable<Arquivo>> PesquisarExatoPor(string valorCampo, string campo)
-        {
-            throw new NotImplementedException();
         }
     }
 }
