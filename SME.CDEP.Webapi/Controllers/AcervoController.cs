@@ -16,7 +16,6 @@ public class AcervoController: BaseController
     [ProducesResponseType(typeof(RetornoBaseDTO), 400)]
     [ProducesResponseType(typeof(RetornoBaseDTO), 403)]
     [ProducesResponseType(typeof(RetornoBaseDTO), 601)]
-    [Permissao(Permissao.ACR_C, Policy = "Bearer")]
     public IActionResult ObterTiposDeAcervos([FromServices]IServicoAcervo servicoAcervo)
     {
         return Ok(servicoAcervo.ObterTodosTipos());
