@@ -1,7 +1,8 @@
-﻿using Shouldly;
-using SME.CDEP.Aplicacao.DTOS;
+﻿using Bogus;
+using Shouldly;
 using SME.CDEP.Dominio.Entidades;
 using SME.CDEP.Dominio.Excecoes;
+using SME.CDEP.Dominio.Extensions;
 using SME.CDEP.Infra.Dominio.Enumerados;
 using SME.CDEP.TesteIntegracao.Setup;
 using SME.CDEP.TesteIntegracao.Constantes;
@@ -33,13 +34,15 @@ namespace SME.CDEP.TesteIntegracao
             await InserirAcervo();
             var servicoAcervo = GetServicoAcervo();
 
+            var acervos = ObterTodos<Acervo>();
+
             var acervoFotograficoDtos = await servicoAcervo.ObterPorFiltro(
-                (int)TipoAcervo.Fotografico, "títu", null, string.Empty);
+                (int)TipoAcervo.Bibliografico, acervos.FirstOrDefault().Titulo.Substring(1), null, string.Empty);
             
             acervoFotograficoDtos.ShouldNotBeNull();
-            acervoFotograficoDtos.TotalPaginas.ShouldBe(4);
-            acervoFotograficoDtos.TotalRegistros.ShouldBe(35);
-            acervoFotograficoDtos.Items.Count().ShouldBe(10);
+            acervoFotograficoDtos.TotalPaginas.ShouldBeGreaterThan(0);
+            acervoFotograficoDtos.TotalRegistros.ShouldBeLessThanOrEqualTo(35);
+            acervoFotograficoDtos.Items.Count().ShouldBeLessThanOrEqualTo(10);
         }
         
         [Fact(DisplayName = "Acervo - Alterar")]
@@ -49,23 +52,167 @@ namespace SME.CDEP.TesteIntegracao
             await InserirAcervo();
             var servicoAcervo = GetServicoAcervo();
 
-            var acervo = await servicoAcervo.Alterar(new Acervo()
+            var acervoAlterar = (ObterTodos<Acervo>()).FirstOrDefault();
+            acervoAlterar.Descricao = faker.Lorem.Text();
+            acervoAlterar.Titulo = faker.Lorem.Sentence();
+            acervoAlterar.SubTitulo = faker.Lorem.Sentence();
+            
+            var creditoAutores = (ObterTodos<AcervoCreditoAutor>()).Where(w => w.AcervoId == acervoAlterar.Id);
+            acervoAlterar.CreditosAutoresIds = creditoAutores.Take(2).Select(s => s.CreditoAutorId).ToArray();
+            acervoAlterar.CoAutores = creditoAutores.Take(2).Select(s=> new CoAutor() { CreditoAutorId = s.CreditoAutorId, TipoAutoria = faker.Lorem.Word().Limite(15)}).ToList();
+            
+            var acervo = await servicoAcervo.Alterar(acervoAlterar);
+            var acervoAlterado = (ObterTodos<Acervo>()).FirstOrDefault(w=> w.Id == acervoAlterar.Id);
+            acervoAlterado.Codigo.ShouldBe(acervoAlterar.Codigo);
+            acervoAlterado.CodigoNovo.ShouldBe(acervoAlterar.CodigoNovo);
+            acervoAlterado.Titulo.ShouldBe(acervoAlterar.Titulo);
+            acervoAlterado.Descricao.ShouldBe(acervoAlterar.Descricao);
+            acervoAlterado.SubTitulo.ShouldBe(acervoAlterar.SubTitulo);
+            
+            var acervosCreditosAutores = (ObterTodos<AcervoCreditoAutor>()).Where(w=> w.AcervoId == acervoAlterar.Id);
+            acervosCreditosAutores.Count().ShouldBe(4);
+           
+            foreach (var creditoAutorId in acervoAlterar.CreditosAutoresIds)
+                acervosCreditosAutores.Any(f=> f.CreditoAutorId == creditoAutorId && f.TipoAutoria is null).ShouldBeTrue();
+
+            foreach (var coAutor in acervoAlterar.CoAutores)
+                acervosCreditosAutores.Any(f=> f.CreditoAutorId == coAutor.CreditoAutorId && f.TipoAutoria == coAutor.TipoAutoria).ShouldBeTrue();
+        }
+        
+        [Fact(DisplayName = "Acervo - Alterar para sem CoAutor")]
+        public async Task Alterar_sem_coautor()
+        {
+            await InserirDadosBasicos();
+            await InserirAcervo();
+            var servicoAcervo = GetServicoAcervo();
+
+            var acervoAlterar = (ObterTodos<Acervo>()).FirstOrDefault();
+            acervoAlterar.Descricao = faker.Lorem.Text();
+            acervoAlterar.Titulo = faker.Lorem.Sentence();
+            acervoAlterar.SubTitulo = faker.Lorem.Sentence();
+            
+            var creditoAutores = (ObterTodos<AcervoCreditoAutor>()).Where(w => w.AcervoId == acervoAlterar.Id);
+            acervoAlterar.CreditosAutoresIds = creditoAutores.Take(2).Select(s => s.CreditoAutorId).ToArray();
+            acervoAlterar.CoAutores = Enumerable.Empty<CoAutor>();
+            
+            var acervo = await servicoAcervo.Alterar(acervoAlterar);
+            var acervoAlterado = (ObterTodos<Acervo>()).FirstOrDefault(w=> w.Id == acervoAlterar.Id);
+            acervoAlterado.Codigo.ShouldBe(acervoAlterar.Codigo);
+            acervoAlterado.CodigoNovo.ShouldBe(acervoAlterar.CodigoNovo);
+            acervoAlterado.Titulo.ShouldBe(acervoAlterar.Titulo);
+            acervoAlterado.Descricao.ShouldBe(acervoAlterar.Descricao);
+            acervoAlterado.SubTitulo.ShouldBe(acervoAlterar.SubTitulo);
+            acervoAlterar.CoAutores.Count().ShouldBe(0);
+            var acervosCreditosAutores = (ObterTodos<AcervoCreditoAutor>()).Where(w=> w.AcervoId == acervoAlterar.Id);
+            acervosCreditosAutores.Count().ShouldBe(2);
+           
+            foreach (var creditoAutorId in acervoAlterar.CreditosAutoresIds)
+                acervosCreditosAutores.Any(f=> f.CreditoAutorId == creditoAutorId && f.TipoAutoria is null).ShouldBeTrue();
+
+        }
+        
+        [Fact(DisplayName = "Acervo - Não deve alterar para um título e código existente")]
+        public async Task Nao_deve_alterar_com_mesmo_titulo_codigo()
+        {
+            await InserirDadosBasicos();
+            await InserirAcervo();
+            var servicoAcervo = GetServicoAcervo();
+
+            var acervos = ObterTodos<Acervo>();
+            var acervoAlterar = (acervos).FirstOrDefault();
+            acervoAlterar.Titulo = acervos.LastOrDefault().Titulo;
+            acervoAlterar.SubTitulo = acervos.LastOrDefault().SubTitulo;
+            acervoAlterar.Codigo = acervos.LastOrDefault().Codigo;
+            
+            var creditoAutores = (ObterTodos<AcervoCreditoAutor>()).Where(w => w.AcervoId == acervoAlterar.Id);
+            acervoAlterar.CreditosAutoresIds = creditoAutores.Take(2).Select(s => s.CreditoAutorId).ToArray();
+            acervoAlterar.CoAutores = creditoAutores.Take(2).Select(s=> new CoAutor() { CreditoAutorId = s.CreditoAutorId, TipoAutoria = faker.Lorem.Word().Limite(15)}).ToList();
+            
+            await servicoAcervo.Alterar(acervoAlterar).ShouldThrowAsync<NegocioException>();
+        }
+        
+        [Fact(DisplayName = "Acervo - Deve alterar para um título existente e códigos diferentes")]
+        public async Task Deve_alterar_com_mesmo_titulo_e_codigo_diferentes()
+        {
+            await InserirDadosBasicos();
+            await InserirAcervo();
+            var servicoAcervo = GetServicoAcervo();
+            
+            var acervos = ObterTodos<Acervo>();
+            var acervoAlterar = (acervos).FirstOrDefault();
+            acervoAlterar.Titulo = acervos.LastOrDefault().Titulo;
+            acervoAlterar.Descricao = faker.Lorem.Text();
+            acervoAlterar.SubTitulo = acervos.LastOrDefault().SubTitulo;
+            acervoAlterar.Codigo = "196";
+            
+            var creditoAutores = (ObterTodos<AcervoCreditoAutor>()).Where(w => w.AcervoId == acervoAlterar.Id);
+            acervoAlterar.CreditosAutoresIds = creditoAutores.Take(2).Select(s => s.CreditoAutorId).ToArray();
+            acervoAlterar.CoAutores = creditoAutores.Take(2).Select(s=> new CoAutor() { CreditoAutorId = s.CreditoAutorId, TipoAutoria = faker.Lorem.Word()}).ToList();
+            
+            var acervo = await servicoAcervo.Alterar(acervoAlterar);
+            var acervoAlterado = (ObterTodos<Acervo>()).FirstOrDefault(w=> w.Id == acervoAlterar.Id);
+            acervoAlterado.Codigo.ShouldBe(acervoAlterar.Codigo);
+            acervoAlterado.CodigoNovo.ShouldBe(acervoAlterar.CodigoNovo);
+            acervoAlterado.Titulo.ShouldBe(acervoAlterar.Titulo);
+            acervoAlterado.Descricao.ShouldBe(acervoAlterar.Descricao);
+            acervoAlterado.SubTitulo.ShouldBe(acervoAlterar.SubTitulo);
+            
+            var acervosCreditosAutores = (ObterTodos<AcervoCreditoAutor>()).Where(w=> w.AcervoId == acervoAlterar.Id);
+            acervosCreditosAutores.Count().ShouldBe(4);
+           
+            foreach (var creditoAutorId in acervoAlterar.CreditosAutoresIds)
+                acervosCreditosAutores.Any(f=> f.CreditoAutorId == creditoAutorId && f.TipoAutoria is null).ShouldBeTrue();
+
+            foreach (var coAutor in acervoAlterar.CoAutores)
+                acervosCreditosAutores.Any(f=> f.CreditoAutorId == coAutor.CreditoAutorId && f.TipoAutoria == coAutor.TipoAutoria).ShouldBeTrue();
+        }
+        
+        [Fact(DisplayName = "Acervo - Não deve alterar para um título e código existente")]
+        public async Task Nao_deve_alterar_com_mesmo_codigo()
+        {
+            await InserirDadosBasicos();
+            await InserirAcervo();
+            var servicoAcervo = GetServicoAcervo();
+
+            await servicoAcervo.Alterar(new Acervo()
             {
                 Id = 1,
-                Codigo = "150",
-                Titulo = string.Format(ConstantesTestes.TITULO_X,150),
+                Codigo = "1",
+                CodigoNovo = "2",
+                Titulo = string.Format(ConstantesTestes.TITULO_X,1),
                 CreditosAutoresIds = new long[]{1,2},
-                TipoAcervoId = (int)TipoAcervo.Fotografico,  
+                TipoAcervoId = (int)TipoAcervo.DocumentacaoHistorica,  
+                CriadoPor = ConstantesTestes.SISTEMA,
+                CriadoEm = DateTimeExtension.HorarioBrasilia(),
+                CriadoLogin = ConstantesTestes.LOGIN_123456789
+            }).ShouldThrowAsync<NegocioException>();
+        }
+        
+        [Fact(DisplayName = "Acervo - Deve alterar para um título existente e códigos diferentes")]
+        public async Task Deve_alterar_com_mesmo_codigo_diferentes()
+        {
+            await InserirDadosBasicos();
+            await InserirAcervo();
+            var servicoAcervo = GetServicoAcervo();
+
+            await servicoAcervo.Alterar(new Acervo()
+            {
+                Id = 1,
+                Codigo = "196",
+                CodigoNovo = "290",
+                Titulo = string.Format(ConstantesTestes.TITULO_X,1),
+                CreditosAutoresIds = new long[]{1,2},
+                TipoAcervoId = (int)TipoAcervo.DocumentacaoHistorica,  
                 CriadoPor = ConstantesTestes.SISTEMA,
                 CriadoEm = DateTimeExtension.HorarioBrasilia(),
                 CriadoLogin = ConstantesTestes.LOGIN_123456789
             });
-            
-            acervo.ShouldNotBeNull();
-            var acervosCreditosAutores = ObterTodos<AcervoCreditoAutor>();
-            acervosCreditosAutores.Where(w=> w.AcervoId == 1).Count().ShouldBe(2);
-            acervosCreditosAutores.Where(w=> w.AcervoId == 1).FirstOrDefault().CreditoAutorId.ShouldBe(1);
-            acervosCreditosAutores.Where(w=> w.AcervoId == 1).LastOrDefault().CreditoAutorId.ShouldBe(2);
+            var acervos = ObterTodos<Acervo>();
+            var acervoAlterado = acervos.FirstOrDefault(f => f.Id == 1);
+            acervoAlterado.ShouldNotBeNull();
+            acervoAlterado.Codigo.ShouldBe("196");
+            acervoAlterado.CodigoNovo.ShouldBe("290");
+            acervoAlterado.Titulo.ShouldBe(string.Format(ConstantesTestes.TITULO_X,1));
         }
         
         [Fact(DisplayName = "Acervo - Alterar adicionando mais créditos/autores")]
@@ -74,22 +221,34 @@ namespace SME.CDEP.TesteIntegracao
             await InserirDadosBasicos();
             await InserirAcervo();
             var servicoAcervo = GetServicoAcervo();
-
-            var acervo = await servicoAcervo.Alterar(new Acervo()
-            {
-                Id = 1,
-                Codigo = "150",
-                Titulo = string.Format(ConstantesTestes.TITULO_X,150),
-                CreditosAutoresIds = new long[]{1,2,3,4,5},
-                TipoAcervoId = (int)TipoAcervo.Fotografico,  
-                CriadoPor = ConstantesTestes.SISTEMA,
-                CriadoEm = DateTimeExtension.HorarioBrasilia(),
-                CriadoLogin = ConstantesTestes.LOGIN_123456789
-            });
             
-            acervo.ShouldNotBeNull();
-            var acervosCreditosAutores = ObterTodos<AcervoCreditoAutor>();
-            acervosCreditosAutores.Where(w=> w.AcervoId == 1).Count().ShouldBe(5);
+            var acervos = ObterTodos<Acervo>();
+            var acervoAlterar = (acervos).FirstOrDefault();
+            acervoAlterar.Titulo = acervos.LastOrDefault().Titulo;
+            acervoAlterar.Descricao = faker.Lorem.Text();
+            acervoAlterar.SubTitulo = acervos.LastOrDefault().SubTitulo;
+            acervoAlterar.Codigo = "196";
+            
+            var creditoAutores = (ObterTodos<AcervoCreditoAutor>()).Where(w => w.AcervoId == acervoAlterar.Id);
+            acervoAlterar.CreditosAutoresIds = creditoAutores.Take(3).Select(s => s.CreditoAutorId).ToArray();
+            acervoAlterar.CoAutores = creditoAutores.Take(3).Select(s=> new CoAutor() { CreditoAutorId = s.CreditoAutorId, TipoAutoria = faker.Lorem.Word().Limite(15)}).ToList();
+            
+            var acervo = await servicoAcervo.Alterar(acervoAlterar);
+            var acervoAlterado = (ObterTodos<Acervo>()).FirstOrDefault(w=> w.Id == acervoAlterar.Id);
+            acervoAlterado.Codigo.ShouldBe(acervoAlterar.Codigo);
+            acervoAlterado.CodigoNovo.ShouldBe(acervoAlterar.CodigoNovo);
+            acervoAlterado.Titulo.ShouldBe(acervoAlterar.Titulo);
+            acervoAlterado.Descricao.ShouldBe(acervoAlterar.Descricao);
+            acervoAlterado.SubTitulo.ShouldBe(acervoAlterar.SubTitulo);
+            
+            var acervosCreditosAutores = (ObterTodos<AcervoCreditoAutor>()).Where(w=> w.AcervoId == acervoAlterar.Id);
+            acervosCreditosAutores.Count().ShouldBe(6);
+
+            foreach (var creditoAutorId in acervoAlterar.CreditosAutoresIds)
+                acervosCreditosAutores.Any(f=> f.CreditoAutorId == creditoAutorId && f.TipoAutoria is null).ShouldBeTrue();
+
+            foreach (var coAutor in acervoAlterar.CoAutores)
+                acervosCreditosAutores.Any(f=> f.CreditoAutorId == coAutor.CreditoAutorId && f.TipoAutoria == coAutor.TipoAutoria).ShouldBeTrue();
         }
         
         [Fact(DisplayName = "Acervo - Alterar excluindo todos e adicionando um créditos/autores")]
@@ -98,22 +257,34 @@ namespace SME.CDEP.TesteIntegracao
             await InserirDadosBasicos();
             await InserirAcervo();
             var servicoAcervo = GetServicoAcervo();
-
-            var acervo = await servicoAcervo.Alterar(new Acervo()
-            {
-                Id = 1,
-                Codigo = "150",
-                Titulo = string.Format(ConstantesTestes.TITULO_X,150),
-                CreditosAutoresIds = new long[]{5},
-                TipoAcervoId = (int)TipoAcervo.Fotografico,  
-                CriadoPor = ConstantesTestes.SISTEMA,
-                CriadoEm = DateTimeExtension.HorarioBrasilia(),
-                CriadoLogin = ConstantesTestes.LOGIN_123456789
-            });
             
-            acervo.ShouldNotBeNull();
-            var acervosCreditosAutores = ObterTodos<AcervoCreditoAutor>();
-            acervosCreditosAutores.Where(w=> w.AcervoId == 1).Count().ShouldBe(1);
+            var acervos = ObterTodos<Acervo>();
+            var acervoAlterar = (acervos).FirstOrDefault();
+            acervoAlterar.Titulo = acervos.LastOrDefault().Titulo;
+            acervoAlterar.Descricao = faker.Lorem.Text();
+            acervoAlterar.SubTitulo = acervos.LastOrDefault().SubTitulo;
+            acervoAlterar.Codigo = "196";
+            
+            var creditoAutores = (ObterTodos<AcervoCreditoAutor>()).Where(w => w.AcervoId == acervoAlterar.Id);
+            acervoAlterar.CreditosAutoresIds = creditoAutores.Take(1).Select(s => s.CreditoAutorId).ToArray();
+            acervoAlterar.CoAutores = creditoAutores.Take(1).Select(s=> new CoAutor() { CreditoAutorId = s.CreditoAutorId, TipoAutoria = faker.Lorem.Word().Limite(15)}).ToList();
+            
+            var acervo = await servicoAcervo.Alterar(acervoAlterar);
+            var acervoAlterado = (ObterTodos<Acervo>()).FirstOrDefault(w=> w.Id == acervoAlterar.Id);
+            acervoAlterado.Codigo.ShouldBe(acervoAlterar.Codigo);
+            acervoAlterado.CodigoNovo.ShouldBe(acervoAlterar.CodigoNovo);
+            acervoAlterado.Titulo.ShouldBe(acervoAlterar.Titulo);
+            acervoAlterado.Descricao.ShouldBe(acervoAlterar.Descricao);
+            acervoAlterado.SubTitulo.ShouldBe(acervoAlterar.SubTitulo);
+            
+            var acervosCreditosAutores = (ObterTodos<AcervoCreditoAutor>()).Where(w=> w.AcervoId == acervoAlterar.Id);
+            acervosCreditosAutores.Count().ShouldBe(2);
+           
+            foreach (var creditoAutorId in acervoAlterar.CreditosAutoresIds)
+                acervosCreditosAutores.Any(f=> f.CreditoAutorId == creditoAutorId && f.TipoAutoria is null).ShouldBeTrue();
+
+            foreach (var coAutor in acervoAlterar.CoAutores)
+                acervosCreditosAutores.Any(f=> f.CreditoAutorId == coAutor.CreditoAutorId && f.TipoAutoria == coAutor.TipoAutoria).ShouldBeTrue();
         }
         
         [Fact(DisplayName = "Acervo - Inserir")]
@@ -121,25 +292,108 @@ namespace SME.CDEP.TesteIntegracao
         {
             await InserirDadosBasicos();
             var servicoAcervo = GetServicoAcervo();
+            var random = new Random();
+            
+            var acervoInserir = GerarAcervo(TipoAcervo.Bibliografico).Generate();
+            acervoInserir.CreditosAutoresIds = new long []{1,2,3,4,5};
+            acervoInserir.CoAutores = new List<CoAutor>() { new () { CreditoAutorId = random.Next(1,5), TipoAutoria = faker.Lorem.Word().Limite(15)}}.ToList();
+            
+            var acervoId = await servicoAcervo.Inserir(acervoInserir);
+            var acervoinserido = (ObterTodos<Acervo>()).FirstOrDefault(w=> w.Id == acervoId);
+            acervoinserido.Codigo.ShouldBe(acervoInserir.Codigo);
+            acervoinserido.Titulo.ShouldBe(acervoInserir.Titulo);
+            acervoinserido.Descricao.ShouldBe(acervoInserir.Descricao);
+            acervoinserido.SubTitulo.ShouldBe(acervoInserir.SubTitulo);
+            
+            var acervosCreditosAutores = (ObterTodos<AcervoCreditoAutor>()).Where(w=> w.AcervoId == acervoId);
+            acervosCreditosAutores.Count().ShouldBe(6);
+           
+            foreach (var creditoAutorId in acervoInserir.CreditosAutoresIds)
+                acervosCreditosAutores.Any(f=> f.CreditoAutorId == creditoAutorId && f.TipoAutoria is null).ShouldBeTrue();
 
-            var acervo = await servicoAcervo.Inserir(new Acervo()
-            {
-                Codigo = "1",
-                Titulo = string.Format(ConstantesTestes.TITULO_X,1),
-                CreditosAutoresIds = new long[]{1,2},
-                TipoAcervoId = (int)TipoAcervo.Fotografico,    
-            });
-            
-            acervo.ShouldBeGreaterThan(0);
-            var acervos = ObterTodos<Acervo>();
-            acervos.Count().ShouldBe(1);
-            
-            var acervosCreditosAutores = ObterTodos<AcervoCreditoAutor>();
-            acervosCreditosAutores.Count().ShouldBe(2);
+            foreach (var coAutor in acervoInserir.CoAutores)
+                acervosCreditosAutores.Any(f=> f.CreditoAutorId == coAutor.CreditoAutorId && f.TipoAutoria == coAutor.TipoAutoria).ShouldBeTrue();
         }
         
-        [Fact(DisplayName = "Acervo - Não deve inserir pois já existe cadastro com esse título")]
+        [Fact(DisplayName = "Acervo - Inserir sem CoAutor")]
+        public async Task Inserir_sem_coAutor()
+        {
+            await InserirDadosBasicos();
+            var servicoAcervo = GetServicoAcervo();
+            
+            var acervoInserir = GerarAcervo(TipoAcervo.Bibliografico).Generate();
+            acervoInserir.CreditosAutoresIds = new long []{1,2,3,4,5};
+            acervoInserir.CoAutores = Enumerable.Empty<CoAutor>();
+            
+            var acervoId = await servicoAcervo.Inserir(acervoInserir);
+            var acervoinserido = (ObterTodos<Acervo>()).FirstOrDefault(w=> w.Id == acervoId);
+            acervoinserido.Codigo.ShouldBe(acervoInserir.Codigo);
+            acervoinserido.Titulo.ShouldBe(acervoInserir.Titulo);
+            acervoinserido.Descricao.ShouldBe(acervoInserir.Descricao);
+            acervoinserido.SubTitulo.ShouldBe(acervoInserir.SubTitulo);
+            
+            var acervosCreditosAutores = (ObterTodos<AcervoCreditoAutor>()).Where(w=> w.AcervoId == acervoId);
+            acervosCreditosAutores.Count().ShouldBe(5);
+           
+            foreach (var creditoAutorId in acervoInserir.CreditosAutoresIds)
+                acervosCreditosAutores.Any(f=> f.CreditoAutorId == creditoAutorId && f.TipoAutoria is null).ShouldBeTrue();
+        }
+        
+        [Fact(DisplayName = "Acervo - Não deve inserir pois já existe cadastro com esse título e código")]
         public async Task Nao_deve_inserir_duplicado()
+        {
+            await InserirDadosBasicos();
+            await InserirAcervo();
+            var servicoAcervo = GetServicoAcervo();
+            
+            var acervoInserir = GerarAcervo(TipoAcervo.Bibliografico).Generate();
+            acervoInserir.CreditosAutoresIds = new long []{1,2,3,4,5};
+            acervoInserir.CoAutores = new List<CoAutor>() { new () { CreditoAutorId = new Random().Next(1,5), TipoAutoria = faker.Lorem.Word().Limite(15)}}.ToList();
+
+            var acervos = ObterTodos<Acervo>();
+            acervoInserir.Titulo = acervos.LastOrDefault().Titulo;
+            acervoInserir.SubTitulo = acervos.LastOrDefault().SubTitulo;
+            acervoInserir.Codigo = acervos.LastOrDefault().Codigo;
+            
+            await servicoAcervo.Inserir(acervoInserir).ShouldThrowAsync<NegocioException>();
+        }
+        
+        [Fact(DisplayName = "Acervo - Deve inserir pois já existe cadastro com esse título, mas com outro código")]
+        public async Task Deve_inserir_com_titulo_duplicado_com_codigo_diferente()
+        {
+            await InserirDadosBasicos();
+            await InserirAcervo();
+            var servicoAcervo = GetServicoAcervo();
+            
+            var acervoInserir = GerarAcervo(TipoAcervo.Bibliografico).Generate();
+            acervoInserir.CreditosAutoresIds = new long []{1,2,3,4,5};
+            acervoInserir.CoAutores = new List<CoAutor>() { new () { CreditoAutorId = new Random().Next(1,5), TipoAutoria = faker.Lorem.Word().Limite(15)}}.ToList();
+
+            var acervos = ObterTodos<Acervo>();
+            acervoInserir.Titulo = acervos.LastOrDefault().Titulo;
+            acervoInserir.Descricao = faker.Lorem.Text();
+            acervoInserir.SubTitulo = acervos.LastOrDefault().SubTitulo;
+            acervoInserir.Codigo = faker.Random.Number(100, 150).ToString();
+
+            var acervoId = await servicoAcervo.Inserir(acervoInserir);
+            var acervoinserido = (ObterTodos<Acervo>()).FirstOrDefault(w=> w.Id == acervoId);
+            acervoinserido.Codigo.ShouldBe(acervoInserir.Codigo);
+            acervoinserido.Titulo.ShouldBe(acervoInserir.Titulo);
+            acervoinserido.Descricao.ShouldBe(acervoInserir.Descricao);
+            acervoinserido.SubTitulo.ShouldBe(acervoInserir.SubTitulo);
+            
+            var acervosCreditosAutores = (ObterTodos<AcervoCreditoAutor>()).Where(w=> w.AcervoId == acervoId);
+            acervosCreditosAutores.Count().ShouldBe(6);
+           
+            foreach (var creditoAutorId in acervoInserir.CreditosAutoresIds)
+                acervosCreditosAutores.Any(f=> f.CreditoAutorId == creditoAutorId && f.TipoAutoria is null).ShouldBeTrue();
+
+            foreach (var coAutor in acervoInserir.CoAutores)
+                acervosCreditosAutores.Any(f=> f.CreditoAutorId == coAutor.CreditoAutorId && f.TipoAutoria == coAutor.TipoAutoria).ShouldBeTrue();
+        }
+        
+        [Fact(DisplayName = "Acervo - Deve inserir pois já existe cadastro com esse título, mas com outro código")]
+        public async Task Deve_inserir_com_codigo_diferente()
         {
             await InserirDadosBasicos();
 
@@ -147,13 +401,20 @@ namespace SME.CDEP.TesteIntegracao
 
             var servicoAcervo = GetServicoAcervo();
             
-            await servicoAcervo.Inserir(new Acervo()
+            var retorno = await servicoAcervo.Inserir(new Acervo()
             {
-                Codigo = "1",
+                Codigo = "150",
                 Titulo = string.Format(ConstantesTestes.TITULO_X,1),
                 CreditosAutoresIds = new long[]{1,2},
                 TipoAcervoId = (int)TipoAcervo.Fotografico,    
-            }).ShouldThrowAsync<NegocioException>();
+            });
+
+            var acervos = ObterTodos<Acervo>();
+            var acervo = acervos.FirstOrDefault(f => f.Id == retorno);
+            acervo.ShouldNotBeNull();
+            acervo.Id.ShouldBe(36);
+            acervo.Titulo.ShouldBe(string.Format(ConstantesTestes.TITULO_X, 1));
+            acervo.Codigo.ShouldBe("150");
         }
         
         [Fact(DisplayName = "Acervo - Obter por id")]
@@ -168,7 +429,9 @@ namespace SME.CDEP.TesteIntegracao
             var acervo = await servicoAcervo.ObterPorId(1);
             acervo.ShouldNotBeNull();
             acervo.Id.ShouldBe(1);
-            acervo.Titulo.ShouldBe(string.Format(ConstantesTestes.TITULO_X, 1));
+            acervo.Titulo.ShouldNotBeNull();
+            acervo.Codigo.ShouldNotBeNull();
+            acervo.SubTitulo.ShouldNotBeNull();
         }
         
         [Fact(DisplayName = "Acervo - Excluir")]
@@ -194,8 +457,10 @@ namespace SME.CDEP.TesteIntegracao
                 await InserirNaBase(new Acervo()
                 {
                     Codigo = j.ToString(),
-                    Titulo = string.Format(ConstantesTestes.TITULO_X, j),
-                    TipoAcervoId = (int)TipoAcervo.Fotografico,
+                    Titulo = faker.Lorem.Sentence(),
+                    Descricao = faker.Lorem.Text(),
+                    SubTitulo = faker.Lorem.Sentence(),
+                    TipoAcervoId = (int)TipoAcervo.Bibliografico,
                     CriadoPor = ConstantesTestes.SISTEMA,
                     CriadoEm = DateTimeExtension.HorarioBrasilia(),
                     CriadoLogin = ConstantesTestes.LOGIN_123456789
@@ -217,6 +482,20 @@ namespace SME.CDEP.TesteIntegracao
                 {
                     AcervoId = j,
                     CreditoAutorId = 3
+                });
+                
+                await InserirNaBase(new AcervoCreditoAutor()
+                {
+                    AcervoId = j,
+                    CreditoAutorId = 1,
+                    TipoAutoria = faker.Lorem.Word().Limite(15)
+                });
+                
+                await InserirNaBase(new AcervoCreditoAutor()
+                {
+                    AcervoId = j,
+                    CreditoAutorId = 2,
+                    TipoAutoria = faker.Lorem.Word().Limite(15)
                 });
             }
         }

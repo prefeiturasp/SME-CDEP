@@ -6,6 +6,7 @@ using SME.CDEP.Dominio;
 using SME.CDEP.Dominio.Constantes;
 using SME.CDEP.Dominio.Contexto;
 using SME.CDEP.Dominio.Excecoes;
+using SME.CDEP.Dominio.Extensions;
 using SME.CDEP.Dominio.Repositorios;
 using SME.CDEP.Infra.Dominio.Enumerados;
 
@@ -75,7 +76,7 @@ namespace SME.CDEP.Aplicacao.Servicos
                 var numeroRegistrosQueryString = contextoAplicacao.ObterVariavel<string>("NumeroRegistros");
                 var ordenacaoQueryString = contextoAplicacao.ObterVariavel<string>("Ordenacao");
 
-                if (string.IsNullOrWhiteSpace(numeroPaginaQueryString) || string.IsNullOrWhiteSpace(numeroRegistrosQueryString)|| string.IsNullOrWhiteSpace(ordenacaoQueryString))
+                if (numeroPaginaQueryString.NaoEstaPreenchido() || numeroRegistrosQueryString.NaoEstaPreenchido()|| ordenacaoQueryString.NaoEstaPreenchido())
                     return new Paginacao(0, 0,0);
 
                 var numeroPagina = int.Parse(numeroPaginaQueryString);

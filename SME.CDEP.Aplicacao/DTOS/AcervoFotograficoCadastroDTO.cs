@@ -2,19 +2,8 @@
 
 namespace SME.CDEP.Aplicacao.DTOS;
 
-public class AcervoFotograficoCadastroDTO
+public class AcervoFotograficoCadastroDTO : AcervoCadastroDTO
 {
-    [Required(ErrorMessage = "É necessário informar o título do acervo fotográfico")]
-    [MaxLength(500, ErrorMessage = "A localização do acervo fotográfico não pode conter mais que 500 caracteres")]
-    public string Titulo { get; set; }
-    
-    [Required(ErrorMessage = "É necessário informar o Tombo do acervo fotográfico")]
-    [MaxLength(13, ErrorMessage = "O Tombo do acervo fotográfico não pode conter mais que 13 caracteres")]
-    public string Codigo { get; set; }
-    
-    [Required(ErrorMessage = "É necessário informar ao menos um crédito ou autoria do acervo fotográfico")]
-    public long[] CreditosAutoresIds { get; set; }
-    
     [MaxLength(100, ErrorMessage = "A localização do acervo fotográfico não pode conter mais que 100 caracteres")]
     public string? Localizacao { get; set; }
     
@@ -32,9 +21,6 @@ public class AcervoFotograficoCadastroDTO
     [Required(ErrorMessage = "É necessário informar o identificador da conservação do acervo fotografico")]
     [Range(1, long.MaxValue, ErrorMessage = "O identificador da conservação do acervo fotográfico deve ser maior que zero")]
     public long ConservacaoId { get; set; }
-    
-    [Required(ErrorMessage = "É necessário informar a descrição do acervo fotografico")]
-    public string Descricao { get; set; }
     
     [Required(ErrorMessage = "É necessário informar a quantidade do acervo fotografico")]
     [Range(1, long.MaxValue, ErrorMessage = "A quantidade do acervo fotográfico deve ser maior que zero")]

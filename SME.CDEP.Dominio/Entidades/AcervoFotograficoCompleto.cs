@@ -4,7 +4,7 @@ using SME.CDEP.Infra.Dominio.Enumerados;
 
 namespace SME.CDEP.Dominio.Entidades;
 
-public class AcervoFotograficoCompleto: EntidadeBase
+public class AcervoFotograficoCompleto: EntidadeBaseAuditavel
 {
     public long AcervoId { get; set; }
     public string Titulo { get; set; }
@@ -20,19 +20,13 @@ public class AcervoFotograficoCompleto: EntidadeBase
     public long ConservacaoId { get; set; }
     public string Descricao { get; set; }
     public long Quantidade { get; set; }
-    public float Largura { get; set; }
-    public float Altura { get; set; }
+    public float? Largura { get; set; }
+    public float? Altura { get; set; }
     public long SuporteId { get; set; }
     public long FormatoId { get; set; }
     public long CromiaId { get; set; }
     public string Resolucao { get; set; }
     public string TamanhoArquivo { get; set; }
-    public DateTime? AlteradoEm { get; set; }
-    public string? AlteradoPor { get; set; }
-    public string? AlteradoLogin { get; set; }
-    public DateTime CriadoEm { get; set; }
-    public string CriadoPor { get; set; }
-    public string CriadoLogin { get; set; }
     public ArquivoResumido[] Arquivos  { get; set; }
     public long ArquivoId { get; set; }
     public string ArquivoNome { get; set; }

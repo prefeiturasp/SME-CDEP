@@ -1,10 +1,8 @@
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Options;
 using Minio;
-using SME.CDEP.Dominio.Excecoes;
+using SME.CDEP.Dominio.Extensions;
 using SME.CDEP.Infra.Servicos.Mensageria;
-using SME.CDEP.Infra.Servicos.Mensageria.Exchange;
-using SME.CDEP.Infra.Servicos.Mensageria.Rotas;
 using SME.CDEP.Infra.Servicos.ServicoArmazenamento.Interface;
 
 namespace SME.CDEP.Infra.Servicos.ServicoArmazenamento
@@ -108,7 +106,7 @@ namespace SME.CDEP.Infra.Servicos.ServicoArmazenamento
 
         public async Task<bool> Excluir(string nomeArquivo, string nomeBucket = "")
         {
-            nomeBucket = string.IsNullOrEmpty(nomeBucket)
+            nomeBucket = nomeBucket.EhNulo()
                 ? configuracaoArmazenamentoOptions.BucketArquivos
                 : nomeBucket;
 

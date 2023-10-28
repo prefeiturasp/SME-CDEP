@@ -3,12 +3,14 @@ pipeline {
       branchname =  env.BRANCH_NAME.toLowerCase()
       kubeconfig = getKubeconf(env.branchname)
       registryCredential = 'jenkins_registry'
-      namespace = "${env.branchname == 'development' ? 'cdep-dev' : env.branchname == 'release' ? 'sme-cdep' : env.branchname == 'release-r2' ? 'cdep-hom2' : 'sme-cdep' }"
+      namespace = "${env.branchname == 'development' ? 'cdep-dev' : env.branchname == 'release' ? 'cdep-hom' : env.branchname == 'release-r2' ? 'cdep-hom2' : 'sme-cdep' }"
     }	    
       
-    agent {
-      node { label 'AGENT-NODES' }
-    }
+    agent { kubernetes { 
+                  label 'builder'
+                  defaultContainer 'builder'
+                }
+              } 
 
     options {
       buildDiscarder(logRotator(numToKeepStr: '20', artifactNumToKeepStr: '5'))
@@ -58,12 +60,18 @@ pipeline {
         }
 
       stage('Flyway') {
-        agent { label 'master' }
+        agent { kubernetes { 
+                  label 'flyway'
+                  defaultContainer 'flyway'
+                }
+              }
         when { anyOf {  branch 'master'; branch 'main'; branch 'development'; branch 'release'; branch 'release-r2'; } }
         steps{
           withCredentials([string(credentialsId: "flyway_cdep_${branchname}", variable: 'url')]) {
             checkout scm
-            sh 'docker run --rm -v $(pwd)/scripts:/opt/scripts registry.sme.prefeitura.sp.gov.br/devops/flyway:5.2.4 -url=$url -locations="filesystem:/opt/scripts" -outOfOrder=true migrate'
+            sh 'pwd'
+            sh 'ls'
+            sh 'flyway -url=$url -locations="filesystem:scripts" -outOfOrder=true migrate'
           }
         }       
       }
@@ -75,9 +83,9 @@ post {
 def getKubeconf(branchName) {
     if("main".equals(branchName)) { return "config_prd"; }
     else if ("master".equals(branchName)) { return "config_prd"; }
-    else if ("homolog".equals(branchName)) { return "config_hom"; }
-    else if ("homolog-r2".equals(branchName)) { return "config_hom"; }
-    else if ("release".equals(branchName)) { return "config_hom"; }
+    else if ("homolog".equals(branchName)) { return "config_release"; }
+    else if ("homolog-r2".equals(branchName)) { return "config_release"; }
+    else if ("release".equals(branchName)) { return "config_release"; }
     else if ("development".equals(branchName)) { return "config_release"; }
     else if ("develop".equals(branchName)) { return "config_release"; }
 }

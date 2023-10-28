@@ -1,9 +1,11 @@
 using AutoMapper;
+using Bogus;
 using Microsoft.Extensions.DependencyInjection;
 using SME.CDEP.Aplicacao.DTOS;
 using SME.CDEP.Aplicacao.Servicos.Interface;
 using SME.CDEP.Dominio.Contexto;
 using SME.CDEP.Dominio.Entidades;
+using SME.CDEP.Dominio.Extensions;
 using SME.CDEP.Infra.Dominio.Enumerados;
 using SME.CDEP.TesteIntegracao.Constantes;
 using SME.CDEP.TesteIntegracao.Setup;
@@ -14,9 +16,10 @@ using Xunit;
 namespace SME.CDEP.TesteIntegracao
 {
     [Collection("TesteIntegradoCDEP")]
-    public class TesteBase : IClassFixture<TestFixture>
+    public class TesteBase : BaseMock, IClassFixture<TestFixture>
     {
         protected readonly CollectionFixture _collectionFixture;
+        protected readonly Faker faker;
 
         public ServiceProvider ServiceProvider => _collectionFixture.ServiceProvider;
 
@@ -28,6 +31,8 @@ namespace SME.CDEP.TesteIntegracao
 
             RegistrarFakes(_collectionFixture.Services);
             _collectionFixture.BuildServiceProvider();
+            
+            faker = new Faker("pt_BR");
         }
 
         protected virtual void RegistrarFakes(IServiceCollection services)
@@ -159,6 +164,31 @@ namespace SME.CDEP.TesteIntegracao
             return ObterServicoAplicacao<IServicoAcervoFotografico>();
         }
         
+        protected IServicoAcervoArteGrafica GetServicoAcervoArteGrafica()
+        {
+            return ObterServicoAplicacao<IServicoAcervoArteGrafica>();
+        }
+        
+        protected IServicoAcervoTridimensional GetServicoAcervoTridimensional()
+        {
+            return ObterServicoAplicacao<IServicoAcervoTridimensional>();
+        }
+        
+        protected IServicoAcervoAudiovisual GetServicoAcervoAudiovisual()
+        {
+            return ObterServicoAplicacao<IServicoAcervoAudiovisual>();
+        }
+        
+        protected IServicoAcervoDocumental GetServicoAcervoDocumental()
+        {
+            return ObterServicoAplicacao<IServicoAcervoDocumental>();
+        }
+        
+        protected IServicoAcervoBibliografico GetServicoAcervoBibliografico()
+        {
+            return ObterServicoAplicacao<IServicoAcervoBibliografico>();
+        }
+        
         protected IMapper GetServicoMapper()
         {
             return ServiceProvider.GetService<IMapper>();
@@ -234,7 +264,7 @@ namespace SME.CDEP.TesteIntegracao
             {
                 await InserirNaBase(new CreditoAutor()
                 {
-                    Nome = string.Format(ConstantesTestes.CREDITO_AUTOR_X,i),
+                    Nome = faker.Lorem.Sentence().Limite(200),
                     CriadoPor = ConstantesTestes.SISTEMA, 
                     CriadoEm = DateTimeExtension.HorarioBrasilia().Date, 
                     CriadoLogin = ConstantesTestes.LOGIN_123456789 
@@ -242,20 +272,123 @@ namespace SME.CDEP.TesteIntegracao
                 
                 await InserirNaBase(new Suporte()
                 {
-                    Nome = string.Format(ConstantesTestes.SUPORTE_X,i),
+                    Nome = faker.Lorem.Sentence().Limite(500),
                     Tipo = (TipoSuporte)random.Next(1,2),
                 });
                 
                 await InserirNaBase(new Formato()
                 {
-                    Nome = string.Format(ConstantesTestes.FORMATO_X,i),
+                    Nome = faker.Lorem.Sentence().Limite(500),
                     Tipo = (TipoFormato)random.Next(1,2),
                 });
                 
-                await InserirNaBase(new Cromia() { Nome = string.Format(ConstantesTestes.CROMIA_X,i)});
+                await InserirNaBase(new Cromia() { Nome = faker.Lorem.Sentence().Limite(500)});
                 
-                await InserirNaBase(new Conservacao() { Nome = string.Format(ConstantesTestes.CONSERVACAO_X,i)});
+                await InserirNaBase(new Conservacao() { Nome = faker.Lorem.Sentence().Limite(500)});
+                
+                await InserirNaBase(new Idioma() { Nome = faker.Lorem.Sentence().Limite(500)});
+                await InserirNaBase(new Material() { Nome = faker.Lorem.Sentence().Limite(500)});
+                await InserirNaBase(new AcessoDocumento() { Nome = faker.Lorem.Sentence().Limite(500)});
+                await InserirNaBase(new Editora()
+                { 
+                    Nome = faker.Lorem.Sentence().Limite(200), 
+                    CriadoPor = ConstantesTestes.SISTEMA, 
+                    CriadoEm = DateTimeExtension.HorarioBrasilia().Date, 
+                    CriadoLogin = ConstantesTestes.LOGIN_123456789 
+                });
+                await InserirNaBase(new SerieColecao()
+                { 
+                    Nome = faker.Lorem.Sentence().Limite(200), 
+                    CriadoPor = ConstantesTestes.SISTEMA, 
+                    CriadoEm = DateTimeExtension.HorarioBrasilia().Date, 
+                    CriadoLogin = ConstantesTestes.LOGIN_123456789 
+                });
+                await InserirNaBase(new Assunto()
+                { 
+                    Nome = faker.Lorem.Sentence().Limite(200), 
+                    CriadoPor = ConstantesTestes.SISTEMA, 
+                    CriadoEm = DateTimeExtension.HorarioBrasilia().Date, 
+                    CriadoLogin = ConstantesTestes.LOGIN_123456789 
+                });
             }
+        }
+        
+        protected static Faker<Acervo> GerarAcervo(TipoAcervo tipoAcervo)
+        {
+            var random = new Random();
+            var faker = new Faker<Acervo>("pt_BR");
+            faker.RuleFor(x => x.Titulo, f => f.Lorem.Text().Limite(500));
+            faker.RuleFor(x => x.Descricao, f => f.Lorem.Text());
+            faker.RuleFor(x => x.Codigo, f => random.Next(1,499).ToString());
+            
+            if (((long)tipoAcervo).EhAcervoDocumental())
+                faker.RuleFor(x => x.CodigoNovo, f => random.Next(500,999).ToString());
+            
+            faker.RuleFor(x => x.SubTitulo, f => f.Lorem.Text().Limite(500));
+            faker.RuleFor(x => x.TipoAcervoId, f => (int)tipoAcervo);
+            AuditoriaFaker(faker);
+            return faker;
+        }
+        
+        protected Faker<AcervoArteGrafica> GerarAcervoArteGrafica()
+        {
+            var random = new Random();
+            var faker = new Faker<AcervoArteGrafica>("pt_BR");
+            
+            faker.RuleFor(x => x.Localizacao, f => f.Lorem.Text().Limite(100));
+            faker.RuleFor(x => x.Procedencia, f => f.Lorem.Text().Limite(200));
+            faker.RuleFor(x => x.DataAcervo, f => f.Date.Recent().Year.ToString());
+            faker.RuleFor(x => x.CopiaDigital, f => true);
+            faker.RuleFor(x => x.PermiteUsoImagem, f => true);
+            faker.RuleFor(x => x.Largura, f => random.Next(15,55));
+            faker.RuleFor(x => x.Altura, f => random.Next(15,55));
+            faker.RuleFor(x => x.ConservacaoId, f => random.Next(1,5));
+            faker.RuleFor(x => x.CromiaId, f => random.Next(1,5));
+            faker.RuleFor(x => x.Diametro, f => random.Next(15,55));
+            faker.RuleFor(x => x.Tecnica, f => f.Lorem.Sentence().Limite(100));
+            faker.RuleFor(x => x.SuporteId, f => random.Next(1,5));
+            faker.RuleFor(x => x.Quantidade, f => random.Next(15,55));
+            faker.RuleFor(x => x.Acervo, f => GerarAcervo(TipoAcervo.ArtesGraficas).Generate());
+            return faker;
+        }
+        
+        protected Faker<AcervoArteGraficaCadastroDTO> GerarAcervoArteGraficaCadastroDTO()
+        {
+            var random = new Random();
+            var faker = new Faker<AcervoArteGraficaCadastroDTO>("pt_BR");
+            
+            faker.RuleFor(x => x.Codigo, f => random.Next(1,499).ToString());
+            faker.RuleFor(x => x.Titulo, f => f.Lorem.Text().Limite(500));
+            faker.RuleFor(x => x.Descricao, f => f.Lorem.Text());
+            faker.RuleFor(x => x.SubTitulo, f => f.Lorem.Text().Limite(500));
+            faker.RuleFor(x => x.Localizacao, f => f.Lorem.Text().Limite(100));
+            faker.RuleFor(x => x.Procedencia, f => f.Lorem.Text().Limite(200));
+            faker.RuleFor(x => x.DataAcervo, f => f.Date.Recent().Year.ToString());
+            faker.RuleFor(x => x.CopiaDigital, f => true);
+            faker.RuleFor(x => x.PermiteUsoImagem, f => true);
+            faker.RuleFor(x => x.Largura, f => random.Next(15,55));
+            faker.RuleFor(x => x.Altura, f => random.Next(15,55));
+            faker.RuleFor(x => x.ConservacaoId, f => random.Next(1,5));
+            faker.RuleFor(x => x.CromiaId, f => random.Next(1,5));
+            faker.RuleFor(x => x.Diametro, f => random.Next(15,55));
+            faker.RuleFor(x => x.Tecnica, f => f.Lorem.Sentence().Limite(100));
+            faker.RuleFor(x => x.SuporteId, f => random.Next(1,5));
+            faker.RuleFor(x => x.Quantidade, f => random.Next(15,55));
+            faker.RuleFor(x => x.CreditosAutoresIds, f => new long[]{1,2,3,4,5});
+            faker.RuleFor(x => x.Arquivos, f => new long[]{random.Next(1,10),random.Next(1,10),random.Next(1,10),random.Next(1,10),random.Next(1,10)});
+            return faker;
+        }
+        
+        protected Faker<Arquivo> GerarArquivo(TipoArquivo tipoArquivo)
+        {
+            var faker = new Faker<Arquivo>("pt_BR");
+            
+            faker.RuleFor(x => x.Codigo, f => Guid.NewGuid());
+            faker.RuleFor(x => x.Nome, f => f.Lorem.Text().Limite(20));
+            faker.RuleFor(x => x.Tipo, f => tipoArquivo);
+            faker.RuleFor(x => x.TipoConteudo, f => "image/jpeg");
+            AuditoriaFaker(faker);
+            return faker;
         }
     }
 }

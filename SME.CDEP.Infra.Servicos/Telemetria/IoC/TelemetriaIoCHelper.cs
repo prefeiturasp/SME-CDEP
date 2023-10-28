@@ -1,5 +1,6 @@
 ﻿using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using SME.CDEP.Dominio.Extensions;
 using SME.CDEP.Infra.Servicos.Telemetria.Options;
 
 namespace SME.CDEP.Infra.Servicos.Telemetria.IoC
@@ -8,7 +9,7 @@ namespace SME.CDEP.Infra.Servicos.Telemetria.IoC
     {
         public static void ConfigurarTelemetria(this IServiceCollection services, IConfiguration configuration)
         {
-            if (configuration == null)
+            if (configuration.EhNulo())
                 return;
 
             services.AddOptions<TelemetriaOptions>()

@@ -8,6 +8,7 @@ using SME.CDEP.Dominio.Excecoes;
 using SME.CDEP.Infra.Dados.Repositorios.Interfaces;
 using SME.CDEP.Aplicacao.Integracoes.Interfaces;
 using SME.CDEP.Dominio.Contexto;
+using SME.CDEP.Dominio.Extensions;
 using SME.CDEP.Infra.Dominio.Enumerados;
 
 namespace SME.CDEP.Aplicacao.Servicos
@@ -83,7 +84,7 @@ namespace SME.CDEP.Aplicacao.Servicos
         private async Task<bool> ValidarCpfEmUsuarioAcervoECoreSSO(string cpf)
         {
             var usuarioAcervo = await ObterPorLogin(cpf);
-            if (usuarioAcervo != null)
+            if (usuarioAcervo.NaoEhNulo())
                 throw new NegocioException(MensagemNegocio.VOCE_JA_POSSUI_LOGIN_ACERVO);
 
             var usuarioCoreSSO = await servicoAcessos.UsuarioCadastradoCoreSSO(cpf);
@@ -163,7 +164,7 @@ namespace SME.CDEP.Aplicacao.Servicos
 
         private void ValidarUsuarioExterno(Usuario usuario)
         {
-            if (usuario == null)
+            if (usuario.EhNulo())
                 throw new NegocioException(MensagemNegocio.LOGIN_NAO_ENCONTRADO);
 
             if (!usuario.EhCadastroExterno())
@@ -199,7 +200,7 @@ namespace SME.CDEP.Aplicacao.Servicos
         {
             var retornoAutenticacao = await servicoAcessos.Autenticar(login, senha);
             
-            if (string.IsNullOrEmpty(retornoAutenticacao.Login))
+            if (retornoAutenticacao.Login.NaoEstaPreenchido())
                 throw new NegocioException(MensagemNegocio.USUARIO_OU_SENHA_INVALIDOS);
 
             await ManutencaoUsuario(login, retornoAutenticacao);
@@ -210,7 +211,7 @@ namespace SME.CDEP.Aplicacao.Servicos
         private async Task ManutencaoUsuario(string login, UsuarioAutenticacaoRetornoDTO retorno)
         {
             var usuario = await repositorioUsuario.ObterPorLogin(login);
-            if (usuario != null)
+            if (usuario.NaoEhNulo())
             {
                 usuario.UltimoLogin = DateTimeExtension.HorarioBrasilia();
                 usuario.Nome = retorno.Nome;

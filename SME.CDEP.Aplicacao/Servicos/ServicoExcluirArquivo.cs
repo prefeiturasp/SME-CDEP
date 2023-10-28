@@ -1,8 +1,8 @@
 ﻿using SME.CDEP.Aplicacao.Servicos.Interface;
 using SME.CDEP.Dominio.Constantes;
 using SME.CDEP.Dominio.Excecoes;
+using SME.CDEP.Dominio.Extensions;
 using SME.CDEP.Infra.Dados.Repositorios.Interfaces;
-using SME.CDEP.Infra.Servicos.ServicoArmazenamento;
 using SME.CDEP.Infra.Servicos.ServicoArmazenamento.Interface;
 
 namespace SME.CDEP.Aplicacao.Servicos
@@ -21,7 +21,7 @@ namespace SME.CDEP.Aplicacao.Servicos
         public async Task<bool> Excluir(long[] ids)
         {
              var arquivos = await repositorioArquivo.ObterPorIds(ids);
-             if (arquivos == null)
+             if (arquivos.EhNulo())
                  throw new NegocioException(MensagemNegocio.ARQUIVO_INF0RMADO_NAO_ENCONTRADO);
             
              var arquivosIds = arquivos.Select(s => s.Id).ToArray();

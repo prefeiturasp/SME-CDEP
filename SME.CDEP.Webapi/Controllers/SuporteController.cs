@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Mvc;
 using SME.CDEP.Aplicacao.DTOS;
 using SME.CDEP.Aplicacao.Servicos.Interface;
+using SME.CDEP.Infra.Dominio.Enumerados;
 using SME.CDEP.Webapi.Filtros;
 
 namespace SME.CDEP.Webapi.Controllers;
@@ -37,9 +38,11 @@ public class SuporteController: BaseController
     [ProducesResponseType(typeof(RetornoBaseDTO), 601)]
     [ProducesResponseType(typeof(IdNomeTipoExcluidoDTO), 200)]  
     [Authorize("Bearer")]
-    public async Task<IActionResult> ObterTodos([FromServices]IServicoSuporte servicoSuporte)
+    public async Task<IActionResult> ObterTodos(TipoSuporte tipoSuporte, [FromServices]IServicoSuporte servicoSuporte)
     {
-        return Ok(await servicoSuporte.ObterTodos());
+        var suportes = await servicoSuporte.ObterTodos();
+        return Ok(tipoSuporte == TipoSuporte.NAO_DEFINIDO ? suportes : suportes.Where(w=> w.Tipo == (int)tipoSuporte));
+
     }
     
     [HttpGet("{id}")]

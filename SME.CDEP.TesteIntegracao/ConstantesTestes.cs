@@ -101,6 +101,7 @@ public class ConstantesTestes
     
     public const string LOCALIZACAO_X = "Localização {0}";
     public const string PROCEDENCIA_X = "Procedencia {0}";
+    public const string TECNICA_X = "Técnica {0}";
     public const string DESCRICAO_X = "Acervo: {0} As descrições de coleções são uma ferramenta essencial para compreender o conteúdo e o significado de uma coleção. Uma descrição da coleção fornece informações sobre os atributos físicos da coleção, seu significado histórico e políticas de acesso e uso. Este ensaio explorará essas três áreas principais da descrição da coleção com mais detalhes.";
     public const string RESOLUCAO_X = "Resolução {0}";
     public const string TAMANHO_ARQUIVO_X_MB = "{0}2MB";
@@ -112,4 +113,18 @@ public class ConstantesTestes
     public const string CROMIA_X = "Cromia {0}";
     public const string CONSERVACAO_X = "Conservação {0}";
     public const string MIME_TYPE_JPG = "image/jpg";
+    
+    public const string ANO_X = "Ano {0}";
+    public const string NUMERO_PAGINA_X = "{0}";
+    public const string VOLUME_X = "Volume {0}";
+    public const string TIPO_ANEXO_X = "Volume {0}";
+    
+    public const string IDIOMA_X = "Idioma {0}";
+    public const string MATERIAL_X = "Material {0}";
+    public const string ACESSO_DOCUMENTO_X = "Acesso Documento {0}";
+    
+    public const string COPIA_X = "Cópia {0}";
+    public const string DURACAO_X = "Duração {0}";
+    public const string ACESSIBILIDADE_X = "Acessibilidade {0}";
+    public const string DISPONIBILIZACAO_X = "Disponibilidade {0}";
 }
