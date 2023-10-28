@@ -3,6 +3,7 @@ using SME.CDEP.Dominio.Contexto;
 using SME.CDEP.Dominio.Entidades;
 using SME.CDEP.Dominio.Extensions;
 using SME.CDEP.Infra.Dados.Repositorios.Interfaces;
+using SME.CDEP.Infra.Dominio.Enumerados;
 
 namespace SME.CDEP.Infra.Dados.Repositorios
 {
@@ -55,14 +56,9 @@ namespace SME.CDEP.Infra.Dados.Repositorios
             }, new { tipoAcervo, creditoAutorId }, splitOn: "id"));
         }
         
-        public Task<bool> ExisteCodigo(string codigo, long id)
+        public Task<bool> ExisteCodigo(string codigo, long id, TipoAcervo tipo)
         {
-            return conexao.Obter().QueryFirstOrDefaultAsync<bool>("select 1 from acervo where (lower(codigo) = @codigo or lower(codigo_novo) = @codigo) and not excluido and id != @id",new { id, codigo = codigo.ToLower() });
-        }
-        
-        public Task<bool> ExisteTitulo(string titulo, long id, string codigo, string codigoNovo)
-        {
-            return conexao.Obter().QueryFirstOrDefaultAsync<bool>($"select 1 from acervo where lower(titulo) = @titulo and not excluido and id != @id and codigo = @codigo {IncluirCodigoNovo(codigoNovo)}",new { id, titulo = titulo.ToLower(), codigo, codigoNovo });
+            return conexao.Obter().QueryFirstOrDefaultAsync<bool>("select 1 from acervo where (lower(codigo) = @codigo or lower(codigo_novo) = @codigo) and not excluido and id != @id and tipo = @tipo",new { id, codigo = codigo.ToLower(), tipo });
         }
 
         private string IncluirCodigoNovo(string codigoNovo)
