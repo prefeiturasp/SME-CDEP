@@ -7,8 +7,7 @@ namespace SME.CDEP.Infra.Dados.Repositorios.Interfaces
     public interface IRepositorioAcervo : IRepositorioBaseAuditavel<Acervo>
     {
         Task<IEnumerable<Acervo>> PesquisarPorFiltro(int? tipoAcervo, string titulo, long? creditoAutorId, string codigo);
-        Task<bool> ExisteCodigo(string codigo, long id);
-        Task<bool> ExisteTitulo(string titulo, long id, string codigo, string codigoNovo);
+        Task<bool> ExisteCodigo(string codigo, long id, TipoAcervo tipo);
         Task<IEnumerable<PesquisaAcervo>> ObterPorTextoLivreETipoAcervo(string? textoLivre, TipoAcervo? tipoAcervo);
     }
 }
