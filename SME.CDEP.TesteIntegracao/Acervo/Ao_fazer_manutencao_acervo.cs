@@ -168,7 +168,7 @@ namespace SME.CDEP.TesteIntegracao
         }
         
         [Fact(DisplayName = "Acervo - Não deve alterar para um título e código existente")]
-        public async Task Nao_deve_alterar_com_mesmo_titulo_codigo()
+        public async Task Nao_deve_alterar_com_mesmo_codigo()
         {
             await InserirDadosBasicos();
             await InserirAcervo();
@@ -189,7 +189,7 @@ namespace SME.CDEP.TesteIntegracao
         }
         
         [Fact(DisplayName = "Acervo - Deve alterar para um título existente e códigos diferentes")]
-        public async Task Deve_alterar_com_mesmo_titulo_e_codigo_diferentes()
+        public async Task Deve_alterar_com_mesmo_codigo_diferentes()
         {
             await InserirDadosBasicos();
             await InserirAcervo();
@@ -393,7 +393,7 @@ namespace SME.CDEP.TesteIntegracao
         }
         
         [Fact(DisplayName = "Acervo - Deve inserir pois já existe cadastro com esse título, mas com outro código")]
-        public async Task Deve_inserir_com_titulo_duplicado_com_codigo_diferente()
+        public async Task Deve_inserir_com_codigo_diferente()
         {
             await InserirDadosBasicos();
 
