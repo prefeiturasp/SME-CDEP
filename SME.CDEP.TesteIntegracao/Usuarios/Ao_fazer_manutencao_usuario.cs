@@ -17,7 +17,7 @@ namespace SME.CDEP.TesteIntegracao.Usuario
         public async Task Cadastrar_usuario()
         {
             var servicoUsuario = GetServicoUsuario();
-            var usuarioDto = ObterUsuarioDto(TipoUsuario.SERVIDOR_PUBLICO, ConstantesTestes.NUMERO_1);
+            var usuarioDto = GerarUsuarioDTO(TipoUsuario.SERVIDOR_PUBLICO).Generate(); 
 
             var usuarioId = await servicoUsuario.Inserir(usuarioDto);
             usuarioId.ShouldBeGreaterThan(0);
@@ -30,7 +30,7 @@ namespace SME.CDEP.TesteIntegracao.Usuario
 
             var usuarios = await servicoUsuario.ObterTodos();
             usuarios.ShouldNotBeNull();
-            usuarios.Count().ShouldBe(11);
+            usuarios.Count().ShouldBe(10);
         }
 
         [Fact(DisplayName = "Usuário - Obter por id")]
@@ -86,12 +86,16 @@ namespace SME.CDEP.TesteIntegracao.Usuario
         {
             var servicoUsuario = GetServicoUsuario();
 
-            for (int i = 0; i <= 10; i++)
-            {
-                var usuarioDto = ObterUsuarioDto(tipoUsuario, i.ToString());
+            var usuariosDTOs = GerarUsuarioDTO(tipoUsuario).Generate(10);
 
+            var contador = 1;
+
+            foreach (var usuarioDto in usuariosDTOs)
+            {
+                usuarioDto.Login = $"{usuarioDto.Login}_{contador}";
                 var usuarioId = await servicoUsuario.Inserir(usuarioDto);
                 usuarioId.ShouldBeGreaterThan(0);
+                contador++;
             }
 
             return servicoUsuario;

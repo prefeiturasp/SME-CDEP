@@ -237,25 +237,6 @@ namespace SME.CDEP.TesteIntegracao
             };
         }
 
-        protected UsuarioDTO ObterUsuarioDto(TipoUsuario tipoUsuario, string numero)
-        {
-            var retorno = new UsuarioDTO()
-            {
-                Login = $"{faker.Person.FirstName}_{numero}",
-                Nome = faker.Person.FullName,
-                Endereco = faker.Address.FullAddress(),
-                Numero = int.Parse(faker.Address.BuildingNumber()),
-                Complemento = faker.Address.StreetSuffix(),
-                Cep = faker.Address.ZipCode(),
-                Cidade = faker.Address.City(),
-                Estado = faker.Address.StateAbbr(),
-                Telefone = faker.Phone.PhoneNumber("(##) #####-####"),
-                Bairro = faker.Address.County(),
-                TipoUsuario = (int)tipoUsuario
-            };
-            return retorno;
-        }
-
         protected async Task InserirDadosBasicos()
         {
             var random = new Random();
@@ -388,6 +369,24 @@ namespace SME.CDEP.TesteIntegracao
             faker.RuleFor(x => x.Tipo, f => tipoArquivo);
             faker.RuleFor(x => x.TipoConteudo, f => "image/jpeg");
             AuditoriaFaker(faker);
+            return faker;
+        }
+        
+        protected Faker<UsuarioDTO> GerarUsuarioDTO(TipoUsuario tipoUsuario)
+        {
+            var faker = new Faker<UsuarioDTO>("pt_BR");
+            
+            faker.RuleFor(x => x.Login, f => f.Person.FirstName.Limite(45));
+            faker.RuleFor(x => x.Nome, f => f.Lorem.Text().Limite(100));
+            faker.RuleFor(x => x.Endereco, f => f.Address.FullAddress().Limite(200));
+            faker.RuleFor(x => x.Numero, f => int.Parse(f.Address.BuildingNumber().Limite(4)));
+            faker.RuleFor(x => x.Complemento, f => f.Address.StreetSuffix().Limite(20));
+            faker.RuleFor(x => x.Cep, f => f.Address.ZipCode());
+            faker.RuleFor(x => x.Cidade, f => f.Address.City());
+            faker.RuleFor(x => x.Estado, f => f.Address.StateAbbr());
+            faker.RuleFor(x => x.Telefone, f => f.Phone.PhoneNumber("(##) #####-####"));
+            faker.RuleFor(x => x.Bairro, f => f.Address.County().Limite(200));
+            faker.RuleFor(x => x.TipoUsuario, f => (int)tipoUsuario);
             return faker;
         }
     }
