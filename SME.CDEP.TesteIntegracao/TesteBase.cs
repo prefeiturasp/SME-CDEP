@@ -237,25 +237,6 @@ namespace SME.CDEP.TesteIntegracao
             };
         }
 
-        // protected UsuarioDTO ObterUsuarioDto(TipoUsuario tipoUsuario, string numero)
-        // {
-        //     var retorno = new UsuarioDTO()
-        //     {
-        //         Login = $"{faker.Person.FirstName}_{numero}",
-        //         Nome = faker.Person.FullName,
-        //         Endereco = faker.Address.FullAddress(),
-        //         Numero = int.Parse(faker.Address.BuildingNumber()),
-        //         Complemento = faker.Address.StreetSuffix(),
-        //         Cep = faker.Address.ZipCode(),
-        //         Cidade = faker.Address.City(),
-        //         Estado = faker.Address.StateAbbr(),
-        //         Telefone = faker.Phone.PhoneNumber("(##) #####-####"),
-        //         Bairro = faker.Address.County(),
-        //         TipoUsuario = (int)tipoUsuario
-        //     };
-        //     return retorno;
-        // }
-
         protected async Task InserirDadosBasicos()
         {
             var random = new Random();
