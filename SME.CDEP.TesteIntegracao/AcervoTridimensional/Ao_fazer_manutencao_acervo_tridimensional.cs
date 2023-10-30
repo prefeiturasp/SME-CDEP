@@ -2,6 +2,7 @@
 using SME.CDEP.Aplicacao.DTOS;
 using SME.CDEP.Dominio.Entidades;
 using SME.CDEP.Dominio.Excecoes;
+using SME.CDEP.Dominio.Extensions;
 using SME.CDEP.Infra.Dominio.Enumerados;
 using SME.CDEP.TesteIntegracao.Setup;
 using SME.CDEP.TesteIntegracao.Constantes;
@@ -56,8 +57,8 @@ namespace SME.CDEP.TesteIntegracao
                 Id = 3,
                 AcervoId = 3,
                 Codigo = "100.TD",
-                Titulo = string.Format(ConstantesTestes.TITULO_X, 100),
-                Procedencia = string.Format(ConstantesTestes.PROCEDENCIA_X, 100),
+                Titulo = faker.Lorem.Text().Limite(500),
+                Procedencia = faker.Lorem.Text().Limite(200),
                 DataAcervo = DateTimeExtension.HorarioBrasilia().Date.ToString("dd/MM/yyyy"),
                 ConservacaoId = random.Next(1, 5),
                 Quantidade = random.Next(15, 55),
@@ -118,8 +119,8 @@ namespace SME.CDEP.TesteIntegracao
                 Id = 3,
                 AcervoId = 3,
                 Codigo = "100.TD",
-                Titulo = string.Format(ConstantesTestes.TITULO_X, 100),
-                Procedencia = string.Format(ConstantesTestes.PROCEDENCIA_X, 100),
+                Titulo = faker.Lorem.Text().Limite(500),
+                Procedencia = faker.Lorem.Text().Limite(200),
                 DataAcervo = DateTimeExtension.HorarioBrasilia().Date.ToString("dd/MM/yyyy"),
                 ConservacaoId = random.Next(1, 5),
                 Quantidade = random.Next(15, 55),
@@ -178,8 +179,8 @@ namespace SME.CDEP.TesteIntegracao
                 Id = 3,
                 AcervoId = 3,
                 Codigo = "100.TD",
-                Titulo = string.Format(ConstantesTestes.TITULO_X, 100),
-                Procedencia = string.Format(ConstantesTestes.PROCEDENCIA_X, 100),
+                Titulo = faker.Lorem.Text().Limite(500),
+                Procedencia = faker.Lorem.Text().Limite(200),
                 DataAcervo = DateTimeExtension.HorarioBrasilia().Date.ToString("dd/MM/yyyy"),
                 ConservacaoId = random.Next(1, 5),
                 Quantidade = random.Next(15, 55),
@@ -238,8 +239,8 @@ namespace SME.CDEP.TesteIntegracao
             var acervoTridimensionalCadastroDto = new AcervoTridimensionalCadastroDTO()
             {
                 Codigo = "100",
-                Titulo = string.Format(ConstantesTestes.TITULO_X, 100),
-                Procedencia = string.Format(ConstantesTestes.PROCEDENCIA_X, 100),
+                Titulo = faker.Lorem.Text().Limite(500),
+                Procedencia = faker.Lorem.Text().Limite(200),
                 DataAcervo = DateTimeExtension.HorarioBrasilia().Date.ToString("dd/MM/yyyy"),
                 ConservacaoId = random.Next(1, 5),
                 Quantidade = random.Next(15, 55),
@@ -299,8 +300,8 @@ namespace SME.CDEP.TesteIntegracao
             var acervoTridimensionalCadastroDto = new AcervoTridimensionalCadastroDTO()
             {
                 Codigo = "1",
-                Titulo = string.Format(ConstantesTestes.TITULO_X, 100),
-                Procedencia = string.Format(ConstantesTestes.PROCEDENCIA_X, 100),
+                Titulo = faker.Lorem.Text().Limite(500),
+                Procedencia = faker.Lorem.Text().Limite(200),
                 DataAcervo = DateTimeExtension.HorarioBrasilia().Date.ToString("dd/MM/yyyy"),
                 ConservacaoId = random.Next(1, 5),
                 Quantidade = random.Next(15, 55),
@@ -325,7 +326,7 @@ namespace SME.CDEP.TesteIntegracao
                 await InserirNaBase(new Acervo()
                 {
                     Codigo = $"{j.ToString()}.TD",
-                    Titulo = string.Format(ConstantesTestes.TITULO_X, j),
+                    Titulo = faker.Lorem.Text().Limite(500),
                     Descricao = faker.Lorem.Text(),
                     TipoAcervoId = (int)TipoAcervo.Tridimensional,
                     CriadoPor = ConstantesTestes.SISTEMA,
@@ -336,7 +337,7 @@ namespace SME.CDEP.TesteIntegracao
                 await InserirNaBase(new AcervoTridimensional()
                 {
                     AcervoId = j,
-                    Procedencia = string.Format(ConstantesTestes.PROCEDENCIA_X,j),
+                    Procedencia = faker.Lorem.Text().Limite(200),
                     DataAcervo = DateTimeExtension.HorarioBrasilia().Date.ToString("dd/MM/yyyy"),
                     ConservacaoId = random.Next(1,5),
                     Quantidade = random.Next(15,55),
@@ -348,7 +349,7 @@ namespace SME.CDEP.TesteIntegracao
                 
                 await InserirNaBase(new Arquivo()
                 {
-                    Nome = string.Format(ConstantesTestes.ARQUIVO_X,j),
+                    Nome = faker.Lorem.Text(),
                     Codigo = Guid.NewGuid(),
                     Tipo = TipoArquivo.AcervoTridimensional,
                     TipoConteudo = ConstantesTestes.MIME_TYPE_JPG,

@@ -3,6 +3,7 @@ using Shouldly;
 using SME.CDEP.Aplicacao.DTOS;
 using SME.CDEP.Dominio.Entidades;
 using SME.CDEP.Dominio.Excecoes;
+using SME.CDEP.Dominio.Extensions;
 using SME.CDEP.Infra.Dominio.Enumerados;
 using SME.CDEP.TesteIntegracao.Setup;
 using SME.CDEP.TesteIntegracao.Constantes;
@@ -68,21 +69,21 @@ namespace SME.CDEP.TesteIntegracao
                 Id = 3,
                 AcervoId = 3,
                 Codigo = "100.AV",
-                Titulo = string.Format(ConstantesTestes.TITULO_X, 100),
+                Titulo = faker.Lorem.Text().Limite(500),
                 CreditosAutoresIds = new long[]{4,5},
-                Localizacao = string.Format(ConstantesTestes.LOCALIZACAO_X, 100),
-                Procedencia = string.Format(ConstantesTestes.PROCEDENCIA_X, 100),
+                Localizacao = faker.Lorem.Text().Limite(100),
+                Procedencia = faker.Lorem.Text().Limite(200),
                 DataAcervo = DateTimeExtension.HorarioBrasilia().Date.ToString("dd/MM/yyyy"),
-                Copia = string.Format(ConstantesTestes.COPIA_X, 100),
+                Copia = faker.Lorem.Text().Limite(100),
                 PermiteUsoImagem = true,
                 ConservacaoId = random.Next(1, 5),
                 Descricao = faker.Lorem.Text(),
                 SuporteId = random.Next(1, 5),
-                Duracao = string.Format(ConstantesTestes.DURACAO_X, 100),
+                Duracao = faker.Lorem.Text().Limite(15),
                 CromiaId = random.Next(1, 5),
-                TamanhoArquivo = string.Format(ConstantesTestes.TAMANHO_ARQUIVO_X_MB, 100),
-                Acessibilidade = string.Format(ConstantesTestes.ACESSIBILIDADE_X, 100),
-                Disponibilizacao = string.Format(ConstantesTestes.DISPONIBILIZACAO_X, 100),
+                TamanhoArquivo = faker.Lorem.Text().Limite(15),
+                Acessibilidade = faker.Lorem.Text().Limite(100),
+                Disponibilizacao = faker.Lorem.Text().Limite(100),
             };
             
             await servicoAcervoAudiovisual.Alterar(acervoAudiovisualAlteracaoDto);
@@ -133,21 +134,21 @@ namespace SME.CDEP.TesteIntegracao
             var acervoAudiovisualCadastroDto = new AcervoAudiovisualCadastroDTO()
             {
                 Codigo = "100",
-                Titulo = string.Format(ConstantesTestes.TITULO_X, 100),
+                Titulo = faker.Lorem.Text().Limite(500),
                 CreditosAutoresIds = new long[]{4,5},
-                Localizacao = string.Format(ConstantesTestes.LOCALIZACAO_X, 100),
-                Procedencia = string.Format(ConstantesTestes.PROCEDENCIA_X, 100),
+                Localizacao = faker.Lorem.Text().Limite(100),
+                Procedencia = faker.Lorem.Text().Limite(200),
                 DataAcervo = DateTimeExtension.HorarioBrasilia().Date.ToString("dd/MM/yyyy"),
-                Copia = string.Format(ConstantesTestes.COPIA_X, 100),
+                Copia = faker.Lorem.Text().Limite(100),
                 PermiteUsoImagem = true,
                 ConservacaoId = random.Next(1, 5),
                 Descricao = faker.Lorem.Text(),
                 SuporteId = random.Next(1, 5),
-                Duracao = string.Format(ConstantesTestes.DURACAO_X, 100),
+                Duracao = faker.Lorem.Text().Limite(15),
                 CromiaId = random.Next(1, 5),
-                TamanhoArquivo = string.Format(ConstantesTestes.TAMANHO_ARQUIVO_X_MB, 100),
-                Acessibilidade = string.Format(ConstantesTestes.ACESSIBILIDADE_X, 100),
-                Disponibilizacao = string.Format(ConstantesTestes.DISPONIBILIZACAO_X, 100),
+                TamanhoArquivo = faker.Lorem.Text().Limite(15),
+                Acessibilidade = faker.Lorem.Text().Limite(100),
+                Disponibilizacao = faker.Lorem.Text().Limite(100),
             };
             
             var acervoAudiovisualInserido = await servicoAcervoAudiovisual.Inserir(acervoAudiovisualCadastroDto);
@@ -199,21 +200,21 @@ namespace SME.CDEP.TesteIntegracao
             var acervoAudiovisualCadastroDto = new AcervoAudiovisualCadastroDTO()
             {
                 Codigo = "1",
-                Titulo = string.Format(ConstantesTestes.TITULO_X, 100),
+                Titulo = faker.Lorem.Text().Limite(500),
                 CreditosAutoresIds = new long[]{4,5},
-                Localizacao = string.Format(ConstantesTestes.LOCALIZACAO_X, 100),
-                Procedencia = string.Format(ConstantesTestes.PROCEDENCIA_X, 100),
+                Localizacao = faker.Lorem.Text().Limite(100),
+                Procedencia = faker.Lorem.Text().Limite(200),
                 DataAcervo = DateTimeExtension.HorarioBrasilia().Date.ToString("dd/MM/yyyy"),
-                Copia = string.Format(ConstantesTestes.COPIA_X, 100),
+                Copia = faker.Lorem.Text().Limite(100),
                 PermiteUsoImagem = true,
                 ConservacaoId = random.Next(1, 5),
                 Descricao = faker.Lorem.Text(),
                 SuporteId = random.Next(1, 5),
-                Duracao = string.Format(ConstantesTestes.DURACAO_X, 100),
+                Duracao = faker.Lorem.Text().Limite(15),
                 CromiaId = random.Next(1, 5),
-                TamanhoArquivo = string.Format(ConstantesTestes.TAMANHO_ARQUIVO_X_MB, 100),
-                Acessibilidade = string.Format(ConstantesTestes.ACESSIBILIDADE_X, 100),
-                Disponibilizacao = string.Format(ConstantesTestes.DISPONIBILIZACAO_X, 100),
+                TamanhoArquivo = faker.Lorem.Text().Limite(15),
+                Acessibilidade = faker.Lorem.Text().Limite(100),
+                Disponibilizacao = faker.Lorem.Text().Limite(100),
             };
             
             await servicoAcervoAudiovisual.Inserir(acervoAudiovisualCadastroDto).ShouldThrowAsync<NegocioException>();
@@ -229,7 +230,7 @@ namespace SME.CDEP.TesteIntegracao
                 await InserirNaBase(new Acervo()
                 {
                     Codigo = $"{j.ToString()}.AV",
-                    Titulo = string.Format(ConstantesTestes.TITULO_X, j),
+                    Titulo = faker.Lorem.Text().Limite(500),
                     Descricao = faker.Lorem.Text(),
                     TipoAcervoId = (int)TipoAcervo.Audiovisual,
                     CriadoPor = ConstantesTestes.SISTEMA,
@@ -261,18 +262,18 @@ namespace SME.CDEP.TesteIntegracao
                 await InserirNaBase(new AcervoAudiovisual()
                 {
                     AcervoId = j,
-                    Localizacao = string.Format(ConstantesTestes.LOCALIZACAO_X, j),
-                    Procedencia = string.Format(ConstantesTestes.PROCEDENCIA_X,j),
+                    Localizacao = faker.Lorem.Text().Limite(100),
+                    Procedencia = faker.Lorem.Text().Limite(200),
                     DataAcervo = DateTimeExtension.HorarioBrasilia().Date.ToString("dd/MM/yyyy"),
-                    Copia = string.Format(ConstantesTestes.COPIA_X,j),
+                    Copia = faker.Lorem.Text().Limite(100),
                     PermiteUsoImagem = true,
                     ConservacaoId = random.Next(1,5),
                     SuporteId = random.Next(1,5),
-                    Duracao = string.Format(ConstantesTestes.DURACAO_X,j),
+                    Duracao = faker.Lorem.Text().Limite(15),
                     CromiaId = random.Next(1,5),
-                    TamanhoArquivo = string.Format(ConstantesTestes.TAMANHO_ARQUIVO_X_MB,j),
-                    Acessibilidade = string.Format(ConstantesTestes.ACESSIBILIDADE_X,j),
-                    Disponibilizacao = string.Format(ConstantesTestes.DISPONIBILIZACAO_X,j),
+                    TamanhoArquivo = faker.Lorem.Text().Limite(15),
+                    Acessibilidade = faker.Lorem.Text().Limite(100),
+                    Disponibilizacao = faker.Lorem.Text().Limite(100),
                 });
             }
         }

@@ -1,12 +1,20 @@
-﻿using SME.CDEP.Aplicacao.DTOS;
+﻿using Bogus;
+using SME.CDEP.Aplicacao.DTOS;
 using SME.CDEP.Aplicacao.Integracoes.Interfaces;
 using SME.CDEP.Infra.Dominio.Enumerados;
 using SME.CDEP.TesteIntegracao.Constantes;
 
 namespace SME.CDEP.TesteIntegracao.ServicosFakes;
 
-public class ServicoAcessosFake : IServicoAcessos
+public class ServicoAcessosFake : BaseMock, IServicoAcessos
 {
+    protected readonly Faker faker;
+
+    public ServicoAcessosFake()
+    {
+        faker = new Faker("pt_BR");
+    }
+    
     public Task<UsuarioAutenticacaoRetornoDTO> Autenticar(string login, string senha)
     {
         return Task.FromResult(new UsuarioAutenticacaoRetornoDTO()
@@ -71,21 +79,21 @@ public class ServicoAcessosFake : IServicoAcessos
             {
                 Login = ConstantesTestes.LOGIN_99999999998,
                 Nome = ConstantesTestes.USUARIO_EXTERNO_99999999998,
-                Email = ConstantesTestes.EMAIL_EXTERNO,
+                Email = faker.Person.Email,
             }),
             ConstantesTestes.LOGIN_99999999999 => Task.FromResult(new DadosUsuarioDTO()
             {
                 Login = ConstantesTestes.LOGIN_99999999999,
                 Nome = ConstantesTestes.USUARIO_INTERNO_99999999999,
-                Email = ConstantesTestes.EMAIL_INTERNO,
-                Endereco = ConstantesTestes.RUA_99999999999,
-                Numero = ConstantesTestes.NUMERO_99,
-                Complemento = ConstantesTestes.COMPLEMENTO_CASA_99,
-                Cep = ConstantesTestes.CEP_88058999,
-                Cidade = ConstantesTestes.CIDADE_99999999999,
-                Estado = ConstantesTestes.ESTADO_SC,
-                Telefone = ConstantesTestes.TELEFONE_99_99999_9999,
-                Bairro = ConstantesTestes.BAIRRO_99999999999,
+                Email = faker.Person.Email,
+                Endereco = faker.Address.FullAddress(),
+                Numero = faker.Address.BuildingNumber(),
+                Complemento = faker.Address.StreetSuffix(),
+                Cep = faker.Address.ZipCode(),
+                Cidade = faker.Address.City(),
+                Estado = faker.Address.StateAbbr(),
+                Telefone = faker.Phone.PhoneNumber("(##) #####-####"),
+                Bairro = faker.Address.County(),
             }),
             _ => Task.FromResult(new DadosUsuarioDTO())
         };

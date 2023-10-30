@@ -237,20 +237,20 @@ namespace SME.CDEP.TesteIntegracao
             };
         }
 
-        protected static UsuarioDTO ObterUsuarioDto(TipoUsuario tipoUsuario, string numero)
+        protected UsuarioDTO ObterUsuarioDto(TipoUsuario tipoUsuario, string numero)
         {
             var retorno = new UsuarioDTO()
             {
-                Login = $"9999999999{numero}",
-                Nome = $"Usuário 9999999999{numero}'",
-                Endereco = $"Rua 9999999999{numero}'",
-                Numero = int.Parse($"9{numero}"),
-                Complemento = $"Casa 9{numero}'",
-                Cep = $"8805899{numero}'",
-                Cidade = $"Cidade 9999999999{numero}'",
-                Estado = ConstantesTestes.ESTADO_SC,
-                Telefone = $"99_99999_999{numero}'",
-                Bairro = $"Bairro 9999999999{numero}'",
+                Login = $"{faker.Person.FirstName}_{numero}",
+                Nome = faker.Person.FullName,
+                Endereco = faker.Address.FullAddress(),
+                Numero = int.Parse(faker.Address.BuildingNumber()),
+                Complemento = faker.Address.StreetSuffix(),
+                Cep = faker.Address.ZipCode(),
+                Cidade = faker.Address.City(),
+                Estado = faker.Address.StateAbbr(),
+                Telefone = faker.Phone.PhoneNumber("(##) #####-####"),
+                Bairro = faker.Address.County(),
                 TipoUsuario = (int)tipoUsuario
             };
             return retorno;
