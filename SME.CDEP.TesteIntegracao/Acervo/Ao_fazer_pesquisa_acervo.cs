@@ -27,8 +27,14 @@ namespace SME.CDEP.TesteIntegracao
 
             var acervoArteGraficas = GerarAcervoArteGraficaCadastroDTO().Generate(25);
 
+            var contador = 1;
+
             foreach (var arteGrafica in acervoArteGraficas)
+            {
+                arteGrafica.Codigo = $"{arteGrafica.Codigo}{contador}";
                 await servicoAcervoArteGrafica.Inserir(arteGrafica);
+                contador++;
+            }
 
             var filtro = new FiltroTextoLivreTipoAcervoDTO()
             {
@@ -66,8 +72,14 @@ namespace SME.CDEP.TesteIntegracao
 
             var acervoArteGraficas = GerarAcervoArteGraficaCadastroDTO().Generate(25);
 
+            var contador = 1;
+
             foreach (var arteGrafica in acervoArteGraficas)
+            {
+                arteGrafica.Codigo = $"{arteGrafica.Codigo}{contador}";
                 await servicoAcervoArteGrafica.Inserir(arteGrafica);
+                contador++;
+            }
 
             var filtro = new FiltroTextoLivreTipoAcervoDTO()
             {
@@ -105,9 +117,14 @@ namespace SME.CDEP.TesteIntegracao
                 await InserirNaBase(arquivo);
 
             var acervoArteGraficas = GerarAcervoArteGraficaCadastroDTO().Generate(25);
+            var contador = 1;
 
             foreach (var arteGrafica in acervoArteGraficas)
+            {
+                arteGrafica.Codigo = $"{arteGrafica.Codigo}{contador}";
                 await servicoAcervoArteGrafica.Inserir(arteGrafica);
+                contador++;
+            }
 
             var filtro = new FiltroTextoLivreTipoAcervoDTO()
             {
