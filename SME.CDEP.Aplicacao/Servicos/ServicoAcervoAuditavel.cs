@@ -208,7 +208,7 @@ namespace SME.CDEP.Aplicacao.Servicos
 
                 var acervosCodigoNomeResumidos = await repositorioArquivo.ObterAcervoCodigoNomeArquivoPorAcervoId(acervosIds);
 
-                var hostAplicacao = "https://dev-arquivos.sme.prefeitura.sp.gov.br/";//configuration["UrlFrontEnd"];
+                var hostAplicacao = configuration["UrlFrontEnd"];
             
                 var acervosAgrupandoCreditoAutor = acervos
                     .GroupBy(g => new { g.AcervoId,g.Codigo, g.Titulo, g.Tipo, g.Descricao, g.TipoAcervoTag })
