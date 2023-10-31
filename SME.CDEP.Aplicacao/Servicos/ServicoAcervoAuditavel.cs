@@ -1,7 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using AutoMapper;
 using Microsoft.Extensions.Configuration;
-using Newtonsoft.Json;
 using SME.CDEP.Aplicacao.DTOS;
 using SME.CDEP.Aplicacao.Enumerados;
 using SME.CDEP.Aplicacao.Servicos.Interface;
