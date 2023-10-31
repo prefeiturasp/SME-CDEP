@@ -60,11 +60,6 @@ namespace SME.CDEP.Infra.Dados.Repositorios
         {
             return conexao.Obter().QueryFirstOrDefaultAsync<bool>("select 1 from acervo where (lower(codigo) = @codigo or lower(codigo_novo) = @codigo) and not excluido and id != @id and tipo = @tipo",new { id, codigo = codigo.ToLower(), tipo });
         }
-
-        private string IncluirCodigoNovo(string codigoNovo)
-        {
-            return codigoNovo.EstaPreenchido() ? " and codigo_novo = @codigoNovo " : string.Empty;
-        }
         
         public async Task<IEnumerable<PesquisaAcervo>> ObterPorTextoLivreETipoAcervo(string? textoLivre, TipoAcervo? tipoAcervo)
         {
