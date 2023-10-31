@@ -43,7 +43,7 @@ namespace SME.CDEP.Aplicacao.Servicos
             if (acervo.CodigoNovo.EstaPreenchido())
                 await ValidarCodigoTomboCodigoNovoDuplicado(acervo.CodigoNovo, acervo.Id, (TipoAcervo)acervo.TipoAcervoId, "Código Novo");
             
-            if (acervo.CodigoNovo.EstaPreenchido() && acervo.TipoAcervoId != (long)TipoAcervo.DocumentacaoHistorica)
+            if (acervo.CodigoNovo.EstaPreenchido() && acervo.TipoAcervoId.NaoEhAcervoDocumental())
                 throw new NegocioException(MensagemNegocio.SOMENTE_ACERVO_DOCUMENTAL_POSSUI_CODIGO_NOVO);
                 
             acervo.CriadoEm = DateTimeExtension.HorarioBrasilia();
@@ -105,7 +105,7 @@ namespace SME.CDEP.Aplicacao.Servicos
             acervo.AlteradoLogin = contextoAplicacao.UsuarioLogado;
             acervo.AlteradoPor = contextoAplicacao.NomeUsuario;
             
-            if (acervo.CodigoNovo.EstaPreenchido() && acervo.TipoAcervoId != (long)TipoAcervo.DocumentacaoHistorica)
+            if (acervo.CodigoNovo.EstaPreenchido() && acervo.TipoAcervoId.NaoEhAcervoDocumental())
                 throw new NegocioException(MensagemNegocio.SOMENTE_ACERVO_DOCUMENTAL_POSSUI_CODIGO_NOVO);
             
             var acervoAlterado = mapper.Map<AcervoDTO>(await repositorioAcervo.Atualizar(acervo));
