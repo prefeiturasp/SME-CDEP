@@ -2,6 +2,7 @@
 
 public class Constantes
 {
+    public const string FORMATO_TIFF = "image/tiff";
     public const string BUCKET_CDEP = "cdep";
     public const string SIGLA_ACERVO_FOTOGRAFICO = ".FT";
     public const string SIGLA_ACERVO_ARTE_GRAFICA = ".AG";

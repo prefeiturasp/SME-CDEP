@@ -222,7 +222,7 @@ namespace SME.CDEP.Aplicacao.Servicos
                         CreditoAutoria = s.Any(w=> w.CreditoAutoria.NaoEhNulo() ) ? string.Join(", ", s.Select(ca=> ca.CreditoAutoria).Distinct()) : string.Empty,
                         Assunto = s.Any(w=> w.Assunto.NaoEhNulo() ) ? string.Join(", ", s.Select(ca=> ca.Assunto).Distinct()) : string.Empty,
                         EnderecoImagem = acervosCodigoNomeResumidos.Any(f=> f.AcervoId == s.Key.AcervoId) 
-                            ? ObterImagemBase64(hostAplicacao,acervosCodigoNomeResumidos.FirstOrDefault(f=> f.AcervoId == s.Key.AcervoId)).Result
+                            ? $"{hostAplicacao}{Constantes.BUCKET_CDEP}/{acervosCodigoNomeResumidos.FirstOrDefault(f=> f.AcervoId == s.Key.AcervoId).NomeArquivo}"
                             : string.Empty
                     });
             
@@ -235,19 +235,6 @@ namespace SME.CDEP.Aplicacao.Servicos
                     TotalPaginas = (int)Math.Ceiling((double)totalRegistros / paginacao.QuantidadeRegistros)
                 };
             }
-            return default;
-        }
-
-        private async Task<string> ObterImagemBase64(string hostAplicacao, AcervoCodigoNomeResumido acervoCodigoNomeResumido)
-        {
-            var response = await new HttpClient().GetAsync($"{hostAplicacao}{Constantes.BUCKET_CDEP}/{acervoCodigoNomeResumido.NomeArquivo}");
-
-            if (response.StatusCode == System.Net.HttpStatusCode.OK)
-            {
-                var arquivoEmBytes = await response.Content.ReadAsByteArrayAsync();
-                return string.Format("data:{0};base64,{1}",acervoCodigoNomeResumido.TipoConteudo,Convert.ToBase64String(arquivoEmBytes));
-            }
-
             return default;
         }
 
