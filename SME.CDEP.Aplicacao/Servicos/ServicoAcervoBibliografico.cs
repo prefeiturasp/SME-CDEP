@@ -57,7 +57,7 @@ namespace SME.CDEP.Aplicacao.Servicos
                 {
                     await repositorioAcervoBibliograficoAssunto.Inserir(new AcervoBibliograficoAssunto()
                     {
-                        AssuntolId = assunto.Id, 
+                        AssuntoId = assunto.Id, 
                         AcervoBibliograficoId= acervoBibliografico.Id
                     });
                 }
@@ -89,7 +89,7 @@ namespace SME.CDEP.Aplicacao.Servicos
             
             var acervoBibliografico = mapper.Map<AcervoBibliografico>(acervoBibliograficoAlteracaoDto);
             
-            var assuntosExistentes = (await repositorioAcervoBibliograficoAssunto.ObterPorAcervoBibliograficoId(acervoBibliograficoAlteracaoDto.Id)).Select(s => s.AssuntolId).ToArray();
+            var assuntosExistentes = (await repositorioAcervoBibliograficoAssunto.ObterPorAcervoBibliograficoId(acervoBibliograficoAlteracaoDto.Id)).Select(s => s.AssuntoId).ToArray();
             (assuntosIdsInserir, assuntosIdsExcluir) = await ObterAssuntoInseridosExcluidos(acervoBibliograficoAlteracaoDto.AssuntosIds, assuntosExistentes);
             
             var tran = transacao.Iniciar();
@@ -108,7 +108,7 @@ namespace SME.CDEP.Aplicacao.Servicos
                 {
                     await repositorioAcervoBibliograficoAssunto.Inserir(new AcervoBibliograficoAssunto()
                     {
-                        AssuntolId = assunto, 
+                        AssuntoId = assunto, 
                         AcervoBibliograficoId= acervoBibliografico.Id
                     });
                 }
@@ -153,8 +153,7 @@ namespace SME.CDEP.Aplicacao.Servicos
 
         public async Task<bool> Excluir(long id)
         {
-            await repositorioAcervoBibliografico.Remover(id);
-            return true;
+            return await servicoAcervo.Excluir(id);
         }
     }
 }

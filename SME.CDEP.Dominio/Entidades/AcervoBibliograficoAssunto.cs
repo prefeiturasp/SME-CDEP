@@ -3,6 +3,6 @@
     public class AcervoBibliograficoAssunto : EntidadeBaseSomenteId
     {
         public long AcervoBibliograficoId { get; set; }
-        public long AssuntolId { get; set; }
+        public long AssuntoId { get; set; }
     }
 }

@@ -10,7 +10,7 @@ namespace SME.CDEP.Infra.Dados.Mapeamentos
             ToTable("acervo_bibliografico_assunto");
             Map(c => c.Id).ToColumn("id").IsKey();
             Map(c => c.AcervoBibliograficoId).ToColumn("acervo_bibliografico_id");
-            Map(c => c.AssuntolId).ToColumn("assunto_id");
+            Map(c => c.AssuntoId).ToColumn("assunto_id");
         }
     }
 }

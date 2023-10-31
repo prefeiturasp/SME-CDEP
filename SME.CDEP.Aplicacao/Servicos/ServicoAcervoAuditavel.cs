@@ -38,14 +38,12 @@ namespace SME.CDEP.Aplicacao.Servicos
         {
             ValidarCodigoTomboCodigoNovo(acervo);
             
-            await ValidarTituloDuplicado(acervo.Titulo, acervo.Id, acervo.Codigo, acervo.TipoAcervoId.EhAcervoDocumental() ? acervo.CodigoNovo : string.Empty);
-            
-            await ValidarCodigoTomboCodigoNovoDuplicado(acervo.Codigo, acervo.Id, acervo.TipoAcervoId.EhAcervoDocumental() ? "Código antigo" : "Código");
+            await ValidarCodigoTomboCodigoNovoDuplicado(acervo.Codigo, acervo.Id, (TipoAcervo)acervo.TipoAcervoId, acervo.TipoAcervoId.EhAcervoDocumental() ? "Código antigo" : "Código");
             
             if (acervo.CodigoNovo.EstaPreenchido())
-                await ValidarCodigoTomboCodigoNovoDuplicado(acervo.CodigoNovo, acervo.Id, "Código Novo");
+                await ValidarCodigoTomboCodigoNovoDuplicado(acervo.CodigoNovo, acervo.Id, (TipoAcervo)acervo.TipoAcervoId, "Código Novo");
             
-            if (acervo.CodigoNovo.EstaPreenchido() && acervo.TipoAcervoId != (long)TipoAcervo.DocumentacaoHistorica)
+            if (acervo.CodigoNovo.EstaPreenchido() && acervo.TipoAcervoId.NaoEhAcervoDocumental())
                 throw new NegocioException(MensagemNegocio.SOMENTE_ACERVO_DOCUMENTAL_POSSUI_CODIGO_NOVO);
                 
             acervo.CriadoEm = DateTimeExtension.HorarioBrasilia();
@@ -83,16 +81,10 @@ namespace SME.CDEP.Aplicacao.Servicos
                 throw new NegocioException(string.Format(MensagemNegocio.REGISTRO_X_DUPLICADO, "Código"));
         }
 
-        public async Task ValidarCodigoTomboCodigoNovoDuplicado(string codigo, long id, string nomeCampo = "codigo")
+        public async Task ValidarCodigoTomboCodigoNovoDuplicado(string codigo, long id, TipoAcervo tipo, string nomeCampo = "codigo")
         {
-            if (codigo.EstaPreenchido() && await repositorioAcervo.ExisteCodigo(codigo, id))
+            if (codigo.EstaPreenchido() && await repositorioAcervo.ExisteCodigo(codigo, id, tipo))
                 throw new NegocioException(string.Format(MensagemNegocio.REGISTRO_X_DUPLICADO,nomeCampo));
-        }
-        
-        public async Task ValidarTituloDuplicado(string titulo, long id, string codigo, string codigoNovo)
-        {
-            if (await repositorioAcervo.ExisteTitulo(titulo, id,codigo,codigoNovo))
-                throw new NegocioException(string.Format(MensagemNegocio.REGISTRO_X_DUPLICADO, "Título"));
         }
 
         public async Task<IEnumerable<AcervoDTO>> ObterTodos()
@@ -104,18 +96,16 @@ namespace SME.CDEP.Aplicacao.Servicos
         {
             ValidarCodigoTomboCodigoNovo(acervo);
             
-            await ValidarTituloDuplicado(acervo.Titulo, acervo.Id, acervo.Codigo, acervo.TipoAcervoId.EhAcervoDocumental() ? acervo.CodigoNovo : string.Empty);
-            
-            await ValidarCodigoTomboCodigoNovoDuplicado(acervo.Codigo, acervo.Id, acervo.TipoAcervoId.EhAcervoDocumental() ? "Código antigo" : "Código");
+            await ValidarCodigoTomboCodigoNovoDuplicado(acervo.Codigo, acervo.Id, (TipoAcervo)acervo.TipoAcervoId, acervo.TipoAcervoId.EhAcervoDocumental() ? "Código antigo" : "Código");
 
             if (acervo.CodigoNovo.EstaPreenchido())
-                await ValidarCodigoTomboCodigoNovoDuplicado(acervo.CodigoNovo, acervo.Id, "Código Novo");
+                await ValidarCodigoTomboCodigoNovoDuplicado(acervo.CodigoNovo, acervo.Id, (TipoAcervo)acervo.TipoAcervoId, "Código Novo");
             
             acervo.AlteradoEm = DateTimeExtension.HorarioBrasilia();
             acervo.AlteradoLogin = contextoAplicacao.UsuarioLogado;
             acervo.AlteradoPor = contextoAplicacao.NomeUsuario;
             
-            if (acervo.CodigoNovo.EstaPreenchido() && acervo.TipoAcervoId != (long)TipoAcervo.DocumentacaoHistorica)
+            if (acervo.CodigoNovo.EstaPreenchido() && acervo.TipoAcervoId.NaoEhAcervoDocumental())
                 throw new NegocioException(MensagemNegocio.SOMENTE_ACERVO_DOCUMENTAL_POSSUI_CODIGO_NOVO);
             
             var acervoAlterado = mapper.Map<AcervoDTO>(await repositorioAcervo.Atualizar(acervo));
@@ -163,7 +153,7 @@ namespace SME.CDEP.Aplicacao.Servicos
             acervo.Titulo = titulo;
             acervo.Codigo = codigo;
             acervo.CreditosAutoresIds = creditosAutoresIds;
-            acervo.CoAutores = coAutores.NaoEhNulo() ? coAutores.Select(s=> new CoAutor() { CreditoAutorId = s.CreditoAutorId, TipoAutoria = s.TipoAutoria}) : null;
+            acervo.CoAutores = coAutores.NaoEhNulo() ? coAutores.Select(s=> new CoAutor() { CreditoAutorId = s.CreditoAutorId.Value, TipoAutoria = s.TipoAutoria}) : null;
             acervo.SubTitulo = subTitulo;
             return await Alterar(acervo);
         }

@@ -113,7 +113,7 @@ namespace SME.CDEP.TesteIntegracao
             acervoBibliograficoAssuntoInseridos.Count().ShouldBe(acervoBibliograficoAlteracaoDto.AssuntosIds.Count());
 
             foreach (var assuntoId in acervoBibliograficoAlteracaoDto.AssuntosIds)
-                acervoBibliograficoAssuntoInseridos.Any(a=> a.AssuntolId == assuntoId).ShouldBeTrue();
+                acervoBibliograficoAssuntoInseridos.Any(a=> a.AssuntoId == assuntoId).ShouldBeTrue();
             
             var autoresCoAutores = ObterTodos<AcervoCreditoAutor>().Where(w=> w.AcervoId == 3);
             
@@ -190,7 +190,7 @@ namespace SME.CDEP.TesteIntegracao
             acervoBibliograficoAssuntoInseridos.Count().ShouldBe(acervoBibliograficoAlteracaoDto.AssuntosIds.Count());
 
             foreach (var assuntoId in acervoBibliograficoAlteracaoDto.AssuntosIds)
-                acervoBibliograficoAssuntoInseridos.Any(a=> a.AssuntolId == assuntoId).ShouldBeTrue();
+                acervoBibliograficoAssuntoInseridos.Any(a=> a.AssuntoId == assuntoId).ShouldBeTrue();
             
             var autoresCoAutores = ObterTodos<AcervoCreditoAutor>().Where(w=> w.AcervoId == 3);
             
@@ -322,7 +322,7 @@ namespace SME.CDEP.TesteIntegracao
             acervoBibliograficoAssuntoInseridos.Count().ShouldBe(acervoBibliograficoAlteracaoDto.AssuntosIds.Count());
 
             foreach (var assuntoId in acervoBibliograficoAlteracaoDto.AssuntosIds)
-                acervoBibliograficoAssuntoInseridos.Any(a=> a.AssuntolId == assuntoId).ShouldBeTrue();
+                acervoBibliograficoAssuntoInseridos.Any(a=> a.AssuntoId == assuntoId).ShouldBeTrue();
             
             var autoresCoAutores = ObterTodos<AcervoCreditoAutor>().Where(w=> w.AcervoId == 3);
             
@@ -390,7 +390,7 @@ namespace SME.CDEP.TesteIntegracao
             acervoBibliograficoAssuntoInseridos.Count().ShouldBe(acervoBibliograficoCadastroDto.AssuntosIds.Count());
 
             foreach (var assuntoId in acervoBibliograficoCadastroDto.AssuntosIds)
-                acervoBibliograficoAssuntoInseridos.Any(a=> a.AssuntolId == assuntoId).ShouldBeTrue();
+                acervoBibliograficoAssuntoInseridos.Any(a=> a.AssuntoId == assuntoId).ShouldBeTrue();
             
             var autoresCoAutores = ObterTodos<AcervoCreditoAutor>().Where(w=> w.AcervoId == acervoInserido.Id);
             
@@ -458,7 +458,7 @@ namespace SME.CDEP.TesteIntegracao
             acervoBibliograficoAssuntoInseridos.Count().ShouldBe(acervoBibliograficoCadastroDto.AssuntosIds.Count());
 
             foreach (var assuntoId in acervoBibliograficoCadastroDto.AssuntosIds)
-                acervoBibliograficoAssuntoInseridos.Any(a=> a.AssuntolId == assuntoId).ShouldBeTrue();
+                acervoBibliograficoAssuntoInseridos.Any(a=> a.AssuntoId == assuntoId).ShouldBeTrue();
             
             var autoresCoAutores = ObterTodos<AcervoCreditoAutor>().Where(w=> w.AcervoId == acervoInserido.Id);
             
@@ -599,13 +599,13 @@ namespace SME.CDEP.TesteIntegracao
                 
                 await InserirNaBase(new AcervoBibliograficoAssunto()
                 {
-                    AssuntolId = random.Next(1,5),
+                    AssuntoId = random.Next(1,5),
                     AcervoBibliograficoId = j
                 });
                 
                 await InserirNaBase(new AcervoBibliograficoAssunto()
                 {
-                    AssuntolId = random.Next(1,5),
+                    AssuntoId = random.Next(1,5),
                     AcervoBibliograficoId = j
                 });
             }
