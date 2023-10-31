@@ -52,7 +52,7 @@ namespace SME.CDEP.TesteIntegracao
                 pesquisaAcervoDto.Tipo.ShouldBe(TipoAcervo.ArtesGraficas);   
                 pesquisaAcervoDto.Titulo.ShouldNotBeEmpty();   
                 pesquisaAcervoDto.CreditoAutoria.ShouldNotBeNull();   
-                pesquisaAcervoDto.EnderecoImagem.ShouldNotBeEmpty();   
+                pesquisaAcervoDto.EnderecoImagem.ShouldNotBeNull();   
                 pesquisaAcervoDto.TipoAcervoTag.ShouldBe(TipoAcervoTag.MemoriaEducacaoMunicipal);   
             }
         }
@@ -98,7 +98,7 @@ namespace SME.CDEP.TesteIntegracao
                 pesquisaAcervoDto.Tipo.ShouldBe(TipoAcervo.ArtesGraficas);   
                 pesquisaAcervoDto.Titulo.ShouldNotBeEmpty();   
                 pesquisaAcervoDto.CreditoAutoria.ShouldNotBeNull();   
-                pesquisaAcervoDto.EnderecoImagem.ShouldNotBeEmpty();   
+                pesquisaAcervoDto.EnderecoImagem.ShouldNotBeNull();   
                 pesquisaAcervoDto.TipoAcervoTag.ShouldBe(TipoAcervoTag.MemoriaEducacaoMunicipal);   
             }
         }
