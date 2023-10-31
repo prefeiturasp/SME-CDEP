@@ -7,6 +7,7 @@ namespace SME.CDEP.Dominio.Entidades
         public long AcervoId { get; set; }
         public Guid Codigo { get; set; }
         public string Nome { get; set; }
+        public string TipoConteudo { get; set; }
 
         public string NomeArquivo
         {

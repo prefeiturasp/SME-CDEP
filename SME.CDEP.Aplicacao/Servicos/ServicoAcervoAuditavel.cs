@@ -1,6 +1,7 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using AutoMapper;
 using Microsoft.Extensions.Configuration;
+using Newtonsoft.Json;
 using SME.CDEP.Aplicacao.DTOS;
 using SME.CDEP.Aplicacao.Enumerados;
 using SME.CDEP.Aplicacao.Servicos.Interface;
@@ -206,7 +207,7 @@ namespace SME.CDEP.Aplicacao.Servicos
                 var acervosIds = acervos.Where(w=> w.Tipo.EhAcervoArteGraficaOuFotografico()).Select(s => s.AcervoId).Distinct().ToArray();
 
                 var acervosCodigoNomeResumidos = await repositorioArquivo.ObterAcervoCodigoNomeArquivoPorAcervoId(acervosIds);
-            
+
                 var hostAplicacao = configuration["UrlFrontEnd"];
             
                 var acervosAgrupandoCreditoAutor = acervos
@@ -221,7 +222,7 @@ namespace SME.CDEP.Aplicacao.Servicos
                         CreditoAutoria = s.Any(w=> w.CreditoAutoria.NaoEhNulo() ) ? string.Join(", ", s.Select(ca=> ca.CreditoAutoria).Distinct()) : string.Empty,
                         Assunto = s.Any(w=> w.Assunto.NaoEhNulo() ) ? string.Join(", ", s.Select(ca=> ca.Assunto).Distinct()) : string.Empty,
                         EnderecoImagem = acervosCodigoNomeResumidos.Any(f=> f.AcervoId == s.Key.AcervoId) 
-                            ? $"{hostAplicacao}{Constantes.BUCKET_CDEP}/{acervosCodigoNomeResumidos.FirstOrDefault(f=> f.AcervoId == s.Key.AcervoId).NomeArquivo}"
+                            ? ObterImagemBase64(hostAplicacao,acervosCodigoNomeResumidos.FirstOrDefault(f=> f.AcervoId == s.Key.AcervoId)).Result
                             : string.Empty
                     });
             
@@ -234,6 +235,19 @@ namespace SME.CDEP.Aplicacao.Servicos
                     TotalPaginas = (int)Math.Ceiling((double)totalRegistros / paginacao.QuantidadeRegistros)
                 };
             }
+            return default;
+        }
+
+        private async Task<string> ObterImagemBase64(string hostAplicacao, AcervoCodigoNomeResumido acervoCodigoNomeResumido)
+        {
+            var response = await new HttpClient().GetAsync($"{hostAplicacao}{Constantes.BUCKET_CDEP}/{acervoCodigoNomeResumido.NomeArquivo}");
+
+            if (response.StatusCode == System.Net.HttpStatusCode.OK)
+            {
+                var arquivoEmBytes = await response.Content.ReadAsByteArrayAsync();
+                return string.Format("data:{0};base64,{1}",acervoCodigoNomeResumido.TipoConteudo,JsonConvert.SerializeObject(arquivoEmBytes));
+            }
+
             return default;
         }
 
