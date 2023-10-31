@@ -88,9 +88,9 @@ namespace SME.CDEP.Infra.Dados.Repositorios
                 query += $"and a.tipo = @tipoAcervo ";
 
             if (textoLivre.EstaPreenchido())
-                query += " and ( lower(f_unaccent(a.titulo)) LIKE ('%' || @textoLivre || '%') Or lower(f_unaccent(ca.nome)) LIKE ('%' || @textoLivre || '%')  Or lower(f_unaccent(ast.nome)) LIKE ('%' || @textoLivre || '%'))";
+                query += " and ( lower(f_unaccent(a.titulo)) LIKE ('%' || lower(f_unaccent(@textoLivre)) || '%') Or lower(f_unaccent(ca.nome)) LIKE ('%' || lower(f_unaccent(@textoLivre)) || '%')  Or lower(f_unaccent(ast.nome)) LIKE ('%' || lower(f_unaccent(@textoLivre)) || '%'))";
 	
-            return await conexao.Obter().QueryAsync<PesquisaAcervo>(query, new { tipoAcervo, textoLivre });
+            return await conexao.Obter().QueryAsync<PesquisaAcervo>(query, new { tipoAcervo, textoLivre = textoLivre.ToLower() });
         }
     }
 }
