@@ -52,6 +52,9 @@ namespace SME.CDEP.Dominio.Extensions
         
         public static string RemoverTagsHtml(this string texto)
         {
+            if (texto.NaoEstaPreenchido())
+                return string.Empty;
+            
             texto = RegexTagsBR.Replace(texto, " ");
             texto = RegexTagsP.Replace(texto, " ");
             texto = RegexTagsLI.Replace(texto, " ");
