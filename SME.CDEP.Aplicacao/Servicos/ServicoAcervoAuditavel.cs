@@ -245,7 +245,7 @@ namespace SME.CDEP.Aplicacao.Servicos
             if (response.StatusCode == System.Net.HttpStatusCode.OK)
             {
                 var arquivoEmBytes = await response.Content.ReadAsByteArrayAsync();
-                return string.Format("data:{0};base64,{1}",acervoCodigoNomeResumido.TipoConteudo,JsonConvert.SerializeObject(arquivoEmBytes));
+                return string.Format("data:{0};base64,{1}",acervoCodigoNomeResumido.TipoConteudo,arquivoEmBytes);
             }
 
             return default;
