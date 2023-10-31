@@ -208,7 +208,7 @@ namespace SME.CDEP.Aplicacao.Servicos
 
                 var acervosCodigoNomeResumidos = await repositorioArquivo.ObterAcervoCodigoNomeArquivoPorAcervoId(acervosIds);
 
-                var hostAplicacao = configuration["UrlFrontEnd"];
+                var hostAplicacao = "https://dev-arquivos.sme.prefeitura.sp.gov.br/";//configuration["UrlFrontEnd"];
             
                 var acervosAgrupandoCreditoAutor = acervos
                     .GroupBy(g => new { g.AcervoId,g.Codigo, g.Titulo, g.Tipo, g.Descricao, g.TipoAcervoTag })
@@ -245,7 +245,7 @@ namespace SME.CDEP.Aplicacao.Servicos
             if (response.StatusCode == System.Net.HttpStatusCode.OK)
             {
                 var arquivoEmBytes = await response.Content.ReadAsByteArrayAsync();
-                return string.Format("data:{0};base64,{1}",acervoCodigoNomeResumido.TipoConteudo,arquivoEmBytes);
+                return string.Format("data:{0};base64,{1}",acervoCodigoNomeResumido.TipoConteudo,Convert.ToBase64String(arquivoEmBytes));
             }
 
             return default;
