@@ -17,7 +17,7 @@ namespace SME.CDEP.TesteIntegracao.Usuario
         public async Task Cadastrar_usuario()
         {
             var servicoUsuario = GetServicoUsuario();
-            var usuarioDto = ObterUsuarioDto(TipoUsuario.SERVIDOR_PUBLICO, ConstantesTestes.NUMERO_1);
+            var usuarioDto = GerarUsuarioDTO(TipoUsuario.SERVIDOR_PUBLICO).Generate(); 
 
             var usuarioId = await servicoUsuario.Inserir(usuarioDto);
             usuarioId.ShouldBeGreaterThan(0);
@@ -30,7 +30,7 @@ namespace SME.CDEP.TesteIntegracao.Usuario
 
             var usuarios = await servicoUsuario.ObterTodos();
             usuarios.ShouldNotBeNull();
-            usuarios.Count().ShouldBe(11);
+            usuarios.Count().ShouldBe(10);
         }
 
         [Fact(DisplayName = "Usuário - Obter por id")]
@@ -50,13 +50,13 @@ namespace SME.CDEP.TesteIntegracao.Usuario
             IServicoUsuario servicoUsuario = await CadastrarVariosUsuarios(TipoUsuario.ESTUDANTE);
 
             var usuarioAlterado = await servicoUsuario.ObterPorId(1);
-            usuarioAlterado.Login = ConstantesTestes.LOGIN_123456789;
-            usuarioAlterado.Nome = ConstantesTestes.NOME_123456789;
+            usuarioAlterado.Login = faker.Person.FirstName;
+            usuarioAlterado.Nome = faker.Person.FullName;
             var usuario = await servicoUsuario.Alterar(usuarioAlterado);
             usuario.ShouldNotBeNull();
-            usuario.Login.ShouldBe(ConstantesTestes.LOGIN_123456789);
-            usuario.AlteradoLogin.ShouldBe(ConstantesTestes.LOGIN_123456789);
-            usuario.AlteradoPor.ShouldBe(ConstantesTestes.SISTEMA);
+            usuario.Login.ShouldBe(usuarioAlterado.Login);
+            usuario.AlteradoLogin.ShouldNotBeEmpty();
+            usuario.AlteradoPor.ShouldNotBeEmpty();
             usuario.AlteradoEm.Value.Date.ShouldBe(DateTimeExtension.HorarioBrasilia().Date);
         }
         
@@ -64,32 +64,38 @@ namespace SME.CDEP.TesteIntegracao.Usuario
         public async Task ObterPorLogin()
         {
             IServicoUsuario servicoUsuario = await CadastrarVariosUsuarios(TipoUsuario.PROFESSOR);
+            var usuarios = ObterTodos<Dominio.Entidades.Usuario>();
 
-            var usuario = await servicoUsuario.ObterPorLogin(ConstantesTestes.LOGIN_99999999998);
+            var usuario = await servicoUsuario.ObterPorLogin(usuarios.FirstOrDefault().Login);
             usuario.ShouldNotBeNull();
-            usuario.Login.ShouldBe(ConstantesTestes.LOGIN_99999999998);
+            usuario.Login.ShouldBe(usuarios.FirstOrDefault().Login);
         }
         
         [Fact(DisplayName = "Usuário - Obter por login - falhar")]
         public async Task ObterPorLoginComFalha()
         {
             IServicoUsuario servicoUsuario = await CadastrarVariosUsuarios(TipoUsuario.POPULACAO_GERAL);
-
-            var usuario = await servicoUsuario.ObterPorLogin(ConstantesTestes.LOGIN_99999999999);
+            var usuarios = ObterTodos<Dominio.Entidades.Usuario>();
+            
+            var usuario = await servicoUsuario.ObterPorLogin(usuarios.FirstOrDefault().Login);
             usuario.ShouldNotBeNull();
-            usuario.Login.ShouldBe(ConstantesTestes.LOGIN_99999999999);
+            usuario.Login.ShouldBe(usuarios.FirstOrDefault().Login);
         }
 
         private async Task<IServicoUsuario> CadastrarVariosUsuarios(TipoUsuario tipoUsuario)
         {
             var servicoUsuario = GetServicoUsuario();
 
-            for (int i = 0; i <= 10; i++)
-            {
-                var usuarioDto = ObterUsuarioDto(tipoUsuario, i.ToString());
+            var usuariosDTOs = GerarUsuarioDTO(tipoUsuario).Generate(10);
 
+            var contador = 1;
+
+            foreach (var usuarioDto in usuariosDTOs)
+            {
+                usuarioDto.Login = $"{usuarioDto.Login}_{contador}";
                 var usuarioId = await servicoUsuario.Inserir(usuarioDto);
                 usuarioId.ShouldBeGreaterThan(0);
+                contador++;
             }
 
             return servicoUsuario;

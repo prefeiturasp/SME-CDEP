@@ -237,25 +237,6 @@ namespace SME.CDEP.TesteIntegracao
             };
         }
 
-        protected static UsuarioDTO ObterUsuarioDto(TipoUsuario tipoUsuario, string numero)
-        {
-            var retorno = new UsuarioDTO()
-            {
-                Login = $"9999999999{numero}",
-                Nome = $"Usuário 9999999999{numero}'",
-                Endereco = $"Rua 9999999999{numero}'",
-                Numero = int.Parse($"9{numero}"),
-                Complemento = $"Casa 9{numero}'",
-                Cep = $"8805899{numero}'",
-                Cidade = $"Cidade 9999999999{numero}'",
-                Estado = ConstantesTestes.ESTADO_SC,
-                Telefone = $"99_99999_999{numero}'",
-                Bairro = $"Bairro 9999999999{numero}'",
-                TipoUsuario = (int)tipoUsuario
-            };
-            return retorno;
-        }
-
         protected async Task InserirDadosBasicos()
         {
             var random = new Random();
@@ -327,6 +308,85 @@ namespace SME.CDEP.TesteIntegracao
             faker.RuleFor(x => x.SubTitulo, f => f.Lorem.Text().Limite(500));
             faker.RuleFor(x => x.TipoAcervoId, f => (int)tipoAcervo);
             AuditoriaFaker(faker);
+            return faker;
+        }
+        
+        protected Faker<AcervoArteGrafica> GerarAcervoArteGrafica()
+        {
+            var random = new Random();
+            var faker = new Faker<AcervoArteGrafica>("pt_BR");
+            
+            faker.RuleFor(x => x.Localizacao, f => f.Lorem.Text().Limite(100));
+            faker.RuleFor(x => x.Procedencia, f => f.Lorem.Text().Limite(200));
+            faker.RuleFor(x => x.DataAcervo, f => f.Date.Recent().Year.ToString());
+            faker.RuleFor(x => x.CopiaDigital, f => true);
+            faker.RuleFor(x => x.PermiteUsoImagem, f => true);
+            faker.RuleFor(x => x.Largura, f => random.Next(15,55));
+            faker.RuleFor(x => x.Altura, f => random.Next(15,55));
+            faker.RuleFor(x => x.ConservacaoId, f => random.Next(1,5));
+            faker.RuleFor(x => x.CromiaId, f => random.Next(1,5));
+            faker.RuleFor(x => x.Diametro, f => random.Next(15,55));
+            faker.RuleFor(x => x.Tecnica, f => f.Lorem.Sentence().Limite(100));
+            faker.RuleFor(x => x.SuporteId, f => random.Next(1,5));
+            faker.RuleFor(x => x.Quantidade, f => random.Next(15,55));
+            faker.RuleFor(x => x.Acervo, f => GerarAcervo(TipoAcervo.ArtesGraficas).Generate());
+            return faker;
+        }
+        
+        protected Faker<AcervoArteGraficaCadastroDTO> GerarAcervoArteGraficaCadastroDTO()
+        {
+            var random = new Random();
+            var faker = new Faker<AcervoArteGraficaCadastroDTO>("pt_BR");
+            
+            faker.RuleFor(x => x.Codigo, f => random.Next(1,499).ToString());
+            faker.RuleFor(x => x.Titulo, f => f.Lorem.Text().Limite(500));
+            faker.RuleFor(x => x.Descricao, f => f.Lorem.Text());
+            faker.RuleFor(x => x.SubTitulo, f => f.Lorem.Text().Limite(500));
+            faker.RuleFor(x => x.Localizacao, f => f.Lorem.Text().Limite(100));
+            faker.RuleFor(x => x.Procedencia, f => f.Lorem.Text().Limite(200));
+            faker.RuleFor(x => x.DataAcervo, f => f.Date.Recent().Year.ToString());
+            faker.RuleFor(x => x.CopiaDigital, f => true);
+            faker.RuleFor(x => x.PermiteUsoImagem, f => true);
+            faker.RuleFor(x => x.Largura, f => random.Next(15,55));
+            faker.RuleFor(x => x.Altura, f => random.Next(15,55));
+            faker.RuleFor(x => x.ConservacaoId, f => random.Next(1,5));
+            faker.RuleFor(x => x.CromiaId, f => random.Next(1,5));
+            faker.RuleFor(x => x.Diametro, f => random.Next(15,55));
+            faker.RuleFor(x => x.Tecnica, f => f.Lorem.Sentence().Limite(100));
+            faker.RuleFor(x => x.SuporteId, f => random.Next(1,5));
+            faker.RuleFor(x => x.Quantidade, f => random.Next(15,55));
+            faker.RuleFor(x => x.CreditosAutoresIds, f => new long[]{1,2,3,4,5});
+            faker.RuleFor(x => x.Arquivos, f => new long[]{random.Next(1,10),random.Next(1,10),random.Next(1,10),random.Next(1,10),random.Next(1,10)});
+            return faker;
+        }
+        
+        protected Faker<Arquivo> GerarArquivo(TipoArquivo tipoArquivo)
+        {
+            var faker = new Faker<Arquivo>("pt_BR");
+            
+            faker.RuleFor(x => x.Codigo, f => Guid.NewGuid());
+            faker.RuleFor(x => x.Nome, f => f.Lorem.Text().Limite(20));
+            faker.RuleFor(x => x.Tipo, f => tipoArquivo);
+            faker.RuleFor(x => x.TipoConteudo, f => "image/jpeg");
+            AuditoriaFaker(faker);
+            return faker;
+        }
+        
+        protected Faker<UsuarioDTO> GerarUsuarioDTO(TipoUsuario tipoUsuario)
+        {
+            var faker = new Faker<UsuarioDTO>("pt_BR");
+            
+            faker.RuleFor(x => x.Login, f => f.Person.FirstName.Limite(45));
+            faker.RuleFor(x => x.Nome, f => f.Lorem.Text().Limite(100));
+            faker.RuleFor(x => x.Endereco, f => f.Address.FullAddress().Limite(200));
+            faker.RuleFor(x => x.Numero, f => int.Parse(f.Address.BuildingNumber().Limite(4)));
+            faker.RuleFor(x => x.Complemento, f => f.Address.StreetSuffix().Limite(20));
+            faker.RuleFor(x => x.Cep, f => f.Address.ZipCode());
+            faker.RuleFor(x => x.Cidade, f => f.Address.City());
+            faker.RuleFor(x => x.Estado, f => f.Address.StateAbbr());
+            faker.RuleFor(x => x.Telefone, f => f.Phone.PhoneNumber("(##) #####-####"));
+            faker.RuleFor(x => x.Bairro, f => f.Address.County().Limite(200));
+            faker.RuleFor(x => x.TipoUsuario, f => (int)tipoUsuario);
             return faker;
         }
     }
