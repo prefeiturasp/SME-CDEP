@@ -7,7 +7,7 @@ namespace SME.CDEP.Dominio.Extensions
     {
         public static bool EhAcervoDocumental(this long valor)
         {
-            return valor == (int)TipoAcervo.DocumentacaoHistorica; 
+            return valor == (long)TipoAcervo.DocumentacaoHistorica; 
         }
         
         public static bool NaoEhAcervoDocumental(this long valor)
