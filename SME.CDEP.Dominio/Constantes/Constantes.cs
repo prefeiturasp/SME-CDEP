@@ -12,4 +12,9 @@ public class Constantes
     public const string PERFIL_EXTERNO_GUID = "3092428D-CA98-4788-9717-E706DF1945A0";
     public const string CLAIM_PERMISSAO = "http://schemas.microsoft.com/ws/2008/06/identity/claims/role";
     public const string CLAIMS = "Claims";
+    public const string EXPRESSAO_TAG_BR = @"<br[^>]*>";
+    public const string EXPRESSAO_TAG_P = @"<p[^>]*>";
+    public const string EXPRESSAO_TAG_LI = @"<li[^>]*>";
+    public const string EXPRESSAO_TAG_HTML_QUALQUER = @"<[^>]*>";
+    public const string EXPRESSAO_ESPACO_BRANCO = @"&nbsp;";
 }
