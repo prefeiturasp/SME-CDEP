@@ -1,8 +1,16 @@
 ﻿
+using System.Text.RegularExpressions;
+
 namespace SME.CDEP.Dominio.Extensions
 {
     public static class StringExtension
     {
+        public static readonly Regex RegexTagsBR = new(Constantes.Constantes.EXPRESSAO_TAG_BR, RegexOptions.Compiled);
+        public static readonly Regex RegexTagsP = new(Constantes.Constantes.EXPRESSAO_TAG_P, RegexOptions.Compiled);
+        public static readonly Regex RegexTagsLI = new(Constantes.Constantes.EXPRESSAO_TAG_LI, RegexOptions.Compiled);
+        public static readonly Regex RegexTagsHTMLQualquer = new(Constantes.Constantes.EXPRESSAO_TAG_HTML_QUALQUER, RegexOptions.Compiled);
+        public static readonly Regex RegexEspacosEmBranco = new(Constantes.Constantes.EXPRESSAO_ESPACO_BRANCO, RegexOptions.Compiled);
+        
         public static bool EhExtensaoImagemParaOtimizar(this string extensao)
         {
             return (extensao.ToLower().Equals(".jpg") || extensao.ToLower().Equals(".jpeg") || extensao.ToLower().Equals(".png") || extensao.ToLower().Equals(".tiff") || extensao.ToLower().Equals(".tif"));
@@ -40,6 +48,19 @@ namespace SME.CDEP.Dominio.Extensions
         {
             var tamanhoString = str.Length;
             return tamanhoString > limite ? str.Substring(0,limite) : str;
+        }
+        
+        public static string RemoverTagsHtml(this string texto)
+        {
+            if (texto.NaoEstaPreenchido())
+                return string.Empty;
+            
+            texto = RegexTagsBR.Replace(texto, " ");
+            texto = RegexTagsP.Replace(texto, " ");
+            texto = RegexTagsLI.Replace(texto, " ");
+            texto = RegexTagsHTMLQualquer.Replace(texto, string.Empty);
+            texto = RegexEspacosEmBranco.Replace(texto, " ").Trim();
+            return texto.Trim();
         }
     }
 }

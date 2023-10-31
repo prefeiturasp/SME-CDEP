@@ -1,13 +1,12 @@
-﻿using AutoMapper;
-using Shouldly;
+﻿using Shouldly;
 using SME.CDEP.Aplicacao.DTOS;
 using SME.CDEP.Dominio.Entidades;
 using SME.CDEP.Dominio.Excecoes;
+using SME.CDEP.Dominio.Extensions;
 using SME.CDEP.Infra.Dominio.Enumerados;
 using SME.CDEP.TesteIntegracao.Setup;
 using SME.CDEP.TesteIntegracao.Constantes;
 using Xunit;
-using Xunit.Sdk;
 
 namespace SME.CDEP.TesteIntegracao
 {
@@ -56,11 +55,11 @@ namespace SME.CDEP.TesteIntegracao
                 Id = 3,
                 AcervoId = 3,
                 Codigo = "100.FT",
-                Titulo = string.Format(ConstantesTestes.TITULO_X, 100),
+                Titulo = faker.Lorem.Text().Limite(500),
                 CreditosAutoresIds = new long[]{1,2,3,4,5},
                 Descricao = faker.Lorem.Text(),
-                Localizacao = string.Format(ConstantesTestes.LOCALIZACAO_X, 100),
-                Procedencia = string.Format(ConstantesTestes.PROCEDENCIA_X, 100),
+                Localizacao = faker.Lorem.Text().Limite(100),
+                Procedencia = faker.Lorem.Text().Limite(200),
                 DataAcervo = DateTimeExtension.HorarioBrasilia().Date.ToString("dd/MM/yyyy"),
                 CopiaDigital = true,
                 PermiteUsoImagem = true,
@@ -71,8 +70,8 @@ namespace SME.CDEP.TesteIntegracao
                 SuporteId = 2,
                 FormatoId = 3,
                 CromiaId = 4,
-                Resolucao = string.Format(ConstantesTestes.RESOLUCAO_X, 100),
-                TamanhoArquivo = string.Format(ConstantesTestes.TAMANHO_ARQUIVO_X_MB, 100),
+                Resolucao = faker.Lorem.Text().Limite(15),
+                TamanhoArquivo = faker.Lorem.Text().Limite(15),
                 Arquivos = arquivosSelecionados
             };
             
@@ -132,11 +131,11 @@ namespace SME.CDEP.TesteIntegracao
                 Id = 3,
                 AcervoId = 3,
                 Codigo = "100.FT",
-                Titulo = string.Format(ConstantesTestes.TITULO_X, 100),
+                Titulo = faker.Lorem.Text().Limite(500),
                 CreditosAutoresIds = new long[]{3,4,5},
                 Descricao = faker.Lorem.Text(),
-                Localizacao = string.Format(ConstantesTestes.LOCALIZACAO_X, 100),
-                Procedencia = string.Format(ConstantesTestes.PROCEDENCIA_X, 100),
+                Localizacao = faker.Lorem.Text().Limite(100),
+                Procedencia = faker.Lorem.Text().Limite(200),
                 DataAcervo = DateTimeExtension.HorarioBrasilia().Date.ToString("dd/MM/yyyy"),
                 CopiaDigital = true,
                 PermiteUsoImagem = true,
@@ -147,8 +146,8 @@ namespace SME.CDEP.TesteIntegracao
                 SuporteId = 2,
                 FormatoId = 3,
                 CromiaId = 4,
-                Resolucao = string.Format(ConstantesTestes.RESOLUCAO_X, 100),
-                TamanhoArquivo = string.Format(ConstantesTestes.TAMANHO_ARQUIVO_X_MB, 100),
+                Resolucao = faker.Lorem.Text().Limite(15),
+                TamanhoArquivo = faker.Lorem.Text().Limite(15),
                 Arquivos = arquivosSelecionados
             };
             
@@ -206,11 +205,11 @@ namespace SME.CDEP.TesteIntegracao
                 Id = 3,
                 AcervoId = 3,
                 Codigo = "100.FT",
-                Titulo = string.Format(ConstantesTestes.TITULO_X, 100),
+                Titulo = faker.Lorem.Text().Limite(500),
                 CreditosAutoresIds = new long[]{4,5},
                 Descricao = faker.Lorem.Text(),
-                Localizacao = string.Format(ConstantesTestes.LOCALIZACAO_X, 100),
-                Procedencia = string.Format(ConstantesTestes.PROCEDENCIA_X, 100),
+                Localizacao = faker.Lorem.Text().Limite(100),
+                Procedencia = faker.Lorem.Text().Limite(200),
                 DataAcervo = DateTimeExtension.HorarioBrasilia().Date.ToString("dd/MM/yyyy"),
                 CopiaDigital = true,
                 PermiteUsoImagem = true,
@@ -221,8 +220,8 @@ namespace SME.CDEP.TesteIntegracao
                 SuporteId = 2,
                 FormatoId = 3,
                 CromiaId = 4,
-                Resolucao = string.Format(ConstantesTestes.RESOLUCAO_X, 100),
-                TamanhoArquivo = string.Format(ConstantesTestes.TAMANHO_ARQUIVO_X_MB, 100),
+                Resolucao = faker.Lorem.Text().Limite(15),
+                TamanhoArquivo = faker.Lorem.Text().Limite(15),
                 Arquivos = arquivosSelecionados
             };
                 
@@ -284,11 +283,11 @@ namespace SME.CDEP.TesteIntegracao
             var acervoFotograficoDto = new AcervoFotograficoCadastroDTO()
             {
                 Codigo = "100",
-                Titulo = string.Format(ConstantesTestes.TITULO_X, 100),
+                Titulo = faker.Lorem.Text().Limite(500),
                 CreditosAutoresIds = new long[]{new Random().Next(1, 5),new Random().Next(1, 5)},
                 Descricao = faker.Lorem.Text(),
-                Localizacao = string.Format(ConstantesTestes.LOCALIZACAO_X, 100),
-                Procedencia = string.Format(ConstantesTestes.PROCEDENCIA_X, 100),
+                Localizacao = faker.Lorem.Text().Limite(100),
+                Procedencia = faker.Lorem.Text().Limite(200),
                 DataAcervo = DateTimeExtension.HorarioBrasilia().Date.ToString("dd/MM/yyyy"),
                 CopiaDigital = true,
                 PermiteUsoImagem = true,
@@ -299,8 +298,8 @@ namespace SME.CDEP.TesteIntegracao
                 SuporteId = random.Next(1, 5),
                 FormatoId = random.Next(1, 5),
                 CromiaId = random.Next(1, 5),
-                Resolucao = string.Format(ConstantesTestes.RESOLUCAO_X, 100),
-                TamanhoArquivo = string.Format(ConstantesTestes.TAMANHO_ARQUIVO_X_MB, 100),
+                Resolucao = faker.Lorem.Text().Limite(15),
+                TamanhoArquivo = faker.Lorem.Text().Limite(15),
                 Arquivos = arquivosSelecionados
             };
             
@@ -358,11 +357,11 @@ namespace SME.CDEP.TesteIntegracao
             var acervoFotograficoDto = new AcervoFotograficoCadastroDTO()
             {
                 Codigo = "1",
-                Titulo = string.Format(ConstantesTestes.TITULO_X, 100),
+                Titulo = faker.Lorem.Text().Limite(500),
                 CreditosAutoresIds = new long[]{new Random().Next(1, 5),new Random().Next(1, 5)},
                 Descricao = faker.Lorem.Text(),
-                Localizacao = string.Format(ConstantesTestes.LOCALIZACAO_X, 100),
-                Procedencia = string.Format(ConstantesTestes.PROCEDENCIA_X, 100),
+                Localizacao = faker.Lorem.Text().Limite(100),
+                Procedencia = faker.Lorem.Text().Limite(200),
                 DataAcervo = DateTimeExtension.HorarioBrasilia().Date.ToString("dd/MM/yyyy"),
                 CopiaDigital = true,
                 PermiteUsoImagem = true,
@@ -373,8 +372,8 @@ namespace SME.CDEP.TesteIntegracao
                 SuporteId = random.Next(1, 5),
                 FormatoId = random.Next(1, 5),
                 CromiaId = random.Next(1, 5),
-                Resolucao = string.Format(ConstantesTestes.RESOLUCAO_X, 100),
-                TamanhoArquivo = string.Format(ConstantesTestes.TAMANHO_ARQUIVO_X_MB, 100),
+                Resolucao = faker.Lorem.Text().Limite(15),
+                TamanhoArquivo = faker.Lorem.Text().Limite(15),
                 Arquivos = arquivosSelecionados
             };
             
@@ -391,7 +390,7 @@ namespace SME.CDEP.TesteIntegracao
                 await InserirNaBase(new Acervo()
                 {
                     Codigo = $"{j.ToString()}.FT",
-                    Titulo = string.Format(ConstantesTestes.TITULO_X, j),
+                    Titulo = faker.Lorem.Text().Limite(500),
                     Descricao = faker.Lorem.Text(),
                     CreditosAutoresIds = new long[]{new Random().Next(1, 5),new Random().Next(1, 5)},
                     TipoAcervoId = (int)TipoAcervo.Fotografico,
@@ -424,8 +423,8 @@ namespace SME.CDEP.TesteIntegracao
                 await InserirNaBase(new AcervoFotografico()
                 {
                     AcervoId = j,
-                    Localizacao = string.Format(ConstantesTestes.LOCALIZACAO_X, j),
-                    Procedencia = string.Format(ConstantesTestes.PROCEDENCIA_X,j),
+                    Localizacao = faker.Lorem.Text().Limite(100),
+                    Procedencia = faker.Lorem.Text().Limite(200),
                     DataAcervo = DateTimeExtension.HorarioBrasilia().Date.ToString("dd/MM/yyyy"),
                     CopiaDigital = true,
                     PermiteUsoImagem = true,
@@ -436,13 +435,13 @@ namespace SME.CDEP.TesteIntegracao
                     SuporteId = random.Next(1,5),
                     FormatoId = random.Next(1,5),
                     CromiaId = random.Next(1,5),
-                    Resolucao = string.Format(ConstantesTestes.RESOLUCAO_X,j),
-                    TamanhoArquivo = string.Format(ConstantesTestes.TAMANHO_ARQUIVO_X_MB,j),
+                    Resolucao = faker.Lorem.Text().Limite(15),
+                    TamanhoArquivo = faker.Lorem.Text().Limite(15),
                 });
                 
                 await InserirNaBase(new Arquivo()
                 {
-                    Nome = string.Format(ConstantesTestes.ARQUIVO_X,j),
+                    Nome = faker.Lorem.Text(),
                     Codigo = Guid.NewGuid(),
                     Tipo = TipoArquivo.AcervoFotografico,
                     TipoConteudo = ConstantesTestes.MIME_TYPE_JPG,

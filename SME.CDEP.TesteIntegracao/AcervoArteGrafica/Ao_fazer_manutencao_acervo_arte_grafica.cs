@@ -1,8 +1,10 @@
 ﻿using AutoMapper;
+using Bogus;
 using Shouldly;
 using SME.CDEP.Aplicacao.DTOS;
 using SME.CDEP.Dominio.Entidades;
 using SME.CDEP.Dominio.Excecoes;
+using SME.CDEP.Dominio.Extensions;
 using SME.CDEP.Infra.Dominio.Enumerados;
 using SME.CDEP.TesteIntegracao.Setup;
 using SME.CDEP.TesteIntegracao.Constantes;
@@ -71,10 +73,10 @@ namespace SME.CDEP.TesteIntegracao
                 Id = 3,
                 AcervoId = 3,
                 Codigo = "100.AG",
-                Titulo = string.Format(ConstantesTestes.TITULO_X, 100),
+                Titulo = faker.Lorem.Text().Limite(500),
                 CreditosAutoresIds = new long[]{4,5},
-                Localizacao = string.Format(ConstantesTestes.LOCALIZACAO_X, 100),
-                Procedencia = string.Format(ConstantesTestes.PROCEDENCIA_X, 100),
+                Localizacao = faker.Lorem.Text().Limite(100),
+                Procedencia = faker.Lorem.Text().Limite(200),
                 DataAcervo = DateTimeExtension.HorarioBrasilia().Date.ToString("dd/MM/yyyy"),
                 CopiaDigital = true,
                 PermiteUsoImagem = true,
@@ -83,7 +85,7 @@ namespace SME.CDEP.TesteIntegracao
                 Largura = random.Next(15, 55),
                 Altura = random.Next(15, 55),
                 Diametro = random.Next(15, 55),
-                Tecnica = string.Format(ConstantesTestes.TECNICA_X, 100),
+                Tecnica = faker.Lorem.Text().Limite(100),
                 SuporteId = random.Next(1, 5),
                 Quantidade = random.Next(15, 55),
                 Descricao = faker.Lorem.Text(),
@@ -149,10 +151,10 @@ namespace SME.CDEP.TesteIntegracao
                 Id = 3,
                 AcervoId = 3,
                 Codigo = "100.AG",
-                Titulo = string.Format(ConstantesTestes.TITULO_X, 100),
+                Titulo = faker.Lorem.Text().Limite(500),
                 CreditosAutoresIds = new long[]{2,3},
-                Localizacao = string.Format(ConstantesTestes.LOCALIZACAO_X, 100),
-                Procedencia = string.Format(ConstantesTestes.PROCEDENCIA_X, 100),
+                Localizacao = faker.Lorem.Text().Limite(100),
+                Procedencia = faker.Lorem.Text().Limite(200),
                 DataAcervo = DateTimeExtension.HorarioBrasilia().Date.ToString("dd/MM/yyyy"),
                 CopiaDigital = true,
                 PermiteUsoImagem = true,
@@ -161,7 +163,7 @@ namespace SME.CDEP.TesteIntegracao
                 Largura = random.Next(15, 55),
                 Altura = random.Next(15, 55),
                 Diametro = random.Next(15, 55),
-                Tecnica = string.Format(ConstantesTestes.TECNICA_X, 100),
+                Tecnica = faker.Lorem.Text().Limite(100),
                 SuporteId = random.Next(1, 5),
                 Quantidade = random.Next(15, 55),
                 Descricao = faker.Lorem.Text(),
@@ -225,10 +227,10 @@ namespace SME.CDEP.TesteIntegracao
                 Id = 3,
                 AcervoId = 3,
                 Codigo = "100.AG",
-                Titulo = string.Format(ConstantesTestes.TITULO_X, 100),
+                Titulo = faker.Lorem.Text().Limite(500),
                 CreditosAutoresIds = new long[]{1,5},
-                Localizacao = string.Format(ConstantesTestes.LOCALIZACAO_X, 100),
-                Procedencia = string.Format(ConstantesTestes.PROCEDENCIA_X, 100),
+                Localizacao = faker.Lorem.Text().Limite(100),
+                Procedencia = faker.Lorem.Text().Limite(200),
                 DataAcervo = DateTimeExtension.HorarioBrasilia().Date.ToString("dd/MM/yyyy"),
                 CopiaDigital = true,
                 PermiteUsoImagem = true,
@@ -237,7 +239,7 @@ namespace SME.CDEP.TesteIntegracao
                 Largura = random.Next(15, 55),
                 Altura = random.Next(15, 55),
                 Diametro = random.Next(15, 55),
-                Tecnica = string.Format(ConstantesTestes.TECNICA_X, 100),
+                Tecnica = faker.Lorem.Text().Limite(100),
                 SuporteId = random.Next(1, 5),
                 Quantidade = random.Next(15, 55),
                 Descricao = faker.Lorem.Text(),
@@ -301,10 +303,10 @@ namespace SME.CDEP.TesteIntegracao
             var acervoArteGraficaCadastroDto = new AcervoArteGraficaCadastroDTO()
             {
                 Codigo = "100",
-                Titulo = string.Format(ConstantesTestes.TITULO_X, 100),
+                Titulo = faker.Lorem.Text().Limite(500),
                 CreditosAutoresIds = new long[]{3,4},
-                Localizacao = string.Format(ConstantesTestes.LOCALIZACAO_X, 100),
-                Procedencia = string.Format(ConstantesTestes.PROCEDENCIA_X, 100),
+                Localizacao = faker.Lorem.Text().Limite(100),
+                Procedencia = faker.Lorem.Text().Limite(200),
                 DataAcervo = DateTimeExtension.HorarioBrasilia().Date.ToString("dd/MM/yyyy"),
                 CopiaDigital = true,
                 PermiteUsoImagem = true,
@@ -313,7 +315,7 @@ namespace SME.CDEP.TesteIntegracao
                 Largura = random.Next(15, 55),
                 Altura = random.Next(15, 55),
                 Diametro = random.Next(15, 55),
-                Tecnica = string.Format(ConstantesTestes.TECNICA_X, 100),
+                Tecnica = faker.Lorem.Text().Limite(100),
                 SuporteId = random.Next(1, 5),
                 Quantidade = random.Next(15, 55),
                 Descricao = faker.Lorem.Text(),
@@ -378,10 +380,10 @@ namespace SME.CDEP.TesteIntegracao
             var acervoArteGraficaCadastroDto = new AcervoArteGraficaCadastroDTO()
             {
                 Codigo = "1",
-                Titulo = string.Format(ConstantesTestes.TITULO_X, 100),
+                Titulo = faker.Lorem.Text().Limite(500),
                 CreditosAutoresIds = new long[]{new Random().Next(1, 5),new Random().Next(1, 5)},
-                Localizacao = string.Format(ConstantesTestes.LOCALIZACAO_X, 100),
-                Procedencia = string.Format(ConstantesTestes.PROCEDENCIA_X, 100),
+                Localizacao = faker.Lorem.Text().Limite(100),
+                Procedencia = faker.Lorem.Text().Limite(200),
                 DataAcervo = DateTimeExtension.HorarioBrasilia().Date.ToString("dd/MM/yyyy"),
                 CopiaDigital = true,
                 PermiteUsoImagem = true,
@@ -390,7 +392,7 @@ namespace SME.CDEP.TesteIntegracao
                 Largura = random.Next(15, 55),
                 Altura = random.Next(15, 55),
                 Diametro = random.Next(15, 55),
-                Tecnica = string.Format(ConstantesTestes.TECNICA_X, 100),
+                Tecnica = faker.Lorem.Text().Limite(100),
                 SuporteId = random.Next(1, 5),
                 Quantidade = random.Next(15, 55),
                 Descricao = faker.Lorem.Text(),
@@ -410,7 +412,7 @@ namespace SME.CDEP.TesteIntegracao
                 await InserirNaBase(new Acervo()
                 {
                     Codigo = $"{j.ToString()}.AG",
-                    Titulo = string.Format(ConstantesTestes.TITULO_X, j),
+                    Titulo = faker.Lorem.Text().Limite(500),
                     Descricao = faker.Lorem.Text(),
                     TipoAcervoId = (int)TipoAcervo.ArtesGraficas,
                     CriadoPor = ConstantesTestes.SISTEMA,
@@ -442,8 +444,8 @@ namespace SME.CDEP.TesteIntegracao
                 await InserirNaBase(new AcervoArteGrafica()
                 {
                     AcervoId = j,
-                    Localizacao = string.Format(ConstantesTestes.LOCALIZACAO_X, j),
-                    Procedencia = string.Format(ConstantesTestes.PROCEDENCIA_X,j),
+                    Localizacao = faker.Lorem.Text().Limite(100),
+                    Procedencia = faker.Lorem.Text().Limite(200),
                     DataAcervo = DateTimeExtension.HorarioBrasilia().Date.ToString("dd/MM/yyyy"),
                     CopiaDigital = true,
                     PermiteUsoImagem = true,
@@ -452,14 +454,14 @@ namespace SME.CDEP.TesteIntegracao
                     Largura = random.Next(15,55),
                     Altura = random.Next(15,55),
                     Diametro = random.Next(15,55),
-                    Tecnica = string.Format(ConstantesTestes.TECNICA_X,j),
+                    Tecnica = faker.Lorem.Text().Limite(100),
                     SuporteId = random.Next(1,5),
                     Quantidade = random.Next(15,55),
                 });
                 
                 await InserirNaBase(new Arquivo()
                 {
-                    Nome = string.Format(ConstantesTestes.ARQUIVO_X,j),
+                    Nome = faker.Lorem.Text(),
                     Codigo = Guid.NewGuid(),
                     Tipo = TipoArquivo.AcervoArteGrafica,
                     TipoConteudo = ConstantesTestes.MIME_TYPE_JPG,
