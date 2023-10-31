@@ -43,5 +43,28 @@ namespace SME.CDEP.Aplicacao.Servicos
             
             return (arquivoFisico, arquivo.TipoConteudo, arquivo.Nome);
         }
+
+        public async Task<(byte[], string, string)> DownloadCsv(TipoAcervo tipoAcervo)
+        {
+            var arquivo = tipoAcervo.ObterPlanilhaModelo();
+            
+            var enderecoArquivo = await servicoArmazenamento.Obter(nomeArquivoComExtensao, arquivo.Tipo == TipoArquivo.Temp);
+            
+            var arquivoFisico = Array.Empty<byte>();
+            
+            if (enderecoArquivo.EstaPreenchido())
+            {
+                var response = await new HttpClient().GetAsync(enderecoArquivo);
+            
+                if (response.StatusCode == System.Net.HttpStatusCode.OK)
+                    arquivoFisico = await response.Content.ReadAsByteArrayAsync();
+            }
+            else
+                throw new NegocioException(MensagemNegocio.IMAGEM_NAO_ENCONTRADO);
+            
+            return (arquivoFisico, Constantes.TipoConteudoCsv, arquivo.Nome);
+
+            return default;
+        }
     }
 }  
