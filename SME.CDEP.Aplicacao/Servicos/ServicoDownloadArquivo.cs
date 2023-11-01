@@ -1,5 +1,8 @@
-﻿using SME.CDEP.Aplicacao.Servicos.Interface;
+﻿using System.Net.Http.Headers;
+using System.Text;
+using SME.CDEP.Aplicacao.Servicos.Interface;
 using SME.CDEP.Dominio.Constantes;
+using SME.CDEP.Dominio.Entidades;
 using SME.CDEP.Dominio.Excecoes;
 using SME.CDEP.Dominio.Extensions;
 using SME.CDEP.Infra.Dados.Repositorios.Interfaces;
@@ -21,50 +24,36 @@ namespace SME.CDEP.Aplicacao.Servicos
        
         public async Task<(byte[], string, string)> Download(Guid codigoArquivo)
         {
-            var arquivo = await repositorioArquivo.ObterPorCodigo(codigoArquivo);
-            
-            var extensao = Path.GetExtension(arquivo.Nome);
-
-            var nomeArquivoComExtensao = $"{codigoArquivo}{extensao}";
-
-            var enderecoArquivo = await servicoArmazenamento.Obter(nomeArquivoComExtensao, arquivo.Tipo == TipoArquivo.Temp);
-
-            var arquivoFisico = Array.Empty<byte>();
-
-            if (enderecoArquivo.EstaPreenchido())
-            {
-                var response = await new HttpClient().GetAsync(enderecoArquivo);
-
-                if (response.StatusCode == System.Net.HttpStatusCode.OK)
-                    arquivoFisico = await response.Content.ReadAsByteArrayAsync();
-            }
-            else
-                throw new NegocioException(MensagemNegocio.IMAGEM_NAO_ENCONTRADO);
-            
-            return (arquivoFisico, arquivo.TipoConteudo, arquivo.Nome);
+            return await ObterArquivo(await repositorioArquivo.ObterPorCodigo(codigoArquivo));
         }
 
-        public async Task<(byte[], string, string)> DownloadCsv(TipoAcervo tipoAcervo)
+        public async Task<(byte[], string, string)> DownloadPorTipoAcervo(TipoAcervo tipoAcervo)
         {
-            var arquivo = tipoAcervo.ObterPlanilhaModelo();
-            
+            return await ObterArquivo(await repositorioArquivo.ObterArquivoPorNomeTipoArquivo(tipoAcervo.ObterPlanilhaModelo(), TipoArquivo.Sistema));
+        }
+        
+        private async Task<(byte[], string, string)> ObterArquivo(Arquivo arquivo)
+        {
+            var extensao = Path.GetExtension(arquivo.Nome);
+
+            var nomeArquivoComExtensao = $"{arquivo.Codigo}{extensao}";
+
             var enderecoArquivo = await servicoArmazenamento.Obter(nomeArquivoComExtensao, arquivo.Tipo == TipoArquivo.Temp);
-            
+
             var arquivoFisico = Array.Empty<byte>();
-            
+
             if (enderecoArquivo.EstaPreenchido())
             {
                 var response = await new HttpClient().GetAsync(enderecoArquivo);
-            
+                
                 if (response.StatusCode == System.Net.HttpStatusCode.OK)
-                    arquivoFisico = await response.Content.ReadAsByteArrayAsync();
+                    arquivoFisico = Encoding.Default.GetBytes(await response.Content.ReadAsStringAsync());
+                    
             }
             else
-                throw new NegocioException(MensagemNegocio.IMAGEM_NAO_ENCONTRADO);
-            
-            return (arquivoFisico, Constantes.TipoConteudoCsv, arquivo.Nome);
+                throw new NegocioException(MensagemNegocio.ARQUIVO_NAO_ENCONTRADO);
 
-            return default;
+            return (arquivoFisico, arquivo.TipoConteudo, arquivo.Nome);
         }
     }
 }  
