@@ -11,7 +11,6 @@ using SME.CDEP.Aplicacao.Integracoes.Interfaces;
 using SME.CDEP.Aplicacao.Mapeamentos;
 using SME.CDEP.Dominio.Contexto;
 using SME.CDEP.Infra.Servicos.Mensageria;
-using SME.CDEP.Infra.Servicos.ServicoArmazenamento;
 using SME.CDEP.Infra.Servicos.ServicoArmazenamento.Interface;
 using SME.CDEP.Webapi.Contexto;
 using SSME.CDEP.TesteIntegracao.ServicosFakes;
@@ -90,6 +89,7 @@ namespace SME.CDEP.TesteIntegracao.Setup
             _serviceCollection.TryAddScoped<IServicoAcervoAudiovisual, ServicoAcervoAudiovisual>();
             _serviceCollection.TryAddScoped<IServicoAcervoDocumental, ServicoAcervoDocumental>();
             _serviceCollection.TryAddScoped<IServicoAcervoBibliografico, ServicoAcervoBibliografico>();
+            _serviceCollection.TryAddScoped<IServicoImportacaoArquivo, ServicoImportacaoArquivo>();
         }
         protected override void RegistrarHttpClients()
         {}

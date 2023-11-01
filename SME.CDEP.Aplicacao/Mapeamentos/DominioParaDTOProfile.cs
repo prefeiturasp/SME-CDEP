@@ -82,6 +82,8 @@ namespace SME.CDEP.Aplicacao.Mapeamentos
             CreateMap<AcervoBibliograficoCompleto, AcervoBibliograficoDTO>()
                 .ForMember(dest => dest.CoAutores, opt => opt.MapFrom(o => o.CoAutores))
                 .ReverseMap();
+            
+            CreateMap<ImportacaoArquivoDTO, ImportacaoArquivo>().ReverseMap();
         }
     }
 }

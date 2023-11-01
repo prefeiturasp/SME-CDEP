@@ -14,5 +14,10 @@ namespace SME.CDEP.Dominio.Extensions
         {
             return tipo == TipoAcervo.ArtesGraficas || tipo == TipoAcervo.Fotografico;  
         }
+        
+        public static bool EhAcervoBibliografico(this TipoAcervo tipo)
+        {
+            return tipo == TipoAcervo.Bibliografico;  
+        }
     }
 }
