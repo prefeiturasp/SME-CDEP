@@ -206,7 +206,7 @@ namespace SME.CDEP.Aplicacao.Servicos
                 var acervosIds = acervos.Where(w=> w.Tipo.EhAcervoArteGraficaOuFotografico()).Select(s => s.AcervoId).Distinct().ToArray();
 
                 var acervosCodigoNomeResumidos = await repositorioArquivo.ObterAcervoCodigoNomeArquivoPorAcervoId(acervosIds);
-            
+
                 var hostAplicacao = configuration["UrlFrontEnd"];
             
                 var acervosAgrupandoCreditoAutor = acervos

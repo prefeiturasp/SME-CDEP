@@ -60,11 +60,6 @@ namespace SME.CDEP.Infra.Dados.Repositorios
         {
             return conexao.Obter().QueryFirstOrDefaultAsync<bool>("select 1 from acervo where (lower(codigo) = @codigo or lower(codigo_novo) = @codigo) and not excluido and id != @id and tipo = @tipo",new { id, codigo = codigo.ToLower(), tipo });
         }
-
-        private string IncluirCodigoNovo(string codigoNovo)
-        {
-            return codigoNovo.EstaPreenchido() ? " and codigo_novo = @codigoNovo " : string.Empty;
-        }
         
         public async Task<IEnumerable<PesquisaAcervo>> ObterPorTextoLivreETipoAcervo(string? textoLivre, TipoAcervo? tipoAcervo)
         {
@@ -88,9 +83,13 @@ namespace SME.CDEP.Infra.Dados.Repositorios
                 query += $"and a.tipo = @tipoAcervo ";
 
             if (textoLivre.EstaPreenchido())
-                query += " and ( lower(f_unaccent(a.titulo)) LIKE ('%' || @textoLivre || '%') Or lower(f_unaccent(ca.nome)) LIKE ('%' || @textoLivre || '%')  Or lower(f_unaccent(ast.nome)) LIKE ('%' || @textoLivre || '%'))";
+            {
+                textoLivre = textoLivre.ToLower();
+                query += " and ( lower(f_unaccent(a.titulo)) LIKE ('%' || lower(f_unaccent(@textoLivre)) || '%') Or lower(f_unaccent(ca.nome)) LIKE ('%' || lower(f_unaccent(@textoLivre)) || '%')  Or lower(f_unaccent(ast.nome)) LIKE ('%' || lower(f_unaccent(@textoLivre)) || '%'))";
+            }
+                
 	
-            return await conexao.Obter().QueryAsync<PesquisaAcervo>(query, new { tipoAcervo, textoLivre });
+            return await conexao.Obter().QueryAsync<PesquisaAcervo>(query, new { tipoAcervo, textoLivre});
         }
     }
 }
