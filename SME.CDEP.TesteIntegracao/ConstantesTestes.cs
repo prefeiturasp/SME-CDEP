@@ -4,6 +4,12 @@ namespace SME.CDEP.TesteIntegracao.Constantes;
 
 public class ConstantesTestes
 {
+    public static string FORMATO_DOUBLE = "double";
+    
+    public const int CARACTERES_PERMITIDOS_15 = 15;
+    public const int CARACTERES_PERMITIDOS_50 = 50;
+    public const int CARACTERES_PERMITIDOS_200 = 200;
+    public const int CARACTERES_PERMITIDOS_500 = 500;
     public const int QUANTIDADE_3 = 3;
     
     public const string VHS = "VHS";

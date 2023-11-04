@@ -1,5 +1,7 @@
-﻿using SME.CDEP.Aplicacao.DTOS;
+﻿using Microsoft.AspNetCore.Http;
+using SME.CDEP.Aplicacao.DTOS;
 using SME.CDEP.Dominio.Entidades;
+using SME.CDEP.Infra.Dominio.Enumerados;
 
 namespace SME.CDEP.Aplicacao.Servicos.Interface
 {
@@ -9,5 +11,6 @@ namespace SME.CDEP.Aplicacao.Servicos.Interface
         Task<ImportacaoArquivoDTO> Alterar(ImportacaoArquivo importacaoArquivo);
         Task<bool> Excluir(long importacaoArquivoId);
         Task<ImportacaoArquivoCompleto> ObterUltimaImportacao();
+        Task<bool> UploadPorTipoAcervo(IFormFile file, TipoAcervo tipoAcervo);
     }
 }

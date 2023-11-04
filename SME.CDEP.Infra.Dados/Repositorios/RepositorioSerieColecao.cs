@@ -15,9 +15,9 @@ namespace SME.CDEP.Infra.Dados.Repositorios
             return conexao.Obter().QueryFirstOrDefaultAsync<bool>("select 1 from serie_colecao where lower(nome) = @nome and not excluido and id != @id",new { id, nome = nome.ToLower() });
         }
 
-        public async Task<IEnumerable<SerieColecao>> PesquisarPorNome(string nome)
+        public Task<IEnumerable<SerieColecao>> PesquisarPorNome(string nome)
         {
-            return await conexao.Obter().QueryAsync<SerieColecao>($@"select id, 
+            return conexao.Obter().QueryAsync<SerieColecao>($@"select id, 
                                                                     nome,
                                                                     excluido, 
                                                                     criado_em, 
@@ -29,6 +29,11 @@ namespace SME.CDEP.Infra.Dados.Repositorios
                                                             from serie_colecao 
                                                             where lower(nome) like '%{nome.ToLower()}%' 
                                                               and not excluido ");
+        }
+        
+        public Task<long> ObterPorNome(string nome)
+        {
+            return conexao.Obter().QueryFirstOrDefaultAsync<long>("select id from serie_colecao where lower(nome) = @nome and not excluido ",new { nome });
         }
     }
 }

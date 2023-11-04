@@ -90,6 +90,8 @@ namespace SME.CDEP.TesteIntegracao.Setup
             _serviceCollection.TryAddScoped<IServicoAcervoDocumental, ServicoAcervoDocumental>();
             _serviceCollection.TryAddScoped<IServicoAcervoBibliografico, ServicoAcervoBibliografico>();
             _serviceCollection.TryAddScoped<IServicoImportacaoArquivo, ServicoImportacaoArquivo>();
+            _serviceCollection.TryAddScoped<IServicoImportacaoArquivoBase, ServicoImportacaoArquivoBase>();
+            _serviceCollection.TryAddScoped<IServicoImportacaoArquivoAcervoBibliografico, ServicoImportacaoArquivoAcervoBibliografico>();
         }
         protected override void RegistrarHttpClients()
         {}

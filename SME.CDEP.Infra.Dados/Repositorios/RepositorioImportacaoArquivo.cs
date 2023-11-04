@@ -1,6 +1,7 @@
 ﻿using Dapper;
 using SME.CDEP.Dominio.Contexto;
 using SME.CDEP.Dominio.Entidades;
+using SME.CDEP.Dominio.Extensions;
 using SME.CDEP.Infra.Dados.Repositorios.Interfaces;
 
 namespace SME.CDEP.Infra.Dados.Repositorios
@@ -22,6 +23,14 @@ namespace SME.CDEP.Infra.Dados.Repositorios
 						order by ia.id desc";
 
             return await conexao.Obter().QueryFirstAsync<ImportacaoArquivoCompleto>(query);
+        }
+
+        public async Task<long> Salvar(ImportacaoArquivo importacaoArquivo)
+        {
+	        if (importacaoArquivo.Id.EhMaiorQueZero())
+		        return (await Atualizar(importacaoArquivo)).Id;
+	        
+	        return await Inserir(importacaoArquivo);
         }
     }
 }

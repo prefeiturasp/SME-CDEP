@@ -138,25 +138,25 @@ namespace SME.CDEP.TesteIntegracao
             var random = new Random();
             var faker = new Faker<AcervoBibliograficoLinhaDTO>("pt_BR");
             
-            faker.RuleFor(x => x.Titulo, f => new LinhaConteudoAjustarDTO() { Conteudo = f.Lorem.Text().Limite(500), Ajustar = false});
-            faker.RuleFor(x => x.SubTitulo, f => new LinhaConteudoAjustarDTO() { Conteudo = f.Lorem.Text().Limite(500), Ajustar = false});
-            faker.RuleFor(x => x.Material, f => new LinhaConteudoAjustarDTO() { Conteudo = f.Lorem.Text().Limite(50), Ajustar = true});
-            faker.RuleFor(x => x.Autor, f => new LinhaConteudoAjustarDTO() { Conteudo = f.Lorem.Text().Limite(50), Ajustar = false});
-            faker.RuleFor(x => x.CoAutor, f => new LinhaConteudoAjustarDTO() { Conteudo = f.Lorem.Text().Limite(50), Ajustar = false});
-            faker.RuleFor(x => x.TipoAutoria, f => new LinhaConteudoAjustarDTO() { Conteudo = f.Lorem.Text().Limite(50), Ajustar = false});
-            faker.RuleFor(x => x.Editora, f => new LinhaConteudoAjustarDTO() { Conteudo = f.Lorem.Text().Limite(50), Ajustar = true});
-            faker.RuleFor(x => x.Assunto, f => new LinhaConteudoAjustarDTO() { Conteudo = f.Lorem.Text().Limite(50), Ajustar = false});
-            faker.RuleFor(x => x.Ano, f => new LinhaConteudoAjustarDTO() { Conteudo = f.Date.Recent().Year.ToString(), Ajustar = false});
-            faker.RuleFor(x => x.Edicao, f => new LinhaConteudoAjustarDTO() { Conteudo = f.Lorem.Sentence().Limite(15), Ajustar = false});
-            faker.RuleFor(x => x.NumeroPaginas, f => new LinhaConteudoAjustarDTO() { Conteudo = random.Next(15,55).ToString(), Ajustar = false});
-            faker.RuleFor(x => x.Largura, f => new LinhaConteudoAjustarDTO() { Conteudo = random.Next(15,55).ToString(), Ajustar = false});
-            faker.RuleFor(x => x.Altura, f => new LinhaConteudoAjustarDTO() { Conteudo = random.Next(15,55).ToString(), Ajustar = false});
-            faker.RuleFor(x => x.Volume, f => new LinhaConteudoAjustarDTO() { Conteudo = f.Lorem.Sentence().Limite(15), Ajustar = false});
-            faker.RuleFor(x => x.Idioma, f => new LinhaConteudoAjustarDTO() { Conteudo = f.Lorem.Sentence().Limite(15), Ajustar = false});
-            faker.RuleFor(x => x.LocalizacaoCDD, f => new LinhaConteudoAjustarDTO() { Conteudo = f.Lorem.Sentence().Limite(50), Ajustar = false});
-            faker.RuleFor(x => x.LocalizacaoPHA, f => new LinhaConteudoAjustarDTO() { Conteudo = f.Lorem.Sentence().Limite(50), Ajustar = true});
-            faker.RuleFor(x => x.NotasGerais, f => new LinhaConteudoAjustarDTO() { Conteudo = f.Lorem.Text().Limite(500), Ajustar = true});
-            faker.RuleFor(x => x.Isbn, f => new LinhaConteudoAjustarDTO() { Conteudo = f.Lorem.Sentence().Limite(50), Ajustar = true});
+            faker.RuleFor(x => x.Titulo, f => new LinhaConteudoAjustarDTO() { Conteudo = f.Lorem.Text().Limite(500), Validado = false});
+            faker.RuleFor(x => x.SubTitulo, f => new LinhaConteudoAjustarDTO() { Conteudo = f.Lorem.Text().Limite(500), Validado = false});
+            faker.RuleFor(x => x.Material, f => new LinhaConteudoAjustarDTO() { Conteudo = f.Lorem.Text().Limite(50), Validado = true});
+            faker.RuleFor(x => x.Autor, f => new LinhaConteudoAjustarDTO() { Conteudo = f.Lorem.Text().Limite(50), Validado = false});
+            faker.RuleFor(x => x.CoAutor, f => new LinhaConteudoAjustarDTO() { Conteudo = f.Lorem.Text().Limite(50), Validado = false});
+            faker.RuleFor(x => x.TipoAutoria, f => new LinhaConteudoAjustarDTO() { Conteudo = f.Lorem.Text().Limite(50), Validado = false});
+            faker.RuleFor(x => x.Editora, f => new LinhaConteudoAjustarDTO() { Conteudo = f.Lorem.Text().Limite(50), Validado = true});
+            faker.RuleFor(x => x.Assunto, f => new LinhaConteudoAjustarDTO() { Conteudo = f.Lorem.Text().Limite(50), Validado = false});
+            faker.RuleFor(x => x.Ano, f => new LinhaConteudoAjustarDTO() { Conteudo = f.Date.Recent().Year.ToString(), Validado = false});
+            faker.RuleFor(x => x.Edicao, f => new LinhaConteudoAjustarDTO() { Conteudo = f.Lorem.Sentence().Limite(15), Validado = false});
+            faker.RuleFor(x => x.NumeroPaginas, f => new LinhaConteudoAjustarDTO() { Conteudo = random.Next(15,55).ToString(), Validado = false});
+            faker.RuleFor(x => x.Largura, f => new LinhaConteudoAjustarDTO() { Conteudo = random.Next(15,55).ToString(), Validado = false});
+            faker.RuleFor(x => x.Altura, f => new LinhaConteudoAjustarDTO() { Conteudo = random.Next(15,55).ToString(), Validado = false});
+            faker.RuleFor(x => x.Volume, f => new LinhaConteudoAjustarDTO() { Conteudo = f.Lorem.Sentence().Limite(15), Validado = false});
+            faker.RuleFor(x => x.Idioma, f => new LinhaConteudoAjustarDTO() { Conteudo = f.Lorem.Sentence().Limite(15), Validado = false});
+            faker.RuleFor(x => x.LocalizacaoCDD, f => new LinhaConteudoAjustarDTO() { Conteudo = f.Lorem.Sentence().Limite(50), Validado = false});
+            faker.RuleFor(x => x.LocalizacaoPHA, f => new LinhaConteudoAjustarDTO() { Conteudo = f.Lorem.Sentence().Limite(50), Validado = true});
+            faker.RuleFor(x => x.NotasGerais, f => new LinhaConteudoAjustarDTO() { Conteudo = f.Lorem.Text().Limite(500), Validado = true});
+            faker.RuleFor(x => x.Isbn, f => new LinhaConteudoAjustarDTO() { Conteudo = f.Lorem.Sentence().Limite(50), Validado = true});
             return faker;
         }
         

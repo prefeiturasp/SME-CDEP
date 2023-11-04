@@ -62,5 +62,53 @@ namespace SME.CDEP.Dominio.Extensions
             texto = RegexEspacosEmBranco.Replace(texto, " ").Trim();
             return texto.Trim();
         }
+
+        public static bool EhArquivoXlsx(this string texto)
+        {
+            return texto.Equals(Constantes.Constantes.ContentTypeExcel);
+        }
+        
+        public static bool NaoEhArquivoXlsx(this string texto)
+        {
+            return !EhArquivoXlsx(texto);
+        }
+        
+        public static string[] SplitPipe(this string texto)
+        {
+            return texto.Trim().Split(Constantes.Constantes.PIPE).Select(s=> s.Trim()).ToArray();
+        }
+        
+        public static bool ValidarLimiteDeCaracteres(this string str, int limite = 0)
+        {
+            if (limite.EhIgualZero())
+                return true;
+            
+            return str.Length <= limite;
+        }
+        
+        public static bool EhFormatoString(this string formato)
+        {
+            return formato.Equals(Constantes.Constantes.FORMATO_STRING);
+        }
+        
+        public static bool EhFormatoDouble(this string formato)
+        {
+            return formato.Equals(Constantes.Constantes.FORMATO_DOUBLE);
+        }
+        
+        public static bool EhFormatoInteiro(this string formato)
+        {
+            return formato.Equals(Constantes.Constantes.FORMATO_INTEIRO);
+        }
+        
+        public static bool EhFormatoLongo(this string formato)
+        {
+            return formato.Equals(Constantes.Constantes.FORMATO_LONGO);
+        }
+
+        public static IEnumerable<string> FormatarTextoEmArray(this string textoComPipes)
+        {
+            return textoComPipes.SplitPipe().Distinct();
+        }
     }
 }

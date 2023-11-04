@@ -7,5 +7,6 @@ namespace SME.CDEP.Infra.Dados.Repositorios.Interfaces
     public interface IRepositorioImportacaoArquivo : IRepositorioBaseAuditavel<ImportacaoArquivo>
     {
         Task<ImportacaoArquivoCompleto> ObterUltimaImportacao();
+        Task<long> Salvar(ImportacaoArquivo importacaoArquivo);
     }
 }
