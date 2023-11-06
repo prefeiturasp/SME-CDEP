@@ -19,6 +19,6 @@ public class ImportacaoArquivoController: BaseController
     // [Authorize("Bearer")]
     public async Task<IActionResult> UploadPorTipoAcervo(IFormFile file, TipoAcervo tipoAcervo,[FromServices] IServicoImportacaoArquivo servicoImportacaoArquivo)
     {
-        return Ok(await servicoImportacaoArquivo.UploadPorTipoAcervo(file,tipoAcervo));
+        return Ok(await servicoImportacaoArquivo.ImportarArquivoPorTipoAcervo(file,tipoAcervo));
     }
 }

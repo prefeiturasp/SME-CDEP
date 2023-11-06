@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Http;
 using SME.CDEP.Aplicacao.DTOS;
+using SME.CDEP.Dominio.Entidades;
 using SME.CDEP.Infra.Dominio.Enumerados;
 
 namespace SME.CDEP.Aplicacao.Servicos.Interface
@@ -7,7 +8,7 @@ namespace SME.CDEP.Aplicacao.Servicos.Interface
     public interface IServicoImportacaoArquivoBase
     {
         void ValidarArquivo(IFormFile file);
-        Task<long> PersistirImportacao(string nomeDoArquivo, TipoAcervo tipoAcervo, string conteudo);
+        Task<long> PersistirImportacao(ImportacaoArquivo importacaoArquivo);
         Task<long> AtualizarImportacao(long id, string conteudo, ImportacaoStatus? status = null);
         Task ValidarOuInserirMateriais(IEnumerable<string> materiais, TipoMaterial tipoMaterial);
         Task ValidarOuInserirEditoras(IEnumerable<string> editoras);

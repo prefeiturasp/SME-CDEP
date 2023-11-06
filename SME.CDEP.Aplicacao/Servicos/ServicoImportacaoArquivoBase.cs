@@ -15,14 +15,13 @@ namespace SME.CDEP.Aplicacao.Servicos
 {
     public class ServicoImportacaoArquivoBase : IServicoImportacaoArquivoBase
     {
-        private readonly IRepositorioImportacaoArquivo repositorioImportacaoArquivo;
-        private readonly IRepositorioMaterial repositorioMaterial;
-        private readonly IRepositorioEditora repositorioEditora;
-        private readonly IRepositorioSerieColecao repositorioSerieColecao;
-        private readonly IRepositorioIdioma repositorioIdioma;
-        private readonly IRepositorioAssunto repositorioAssunto;
-        private readonly IRepositorioCreditoAutor repositorioCreditoAutor;
-        private readonly IMapper mapper;
+        protected readonly IRepositorioImportacaoArquivo repositorioImportacaoArquivo;
+        private readonly IServicoMaterial servicoMaterial;
+        private readonly IServicoEditora servicoEditora;
+        private readonly IServicoSerieColecao servicoSerieColecao;
+        private readonly IServicoIdioma servicoIdioma;
+        private readonly IServicoAssunto servicoAssunto;
+        private readonly IServicoCreditoAutor servicoCreditoAutor;
         protected List<IdNomeTipoDTO> Materiais;
         protected List<IdNomeDTO> Editoras;
         protected List<IdNomeDTO> SeriesColecoes;
@@ -30,18 +29,17 @@ namespace SME.CDEP.Aplicacao.Servicos
         protected List<IdNomeDTO> Assuntos;
         protected List<IdNomeTipoDTO> CreditosAutores { get; set; }
 
-        public ServicoImportacaoArquivoBase(IRepositorioImportacaoArquivo repositorioImportacaoArquivo, IMapper mapper,
-            IRepositorioMaterial repositorioMaterial,IRepositorioEditora repositorioEditora,IRepositorioSerieColecao repositorioSerieColecao,
-            IRepositorioIdioma repositorioIdioma,IRepositorioAssunto repositorioAssunto,IRepositorioCreditoAutor repositorioCreditoAutor)
+        public ServicoImportacaoArquivoBase(IRepositorioImportacaoArquivo repositorioImportacaoArquivo, IServicoMaterial servicoMaterial,
+            IServicoEditora servicoEditora,IServicoSerieColecao servicoSerieColecao,IServicoIdioma servicoIdioma,
+            IServicoAssunto servicoAssunto,IServicoCreditoAutor servicoCreditoAutor)
         {
             this.repositorioImportacaoArquivo = repositorioImportacaoArquivo ?? throw new ArgumentNullException(nameof(repositorioImportacaoArquivo));
-            this.repositorioMaterial = repositorioMaterial ?? throw new ArgumentNullException(nameof(repositorioMaterial));
-            this.repositorioEditora = repositorioEditora ?? throw new ArgumentNullException(nameof(repositorioEditora));
-            this.repositorioSerieColecao = repositorioSerieColecao ?? throw new ArgumentNullException(nameof(repositorioSerieColecao));
-            this.repositorioIdioma = repositorioIdioma ?? throw new ArgumentNullException(nameof(repositorioIdioma));
-            this.repositorioAssunto = repositorioAssunto ?? throw new ArgumentNullException(nameof(repositorioAssunto));
-            this.repositorioCreditoAutor = repositorioCreditoAutor ?? throw new ArgumentNullException(nameof(repositorioCreditoAutor));
-            this.mapper = mapper ?? throw new ArgumentNullException(nameof(mapper));
+            this.servicoMaterial = servicoMaterial ?? throw new ArgumentNullException(nameof(servicoMaterial));
+            this.servicoEditora = servicoEditora ?? throw new ArgumentNullException(nameof(servicoEditora));
+            this.servicoSerieColecao = servicoSerieColecao ?? throw new ArgumentNullException(nameof(servicoSerieColecao));
+            this.servicoIdioma = servicoIdioma ?? throw new ArgumentNullException(nameof(servicoIdioma));
+            this.servicoAssunto = servicoAssunto ?? throw new ArgumentNullException(nameof(servicoAssunto));
+            this.servicoCreditoAutor = servicoCreditoAutor ?? throw new ArgumentNullException(nameof(servicoCreditoAutor));
             Materiais = new List<IdNomeTipoDTO>();
             Editoras = new List<IdNomeDTO>();
             SeriesColecoes = new List<IdNomeDTO>();
@@ -59,17 +57,20 @@ namespace SME.CDEP.Aplicacao.Servicos
                 throw new NegocioException(MensagemNegocio.SOMENTE_ARQUIVO_XLSX_SUPORTADO);
         }
 
-        public async Task<long> PersistirImportacao(string nomeDoArquivo, TipoAcervo tipoAcervo, string conteudo)
+        public async Task<long> PersistirImportacao(ImportacaoArquivo importacaoArquivo)
         {
-            var importacaoArquivo = new ImportacaoArquivo()
+            return await repositorioImportacaoArquivo.Salvar(importacaoArquivo);
+        }
+
+        protected ImportacaoArquivo ObterImportacaoArquivoParaSalvar(string nomeDoArquivo, TipoAcervo tipoAcervo, string conteudo)
+        {
+            return new ImportacaoArquivo()
             {
                 Nome = nomeDoArquivo,
                 TipoAcervo = tipoAcervo,
                 Status = ImportacaoStatus.Pendente,
                 Conteudo = conteudo
             };
-            
-            return await repositorioImportacaoArquivo.Salvar(importacaoArquivo);
         }
 
         public async Task<long> AtualizarImportacao(long id, string conteudo,ImportacaoStatus? status = null)
@@ -89,7 +90,7 @@ namespace SME.CDEP.Aplicacao.Servicos
             {
                 if (!await ExisteMaterialPorNomeTipo(tipoMaterial, nome))
                 {
-                    var id = await repositorioMaterial.Inserir(new Material() { Nome = nome, Tipo = tipoMaterial });
+                    var id = await servicoMaterial.Inserir(new IdNomeTipoExcluidoDTO() { Nome = nome, Tipo = (int)tipoMaterial });
                     CachearMateriais(tipoMaterial, nome, id);
                 }
             }
@@ -97,7 +98,7 @@ namespace SME.CDEP.Aplicacao.Servicos
         
         private async Task<bool> ExisteMaterialPorNomeTipo(TipoMaterial tipo, string nome)
         {
-            var id = await repositorioMaterial.ObterPorNomeTipo(nome, tipo);
+            var id = await servicoMaterial.ObterPorNomeTipo(nome, tipo);
             
             var existeRegistro = id.EhMaiorQueZero();
             
@@ -118,7 +119,7 @@ namespace SME.CDEP.Aplicacao.Servicos
             {
                 if (!await ExisteEditoraPorNome(nome))
                 {
-                    var id = await repositorioEditora.Inserir(new Editora() { Nome = nome });
+                    var id = await servicoEditora.Inserir(new IdNomeExcluidoAuditavelDTO() { Nome = nome});
                     CachearEditora(nome, id);
                 }
             }
@@ -126,7 +127,7 @@ namespace SME.CDEP.Aplicacao.Servicos
 
         private async Task<bool> ExisteEditoraPorNome(string nome)
         {
-            var id = await repositorioEditora.ObterPorNome(nome);
+            var id = await servicoEditora.ObterPorNome(nome);
             
             var existeRegistro = id.EhMaiorQueZero();
             
@@ -147,7 +148,7 @@ namespace SME.CDEP.Aplicacao.Servicos
             {
                 if (!await ExisteSerieColecaoPorNome(nome))
                 {
-                    var id  = await repositorioSerieColecao.Inserir(new SerieColecao() { Nome = nome });
+                    var id  = await servicoSerieColecao.Inserir(new IdNomeExcluidoAuditavelDTO() { Nome = nome });
                     CachearSerieColecao(nome, id);
                 }
             }
@@ -155,7 +156,7 @@ namespace SME.CDEP.Aplicacao.Servicos
 
         private async Task<bool> ExisteSerieColecaoPorNome(string nome)
         {
-            var id = await repositorioSerieColecao.ObterPorNome(nome);
+            var id = await servicoSerieColecao.ObterPorNome(nome);
 
             var existeRegistro = id.EhMaiorQueZero();
             
@@ -176,7 +177,7 @@ namespace SME.CDEP.Aplicacao.Servicos
             {
                 if (!await ExisteIdiomaPorNome(nome))
                 {
-                    var id  = await repositorioIdioma.Inserir(new Idioma() { Nome = nome });
+                    var id  = await servicoIdioma.Inserir(new IdNomeExcluidoDTO() { Nome = nome });
                     CachearIdioma(nome, id);
                 }
             }
@@ -184,7 +185,7 @@ namespace SME.CDEP.Aplicacao.Servicos
 
         private async Task<bool> ExisteIdiomaPorNome(string nome)
         {
-            var id = await repositorioIdioma.ObterPorNome(nome);
+            var id = await servicoIdioma.ObterPorNome(nome);
 
             var existeRegistro = id.EhMaiorQueZero();
             
@@ -205,7 +206,7 @@ namespace SME.CDEP.Aplicacao.Servicos
             {
                 if (!await ExisteAssuntoPorNome(nome))
                 {
-                    var id  = await repositorioAssunto.Inserir(new Assunto() { Nome = nome });
+                    var id  = await servicoAssunto.Inserir(new IdNomeExcluidoAuditavelDTO() { Nome = nome });
                     CachearAssunto(nome, id);
                 }
             }
@@ -213,7 +214,7 @@ namespace SME.CDEP.Aplicacao.Servicos
 
         private async Task<bool> ExisteAssuntoPorNome(string nome)
         {
-            var id = await repositorioAssunto.ObterPorNome(nome);
+            var id = await servicoAssunto.ObterPorNome(nome);
 
             var existeRegistro = id.EhMaiorQueZero();
             
@@ -234,7 +235,7 @@ namespace SME.CDEP.Aplicacao.Servicos
             {
                 if (!await ExisteCreditoAutorCoAutorPorNome(nome, tipoCreditoAutoria))
                 {
-                    var id  = await repositorioCreditoAutor.Inserir(new CreditoAutor() { Nome = nome, Tipo = tipoCreditoAutoria});
+                    var id  = await servicoCreditoAutor.Inserir(new IdNomeTipoExcluidoAuditavelDTO() { Nome = nome, Tipo = (int)tipoCreditoAutoria});
                     CachearCreditoAutor(nome, id, tipoCreditoAutoria);
                 }
             }
@@ -242,7 +243,7 @@ namespace SME.CDEP.Aplicacao.Servicos
 
         private async Task<bool> ExisteCreditoAutorCoAutorPorNome(string nome, TipoCreditoAutoria tipoCreditoAutoria)
         {
-            var id = await repositorioCreditoAutor.ObterPorNomeTipo(nome, tipoCreditoAutoria);
+            var id = await servicoCreditoAutor.ObterPorNomeTipo(nome, tipoCreditoAutoria);
 
             var existeRegistro = id.EhMaiorQueZero();
             

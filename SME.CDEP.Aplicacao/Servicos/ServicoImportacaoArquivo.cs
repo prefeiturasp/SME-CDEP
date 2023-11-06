@@ -16,29 +16,30 @@ namespace SME.CDEP.Aplicacao.Servicos
     public class ServicoImportacaoArquivo : IServicoImportacaoArquivo
     {
         private readonly IRepositorioImportacaoArquivo repositorioImportacaoArquivo;
-        private readonly IMapper mapper;
-        private readonly IRepositorioMaterial repositorioMaterial;
-        private readonly IRepositorioEditora repositorioEditora;
-        private readonly IRepositorioSerieColecao repositorioSerieColecao;
-        private readonly IRepositorioIdioma repositorioIdioma;
-        private readonly IRepositorioAssunto repositorioAssunto;
-        private readonly IRepositorioCreditoAutor repositorioCreditoAutor;
         private readonly IServicoAcervoBibliografico servicoAcervoBibliografico;
+        private readonly IServicoMaterial servicoMaterial;
+        private readonly IServicoEditora servicoEditora;
+        private readonly IServicoSerieColecao servicoSerieColecao;
+        private readonly IServicoIdioma servicoIdioma;
+        private readonly IServicoAssunto servicoAssunto;
+        private readonly IServicoCreditoAutor servicoCreditoAutor;
+        private readonly IMapper mapper;
 
         public ServicoImportacaoArquivo(IRepositorioImportacaoArquivo repositorioImportacaoArquivo,
             IMapper mapper, IRepositorioMaterial repositorioMaterial, IRepositorioEditora repositorioEditora,
             IRepositorioSerieColecao repositorioSerieColecao, IRepositorioIdioma repositorioIdioma, 
-            IRepositorioAssunto repositorioAssunto, IRepositorioCreditoAutor repositorioCreditoAutor,IServicoAcervoBibliografico servicoAcervoBibliografico)
+            IRepositorioAssunto repositorioAssunto, IRepositorioCreditoAutor repositorioCreditoAutor,
+            IServicoAcervoBibliografico servicoAcervoBibliografico)
         {
+            this.mapper = mapper ?? throw new ArgumentNullException(nameof(repositorioImportacaoArquivo));
             this.repositorioImportacaoArquivo = repositorioImportacaoArquivo ?? throw new ArgumentNullException(nameof(repositorioImportacaoArquivo));
-            this.mapper = mapper ?? throw new ArgumentNullException(nameof(mapper));
             this.repositorioImportacaoArquivo = repositorioImportacaoArquivo ?? throw new ArgumentNullException(nameof(repositorioImportacaoArquivo));
-            this.repositorioMaterial = repositorioMaterial ?? throw new ArgumentNullException(nameof(repositorioMaterial));
-            this.repositorioEditora = repositorioEditora ?? throw new ArgumentNullException(nameof(repositorioEditora));
-            this.repositorioSerieColecao = repositorioSerieColecao ?? throw new ArgumentNullException(nameof(repositorioSerieColecao));
-            this.repositorioIdioma = repositorioIdioma ?? throw new ArgumentNullException(nameof(repositorioIdioma));
-            this.repositorioAssunto = repositorioAssunto ?? throw new ArgumentNullException(nameof(repositorioAssunto));
-            this.repositorioCreditoAutor = repositorioCreditoAutor ?? throw new ArgumentNullException(nameof(repositorioCreditoAutor));
+            this.servicoMaterial = servicoMaterial ?? throw new ArgumentNullException(nameof(servicoMaterial));
+            this.servicoEditora = servicoEditora ?? throw new ArgumentNullException(nameof(servicoEditora));
+            this.servicoSerieColecao = servicoSerieColecao ?? throw new ArgumentNullException(nameof(servicoSerieColecao));
+            this.servicoIdioma = servicoIdioma ?? throw new ArgumentNullException(nameof(servicoIdioma));
+            this.servicoAssunto = servicoAssunto ?? throw new ArgumentNullException(nameof(servicoAssunto));
+            this.servicoCreditoAutor = servicoCreditoAutor ?? throw new ArgumentNullException(nameof(servicoCreditoAutor));
             this.servicoAcervoBibliografico = servicoAcervoBibliografico ?? throw new ArgumentNullException(nameof(servicoAcervoBibliografico));
         }
 
@@ -63,7 +64,7 @@ namespace SME.CDEP.Aplicacao.Servicos
             return await repositorioImportacaoArquivo.ObterUltimaImportacao();
         }
 
-        public async Task<bool> UploadPorTipoAcervo(IFormFile file, TipoAcervo tipoAcervo)
+        public async Task<ImportacaoArquivoDTO> ImportarArquivoPorTipoAcervo(IFormFile file, TipoAcervo tipoAcervo)
         {
             if (file == null || file.Length == 0)
                 throw new NegocioException(MensagemNegocio.ARQUIVO_VAZIO);
@@ -74,8 +75,7 @@ namespace SME.CDEP.Aplicacao.Servicos
             switch (tipoAcervo)
             {
                 case TipoAcervo.Bibliografico:
-                    return await new ServicoImportacaoArquivoAcervoBibliografico(repositorioImportacaoArquivo,mapper, repositorioMaterial, repositorioEditora,
-                        repositorioSerieColecao, repositorioIdioma, repositorioAssunto, repositorioCreditoAutor,servicoAcervoBibliografico).Processar(file,tipoAcervo);
+                    return await ObterServicoImportacaoArquivoAcervoBibliografico().ImportarArquivo(file,tipoAcervo);
                 
                 case TipoAcervo.DocumentacaoHistorica:
                     break;
@@ -90,7 +90,13 @@ namespace SME.CDEP.Aplicacao.Servicos
                 default:
                     throw new ArgumentOutOfRangeException(nameof(tipoAcervo), tipoAcervo, null);
             }
-            return true;
+            return default;
+        }
+
+        private ServicoImportacaoArquivoAcervoBibliografico ObterServicoImportacaoArquivoAcervoBibliografico()
+        {
+            return new ServicoImportacaoArquivoAcervoBibliografico(repositorioImportacaoArquivo, mapper, servicoMaterial,
+                servicoEditora, servicoSerieColecao, servicoIdioma, servicoAssunto, servicoCreditoAutor, servicoAcervoBibliografico);
         }
     }
 }

@@ -11,6 +11,6 @@ namespace SME.CDEP.Aplicacao.Servicos.Interface
         Task<ImportacaoArquivoDTO> Alterar(ImportacaoArquivo importacaoArquivo);
         Task<bool> Excluir(long importacaoArquivoId);
         Task<ImportacaoArquivoCompleto> ObterUltimaImportacao();
-        Task<bool> UploadPorTipoAcervo(IFormFile file, TipoAcervo tipoAcervo);
+        Task<ImportacaoArquivoDTO> ImportarArquivoPorTipoAcervo(IFormFile file, TipoAcervo tipoAcervo);
     }
 }

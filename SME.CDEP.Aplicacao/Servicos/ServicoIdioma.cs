@@ -10,7 +10,16 @@ namespace SME.CDEP.Aplicacao.Servicos
 {
     public class ServicoIdioma : ServicoAplicacao<Idioma, IdNomeExcluidoDTO>,IServicoIdioma
     {
+        private readonly IRepositorioIdioma repositorio;
+
         public ServicoIdioma(IRepositorioIdioma repositorio, IMapper mapper) : base(repositorio, mapper)
-        {}
+        {
+            this.repositorio = repositorio ?? throw new ArgumentNullException(nameof(repositorio));
+        }
+
+        public Task<long> ObterPorNome(string nome)
+        {
+            return repositorio.ObterPorNome(nome);
+        }
     }
 }

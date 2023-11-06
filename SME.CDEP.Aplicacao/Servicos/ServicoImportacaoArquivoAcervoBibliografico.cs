@@ -6,6 +6,7 @@ using SME.CDEP.Aplicacao.DTOS;
 using SME.CDEP.Aplicacao.Servicos.Interface;
 using SME.CDEP.Dominio.Constantes;
 using SME.CDEP.Dominio.Extensions;
+using SME.CDEP.Infra.Dados.Repositorios;
 using SME.CDEP.Infra.Dados.Repositorios.Interfaces;
 using SME.CDEP.Infra.Dominio.Enumerados;
 
@@ -14,16 +15,16 @@ namespace SME.CDEP.Aplicacao.Servicos
     public class ServicoImportacaoArquivoAcervoBibliografico : ServicoImportacaoArquivoBase, IServicoImportacaoArquivoAcervoBibliografico
     {
         private readonly IServicoAcervoBibliografico servicoAcervoBibliografico;
+        private readonly IMapper mapper;
         
-        public ServicoImportacaoArquivoAcervoBibliografico(IRepositorioImportacaoArquivo repositorioImportacaoArquivo,
-            IMapper mapper, IRepositorioMaterial repositorioMaterial, IRepositorioEditora repositorioEditora,
-            IRepositorioSerieColecao repositorioSerieColecao, IRepositorioIdioma repositorioIdioma, 
-            IRepositorioAssunto repositorioAssunto, IRepositorioCreditoAutor repositorioCreditoAutor,
+        public ServicoImportacaoArquivoAcervoBibliografico(IRepositorioImportacaoArquivo repositorioImportacaoArquivo, IMapper mapper, IServicoMaterial servicoMaterial,
+            IServicoEditora servicoEditora,IServicoSerieColecao servicoSerieColecao,IServicoIdioma servicoIdioma,
+            IServicoAssunto servicoAssunto,IServicoCreditoAutor servicoCreditoAutor,
             IServicoAcervoBibliografico servicoAcervoBibliografico)
-            : base(repositorioImportacaoArquivo, mapper, repositorioMaterial, repositorioEditora,
-                repositorioSerieColecao, repositorioIdioma, repositorioAssunto, repositorioCreditoAutor)
+            : base(repositorioImportacaoArquivo, servicoMaterial, servicoEditora,servicoSerieColecao, servicoIdioma, servicoAssunto, servicoCreditoAutor)
         {
             this.servicoAcervoBibliografico = servicoAcervoBibliografico ?? throw new ArgumentNullException(nameof(servicoAcervoBibliografico));
+            this.mapper = mapper ?? throw new ArgumentNullException(nameof(mapper));
         }
 
         public void DefinirCreditosAutores(List<IdNomeTipoDTO> creditosAutores)
@@ -31,13 +32,47 @@ namespace SME.CDEP.Aplicacao.Servicos
             CreditosAutores = creditosAutores;
         }
         
-        public async Task<bool> Processar(IFormFile file, TipoAcervo tipoAcervo)
+        public async Task<ImportacaoArquivoDTO> ImportarArquivo(IFormFile file, TipoAcervo tipoAcervo)
         {
             ValidarArquivo(file);
         
             var acervosBibliograficosLinhas = await LerPlanilha(file, tipoAcervo);
+
+            var importacaoArquivo = ObterImportacaoArquivoParaSalvar(file.FileName, tipoAcervo, JsonConvert.SerializeObject(acervosBibliograficosLinhas));
             
-            var importacaoArquivoId = await PersistirImportacao(file.FileName, tipoAcervo, JsonConvert.SerializeObject(acervosBibliograficosLinhas));
+            importacaoArquivo.Id = await PersistirImportacao(importacaoArquivo);
+
+            var retorno = await repositorioImportacaoArquivo.ObterPorId(importacaoArquivo.Id);
+            
+            return mapper.Map<ImportacaoArquivoDTO>(retorno);
+        }
+        
+        public async Task<ImportacaoArquivoDTO> IniciarImportacao(long importacaoArquivoId)
+        {
+            var importacaoArquivo = await repositorioImportacaoArquivo.ObterPorId(importacaoArquivoId);
+
+            var acervosBibliograficosLinhas = JsonConvert.DeserializeObject<IEnumerable<AcervoBibliograficoLinhaDTO>>(importacaoArquivo.Conteudo);
+
+            ValidarPreenchimentoValorFormatoQtdeCaracteres(acervosBibliograficosLinhas);
+            
+            await AtualizarImportacao(importacaoArquivoId, JsonConvert.SerializeObject(acervosBibliograficosLinhas),ImportacaoStatus.ValidadoPreenchimentoValorFormatoQtdeCaracteres);
+            
+            await ValidacaoObterOuInserirDominios(acervosBibliograficosLinhas);
+            await AtualizarImportacao(importacaoArquivoId, JsonConvert.SerializeObject(acervosBibliograficosLinhas),ImportacaoStatus.ValidacaoDominios);
+            
+            await PersistenciaAcervoBibliografico(acervosBibliograficosLinhas, importacaoArquivoId);
+
+            var retorno = await repositorioImportacaoArquivo.ObterPorId(importacaoArquivoId);
+            
+            return mapper.Map<ImportacaoArquivoDTO>(retorno);
+        }
+        
+        public async Task<ImportacaoArquivoDTO> Salvar(IEnumerable<AcervoBibliograficoTelaDTO> acervosBibliograficosTela, long importacaoArquivoId)
+        {
+            var importacaoArquivo = await repositorioImportacaoArquivo.ObterPorId(importacaoArquivoId);
+            var acervosBibliograficosLinhas = JsonConvert.DeserializeObject<IEnumerable<AcervoBibliograficoLinhaDTO>>(importacaoArquivo.Conteudo);
+
+            AcervoBibliograficoTelaParaLinha(acervosBibliograficosTela, acervosBibliograficosLinhas);
 
             ValidarPreenchimentoValorFormatoQtdeCaracteres(acervosBibliograficosLinhas);
             await AtualizarImportacao(importacaoArquivoId, JsonConvert.SerializeObject(acervosBibliograficosLinhas),ImportacaoStatus.ValidadoPreenchimentoValorFormatoQtdeCaracteres);
@@ -45,11 +80,64 @@ namespace SME.CDEP.Aplicacao.Servicos
             await ValidacaoObterOuInserirDominios(acervosBibliograficosLinhas);
             await AtualizarImportacao(importacaoArquivoId, JsonConvert.SerializeObject(acervosBibliograficosLinhas),ImportacaoStatus.ValidacaoDominios);
 
-            await PersistenciaAcervobibliografico(acervosBibliograficosLinhas, importacaoArquivoId);
-            return true;
+            await PersistenciaAcervoBibliografico(acervosBibliograficosLinhas, importacaoArquivoId);
+            
+            var retorno = await repositorioImportacaoArquivo.ObterPorId(importacaoArquivoId);
+            
+            return mapper.Map<ImportacaoArquivoDTO>(retorno);
         }
 
-        public async Task PersistenciaAcervobibliografico(IEnumerable<AcervoBibliograficoLinhaDTO> acervosBibliograficosLinhas, long importacaoArquivoId)
+        private static void AcervoBibliograficoTelaParaLinha(IEnumerable<AcervoBibliograficoTelaDTO> acervosBibliograficosTela,
+            IEnumerable<AcervoBibliograficoLinhaDTO>? acervosBibliograficosLinhasExistente)
+        {
+            foreach (var acervoBibliograficoTela in acervosBibliograficosTela)
+            {
+                acervosBibliograficosLinhasExistente.FirstOrDefault(f => f.NumeroLinha == acervoBibliograficoTela.NumeroLinha)
+                    .Titulo.Conteudo = acervoBibliograficoTela.Titulo;
+                acervosBibliograficosLinhasExistente.FirstOrDefault(f => f.NumeroLinha == acervoBibliograficoTela.NumeroLinha)
+                    .SubTitulo.Conteudo = acervoBibliograficoTela.SubTitulo;
+                acervosBibliograficosLinhasExistente.FirstOrDefault(f => f.NumeroLinha == acervoBibliograficoTela.NumeroLinha)
+                    .Material.Conteudo = acervoBibliograficoTela.Material;
+                acervosBibliograficosLinhasExistente.FirstOrDefault(f => f.NumeroLinha == acervoBibliograficoTela.NumeroLinha)
+                    .Autor.Conteudo = acervoBibliograficoTela.Autor;
+                acervosBibliograficosLinhasExistente.FirstOrDefault(f => f.NumeroLinha == acervoBibliograficoTela.NumeroLinha)
+                    .CoAutor.Conteudo = acervoBibliograficoTela.CoAutor;
+                acervosBibliograficosLinhasExistente.FirstOrDefault(f => f.NumeroLinha == acervoBibliograficoTela.NumeroLinha)
+                    .TipoAutoria.Conteudo = acervoBibliograficoTela.TipoAutoria;
+                acervosBibliograficosLinhasExistente.FirstOrDefault(f => f.NumeroLinha == acervoBibliograficoTela.NumeroLinha)
+                    .Editora.Conteudo = acervoBibliograficoTela.Editora;
+                acervosBibliograficosLinhasExistente.FirstOrDefault(f => f.NumeroLinha == acervoBibliograficoTela.NumeroLinha)
+                    .Assunto.Conteudo = acervoBibliograficoTela.Assunto;
+                acervosBibliograficosLinhasExistente.FirstOrDefault(f => f.NumeroLinha == acervoBibliograficoTela.NumeroLinha)
+                    .Ano.Conteudo = acervoBibliograficoTela.Ano;
+                acervosBibliograficosLinhasExistente.FirstOrDefault(f => f.NumeroLinha == acervoBibliograficoTela.NumeroLinha)
+                    .Edicao.Conteudo = acervoBibliograficoTela.Edicao;
+                acervosBibliograficosLinhasExistente.FirstOrDefault(f => f.NumeroLinha == acervoBibliograficoTela.NumeroLinha)
+                    .NumeroPaginas.Conteudo = acervoBibliograficoTela.NumeroPaginas;
+                acervosBibliograficosLinhasExistente.FirstOrDefault(f => f.NumeroLinha == acervoBibliograficoTela.NumeroLinha)
+                    .Largura.Conteudo = acervoBibliograficoTela.Largura;
+                acervosBibliograficosLinhasExistente.FirstOrDefault(f => f.NumeroLinha == acervoBibliograficoTela.NumeroLinha)
+                    .Altura.Conteudo = acervoBibliograficoTela.Altura;
+                acervosBibliograficosLinhasExistente.FirstOrDefault(f => f.NumeroLinha == acervoBibliograficoTela.NumeroLinha)
+                    .SerieColecao.Conteudo = acervoBibliograficoTela.SerieColecao;
+                acervosBibliograficosLinhasExistente.FirstOrDefault(f => f.NumeroLinha == acervoBibliograficoTela.NumeroLinha)
+                    .Volume.Conteudo = acervoBibliograficoTela.Volume;
+                acervosBibliograficosLinhasExistente.FirstOrDefault(f => f.NumeroLinha == acervoBibliograficoTela.NumeroLinha)
+                    .Idioma.Conteudo = acervoBibliograficoTela.Idioma;
+                acervosBibliograficosLinhasExistente.FirstOrDefault(f => f.NumeroLinha == acervoBibliograficoTela.NumeroLinha)
+                    .LocalizacaoCDD.Conteudo = acervoBibliograficoTela.LocalizacaoCDD;
+                acervosBibliograficosLinhasExistente.FirstOrDefault(f => f.NumeroLinha == acervoBibliograficoTela.NumeroLinha)
+                    .LocalizacaoPHA.Conteudo = acervoBibliograficoTela.LocalizacaoPHA;
+                acervosBibliograficosLinhasExistente.FirstOrDefault(f => f.NumeroLinha == acervoBibliograficoTela.NumeroLinha)
+                    .NotasGerais.Conteudo = acervoBibliograficoTela.NotasGerais;
+                acervosBibliograficosLinhasExistente.FirstOrDefault(f => f.NumeroLinha == acervoBibliograficoTela.NumeroLinha)
+                    .Isbn.Conteudo = acervoBibliograficoTela.Isbn;
+                acervosBibliograficosLinhasExistente.FirstOrDefault(f => f.NumeroLinha == acervoBibliograficoTela.NumeroLinha)
+                    .Tombo.Conteudo = acervoBibliograficoTela.Tombo;
+            }
+        }
+
+        public async Task PersistenciaAcervoBibliografico(IEnumerable<AcervoBibliograficoLinhaDTO> acervosBibliograficosLinhas, long importacaoArquivoId)
         {
             foreach (var acervoBibliograficoLinha in acervosBibliograficosLinhas)
             {
@@ -210,6 +298,7 @@ namespace SME.CDEP.Aplicacao.Servicos
                 {
                     linhas.Add(new AcervoBibliograficoLinhaDTO()
                     {
+                        NumeroLinha = numeroLinha,
                         Titulo = new LinhaConteudoAjustarDTO()
                         {
                             Conteudo = planilha.ObterValorDaCelula(numeroLinha, Constantes.ACERVO_BIBLIOGRAFICO_CAMPO_TITULO),
@@ -321,7 +410,7 @@ namespace SME.CDEP.Aplicacao.Servicos
                         Tombo = new LinhaConteudoAjustarDTO()
                         {
                             Conteudo = planilha.ObterValorDaCelula(numeroLinha, Constantes.ACERVO_BIBLIOGRAFICO_CAMPO_TOMBO),
-                            LimiteCaracteres = Constantes.CARACTERES_PERMITIDOS_50,
+                            LimiteCaracteres = Constantes.CARACTERES_PERMITIDOS_15,
                             EhCampoObrigatorio = true
                         }
                     });

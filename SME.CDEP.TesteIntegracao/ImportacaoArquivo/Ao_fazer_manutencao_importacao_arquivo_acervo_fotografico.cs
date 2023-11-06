@@ -1,7 +1,10 @@
 ﻿using Bogus.Extensions.Brazil;
+using Newtonsoft.Json;
 using Shouldly;
 using SME.CDEP.Aplicacao.DTOS;
+using SME.CDEP.Dominio.Entidades;
 using SME.CDEP.Dominio.Extensions;
+using SME.CDEP.Infra.Dominio.Enumerados;
 using SME.CDEP.TesteIntegracao.Constantes;
 using SME.CDEP.TesteIntegracao.Setup;
 using Xunit;
@@ -13,7 +16,7 @@ namespace SME.CDEP.TesteIntegracao
         public Ao_fazer_manutencao_importacao_arquivo_acervo_fotografico(CollectionFixture collectionFixture) : base(collectionFixture)
         {}
 
-        [Fact(DisplayName = "Importação Arquivo Acervo Bibliográfico - Validar ObterCoAutoresTipoAutoria com tipo autoria nos 3 primeiros coautores")]
+        [Fact(DisplayName = "Importação Arquivo Acervo Bibliográfico - ObterCoAutoresTipoAutoria com tipo autoria nos 3 primeiros coautores")]
         public async Task Validar_obter_coautores_tipo_autoria_com_tipo_autoria_nos_tres_primeiros_coautores()
         {
             var servicoImportacaoArquivo = GetServicoImportacaoArquivoAcervoBibliografico();
@@ -53,7 +56,7 @@ namespace SME.CDEP.TesteIntegracao
             }
         }
         
-        [Fact(DisplayName = "Importação Arquivo Acervo Bibliográfico - Validar ObterCoAutoresTipoAutoria com tipo autoria somente no primeiro coautor")]
+        [Fact(DisplayName = "Importação Arquivo Acervo Bibliográfico - ObterCoAutoresTipoAutoria com tipo autoria somente no primeiro coautor")]
         public async Task Validar_obter_coautores_tipo_autoria_com_tipo_autoria_no_primeiro_coautor()
         {
             var servicoImportacaoArquivo = GetServicoImportacaoArquivoAcervoBibliografico();
@@ -93,7 +96,7 @@ namespace SME.CDEP.TesteIntegracao
             }
         }
         
-        [Fact(DisplayName = "Importação Arquivo Acervo Bibliográfico - Validar ObterCoAutoresTipoAutoria sem tipo autoria")]
+        [Fact(DisplayName = "Importação Arquivo Acervo Bibliográfico - ObterCoAutoresTipoAutoria sem tipo autoria")]
         public async Task Validar_obter_coautores_tipo_autoria_sem_tipo_autoria()
         {
             var servicoImportacaoArquivo = GetServicoImportacaoArquivoAcervoBibliografico();
@@ -127,7 +130,7 @@ namespace SME.CDEP.TesteIntegracao
             }
         }
         
-        [Fact(DisplayName = "Importação Arquivo Acervo Bibliográfico - Validar ObterCoAutoresTipoAutoria com tipo autoria e coautores iguais")]
+        [Fact(DisplayName = "Importação Arquivo Acervo Bibliográfico - ObterCoAutoresTipoAutoria com tipo autoria e coautores iguais")]
         public async Task Validar_obter_coautores_tipo_autoria_com_tipo_autoria_iguais_ao_numero_decoautores()
         {
             var servicoImportacaoArquivo = GetServicoImportacaoArquivoAcervoBibliografico();
@@ -282,8 +285,8 @@ namespace SME.CDEP.TesteIntegracao
                 },
                 Tombo = new LinhaConteudoAjustarDTO()
                 {
-                    Conteudo = faker.Lorem.Sentence().Limite(50),
-                    LimiteCaracteres = ConstantesTestes.CARACTERES_PERMITIDOS_50,
+                    Conteudo = faker.Lorem.Sentence().Limite(15),
+                    LimiteCaracteres = ConstantesTestes.CARACTERES_PERMITIDOS_15,
                     EhCampoObrigatorio = true
                 }
             };
@@ -433,8 +436,8 @@ namespace SME.CDEP.TesteIntegracao
                 },
                 Tombo = new LinhaConteudoAjustarDTO()
                 {
-                    Conteudo = faker.Lorem.Sentence().Limite(50),
-                    LimiteCaracteres = ConstantesTestes.CARACTERES_PERMITIDOS_50,
+                    Conteudo = faker.Lorem.Sentence().Limite(15),
+                    LimiteCaracteres = ConstantesTestes.CARACTERES_PERMITIDOS_15,
                     EhCampoObrigatorio = true
                 }
             };
@@ -583,8 +586,8 @@ namespace SME.CDEP.TesteIntegracao
                 },
                 Tombo = new LinhaConteudoAjustarDTO()
                 {
-                    Conteudo = faker.Lorem.Sentence().Limite(50),
-                    LimiteCaracteres = ConstantesTestes.CARACTERES_PERMITIDOS_50,
+                    Conteudo = faker.Lorem.Sentence().Limite(15),
+                    LimiteCaracteres = ConstantesTestes.CARACTERES_PERMITIDOS_15,
                     EhCampoObrigatorio = true
                 }
             };
@@ -738,8 +741,8 @@ namespace SME.CDEP.TesteIntegracao
                 },
                 Tombo = new LinhaConteudoAjustarDTO()
                 {
-                    Conteudo = faker.Lorem.Sentence().Limite(50),
-                    LimiteCaracteres = ConstantesTestes.CARACTERES_PERMITIDOS_50,
+                    Conteudo = faker.Lorem.Sentence().Limite(15),
+                    LimiteCaracteres = ConstantesTestes.CARACTERES_PERMITIDOS_15,
                     EhCampoObrigatorio = true
                 }
             };
@@ -778,6 +781,7 @@ namespace SME.CDEP.TesteIntegracao
 
             var acervoBibliograficoLinha = new AcervoBibliograficoLinhaDTO()
             {
+                NumeroLinha = 1,
                 Titulo = new LinhaConteudoAjustarDTO()
                 {
                     Conteudo = faker.Lorem.Text().Limite(500),
@@ -888,8 +892,8 @@ namespace SME.CDEP.TesteIntegracao
                 },
                 Tombo = new LinhaConteudoAjustarDTO()
                 {
-                    Conteudo = faker.Lorem.Sentence().Limite(50),
-                    LimiteCaracteres = ConstantesTestes.CARACTERES_PERMITIDOS_50,
+                    Conteudo = faker.Lorem.Sentence().Limite(15),
+                    LimiteCaracteres = ConstantesTestes.CARACTERES_PERMITIDOS_15,
                     EhCampoObrigatorio = true
                 }
             };
@@ -917,6 +921,536 @@ namespace SME.CDEP.TesteIntegracao
             acervoBibliograficoLinha.NotasGerais.Validado.ShouldBeTrue();
             acervoBibliograficoLinha.Isbn.Validado.ShouldBeTrue();
             acervoBibliograficoLinha.Tombo.Validado.ShouldBeTrue();
+        }
+        
+        [Fact(DisplayName = "Importação Arquivo Acervo Bibliográfico - ValidacaoObterOuInserirDominios")]
+        public async Task Validacao_obter_ou_inserir_dominios()
+        {
+            var servicoImportacaoArquivo = GetServicoImportacaoArquivoAcervoBibliografico();
+
+            var random = new Random();
+
+            var acervoBibliograficoLinha = new AcervoBibliograficoLinhaDTO()
+            {
+                Titulo = new LinhaConteudoAjustarDTO()
+                {
+                    Conteudo = faker.Lorem.Text().Limite(500),
+                    LimiteCaracteres = ConstantesTestes.CARACTERES_PERMITIDOS_500,
+                    EhCampoObrigatorio = true
+                },
+                SubTitulo = new LinhaConteudoAjustarDTO()
+                {
+                    Conteudo = faker.Lorem.Sentence().Limite(500),
+                    LimiteCaracteres = ConstantesTestes.CARACTERES_PERMITIDOS_500,
+                },
+                Material = new LinhaConteudoAjustarDTO()
+                {
+                    Conteudo = faker.Lorem.Sentence().Limite(500),
+                    LimiteCaracteres = ConstantesTestes.CARACTERES_PERMITIDOS_500,
+                    EhCampoObrigatorio = true
+                },
+                Autor = new LinhaConteudoAjustarDTO()
+                {
+                    Conteudo = $"{faker.Person.FirstName.Limite(200)}|{faker.Person.LastName.Limite(200)}|{faker.Person.FullName.Limite(200)}",
+                    LimiteCaracteres = ConstantesTestes.CARACTERES_PERMITIDOS_200,
+                    EhCampoObrigatorio = true
+                },
+                CoAutor = new LinhaConteudoAjustarDTO()
+                {
+                    Conteudo = $"{faker.Address.SecondaryAddress().Limite(200)}|{faker.Address.FullAddress().Limite(200)}|{faker.Address.StreetAddress().Limite(200)}|{faker.Address.Country().Limite(200)}|{faker.Address.City().Limite(200)}|{faker.Address.State().Limite(200)}",
+                    LimiteCaracteres = ConstantesTestes.CARACTERES_PERMITIDOS_200
+                },
+                TipoAutoria = new LinhaConteudoAjustarDTO()
+                {
+                    Conteudo = $"{faker.Company.CompanyName().Limite(15)}|{faker.Lorem.Sentence().Limite(15)}|{faker.Company.Cnpj().Limite(15)}|{faker.Company.Bs().Limite(15)}",
+                    LimiteCaracteres = ConstantesTestes.CARACTERES_PERMITIDOS_15
+                },
+                Editora = new LinhaConteudoAjustarDTO()
+                {
+                    Conteudo = faker.Commerce.Department().Limite(200),
+                    LimiteCaracteres = ConstantesTestes.CARACTERES_PERMITIDOS_200
+                },
+                Assunto = new LinhaConteudoAjustarDTO()
+                {
+                    Conteudo = $"{faker.Address.StreetAddress().Limite(200)}|{faker.Address.City().Limite(200)}",
+                    LimiteCaracteres = ConstantesTestes.CARACTERES_PERMITIDOS_200,
+                    EhCampoObrigatorio = true
+                },
+                Ano = new LinhaConteudoAjustarDTO()
+                {
+                    Conteudo = faker.Date.Recent().Year.ToString(),
+                    LimiteCaracteres = ConstantesTestes.CARACTERES_PERMITIDOS_15,
+                    EhCampoObrigatorio = true
+                },
+                Edicao = new LinhaConteudoAjustarDTO()
+                {
+                    Conteudo = faker.Lorem.Text().Limite(15),
+                    LimiteCaracteres = ConstantesTestes.CARACTERES_PERMITIDOS_15,
+                },
+                NumeroPaginas = new LinhaConteudoAjustarDTO()
+                {
+                    Conteudo = random.Next(15,55).ToString(),
+                    FormatoTipoDeCampo = ConstantesTestes.FORMATO_DOUBLE
+                },
+                Altura = new LinhaConteudoAjustarDTO()
+                {
+                    Conteudo = random.Next(15,55).ToString(),
+                    FormatoTipoDeCampo = ConstantesTestes.FORMATO_DOUBLE
+                },
+                Largura = new LinhaConteudoAjustarDTO()
+                {
+                    Conteudo = random.Next(15,55).ToString(),
+                    FormatoTipoDeCampo = ConstantesTestes.FORMATO_DOUBLE
+                },
+                SerieColecao = new LinhaConteudoAjustarDTO()
+                {
+                    Conteudo = faker.Lorem.Sentence().Limite(200),
+                    LimiteCaracteres = ConstantesTestes.CARACTERES_PERMITIDOS_200,
+                },
+                Volume = new LinhaConteudoAjustarDTO()
+                {
+                    Conteudo = faker.Lorem.Text().Limite(15),
+                    LimiteCaracteres = ConstantesTestes.CARACTERES_PERMITIDOS_15,
+                },
+                Idioma = new LinhaConteudoAjustarDTO()
+                {
+                    Conteudo = faker.Lorem.Sentence().Limite(500),
+                    LimiteCaracteres = ConstantesTestes.CARACTERES_PERMITIDOS_500,
+                    EhCampoObrigatorio = true
+                },
+                LocalizacaoCDD = new LinhaConteudoAjustarDTO()
+                {
+                    Conteudo = faker.Lorem.Sentence().Limite(50),
+                    LimiteCaracteres = ConstantesTestes.CARACTERES_PERMITIDOS_50,
+                    EhCampoObrigatorio = true
+                },
+                LocalizacaoPHA = new LinhaConteudoAjustarDTO()
+                {
+                    Conteudo = faker.Lorem.Sentence().Limite(50),
+                    LimiteCaracteres = ConstantesTestes.CARACTERES_PERMITIDOS_50,
+                    EhCampoObrigatorio = true
+                },
+                NotasGerais = new LinhaConteudoAjustarDTO()
+                {
+                    Conteudo = faker.Lorem.Sentence().Limite(500),
+                    LimiteCaracteres = ConstantesTestes.CARACTERES_PERMITIDOS_500,
+                },
+                Isbn = new LinhaConteudoAjustarDTO()
+                {
+                    Conteudo = faker.Lorem.Sentence().Limite(50),
+                    LimiteCaracteres = ConstantesTestes.CARACTERES_PERMITIDOS_50,
+                },
+                Tombo = new LinhaConteudoAjustarDTO()
+                {
+                    Conteudo = faker.Lorem.Sentence().Limite(15),
+                    LimiteCaracteres = ConstantesTestes.CARACTERES_PERMITIDOS_15,
+                    EhCampoObrigatorio = true
+                }
+            };
+           
+            await servicoImportacaoArquivo.ValidacaoObterOuInserirDominios(new List<AcervoBibliograficoLinhaDTO>() { acervoBibliograficoLinha });
+
+            var materialInserido = acervoBibliograficoLinha.Material.Conteudo;
+            var materiais = ObterTodos<Material>();
+            materiais.Any(a=> a.Nome.Equals(materialInserido)).ShouldBeTrue();
+
+            var editoraInserida = acervoBibliograficoLinha.Editora.Conteudo;
+            var editoras = ObterTodos<Editora>();
+            editoras.Any(a=> a.Nome.Equals(editoraInserida)).ShouldBeTrue();
+            
+            var serieColecaoInserida = acervoBibliograficoLinha.SerieColecao.Conteudo;
+            var serieColecaos = ObterTodos<SerieColecao>();
+            serieColecaos.Any(a=> a.Nome.Equals(serieColecaoInserida)).ShouldBeTrue();
+            
+            var idiomaInserido = acervoBibliograficoLinha.Idioma.Conteudo;
+            var idiomas = ObterTodos<Idioma>();
+            idiomas.Any(a=> a.Nome.Equals(idiomaInserido)).ShouldBeTrue();
+            
+            var assuntosInseridos = acervoBibliograficoLinha.Assunto.Conteudo.FormatarTextoEmArray().ToArray().UnificarPipe().SplitPipe().Distinct();
+            var assuntos = ObterTodos<Assunto>();
+            foreach (var assunto in assuntosInseridos)
+                assuntos.Any(a=> a.Nome.Equals(assunto)).ShouldBeTrue();
+            
+            var creditoAutorInseridos = acervoBibliograficoLinha.Autor.Conteudo.FormatarTextoEmArray().ToArray().UnificarPipe().SplitPipe().Distinct();
+            var creditosAutores = ObterTodos<CreditoAutor>();
+            foreach (var creditoAutor in creditoAutorInseridos)
+                creditosAutores.Any(a=> a.Nome.Equals(creditoAutor)).ShouldBeTrue();
+            
+            creditoAutorInseridos = acervoBibliograficoLinha.CoAutor.Conteudo.FormatarTextoEmArray().ToArray().UnificarPipe().SplitPipe().Distinct();
+            foreach (var creditoAutor in creditoAutorInseridos)
+                creditosAutores.Any(a=> a.Nome.Equals(creditoAutor)).ShouldBeTrue();
+            
+            var tipoAutorias = acervoBibliograficoLinha.TipoAutoria.Conteudo.FormatarTextoEmArray().ToArray().UnificarPipe().SplitPipe().Distinct();
+            creditosAutores = ObterTodos<CreditoAutor>();
+            foreach (var tipoAutoria in tipoAutorias)
+                creditosAutores.Any(a => a.Tipo.Equals(tipoAutoria));
+        }
+        
+        [Fact(DisplayName = "Importação Arquivo Acervo Bibliográfico - PersistenciaAcervobibliografico")]
+        public async Task Persistencia_acervo_bibliografico()
+        {
+            var servicoImportacaoArquivo = GetServicoImportacaoArquivoAcervoBibliografico();
+
+            var random = new Random();
+
+            var acervoBibliograficoLinha = new AcervoBibliograficoLinhaDTO()
+            {
+                Titulo = new LinhaConteudoAjustarDTO()
+                {
+                    Conteudo = faker.Lorem.Text().Limite(500),
+                    LimiteCaracteres = ConstantesTestes.CARACTERES_PERMITIDOS_500,
+                    EhCampoObrigatorio = true
+                },
+                SubTitulo = new LinhaConteudoAjustarDTO()
+                {
+                    Conteudo = faker.Lorem.Sentence().Limite(500),
+                    LimiteCaracteres = ConstantesTestes.CARACTERES_PERMITIDOS_500,
+                },
+                Material = new LinhaConteudoAjustarDTO()
+                {
+                    Conteudo = faker.Lorem.Sentence().Limite(500),
+                    LimiteCaracteres = ConstantesTestes.CARACTERES_PERMITIDOS_500,
+                    EhCampoObrigatorio = true
+                },
+                Autor = new LinhaConteudoAjustarDTO()
+                {
+                    Conteudo = $"{faker.Person.FirstName.Limite(200)}|{faker.Person.LastName.Limite(200)}|{faker.Person.FullName.Limite(200)}",
+                    LimiteCaracteres = ConstantesTestes.CARACTERES_PERMITIDOS_200,
+                    EhCampoObrigatorio = true
+                },
+                CoAutor = new LinhaConteudoAjustarDTO()
+                {
+                    Conteudo = $"{faker.Address.SecondaryAddress().Limite(200)}|{faker.Address.FullAddress().Limite(200)}|{faker.Address.StreetAddress().Limite(200)}|{faker.Address.Country().Limite(200)}|{faker.Address.City().Limite(200)}|{faker.Address.State().Limite(200)}",
+                    LimiteCaracteres = ConstantesTestes.CARACTERES_PERMITIDOS_200
+                },
+                TipoAutoria = new LinhaConteudoAjustarDTO()
+                {
+                    Conteudo = $"{faker.Company.CompanyName().Limite(15)}|{faker.Lorem.Sentence().Limite(15)}|{faker.Company.Cnpj().Limite(15)}|{faker.Company.Bs().Limite(15)}",
+                    LimiteCaracteres = ConstantesTestes.CARACTERES_PERMITIDOS_15
+                },
+                Editora = new LinhaConteudoAjustarDTO()
+                {
+                    Conteudo = faker.Commerce.Department().Limite(200),
+                    LimiteCaracteres = ConstantesTestes.CARACTERES_PERMITIDOS_200
+                },
+                Assunto = new LinhaConteudoAjustarDTO()
+                {
+                    Conteudo = $"{faker.Address.StreetAddress().Limite(200)}|{faker.Address.City().Limite(200)}",
+                    LimiteCaracteres = ConstantesTestes.CARACTERES_PERMITIDOS_200,
+                    EhCampoObrigatorio = true
+                },
+                Ano = new LinhaConteudoAjustarDTO()
+                {
+                    Conteudo = faker.Date.Recent().Year.ToString(),
+                    LimiteCaracteres = ConstantesTestes.CARACTERES_PERMITIDOS_15,
+                    EhCampoObrigatorio = true
+                },
+                Edicao = new LinhaConteudoAjustarDTO()
+                {
+                    Conteudo = faker.Lorem.Text().Limite(15),
+                    LimiteCaracteres = ConstantesTestes.CARACTERES_PERMITIDOS_15,
+                },
+                NumeroPaginas = new LinhaConteudoAjustarDTO()
+                {
+                    Conteudo = random.Next(15,55).ToString(),
+                    FormatoTipoDeCampo = ConstantesTestes.FORMATO_DOUBLE
+                },
+                Altura = new LinhaConteudoAjustarDTO()
+                {
+                    Conteudo = random.Next(15,55).ToString(),
+                    FormatoTipoDeCampo = ConstantesTestes.FORMATO_DOUBLE
+                },
+                Largura = new LinhaConteudoAjustarDTO()
+                {
+                    Conteudo = random.Next(15,55).ToString(),
+                    FormatoTipoDeCampo = ConstantesTestes.FORMATO_DOUBLE
+                },
+                SerieColecao = new LinhaConteudoAjustarDTO()
+                {
+                    Conteudo = faker.Lorem.Sentence().Limite(200),
+                    LimiteCaracteres = ConstantesTestes.CARACTERES_PERMITIDOS_200,
+                },
+                Volume = new LinhaConteudoAjustarDTO()
+                {
+                    Conteudo = faker.Lorem.Text().Limite(15),
+                    LimiteCaracteres = ConstantesTestes.CARACTERES_PERMITIDOS_15,
+                },
+                Idioma = new LinhaConteudoAjustarDTO()
+                {
+                    Conteudo = faker.Lorem.Sentence().Limite(500),
+                    LimiteCaracteres = ConstantesTestes.CARACTERES_PERMITIDOS_500,
+                    EhCampoObrigatorio = true
+                },
+                LocalizacaoCDD = new LinhaConteudoAjustarDTO()
+                {
+                    Conteudo = faker.Lorem.Sentence().Limite(50),
+                    LimiteCaracteres = ConstantesTestes.CARACTERES_PERMITIDOS_50,
+                    EhCampoObrigatorio = true
+                },
+                LocalizacaoPHA = new LinhaConteudoAjustarDTO()
+                {
+                    Conteudo = faker.Lorem.Sentence().Limite(50),
+                    LimiteCaracteres = ConstantesTestes.CARACTERES_PERMITIDOS_50,
+                    EhCampoObrigatorio = true
+                },
+                NotasGerais = new LinhaConteudoAjustarDTO()
+                {
+                    Conteudo = faker.Lorem.Sentence().Limite(500),
+                    LimiteCaracteres = ConstantesTestes.CARACTERES_PERMITIDOS_500,
+                },
+                Isbn = new LinhaConteudoAjustarDTO()
+                {
+                    Conteudo = faker.Lorem.Sentence().Limite(50),
+                    LimiteCaracteres = ConstantesTestes.CARACTERES_PERMITIDOS_50,
+                },
+                Tombo = new LinhaConteudoAjustarDTO()
+                {
+                    Conteudo = faker.Lorem.Sentence().Limite(15),
+                    LimiteCaracteres = ConstantesTestes.CARACTERES_PERMITIDOS_15,
+                    EhCampoObrigatorio = true
+                }
+            };
+            
+            await InserirNaBase(new ImportacaoArquivo()
+            {
+                Nome = faker.Hacker.Verb(),
+                TipoAcervo = TipoAcervo.Bibliografico,
+                Status = ImportacaoStatus.Pendente,
+                Conteudo = JsonConvert.SerializeObject(acervoBibliograficoLinha),
+                CriadoEm = DateTimeExtension.HorarioBrasilia().Date, CriadoPor = ConstantesTestes.SISTEMA, CriadoLogin = ConstantesTestes.LOGIN_123456789
+            });
+            
+            await servicoImportacaoArquivo.ValidacaoObterOuInserirDominios(new List<AcervoBibliograficoLinhaDTO>() { acervoBibliograficoLinha });
+            await servicoImportacaoArquivo.PersistenciaAcervoBibliografico(new List<AcervoBibliograficoLinhaDTO>() { acervoBibliograficoLinha },1);
+
+            var acervosBibliograficos = ObterTodos<AcervoBibliografico>();
+            acervosBibliograficos.ShouldNotBeNull();
+
+            var acervoBibliograficoInserido = acervosBibliograficos.FirstOrDefault();
+            
+            var materiais = ObterTodos<Material>();
+            acervoBibliograficoLinha.Material.Conteudo.Equals(materiais.FirstOrDefault().Nome);
+            acervoBibliograficoInserido.MaterialId.ShouldBe(acervoBibliograficoInserido.MaterialId);
+            
+            var editoras = ObterTodos<Editora>();
+            acervoBibliograficoLinha.Editora.Conteudo.Equals(editoras.FirstOrDefault().Nome);
+            acervoBibliograficoInserido.EditoraId.ShouldBe(acervoBibliograficoInserido.EditoraId);
+            
+            var serieColecaoInserida = ObterTodos<SerieColecao>();
+            acervoBibliograficoLinha.SerieColecao.Conteudo.Equals(serieColecaoInserida.FirstOrDefault().Nome);
+            acervoBibliograficoInserido.SerieColecaoId.ShouldBe(acervoBibliograficoInserido.SerieColecaoId);
+            
+            var idiomaInserido = ObterTodos<Idioma>();
+            acervoBibliograficoLinha.Idioma.Conteudo.Equals(idiomaInserido.FirstOrDefault().Nome);
+            acervoBibliograficoInserido.IdiomaId.ShouldBe(acervoBibliograficoInserido.IdiomaId); 
+            
+            var assuntosAInserir = acervoBibliograficoLinha.Assunto.Conteudo.FormatarTextoEmArray().ToArray().UnificarPipe().SplitPipe().Distinct();
+            var assuntosInseridos = ObterTodos<Assunto>();
+            
+            foreach (var assunto in assuntosAInserir)
+                assuntosInseridos.Any(a=> a.Nome.Equals(assunto)).ShouldBeTrue();
+            
+            var acervoBibliograficoAssuntos = ObterTodos<AcervoBibliograficoAssunto>();
+            foreach (var acervoBibliograficoAssunto in acervoBibliograficoAssuntos)
+                assuntosInseridos.Any(a=> a.Id == acervoBibliograficoAssunto.AssuntoId).ShouldBeTrue();
+            
+            var autorAInserir = acervoBibliograficoLinha.Autor.Conteudo.FormatarTextoEmArray().ToArray().UnificarPipe().SplitPipe().Distinct();
+            var creditoAutoresInseridos = ObterTodos<CreditoAutor>();
+            
+            foreach (var autor in autorAInserir)
+                creditoAutoresInseridos.Any(a=> a.Nome.Equals(autor)).ShouldBeTrue();
+            
+            var acervoCreditoAutors = ObterTodos<AcervoCreditoAutor>();
+            foreach (var creditoAutor in acervoCreditoAutors)
+                creditoAutoresInseridos.Any(a=> a.Id == creditoAutor.CreditoAutorId).ShouldBeTrue();
+            
+            var coAutorAInserir = acervoBibliograficoLinha.CoAutor.Conteudo.FormatarTextoEmArray().ToArray().UnificarPipe().SplitPipe().Distinct();
+            foreach (var coautor in coAutorAInserir)
+                creditoAutoresInseridos.Any(a=> a.Nome.Equals(coautor)).ShouldBeTrue();
+        }
+        
+        [Fact(DisplayName = "Importação Arquivo Acervo Bibliográfico - Geral")]
+        public async Task Importacao_geral()
+        {
+            var servicoImportacaoArquivo = GetServicoImportacaoArquivoAcervoBibliografico();
+
+            var random = new Random();
+
+            var acervoBibliograficoLinha = new AcervoBibliograficoLinhaDTO()
+            {
+                Titulo = new LinhaConteudoAjustarDTO()
+                {
+                    Conteudo = faker.Lorem.Text().Limite(500),
+                    LimiteCaracteres = ConstantesTestes.CARACTERES_PERMITIDOS_500,
+                    EhCampoObrigatorio = true
+                },
+                SubTitulo = new LinhaConteudoAjustarDTO()
+                {
+                    Conteudo = faker.Lorem.Sentence().Limite(500),
+                    LimiteCaracteres = ConstantesTestes.CARACTERES_PERMITIDOS_500,
+                },
+                Material = new LinhaConteudoAjustarDTO()
+                {
+                    Conteudo = faker.Lorem.Sentence().Limite(500),
+                    LimiteCaracteres = ConstantesTestes.CARACTERES_PERMITIDOS_500,
+                    EhCampoObrigatorio = true
+                },
+                Autor = new LinhaConteudoAjustarDTO()
+                {
+                    Conteudo = $"{faker.Person.FirstName.Limite(200)}|{faker.Person.LastName.Limite(200)}|{faker.Person.FullName.Limite(200)}",
+                    LimiteCaracteres = ConstantesTestes.CARACTERES_PERMITIDOS_200,
+                    EhCampoObrigatorio = true
+                },
+                CoAutor = new LinhaConteudoAjustarDTO()
+                {
+                    Conteudo = $"{faker.Address.SecondaryAddress().Limite(200)}|{faker.Address.FullAddress().Limite(200)}|{faker.Address.StreetAddress().Limite(200)}|{faker.Address.Country().Limite(200)}|{faker.Address.City().Limite(200)}|{faker.Address.State().Limite(200)}",
+                    LimiteCaracteres = ConstantesTestes.CARACTERES_PERMITIDOS_200
+                },
+                TipoAutoria = new LinhaConteudoAjustarDTO()
+                {
+                    Conteudo = $"{faker.Company.CompanyName().Limite(15)}|{faker.Lorem.Sentence().Limite(15)}|{faker.Company.Cnpj().Limite(15)}|{faker.Company.Bs().Limite(15)}",
+                    LimiteCaracteres = ConstantesTestes.CARACTERES_PERMITIDOS_15
+                },
+                Editora = new LinhaConteudoAjustarDTO()
+                {
+                    Conteudo = faker.Commerce.Department().Limite(200),
+                    LimiteCaracteres = ConstantesTestes.CARACTERES_PERMITIDOS_200
+                },
+                Assunto = new LinhaConteudoAjustarDTO()
+                {
+                    Conteudo = $"{faker.Address.StreetAddress().Limite(200)}|{faker.Address.City().Limite(200)}",
+                    LimiteCaracteres = ConstantesTestes.CARACTERES_PERMITIDOS_200,
+                    EhCampoObrigatorio = true
+                },
+                Ano = new LinhaConteudoAjustarDTO()
+                {
+                    Conteudo = faker.Date.Recent().Year.ToString(),
+                    LimiteCaracteres = ConstantesTestes.CARACTERES_PERMITIDOS_15,
+                    EhCampoObrigatorio = true
+                },
+                Edicao = new LinhaConteudoAjustarDTO()
+                {
+                    Conteudo = faker.Lorem.Text().Limite(15),
+                    LimiteCaracteres = ConstantesTestes.CARACTERES_PERMITIDOS_15,
+                },
+                NumeroPaginas = new LinhaConteudoAjustarDTO()
+                {
+                    Conteudo = random.Next(15,55).ToString(),
+                    FormatoTipoDeCampo = ConstantesTestes.FORMATO_DOUBLE
+                },
+                Altura = new LinhaConteudoAjustarDTO()
+                {
+                    Conteudo = random.Next(15,55).ToString(),
+                    FormatoTipoDeCampo = ConstantesTestes.FORMATO_DOUBLE
+                },
+                Largura = new LinhaConteudoAjustarDTO()
+                {
+                    Conteudo = random.Next(15,55).ToString(),
+                    FormatoTipoDeCampo = ConstantesTestes.FORMATO_DOUBLE
+                },
+                SerieColecao = new LinhaConteudoAjustarDTO()
+                {
+                    Conteudo = faker.Lorem.Sentence().Limite(200),
+                    LimiteCaracteres = ConstantesTestes.CARACTERES_PERMITIDOS_200,
+                },
+                Volume = new LinhaConteudoAjustarDTO()
+                {
+                    Conteudo = faker.Lorem.Text().Limite(15),
+                    LimiteCaracteres = ConstantesTestes.CARACTERES_PERMITIDOS_15,
+                },
+                Idioma = new LinhaConteudoAjustarDTO()
+                {
+                    Conteudo = faker.Lorem.Sentence().Limite(500),
+                    LimiteCaracteres = ConstantesTestes.CARACTERES_PERMITIDOS_500,
+                    EhCampoObrigatorio = true
+                },
+                LocalizacaoCDD = new LinhaConteudoAjustarDTO()
+                {
+                    Conteudo = faker.Lorem.Sentence().Limite(50),
+                    LimiteCaracteres = ConstantesTestes.CARACTERES_PERMITIDOS_50,
+                    EhCampoObrigatorio = true
+                },
+                LocalizacaoPHA = new LinhaConteudoAjustarDTO()
+                {
+                    Conteudo = faker.Lorem.Sentence().Limite(50),
+                    LimiteCaracteres = ConstantesTestes.CARACTERES_PERMITIDOS_50,
+                    EhCampoObrigatorio = true
+                },
+                NotasGerais = new LinhaConteudoAjustarDTO()
+                {
+                    Conteudo = faker.Lorem.Sentence().Limite(500),
+                    LimiteCaracteres = ConstantesTestes.CARACTERES_PERMITIDOS_500,
+                },
+                Isbn = new LinhaConteudoAjustarDTO()
+                {
+                    Conteudo = faker.Lorem.Sentence().Limite(50),
+                    LimiteCaracteres = ConstantesTestes.CARACTERES_PERMITIDOS_50,
+                },
+                Tombo = new LinhaConteudoAjustarDTO()
+                {
+                    Conteudo = faker.Lorem.Sentence().Limite(15),
+                    LimiteCaracteres = ConstantesTestes.CARACTERES_PERMITIDOS_15,
+                    EhCampoObrigatorio = true
+                }
+            };
+           
+            await InserirNaBase(new ImportacaoArquivo()
+            {
+                Nome = faker.Hacker.Verb(),
+                TipoAcervo = TipoAcervo.Bibliografico,
+                Status = ImportacaoStatus.Pendente,
+                Conteudo = JsonConvert.SerializeObject(acervoBibliograficoLinha),
+                CriadoEm = DateTimeExtension.HorarioBrasilia().Date, CriadoPor = ConstantesTestes.SISTEMA, CriadoLogin = ConstantesTestes.LOGIN_123456789
+            });
+            
+            servicoImportacaoArquivo.ValidarPreenchimentoValorFormatoQtdeCaracteres(new List<AcervoBibliograficoLinhaDTO>() { acervoBibliograficoLinha });
+            await servicoImportacaoArquivo.ValidacaoObterOuInserirDominios(new List<AcervoBibliograficoLinhaDTO>() { acervoBibliograficoLinha });
+            await servicoImportacaoArquivo.PersistenciaAcervoBibliografico(new List<AcervoBibliograficoLinhaDTO>() { acervoBibliograficoLinha },1);
+
+            var acervosBibliograficos = ObterTodos<AcervoBibliografico>();
+            acervosBibliograficos.ShouldNotBeNull();
+
+            var acervoBibliograficoInserido = acervosBibliograficos.FirstOrDefault();
+            
+            var materiais = ObterTodos<Material>();
+            acervoBibliograficoLinha.Material.Conteudo.Equals(materiais.FirstOrDefault().Nome);
+            acervoBibliograficoInserido.MaterialId.ShouldBe(acervoBibliograficoInserido.MaterialId);
+            
+            var editoras = ObterTodos<Editora>();
+            acervoBibliograficoLinha.Editora.Conteudo.Equals(editoras.FirstOrDefault().Nome);
+            acervoBibliograficoInserido.EditoraId.ShouldBe(acervoBibliograficoInserido.EditoraId);
+            
+            var serieColecaoInserida = ObterTodos<SerieColecao>();
+            acervoBibliograficoLinha.SerieColecao.Conteudo.Equals(serieColecaoInserida.FirstOrDefault().Nome);
+            acervoBibliograficoInserido.SerieColecaoId.ShouldBe(acervoBibliograficoInserido.SerieColecaoId);
+            
+            var idiomaInserido = ObterTodos<Idioma>();
+            acervoBibliograficoLinha.Idioma.Conteudo.Equals(idiomaInserido.FirstOrDefault().Nome);
+            acervoBibliograficoInserido.IdiomaId.ShouldBe(acervoBibliograficoInserido.IdiomaId); 
+            
+            var assuntosAInserir = acervoBibliograficoLinha.Assunto.Conteudo.FormatarTextoEmArray().ToArray().UnificarPipe().SplitPipe().Distinct();
+            var assuntosInseridos = ObterTodos<Assunto>();
+            
+            foreach (var assunto in assuntosAInserir)
+                assuntosInseridos.Any(a=> a.Nome.Equals(assunto)).ShouldBeTrue();
+            
+            var acervoBibliograficoAssuntos = ObterTodos<AcervoBibliograficoAssunto>();
+            foreach (var acervoBibliograficoAssunto in acervoBibliograficoAssuntos)
+                assuntosInseridos.Any(a=> a.Id == acervoBibliograficoAssunto.AssuntoId).ShouldBeTrue();
+            
+            var autorAInserir = acervoBibliograficoLinha.Autor.Conteudo.FormatarTextoEmArray().ToArray().UnificarPipe().SplitPipe().Distinct();
+            var creditoAutoresInseridos = ObterTodos<CreditoAutor>();
+            
+            foreach (var autor in autorAInserir)
+                creditoAutoresInseridos.Any(a=> a.Nome.Equals(autor)).ShouldBeTrue();
+            
+            var acervoCreditoAutors = ObterTodos<AcervoCreditoAutor>();
+            foreach (var creditoAutor in acervoCreditoAutors)
+                creditoAutoresInseridos.Any(a=> a.Id == creditoAutor.CreditoAutorId).ShouldBeTrue();
+            
+            var coAutorAInserir = acervoBibliograficoLinha.CoAutor.Conteudo.FormatarTextoEmArray().ToArray().UnificarPipe().SplitPipe().Distinct();
+            foreach (var coautor in coAutorAInserir)
+                creditoAutoresInseridos.Any(a=> a.Nome.Equals(coautor)).ShouldBeTrue();
         }
     }
 }
