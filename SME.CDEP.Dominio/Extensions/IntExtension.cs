@@ -1,0 +1,26 @@
+﻿
+namespace SME.CDEP.Dominio.Extensions
+{
+    public static class IntExtension
+    {
+        public static bool EhMaiorQueZero(this int valor)
+        {
+            return valor > 0; 
+        }
+        
+        public static bool EhMenorIgualQueZero(this int valor)
+        {
+            return valor <= 0; 
+        }
+        
+        public static bool EhIgualZero(this int valor)
+        {
+            return valor == 0; 
+        }
+        
+        public static bool EhDiferente(this int valor, int valor2)
+        {
+            return valor != valor2; 
+        }
+    }
+}

@@ -19,5 +19,10 @@ namespace SME.CDEP.Dominio.Extensions
         {
             return valor > 0; 
         }
+        
+        public static bool EhMenorIgualQueZero(this long valor)
+        {
+            return valor <= 0; 
+        }
     }
 }

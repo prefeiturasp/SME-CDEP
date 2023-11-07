@@ -10,5 +10,6 @@ namespace SME.CDEP.Infra.Dados.Repositorios.Interfaces
         Task<IEnumerable<CreditoAutor>> PesquisarPorNomeTipo(string nome, TipoCreditoAutoria tipo);
         Task<bool> Existe(string nome, long id, int tipo);
         Task<IEnumerable<CreditoAutor>> PesquisarPorNome(string nome, int tipo);
+        Task<long> ObterPorNomeTipo(string nome, TipoCreditoAutoria tipoCreditoAutoria);
     }
 }

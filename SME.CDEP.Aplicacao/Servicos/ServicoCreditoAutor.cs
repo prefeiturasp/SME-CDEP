@@ -64,6 +64,11 @@ namespace SME.CDEP.Aplicacao.Servicos
                 : mapper.Map<IEnumerable<IdNomeTipoExcluidoAuditavelDTO>>(await repositorioCreditoAutor.ObterTodos());
         }
 
+        public Task<long> ObterPorNomeTipo(string nome, TipoCreditoAutoria tipoCreditoAutoria)
+        {
+            return repositorioCreditoAutor.ObterPorNomeTipo(nome, tipoCreditoAutoria);
+        }
+
         private IOrderedEnumerable<IdNomeTipoExcluidoAuditavelDTO> OrdenarRegistros(Paginacao paginacao, IList<IdNomeTipoExcluidoAuditavelDTO> registros)
         {
             return paginacao.Ordenacao switch

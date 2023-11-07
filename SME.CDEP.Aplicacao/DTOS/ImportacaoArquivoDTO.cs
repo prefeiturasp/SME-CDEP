@@ -2,7 +2,7 @@
 
 namespace SME.CDEP.Aplicacao.DTOS;
 
-public class ImportacaoArquivoDTO : BaseAuditavelDTO
+public class ImportacaoArquivoDTO : BaseAuditavelDTO 
 {
     public string Nome { get; set; }
     public TipoAcervo TipoAcervo { get; set; }
