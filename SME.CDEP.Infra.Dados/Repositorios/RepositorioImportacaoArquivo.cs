@@ -3,6 +3,7 @@ using SME.CDEP.Dominio.Contexto;
 using SME.CDEP.Dominio.Entidades;
 using SME.CDEP.Dominio.Extensions;
 using SME.CDEP.Infra.Dados.Repositorios.Interfaces;
+using SME.CDEP.Infra.Dominio.Enumerados;
 
 namespace SME.CDEP.Infra.Dados.Repositorios
 {
@@ -11,18 +12,20 @@ namespace SME.CDEP.Infra.Dados.Repositorios
         public RepositorioImportacaoArquivo(IContextoAplicacao contexto, ICdepConexao conexao) : base(contexto,conexao)
         { }
 
-        public async Task<ImportacaoArquivoCompleto> ObterUltimaImportacao()
+        public async Task<ImportacaoArquivo> ObterUltimaImportacao(TipoAcervo tipoAcervo)
         {
             var query = @"select ia.id,
 								  ia.nome,
 								  ia.tipo_acervo as TipoAcervo,
 								  ia.status as StatusArquivo,
-								  ia.conteudo
+								  ia.conteudo,
+								  ia.criado_em criadoEm
 						from importacao_arquivo ia
 						where not ia.excluido 
+						and ia.tipo_acervo = @tipoAcervo
 						order by ia.id desc";
 
-            return await conexao.Obter().QueryFirstAsync<ImportacaoArquivoCompleto>(query);
+            return await conexao.Obter().QueryFirstAsync<ImportacaoArquivo>(query, new { tipoAcervo});
         }
 
         public async Task<long> Salvar(ImportacaoArquivo importacaoArquivo)

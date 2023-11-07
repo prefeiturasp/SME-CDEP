@@ -34,6 +34,8 @@ public class Constantes
     public const string CAMPO_X_REQUER_UM_VALOR_NUMERICO = "O campo '{0}' requer um valor numérico";
     public const string CAMPO_COAUTOR_SEM_PREENCHIMENTO_E_TIPO_AUTORIA_PREENCHIDO = "O preenchimento do campo coautor é obrigatório quando o tipo de autoria está especificado";
     public const string TEMOS_MAIS_TIPO_AUTORIA_QUE_COAUTORES = "A quantidade de tipos de autoria excede a de coautores. É aceitável ter coautores desprovidos de tipo de autoria, mas o contrário não é permitido";
+    public const string OCORREU_UMA_FALHA_INESPERADA_NA_LINHA_X_MOTIVO_Y = "Ocorreu uma falha inesperada na linha '{0}' -  Motivo: '{1}'";
+    public const string OCORREU_UMA_FALHA_INESPERADA_NO_CADASTRO_DAS_REFERENCIAS_MOTIVO_X = "Ocorreu uma falha inesperada no cadastrodas referências -  Motivo: '{0}'";
     
     public const char PIPE = '|';
     public const int INICIO_LINHA_TITULO = 1;

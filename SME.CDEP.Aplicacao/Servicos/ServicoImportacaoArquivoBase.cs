@@ -27,7 +27,7 @@ namespace SME.CDEP.Aplicacao.Servicos
         protected List<IdNomeDTO> SeriesColecoes;
         protected List<IdNomeDTO> Idiomas;
         protected List<IdNomeDTO> Assuntos;
-        protected List<long> LinhasComErros;
+        
         protected List<IdNomeTipoDTO> CreditosAutores { get; set; }
 
         public ServicoImportacaoArquivoBase(IRepositorioImportacaoArquivo repositorioImportacaoArquivo, IServicoMaterial servicoMaterial,
@@ -47,7 +47,6 @@ namespace SME.CDEP.Aplicacao.Servicos
             Idiomas = new List<IdNomeDTO>();
             Assuntos = new List<IdNomeDTO>();
             CreditosAutores = new List<IdNomeTipoDTO>();
-            LinhasComErros = new List<long>();
         }
 
         public void ValidarArquivo(IFormFile file)
@@ -313,14 +312,13 @@ namespace SME.CDEP.Aplicacao.Servicos
 
         protected void DefinirMensagemErro(LinhaConteudoAjustarDTO campo, string mensagemErro, int numeroLinha)
         {
-            campo.Validado = false;
+            campo.PossuiErro = true;
             campo.Mensagem = mensagemErro;
-            LinhasComErros.Add(numeroLinha);
         }
 
         private void DefinirCampoValidado(LinhaConteudoAjustarDTO campo)
         {
-            campo.Validado = true;
+            campo.PossuiErro = false;
             campo.Mensagem = string.Empty;
         }
     }

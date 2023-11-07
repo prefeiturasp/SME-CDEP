@@ -27,5 +27,6 @@ public class AcervoBibliograficoLinhaDTO: LinhaDTO
     public LinhaConteudoAjustarDTO Tombo { get; set; }
     public ImportacaoStatus Status { get; set; }
     public string Mensagem { get; set; }
-    public int NumeroLinha { get; set; } = 1;
+    public int NumeroLinha { get; set; }
+    public bool PossuiErros { get; set; }
 }

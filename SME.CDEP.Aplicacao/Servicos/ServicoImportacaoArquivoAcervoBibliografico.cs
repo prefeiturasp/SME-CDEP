@@ -5,6 +5,7 @@ using Newtonsoft.Json;
 using SME.CDEP.Aplicacao.DTOS;
 using SME.CDEP.Aplicacao.Servicos.Interface;
 using SME.CDEP.Dominio.Constantes;
+using SME.CDEP.Dominio.Entidades;
 using SME.CDEP.Dominio.Extensions;
 using SME.CDEP.Infra.Dados.Repositorios.Interfaces;
 using SME.CDEP.Infra.Dominio.Enumerados;
@@ -30,7 +31,14 @@ namespace SME.CDEP.Aplicacao.Servicos
         {
             CreditosAutores = creditosAutores;
         }
-        
+
+        public async Task<ImportacaoArquivoRetornoDTO<AcervoBibliograficoLinhaRetornoDTO>> ObterImportacaoPendente()
+        {
+            var arquivoImportado = await repositorioImportacaoArquivo.ObterUltimaImportacao(TipoAcervo.Bibliografico);
+
+            return ObterRetornoImportacaoAcervoBibliografico(arquivoImportado, JsonConvert.DeserializeObject<IEnumerable<AcervoBibliograficoLinhaDTO>>(arquivoImportado.Conteudo));
+        }
+
         public async Task<ImportacaoArquivoRetornoDTO<AcervoBibliograficoLinhaRetornoDTO>> ImportarArquivo(IFormFile file)
         {
             ValidarArquivo(file);
@@ -52,46 +60,86 @@ namespace SME.CDEP.Aplicacao.Servicos
 
             var arquivoImportado = await repositorioImportacaoArquivo.ObterPorId(importacaoArquivoId);
 
+            return ObterRetornoImportacaoAcervoBibliografico(arquivoImportado, acervosBibliograficosLinhas);
+        }
+
+        private ImportacaoArquivoRetornoDTO<AcervoBibliograficoLinhaRetornoDTO> ObterRetornoImportacaoAcervoBibliografico(ImportacaoArquivo arquivoImportado, IEnumerable<AcervoBibliograficoLinhaDTO> acervosBibliograficosLinhas)
+        {
             var acervoBibliograficoRetorno = new ImportacaoArquivoRetornoDTO<AcervoBibliograficoLinhaRetornoDTO>()
             {
                 Id = arquivoImportado.Id,
                 Nome = arquivoImportado.Nome,
                 TipoAcervo = arquivoImportado.TipoAcervo,
                 DataImportacao = arquivoImportado.CriadoEm,
-                Erros = LinhasComErros.Any()
-                    ? acervosBibliograficosLinhas
-                        .Where(w => LinhasComErros.Contains(w.NumeroLinha))
-                        .Select(s =>  new AcervoBibliograficoLinhaRetornoDTO()
+                Erros = acervosBibliograficosLinhas
+                        .Where(w => w.PossuiErros)
+                        .Select(s => new AcervoBibliograficoLinhaRetornoDTO()
                         {
-                            Titulo = new LinhaConteudoAjustarRetornoDTO() { Conteudo = s.Titulo.Conteudo, Validado = s.Titulo.Validado, Mensagem = s.Titulo.Mensagem },
-                            SubTitulo = new LinhaConteudoAjustarRetornoDTO() { Conteudo = s.SubTitulo.Conteudo, Validado = s.SubTitulo.Validado, Mensagem = s.SubTitulo.Mensagem },
-                            Material = new LinhaConteudoAjustarRetornoDTO() { Conteudo = s.Material.Conteudo, Validado = s.Material.Validado, Mensagem = s.Material.Mensagem },
-                            Autor = new LinhaConteudoAjustarRetornoDTO() { Conteudo = s.Autor.Conteudo, Validado = s.Autor.Validado, Mensagem = s.Autor.Mensagem },
-                            CoAutor = new LinhaConteudoAjustarRetornoDTO() { Conteudo = s.CoAutor.Conteudo, Validado = s.CoAutor.Validado, Mensagem = s.CoAutor.Mensagem },
-                            TipoAutoria = new LinhaConteudoAjustarRetornoDTO() { Conteudo = s.TipoAutoria.Conteudo, Validado = s.TipoAutoria.Validado, Mensagem = s.TipoAutoria.Mensagem },
-                            Editora = new LinhaConteudoAjustarRetornoDTO() { Conteudo = s.Editora.Conteudo, Validado = s.Editora.Validado, Mensagem = s.Editora.Mensagem },
-                            Assunto = new LinhaConteudoAjustarRetornoDTO() { Conteudo = s.Assunto.Conteudo, Validado = s.Assunto.Validado, Mensagem = s.Assunto.Mensagem },
-                            Ano = new LinhaConteudoAjustarRetornoDTO() { Conteudo = s.Ano.Conteudo, Validado = s.Ano.Validado, Mensagem = s.Ano.Mensagem },
-                            Edicao = new LinhaConteudoAjustarRetornoDTO() { Conteudo = s.Edicao.Conteudo, Validado = s.Edicao.Validado, Mensagem = s.Edicao.Mensagem },
-                            NumeroPaginas = new LinhaConteudoAjustarRetornoDTO() { Conteudo = s.NumeroPaginas.Conteudo, Validado = s.NumeroPaginas.Validado, Mensagem = s.NumeroPaginas.Mensagem },
-                            Largura = new LinhaConteudoAjustarRetornoDTO() { Conteudo = s.Largura.Conteudo, Validado = s.Largura.Validado, Mensagem = s.Largura.Mensagem },
-                            Altura = new LinhaConteudoAjustarRetornoDTO() { Conteudo = s.Altura.Conteudo, Validado = s.Altura.Validado, Mensagem = s.Altura.Mensagem },
-                            SerieColecao = new LinhaConteudoAjustarRetornoDTO() { Conteudo = s.SerieColecao.Conteudo, Validado = s.SerieColecao.Validado, Mensagem = s.SerieColecao.Mensagem },
-                            Volume = new LinhaConteudoAjustarRetornoDTO() { Conteudo = s.Volume.Conteudo, Validado = s.Volume.Validado, Mensagem = s.Volume.Mensagem },
-                            Idioma = new LinhaConteudoAjustarRetornoDTO() { Conteudo = s.Idioma.Conteudo, Validado = s.Idioma.Validado, Mensagem = s.Idioma.Mensagem },
-                            LocalizacaoCDD = new LinhaConteudoAjustarRetornoDTO() { Conteudo = s.LocalizacaoCDD.Conteudo, Validado = s.LocalizacaoCDD.Validado, Mensagem = s.LocalizacaoCDD.Mensagem },
-                            LocalizacaoPHA = new LinhaConteudoAjustarRetornoDTO() { Conteudo = s.LocalizacaoPHA.Conteudo, Validado = s.LocalizacaoPHA.Validado, Mensagem = s.LocalizacaoPHA.Mensagem },
-                            NotasGerais = new LinhaConteudoAjustarRetornoDTO() { Conteudo = s.NotasGerais.Conteudo, Validado = s.NotasGerais.Validado, Mensagem = s.NotasGerais.Mensagem },
-                            Isbn = new LinhaConteudoAjustarRetornoDTO() { Conteudo = s.Isbn.Conteudo, Validado = s.Isbn.Validado, Mensagem = s.Isbn.Mensagem },
-                            Tombo = new LinhaConteudoAjustarRetornoDTO() { Conteudo = s.Tombo.Conteudo, Validado = s.Tombo.Validado, Mensagem = s.Tombo.Mensagem },
-                        }) : new List<AcervoBibliograficoLinhaRetornoDTO>(Enumerable.Empty<AcervoBibliograficoLinhaRetornoDTO>())
+                            Titulo = ObterConteudoMensagemStatus(s.Titulo),
+                            SubTitulo = ObterConteudoMensagemStatus(s.SubTitulo),
+                            Material = ObterConteudoMensagemStatus(s.Material),
+                            Autor = ObterConteudoMensagemStatus(s.Autor),
+                            CoAutor = ObterConteudoMensagemStatus(s.CoAutor),
+                            TipoAutoria = ObterConteudoMensagemStatus(s.TipoAutoria),
+                            Editora = ObterConteudoMensagemStatus(s.Editora),
+                            Assunto = ObterConteudoMensagemStatus(s.Assunto),
+                            Ano = ObterConteudoMensagemStatus(s.Ano),
+                            Edicao = ObterConteudoMensagemStatus(s.Edicao),
+                            NumeroPaginas = ObterConteudoMensagemStatus(s.NumeroPaginas),
+                            Largura = ObterConteudoMensagemStatus(s.Largura),
+                            Altura = ObterConteudoMensagemStatus(s.Altura),
+                            SerieColecao = ObterConteudoMensagemStatus(s.SerieColecao),
+                            Volume = ObterConteudoMensagemStatus(s.Volume),
+                            Idioma = ObterConteudoMensagemStatus(s.Idioma),
+                            LocalizacaoCDD = ObterConteudoMensagemStatus(s.LocalizacaoCDD),
+                            LocalizacaoPHA = ObterConteudoMensagemStatus(s.LocalizacaoPHA),
+                            NotasGerais = ObterConteudoMensagemStatus(s.NotasGerais),
+                            Isbn = ObterConteudoMensagemStatus(s.Isbn),
+                            Tombo = ObterConteudoMensagemStatus(s.Tombo),
+                        }),
+                Sucesso = acervosBibliograficosLinhas
+                        .Where(w => !w.PossuiErros)
+                        .Select(s => new AcervoBibliograficoLinhaRetornoDTO()
+                        {
+                            Titulo = ObterConteudoMensagemStatus(s.Titulo),
+                            SubTitulo = ObterConteudoMensagemStatus(s.SubTitulo),
+                            Material = ObterConteudoMensagemStatus(s.Material),
+                            Autor = ObterConteudoMensagemStatus(s.Autor),
+                            CoAutor = ObterConteudoMensagemStatus(s.CoAutor),
+                            TipoAutoria = ObterConteudoMensagemStatus(s.TipoAutoria),
+                            Editora = ObterConteudoMensagemStatus(s.Editora),
+                            Assunto = ObterConteudoMensagemStatus(s.Assunto),
+                            Ano = ObterConteudoMensagemStatus(s.Ano),
+                            Edicao = ObterConteudoMensagemStatus(s.Edicao),
+                            NumeroPaginas = ObterConteudoMensagemStatus(s.NumeroPaginas),
+                            Largura = ObterConteudoMensagemStatus(s.Largura),
+                            Altura = ObterConteudoMensagemStatus(s.Altura),
+                            SerieColecao = ObterConteudoMensagemStatus(s.SerieColecao),
+                            Volume = ObterConteudoMensagemStatus(s.Volume),
+                            Idioma = ObterConteudoMensagemStatus(s.Idioma),
+                            LocalizacaoCDD = ObterConteudoMensagemStatus(s.LocalizacaoCDD),
+                            LocalizacaoPHA = ObterConteudoMensagemStatus(s.LocalizacaoPHA),
+                            NotasGerais = ObterConteudoMensagemStatus(s.NotasGerais),
+                            Isbn = ObterConteudoMensagemStatus(s.Isbn),
+                            Tombo = ObterConteudoMensagemStatus(s.Tombo),
+                        })
             };
             return acervoBibliograficoRetorno;
         }
 
+        private static LinhaConteudoAjustarRetornoDTO ObterConteudoMensagemStatus(LinhaConteudoAjustarDTO linha)
+        {
+            return new LinhaConteudoAjustarRetornoDTO()
+            {
+                Conteudo = linha.Conteudo, 
+                Validado = linha.PossuiErro, 
+                Mensagem = linha.Mensagem
+            };
+        }
+
         public async Task PersistenciaAcervoBibliografico(IEnumerable<AcervoBibliograficoLinhaDTO> acervosBibliograficosLinhas, long importacaoArquivoId)
         {
-            foreach (var acervoBibliograficoLinha in acervosBibliograficosLinhas)
+            foreach (var acervoBibliograficoLinha in acervosBibliograficosLinhas.Where(w=> !w.PossuiErros))
             {
                 try
                 {
@@ -141,15 +189,15 @@ namespace SME.CDEP.Aplicacao.Servicos
                     };
                     await servicoAcervoBibliografico.Inserir(acervoBibliografico);
 
-                    await AtualizarImportacao(importacaoArquivoId, JsonConvert.SerializeObject(acervosBibliograficosLinhas));
                     acervoBibliograficoLinha.Status = ImportacaoStatus.Sucesso;
                     acervoBibliograficoLinha.Mensagem = string.Empty;
+                    acervoBibliograficoLinha.PossuiErros = false;
                 }
                 catch (Exception ex)
                 {
+                    acervoBibliograficoLinha.PossuiErros = true;
                     acervoBibliograficoLinha.Status = ImportacaoStatus.Erros;
-                    acervoBibliograficoLinha.Mensagem = $"Mensagem: {ex.Message} - Detalhes: {ex.StackTrace}";
-                    await AtualizarImportacao(importacaoArquivoId, JsonConvert.SerializeObject(acervosBibliograficosLinhas));
+                    acervoBibliograficoLinha.Mensagem = ex.Message;
                 }
             }
         }
@@ -185,53 +233,101 @@ namespace SME.CDEP.Aplicacao.Servicos
         {
             foreach (var linha in linhas)
             {
-                ValidarPreenchimentoLimiteCaracteres(linha.Titulo, Constantes.TITULO, linha.NumeroLinha);
-                ValidarPreenchimentoLimiteCaracteres(linha.SubTitulo, Constantes.SUB_TITULO, linha.NumeroLinha);
-                ValidarPreenchimentoLimiteCaracteres(linha.Material,Constantes.MATERIAL, linha.NumeroLinha);
-                ValidarPreenchimentoLimiteCaracteres(linha.Autor,Constantes.AUTOR, linha.NumeroLinha);
-                ValidarPreenchimentoLimiteCaracteres(linha.CoAutor,Constantes.CO_AUTOR, linha.NumeroLinha);
-                ValidarPreenchimentoLimiteCaracteres(linha.TipoAutoria,Constantes.TIPO_AUTORIA, linha.NumeroLinha);
-                
-                if (linha.TipoAutoria.Conteudo.EstaPreenchido() && linha.CoAutor.Conteudo.NaoEstaPreenchido())
-                    DefinirMensagemErro(linha.TipoAutoria, Constantes.CAMPO_COAUTOR_SEM_PREENCHIMENTO_E_TIPO_AUTORIA_PREENCHIDO, linha.NumeroLinha);
+                try
+                {
+                    ValidarPreenchimentoLimiteCaracteres(linha.Titulo, Constantes.TITULO, linha.NumeroLinha);
+                    ValidarPreenchimentoLimiteCaracteres(linha.SubTitulo, Constantes.SUB_TITULO, linha.NumeroLinha);
+                    ValidarPreenchimentoLimiteCaracteres(linha.Material,Constantes.MATERIAL, linha.NumeroLinha);
+                    ValidarPreenchimentoLimiteCaracteres(linha.Autor,Constantes.AUTOR, linha.NumeroLinha);
+                    ValidarPreenchimentoLimiteCaracteres(linha.CoAutor,Constantes.CO_AUTOR, linha.NumeroLinha);
+                    ValidarPreenchimentoLimiteCaracteres(linha.TipoAutoria,Constantes.TIPO_AUTORIA, linha.NumeroLinha);
+                    
+                    if (linha.TipoAutoria.Conteudo.EstaPreenchido() && linha.CoAutor.Conteudo.NaoEstaPreenchido())
+                        DefinirMensagemErro(linha.TipoAutoria, Constantes.CAMPO_COAUTOR_SEM_PREENCHIMENTO_E_TIPO_AUTORIA_PREENCHIDO, linha.NumeroLinha);
 
-                if (linha.TipoAutoria.Conteudo.SplitPipe().Count() > linha.CoAutor.Conteudo.SplitPipe().Count())
-                    DefinirMensagemErro(linha.TipoAutoria, Constantes.TEMOS_MAIS_TIPO_AUTORIA_QUE_COAUTORES, linha.NumeroLinha);
-                
-                ValidarPreenchimentoLimiteCaracteres(linha.Editora,Constantes.EDITORA, linha.NumeroLinha);
-                ValidarPreenchimentoLimiteCaracteres(linha.Assunto,Constantes.ASSUNTO, linha.NumeroLinha);
-                ValidarPreenchimentoLimiteCaracteres(linha.Ano,Constantes.ANO, linha.NumeroLinha);
-                ValidarPreenchimentoLimiteCaracteres(linha.Edicao,Constantes.EDICAO, linha.NumeroLinha);
-                ValidarPreenchimentoLimiteCaracteres(linha.NumeroPaginas,Constantes.NUMERO_PAGINAS, linha.NumeroLinha);
-                ValidarPreenchimentoLimiteCaracteres(linha.Largura,Constantes.LARGURA, linha.NumeroLinha);
-                ValidarPreenchimentoLimiteCaracteres(linha.Altura,Constantes.ALTURA, linha.NumeroLinha);
-                ValidarPreenchimentoLimiteCaracteres(linha.SerieColecao,Constantes.SERIE_COLECAO, linha.NumeroLinha);
-                ValidarPreenchimentoLimiteCaracteres(linha.Volume,Constantes.VOLUME, linha.NumeroLinha);
-                ValidarPreenchimentoLimiteCaracteres(linha.Idioma,Constantes.IDIOMA, linha.NumeroLinha);
-                ValidarPreenchimentoLimiteCaracteres(linha.LocalizacaoCDD,Constantes.LOCALIZACAO_CDD, linha.NumeroLinha);
-                ValidarPreenchimentoLimiteCaracteres(linha.LocalizacaoPHA,Constantes.LOCALIZACAO_PHA, linha.NumeroLinha);
-                ValidarPreenchimentoLimiteCaracteres(linha.NotasGerais,Constantes.NOTAS_GERAIS, linha.NumeroLinha);
-                ValidarPreenchimentoLimiteCaracteres(linha.Isbn,Constantes.ISBN, linha.NumeroLinha);
-                ValidarPreenchimentoLimiteCaracteres(linha.Tombo,Constantes.TOMBO, linha.NumeroLinha);
+                    if (linha.TipoAutoria.Conteudo.SplitPipe().Count() > linha.CoAutor.Conteudo.SplitPipe().Count())
+                        DefinirMensagemErro(linha.TipoAutoria, Constantes.TEMOS_MAIS_TIPO_AUTORIA_QUE_COAUTORES, linha.NumeroLinha);
+                    
+                    ValidarPreenchimentoLimiteCaracteres(linha.Editora,Constantes.EDITORA, linha.NumeroLinha);
+                    ValidarPreenchimentoLimiteCaracteres(linha.Assunto,Constantes.ASSUNTO, linha.NumeroLinha);
+                    ValidarPreenchimentoLimiteCaracteres(linha.Ano,Constantes.ANO, linha.NumeroLinha);
+                    ValidarPreenchimentoLimiteCaracteres(linha.Edicao,Constantes.EDICAO, linha.NumeroLinha);
+                    ValidarPreenchimentoLimiteCaracteres(linha.NumeroPaginas,Constantes.NUMERO_PAGINAS, linha.NumeroLinha);
+                    ValidarPreenchimentoLimiteCaracteres(linha.Largura,Constantes.LARGURA, linha.NumeroLinha);
+                    ValidarPreenchimentoLimiteCaracteres(linha.Altura,Constantes.ALTURA, linha.NumeroLinha);
+                    ValidarPreenchimentoLimiteCaracteres(linha.SerieColecao,Constantes.SERIE_COLECAO, linha.NumeroLinha);
+                    ValidarPreenchimentoLimiteCaracteres(linha.Volume,Constantes.VOLUME, linha.NumeroLinha);
+                    ValidarPreenchimentoLimiteCaracteres(linha.Idioma,Constantes.IDIOMA, linha.NumeroLinha);
+                    ValidarPreenchimentoLimiteCaracteres(linha.LocalizacaoCDD,Constantes.LOCALIZACAO_CDD, linha.NumeroLinha);
+                    ValidarPreenchimentoLimiteCaracteres(linha.LocalizacaoPHA,Constantes.LOCALIZACAO_PHA, linha.NumeroLinha);
+                    ValidarPreenchimentoLimiteCaracteres(linha.NotasGerais,Constantes.NOTAS_GERAIS, linha.NumeroLinha);
+                    ValidarPreenchimentoLimiteCaracteres(linha.Isbn,Constantes.ISBN, linha.NumeroLinha);
+                    ValidarPreenchimentoLimiteCaracteres(linha.Tombo,Constantes.TOMBO, linha.NumeroLinha);
+                    linha.PossuiErros = PossuiErro(linha);
+                }
+                catch (Exception e)
+                {
+                    linha.PossuiErros = true;
+                    linha.Status = ImportacaoStatus.Erros;
+                    linha.Mensagem = string.Format(Constantes.OCORREU_UMA_FALHA_INESPERADA_NA_LINHA_X_MOTIVO_Y, linha.NumeroLinha, e.Message);
+                }
             }
+        }
+
+        private bool PossuiErro(AcervoBibliograficoLinhaDTO linha)
+        {
+            return linha.Titulo.PossuiErro 
+                   || linha.SubTitulo.PossuiErro 
+                   || linha.Material.PossuiErro 
+                   || linha.Autor.PossuiErro 
+                   || linha.CoAutor.PossuiErro 
+                   || linha.TipoAutoria.PossuiErro 
+                   || linha.Editora.PossuiErro 
+                   || linha.Edicao.PossuiErro 
+                   || linha.Assunto.PossuiErro 
+                   || linha.Ano.PossuiErro 
+                   || linha.NumeroPaginas.PossuiErro
+                   || linha.Largura.PossuiErro 
+                   || linha.Altura.PossuiErro 
+                   || linha.SerieColecao.PossuiErro 
+                   || linha.Volume.PossuiErro 
+                   || linha.Idioma.PossuiErro
+                   || linha.LocalizacaoCDD.PossuiErro
+                   || linha.LocalizacaoPHA.PossuiErro
+                   || linha.NotasGerais.PossuiErro
+                   || linha.Isbn.PossuiErro
+                   || linha.Tombo.PossuiErro;
         }
 
         public async Task ValidacaoObterOuInserirDominios(IEnumerable<AcervoBibliograficoLinhaDTO> linhas)
         {
-            
-            await ValidarOuInserirMateriais(linhas.Select(s => s.Material.Conteudo).Distinct(), TipoMaterial.BIBLIOGRAFICO);
+            var linhasComsucesso = linhas.Where(w => !w.PossuiErros);
 
-            await ValidarOuInserirEditoras(linhas.Select(s => s.Editora.Conteudo).Distinct());
+            try
+            {
+                await ValidarOuInserirMateriais(linhasComsucesso.Select(s => s.Material.Conteudo).Distinct(), TipoMaterial.BIBLIOGRAFICO);
 
-            await ValidarOuInserirSeriesColecoes(linhas.Select(s => s.SerieColecao.Conteudo).Distinct());
+                await ValidarOuInserirEditoras(linhasComsucesso.Select(s => s.Editora.Conteudo).Distinct());
 
-            await ValidarOuInserirIdiomas(linhas.Select(s => s.Idioma.Conteudo).Distinct());
+                await ValidarOuInserirSeriesColecoes(linhasComsucesso.Select(s => s.SerieColecao.Conteudo).Distinct());
 
-            await ValidarOuInserirAssuntos(linhas.Select(s => s.Assunto.Conteudo).ToArray().UnificarPipe().SplitPipe().Distinct());
+                await ValidarOuInserirIdiomas(linhasComsucesso.Select(s => s.Idioma.Conteudo).Distinct());
 
-            await ValidarOuInserirCreditoAutoresCoAutores(linhas.Select(s => s.Autor.Conteudo).ToArray().UnificarPipe().SplitPipe().Distinct(), TipoCreditoAutoria.Autoria);
+                await ValidarOuInserirAssuntos(linhasComsucesso.Select(s => s.Assunto.Conteudo).ToArray().UnificarPipe().SplitPipe().Distinct());
 
-            await ValidarOuInserirCreditoAutoresCoAutores(linhas.Select(s => s.CoAutor.Conteudo).ToArray().UnificarPipe().SplitPipe().Distinct(), TipoCreditoAutoria.Autoria);
+                await ValidarOuInserirCreditoAutoresCoAutores(linhasComsucesso.Select(s => s.Autor.Conteudo).ToArray().UnificarPipe().SplitPipe().Distinct(), TipoCreditoAutoria.Autoria);
+
+                await ValidarOuInserirCreditoAutoresCoAutores(linhasComsucesso.Select(s => s.CoAutor.Conteudo).ToArray().UnificarPipe().SplitPipe().Distinct(), TipoCreditoAutoria.Autoria);
+            }
+            catch (Exception e)
+            {
+                foreach (var linha in linhas)
+                {
+                    linha.PossuiErros = true;
+                    linha.Status = ImportacaoStatus.Erros;
+                    linha.Mensagem = string.Format(Constantes.OCORREU_UMA_FALHA_INESPERADA_NO_CADASTRO_DAS_REFERENCIAS_MOTIVO_X, e.Message);
+                }
+            }
         }
 
         private async Task<IEnumerable<AcervoBibliograficoLinhaDTO>> LerPlanilha(IFormFile file)

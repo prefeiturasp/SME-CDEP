@@ -12,5 +12,6 @@ namespace SME.CDEP.Aplicacao.Servicos.Interface
         void ValidarPreenchimentoValorFormatoQtdeCaracteres(IEnumerable<AcervoBibliograficoLinhaDTO> linhas);
         Task ValidacaoObterOuInserirDominios(IEnumerable<AcervoBibliograficoLinhaDTO> linhas);
         void DefinirCreditosAutores(List<IdNomeTipoDTO> creditosAutores);
+        Task<ImportacaoArquivoRetornoDTO<AcervoBibliograficoLinhaRetornoDTO>> ObterImportacaoPendente();
     }
 }

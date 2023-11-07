@@ -21,4 +21,14 @@ public class ImportacaoArquivoAcervoBibliograficoController: BaseController
     {
         return Ok(await servicoImportacaoArquivoAcervoBibliografico.ImportarArquivo(file));
     }
+    
+    [HttpGet]
+    [ProducesResponseType(typeof(ImportacaoArquivoRetornoDTO<AcervoBibliograficoLinhaRetornoDTO>),200)]
+    [ProducesResponseType(401)]
+    [ProducesResponseType(typeof(RetornoBaseDTO), 500)]
+    [Authorize("Bearer")] 
+    public async Task<IActionResult> ObterImportacaoPendente([FromServices] IServicoImportacaoArquivoAcervoBibliografico servicoImportacaoArquivoAcervoBibliografico)
+    {
+        return Ok(await servicoImportacaoArquivoAcervoBibliografico.ObterImportacaoPendente());
+    }
 }
