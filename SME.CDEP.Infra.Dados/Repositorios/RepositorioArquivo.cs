@@ -70,13 +70,13 @@ namespace SME.CDEP.Infra.Dados.Repositorios
 
         public async Task<IEnumerable<AcervoCodigoNomeResumido>> ObterAcervoCodigoNomeArquivoPorAcervoId(long[] acervosIds)
         {
-            var query = @"select ag.acervo_id as acervoId, a.codigo, a.nome, a.tipo_conteudo tipoConteudo 
+            var query = @"select ag.acervo_id as acervoId, a.codigo, a.nome 
                             from acervo_arte_grafica ag 
                                 join acervo_arte_grafica_arquivo aga on aga.acervo_arte_grafica_id = ag.id 
                                 join arquivo a on a.id = aga.arquivo_id and a.tipo_conteudo <> @tipoConteudo
                             where permite_uso_imagem and ag.acervo_id = any(@acervosIds)
                             union all
-                            select af.acervo_id as acervoId, a.codigo, a.nome, a.tipo_conteudo tipoConteudo 
+                            select af.acervo_id as acervoId, a.codigo, a.nome 
                                 from acervo_fotografico af 
                                     join acervo_fotografico_arquivo afa on afa.acervo_fotografico_id = af.id 
                                     join arquivo a on a.id = afa.arquivo_id and a.tipo_conteudo <> @tipoConteudo
