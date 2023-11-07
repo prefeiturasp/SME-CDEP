@@ -16,8 +16,8 @@ public class ImportacaoArquivoAcervoBibliograficoController: BaseController
     [ProducesResponseType(200)]
     [ProducesResponseType(401)]
     [ProducesResponseType(typeof(RetornoBaseDTO), 500)]
-    [Authorize("Bearer")]
-    public async Task<IActionResult> UploadPorTipoAcervo(IFormFile file,[FromServices] IServicoImportacaoArquivoAcervoBibliografico servicoImportacaoArquivoAcervoBibliografico)
+    [Authorize("Bearer")] 
+    public async Task<IActionResult> ImportarArquivo(IFormFile file,[FromServices] IServicoImportacaoArquivoAcervoBibliografico servicoImportacaoArquivoAcervoBibliografico)
     {
         return Ok(await servicoImportacaoArquivoAcervoBibliografico.ImportarArquivo(file));
     }
