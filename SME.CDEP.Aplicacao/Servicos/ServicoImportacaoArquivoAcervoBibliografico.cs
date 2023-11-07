@@ -6,13 +6,12 @@ using SME.CDEP.Aplicacao.DTOS;
 using SME.CDEP.Aplicacao.Servicos.Interface;
 using SME.CDEP.Dominio.Constantes;
 using SME.CDEP.Dominio.Extensions;
-using SME.CDEP.Infra.Dados.Repositorios;
 using SME.CDEP.Infra.Dados.Repositorios.Interfaces;
 using SME.CDEP.Infra.Dominio.Enumerados;
 
 namespace SME.CDEP.Aplicacao.Servicos
 {
-    public class ServicoImportacaoArquivoAcervoBibliografico : ServicoImportacaoArquivoBase, IServicoImportacaoArquivoAcervoBibliografico
+    public class ServicoImportacaoArquivoAcervoBibliografico : ServicoImportacaoArquivoBase, IServicoImportacaoArquivoAcervoBibliografico 
     {
         private readonly IServicoAcervoBibliografico servicoAcervoBibliografico;
         private readonly IMapper mapper;
@@ -32,7 +31,7 @@ namespace SME.CDEP.Aplicacao.Servicos
             CreditosAutores = creditosAutores;
         }
         
-        public async Task<ImportacaoArquivoDTO> ImportarArquivo(IFormFile file, TipoAcervo tipoAcervo)
+        public async Task<ImportacaoArquivoRetornoDTO<AcervoBibliograficoLinhaRetornoDTO>> ImportarArquivo(IFormFile file, TipoAcervo tipoAcervo)
         {
             ValidarArquivo(file);
         
@@ -40,19 +39,8 @@ namespace SME.CDEP.Aplicacao.Servicos
 
             var importacaoArquivo = ObterImportacaoArquivoParaSalvar(file.FileName, tipoAcervo, JsonConvert.SerializeObject(acervosBibliograficosLinhas));
             
-            importacaoArquivo.Id = await PersistirImportacao(importacaoArquivo);
-
-            var retorno = await repositorioImportacaoArquivo.ObterPorId(importacaoArquivo.Id);
-            
-            return mapper.Map<ImportacaoArquivoDTO>(retorno);
-        }
-        
-        public async Task<ImportacaoArquivoDTO> IniciarImportacao(long importacaoArquivoId)
-        {
-            var importacaoArquivo = await repositorioImportacaoArquivo.ObterPorId(importacaoArquivoId);
-
-            var acervosBibliograficosLinhas = JsonConvert.DeserializeObject<IEnumerable<AcervoBibliograficoLinhaDTO>>(importacaoArquivo.Conteudo);
-
+            var importacaoArquivoId = await PersistirImportacao(importacaoArquivo);
+           
             ValidarPreenchimentoValorFormatoQtdeCaracteres(acervosBibliograficosLinhas);
             
             await AtualizarImportacao(importacaoArquivoId, JsonConvert.SerializeObject(acervosBibliograficosLinhas),ImportacaoStatus.ValidadoPreenchimentoValorFormatoQtdeCaracteres);
@@ -62,79 +50,43 @@ namespace SME.CDEP.Aplicacao.Servicos
             
             await PersistenciaAcervoBibliografico(acervosBibliograficosLinhas, importacaoArquivoId);
 
-            var retorno = await repositorioImportacaoArquivo.ObterPorId(importacaoArquivoId);
-            
-            return mapper.Map<ImportacaoArquivoDTO>(retorno);
-        }
-        
-        public async Task<ImportacaoArquivoDTO> Salvar(IEnumerable<AcervoBibliograficoTelaDTO> acervosBibliograficosTela, long importacaoArquivoId)
-        {
-            var importacaoArquivo = await repositorioImportacaoArquivo.ObterPorId(importacaoArquivoId);
-            var acervosBibliograficosLinhas = JsonConvert.DeserializeObject<IEnumerable<AcervoBibliograficoLinhaDTO>>(importacaoArquivo.Conteudo);
+            var arquivoImportado = await repositorioImportacaoArquivo.ObterPorId(importacaoArquivoId);
 
-            AcervoBibliograficoTelaParaLinha(acervosBibliograficosTela, acervosBibliograficosLinhas);
-
-            ValidarPreenchimentoValorFormatoQtdeCaracteres(acervosBibliograficosLinhas);
-            await AtualizarImportacao(importacaoArquivoId, JsonConvert.SerializeObject(acervosBibliograficosLinhas),ImportacaoStatus.ValidadoPreenchimentoValorFormatoQtdeCaracteres);
-
-            await ValidacaoObterOuInserirDominios(acervosBibliograficosLinhas);
-            await AtualizarImportacao(importacaoArquivoId, JsonConvert.SerializeObject(acervosBibliograficosLinhas),ImportacaoStatus.ValidacaoDominios);
-
-            await PersistenciaAcervoBibliografico(acervosBibliograficosLinhas, importacaoArquivoId);
-            
-            var retorno = await repositorioImportacaoArquivo.ObterPorId(importacaoArquivoId);
-            
-            return mapper.Map<ImportacaoArquivoDTO>(retorno);
-        }
-
-        private static void AcervoBibliograficoTelaParaLinha(IEnumerable<AcervoBibliograficoTelaDTO> acervosBibliograficosTela,
-            IEnumerable<AcervoBibliograficoLinhaDTO>? acervosBibliograficosLinhasExistente)
-        {
-            foreach (var acervoBibliograficoTela in acervosBibliograficosTela)
+            var acervoBibliograficoRetorno = new ImportacaoArquivoRetornoDTO<AcervoBibliograficoLinhaRetornoDTO>()
             {
-                acervosBibliograficosLinhasExistente.FirstOrDefault(f => f.NumeroLinha == acervoBibliograficoTela.NumeroLinha)
-                    .Titulo.Conteudo = acervoBibliograficoTela.Titulo;
-                acervosBibliograficosLinhasExistente.FirstOrDefault(f => f.NumeroLinha == acervoBibliograficoTela.NumeroLinha)
-                    .SubTitulo.Conteudo = acervoBibliograficoTela.SubTitulo;
-                acervosBibliograficosLinhasExistente.FirstOrDefault(f => f.NumeroLinha == acervoBibliograficoTela.NumeroLinha)
-                    .Material.Conteudo = acervoBibliograficoTela.Material;
-                acervosBibliograficosLinhasExistente.FirstOrDefault(f => f.NumeroLinha == acervoBibliograficoTela.NumeroLinha)
-                    .Autor.Conteudo = acervoBibliograficoTela.Autor;
-                acervosBibliograficosLinhasExistente.FirstOrDefault(f => f.NumeroLinha == acervoBibliograficoTela.NumeroLinha)
-                    .CoAutor.Conteudo = acervoBibliograficoTela.CoAutor;
-                acervosBibliograficosLinhasExistente.FirstOrDefault(f => f.NumeroLinha == acervoBibliograficoTela.NumeroLinha)
-                    .TipoAutoria.Conteudo = acervoBibliograficoTela.TipoAutoria;
-                acervosBibliograficosLinhasExistente.FirstOrDefault(f => f.NumeroLinha == acervoBibliograficoTela.NumeroLinha)
-                    .Editora.Conteudo = acervoBibliograficoTela.Editora;
-                acervosBibliograficosLinhasExistente.FirstOrDefault(f => f.NumeroLinha == acervoBibliograficoTela.NumeroLinha)
-                    .Assunto.Conteudo = acervoBibliograficoTela.Assunto;
-                acervosBibliograficosLinhasExistente.FirstOrDefault(f => f.NumeroLinha == acervoBibliograficoTela.NumeroLinha)
-                    .Ano.Conteudo = acervoBibliograficoTela.Ano;
-                acervosBibliograficosLinhasExistente.FirstOrDefault(f => f.NumeroLinha == acervoBibliograficoTela.NumeroLinha)
-                    .Edicao.Conteudo = acervoBibliograficoTela.Edicao;
-                acervosBibliograficosLinhasExistente.FirstOrDefault(f => f.NumeroLinha == acervoBibliograficoTela.NumeroLinha)
-                    .NumeroPaginas.Conteudo = acervoBibliograficoTela.NumeroPaginas;
-                acervosBibliograficosLinhasExistente.FirstOrDefault(f => f.NumeroLinha == acervoBibliograficoTela.NumeroLinha)
-                    .Largura.Conteudo = acervoBibliograficoTela.Largura;
-                acervosBibliograficosLinhasExistente.FirstOrDefault(f => f.NumeroLinha == acervoBibliograficoTela.NumeroLinha)
-                    .Altura.Conteudo = acervoBibliograficoTela.Altura;
-                acervosBibliograficosLinhasExistente.FirstOrDefault(f => f.NumeroLinha == acervoBibliograficoTela.NumeroLinha)
-                    .SerieColecao.Conteudo = acervoBibliograficoTela.SerieColecao;
-                acervosBibliograficosLinhasExistente.FirstOrDefault(f => f.NumeroLinha == acervoBibliograficoTela.NumeroLinha)
-                    .Volume.Conteudo = acervoBibliograficoTela.Volume;
-                acervosBibliograficosLinhasExistente.FirstOrDefault(f => f.NumeroLinha == acervoBibliograficoTela.NumeroLinha)
-                    .Idioma.Conteudo = acervoBibliograficoTela.Idioma;
-                acervosBibliograficosLinhasExistente.FirstOrDefault(f => f.NumeroLinha == acervoBibliograficoTela.NumeroLinha)
-                    .LocalizacaoCDD.Conteudo = acervoBibliograficoTela.LocalizacaoCDD;
-                acervosBibliograficosLinhasExistente.FirstOrDefault(f => f.NumeroLinha == acervoBibliograficoTela.NumeroLinha)
-                    .LocalizacaoPHA.Conteudo = acervoBibliograficoTela.LocalizacaoPHA;
-                acervosBibliograficosLinhasExistente.FirstOrDefault(f => f.NumeroLinha == acervoBibliograficoTela.NumeroLinha)
-                    .NotasGerais.Conteudo = acervoBibliograficoTela.NotasGerais;
-                acervosBibliograficosLinhasExistente.FirstOrDefault(f => f.NumeroLinha == acervoBibliograficoTela.NumeroLinha)
-                    .Isbn.Conteudo = acervoBibliograficoTela.Isbn;
-                acervosBibliograficosLinhasExistente.FirstOrDefault(f => f.NumeroLinha == acervoBibliograficoTela.NumeroLinha)
-                    .Tombo.Conteudo = acervoBibliograficoTela.Tombo;
-            }
+                Id = arquivoImportado.Id,
+                Nome = arquivoImportado.Nome,
+                TipoAcervo = arquivoImportado.TipoAcervo,
+                DataImportacao = arquivoImportado.CriadoEm,
+                Erros = LinhasComErros.Any()
+                    ? acervosBibliograficosLinhas
+                        .Where(w => LinhasComErros.Contains(w.NumeroLinha))
+                        .Select(s =>  new AcervoBibliograficoLinhaRetornoDTO()
+                        {
+                            Titulo = new LinhaConteudoAjustarRetornoDTO() { Conteudo = s.Titulo.Conteudo, Validado = s.Titulo.Validado, Mensagem = s.Titulo.Mensagem },
+                            SubTitulo = new LinhaConteudoAjustarRetornoDTO() { Conteudo = s.SubTitulo.Conteudo, Validado = s.SubTitulo.Validado, Mensagem = s.SubTitulo.Mensagem },
+                            Material = new LinhaConteudoAjustarRetornoDTO() { Conteudo = s.Material.Conteudo, Validado = s.Material.Validado, Mensagem = s.Material.Mensagem },
+                            Autor = new LinhaConteudoAjustarRetornoDTO() { Conteudo = s.Autor.Conteudo, Validado = s.Autor.Validado, Mensagem = s.Autor.Mensagem },
+                            CoAutor = new LinhaConteudoAjustarRetornoDTO() { Conteudo = s.CoAutor.Conteudo, Validado = s.CoAutor.Validado, Mensagem = s.CoAutor.Mensagem },
+                            TipoAutoria = new LinhaConteudoAjustarRetornoDTO() { Conteudo = s.TipoAutoria.Conteudo, Validado = s.TipoAutoria.Validado, Mensagem = s.TipoAutoria.Mensagem },
+                            Editora = new LinhaConteudoAjustarRetornoDTO() { Conteudo = s.Editora.Conteudo, Validado = s.Editora.Validado, Mensagem = s.Editora.Mensagem },
+                            Assunto = new LinhaConteudoAjustarRetornoDTO() { Conteudo = s.Assunto.Conteudo, Validado = s.Assunto.Validado, Mensagem = s.Assunto.Mensagem },
+                            Ano = new LinhaConteudoAjustarRetornoDTO() { Conteudo = s.Ano.Conteudo, Validado = s.Ano.Validado, Mensagem = s.Ano.Mensagem },
+                            Edicao = new LinhaConteudoAjustarRetornoDTO() { Conteudo = s.Edicao.Conteudo, Validado = s.Edicao.Validado, Mensagem = s.Edicao.Mensagem },
+                            NumeroPaginas = new LinhaConteudoAjustarRetornoDTO() { Conteudo = s.NumeroPaginas.Conteudo, Validado = s.NumeroPaginas.Validado, Mensagem = s.NumeroPaginas.Mensagem },
+                            Largura = new LinhaConteudoAjustarRetornoDTO() { Conteudo = s.Largura.Conteudo, Validado = s.Largura.Validado, Mensagem = s.Largura.Mensagem },
+                            Altura = new LinhaConteudoAjustarRetornoDTO() { Conteudo = s.Altura.Conteudo, Validado = s.Altura.Validado, Mensagem = s.Altura.Mensagem },
+                            SerieColecao = new LinhaConteudoAjustarRetornoDTO() { Conteudo = s.SerieColecao.Conteudo, Validado = s.SerieColecao.Validado, Mensagem = s.SerieColecao.Mensagem },
+                            Volume = new LinhaConteudoAjustarRetornoDTO() { Conteudo = s.Volume.Conteudo, Validado = s.Volume.Validado, Mensagem = s.Volume.Mensagem },
+                            Idioma = new LinhaConteudoAjustarRetornoDTO() { Conteudo = s.Idioma.Conteudo, Validado = s.Idioma.Validado, Mensagem = s.Idioma.Mensagem },
+                            LocalizacaoCDD = new LinhaConteudoAjustarRetornoDTO() { Conteudo = s.LocalizacaoCDD.Conteudo, Validado = s.LocalizacaoCDD.Validado, Mensagem = s.LocalizacaoCDD.Mensagem },
+                            LocalizacaoPHA = new LinhaConteudoAjustarRetornoDTO() { Conteudo = s.LocalizacaoPHA.Conteudo, Validado = s.LocalizacaoPHA.Validado, Mensagem = s.LocalizacaoPHA.Mensagem },
+                            NotasGerais = new LinhaConteudoAjustarRetornoDTO() { Conteudo = s.NotasGerais.Conteudo, Validado = s.NotasGerais.Validado, Mensagem = s.NotasGerais.Mensagem },
+                            Isbn = new LinhaConteudoAjustarRetornoDTO() { Conteudo = s.Isbn.Conteudo, Validado = s.Isbn.Validado, Mensagem = s.Isbn.Mensagem },
+                            Tombo = new LinhaConteudoAjustarRetornoDTO() { Conteudo = s.Tombo.Conteudo, Validado = s.Tombo.Validado, Mensagem = s.Tombo.Mensagem },
+                        }) : new List<AcervoBibliograficoLinhaRetornoDTO>(Enumerable.Empty<AcervoBibliograficoLinhaRetornoDTO>())
+            };
+            return acervoBibliograficoRetorno;
         }
 
         public async Task PersistenciaAcervoBibliografico(IEnumerable<AcervoBibliograficoLinhaDTO> acervosBibliograficosLinhas, long importacaoArquivoId)
@@ -233,34 +185,34 @@ namespace SME.CDEP.Aplicacao.Servicos
         {
             foreach (var linha in linhas)
             {
-                ValidarPreenchimentoLimiteCaracteres(linha.Titulo, Constantes.TITULO);
-                ValidarPreenchimentoLimiteCaracteres(linha.SubTitulo, Constantes.SUB_TITULO);
-                ValidarPreenchimentoLimiteCaracteres(linha.Material,Constantes.MATERIAL);
-                ValidarPreenchimentoLimiteCaracteres(linha.Autor,Constantes.AUTOR);
-                ValidarPreenchimentoLimiteCaracteres(linha.CoAutor,Constantes.CO_AUTOR);
-                ValidarPreenchimentoLimiteCaracteres(linha.TipoAutoria,Constantes.TIPO_AUTORIA);
+                ValidarPreenchimentoLimiteCaracteres(linha.Titulo, Constantes.TITULO, linha.NumeroLinha);
+                ValidarPreenchimentoLimiteCaracteres(linha.SubTitulo, Constantes.SUB_TITULO, linha.NumeroLinha);
+                ValidarPreenchimentoLimiteCaracteres(linha.Material,Constantes.MATERIAL, linha.NumeroLinha);
+                ValidarPreenchimentoLimiteCaracteres(linha.Autor,Constantes.AUTOR, linha.NumeroLinha);
+                ValidarPreenchimentoLimiteCaracteres(linha.CoAutor,Constantes.CO_AUTOR, linha.NumeroLinha);
+                ValidarPreenchimentoLimiteCaracteres(linha.TipoAutoria,Constantes.TIPO_AUTORIA, linha.NumeroLinha);
                 
                 if (linha.TipoAutoria.Conteudo.EstaPreenchido() && linha.CoAutor.Conteudo.NaoEstaPreenchido())
-                    DefinirMensagemErro(linha.TipoAutoria, Constantes.CAMPO_COAUTOR_SEM_PREENCHIMENTO_E_TIPO_AUTORIA_PREENCHIDO);
+                    DefinirMensagemErro(linha.TipoAutoria, Constantes.CAMPO_COAUTOR_SEM_PREENCHIMENTO_E_TIPO_AUTORIA_PREENCHIDO, linha.NumeroLinha);
 
                 if (linha.TipoAutoria.Conteudo.SplitPipe().Count() > linha.CoAutor.Conteudo.SplitPipe().Count())
-                    DefinirMensagemErro(linha.TipoAutoria, Constantes.TEMOS_MAIS_TIPO_AUTORIA_QUE_COAUTORES);
+                    DefinirMensagemErro(linha.TipoAutoria, Constantes.TEMOS_MAIS_TIPO_AUTORIA_QUE_COAUTORES, linha.NumeroLinha);
                 
-                ValidarPreenchimentoLimiteCaracteres(linha.Editora,Constantes.EDITORA);
-                ValidarPreenchimentoLimiteCaracteres(linha.Assunto,Constantes.ASSUNTO);
-                ValidarPreenchimentoLimiteCaracteres(linha.Ano,Constantes.ANO);
-                ValidarPreenchimentoLimiteCaracteres(linha.Edicao,Constantes.EDICAO);
-                ValidarPreenchimentoLimiteCaracteres(linha.NumeroPaginas,Constantes.NUMERO_PAGINAS);
-                ValidarPreenchimentoLimiteCaracteres(linha.Largura,Constantes.LARGURA);
-                ValidarPreenchimentoLimiteCaracteres(linha.Altura,Constantes.ALTURA);
-                ValidarPreenchimentoLimiteCaracteres(linha.SerieColecao,Constantes.SERIE_COLECAO);
-                ValidarPreenchimentoLimiteCaracteres(linha.Volume,Constantes.VOLUME);
-                ValidarPreenchimentoLimiteCaracteres(linha.Idioma,Constantes.IDIOMA);
-                ValidarPreenchimentoLimiteCaracteres(linha.LocalizacaoCDD,Constantes.LOCALIZACAO_CDD);
-                ValidarPreenchimentoLimiteCaracteres(linha.LocalizacaoPHA,Constantes.LOCALIZACAO_PHA);
-                ValidarPreenchimentoLimiteCaracteres(linha.NotasGerais,Constantes.NOTAS_GERAIS);
-                ValidarPreenchimentoLimiteCaracteres(linha.Isbn,Constantes.ISBN);
-                ValidarPreenchimentoLimiteCaracteres(linha.Tombo,Constantes.TOMBO);
+                ValidarPreenchimentoLimiteCaracteres(linha.Editora,Constantes.EDITORA, linha.NumeroLinha);
+                ValidarPreenchimentoLimiteCaracteres(linha.Assunto,Constantes.ASSUNTO, linha.NumeroLinha);
+                ValidarPreenchimentoLimiteCaracteres(linha.Ano,Constantes.ANO, linha.NumeroLinha);
+                ValidarPreenchimentoLimiteCaracteres(linha.Edicao,Constantes.EDICAO, linha.NumeroLinha);
+                ValidarPreenchimentoLimiteCaracteres(linha.NumeroPaginas,Constantes.NUMERO_PAGINAS, linha.NumeroLinha);
+                ValidarPreenchimentoLimiteCaracteres(linha.Largura,Constantes.LARGURA, linha.NumeroLinha);
+                ValidarPreenchimentoLimiteCaracteres(linha.Altura,Constantes.ALTURA, linha.NumeroLinha);
+                ValidarPreenchimentoLimiteCaracteres(linha.SerieColecao,Constantes.SERIE_COLECAO, linha.NumeroLinha);
+                ValidarPreenchimentoLimiteCaracteres(linha.Volume,Constantes.VOLUME, linha.NumeroLinha);
+                ValidarPreenchimentoLimiteCaracteres(linha.Idioma,Constantes.IDIOMA, linha.NumeroLinha);
+                ValidarPreenchimentoLimiteCaracteres(linha.LocalizacaoCDD,Constantes.LOCALIZACAO_CDD, linha.NumeroLinha);
+                ValidarPreenchimentoLimiteCaracteres(linha.LocalizacaoPHA,Constantes.LOCALIZACAO_PHA, linha.NumeroLinha);
+                ValidarPreenchimentoLimiteCaracteres(linha.NotasGerais,Constantes.NOTAS_GERAIS, linha.NumeroLinha);
+                ValidarPreenchimentoLimiteCaracteres(linha.Isbn,Constantes.ISBN, linha.NumeroLinha);
+                ValidarPreenchimentoLimiteCaracteres(linha.Tombo,Constantes.TOMBO, linha.NumeroLinha);
             }
         }
 

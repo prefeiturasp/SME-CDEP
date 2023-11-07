@@ -16,6 +16,6 @@ namespace SME.CDEP.Aplicacao.Servicos.Interface
         Task ValidarOuInserirIdiomas(IEnumerable<string> idiomas);
         Task ValidarOuInserirAssuntos(IEnumerable<string> assuntos);
         Task ValidarOuInserirCreditoAutoresCoAutores(IEnumerable<string> creditosAutoresCoautores, TipoCreditoAutoria tipoCreditoAutoria);
-        void ValidarPreenchimentoLimiteCaracteres(LinhaConteudoAjustarDTO campo, string nomeCampo);
+        void ValidarPreenchimentoLimiteCaracteres(LinhaConteudoAjustarDTO campo, string nomeCampo, int numeroLinha);
     }
 }

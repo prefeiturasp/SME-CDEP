@@ -10,15 +10,15 @@ namespace SME.CDEP.Webapi.Controllers;
 
 [ApiController]
 [ValidaDto]
-public class ImportacaoArquivoController: BaseController
+public class ImportacaoArquivoAcervoBibliograficoController: BaseController
 {
     [HttpPost]
     [ProducesResponseType(200)]
     [ProducesResponseType(401)]
     [ProducesResponseType(typeof(RetornoBaseDTO), 500)]
     // [Authorize("Bearer")]
-    public async Task<IActionResult> UploadPorTipoAcervo(IFormFile file, TipoAcervo tipoAcervo,[FromServices] IServicoImportacaoArquivo servicoImportacaoArquivo)
+    public async Task<IActionResult> UploadPorTipoAcervo(IFormFile file, TipoAcervo tipoAcervo,[FromServices] IServicoImportacaoArquivoAcervoBibliografico servicoImportacaoArquivoAcervoBibliografico)
     {
-        return Ok(await servicoImportacaoArquivo.ImportarArquivoPorTipoAcervo(file,tipoAcervo));
+        return Ok(await servicoImportacaoArquivoAcervoBibliografico.ImportarArquivo(file,tipoAcervo));
     }
 }

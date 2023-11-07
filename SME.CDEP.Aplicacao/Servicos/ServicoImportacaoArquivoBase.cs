@@ -27,6 +27,7 @@ namespace SME.CDEP.Aplicacao.Servicos
         protected List<IdNomeDTO> SeriesColecoes;
         protected List<IdNomeDTO> Idiomas;
         protected List<IdNomeDTO> Assuntos;
+        protected List<long> LinhasComErros;
         protected List<IdNomeTipoDTO> CreditosAutores { get; set; }
 
         public ServicoImportacaoArquivoBase(IRepositorioImportacaoArquivo repositorioImportacaoArquivo, IServicoMaterial servicoMaterial,
@@ -46,6 +47,7 @@ namespace SME.CDEP.Aplicacao.Servicos
             Idiomas = new List<IdNomeDTO>();
             Assuntos = new List<IdNomeDTO>();
             CreditosAutores = new List<IdNomeTipoDTO>();
+            LinhasComErros = new List<long>();
         }
 
         public void ValidarArquivo(IFormFile file)
@@ -258,7 +260,7 @@ namespace SME.CDEP.Aplicacao.Servicos
             CreditosAutores.Add(new IdNomeTipoDTO() { Id = id, Nome = nome, Tipo = (int)tipoCreditoAutoria});
         }
 
-        public void ValidarPreenchimentoLimiteCaracteres(LinhaConteudoAjustarDTO campo, string nomeCampo)
+        public void ValidarPreenchimentoLimiteCaracteres(LinhaConteudoAjustarDTO campo, string nomeCampo, int numeroLinha)
         {
             var conteudoCampo = campo.Conteudo.Trim();
             
@@ -273,7 +275,7 @@ namespace SME.CDEP.Aplicacao.Servicos
                             DefinirCampoValidado(campo);
                         else
                         {
-                            DefinirMensagemErro(campo, string.Format(Constantes.CAMPO_X_ATINGIU_LIMITE_CARACTERES, nomeCampo));
+                            DefinirMensagemErro(campo, string.Format(Constantes.CAMPO_X_ATINGIU_LIMITE_CARACTERES, nomeCampo),numeroLinha);
                             break;
                         }
                     }
@@ -283,36 +285,37 @@ namespace SME.CDEP.Aplicacao.Servicos
                     if (double.TryParse(conteudoCampo, out double formatoDouble))
                         DefinirCampoValidado(campo);
                     else
-                        DefinirMensagemErro(campo, string.Format(Constantes.CAMPO_X_REQUER_UM_VALOR_NUMERICO, nomeCampo));  
+                        DefinirMensagemErro(campo, string.Format(Constantes.CAMPO_X_REQUER_UM_VALOR_NUMERICO, nomeCampo),numeroLinha);  
                 }
                 else if (campo.FormatoTipoDeCampo.EhFormatoInteiro())
                 {
                     if (int.TryParse(conteudoCampo, out int formatoInteiro))
                         DefinirCampoValidado(campo);
                     else
-                        DefinirMensagemErro(campo, string.Format(Constantes.CAMPO_X_REQUER_UM_VALOR_NUMERICO, nomeCampo));  
+                        DefinirMensagemErro(campo, string.Format(Constantes.CAMPO_X_REQUER_UM_VALOR_NUMERICO, nomeCampo),numeroLinha);  
                 }
                 else if (campo.FormatoTipoDeCampo.EhFormatoLongo())
                 {
                     if (long.TryParse(conteudoCampo, out long formatoInteiro))
                         DefinirCampoValidado(campo);
                     else
-                        DefinirMensagemErro(campo, string.Format(Constantes.CAMPO_X_REQUER_UM_VALOR_NUMERICO, nomeCampo));  
+                        DefinirMensagemErro(campo, string.Format(Constantes.CAMPO_X_REQUER_UM_VALOR_NUMERICO, nomeCampo),numeroLinha);  
                 }
             }
             else
             {
                 if (campo.EhCampoObrigatorio)
-                    DefinirMensagemErro(campo, string.Format(Constantes.CAMPO_X_NAO_PREENCHIDO, nomeCampo));
+                    DefinirMensagemErro(campo, string.Format(Constantes.CAMPO_X_NAO_PREENCHIDO, nomeCampo),numeroLinha);
                 else
                     DefinirCampoValidado(campo);
             }
         }
 
-        protected void DefinirMensagemErro(LinhaConteudoAjustarDTO campo, string mensagemErro)
+        protected void DefinirMensagemErro(LinhaConteudoAjustarDTO campo, string mensagemErro, int numeroLinha)
         {
             campo.Validado = false;
             campo.Mensagem = mensagemErro;
+            LinhasComErros.Add(numeroLinha);
         }
 
         private void DefinirCampoValidado(LinhaConteudoAjustarDTO campo)

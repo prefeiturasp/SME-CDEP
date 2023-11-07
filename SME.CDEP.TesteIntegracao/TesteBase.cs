@@ -190,11 +190,6 @@ namespace SME.CDEP.TesteIntegracao
             return ObterServicoAplicacao<IServicoAcervoBibliografico>();
         }
         
-        protected IServicoImportacaoArquivo GetServicoImportacaoArquivo()
-        {
-            return ObterServicoAplicacao<IServicoImportacaoArquivo>();
-        }
-        
         protected IMapper GetServicoMapper()
         {
             return ServiceProvider.GetService<IMapper>();
