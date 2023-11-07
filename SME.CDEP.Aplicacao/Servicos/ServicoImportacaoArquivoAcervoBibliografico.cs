@@ -35,7 +35,7 @@ namespace SME.CDEP.Aplicacao.Servicos
         {
             ValidarArquivo(file);
         
-            var acervosBibliograficosLinhas = await LerPlanilha(file, TipoAcervo.Bibliografico);
+            var acervosBibliograficosLinhas = await LerPlanilha(file);
 
             var importacaoArquivo = ObterImportacaoArquivoParaSalvar(file.FileName, TipoAcervo.Bibliografico, JsonConvert.SerializeObject(acervosBibliograficosLinhas));
             
@@ -234,7 +234,7 @@ namespace SME.CDEP.Aplicacao.Servicos
             await ValidarOuInserirCreditoAutoresCoAutores(linhas.Select(s => s.CoAutor.Conteudo).ToArray().UnificarPipe().SplitPipe().Distinct(), TipoCreditoAutoria.Autoria);
         }
 
-        private async Task<IEnumerable<AcervoBibliograficoLinhaDTO>> LerPlanilha(IFormFile file, TipoAcervo tipoAcervo)
+        private async Task<IEnumerable<AcervoBibliograficoLinhaDTO>> LerPlanilha(IFormFile file)
         {
             var linhas = new List<AcervoBibliograficoLinhaDTO>();
 
