@@ -13,7 +13,7 @@ namespace SME.CDEP.Webapi.Controllers;
 public class ImportacaoArquivoAcervoBibliograficoController: BaseController
 {
     [HttpPost]
-    [ProducesResponseType(200)]
+    [ProducesResponseType(typeof(ImportacaoArquivoRetornoDTO<AcervoBibliograficoLinhaRetornoDTO>),200)]
     [ProducesResponseType(401)]
     [ProducesResponseType(typeof(RetornoBaseDTO), 500)]
     [Authorize("Bearer")] 
