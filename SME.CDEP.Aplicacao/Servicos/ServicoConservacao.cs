@@ -9,7 +9,13 @@ namespace SME.CDEP.Aplicacao.Servicos
 {
     public class ServicoConservacao : ServicoAplicacao<Conservacao, IdNomeExcluidoDTO>,IServicoConservacao
     {
-        public ServicoConservacao(IRepositorioConservacao repositorio, IMapper mapper) : base(repositorio, mapper)
+        private readonly IRepositorioConservacao repositorioConservacao;
+        public ServicoConservacao(IRepositorioConservacao repositorioConservacao, IMapper mapper) : base(repositorioConservacao, mapper)
         {}
+
+        public Task<long> ObterPorNome(string nome)
+        {
+            return repositorioConservacao.ObterPorNome(nome);
+        }
     }
 }

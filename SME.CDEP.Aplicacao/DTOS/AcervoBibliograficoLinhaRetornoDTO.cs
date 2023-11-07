@@ -26,5 +26,5 @@ public class AcervoBibliograficoLinhaRetornoDTO : LinhaDTO
     public LinhaConteudoAjustarRetornoDTO Isbn { get; set; }
     public LinhaConteudoAjustarRetornoDTO Tombo { get; set; }
     public ImportacaoStatus Status { get; set; }
-    public int NumeroLinha { get; set; } = 1;
+    public int NumeroLinha { get; set; }
 }

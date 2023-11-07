@@ -57,7 +57,8 @@ namespace SME.CDEP.Aplicacao.Servicos
             await AtualizarImportacao(importacaoArquivoId, JsonConvert.SerializeObject(acervosBibliograficosLinhas),ImportacaoStatus.ValidacaoDominios);
             
             await PersistenciaAcervoBibliografico(acervosBibliograficosLinhas, importacaoArquivoId);
-
+            await AtualizarImportacao(importacaoArquivoId, JsonConvert.SerializeObject(acervosBibliograficosLinhas), acervosBibliograficosLinhas.Any(a=> a.PossuiErros) ? ImportacaoStatus.Erros : ImportacaoStatus.Sucesso);
+            
             var arquivoImportado = await repositorioImportacaoArquivo.ObterPorId(importacaoArquivoId);
 
             return ObterRetornoImportacaoAcervoBibliografico(arquivoImportado, acervosBibliograficosLinhas);
