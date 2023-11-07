@@ -31,13 +31,13 @@ namespace SME.CDEP.Aplicacao.Servicos
             CreditosAutores = creditosAutores;
         }
         
-        public async Task<ImportacaoArquivoRetornoDTO<AcervoBibliograficoLinhaRetornoDTO>> ImportarArquivo(IFormFile file, TipoAcervo tipoAcervo)
+        public async Task<ImportacaoArquivoRetornoDTO<AcervoBibliograficoLinhaRetornoDTO>> ImportarArquivo(IFormFile file)
         {
             ValidarArquivo(file);
         
-            var acervosBibliograficosLinhas = await LerPlanilha(file, tipoAcervo);
+            var acervosBibliograficosLinhas = await LerPlanilha(file, TipoAcervo.Bibliografico);
 
-            var importacaoArquivo = ObterImportacaoArquivoParaSalvar(file.FileName, tipoAcervo, JsonConvert.SerializeObject(acervosBibliograficosLinhas));
+            var importacaoArquivo = ObterImportacaoArquivoParaSalvar(file.FileName, TipoAcervo.Bibliografico, JsonConvert.SerializeObject(acervosBibliograficosLinhas));
             
             var importacaoArquivoId = await PersistirImportacao(importacaoArquivo);
            
