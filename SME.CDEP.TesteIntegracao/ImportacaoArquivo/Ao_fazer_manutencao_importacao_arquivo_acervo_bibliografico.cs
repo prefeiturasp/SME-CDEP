@@ -11,9 +11,9 @@ using Xunit;
 
 namespace SME.CDEP.TesteIntegracao
 {
-    public class Ao_fazer_manutencao_importacao_arquivo_acervo_fotografico : TesteBase
+    public class Ao_fazer_manutencao_importacao_arquivo_acervo_bibliografico : TesteBase
     {
-        public Ao_fazer_manutencao_importacao_arquivo_acervo_fotografico(CollectionFixture collectionFixture) : base(collectionFixture)
+        public Ao_fazer_manutencao_importacao_arquivo_acervo_bibliografico(CollectionFixture collectionFixture) : base(collectionFixture)
         {}
 
         [Fact(DisplayName = "Importação Arquivo Acervo Bibliográfico - ObterCoAutoresTipoAutoria com tipo autoria nos 3 primeiros coautores")]
