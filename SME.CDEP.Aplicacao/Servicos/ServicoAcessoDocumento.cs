@@ -9,7 +9,17 @@ namespace SME.CDEP.Aplicacao.Servicos
 {
     public class ServicoAcessoDocumento : ServicoAplicacao<AcessoDocumento, IdNomeExcluidoDTO>,IServicoAcessoDocumento
     {
-        public ServicoAcessoDocumento(IRepositorioAcessoDocumento repositorio, IMapper mapper) : base(repositorio, mapper)
-        {}
+        private readonly IRepositorioAcessoDocumento repositorioAcessoDocumento;
+
+        public ServicoAcessoDocumento(IRepositorioAcessoDocumento repositorioAcessoDocumento, IMapper mapper) : base(repositorioAcessoDocumento,
+            mapper)
+        {
+            this.repositorioAcessoDocumento = repositorioAcessoDocumento ?? throw new ArgumentNullException(nameof(repositorioAcessoDocumento));
+        }
+
+        public Task<long> ObterPorNome(string nome)
+        {
+            return repositorioAcessoDocumento.ObterPorNome(nome);
+        }
     }
 }

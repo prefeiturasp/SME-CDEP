@@ -2,32 +2,43 @@
 
 public class Constantes
 {
-    public static string FORMATO_STRING = "string";
-    public static string FORMATO_DOUBLE = "double";
-    public static string FORMATO_INTEIRO = "int";
-    public static string FORMATO_LONGO = "long";
+    public const string OPCAO_SIM = "sim";
+    
+    public const string FORMATO_STRING = "string";
+    public const string FORMATO_DOUBLE = "double";
+    public const string FORMATO_INTEIRO = "int";
+    public const string FORMATO_LONGO = "long";
 
-    public const string MATERIAL = "material";
-    public const string TITULO = "título";
-    public const string SUB_TITULO = "subtítulo";
-    public const string AUTOR = "autor";
-    public const string CO_AUTOR = "coautor";
-    public const string TIPO_AUTORIA = "tipo autoria";
-    public const string EDITORA = "editora";
-    public const string ASSUNTO = "assunto";
-    public const string ANO = "ano";
-    public const string EDICAO = "edição";
-    public const string NUMERO_PAGINAS = "número de páginas";
-    public const string LARGURA = "largura";
-    public const string ALTURA = "altura";
-    public const string SERIE_COLECAO = "série/coleção";
-    public const string VOLUME = "volume";
-    public const string IDIOMA = "idioma";
-    public const string LOCALIZACAO_CDD = "localização CDD";
-    public const string LOCALIZACAO_PHA = "localização PHA";
-    public const string NOTAS_GERAIS = "notas gerais";
-    public const string ISBN = "isbn";
-    public const string TOMBO = "tombo";
+    public const string MATERIAL = "Material";
+    public const string TITULO = "Título";
+    public const string SUB_TITULO = "Subtítulo";
+    public const string AUTOR = "Autor";
+    public const string CO_AUTOR = "Coautor";
+    public const string TIPO_AUTORIA = "Tipo autoria";
+    public const string EDITORA = "Editora";
+    public const string ASSUNTO = "Assunto";
+    public const string ANO = "Ano";
+    public const string EDICAO = "Edição";
+    public const string NUMERO_PAGINAS = "Número de páginas";
+    public const string LARGURA = "Largura";
+    public const string ALTURA = "Altura";
+    public const string SERIE_COLECAO = "Série/coleção";
+    public const string VOLUME = "Volume";
+    public const string IDIOMA = "Idioma";
+    public const string LOCALIZACAO_CDD = "Localização CDD";
+    public const string LOCALIZACAO_PHA = "Localização PHA";
+    public const string NOTAS_GERAIS = "Notas gerais";
+    public const string ISBN = "Isbn";
+    public const string TOMBO = "Tombo";
+    public const string CODIGO_ANTIGO = "Código antigo";
+    public const string CODIGO_NOVO = "Código novo";
+    public const string DESCRICAO = "Descrição";
+    public const string TIPO_ANEXO = "Tipo anexo";
+    public const string TAMANHO_ARQUIVO = "Tamanho arquivo";
+    public const string ACESSO_DOCUMENTO = "Acesso documento";
+    public const string LOCALIZACAO = "Localização";
+    public const string COPIA_DIGITAL = "Cópia digital";
+    public const string ESTADO_CONSERVACAO = "Estado conservação";
     
     public const string CAMPO_X_NAO_PREENCHIDO = "O campo '{0}' é obrigatório";
     public const string CAMPO_X_ATINGIU_LIMITE_CARACTERES = "Os campos '{0}' atingiu o limite de caracteres";
@@ -36,6 +47,7 @@ public class Constantes
     public const string TEMOS_MAIS_TIPO_AUTORIA_QUE_COAUTORES = "A quantidade de tipos de autoria excede a de coautores. É aceitável ter coautores desprovidos de tipo de autoria, mas o contrário não é permitido";
     public const string OCORREU_UMA_FALHA_INESPERADA_NA_LINHA_X_MOTIVO_Y = "Ocorreu uma falha inesperada na linha '{0}' -  Motivo: '{1}'";
     public const string OCORREU_UMA_FALHA_INESPERADA_NO_CADASTRO_DAS_REFERENCIAS_MOTIVO_X = "Ocorreu uma falha inesperada no cadastrodas referências -  Motivo: '{0}'";
+    public const string CAMPO_CODIGO_ANTIGO_OU_CODIGO_NOVO_DEVE_SER_PREENCHIDO = "O campo código antigo ou código novo deve ser preenchido";
     
     public const char PIPE = '|';
     public const int INICIO_LINHA_TITULO = 1;

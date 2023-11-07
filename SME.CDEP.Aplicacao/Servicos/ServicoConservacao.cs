@@ -10,8 +10,11 @@ namespace SME.CDEP.Aplicacao.Servicos
     public class ServicoConservacao : ServicoAplicacao<Conservacao, IdNomeExcluidoDTO>,IServicoConservacao
     {
         private readonly IRepositorioConservacao repositorioConservacao;
+
         public ServicoConservacao(IRepositorioConservacao repositorioConservacao, IMapper mapper) : base(repositorioConservacao, mapper)
-        {}
+        {
+            this.repositorioConservacao = repositorioConservacao ?? throw new ArgumentNullException(nameof(repositorioConservacao));
+        }
 
         public Task<long> ObterPorNome(string nome)
         {

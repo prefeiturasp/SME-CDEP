@@ -8,7 +8,6 @@ namespace SME.CDEP.Aplicacao.Servicos.Interface
     {
         Task<ImportacaoArquivoRetornoDTO<AcervoDocumentalLinhaRetornoDTO>> ImportarArquivo(IFormFile file);
         Task PersistenciaAcervoDocumental(IEnumerable<AcervoDocumentalLinhaDTO> acervosDocumentalLinhas, long importacaoArquivoId);
-        CoAutorDTO[] ObterCoAutoresTipoAutoria(string coautores, string tiposAutoria);
         void ValidarPreenchimentoValorFormatoQtdeCaracteres(IEnumerable<AcervoDocumentalLinhaDTO> linhas);
         Task ValidacaoObterOuInserirDominios(IEnumerable<AcervoDocumentalLinhaDTO> linhas);
         void DefinirCreditosAutores(List<IdNomeTipoDTO> creditosAutores);

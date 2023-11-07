@@ -211,9 +211,9 @@ namespace SME.CDEP.TesteIntegracao
         }
         
         
-        protected IServicoImportacaoArquivoBase GetServicoImportacaoArquivoBase()
+        protected IServicoImportacaoArquivoAcervoDocumental GetServicoImportacaoArquivoAcervoDocumental()
         {
-            return ServiceProvider.GetService<IServicoImportacaoArquivoBase>();
+            return ServiceProvider.GetService<IServicoImportacaoArquivoAcervoDocumental>();
         }
         
         protected IServicoImportacaoArquivoAcervoBibliografico GetServicoImportacaoArquivoAcervoBibliografico()

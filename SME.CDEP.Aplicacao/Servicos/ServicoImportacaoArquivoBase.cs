@@ -23,18 +23,20 @@ namespace SME.CDEP.Aplicacao.Servicos
         private readonly IServicoAssunto servicoAssunto;
         private readonly IServicoCreditoAutor servicoCreditoAutor;
         private readonly IServicoConservacao servicoConservacao;
+        private readonly IServicoAcessoDocumento servicoAcessoDocumento;
         protected List<IdNomeTipoDTO> Materiais;
         protected List<IdNomeDTO> Editoras;
         protected List<IdNomeDTO> SeriesColecoes;
         protected List<IdNomeDTO> Idiomas;
         protected List<IdNomeDTO> Assuntos;
         protected List<IdNomeDTO> Conservacoes;
+        protected List<IdNomeDTO> AcessoDocumentos;
         
         protected List<IdNomeTipoDTO> CreditosAutores { get; set; }
 
         public ServicoImportacaoArquivoBase(IRepositorioImportacaoArquivo repositorioImportacaoArquivo, IServicoMaterial servicoMaterial,
-            IServicoEditora servicoEditora,IServicoSerieColecao servicoSerieColecao,IServicoIdioma servicoIdioma,
-            IServicoAssunto servicoAssunto,IServicoCreditoAutor servicoCreditoAutor,IServicoConservacao servicoConservacao)
+            IServicoEditora servicoEditora,IServicoSerieColecao servicoSerieColecao,IServicoIdioma servicoIdioma, IServicoAssunto servicoAssunto,
+            IServicoCreditoAutor servicoCreditoAutor,IServicoConservacao servicoConservacao, IServicoAcessoDocumento servicoAcessoDocumento)
         {
             this.repositorioImportacaoArquivo = repositorioImportacaoArquivo ?? throw new ArgumentNullException(nameof(repositorioImportacaoArquivo));
             this.servicoMaterial = servicoMaterial ?? throw new ArgumentNullException(nameof(servicoMaterial));
@@ -44,6 +46,7 @@ namespace SME.CDEP.Aplicacao.Servicos
             this.servicoAssunto = servicoAssunto ?? throw new ArgumentNullException(nameof(servicoAssunto));
             this.servicoCreditoAutor = servicoCreditoAutor ?? throw new ArgumentNullException(nameof(servicoCreditoAutor));
             this.servicoConservacao = servicoConservacao ?? throw new ArgumentNullException(nameof(servicoConservacao));
+            this.servicoAcessoDocumento = servicoAcessoDocumento ?? throw new ArgumentNullException(nameof(servicoAcessoDocumento));
             Materiais = new List<IdNomeTipoDTO>();
             Editoras = new List<IdNomeDTO>();
             SeriesColecoes = new List<IdNomeDTO>();
@@ -51,6 +54,7 @@ namespace SME.CDEP.Aplicacao.Servicos
             Assuntos = new List<IdNomeDTO>();
             CreditosAutores = new List<IdNomeTipoDTO>();
             Conservacoes = new List<IdNomeDTO>();
+            AcessoDocumentos = new List<IdNomeDTO>();
         }
 
         public void ValidarArquivo(IFormFile file)
@@ -353,6 +357,35 @@ namespace SME.CDEP.Aplicacao.Servicos
         private void CachearConservacoes(string nome, long id)
         {
             Conservacoes.Add(new IdNomeDTO() { Id = id, Nome = nome });
+        }
+        
+        public async Task ValidarOuInserirAcessoDocumento(IEnumerable<string> acessoDocumentos)
+        {
+            foreach (var nome in acessoDocumentos)
+            {
+                if (!await ExisteAcessoDocumentoPorNome(nome))
+                {
+                    var id  = await servicoAcessoDocumento.Inserir(new IdNomeExcluidoDTO() { Nome = nome});
+                    CachearAcessoDocumento(nome, id);
+                }
+            }
+        }
+
+        private async Task<bool> ExisteAcessoDocumentoPorNome(string nome)
+        {
+            var id = await servicoAcessoDocumento.ObterPorNome(nome);
+
+            var existeRegistro = id.EhMaiorQueZero();
+            
+            if (existeRegistro)
+                CachearAcessoDocumento(nome, id);
+
+            return existeRegistro;
+        }
+
+        private void CachearAcessoDocumento(string nome, long id)
+        {
+            AcessoDocumentos.Add(new IdNomeDTO() { Id = id, Nome = nome});
         }
     }
 }
