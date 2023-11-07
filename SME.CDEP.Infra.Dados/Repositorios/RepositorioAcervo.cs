@@ -98,7 +98,7 @@ namespace SME.CDEP.Infra.Dados.Repositorios
                                 left join assunto ast on ast.id = aba.assunto_id
                          ";
             
-	        var retorno  = await conexao.Obter().QueryAsync<PesquisaAcervo>(query, new { tipoAcervo, textoLivre = textoLivre.ToLower()});
+	        var retorno  = await conexao.Obter().QueryAsync<PesquisaAcervo>(query, new { tipoAcervo, textoLivre = textoLivre.NaoEhNulo() ? textoLivre.ToLower() : string.Empty});
             
             return retorno;
         }
