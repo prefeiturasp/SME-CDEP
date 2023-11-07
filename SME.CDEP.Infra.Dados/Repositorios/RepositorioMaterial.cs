@@ -13,7 +13,7 @@ namespace SME.CDEP.Infra.Dados.Repositorios
 
         public Task<long> ObterPorNomeTipo(string material, TipoMaterial tipoMaterial)
         {
-            return conexao.Obter().QueryFirstOrDefaultAsync<long>("select id from material where lower(nome) = @material and not excluido and tipo = @tipoMaterial",new { material, tipoMaterial });
+            return conexao.Obter().QueryFirstOrDefaultAsync<long>("select id from material where f_unaccent(lower(nome)) = f_unaccent(@material) and not excluido and tipo = @tipoMaterial",new { material = material.ToLower(), tipoMaterial });
         }
     }
 }

@@ -69,8 +69,8 @@ namespace SME.CDEP.Infra.Dados.Repositorios
         public Task<long> ObterPorNomeTipo(string nome, TipoCreditoAutoria tipoCreditoAutoria)
         {
             return conexao.Obter()
-                .QueryFirstOrDefaultAsync<long>("select id from credito_autor where lower(nome) = @nome and not excluido and tipo = @tipoCreditoAutoria",
-                    new { nome,tipoCreditoAutoria });
+                .QueryFirstOrDefaultAsync<long>("select id from credito_autor where f_unaccent(lower(nome)) = f_unaccent(@nome)  and not excluido and tipo = @tipoCreditoAutoria",
+                    new { nome = nome.ToLower(),tipoCreditoAutoria });
         }
     }
 }

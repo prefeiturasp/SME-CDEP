@@ -12,7 +12,7 @@ namespace SME.CDEP.Infra.Dados.Repositorios
         
         public Task<long> ObterPorNome(string nome)
         {
-            return conexao.Obter().QueryFirstOrDefaultAsync<long>("select id from idioma where lower(nome) = @nome and not excluido ",new { nome });
+            return conexao.Obter().QueryFirstOrDefaultAsync<long>("select id from idioma where f_unaccent(lower(nome)) = f_unaccent(@nome) and not excluido ",new { nome = nome.ToLower() });
         }
     }
 }

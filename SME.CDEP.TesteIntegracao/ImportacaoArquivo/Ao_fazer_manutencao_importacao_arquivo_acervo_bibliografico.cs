@@ -589,5 +589,192 @@ namespace SME.CDEP.TesteIntegracao
                 retorno.Erros.Any(a=> a.Tombo.Conteudo.Equals(linhaInserida.Tombo.Conteudo)).ShouldBeTrue();
             }
         }
+
+        [Fact(DisplayName = "Importação Arquivo Acervo Bibliográfico - Validar materiais sem caracteres especiais")]
+        public async Task Validar_materiais_sem_caracteres_especiais()
+        {
+            var servicoMaterial = GetServicoMaterial();
+
+            await InserirNaBase(new Material() { Nome = "Português", Tipo = TipoMaterial.BIBLIOGRAFICO });
+            await InserirNaBase(new Material() { Nome = "Inglês",Tipo = TipoMaterial.BIBLIOGRAFICO });
+            await InserirNaBase(new Material() { Nome = "Geografia", Tipo = TipoMaterial.BIBLIOGRAFICO });
+            await InserirNaBase(new Material() { Nome = "Matemática", Tipo = TipoMaterial.BIBLIOGRAFICO});
+            
+            (await servicoMaterial.ObterPorNomeTipo("PorTuGueS", TipoMaterial.BIBLIOGRAFICO)).ShouldBe(1);
+            (await servicoMaterial.ObterPorNomeTipo("PORTUGUES", TipoMaterial.BIBLIOGRAFICO)).ShouldBe(1);
+            (await servicoMaterial.ObterPorNomeTipo("PóRTÚGUEs", TipoMaterial.BIBLIOGRAFICO)).ShouldBe(1);
+            (await servicoMaterial.ObterPorNomeTipo("PôRTUGüES", TipoMaterial.BIBLIOGRAFICO)).ShouldBe(1);
+            
+            (await servicoMaterial.ObterPorNomeTipo("InGlêS", TipoMaterial.BIBLIOGRAFICO)).ShouldBe(2);
+            (await servicoMaterial.ObterPorNomeTipo("ÍNGLÉS", TipoMaterial.BIBLIOGRAFICO)).ShouldBe(2);
+            (await servicoMaterial.ObterPorNomeTipo("ÎNGLÉS", TipoMaterial.BIBLIOGRAFICO)).ShouldBe(2);
+            (await servicoMaterial.ObterPorNomeTipo("ÎNGLÈS", TipoMaterial.BIBLIOGRAFICO)).ShouldBe(2);
+            
+            (await servicoMaterial.ObterPorNomeTipo("GEOGRAFíA", TipoMaterial.BIBLIOGRAFICO)).ShouldBe(3);
+            (await servicoMaterial.ObterPorNomeTipo("GEôGRáFíA", TipoMaterial.BIBLIOGRAFICO)).ShouldBe(3);
+            (await servicoMaterial.ObterPorNomeTipo("GEÓGRÂFíã", TipoMaterial.BIBLIOGRAFICO)).ShouldBe(3);
+            (await servicoMaterial.ObterPorNomeTipo("GÈÓGRÀFÍÂ", TipoMaterial.BIBLIOGRAFICO)).ShouldBe(3);
+            
+            (await servicoMaterial.ObterPorNomeTipo("MAtemáticA", TipoMaterial.BIBLIOGRAFICO)).ShouldBe(4);
+            (await servicoMaterial.ObterPorNomeTipo("MÁTeMÀTIca", TipoMaterial.BIBLIOGRAFICO)).ShouldBe(4);
+            (await servicoMaterial.ObterPorNomeTipo("MÃtêmàtíCÂ", TipoMaterial.BIBLIOGRAFICO)).ShouldBe(4);
+            (await servicoMaterial.ObterPorNomeTipo("mateMâTícà", TipoMaterial.BIBLIOGRAFICO)).ShouldBe(4);
+        }
+        
+        [Fact(DisplayName = "Importação Arquivo Acervo Bibliográfico - Validar editoras sem caracteres especiais")]
+        public async Task Validar_editoras_sem_caracteres_especiais()
+        {
+            var servicoEditora = GetServicoEditora();
+
+            await InserirNaBase(new Editora() { Nome = "Santuário", CriadoEm = DateTimeExtension.HorarioBrasilia().Date, CriadoPor = ConstantesTestes.SISTEMA, CriadoLogin = ConstantesTestes.LOGIN_123456789});
+            await InserirNaBase(new Editora() { Nome = "Sextânte", CriadoEm = DateTimeExtension.HorarioBrasilia().Date, CriadoPor = ConstantesTestes.SISTEMA, CriadoLogin = ConstantesTestes.LOGIN_123456789 });
+            await InserirNaBase(new Editora() { Nome = "Ágape", CriadoEm = DateTimeExtension.HorarioBrasilia().Date, CriadoPor = ConstantesTestes.SISTEMA, CriadoLogin = ConstantesTestes.LOGIN_123456789 });
+            await InserirNaBase(new Editora() { Nome = "Pressí", CriadoEm = DateTimeExtension.HorarioBrasilia().Date, CriadoPor = ConstantesTestes.SISTEMA, CriadoLogin = ConstantesTestes.LOGIN_123456789 });
+            
+            (await servicoEditora.ObterPorNome("Santuarió")).ShouldBe(1);
+            (await servicoEditora.ObterPorNome("SANTuàRiO")).ShouldBe(1);
+            (await servicoEditora.ObterPorNome("SÁntúaRìo")).ShouldBe(1);
+            (await servicoEditora.ObterPorNome("SÀnTÚaRió")).ShouldBe(1);
+            
+            (await servicoEditora.ObterPorNome("SExTanTé")).ShouldBe(2);
+            (await servicoEditora.ObterPorNome("SéxTaNtê")).ShouldBe(2);
+            (await servicoEditora.ObterPorNome("SEXTAntè")).ShouldBe(2);
+            (await servicoEditora.ObterPorNome("sextantÊ")).ShouldBe(2);
+            
+            (await servicoEditora.ObterPorNome("AGAPÉ")).ShouldBe(3);
+            (await servicoEditora.ObterPorNome("aGapÊ")).ShouldBe(3);
+            (await servicoEditora.ObterPorNome("ÂgaPÈ")).ShouldBe(3);
+            (await servicoEditora.ObterPorNome("ÂgÃpÊ")).ShouldBe(3);
+            
+            (await servicoEditora.ObterPorNome("PrÉssÌ")).ShouldBe(4);
+            (await servicoEditora.ObterPorNome("prÈssÍ")).ShouldBe(4);
+            (await servicoEditora.ObterPorNome("pRÊssi")).ShouldBe(4);
+            (await servicoEditora.ObterPorNome("pressÍ")).ShouldBe(4);
+        }
+        
+        [Fact(DisplayName = "Importação Arquivo Acervo Bibliográfico - Validar séries/coleções sem caracteres especiais")]
+        public async Task Validar_serie_colecoes_sem_caracteres_especiais()
+        {
+            var servicoSerieColecao = GetServicoSerieColecao();
+
+            await InserirNaBase(new SerieColecao() { Nome = "Santuário", CriadoEm = DateTimeExtension.HorarioBrasilia().Date, CriadoPor = ConstantesTestes.SISTEMA, CriadoLogin = ConstantesTestes.LOGIN_123456789});
+            await InserirNaBase(new SerieColecao() { Nome = "Sextânte", CriadoEm = DateTimeExtension.HorarioBrasilia().Date, CriadoPor = ConstantesTestes.SISTEMA, CriadoLogin = ConstantesTestes.LOGIN_123456789 });
+            await InserirNaBase(new SerieColecao() { Nome = "Ágape", CriadoEm = DateTimeExtension.HorarioBrasilia().Date, CriadoPor = ConstantesTestes.SISTEMA, CriadoLogin = ConstantesTestes.LOGIN_123456789 });
+            await InserirNaBase(new SerieColecao() { Nome = "Pressí", CriadoEm = DateTimeExtension.HorarioBrasilia().Date, CriadoPor = ConstantesTestes.SISTEMA, CriadoLogin = ConstantesTestes.LOGIN_123456789 });
+            
+            (await servicoSerieColecao.ObterPorNome("Santuarió")).ShouldBe(1);
+            (await servicoSerieColecao.ObterPorNome("SANTuàRiO")).ShouldBe(1);
+            (await servicoSerieColecao.ObterPorNome("SÁntúaRìo")).ShouldBe(1);
+            (await servicoSerieColecao.ObterPorNome("SÀnTÚaRió")).ShouldBe(1);
+            
+            (await servicoSerieColecao.ObterPorNome("SExTanTé")).ShouldBe(2);
+            (await servicoSerieColecao.ObterPorNome("SéxTaNtê")).ShouldBe(2);
+            (await servicoSerieColecao.ObterPorNome("SEXTAntè")).ShouldBe(2);
+            (await servicoSerieColecao.ObterPorNome("sextantÊ")).ShouldBe(2);
+            
+            (await servicoSerieColecao.ObterPorNome("AGAPÉ")).ShouldBe(3);
+            (await servicoSerieColecao.ObterPorNome("aGapÊ")).ShouldBe(3);
+            (await servicoSerieColecao.ObterPorNome("ÂgaPÈ")).ShouldBe(3);
+            (await servicoSerieColecao.ObterPorNome("ÂgÃpÊ")).ShouldBe(3);
+            
+            (await servicoSerieColecao.ObterPorNome("PrÉssÌ")).ShouldBe(4);
+            (await servicoSerieColecao.ObterPorNome("prÈssÍ")).ShouldBe(4);
+            (await servicoSerieColecao.ObterPorNome("pRÊssi")).ShouldBe(4);
+            (await servicoSerieColecao.ObterPorNome("pressÍ")).ShouldBe(4);
+        }
+        
+        [Fact(DisplayName = "Importação Arquivo Acervo Bibliográfico - Validar idiomas sem caracteres especiais")]
+        public async Task Validar_idiomas_sem_caracteres_especiais()
+        {
+            var servicoIdioma = GetServicoIdioma();
+
+            await InserirNaBase(new Idioma() { Nome = "Santuário"});
+            await InserirNaBase(new Idioma() { Nome = "Sextânte"});
+            await InserirNaBase(new Idioma() { Nome = "Ágape" });
+            await InserirNaBase(new Idioma() { Nome = "Pressí" });
+            
+            (await servicoIdioma.ObterPorNome("Santuarió")).ShouldBe(1);
+            (await servicoIdioma.ObterPorNome("SANTuàRiO")).ShouldBe(1);
+            (await servicoIdioma.ObterPorNome("SÁntúaRìo")).ShouldBe(1);
+            (await servicoIdioma.ObterPorNome("SÀnTÚaRió")).ShouldBe(1);
+            
+            (await servicoIdioma.ObterPorNome("SExTanTé")).ShouldBe(2);
+            (await servicoIdioma.ObterPorNome("SéxTaNtê")).ShouldBe(2);
+            (await servicoIdioma.ObterPorNome("SEXTAntè")).ShouldBe(2);
+            (await servicoIdioma.ObterPorNome("sextantÊ")).ShouldBe(2);
+            
+            (await servicoIdioma.ObterPorNome("AGAPÉ")).ShouldBe(3);
+            (await servicoIdioma.ObterPorNome("aGapÊ")).ShouldBe(3);
+            (await servicoIdioma.ObterPorNome("ÂgaPÈ")).ShouldBe(3);
+            (await servicoIdioma.ObterPorNome("ÂgÃpÊ")).ShouldBe(3);
+            
+            (await servicoIdioma.ObterPorNome("PrÉssÌ")).ShouldBe(4);
+            (await servicoIdioma.ObterPorNome("prÈssÍ")).ShouldBe(4);
+            (await servicoIdioma.ObterPorNome("pRÊssi")).ShouldBe(4);
+            (await servicoIdioma.ObterPorNome("pressÍ")).ShouldBe(4);
+        }
+        
+        [Fact(DisplayName = "Importação Arquivo Acervo Bibliográfico - Validar assuntos sem caracteres especiais")]
+        public async Task Validar_assuntos_sem_caracteres_especiais()
+        {
+            var servicoAssunto = GetServicoAssunto();
+
+            await InserirNaBase(new Assunto() { Nome = "Santuário", CriadoEm = DateTimeExtension.HorarioBrasilia().Date, CriadoPor = ConstantesTestes.SISTEMA, CriadoLogin = ConstantesTestes.LOGIN_123456789});
+            await InserirNaBase(new Assunto() { Nome = "Sextânte", CriadoEm = DateTimeExtension.HorarioBrasilia().Date, CriadoPor = ConstantesTestes.SISTEMA, CriadoLogin = ConstantesTestes.LOGIN_123456789});
+            await InserirNaBase(new Assunto() { Nome = "Ágape" , CriadoEm = DateTimeExtension.HorarioBrasilia().Date, CriadoPor = ConstantesTestes.SISTEMA, CriadoLogin = ConstantesTestes.LOGIN_123456789});
+            await InserirNaBase(new Assunto() { Nome = "Pressí" , CriadoEm = DateTimeExtension.HorarioBrasilia().Date, CriadoPor = ConstantesTestes.SISTEMA, CriadoLogin = ConstantesTestes.LOGIN_123456789});
+            
+            (await servicoAssunto.ObterPorNome("Santuarió")).ShouldBe(1);
+            (await servicoAssunto.ObterPorNome("SANTuàRiO")).ShouldBe(1);
+            (await servicoAssunto.ObterPorNome("SÁntúaRìo")).ShouldBe(1);
+            (await servicoAssunto.ObterPorNome("SÀnTÚaRió")).ShouldBe(1);
+            
+            (await servicoAssunto.ObterPorNome("SExTanTé")).ShouldBe(2);
+            (await servicoAssunto.ObterPorNome("SéxTaNtê")).ShouldBe(2);
+            (await servicoAssunto.ObterPorNome("SEXTAntè")).ShouldBe(2);
+            (await servicoAssunto.ObterPorNome("sextantÊ")).ShouldBe(2);
+            
+            (await servicoAssunto.ObterPorNome("AGAPÉ")).ShouldBe(3);
+            (await servicoAssunto.ObterPorNome("aGapÊ")).ShouldBe(3);
+            (await servicoAssunto.ObterPorNome("ÂgaPÈ")).ShouldBe(3);
+            (await servicoAssunto.ObterPorNome("ÂgÃpÊ")).ShouldBe(3);
+            
+            (await servicoAssunto.ObterPorNome("PrÉssÌ")).ShouldBe(4);
+            (await servicoAssunto.ObterPorNome("prÈssÍ")).ShouldBe(4);
+            (await servicoAssunto.ObterPorNome("pRÊssi")).ShouldBe(4);
+            (await servicoAssunto.ObterPorNome("pressÍ")).ShouldBe(4);
+        }
+        
+        [Fact(DisplayName = "Importação Arquivo Acervo Bibliográfico - Validar autores/coautores sem caracteres especiais")]
+        public async Task Validar_autores_coautores_sem_caracteres_especiais()
+        {
+            var servicoCreditoAutor = GetServicoCreditoAutor();
+
+            await InserirNaBase(new CreditoAutor() { Nome = "Santuário", Tipo = TipoCreditoAutoria.Autoria, CriadoEm = DateTimeExtension.HorarioBrasilia().Date, CriadoPor = ConstantesTestes.SISTEMA, CriadoLogin = ConstantesTestes.LOGIN_123456789});
+            await InserirNaBase(new CreditoAutor() { Nome = "Sextânte", Tipo = TipoCreditoAutoria.Autoria, CriadoEm = DateTimeExtension.HorarioBrasilia().Date, CriadoPor = ConstantesTestes.SISTEMA, CriadoLogin = ConstantesTestes.LOGIN_123456789});
+            await InserirNaBase(new CreditoAutor() { Nome = "Ágape", Tipo = TipoCreditoAutoria.Autoria , CriadoEm = DateTimeExtension.HorarioBrasilia().Date, CriadoPor = ConstantesTestes.SISTEMA, CriadoLogin = ConstantesTestes.LOGIN_123456789});
+            await InserirNaBase(new CreditoAutor() { Nome = "Pressí", Tipo = TipoCreditoAutoria.Autoria , CriadoEm = DateTimeExtension.HorarioBrasilia().Date, CriadoPor = ConstantesTestes.SISTEMA, CriadoLogin = ConstantesTestes.LOGIN_123456789});
+            
+            (await servicoCreditoAutor.ObterPorNomeTipo("Santuarió",TipoCreditoAutoria.Autoria)).ShouldBe(1);
+            (await servicoCreditoAutor.ObterPorNomeTipo("SANTuàRiO",TipoCreditoAutoria.Autoria)).ShouldBe(1);
+            (await servicoCreditoAutor.ObterPorNomeTipo("SÁntúaRìo",TipoCreditoAutoria.Autoria)).ShouldBe(1);
+            (await servicoCreditoAutor.ObterPorNomeTipo("SÀnTÚaRió",TipoCreditoAutoria.Autoria)).ShouldBe(1);
+            
+            (await servicoCreditoAutor.ObterPorNomeTipo("SéxTaNtê",TipoCreditoAutoria.Autoria)).ShouldBe(2);
+            (await servicoCreditoAutor.ObterPorNomeTipo("SEXTAntè",TipoCreditoAutoria.Autoria)).ShouldBe(2);
+            (await servicoCreditoAutor.ObterPorNomeTipo("SExTanTé",TipoCreditoAutoria.Autoria)).ShouldBe(2);
+            (await servicoCreditoAutor.ObterPorNomeTipo("sextantÊ",TipoCreditoAutoria.Autoria)).ShouldBe(2);
+            
+            (await servicoCreditoAutor.ObterPorNomeTipo("AGAPÉ",TipoCreditoAutoria.Autoria)).ShouldBe(3);
+            (await servicoCreditoAutor.ObterPorNomeTipo("aGapÊ",TipoCreditoAutoria.Autoria)).ShouldBe(3);
+            (await servicoCreditoAutor.ObterPorNomeTipo("ÂgaPÈ",TipoCreditoAutoria.Autoria)).ShouldBe(3);
+            (await servicoCreditoAutor.ObterPorNomeTipo("ÂgÃpÊ",TipoCreditoAutoria.Autoria)).ShouldBe(3);
+            
+            (await servicoCreditoAutor.ObterPorNomeTipo("PrÉssÌ",TipoCreditoAutoria.Autoria)).ShouldBe(4);
+            (await servicoCreditoAutor.ObterPorNomeTipo("prÈssÍ",TipoCreditoAutoria.Autoria)).ShouldBe(4);
+            (await servicoCreditoAutor.ObterPorNomeTipo("pRÊssi",TipoCreditoAutoria.Autoria)).ShouldBe(4);
+            (await servicoCreditoAutor.ObterPorNomeTipo("pressÍ",TipoCreditoAutoria.Autoria)).ShouldBe(4);
+        }
+        
     }
 }
