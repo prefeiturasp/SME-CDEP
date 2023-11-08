@@ -26,6 +26,7 @@ namespace SME.CDEP.Aplicacao.Servicos
         private readonly IServicoAcessoDocumento servicoAcessoDocumento;
         private readonly IServicoCromia servicoCromia;
         private readonly IServicoSuporte servicoSuporte;
+        private readonly IServicoFormato servicoFormato;
         protected List<IdNomeTipoDTO> Materiais;
         protected List<IdNomeDTO> Editoras;
         protected List<IdNomeDTO> SeriesColecoes;
@@ -35,13 +36,14 @@ namespace SME.CDEP.Aplicacao.Servicos
         protected List<IdNomeDTO> AcessoDocumentos;
         protected List<IdNomeDTO> Cromias;
         protected List<IdNomeTipoDTO> Suportes;
+        protected List<IdNomeTipoDTO> Formatos;
         
         protected List<IdNomeTipoDTO> CreditosAutores { get; set; }
 
         public ServicoImportacaoArquivoBase(IRepositorioImportacaoArquivo repositorioImportacaoArquivo, IServicoMaterial servicoMaterial,
             IServicoEditora servicoEditora,IServicoSerieColecao servicoSerieColecao,IServicoIdioma servicoIdioma, IServicoAssunto servicoAssunto,
             IServicoCreditoAutor servicoCreditoAutor,IServicoConservacao servicoConservacao, IServicoAcessoDocumento servicoAcessoDocumento,
-            IServicoCromia servicoCromia, IServicoSuporte servicoSuporte)
+            IServicoCromia servicoCromia, IServicoSuporte servicoSuporte,IServicoFormato servicoFormato)
         {
             this.repositorioImportacaoArquivo = repositorioImportacaoArquivo ?? throw new ArgumentNullException(nameof(repositorioImportacaoArquivo));
             this.servicoMaterial = servicoMaterial ?? throw new ArgumentNullException(nameof(servicoMaterial));
@@ -54,6 +56,7 @@ namespace SME.CDEP.Aplicacao.Servicos
             this.servicoAcessoDocumento = servicoAcessoDocumento ?? throw new ArgumentNullException(nameof(servicoAcessoDocumento));
             this.servicoCromia = servicoCromia ?? throw new ArgumentNullException(nameof(servicoCromia));
             this.servicoSuporte = servicoSuporte ?? throw new ArgumentNullException(nameof(servicoSuporte));
+            this.servicoFormato = servicoFormato ?? throw new ArgumentNullException(nameof(servicoFormato));
             Materiais = new List<IdNomeTipoDTO>();
             Editoras = new List<IdNomeDTO>();
             SeriesColecoes = new List<IdNomeDTO>();
@@ -64,6 +67,7 @@ namespace SME.CDEP.Aplicacao.Servicos
             AcessoDocumentos = new List<IdNomeDTO>();
             Suportes = new List<IdNomeTipoDTO>();
             Cromias = new List<IdNomeDTO>();
+            Formatos = new List<IdNomeTipoDTO>();
         }
 
         public void ValidarArquivo(IFormFile file)
@@ -106,7 +110,7 @@ namespace SME.CDEP.Aplicacao.Servicos
         {
             foreach (var nome in materiais)
             {
-                if (!await ExisteMaterialPorNomeTipo(tipoMaterial, nome))
+                if (!await ExisteMaterialPorNomeETipo(tipoMaterial, nome))
                 {
                     var id = await servicoMaterial.Inserir(new IdNomeTipoExcluidoDTO() { Nome = nome, Tipo = (int)tipoMaterial });
                     CachearMateriais(tipoMaterial, nome, id);
@@ -114,9 +118,9 @@ namespace SME.CDEP.Aplicacao.Servicos
             }
         }
         
-        private async Task<bool> ExisteMaterialPorNomeTipo(TipoMaterial tipo, string nome)
+        private async Task<bool> ExisteMaterialPorNomeETipo(TipoMaterial tipo, string nome)
         {
-            var id = await servicoMaterial.ObterPorNomeTipo(nome, tipo);
+            var id = await servicoMaterial.ObterPorNomeETipo(nome, tipo);
             
             var existeRegistro = id.EhMaiorQueZero();
             
@@ -247,11 +251,11 @@ namespace SME.CDEP.Aplicacao.Servicos
             Assuntos.Add(new IdNomeDTO() { Id = id, Nome = nome });
         }
 
-        public async Task ValidarOuInserirCreditoAutoresCoAutores(IEnumerable<string> creditosAutoresCoautores, TipoCreditoAutoria tipoCreditoAutoria)
+        public async Task ValidarOuInserirCreditoAutoresCoAutoresTipoAutoria(IEnumerable<string> creditosAutoresCoautores, TipoCreditoAutoria tipoCreditoAutoria)
         {
             foreach (var nome in creditosAutoresCoautores)
             {
-                if (!await ExisteCreditoAutorCoAutorPorNome(nome, tipoCreditoAutoria))
+                if (!await ExisteCreditoAutorCoAutorPorNomeETipoAutoria(nome, tipoCreditoAutoria))
                 {
                     var id  = await servicoCreditoAutor.Inserir(new IdNomeTipoExcluidoAuditavelDTO() { Nome = nome, Tipo = (int)tipoCreditoAutoria});
                     CachearCreditoAutor(nome, id, tipoCreditoAutoria);
@@ -259,9 +263,9 @@ namespace SME.CDEP.Aplicacao.Servicos
             }
         }
 
-        private async Task<bool> ExisteCreditoAutorCoAutorPorNome(string nome, TipoCreditoAutoria tipoCreditoAutoria)
+        private async Task<bool> ExisteCreditoAutorCoAutorPorNomeETipoAutoria(string nome, TipoCreditoAutoria tipoCreditoAutoria)
         {
-            var id = await servicoCreditoAutor.ObterPorNomeTipo(nome, tipoCreditoAutoria);
+            var id = await servicoCreditoAutor.ObterPorNomeETipo(nome, tipoCreditoAutoria);
 
             var existeRegistro = id.EhMaiorQueZero();
             
@@ -401,7 +405,7 @@ namespace SME.CDEP.Aplicacao.Servicos
         {
             foreach (var nome in suportes)
             {
-                if (!await ExisteSuportePorNomeTipo(nome,(int)tipoSuporte))
+                if (!await ExisteSuportePorNomeETipo(nome,(int)tipoSuporte))
                 {
                     var id = await servicoSuporte.Inserir(new IdNomeTipoExcluidoDTO() { Nome = nome, Tipo = (int)tipoSuporte});
                     CachearSuporte(nome, id, (int)tipoSuporte);
@@ -409,9 +413,9 @@ namespace SME.CDEP.Aplicacao.Servicos
             }
         }
         
-        private async Task<bool> ExisteSuportePorNomeTipo(string nome, int tipoSuporte)
+        private async Task<bool> ExisteSuportePorNomeETipo(string nome, int tipoSuporte)
         {
-            var id = await servicoSuporte.ObterPorNomePorTipo(nome,tipoSuporte);
+            var id = await servicoSuporte.ObterPorNomeETipo(nome,tipoSuporte);
             
             var existeRegistro = id.EhMaiorQueZero();
             
@@ -463,6 +467,35 @@ namespace SME.CDEP.Aplicacao.Servicos
                 Validado = linha.PossuiErro, 
                 Mensagem = linha.Mensagem
             };
+        }
+        
+        public async Task ValidarOuInserirFormato(IEnumerable<string> formatos, TipoFormato tipoFormato)
+        {
+            foreach (var nome in formatos)
+            {
+                if (!await ExisteFormatoPorNomeETipo(nome, tipoFormato))
+                {
+                    var id = await servicoFormato.Inserir(new IdNomeTipoExcluidoDTO() { Nome = nome, Tipo = (int)tipoFormato});
+                    CachearFormatos(nome, id, tipoFormato);
+                }
+            }
+        }
+        
+        private async Task<bool> ExisteFormatoPorNomeETipo(string nome, TipoFormato tipoFormato)
+        {
+            var id = await servicoFormato.ObterPorNomeETipo(nome, (int)tipoFormato);
+            
+            var existeRegistro = id.EhMaiorQueZero();
+            
+            if (existeRegistro)
+                CachearFormatos(nome, id, tipoFormato);
+            
+            return existeRegistro;
+        }
+        
+        private void CachearFormatos(string nome, long id, TipoFormato tipoFormato)
+        {
+            Formatos.Add(new IdNomeTipoDTO() { Id = id, Nome = nome, Tipo = (int)tipoFormato });
         }
     }
 }

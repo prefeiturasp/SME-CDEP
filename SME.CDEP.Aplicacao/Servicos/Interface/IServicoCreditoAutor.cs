@@ -6,6 +6,6 @@ namespace SME.CDEP.Aplicacao.Servicos.Interface
     public interface IServicoCreditoAutor : IServicoAplicacao, IServicoIdNomeTipoExcluidoAuditavel
     {
         Task<IEnumerable<IdNomeTipoExcluidoAuditavelDTO>> ObterTodos(TipoCreditoAutoria? tipo);
-        Task<long> ObterPorNomeTipo(string nome, TipoCreditoAutoria tipoCreditoAutoria);
+        Task<long> ObterPorNomeETipo(string nome, TipoCreditoAutoria tipoCreditoAutoria);
     }
 }

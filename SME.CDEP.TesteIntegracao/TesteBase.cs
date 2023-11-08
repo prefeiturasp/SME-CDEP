@@ -230,6 +230,11 @@ namespace SME.CDEP.TesteIntegracao
             return ServiceProvider.GetService<IServicoImportacaoArquivoAcervoAudiovisual>();
         }
         
+        protected IServicoImportacaoArquivoAcervoFotografico GetServicoImportacaoArquivoAcervoFotografico()
+        {
+            return ServiceProvider.GetService<IServicoImportacaoArquivoAcervoFotografico>();
+        }
+        
         public T ObterServicoAplicacao<T>()
             where T : IServicoAplicacao
         {

@@ -600,25 +600,25 @@ namespace SME.CDEP.TesteIntegracao
             await InserirNaBase(new Material() { Nome = "Geografia", Tipo = TipoMaterial.BIBLIOGRAFICO });
             await InserirNaBase(new Material() { Nome = "Matemática", Tipo = TipoMaterial.BIBLIOGRAFICO});
             
-            (await servicoMaterial.ObterPorNomeTipo("PorTuGueS", TipoMaterial.BIBLIOGRAFICO)).ShouldBe(1);
-            (await servicoMaterial.ObterPorNomeTipo("PORTUGUES", TipoMaterial.BIBLIOGRAFICO)).ShouldBe(1);
-            (await servicoMaterial.ObterPorNomeTipo("PóRTÚGUEs", TipoMaterial.BIBLIOGRAFICO)).ShouldBe(1);
-            (await servicoMaterial.ObterPorNomeTipo("PôRTUGüES", TipoMaterial.BIBLIOGRAFICO)).ShouldBe(1);
+            (await servicoMaterial.ObterPorNomeETipo("PorTuGueS", TipoMaterial.BIBLIOGRAFICO)).ShouldBe(1);
+            (await servicoMaterial.ObterPorNomeETipo("PORTUGUES", TipoMaterial.BIBLIOGRAFICO)).ShouldBe(1);
+            (await servicoMaterial.ObterPorNomeETipo("PóRTÚGUEs", TipoMaterial.BIBLIOGRAFICO)).ShouldBe(1);
+            (await servicoMaterial.ObterPorNomeETipo("PôRTUGüES", TipoMaterial.BIBLIOGRAFICO)).ShouldBe(1);
             
-            (await servicoMaterial.ObterPorNomeTipo("InGlêS", TipoMaterial.BIBLIOGRAFICO)).ShouldBe(2);
-            (await servicoMaterial.ObterPorNomeTipo("ÍNGLÉS", TipoMaterial.BIBLIOGRAFICO)).ShouldBe(2);
-            (await servicoMaterial.ObterPorNomeTipo("ÎNGLÉS", TipoMaterial.BIBLIOGRAFICO)).ShouldBe(2);
-            (await servicoMaterial.ObterPorNomeTipo("ÎNGLÈS", TipoMaterial.BIBLIOGRAFICO)).ShouldBe(2);
+            (await servicoMaterial.ObterPorNomeETipo("InGlêS", TipoMaterial.BIBLIOGRAFICO)).ShouldBe(2);
+            (await servicoMaterial.ObterPorNomeETipo("ÍNGLÉS", TipoMaterial.BIBLIOGRAFICO)).ShouldBe(2);
+            (await servicoMaterial.ObterPorNomeETipo("ÎNGLÉS", TipoMaterial.BIBLIOGRAFICO)).ShouldBe(2);
+            (await servicoMaterial.ObterPorNomeETipo("ÎNGLÈS", TipoMaterial.BIBLIOGRAFICO)).ShouldBe(2);
             
-            (await servicoMaterial.ObterPorNomeTipo("GEOGRAFíA", TipoMaterial.BIBLIOGRAFICO)).ShouldBe(3);
-            (await servicoMaterial.ObterPorNomeTipo("GEôGRáFíA", TipoMaterial.BIBLIOGRAFICO)).ShouldBe(3);
-            (await servicoMaterial.ObterPorNomeTipo("GEÓGRÂFíã", TipoMaterial.BIBLIOGRAFICO)).ShouldBe(3);
-            (await servicoMaterial.ObterPorNomeTipo("GÈÓGRÀFÍÂ", TipoMaterial.BIBLIOGRAFICO)).ShouldBe(3);
+            (await servicoMaterial.ObterPorNomeETipo("GEOGRAFíA", TipoMaterial.BIBLIOGRAFICO)).ShouldBe(3);
+            (await servicoMaterial.ObterPorNomeETipo("GEôGRáFíA", TipoMaterial.BIBLIOGRAFICO)).ShouldBe(3);
+            (await servicoMaterial.ObterPorNomeETipo("GEÓGRÂFíã", TipoMaterial.BIBLIOGRAFICO)).ShouldBe(3);
+            (await servicoMaterial.ObterPorNomeETipo("GÈÓGRÀFÍÂ", TipoMaterial.BIBLIOGRAFICO)).ShouldBe(3);
             
-            (await servicoMaterial.ObterPorNomeTipo("MAtemáticA", TipoMaterial.BIBLIOGRAFICO)).ShouldBe(4);
-            (await servicoMaterial.ObterPorNomeTipo("MÁTeMÀTIca", TipoMaterial.BIBLIOGRAFICO)).ShouldBe(4);
-            (await servicoMaterial.ObterPorNomeTipo("MÃtêmàtíCÂ", TipoMaterial.BIBLIOGRAFICO)).ShouldBe(4);
-            (await servicoMaterial.ObterPorNomeTipo("mateMâTícà", TipoMaterial.BIBLIOGRAFICO)).ShouldBe(4);
+            (await servicoMaterial.ObterPorNomeETipo("MAtemáticA", TipoMaterial.BIBLIOGRAFICO)).ShouldBe(4);
+            (await servicoMaterial.ObterPorNomeETipo("MÁTeMÀTIca", TipoMaterial.BIBLIOGRAFICO)).ShouldBe(4);
+            (await servicoMaterial.ObterPorNomeETipo("MÃtêmàtíCÂ", TipoMaterial.BIBLIOGRAFICO)).ShouldBe(4);
+            (await servicoMaterial.ObterPorNomeETipo("mateMâTícà", TipoMaterial.BIBLIOGRAFICO)).ShouldBe(4);
         }
         
         [Fact(DisplayName = "Importação Arquivo Acervo Bibliográfico - Validar editoras sem caracteres especiais")]
@@ -755,25 +755,25 @@ namespace SME.CDEP.TesteIntegracao
             await InserirNaBase(new CreditoAutor() { Nome = "Ágape", Tipo = TipoCreditoAutoria.Autoria , CriadoEm = DateTimeExtension.HorarioBrasilia().Date, CriadoPor = ConstantesTestes.SISTEMA, CriadoLogin = ConstantesTestes.LOGIN_123456789});
             await InserirNaBase(new CreditoAutor() { Nome = "Pressí", Tipo = TipoCreditoAutoria.Autoria , CriadoEm = DateTimeExtension.HorarioBrasilia().Date, CriadoPor = ConstantesTestes.SISTEMA, CriadoLogin = ConstantesTestes.LOGIN_123456789});
             
-            (await servicoCreditoAutor.ObterPorNomeTipo("Santuarió",TipoCreditoAutoria.Autoria)).ShouldBe(1);
-            (await servicoCreditoAutor.ObterPorNomeTipo("SANTuàRiO",TipoCreditoAutoria.Autoria)).ShouldBe(1);
-            (await servicoCreditoAutor.ObterPorNomeTipo("SÁntúaRìo",TipoCreditoAutoria.Autoria)).ShouldBe(1);
-            (await servicoCreditoAutor.ObterPorNomeTipo("SÀnTÚaRió",TipoCreditoAutoria.Autoria)).ShouldBe(1);
+            (await servicoCreditoAutor.ObterPorNomeETipo("Santuarió",TipoCreditoAutoria.Autoria)).ShouldBe(1);
+            (await servicoCreditoAutor.ObterPorNomeETipo("SANTuàRiO",TipoCreditoAutoria.Autoria)).ShouldBe(1);
+            (await servicoCreditoAutor.ObterPorNomeETipo("SÁntúaRìo",TipoCreditoAutoria.Autoria)).ShouldBe(1);
+            (await servicoCreditoAutor.ObterPorNomeETipo("SÀnTÚaRió",TipoCreditoAutoria.Autoria)).ShouldBe(1);
             
-            (await servicoCreditoAutor.ObterPorNomeTipo("SéxTaNtê",TipoCreditoAutoria.Autoria)).ShouldBe(2);
-            (await servicoCreditoAutor.ObterPorNomeTipo("SEXTAntè",TipoCreditoAutoria.Autoria)).ShouldBe(2);
-            (await servicoCreditoAutor.ObterPorNomeTipo("SExTanTé",TipoCreditoAutoria.Autoria)).ShouldBe(2);
-            (await servicoCreditoAutor.ObterPorNomeTipo("sextantÊ",TipoCreditoAutoria.Autoria)).ShouldBe(2);
+            (await servicoCreditoAutor.ObterPorNomeETipo("SéxTaNtê",TipoCreditoAutoria.Autoria)).ShouldBe(2);
+            (await servicoCreditoAutor.ObterPorNomeETipo("SEXTAntè",TipoCreditoAutoria.Autoria)).ShouldBe(2);
+            (await servicoCreditoAutor.ObterPorNomeETipo("SExTanTé",TipoCreditoAutoria.Autoria)).ShouldBe(2);
+            (await servicoCreditoAutor.ObterPorNomeETipo("sextantÊ",TipoCreditoAutoria.Autoria)).ShouldBe(2);
             
-            (await servicoCreditoAutor.ObterPorNomeTipo("AGAPÉ",TipoCreditoAutoria.Autoria)).ShouldBe(3);
-            (await servicoCreditoAutor.ObterPorNomeTipo("aGapÊ",TipoCreditoAutoria.Autoria)).ShouldBe(3);
-            (await servicoCreditoAutor.ObterPorNomeTipo("ÂgaPÈ",TipoCreditoAutoria.Autoria)).ShouldBe(3);
-            (await servicoCreditoAutor.ObterPorNomeTipo("ÂgÃpÊ",TipoCreditoAutoria.Autoria)).ShouldBe(3);
+            (await servicoCreditoAutor.ObterPorNomeETipo("AGAPÉ",TipoCreditoAutoria.Autoria)).ShouldBe(3);
+            (await servicoCreditoAutor.ObterPorNomeETipo("aGapÊ",TipoCreditoAutoria.Autoria)).ShouldBe(3);
+            (await servicoCreditoAutor.ObterPorNomeETipo("ÂgaPÈ",TipoCreditoAutoria.Autoria)).ShouldBe(3);
+            (await servicoCreditoAutor.ObterPorNomeETipo("ÂgÃpÊ",TipoCreditoAutoria.Autoria)).ShouldBe(3);
             
-            (await servicoCreditoAutor.ObterPorNomeTipo("PrÉssÌ",TipoCreditoAutoria.Autoria)).ShouldBe(4);
-            (await servicoCreditoAutor.ObterPorNomeTipo("prÈssÍ",TipoCreditoAutoria.Autoria)).ShouldBe(4);
-            (await servicoCreditoAutor.ObterPorNomeTipo("pRÊssi",TipoCreditoAutoria.Autoria)).ShouldBe(4);
-            (await servicoCreditoAutor.ObterPorNomeTipo("pressÍ",TipoCreditoAutoria.Autoria)).ShouldBe(4);
+            (await servicoCreditoAutor.ObterPorNomeETipo("PrÉssÌ",TipoCreditoAutoria.Autoria)).ShouldBe(4);
+            (await servicoCreditoAutor.ObterPorNomeETipo("prÈssÍ",TipoCreditoAutoria.Autoria)).ShouldBe(4);
+            (await servicoCreditoAutor.ObterPorNomeETipo("pRÊssi",TipoCreditoAutoria.Autoria)).ShouldBe(4);
+            (await servicoCreditoAutor.ObterPorNomeETipo("pressÍ",TipoCreditoAutoria.Autoria)).ShouldBe(4);
         }
         
     }

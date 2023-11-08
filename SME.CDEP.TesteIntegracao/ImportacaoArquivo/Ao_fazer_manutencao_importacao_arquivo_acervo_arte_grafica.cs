@@ -137,7 +137,7 @@ namespace SME.CDEP.TesteIntegracao
         }
         
         [Fact(DisplayName = "Importação Arquivo Acervo Arte Grafica - PersistenciaAcervo")]
-        public async Task Persistencia_acervo_bibliografico()
+        public async Task Persistencia_acervo()
         {
             var servicoImportacaoArquivo = GetServicoImportacaoArquivoAcervoArteGrafica();
         
@@ -369,25 +369,25 @@ namespace SME.CDEP.TesteIntegracao
             await InserirNaBase(new Suporte() { Nome = "Geografia", Tipo = TipoSuporte.IMAGEM });
             await InserirNaBase(new Suporte() { Nome = "Matemática", Tipo = TipoSuporte.IMAGEM});
             
-            (await servicoSuporte.ObterPorNomePorTipo("PorTuGueS",(int)TipoSuporte.IMAGEM)).ShouldBe(1);
-            (await servicoSuporte.ObterPorNomePorTipo("PORTUGUES",(int)TipoSuporte.IMAGEM)).ShouldBe(1);
-            (await servicoSuporte.ObterPorNomePorTipo("PóRTÚGUEs",(int)TipoSuporte.IMAGEM)).ShouldBe(1);
-            (await servicoSuporte.ObterPorNomePorTipo("PôRTUGüES",(int)TipoSuporte.IMAGEM)).ShouldBe(1);
+            (await servicoSuporte.ObterPorNomeETipo("PorTuGueS",(int)TipoSuporte.IMAGEM)).ShouldBe(1);
+            (await servicoSuporte.ObterPorNomeETipo("PORTUGUES",(int)TipoSuporte.IMAGEM)).ShouldBe(1);
+            (await servicoSuporte.ObterPorNomeETipo("PóRTÚGUEs",(int)TipoSuporte.IMAGEM)).ShouldBe(1);
+            (await servicoSuporte.ObterPorNomeETipo("PôRTUGüES",(int)TipoSuporte.IMAGEM)).ShouldBe(1);
             
-            (await servicoSuporte.ObterPorNomePorTipo("InGlêS",(int)TipoSuporte.IMAGEM)).ShouldBe(2);
-            (await servicoSuporte.ObterPorNomePorTipo("ÍNGLÉS",(int)TipoSuporte.IMAGEM)).ShouldBe(2);
-            (await servicoSuporte.ObterPorNomePorTipo("ÎNGLÉS",(int)TipoSuporte.IMAGEM)).ShouldBe(2);
-            (await servicoSuporte.ObterPorNomePorTipo("ÎNGLÈS",(int)TipoSuporte.IMAGEM)).ShouldBe(2);
+            (await servicoSuporte.ObterPorNomeETipo("InGlêS",(int)TipoSuporte.IMAGEM)).ShouldBe(2);
+            (await servicoSuporte.ObterPorNomeETipo("ÍNGLÉS",(int)TipoSuporte.IMAGEM)).ShouldBe(2);
+            (await servicoSuporte.ObterPorNomeETipo("ÎNGLÉS",(int)TipoSuporte.IMAGEM)).ShouldBe(2);
+            (await servicoSuporte.ObterPorNomeETipo("ÎNGLÈS",(int)TipoSuporte.IMAGEM)).ShouldBe(2);
             
-            (await servicoSuporte.ObterPorNomePorTipo("GEOGRAFíA",(int)TipoSuporte.IMAGEM)).ShouldBe(3);
-            (await servicoSuporte.ObterPorNomePorTipo("GEôGRáFíA",(int)TipoSuporte.IMAGEM)).ShouldBe(3);
-            (await servicoSuporte.ObterPorNomePorTipo("GEÓGRÂFíã",(int)TipoSuporte.IMAGEM)).ShouldBe(3);
-            (await servicoSuporte.ObterPorNomePorTipo("GÈÓGRÀFÍÂ",(int)TipoSuporte.IMAGEM)).ShouldBe(3);
+            (await servicoSuporte.ObterPorNomeETipo("GEOGRAFíA",(int)TipoSuporte.IMAGEM)).ShouldBe(3);
+            (await servicoSuporte.ObterPorNomeETipo("GEôGRáFíA",(int)TipoSuporte.IMAGEM)).ShouldBe(3);
+            (await servicoSuporte.ObterPorNomeETipo("GEÓGRÂFíã",(int)TipoSuporte.IMAGEM)).ShouldBe(3);
+            (await servicoSuporte.ObterPorNomeETipo("GÈÓGRÀFÍÂ",(int)TipoSuporte.IMAGEM)).ShouldBe(3);
             
-            (await servicoSuporte.ObterPorNomePorTipo("MAtemáticA",(int)TipoSuporte.IMAGEM)).ShouldBe(4);
-            (await servicoSuporte.ObterPorNomePorTipo("MÁTeMÀTIca",(int)TipoSuporte.IMAGEM)).ShouldBe(4);
-            (await servicoSuporte.ObterPorNomePorTipo("MÃtêmàtíCÂ",(int)TipoSuporte.IMAGEM)).ShouldBe(4);
-            (await servicoSuporte.ObterPorNomePorTipo("mateMâTícà",(int)TipoSuporte.IMAGEM)).ShouldBe(4);
+            (await servicoSuporte.ObterPorNomeETipo("MAtemáticA",(int)TipoSuporte.IMAGEM)).ShouldBe(4);
+            (await servicoSuporte.ObterPorNomeETipo("MÁTeMÀTIca",(int)TipoSuporte.IMAGEM)).ShouldBe(4);
+            (await servicoSuporte.ObterPorNomeETipo("MÃtêmàtíCÂ",(int)TipoSuporte.IMAGEM)).ShouldBe(4);
+            (await servicoSuporte.ObterPorNomeETipo("mateMâTícà",(int)TipoSuporte.IMAGEM)).ShouldBe(4);
         }
         
         [Fact(DisplayName = "Importação Arquivo Acervo Arte Grafica - Validar Cromia sem caracteres especiais")]

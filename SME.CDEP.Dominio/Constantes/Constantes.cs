@@ -52,6 +52,8 @@ public class Constantes
     public const string DURACAO = "Duração";
     public const string ACESSIBILIDADE = "Acessibilidade";
     public const string DISPONIBILIDADE = "Disponibilidade";
+    public const string FORMATO_IMAGEM = "Formato da imagem";
+    public const string RESOLUCAO = "Resolução";
     
     public const string CAMPO_X_NAO_PREENCHIDO = "O campo '{0}' é obrigatório";
     public const string CAMPO_X_ATINGIU_LIMITE_CARACTERES = "Os campos '{0}' atingiu o limite de caracteres";
@@ -141,6 +143,25 @@ public class Constantes
     public const int ACERVO_AUDIOVISUAL_CAMPO_TAMANHO_ARQUIVO = 14;
     public const int ACERVO_AUDIOVISUAL_CAMPO_ACESSIBILIDADE = 15;
     public const int ACERVO_AUDIOVISUAL_CAMPO_DISPONIBILIZACAO = 16;
+    
+    public const int ACERVO_FOTOGRAFICO_CAMPO_TITULO = 1;
+    public const int ACERVO_FOTOGRAFICO_CAMPO_TOMBO = 2;
+    public const int ACERVO_FOTOGRAFICO_CAMPO_CREDITO = 3;
+    public const int ACERVO_FOTOGRAFICO_CAMPO_LOCALIZACAO = 4;
+    public const int ACERVO_FOTOGRAFICO_CAMPO_PROCEDENCIA = 5;
+    public const int ACERVO_FOTOGRAFICO_CAMPO_DATA = 6;
+    public const int ACERVO_FOTOGRAFICO_CAMPO_COPIA_DIGITAL = 7;
+    public const int ACERVO_FOTOGRAFICO_CAMPO_AUTORIZACAO_USO_DE_IMAGEM = 8;
+    public const int ACERVO_FOTOGRAFICO_CAMPO_ESTADO_CONSERVACAO = 9;
+    public const int ACERVO_FOTOGRAFICO_CAMPO_DESCRICAO = 10;
+    public const int ACERVO_FOTOGRAFICO_CAMPO_QUANTIDADE = 11;
+    public const int ACERVO_FOTOGRAFICO_CAMPO_LARGURA = 12;
+    public const int ACERVO_FOTOGRAFICO_CAMPO_ALTURA = 13;
+    public const int ACERVO_FOTOGRAFICO_CAMPO_SUPORTE = 14;
+    public const int ACERVO_FOTOGRAFICO_CAMPO_FORMATO_IMAGEM = 15;
+    public const int ACERVO_FOTOGRAFICO_CAMPO_TAMANHO_ARQUIVO = 16;
+    public const int ACERVO_FOTOGRAFICO_CAMPO_CROMIA = 17;
+    public const int ACERVO_FOTOGRAFICO_CAMPO_RESOLUCAO = 18;
     
     public const string ContentTypeExcel = "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet";
     public const string BUCKET_CDEP = "cdep";

@@ -5,6 +5,6 @@ namespace SME.CDEP.Aplicacao.Servicos.Interface
 {
     public interface IServicoMaterial : IServicoAplicacao,IServicoIdNomeTipoExcluido
     {
-        Task<long> ObterPorNomeTipo(string nome, TipoMaterial tipo);
+        Task<long> ObterPorNomeETipo(string nome, TipoMaterial tipo);
     }
 }

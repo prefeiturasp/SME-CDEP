@@ -19,10 +19,10 @@ public class AcervoTridimensionalCadastroDTO : AcervoCadastroDTO
     [Required(ErrorMessage = "É necessário informar a quantidade do acervo arte gráfica")]
     [Range(1, long.MaxValue, ErrorMessage = "A quantidade do acervo arte gráfica deve ser maior que zero")]
     public long Quantidade { get; set; }
-    public float? Largura { get; set; }
-    public float? Altura { get; set; }
-    public float? Profundidade { get; set; }
-    public float? Diametro { get; set; }
+    public double? Largura { get; set; }
+    public double? Altura { get; set; }
+    public double? Profundidade { get; set; }
+    public double? Diametro { get; set; }
     
     public long[]? Arquivos { get; set; }
 }
