@@ -73,59 +73,35 @@ namespace SME.CDEP.Aplicacao.Servicos
                 DataImportacao = arquivoImportado.CriadoEm,
                 Erros = acervosArtesGraficasLinhas
                         .Where(w => w.PossuiErros)
-                        .Select(s => new AcervoArteGraficaLinhaRetornoDTO()
-                        {
-                            Titulo = ObterConteudoMensagemStatus(s.Titulo),
-                            Tombo = ObterConteudoMensagemStatus(s.Tombo),
-                            Credito = ObterConteudoMensagemStatus(s.Credito),
-                            Localizacao = ObterConteudoMensagemStatus(s.Localizacao),
-                            Procedencia = ObterConteudoMensagemStatus(s.Procedencia),
-                            Data = ObterConteudoMensagemStatus(s.Data),
-                            CopiaDigital = ObterConteudoMensagemStatus(s.CopiaDigital),
-                            AutorizacaoUsoDeImagem = ObterConteudoMensagemStatus(s.AutorizacaoUsoDeImagem),
-                            EstadoConservacao = ObterConteudoMensagemStatus(s.EstadoConservacao),
-                            Cromia = ObterConteudoMensagemStatus(s.Cromia),
-                            Largura = ObterConteudoMensagemStatus(s.Largura),
-                            Altura = ObterConteudoMensagemStatus(s.Altura),
-                            Diametro = ObterConteudoMensagemStatus(s.Diametro),
-                            Tecnica = ObterConteudoMensagemStatus(s.Tecnica),
-                            Suporte = ObterConteudoMensagemStatus(s.Suporte),
-                            Quantidade = ObterConteudoMensagemStatus(s.Quantidade),
-                            Descricao = ObterConteudoMensagemStatus(s.Descricao),
-                        }),
+                        .Select(ObterAcervoArteGraficaLinhaRetornoDto),
                 Sucesso = acervosArtesGraficasLinhas
                         .Where(w => !w.PossuiErros)
-                        .Select(s => new AcervoArteGraficaLinhaRetornoDTO()
-                        {
-                            Titulo = ObterConteudoMensagemStatus(s.Titulo),
-                            Tombo = ObterConteudoMensagemStatus(s.Tombo),
-                            Credito = ObterConteudoMensagemStatus(s.Credito),
-                            Localizacao = ObterConteudoMensagemStatus(s.Localizacao),
-                            Procedencia = ObterConteudoMensagemStatus(s.Procedencia),
-                            Data = ObterConteudoMensagemStatus(s.Data),
-                            CopiaDigital = ObterConteudoMensagemStatus(s.CopiaDigital),
-                            AutorizacaoUsoDeImagem = ObterConteudoMensagemStatus(s.AutorizacaoUsoDeImagem),
-                            EstadoConservacao = ObterConteudoMensagemStatus(s.EstadoConservacao),
-                            Cromia = ObterConteudoMensagemStatus(s.Cromia),
-                            Largura = ObterConteudoMensagemStatus(s.Largura),
-                            Altura = ObterConteudoMensagemStatus(s.Altura),
-                            Diametro = ObterConteudoMensagemStatus(s.Diametro),
-                            Tecnica = ObterConteudoMensagemStatus(s.Tecnica),
-                            Suporte = ObterConteudoMensagemStatus(s.Suporte),
-                            Quantidade = ObterConteudoMensagemStatus(s.Quantidade),
-                            Descricao = ObterConteudoMensagemStatus(s.Descricao),
-                        })
+                        .Select(ObterAcervoArteGraficaLinhaRetornoDto),
             };
             return acervoArteGraficaRetorno;
         }
 
-        private static LinhaConteudoAjustarRetornoDTO ObterConteudoMensagemStatus(LinhaConteudoAjustarDTO linha)
+        private static AcervoArteGraficaLinhaRetornoDTO ObterAcervoArteGraficaLinhaRetornoDto(AcervoArteGraficaLinhaDTO s)
         {
-            return new LinhaConteudoAjustarRetornoDTO()
+            return new AcervoArteGraficaLinhaRetornoDTO()
             {
-                Conteudo = linha.Conteudo, 
-                Validado = linha.PossuiErro, 
-                Mensagem = linha.Mensagem
+                Titulo = ObterConteudoMensagemStatus(s.Titulo),
+                Tombo = ObterConteudoMensagemStatus(s.Tombo),
+                Credito = ObterConteudoMensagemStatus(s.Credito),
+                Localizacao = ObterConteudoMensagemStatus(s.Localizacao),
+                Procedencia = ObterConteudoMensagemStatus(s.Procedencia),
+                Data = ObterConteudoMensagemStatus(s.Data),
+                CopiaDigital = ObterConteudoMensagemStatus(s.CopiaDigital),
+                AutorizacaoUsoDeImagem = ObterConteudoMensagemStatus(s.AutorizacaoUsoDeImagem),
+                EstadoConservacao = ObterConteudoMensagemStatus(s.EstadoConservacao),
+                Cromia = ObterConteudoMensagemStatus(s.Cromia),
+                Largura = ObterConteudoMensagemStatus(s.Largura),
+                Altura = ObterConteudoMensagemStatus(s.Altura),
+                Diametro = ObterConteudoMensagemStatus(s.Diametro),
+                Tecnica = ObterConteudoMensagemStatus(s.Tecnica),
+                Suporte = ObterConteudoMensagemStatus(s.Suporte),
+                Quantidade = ObterConteudoMensagemStatus(s.Quantidade),
+                Descricao = ObterConteudoMensagemStatus(s.Descricao),
             };
         }
 
