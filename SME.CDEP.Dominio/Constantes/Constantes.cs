@@ -12,6 +12,7 @@ public class Constantes
     public const string MATERIAL = "Material";
     public const string TITULO = "Título";
     public const string SUB_TITULO = "Subtítulo";
+    public const string CREDITO = "Crédito";
     public const string AUTOR = "Autor";
     public const string CO_AUTOR = "Coautor";
     public const string TIPO_AUTORIA = "Tipo autoria";
@@ -22,6 +23,7 @@ public class Constantes
     public const string NUMERO_PAGINAS = "Número de páginas";
     public const string LARGURA = "Largura";
     public const string ALTURA = "Altura";
+    public const string DIAMETRO = "Diâmetro";
     public const string SERIE_COLECAO = "Série/coleção";
     public const string VOLUME = "Volume";
     public const string IDIOMA = "Idioma";
@@ -38,7 +40,14 @@ public class Constantes
     public const string ACESSO_DOCUMENTO = "Acesso documento";
     public const string LOCALIZACAO = "Localização";
     public const string COPIA_DIGITAL = "Cópia digital";
+    public const string AUTORIZACAO_USO_DE_IMAGEM = "Autorização de uso de imagem";
     public const string ESTADO_CONSERVACAO = "Estado conservação";
+    public const string PROCEDENCIA = "Procedência";
+    public const string DATA = "Data";
+    public const string CROMIA = "Cromia";
+    public const string TECNICA = "Técnica";
+    public const string SUPORTE = "Suporte";
+    public const string QUANTIDADE = "Quantidade";
     
     public const string CAMPO_X_NAO_PREENCHIDO = "O campo '{0}' é obrigatório";
     public const string CAMPO_X_ATINGIU_LIMITE_CARACTERES = "Os campos '{0}' atingiu o limite de caracteres";
@@ -93,6 +102,24 @@ public class Constantes
     public const int ACERVO_DOCUMENTAL_CAMPO_LOCALIZACAO = 16;
     public const int ACERVO_DOCUMENTAL_CAMPO_COPIA_DIGITAL = 17;
     public const int ACERVO_DOCUMENTAL_CAMPO_ESTADO_CONSERVACAO = 18;
+    
+    public const int ACERVO_ARTE_GRAFICA_CAMPO_TITULO = 1;
+    public const int ACERVO_ARTE_GRAFICA_CAMPO_TOMBO = 2;
+    public const int ACERVO_ARTE_GRAFICA_CAMPO_CREDITO = 3;
+    public const int ACERVO_ARTE_GRAFICA_CAMPO_LOCALIZACAO = 4;
+    public const int ACERVO_ARTE_GRAFICA_CAMPO_PROCEDENCIA = 5;
+    public const int ACERVO_ARTE_GRAFICA_CAMPO_DATA = 6;
+    public const int ACERVO_ARTE_GRAFICA_CAMPO_COPIA_DIGITAL = 7;
+    public const int ACERVO_ARTE_GRAFICA_CAMPO_AUTORIZACAO_USO_DE_IMAGEM = 8;
+    public const int ACERVO_ARTE_GRAFICA_CAMPO_ESTADO_CONSERVACAO = 9;
+    public const int ACERVO_ARTE_GRAFICA_CAMPO_CROMIA = 10;
+    public const int ACERVO_ARTE_GRAFICA_CAMPO_DIMENSAO_LARGURA = 11;
+    public const int ACERVO_ARTE_GRAFICA_CAMPO_DIMENSAO_ALTURA = 12;
+    public const int ACERVO_ARTE_GRAFICA_CAMPO_DIMENSAO_DIAMETRO = 13;
+    public const int ACERVO_ARTE_GRAFICA_CAMPO_TECNICA = 14;
+    public const int ACERVO_ARTE_GRAFICA_CAMPO_SUPORTE = 15;
+    public const int ACERVO_ARTE_GRAFICA_CAMPO_QUANTIDADE = 16;
+    public const int ACERVO_ARTE_GRAFICA_CAMPO_DESCRICAO = 17;
     
     public const string ContentTypeExcel = "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet";
     public const string BUCKET_CDEP = "cdep";
