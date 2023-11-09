@@ -117,8 +117,8 @@ namespace SME.CDEP.Aplicacao.Servicos
                         Titulo = acervoDocumentalLinha.Titulo.Conteudo,
                         Codigo = acervoDocumentalLinha.CodigoAntigo.Conteudo,
                         CodigoNovo = acervoDocumentalLinha.CodigoNovo.Conteudo,
-                        MaterialId = Materiais.FirstOrDefault(f => f.Nome.Equals(acervoDocumentalLinha.Material.Conteudo)).Id,
-                        IdiomaId = Idiomas.FirstOrDefault(f => f.Nome.Equals(acervoDocumentalLinha.Idioma.Conteudo)).Id,
+                        MaterialId = ObterMaterialDocumentalIdPorValorDoCampo(acervoDocumentalLinha.Material.Conteudo),
+                        IdiomaId = ObterIdiomaIdPorValorDoCampo(acervoDocumentalLinha.Idioma.Conteudo),
                         CreditosAutoresIds = CreditosAutores
                             .Where(f => acervoDocumentalLinha.Autor.Conteudo.FormatarTextoEmArray().Contains(f.Nome))
                             .Select(s => s.Id).ToArray(),
@@ -127,15 +127,15 @@ namespace SME.CDEP.Aplicacao.Servicos
                         Volume = acervoDocumentalLinha.Volume.Conteudo,
                         Descricao = acervoDocumentalLinha.Descricao.Conteudo,
                         TipoAnexo = acervoDocumentalLinha.TipoAnexo.Conteudo,
-                        Largura = double.Parse(acervoDocumentalLinha.Largura.Conteudo),
-                        Altura = double.Parse(acervoDocumentalLinha.Altura.Conteudo),
+                        Largura = acervoDocumentalLinha.Largura.Conteudo.ObterDoubleOuNuloPorValorDoCampo(),
+                        Altura = acervoDocumentalLinha.Altura.Conteudo.ObterDoubleOuNuloPorValorDoCampo(),
                         TamanhoArquivo = acervoDocumentalLinha.TamanhoArquivo.Conteudo,
                         AcessoDocumentosIds = CreditosAutores
                             .Where(f => acervoDocumentalLinha.AcessoDocumento.Conteudo.FormatarTextoEmArray().Contains(f.Nome))
                             .Select(s => s.Id).ToArray(),
                         Localizacao = acervoDocumentalLinha.Localizacao.Conteudo,
-                        CopiaDigital = acervoDocumentalLinha.CopiaDigital.Conteudo.EstaPreenchido() ? acervoDocumentalLinha.CopiaDigital.Conteudo.ToLower().Equals(Constantes.OPCAO_SIM) : false,
-                        ConservacaoId = Conservacoes.FirstOrDefault(f => f.Nome.Equals(acervoDocumentalLinha.EstadoConservacao.Conteudo)).Id
+                        CopiaDigital = acervoDocumentalLinha.CopiaDigital.Conteudo.EhOpcaoSim(),
+                        ConservacaoId = ObterConservacaoIdPorValorDoCampo(acervoDocumentalLinha.EstadoConservacao.Conteudo)
                     };
                     await servicoAcervoDocumental.Inserir(acervoDocumental);
 
@@ -221,7 +221,7 @@ namespace SME.CDEP.Aplicacao.Servicos
 
             try
             {
-                await ValidarOuInserirMateriais(linhasComsucesso.Select(s => s.Material.Conteudo).Distinct(), TipoMaterial.BIBLIOGRAFICO);
+                await ValidarOuInserirMateriais(linhasComsucesso.Select(s => s.Material.Conteudo).Distinct(), TipoMaterial.DOCUMENTAL);
 
                 await ValidarOuInserirIdiomas(linhasComsucesso.Select(s => s.Idioma.Conteudo).Distinct());
                 

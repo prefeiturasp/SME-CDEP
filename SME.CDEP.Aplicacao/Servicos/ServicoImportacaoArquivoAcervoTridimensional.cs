@@ -6,6 +6,7 @@ using SME.CDEP.Aplicacao.DTOS;
 using SME.CDEP.Aplicacao.Servicos.Interface;
 using SME.CDEP.Dominio.Constantes;
 using SME.CDEP.Dominio.Entidades;
+using SME.CDEP.Dominio.Excecoes;
 using SME.CDEP.Dominio.Extensions;
 using SME.CDEP.Infra.Dados.Repositorios.Interfaces;
 using SME.CDEP.Infra.Dominio.Enumerados;
@@ -111,13 +112,13 @@ namespace SME.CDEP.Aplicacao.Servicos
                         Codigo = acervoTridimensionalLinha.Tombo.Conteudo,
                         Procedencia = acervoTridimensionalLinha.Procedencia.Conteudo,
                         DataAcervo = acervoTridimensionalLinha.Data.Conteudo,
-                        ConservacaoId = Conservacoes.FirstOrDefault(f => f.Nome.Equals(acervoTridimensionalLinha.EstadoConservacao.Conteudo)).Id,
-                        Quantidade = long.Parse(acervoTridimensionalLinha.Quantidade.Conteudo),
+                        ConservacaoId = ObterConservacaoIdPorValorDoCampo(acervoTridimensionalLinha.EstadoConservacao.Conteudo),
+                        Quantidade = acervoTridimensionalLinha.Quantidade.Conteudo.ObterLongoPorValorDoCampo(),
                         Descricao = acervoTridimensionalLinha.Descricao.Conteudo,
-                        Largura = long.Parse(acervoTridimensionalLinha.Largura.Conteudo),
-                        Altura = long.Parse(acervoTridimensionalLinha.Altura.Conteudo),
-                        Profundidade = long.Parse(acervoTridimensionalLinha.Profundidade.Conteudo),
-                        Diametro = long.Parse(acervoTridimensionalLinha.Diametro.Conteudo),
+                        Largura = acervoTridimensionalLinha.Largura.Conteudo.ObterDoubleOuNuloPorValorDoCampo(),
+                        Altura = acervoTridimensionalLinha.Altura.Conteudo.ObterDoubleOuNuloPorValorDoCampo(),
+                        Profundidade = acervoTridimensionalLinha.Profundidade.Conteudo.ObterLongoOuNuloPorValorDoCampo(),
+                        Diametro = acervoTridimensionalLinha.Diametro.Conteudo.ObterLongoOuNuloPorValorDoCampo(),
                     };
                     await servicoAcervoTridimensional.Inserir(acervoTridimensional);
         
@@ -132,8 +133,8 @@ namespace SME.CDEP.Aplicacao.Servicos
                     acervoTridimensionalLinha.Mensagem = ex.Message;
                 }
             }
-        } 
-        
+        }
+
         public void ValidarPreenchimentoValorFormatoQtdeCaracteres(IEnumerable<AcervoTridimensionalLinhaDTO> linhas)
         {
             foreach (var linha in linhas)
@@ -206,6 +207,9 @@ namespace SME.CDEP.Aplicacao.Servicos
             using (var package = new XLWorkbook(stream))
             {
                 var planilha = package.Worksheets.FirstOrDefault();
+
+                if (planilha == null)
+                    throw new NegocioException(Constantes.NAO_FOI_POSSIVEL_LER_A_PLANILHA);
         
                 var totalLinhas = planilha.Rows().Count();
         

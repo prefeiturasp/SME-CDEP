@@ -1,7 +1,5 @@
-﻿using Bogus.Extensions.Brazil;
-using Newtonsoft.Json;
+﻿using Newtonsoft.Json;
 using Shouldly;
-using SME.CDEP.Aplicacao.DTOS;
 using SME.CDEP.Dominio.Entidades;
 using SME.CDEP.Dominio.Extensions;
 using SME.CDEP.Infra.Dominio.Enumerados;
@@ -34,9 +32,9 @@ namespace SME.CDEP.TesteIntegracao
 
             foreach (var linha in acervoAudiovisualLinhas)
             {
-                linha.PossuiErros.ShouldBe(linhasComErros.Any(a=> a == linha.NumeroLinha));
+                linha.PossuiErros.ShouldBe(linhasComErros.Any(a=> a.SaoIguais(linha.NumeroLinha)));
 
-                if (linha.NumeroLinha == 3)
+                if (linha.NumeroLinha.SaoIguais(3))
                 {
                     linha.Titulo.PossuiErro.ShouldBeTrue();
                     linha.Titulo.Mensagem.ShouldNotBeEmpty();
@@ -47,7 +45,7 @@ namespace SME.CDEP.TesteIntegracao
                     linha.Titulo.Mensagem.ShouldBeEmpty();
                 }
                 
-                if (linha.NumeroLinha == 5)
+                if (linha.NumeroLinha.SaoIguais(5))
                 {
                     linha.Suporte.PossuiErro.ShouldBeTrue();
                     linha.Suporte.Mensagem.ShouldNotBeEmpty();
@@ -58,7 +56,7 @@ namespace SME.CDEP.TesteIntegracao
                     linha.Suporte.Mensagem.ShouldBeEmpty();
                 }
                 
-                if (linha.NumeroLinha == 6)
+                if (linha.NumeroLinha.SaoIguais(6))
                 {
                     linha.Duracao.PossuiErro.ShouldBeTrue();
                     linha.Duracao.Mensagem.ShouldNotBeEmpty();
@@ -69,7 +67,7 @@ namespace SME.CDEP.TesteIntegracao
                     linha.Duracao.Mensagem.ShouldBeEmpty();
                 }
                 
-                if (linha.NumeroLinha == 8)
+                if (linha.NumeroLinha.SaoIguais(8))
                 {
                     linha.Copia.PossuiErro.ShouldBeTrue();
                     linha.Copia.Mensagem.ShouldNotBeEmpty();
@@ -80,7 +78,7 @@ namespace SME.CDEP.TesteIntegracao
                     linha.Copia.Mensagem.ShouldBeEmpty();
                 }
                 
-                if (linha.NumeroLinha == 9)
+                if (linha.NumeroLinha.SaoIguais(9))
                 {
                     linha.Tombo.PossuiErro.ShouldBeTrue();
                     linha.Tombo.Mensagem.ShouldNotBeEmpty();
@@ -119,19 +117,19 @@ namespace SME.CDEP.TesteIntegracao
                 var creditoAutorInseridos = linha.Credito.Conteudo.FormatarTextoEmArray().ToArray().UnificarPipe().SplitPipe().Distinct();
                 var creditosAutores = ObterTodos<CreditoAutor>();
                 foreach (var creditoAutor in creditoAutorInseridos)
-                    creditosAutores.Any(a => a.Nome.Equals(creditoAutor)).ShouldBeTrue();
+                    creditosAutores.Any(a => a.Nome.SaoIguais(creditoAutor)).ShouldBeTrue();
                 
                 var cromiaInserido = linha.Cromia.Conteudo;
                 var cromias = ObterTodos<Cromia>();
-                cromias.Any(a => a.Nome.Equals(cromiaInserido)).ShouldBeTrue();
+                cromias.Any(a => a.Nome.SaoIguais(cromiaInserido)).ShouldBeTrue();
         
                 var suporteInserido = linha.Suporte.Conteudo;
                 var suportes = ObterTodos<Suporte>();
-                suportes.Any(a => a.Nome.Equals(suporteInserido)).ShouldBeTrue();
+                suportes.Any(a => a.Nome.SaoIguais(suporteInserido)).ShouldBeTrue();
         
                 var conservacoesInseridas = linha.EstadoConservacao.Conteudo;
                 var conservacoes = ObterTodos<Conservacao>();
-                conservacoes.Any(a => a.Nome.Equals(conservacoesInseridas)).ShouldBeTrue();
+                conservacoes.Any(a => a.Nome.SaoIguais(conservacoesInseridas)).ShouldBeTrue();
             }
         }
         
@@ -177,33 +175,33 @@ namespace SME.CDEP.TesteIntegracao
             foreach (var linhasComSucesso in acervoAudiovisualLinhas.Where(w=> !w.PossuiErros))
             {
                 //Acervo
-                acervos.Any(a=> a.Titulo.Equals(linhasComSucesso.Titulo.Conteudo)).ShouldBeTrue();
-                acervos.Any(a=> a.Codigo.Equals(linhasComSucesso.Tombo.Conteudo)).ShouldBeTrue();
-                acervos.Any(a=> a.Descricao.Equals(linhasComSucesso.Descricao.Conteudo)).ShouldBeTrue();  
+                acervos.Any(a=> a.Titulo.SaoIguais(linhasComSucesso.Titulo.Conteudo)).ShouldBeTrue();
+                acervos.Any(a=> a.Codigo.SaoIguais(linhasComSucesso.Tombo.Conteudo)).ShouldBeTrue();
+                acervos.Any(a=> a.Descricao.SaoIguais(linhasComSucesso.Descricao.Conteudo)).ShouldBeTrue();  
                 
                 //Referência 1:1
-                acervosAudiovisual.Any(a=> a.SuporteId == suportes.FirstOrDefault(f=> f.Nome.Equals(linhasComSucesso.Suporte.Conteudo)).Id).ShouldBeTrue();
-                acervosAudiovisual.Any(a=> a.CromiaId == cromias.FirstOrDefault(f=> f.Nome.Equals(linhasComSucesso.Cromia.Conteudo)).Id).ShouldBeTrue();
-                acervosAudiovisual.Any(a=> a.ConservacaoId == conservacoes.FirstOrDefault(f=> f.Nome.Equals(linhasComSucesso.EstadoConservacao.Conteudo)).Id).ShouldBeTrue();
+                acervosAudiovisual.Any(a=> a.SuporteId.SaoIguais(suportes.FirstOrDefault(f=> f.Nome.SaoIguais(linhasComSucesso.Suporte.Conteudo)).Id)).ShouldBeTrue();
+                acervosAudiovisual.Any(a=> a.CromiaId.SaoIguais(cromias.FirstOrDefault(f=> f.Nome.SaoIguais(linhasComSucesso.Cromia.Conteudo)).Id)).ShouldBeTrue();
+                acervosAudiovisual.Any(a=> a.ConservacaoId.SaoIguais(conservacoes.FirstOrDefault(f=> f.Nome.SaoIguais(linhasComSucesso.EstadoConservacao.Conteudo)).Id)).ShouldBeTrue();
                 
                 //Campos livres
-                acervosAudiovisual.Any(a=> a.Localizacao == linhasComSucesso.Localizacao.Conteudo).ShouldBeTrue();
-                acervosAudiovisual.Any(a=> a.Procedencia == linhasComSucesso.Procedencia.Conteudo).ShouldBeTrue();
-                acervosAudiovisual.Any(a=> a.DataAcervo == linhasComSucesso.Data.Conteudo).ShouldBeTrue();
-                acervosAudiovisual.Any(a=> a.Copia == linhasComSucesso.Copia.Conteudo).ShouldBeTrue();
-                acervosAudiovisual.Any(a=> a.PermiteUsoImagem == linhasComSucesso.AutorizacaoUsoDeImagem.Conteudo.Equals("Sim")).ShouldBeTrue();
-                acervosAudiovisual.Any(a=> a.TamanhoArquivo == linhasComSucesso.TamanhoArquivo.Conteudo).ShouldBeTrue();
-                acervosAudiovisual.Any(a=> a.Acessibilidade == linhasComSucesso.Acessibilidade.Conteudo).ShouldBeTrue();
-                acervosAudiovisual.Any(a=> a.Disponibilizacao == linhasComSucesso.Disponibilizacao.Conteudo).ShouldBeTrue();
+                acervosAudiovisual.Any(a=> a.Localizacao.SaoIguais(linhasComSucesso.Localizacao.Conteudo)).ShouldBeTrue();
+                acervosAudiovisual.Any(a=> a.Procedencia.SaoIguais(linhasComSucesso.Procedencia.Conteudo)).ShouldBeTrue();
+                acervosAudiovisual.Any(a=> a.DataAcervo.SaoIguais(linhasComSucesso.Data.Conteudo)).ShouldBeTrue();
+                acervosAudiovisual.Any(a=> a.Copia.SaoIguais(linhasComSucesso.Copia.Conteudo)).ShouldBeTrue();
+                acervosAudiovisual.Any(a=> a.PermiteUsoImagem.SaoIguais(linhasComSucesso.AutorizacaoUsoDeImagem.Conteudo.EhOpcaoSim())).ShouldBeTrue();
+                acervosAudiovisual.Any(a=> a.TamanhoArquivo.SaoIguais(linhasComSucesso.TamanhoArquivo.Conteudo)).ShouldBeTrue();
+                acervosAudiovisual.Any(a=> a.Acessibilidade.SaoIguais(linhasComSucesso.Acessibilidade.Conteudo)).ShouldBeTrue();
+                acervosAudiovisual.Any(a=> a.Disponibilizacao.SaoIguais(linhasComSucesso.Disponibilizacao.Conteudo)).ShouldBeTrue();
                 
                 //Crédito
                 var creditoAInserir = linhasComSucesso.Credito.Conteudo.FormatarTextoEmArray().ToArray().UnificarPipe().SplitPipe().Distinct();
                 
                 foreach (var credito in creditoAInserir)
-                    creditoAutores.Any(a=> a.Nome.Equals(credito)).ShouldBeTrue();
+                    creditoAutores.Any(a=> a.Nome.SaoIguais(credito)).ShouldBeTrue();
                 
                 foreach (var creditoAutor in acervoCreditoAutors)
-                    creditoAutores.Any(a=> a.Id == creditoAutor.CreditoAutorId).ShouldBeTrue();
+                    creditoAutores.Any(a=> a.Id.SaoIguais(creditoAutor.CreditoAutorId)).ShouldBeTrue();
             }
         }
         
@@ -254,33 +252,33 @@ namespace SME.CDEP.TesteIntegracao
             foreach (var linhasComSucesso in acervoAudiovisualLinhas.Where(w=> !w.PossuiErros))
             {
                 //Acervo
-                acervos.Any(a=> a.Titulo.Equals(linhasComSucesso.Titulo.Conteudo)).ShouldBeTrue();
-                acervos.Any(a=> a.Codigo.Equals(linhasComSucesso.Tombo.Conteudo)).ShouldBeTrue();
-                acervos.Any(a=> a.Descricao.Equals(linhasComSucesso.Descricao.Conteudo)).ShouldBeTrue();  
+                acervos.Any(a=> a.Titulo.SaoIguais(linhasComSucesso.Titulo.Conteudo)).ShouldBeTrue();
+                acervos.Any(a=> a.Codigo.SaoIguais(linhasComSucesso.Tombo.Conteudo)).ShouldBeTrue();
+                acervos.Any(a=> a.Descricao.SaoIguais(linhasComSucesso.Descricao.Conteudo)).ShouldBeTrue();  
                 
                 //Referência 1:1
-                acervosAudiovisual.Any(a=> a.SuporteId == suportes.FirstOrDefault(f=> f.Nome.Equals(linhasComSucesso.Suporte.Conteudo)).Id).ShouldBeTrue();
-                acervosAudiovisual.Any(a=> a.CromiaId == cromias.FirstOrDefault(f=> f.Nome.Equals(linhasComSucesso.Cromia.Conteudo)).Id).ShouldBeTrue();
-                acervosAudiovisual.Any(a=> a.ConservacaoId == conservacoes.FirstOrDefault(f=> f.Nome.Equals(linhasComSucesso.EstadoConservacao.Conteudo)).Id).ShouldBeTrue();
+                acervosAudiovisual.Any(a=> a.SuporteId.SaoIguais(suportes.FirstOrDefault(f=> f.Nome.SaoIguais(linhasComSucesso.Suporte.Conteudo)).Id)).ShouldBeTrue();
+                acervosAudiovisual.Any(a=> a.CromiaId.SaoIguais(cromias.FirstOrDefault(f=> f.Nome.SaoIguais(linhasComSucesso.Cromia.Conteudo)).Id)).ShouldBeTrue();
+                acervosAudiovisual.Any(a=> a.ConservacaoId.SaoIguais(conservacoes.FirstOrDefault(f=> f.Nome.SaoIguais(linhasComSucesso.EstadoConservacao.Conteudo)).Id)).ShouldBeTrue();
                 
                 //Campos livres
-                acervosAudiovisual.Any(a=> a.Localizacao == linhasComSucesso.Localizacao.Conteudo).ShouldBeTrue();
-                acervosAudiovisual.Any(a=> a.Procedencia == linhasComSucesso.Procedencia.Conteudo).ShouldBeTrue();
-                acervosAudiovisual.Any(a=> a.DataAcervo == linhasComSucesso.Data.Conteudo).ShouldBeTrue();
-                acervosAudiovisual.Any(a=> a.Copia == linhasComSucesso.Copia.Conteudo).ShouldBeTrue();
-                acervosAudiovisual.Any(a=> a.PermiteUsoImagem == linhasComSucesso.AutorizacaoUsoDeImagem.Conteudo.Equals("Sim")).ShouldBeTrue();
-                acervosAudiovisual.Any(a=> a.TamanhoArquivo == linhasComSucesso.TamanhoArquivo.Conteudo).ShouldBeTrue();
-                acervosAudiovisual.Any(a=> a.Acessibilidade == linhasComSucesso.Acessibilidade.Conteudo).ShouldBeTrue();
-                acervosAudiovisual.Any(a=> a.Disponibilizacao == linhasComSucesso.Disponibilizacao.Conteudo).ShouldBeTrue();
+                acervosAudiovisual.Any(a=> a.Localizacao.SaoIguais(linhasComSucesso.Localizacao.Conteudo)).ShouldBeTrue();
+                acervosAudiovisual.Any(a=> a.Procedencia.SaoIguais(linhasComSucesso.Procedencia.Conteudo)).ShouldBeTrue();
+                acervosAudiovisual.Any(a=> a.DataAcervo.SaoIguais(linhasComSucesso.Data.Conteudo)).ShouldBeTrue();
+                acervosAudiovisual.Any(a=> a.Copia.SaoIguais(linhasComSucesso.Copia.Conteudo)).ShouldBeTrue();
+                acervosAudiovisual.Any(a=> a.PermiteUsoImagem.SaoIguais(linhasComSucesso.AutorizacaoUsoDeImagem.Conteudo.EhOpcaoSim())).ShouldBeTrue();
+                acervosAudiovisual.Any(a=> a.TamanhoArquivo.SaoIguais(linhasComSucesso.TamanhoArquivo.Conteudo)).ShouldBeTrue();
+                acervosAudiovisual.Any(a=> a.Acessibilidade.SaoIguais(linhasComSucesso.Acessibilidade.Conteudo)).ShouldBeTrue();
+                acervosAudiovisual.Any(a=> a.Disponibilizacao.SaoIguais(linhasComSucesso.Disponibilizacao.Conteudo)).ShouldBeTrue();
                 
                 //Crédito
                 var creditoAInserir = linhasComSucesso.Credito.Conteudo.FormatarTextoEmArray().ToArray().UnificarPipe().SplitPipe().Distinct();
                 
                 foreach (var credito in creditoAInserir)
-                    creditoAutores.Any(a=> a.Nome.Equals(credito)).ShouldBeTrue();
+                    creditoAutores.Any(a=> a.Nome.SaoIguais(credito)).ShouldBeTrue();
                 
                 foreach (var creditoAutor in acervoCreditoAutors)
-                    creditoAutores.Any(a=> a.Id == creditoAutor.CreditoAutorId).ShouldBeTrue();
+                    creditoAutores.Any(a=> a.Id.SaoIguais(creditoAutor.CreditoAutorId)).ShouldBeTrue();
             }
         }
         
@@ -315,42 +313,42 @@ namespace SME.CDEP.TesteIntegracao
         
             foreach (var linhaInserida in linhasInseridas.Where(w=> !w.PossuiErros))
             {
-                retorno.Sucesso.Any(a=> a.Titulo.Conteudo.Equals(linhaInserida.Titulo.Conteudo)).ShouldBeTrue();
-                retorno.Sucesso.Any(a=> a.Tombo.Conteudo.Equals(linhaInserida.Tombo.Conteudo)).ShouldBeTrue();
-                retorno.Sucesso.Any(a=> a.Credito.Conteudo.Equals(linhaInserida.Credito.Conteudo)).ShouldBeTrue();
-                retorno.Sucesso.Any(a=> a.Localizacao.Conteudo.Equals(linhaInserida.Localizacao.Conteudo)).ShouldBeTrue();
-                retorno.Sucesso.Any(a=> a.Procedencia.Conteudo.Equals(linhaInserida.Procedencia.Conteudo)).ShouldBeTrue();
-                retorno.Sucesso.Any(a=> a.Data.Conteudo.Equals(linhaInserida.Data.Conteudo)).ShouldBeTrue();
-                retorno.Sucesso.Any(a=> a.Copia.Conteudo.Equals(linhaInserida.Copia.Conteudo)).ShouldBeTrue();
-                retorno.Sucesso.Any(a=> a.AutorizacaoUsoDeImagem.Conteudo.Equals(linhaInserida.AutorizacaoUsoDeImagem.Conteudo)).ShouldBeTrue();
-                retorno.Sucesso.Any(a=> a.EstadoConservacao.Conteudo.Equals(linhaInserida.EstadoConservacao.Conteudo)).ShouldBeTrue();
-                retorno.Sucesso.Any(a=> a.Descricao.Conteudo.Equals(linhaInserida.Descricao.Conteudo)).ShouldBeTrue();
-                retorno.Sucesso.Any(a=> a.Suporte.Conteudo.Equals(linhaInserida.Suporte.Conteudo)).ShouldBeTrue();
-                retorno.Sucesso.Any(a=> a.Duracao.Conteudo.Equals(linhaInserida.Duracao.Conteudo)).ShouldBeTrue();
-                retorno.Sucesso.Any(a=> a.Cromia.Conteudo.Equals(linhaInserida.Cromia.Conteudo)).ShouldBeTrue();
-                retorno.Sucesso.Any(a=> a.TamanhoArquivo.Conteudo.Equals(linhaInserida.TamanhoArquivo.Conteudo)).ShouldBeTrue();
-                retorno.Sucesso.Any(a=> a.Acessibilidade.Conteudo.Equals(linhaInserida.Acessibilidade.Conteudo)).ShouldBeTrue();
-                retorno.Sucesso.Any(a=> a.Disponibilizacao.Conteudo.Equals(linhaInserida.Disponibilizacao.Conteudo)).ShouldBeTrue();
+                retorno.Sucesso.Any(a=> a.Titulo.Conteudo.SaoIguais(linhaInserida.Titulo.Conteudo)).ShouldBeTrue();
+                retorno.Sucesso.Any(a=> a.Tombo.Conteudo.SaoIguais(linhaInserida.Tombo.Conteudo)).ShouldBeTrue();
+                retorno.Sucesso.Any(a=> a.Credito.Conteudo.SaoIguais(linhaInserida.Credito.Conteudo)).ShouldBeTrue();
+                retorno.Sucesso.Any(a=> a.Localizacao.Conteudo.SaoIguais(linhaInserida.Localizacao.Conteudo)).ShouldBeTrue();
+                retorno.Sucesso.Any(a=> a.Procedencia.Conteudo.SaoIguais(linhaInserida.Procedencia.Conteudo)).ShouldBeTrue();
+                retorno.Sucesso.Any(a=> a.Data.Conteudo.SaoIguais(linhaInserida.Data.Conteudo)).ShouldBeTrue();
+                retorno.Sucesso.Any(a=> a.Copia.Conteudo.SaoIguais(linhaInserida.Copia.Conteudo)).ShouldBeTrue();
+                retorno.Sucesso.Any(a=> a.AutorizacaoUsoDeImagem.Conteudo.SaoIguais(linhaInserida.AutorizacaoUsoDeImagem.Conteudo)).ShouldBeTrue();
+                retorno.Sucesso.Any(a=> a.EstadoConservacao.Conteudo.SaoIguais(linhaInserida.EstadoConservacao.Conteudo)).ShouldBeTrue();
+                retorno.Sucesso.Any(a=> a.Descricao.Conteudo.SaoIguais(linhaInserida.Descricao.Conteudo)).ShouldBeTrue();
+                retorno.Sucesso.Any(a=> a.Suporte.Conteudo.SaoIguais(linhaInserida.Suporte.Conteudo)).ShouldBeTrue();
+                retorno.Sucesso.Any(a=> a.Duracao.Conteudo.SaoIguais(linhaInserida.Duracao.Conteudo)).ShouldBeTrue();
+                retorno.Sucesso.Any(a=> a.Cromia.Conteudo.SaoIguais(linhaInserida.Cromia.Conteudo)).ShouldBeTrue();
+                retorno.Sucesso.Any(a=> a.TamanhoArquivo.Conteudo.SaoIguais(linhaInserida.TamanhoArquivo.Conteudo)).ShouldBeTrue();
+                retorno.Sucesso.Any(a=> a.Acessibilidade.Conteudo.SaoIguais(linhaInserida.Acessibilidade.Conteudo)).ShouldBeTrue();
+                retorno.Sucesso.Any(a=> a.Disponibilizacao.Conteudo.SaoIguais(linhaInserida.Disponibilizacao.Conteudo)).ShouldBeTrue();
             }
             
             foreach (var linhaInserida in linhasInseridas.Where(w=> w.PossuiErros))
             {
-                retorno.Erros.Any(a=> a.Titulo.Conteudo.Equals(linhaInserida.Titulo.Conteudo)).ShouldBeTrue();
-                retorno.Erros.Any(a=> a.Tombo.Conteudo.Equals(linhaInserida.Tombo.Conteudo)).ShouldBeTrue();
-                retorno.Erros.Any(a=> a.Credito.Conteudo.Equals(linhaInserida.Credito.Conteudo)).ShouldBeTrue();
-                retorno.Erros.Any(a=> a.Localizacao.Conteudo.Equals(linhaInserida.Localizacao.Conteudo)).ShouldBeTrue();
-                retorno.Erros.Any(a=> a.Procedencia.Conteudo.Equals(linhaInserida.Procedencia.Conteudo)).ShouldBeTrue();
-                retorno.Erros.Any(a=> a.Data.Conteudo.Equals(linhaInserida.Data.Conteudo)).ShouldBeTrue();
-                retorno.Erros.Any(a=> a.Copia.Conteudo.Equals(linhaInserida.Copia.Conteudo)).ShouldBeTrue();
-                retorno.Erros.Any(a=> a.AutorizacaoUsoDeImagem.Conteudo.Equals(linhaInserida.AutorizacaoUsoDeImagem.Conteudo)).ShouldBeTrue();
-                retorno.Erros.Any(a=> a.EstadoConservacao.Conteudo.Equals(linhaInserida.EstadoConservacao.Conteudo)).ShouldBeTrue();
-                retorno.Erros.Any(a=> a.Descricao.Conteudo.Equals(linhaInserida.Descricao.Conteudo)).ShouldBeTrue();
-                retorno.Erros.Any(a=> a.Suporte.Conteudo.Equals(linhaInserida.Suporte.Conteudo)).ShouldBeTrue();
-                retorno.Erros.Any(a=> a.Duracao.Conteudo.Equals(linhaInserida.Duracao.Conteudo)).ShouldBeTrue();
-                retorno.Erros.Any(a=> a.Cromia.Conteudo.Equals(linhaInserida.Cromia.Conteudo)).ShouldBeTrue();
-                retorno.Erros.Any(a=> a.TamanhoArquivo.Conteudo.Equals(linhaInserida.TamanhoArquivo.Conteudo)).ShouldBeTrue();
-                retorno.Erros.Any(a=> a.Acessibilidade.Conteudo.Equals(linhaInserida.Acessibilidade.Conteudo)).ShouldBeTrue();
-                retorno.Erros.Any(a=> a.Disponibilizacao.Conteudo.Equals(linhaInserida.Disponibilizacao.Conteudo)).ShouldBeTrue();
+                retorno.Erros.Any(a=> a.Titulo.Conteudo.SaoIguais(linhaInserida.Titulo.Conteudo)).ShouldBeTrue();
+                retorno.Erros.Any(a=> a.Tombo.Conteudo.SaoIguais(linhaInserida.Tombo.Conteudo)).ShouldBeTrue();
+                retorno.Erros.Any(a=> a.Credito.Conteudo.SaoIguais(linhaInserida.Credito.Conteudo)).ShouldBeTrue();
+                retorno.Erros.Any(a=> a.Localizacao.Conteudo.SaoIguais(linhaInserida.Localizacao.Conteudo)).ShouldBeTrue();
+                retorno.Erros.Any(a=> a.Procedencia.Conteudo.SaoIguais(linhaInserida.Procedencia.Conteudo)).ShouldBeTrue();
+                retorno.Erros.Any(a=> a.Data.Conteudo.SaoIguais(linhaInserida.Data.Conteudo)).ShouldBeTrue();
+                retorno.Erros.Any(a=> a.Copia.Conteudo.SaoIguais(linhaInserida.Copia.Conteudo)).ShouldBeTrue();
+                retorno.Erros.Any(a=> a.AutorizacaoUsoDeImagem.Conteudo.SaoIguais(linhaInserida.AutorizacaoUsoDeImagem.Conteudo)).ShouldBeTrue();
+                retorno.Erros.Any(a=> a.EstadoConservacao.Conteudo.SaoIguais(linhaInserida.EstadoConservacao.Conteudo)).ShouldBeTrue();
+                retorno.Erros.Any(a=> a.Descricao.Conteudo.SaoIguais(linhaInserida.Descricao.Conteudo)).ShouldBeTrue();
+                retorno.Erros.Any(a=> a.Suporte.Conteudo.SaoIguais(linhaInserida.Suporte.Conteudo)).ShouldBeTrue();
+                retorno.Erros.Any(a=> a.Duracao.Conteudo.SaoIguais(linhaInserida.Duracao.Conteudo)).ShouldBeTrue();
+                retorno.Erros.Any(a=> a.Cromia.Conteudo.SaoIguais(linhaInserida.Cromia.Conteudo)).ShouldBeTrue();
+                retorno.Erros.Any(a=> a.TamanhoArquivo.Conteudo.SaoIguais(linhaInserida.TamanhoArquivo.Conteudo)).ShouldBeTrue();
+                retorno.Erros.Any(a=> a.Acessibilidade.Conteudo.SaoIguais(linhaInserida.Acessibilidade.Conteudo)).ShouldBeTrue();
+                retorno.Erros.Any(a=> a.Disponibilizacao.Conteudo.SaoIguais(linhaInserida.Disponibilizacao.Conteudo)).ShouldBeTrue();
             }
         }
     }

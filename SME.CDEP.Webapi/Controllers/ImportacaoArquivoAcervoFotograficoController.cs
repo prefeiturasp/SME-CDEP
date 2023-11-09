@@ -9,6 +9,7 @@ using SME.CDEP.Webapi.Filtros;
 namespace SME.CDEP.Webapi.Controllers;
 
 [ApiController]
+[Route("api/v1/acervo/fotografico/importacao/planilha")]
 [ValidaDto]
 public class ImportacaoArquivoAcervoFotograficoController: BaseController
 {

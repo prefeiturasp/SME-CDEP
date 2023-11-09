@@ -123,8 +123,7 @@ namespace SME.CDEP.Aplicacao.Servicos
 
                         SubTitulo = acervoBibliograficoLinha.SubTitulo.Conteudo,
 
-                        MaterialId =
-                            Materiais.FirstOrDefault(f => f.Nome.Equals(acervoBibliograficoLinha.Material.Conteudo)).Id,
+                        MaterialId = ObterMaterialBibliograficoIdPorValorDoCampo(acervoBibliograficoLinha.Material.Conteudo),
 
                         CreditosAutoresIds = CreditosAutores
                             .Where(f => acervoBibliograficoLinha.Autor.Conteudo.FormatarTextoEmArray().Contains(f.Nome))
@@ -133,7 +132,7 @@ namespace SME.CDEP.Aplicacao.Servicos
                         CoAutores = ObterCoAutoresTipoAutoria(acervoBibliograficoLinha.CoAutor.Conteudo,acervoBibliograficoLinha.TipoAutoria.Conteudo),
 
                         EditoraId = acervoBibliograficoLinha.Editora.Conteudo.EstaPreenchido()
-                            ? Editoras.FirstOrDefault(f => f.Nome.Equals(acervoBibliograficoLinha.Editora.Conteudo)).Id
+                            ? ObterEditoraIdPorValorDoCampo(acervoBibliograficoLinha.Editora.Conteudo)
                             : null,
 
                         AssuntosIds = Assuntos
@@ -142,18 +141,17 @@ namespace SME.CDEP.Aplicacao.Servicos
 
                         Ano = acervoBibliograficoLinha.Ano.Conteudo,
                         Edicao = acervoBibliograficoLinha.Edicao.Conteudo,
-                        NumeroPagina = double.Parse(acervoBibliograficoLinha.NumeroPaginas.Conteudo),
-                        Largura = double.Parse(acervoBibliograficoLinha.Largura.Conteudo),
-                        Altura = double.Parse(acervoBibliograficoLinha.Altura.Conteudo),
+                        NumeroPagina = acervoBibliograficoLinha.NumeroPaginas.Conteudo.ObterDoubleOuNuloPorValorDoCampo(),
+                        Largura = acervoBibliograficoLinha.Largura.Conteudo.ObterDoubleOuNuloPorValorDoCampo(),
+                        Altura = acervoBibliograficoLinha.Altura.Conteudo.ObterDoubleOuNuloPorValorDoCampo(),
 
                         SerieColecaoId = acervoBibliograficoLinha.SerieColecao.Conteudo.EstaPreenchido()
-                            ? SeriesColecoes.FirstOrDefault(f => f.Nome.Equals(acervoBibliograficoLinha.SerieColecao.Conteudo))
-                                .Id
+                            ? ObterSerieColecaoIdPorValorDoCampo(acervoBibliograficoLinha.SerieColecao.Conteudo)
                             : null,
 
                         Volume = acervoBibliograficoLinha.Volume.Conteudo,
 
-                        IdiomaId = Idiomas.FirstOrDefault(f => f.Nome.Equals(acervoBibliograficoLinha.Idioma.Conteudo)).Id,
+                        IdiomaId = ObterIdiomaIdPorValorDoCampo(acervoBibliograficoLinha.Idioma.Conteudo),
 
                         LocalizacaoCDD = acervoBibliograficoLinha.LocalizacaoCDD.Conteudo,
                         LocalizacaoPHA = acervoBibliograficoLinha.LocalizacaoPHA.Conteudo,
@@ -196,8 +194,8 @@ namespace SME.CDEP.Aplicacao.Servicos
             
             var coAutoresCompletos = coAutoresEmTextoAutoNumerados.Select(coAutorAutoNumerado => new CoAutorDTO
             {
-                CreditoAutorId = CreditosAutores.FirstOrDefault(f=> f.Nome.Equals(coAutorAutoNumerado.Nome)).Id,
-                TipoAutoria = tiposAutoriaEmTextoAutoNumerados.FirstOrDefault(f => f.Id == coAutorAutoNumerado.Id)?.Nome
+                CreditoAutorId = CreditosAutores.FirstOrDefault(f=> f.Nome.SaoIguais(coAutorAutoNumerado.Nome)).Id,
+                TipoAutoria = tiposAutoriaEmTextoAutoNumerados.FirstOrDefault(f => f.Id.SaoIguais(coAutorAutoNumerado.Id))?.Nome
             }).ToArray();
 
             return coAutoresCompletos;

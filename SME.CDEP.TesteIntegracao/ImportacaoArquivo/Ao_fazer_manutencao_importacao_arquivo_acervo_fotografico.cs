@@ -16,7 +16,7 @@ namespace SME.CDEP.TesteIntegracao
         public Ao_fazer_manutencao_importacao_arquivo_acervo_fotografico(CollectionFixture collectionFixture) : base(collectionFixture)
         {}
         
-        [Fact(DisplayName = "Importação Arquivo Acervo Fotografico - ValidarPreenchimentoValorFormatoQtdeCaracteres - Com erros: Titulo, Suporte, Procedência, Quantidade e Tombo")]
+        [Fact(DisplayName = "Importação Arquivo Acervo Fotografico - ValidarPreenchimentoValorFormatoQtdeCaracteres - Com erros: Titulo, Suporte, Resolução, Quantidade e Tombo")]
         public async Task Validar_preenchimento_valor_formato_qtde_caracteres()
         {
             var servicoImportacaoArquivo = GetServicoImportacaoArquivoAcervoFotografico();
@@ -25,7 +25,7 @@ namespace SME.CDEP.TesteIntegracao
 
             acervoFotograficoLinhas[2].Titulo.Conteudo = string.Empty;
             acervoFotograficoLinhas[4].Suporte.Conteudo = string.Empty;
-            acervoFotograficoLinhas[5].Procedencia.Conteudo = faker.Lorem.Paragraph();
+            acervoFotograficoLinhas[5].Resolucao.Conteudo = faker.Lorem.Paragraph();
             acervoFotograficoLinhas[7].Quantidade.Conteudo = faker.Lorem.Paragraph();
             acervoFotograficoLinhas[8].Tombo.Conteudo = string.Empty;
             var linhasComErros = new[] { 3, 5, 6, 8, 9 };
@@ -34,9 +34,9 @@ namespace SME.CDEP.TesteIntegracao
 
             foreach (var linha in acervoFotograficoLinhas)
             {
-                linha.PossuiErros.ShouldBe(linhasComErros.Any(a=> a == linha.NumeroLinha));
+                linha.PossuiErros.ShouldBe(linhasComErros.Any(a=> a.SaoIguais(linha.NumeroLinha)));
 
-                if (linha.NumeroLinha == 3)
+                if (linha.NumeroLinha.SaoIguais(3))
                 {
                     linha.Titulo.PossuiErro.ShouldBeTrue();
                     linha.Titulo.Mensagem.ShouldNotBeEmpty();
@@ -47,7 +47,7 @@ namespace SME.CDEP.TesteIntegracao
                     linha.Titulo.Mensagem.ShouldBeEmpty();
                 }
                 
-                if (linha.NumeroLinha == 5)
+                if (linha.NumeroLinha.SaoIguais(5))
                 {
                     linha.Suporte.PossuiErro.ShouldBeTrue();
                     linha.Suporte.Mensagem.ShouldNotBeEmpty();
@@ -58,18 +58,18 @@ namespace SME.CDEP.TesteIntegracao
                     linha.Suporte.Mensagem.ShouldBeEmpty();
                 }
                 
-                if (linha.NumeroLinha == 6)
+                if (linha.NumeroLinha.SaoIguais(6))
                 {
-                    linha.Procedencia.PossuiErro.ShouldBeTrue();
-                    linha.Procedencia.Mensagem.ShouldNotBeEmpty();
+                    linha.Resolucao.PossuiErro.ShouldBeTrue();
+                    linha.Resolucao.Mensagem.ShouldNotBeEmpty();
                 }
                 else
                 {
-                    linha.Procedencia.PossuiErro.ShouldBeFalse();
-                    linha.Procedencia.Mensagem.ShouldBeEmpty();
+                    linha.Resolucao.PossuiErro.ShouldBeFalse();
+                    linha.Resolucao.Mensagem.ShouldBeEmpty();
                 }
                 
-                if (linha.NumeroLinha == 8)
+                if (linha.NumeroLinha.SaoIguais(8))
                 {
                     linha.Quantidade.PossuiErro.ShouldBeTrue();
                     linha.Quantidade.Mensagem.ShouldNotBeEmpty();
@@ -80,7 +80,7 @@ namespace SME.CDEP.TesteIntegracao
                     linha.Quantidade.Mensagem.ShouldBeEmpty();
                 }
                 
-                if (linha.NumeroLinha == 9)
+                if (linha.NumeroLinha.SaoIguais(9))
                 {
                     linha.Tombo.PossuiErro.ShouldBeTrue();
                     linha.Tombo.Mensagem.ShouldNotBeEmpty();
@@ -103,7 +103,7 @@ namespace SME.CDEP.TesteIntegracao
                 linha.FormatoImagem.PossuiErro.ShouldBeFalse();
                 linha.TamanhoArquivo.PossuiErro.ShouldBeFalse();
                 linha.Cromia.PossuiErro.ShouldBeFalse();
-                linha.Resolucao.PossuiErro.ShouldBeFalse();
+                linha.Procedencia.PossuiErro.ShouldBeFalse();
             }
         }
         
@@ -121,23 +121,23 @@ namespace SME.CDEP.TesteIntegracao
                 var creditoAutorInseridos = linha.Credito.Conteudo.FormatarTextoEmArray().ToArray().UnificarPipe().SplitPipe().Distinct();
                 var creditosAutores = ObterTodos<CreditoAutor>();
                 foreach (var creditoAutor in creditoAutorInseridos)
-                    creditosAutores.Any(a => a.Nome.Equals(creditoAutor)).ShouldBeTrue();
+                    creditosAutores.Any(a => a.Nome.SaoIguais(creditoAutor)).ShouldBeTrue();
                 
                 var cromiaInserido = linha.Cromia.Conteudo;
                 var cromias = ObterTodos<Cromia>();
-                cromias.Any(a => a.Nome.Equals(cromiaInserido)).ShouldBeTrue();
+                cromias.Any(a => a.Nome.SaoIguais(cromiaInserido)).ShouldBeTrue();
         
                 var suporteInserido = linha.Suporte.Conteudo;
                 var suportes = ObterTodos<Suporte>();
-                suportes.Any(a => a.Nome.Equals(suporteInserido)).ShouldBeTrue();
+                suportes.Any(a => a.Nome.SaoIguais(suporteInserido)).ShouldBeTrue();
         
                 var conservacoesInseridas = linha.EstadoConservacao.Conteudo;
                 var conservacoes = ObterTodos<Conservacao>();
-                conservacoes.Any(a => a.Nome.Equals(conservacoesInseridas)).ShouldBeTrue();
+                conservacoes.Any(a => a.Nome.SaoIguais(conservacoesInseridas)).ShouldBeTrue();
                 
                 var FormatoInseridas = linha.FormatoImagem.Conteudo;
                 var formato = ObterTodos<Formato>();
-                formato.Any(a => a.Nome.Equals(FormatoInseridas)).ShouldBeTrue();
+                formato.Any(a => a.Nome.SaoIguais(FormatoInseridas)).ShouldBeTrue();
             }
         }
         
@@ -184,39 +184,39 @@ namespace SME.CDEP.TesteIntegracao
             foreach (var linhasComSucesso in acervoFotograficoLinhas.Where(w=> !w.PossuiErros))
             {
                 //Acervo
-                acervos.Any(a=> a.Titulo.Equals(linhasComSucesso.Titulo.Conteudo)).ShouldBeTrue();
-                acervos.Any(a=> a.Codigo.Equals(linhasComSucesso.Tombo.Conteudo)).ShouldBeTrue();
-                acervos.Any(a=> a.Descricao.Equals(linhasComSucesso.Descricao.Conteudo)).ShouldBeTrue();  
+                acervos.Any(a=> a.Titulo.SaoIguais(linhasComSucesso.Titulo.Conteudo)).ShouldBeTrue();
+                acervos.Any(a=> a.Codigo.SaoIguais(linhasComSucesso.Tombo.Conteudo)).ShouldBeTrue();
+                acervos.Any(a=> a.Descricao.SaoIguais(linhasComSucesso.Descricao.Conteudo)).ShouldBeTrue();  
                 
                 //Referência 1:1
-                acervosFotografico.Any(a=> a.SuporteId == suportes.FirstOrDefault(f=> f.Nome.Equals(linhasComSucesso.Suporte.Conteudo)).Id).ShouldBeTrue();
-                acervosFotografico.Any(a=> a.CromiaId == cromias.FirstOrDefault(f=> f.Nome.Equals(linhasComSucesso.Cromia.Conteudo)).Id).ShouldBeTrue();
-                acervosFotografico.Any(a=> a.ConservacaoId == conservacoes.FirstOrDefault(f=> f.Nome.Equals(linhasComSucesso.EstadoConservacao.Conteudo)).Id).ShouldBeTrue();
-                acervosFotografico.Any(a=> a.FormatoId == formatos.FirstOrDefault(f=> f.Nome.Equals(linhasComSucesso.FormatoImagem.Conteudo)).Id).ShouldBeTrue();
+                acervosFotografico.Any(a=> a.SuporteId.SaoIguais(suportes.FirstOrDefault(f=> f.Nome.SaoIguais(linhasComSucesso.Suporte.Conteudo)).Id)).ShouldBeTrue();
+                acervosFotografico.Any(a=> a.CromiaId.SaoIguais(cromias.FirstOrDefault(f=> f.Nome.SaoIguais(linhasComSucesso.Cromia.Conteudo)).Id)).ShouldBeTrue();
+                acervosFotografico.Any(a=> a.ConservacaoId.SaoIguais(conservacoes.FirstOrDefault(f=> f.Nome.SaoIguais(linhasComSucesso.EstadoConservacao.Conteudo)).Id)).ShouldBeTrue();
+                acervosFotografico.Any(a=> a.FormatoId.SaoIguais(formatos.FirstOrDefault(f=> f.Nome.SaoIguais(linhasComSucesso.FormatoImagem.Conteudo)).Id)).ShouldBeTrue();
                 
                 //Campos livres
-                acervosFotografico.Any(a=> a.Localizacao == linhasComSucesso.Localizacao.Conteudo).ShouldBeTrue();
-                acervosFotografico.Any(a=> a.Procedencia == linhasComSucesso.Procedencia.Conteudo).ShouldBeTrue();
-                acervosFotografico.Any(a=> a.DataAcervo == linhasComSucesso.Data.Conteudo).ShouldBeTrue();
-                acervosFotografico.Any(a=> a.CopiaDigital == linhasComSucesso.CopiaDigital.Conteudo.Equals("Sim")).ShouldBeTrue();
-                acervosFotografico.Any(a=> a.PermiteUsoImagem == linhasComSucesso.AutorizacaoUsoDeImagem.Conteudo.Equals("Sim")).ShouldBeTrue();
-                acervosFotografico.Any(a=> a.Quantidade == long.Parse(linhasComSucesso.Quantidade.Conteudo)).ShouldBeTrue();
-                acervosFotografico.Any(a=> a.Largura == double.Parse(linhasComSucesso.Largura.Conteudo)).ShouldBeTrue();
-                acervosFotografico.Any(a=> a.Altura == double.Parse(linhasComSucesso.Altura.Conteudo)).ShouldBeTrue();
-                acervosFotografico.Any(a=> a.TamanhoArquivo == linhasComSucesso.TamanhoArquivo.Conteudo).ShouldBeTrue();
-                acervosFotografico.Any(a=> a.Resolucao == linhasComSucesso.Resolucao.Conteudo).ShouldBeTrue();
+                acervosFotografico.Any(a=> a.Localizacao.SaoIguais(linhasComSucesso.Localizacao.Conteudo)).ShouldBeTrue();
+                acervosFotografico.Any(a=> a.Procedencia.SaoIguais(linhasComSucesso.Procedencia.Conteudo)).ShouldBeTrue();
+                acervosFotografico.Any(a=> a.DataAcervo.SaoIguais(linhasComSucesso.Data.Conteudo)).ShouldBeTrue();
+                acervosFotografico.Any(a=> a.CopiaDigital.SaoIguais(linhasComSucesso.CopiaDigital.Conteudo.EhOpcaoSim())).ShouldBeTrue();
+                acervosFotografico.Any(a=> a.PermiteUsoImagem.SaoIguais(linhasComSucesso.AutorizacaoUsoDeImagem.Conteudo.EhOpcaoSim())).ShouldBeTrue();
+                acervosFotografico.Any(a=> a.Quantidade.SaoIguais(linhasComSucesso.Quantidade.Conteudo.ObterLongoPorValorDoCampo())).ShouldBeTrue();
+                acervosFotografico.Any(a=> a.Largura.SaoIguais(linhasComSucesso.Largura.Conteudo.ObterDoubleOuNuloPorValorDoCampo())).ShouldBeTrue();
+                acervosFotografico.Any(a=> a.Altura.SaoIguais(linhasComSucesso.Altura.Conteudo.ObterDoubleOuNuloPorValorDoCampo())).ShouldBeTrue();
+                acervosFotografico.Any(a=> a.TamanhoArquivo.SaoIguais(linhasComSucesso.TamanhoArquivo.Conteudo)).ShouldBeTrue();
+                acervosFotografico.Any(a=> a.Resolucao.SaoIguais(linhasComSucesso.Resolucao.Conteudo)).ShouldBeTrue();
                 
                 //Crédito
                 var creditoAInserir = linhasComSucesso.Credito.Conteudo.FormatarTextoEmArray().ToArray().UnificarPipe().SplitPipe().Distinct();
                 
                 foreach (var credito in creditoAInserir)
-                    creditoAutores.Any(a=> a.Nome.Equals(credito)).ShouldBeTrue();
+                    creditoAutores.Any(a=> a.Nome.SaoIguais(credito)).ShouldBeTrue();
                 
                 foreach (var creditoAutor in acervoCreditoAutors)
-                    creditoAutores.Any(a=> a.Id == creditoAutor.CreditoAutorId).ShouldBeTrue();
+                    creditoAutores.Any(a=> a.Id.SaoIguais(creditoAutor.CreditoAutorId)).ShouldBeTrue();
             }
         }
-        
+
         [Fact(DisplayName = "Importação Arquivo Acervo Fotografico - Geral - Com erros em 3 linhas")]
         public async Task Importacao_geral()
         {
@@ -265,36 +265,36 @@ namespace SME.CDEP.TesteIntegracao
             foreach (var linhasComSucesso in acervoFotograficoLinhas.Where(w=> !w.PossuiErros))
             {
                 //Acervo
-                acervos.Any(a=> a.Titulo.Equals(linhasComSucesso.Titulo.Conteudo)).ShouldBeTrue();
-                acervos.Any(a=> a.Codigo.Equals(linhasComSucesso.Tombo.Conteudo)).ShouldBeTrue();
-                acervos.Any(a=> a.Descricao.Equals(linhasComSucesso.Descricao.Conteudo)).ShouldBeTrue();  
+                acervos.Any(a=> a.Titulo.SaoIguais(linhasComSucesso.Titulo.Conteudo)).ShouldBeTrue();
+                acervos.Any(a=> a.Codigo.SaoIguais(linhasComSucesso.Tombo.Conteudo)).ShouldBeTrue();
+                acervos.Any(a=> a.Descricao.SaoIguais(linhasComSucesso.Descricao.Conteudo)).ShouldBeTrue();  
                 
                 //Referência 1:1
-                acervosFotografico.Any(a=> a.SuporteId == suportes.FirstOrDefault(f=> f.Nome.Equals(linhasComSucesso.Suporte.Conteudo)).Id).ShouldBeTrue();
-                acervosFotografico.Any(a=> a.CromiaId == cromias.FirstOrDefault(f=> f.Nome.Equals(linhasComSucesso.Cromia.Conteudo)).Id).ShouldBeTrue();
-                acervosFotografico.Any(a=> a.ConservacaoId == conservacoes.FirstOrDefault(f=> f.Nome.Equals(linhasComSucesso.EstadoConservacao.Conteudo)).Id).ShouldBeTrue();
-                acervosFotografico.Any(a=> a.FormatoId == formatos.FirstOrDefault(f=> f.Nome.Equals(linhasComSucesso.FormatoImagem.Conteudo)).Id).ShouldBeTrue();
+                acervosFotografico.Any(a=> a.SuporteId.SaoIguais(suportes.FirstOrDefault(f=> f.Nome.SaoIguais(linhasComSucesso.Suporte.Conteudo)).Id)).ShouldBeTrue();
+                acervosFotografico.Any(a=> a.CromiaId.SaoIguais(cromias.FirstOrDefault(f=> f.Nome.SaoIguais(linhasComSucesso.Cromia.Conteudo)).Id)).ShouldBeTrue();
+                acervosFotografico.Any(a=> a.ConservacaoId.SaoIguais(conservacoes.FirstOrDefault(f=> f.Nome.SaoIguais(linhasComSucesso.EstadoConservacao.Conteudo)).Id)).ShouldBeTrue();
+                acervosFotografico.Any(a=> a.FormatoId.SaoIguais(formatos.FirstOrDefault(f=> f.Nome.SaoIguais(linhasComSucesso.FormatoImagem.Conteudo)).Id)).ShouldBeTrue();
                 
                 //Campos livres
-                acervosFotografico.Any(a=> a.Localizacao == linhasComSucesso.Localizacao.Conteudo).ShouldBeTrue();
-                acervosFotografico.Any(a=> a.Procedencia == linhasComSucesso.Procedencia.Conteudo).ShouldBeTrue();
-                acervosFotografico.Any(a=> a.DataAcervo == linhasComSucesso.Data.Conteudo).ShouldBeTrue();
-                acervosFotografico.Any(a=> a.CopiaDigital == linhasComSucesso.CopiaDigital.Conteudo.Equals("Sim")).ShouldBeTrue();
-                acervosFotografico.Any(a=> a.PermiteUsoImagem == linhasComSucesso.AutorizacaoUsoDeImagem.Conteudo.Equals("Sim")).ShouldBeTrue();
-                acervosFotografico.Any(a=> a.Quantidade == long.Parse(linhasComSucesso.Quantidade.Conteudo)).ShouldBeTrue();
-                acervosFotografico.Any(a=> a.Largura == double.Parse(linhasComSucesso.Largura.Conteudo)).ShouldBeTrue();
-                acervosFotografico.Any(a=> a.Altura == double.Parse(linhasComSucesso.Altura.Conteudo)).ShouldBeTrue();
-                acervosFotografico.Any(a=> a.TamanhoArquivo == linhasComSucesso.TamanhoArquivo.Conteudo).ShouldBeTrue();
-                acervosFotografico.Any(a=> a.Resolucao == linhasComSucesso.Resolucao.Conteudo).ShouldBeTrue();
+                acervosFotografico.Any(a=> a.Localizacao.SaoIguais(linhasComSucesso.Localizacao.Conteudo)).ShouldBeTrue();
+                acervosFotografico.Any(a=> a.Procedencia.SaoIguais(linhasComSucesso.Procedencia.Conteudo)).ShouldBeTrue();
+                acervosFotografico.Any(a=> a.DataAcervo.SaoIguais(linhasComSucesso.Data.Conteudo)).ShouldBeTrue();
+                acervosFotografico.Any(a=> a.CopiaDigital.SaoIguais(linhasComSucesso.CopiaDigital.Conteudo.EhOpcaoSim())).ShouldBeTrue();
+                acervosFotografico.Any(a=> a.PermiteUsoImagem.SaoIguais(linhasComSucesso.AutorizacaoUsoDeImagem.Conteudo.EhOpcaoSim())).ShouldBeTrue();
+                acervosFotografico.Any(a=> a.Quantidade.SaoIguais(linhasComSucesso.Quantidade.Conteudo.ObterLongoPorValorDoCampo())).ShouldBeTrue();
+                acervosFotografico.Any(a=> a.Largura.SaoIguais(linhasComSucesso.Largura.Conteudo.ObterDoubleOuNuloPorValorDoCampo())).ShouldBeTrue();
+                acervosFotografico.Any(a=> a.Altura.SaoIguais(linhasComSucesso.Altura.Conteudo.ObterDoubleOuNuloPorValorDoCampo())).ShouldBeTrue();
+                acervosFotografico.Any(a=> a.TamanhoArquivo.SaoIguais(linhasComSucesso.TamanhoArquivo.Conteudo)).ShouldBeTrue();
+                acervosFotografico.Any(a=> a.Resolucao.SaoIguais(linhasComSucesso.Resolucao.Conteudo)).ShouldBeTrue();
                 
                 //Crédito
                 var creditoAInserir = linhasComSucesso.Credito.Conteudo.FormatarTextoEmArray().ToArray().UnificarPipe().SplitPipe().Distinct();
                 
                 foreach (var credito in creditoAInserir)
-                    creditoAutores.Any(a=> a.Nome.Equals(credito)).ShouldBeTrue();
+                    creditoAutores.Any(a=> a.Nome.SaoIguais(credito)).ShouldBeTrue();
                 
                 foreach (var creditoAutor in acervoCreditoAutors)
-                    creditoAutores.Any(a=> a.Id == creditoAutor.CreditoAutorId).ShouldBeTrue();
+                    creditoAutores.Any(a=> a.Id.SaoIguais(creditoAutor.CreditoAutorId)).ShouldBeTrue();
             }
         }
         
@@ -329,46 +329,46 @@ namespace SME.CDEP.TesteIntegracao
         
             foreach (var linhaInserida in linhasInseridas.Where(w=> !w.PossuiErros))
             {
-                retorno.Sucesso.Any(a=> a.Titulo.Conteudo.Equals(linhaInserida.Titulo.Conteudo)).ShouldBeTrue();
-                retorno.Sucesso.Any(a=> a.Tombo.Conteudo.Equals(linhaInserida.Tombo.Conteudo)).ShouldBeTrue();
-                retorno.Sucesso.Any(a=> a.Credito.Conteudo.Equals(linhaInserida.Credito.Conteudo)).ShouldBeTrue();
-                retorno.Sucesso.Any(a=> a.Localizacao.Conteudo.Equals(linhaInserida.Localizacao.Conteudo)).ShouldBeTrue();
-                retorno.Sucesso.Any(a=> a.Procedencia.Conteudo.Equals(linhaInserida.Procedencia.Conteudo)).ShouldBeTrue();
-                retorno.Sucesso.Any(a=> a.Data.Conteudo.Equals(linhaInserida.Data.Conteudo)).ShouldBeTrue();
-                retorno.Sucesso.Any(a=> a.CopiaDigital.Conteudo.Equals(linhaInserida.CopiaDigital.Conteudo)).ShouldBeTrue();
-                retorno.Sucesso.Any(a=> a.AutorizacaoUsoDeImagem.Conteudo.Equals(linhaInserida.AutorizacaoUsoDeImagem.Conteudo)).ShouldBeTrue();
-                retorno.Sucesso.Any(a=> a.EstadoConservacao.Conteudo.Equals(linhaInserida.EstadoConservacao.Conteudo)).ShouldBeTrue();
-                retorno.Sucesso.Any(a=> a.Descricao.Conteudo.Equals(linhaInserida.Descricao.Conteudo)).ShouldBeTrue();
-                retorno.Sucesso.Any(a=> a.Quantidade.Conteudo.Equals(linhaInserida.Quantidade.Conteudo)).ShouldBeTrue();
-                retorno.Sucesso.Any(a=> a.Largura.Conteudo.Equals(linhaInserida.Largura.Conteudo)).ShouldBeTrue();
-                retorno.Sucesso.Any(a=> a.Altura.Conteudo.Equals(linhaInserida.Altura.Conteudo)).ShouldBeTrue();
-                retorno.Sucesso.Any(a=> a.Suporte.Conteudo.Equals(linhaInserida.Suporte.Conteudo)).ShouldBeTrue();
-                retorno.Sucesso.Any(a=> a.FormatoImagem.Conteudo.Equals(linhaInserida.FormatoImagem.Conteudo)).ShouldBeTrue();
-                retorno.Sucesso.Any(a=> a.TamanhoArquivo.Conteudo.Equals(linhaInserida.TamanhoArquivo.Conteudo)).ShouldBeTrue();
-                retorno.Sucesso.Any(a=> a.Cromia.Conteudo.Equals(linhaInserida.Cromia.Conteudo)).ShouldBeTrue();
-                retorno.Sucesso.Any(a=> a.Resolucao.Conteudo.Equals(linhaInserida.Resolucao.Conteudo)).ShouldBeTrue();
+                retorno.Sucesso.Any(a=> a.Titulo.Conteudo.SaoIguais(linhaInserida.Titulo.Conteudo)).ShouldBeTrue();
+                retorno.Sucesso.Any(a=> a.Tombo.Conteudo.SaoIguais(linhaInserida.Tombo.Conteudo)).ShouldBeTrue();
+                retorno.Sucesso.Any(a=> a.Credito.Conteudo.SaoIguais(linhaInserida.Credito.Conteudo)).ShouldBeTrue();
+                retorno.Sucesso.Any(a=> a.Localizacao.Conteudo.SaoIguais(linhaInserida.Localizacao.Conteudo)).ShouldBeTrue();
+                retorno.Sucesso.Any(a=> a.Procedencia.Conteudo.SaoIguais(linhaInserida.Procedencia.Conteudo)).ShouldBeTrue();
+                retorno.Sucesso.Any(a=> a.Data.Conteudo.SaoIguais(linhaInserida.Data.Conteudo)).ShouldBeTrue();
+                retorno.Sucesso.Any(a=> a.CopiaDigital.Conteudo.SaoIguais(linhaInserida.CopiaDigital.Conteudo)).ShouldBeTrue();
+                retorno.Sucesso.Any(a=> a.AutorizacaoUsoDeImagem.Conteudo.SaoIguais(linhaInserida.AutorizacaoUsoDeImagem.Conteudo)).ShouldBeTrue();
+                retorno.Sucesso.Any(a=> a.EstadoConservacao.Conteudo.SaoIguais(linhaInserida.EstadoConservacao.Conteudo)).ShouldBeTrue();
+                retorno.Sucesso.Any(a=> a.Descricao.Conteudo.SaoIguais(linhaInserida.Descricao.Conteudo)).ShouldBeTrue();
+                retorno.Sucesso.Any(a=> a.Quantidade.Conteudo.SaoIguais(linhaInserida.Quantidade.Conteudo)).ShouldBeTrue();
+                retorno.Sucesso.Any(a=> a.Largura.Conteudo.SaoIguais(linhaInserida.Largura.Conteudo)).ShouldBeTrue();
+                retorno.Sucesso.Any(a=> a.Altura.Conteudo.SaoIguais(linhaInserida.Altura.Conteudo)).ShouldBeTrue();
+                retorno.Sucesso.Any(a=> a.Suporte.Conteudo.SaoIguais(linhaInserida.Suporte.Conteudo)).ShouldBeTrue();
+                retorno.Sucesso.Any(a=> a.FormatoImagem.Conteudo.SaoIguais(linhaInserida.FormatoImagem.Conteudo)).ShouldBeTrue();
+                retorno.Sucesso.Any(a=> a.TamanhoArquivo.Conteudo.SaoIguais(linhaInserida.TamanhoArquivo.Conteudo)).ShouldBeTrue();
+                retorno.Sucesso.Any(a=> a.Cromia.Conteudo.SaoIguais(linhaInserida.Cromia.Conteudo)).ShouldBeTrue();
+                retorno.Sucesso.Any(a=> a.Resolucao.Conteudo.SaoIguais(linhaInserida.Resolucao.Conteudo)).ShouldBeTrue();
             }
             
             foreach (var linhaInserida in linhasInseridas.Where(w=> w.PossuiErros))
             {
-                retorno.Erros.Any(a=> a.Titulo.Conteudo.Equals(linhaInserida.Titulo.Conteudo)).ShouldBeTrue();
-                retorno.Erros.Any(a=> a.Tombo.Conteudo.Equals(linhaInserida.Tombo.Conteudo)).ShouldBeTrue();
-                retorno.Erros.Any(a=> a.Credito.Conteudo.Equals(linhaInserida.Credito.Conteudo)).ShouldBeTrue();
-                retorno.Erros.Any(a=> a.Localizacao.Conteudo.Equals(linhaInserida.Localizacao.Conteudo)).ShouldBeTrue();
-                retorno.Erros.Any(a=> a.Procedencia.Conteudo.Equals(linhaInserida.Procedencia.Conteudo)).ShouldBeTrue();
-                retorno.Erros.Any(a=> a.Data.Conteudo.Equals(linhaInserida.Data.Conteudo)).ShouldBeTrue();
-                retorno.Erros.Any(a=> a.CopiaDigital.Conteudo.Equals(linhaInserida.CopiaDigital.Conteudo)).ShouldBeTrue();
-                retorno.Erros.Any(a=> a.AutorizacaoUsoDeImagem.Conteudo.Equals(linhaInserida.AutorizacaoUsoDeImagem.Conteudo)).ShouldBeTrue();
-                retorno.Erros.Any(a=> a.EstadoConservacao.Conteudo.Equals(linhaInserida.EstadoConservacao.Conteudo)).ShouldBeTrue();
-                retorno.Erros.Any(a=> a.Descricao.Conteudo.Equals(linhaInserida.Descricao.Conteudo)).ShouldBeTrue();
-                retorno.Erros.Any(a=> a.Quantidade.Conteudo.Equals(linhaInserida.Quantidade.Conteudo)).ShouldBeTrue();
-                retorno.Erros.Any(a=> a.Largura.Conteudo.Equals(linhaInserida.Largura.Conteudo)).ShouldBeTrue();
-                retorno.Erros.Any(a=> a.Altura.Conteudo.Equals(linhaInserida.Altura.Conteudo)).ShouldBeTrue();
-                retorno.Erros.Any(a=> a.Suporte.Conteudo.Equals(linhaInserida.Suporte.Conteudo)).ShouldBeTrue();
-                retorno.Erros.Any(a=> a.FormatoImagem.Conteudo.Equals(linhaInserida.FormatoImagem.Conteudo)).ShouldBeTrue();
-                retorno.Erros.Any(a=> a.TamanhoArquivo.Conteudo.Equals(linhaInserida.TamanhoArquivo.Conteudo)).ShouldBeTrue();
-                retorno.Erros.Any(a=> a.Cromia.Conteudo.Equals(linhaInserida.Cromia.Conteudo)).ShouldBeTrue();
-                retorno.Erros.Any(a=> a.Resolucao.Conteudo.Equals(linhaInserida.Resolucao.Conteudo)).ShouldBeTrue();
+                retorno.Erros.Any(a=> a.Titulo.Conteudo.SaoIguais(linhaInserida.Titulo.Conteudo)).ShouldBeTrue();
+                retorno.Erros.Any(a=> a.Tombo.Conteudo.SaoIguais(linhaInserida.Tombo.Conteudo)).ShouldBeTrue();
+                retorno.Erros.Any(a=> a.Credito.Conteudo.SaoIguais(linhaInserida.Credito.Conteudo)).ShouldBeTrue();
+                retorno.Erros.Any(a=> a.Localizacao.Conteudo.SaoIguais(linhaInserida.Localizacao.Conteudo)).ShouldBeTrue();
+                retorno.Erros.Any(a=> a.Procedencia.Conteudo.SaoIguais(linhaInserida.Procedencia.Conteudo)).ShouldBeTrue();
+                retorno.Erros.Any(a=> a.Data.Conteudo.SaoIguais(linhaInserida.Data.Conteudo)).ShouldBeTrue();
+                retorno.Erros.Any(a=> a.CopiaDigital.Conteudo.SaoIguais(linhaInserida.CopiaDigital.Conteudo)).ShouldBeTrue();
+                retorno.Erros.Any(a=> a.AutorizacaoUsoDeImagem.Conteudo.SaoIguais(linhaInserida.AutorizacaoUsoDeImagem.Conteudo)).ShouldBeTrue();
+                retorno.Erros.Any(a=> a.EstadoConservacao.Conteudo.SaoIguais(linhaInserida.EstadoConservacao.Conteudo)).ShouldBeTrue();
+                retorno.Erros.Any(a=> a.Descricao.Conteudo.SaoIguais(linhaInserida.Descricao.Conteudo)).ShouldBeTrue();
+                retorno.Erros.Any(a=> a.Quantidade.Conteudo.SaoIguais(linhaInserida.Quantidade.Conteudo)).ShouldBeTrue();
+                retorno.Erros.Any(a=> a.Largura.Conteudo.SaoIguais(linhaInserida.Largura.Conteudo)).ShouldBeTrue();
+                retorno.Erros.Any(a=> a.Altura.Conteudo.SaoIguais(linhaInserida.Altura.Conteudo)).ShouldBeTrue();
+                retorno.Erros.Any(a=> a.Suporte.Conteudo.SaoIguais(linhaInserida.Suporte.Conteudo)).ShouldBeTrue();
+                retorno.Erros.Any(a=> a.FormatoImagem.Conteudo.SaoIguais(linhaInserida.FormatoImagem.Conteudo)).ShouldBeTrue();
+                retorno.Erros.Any(a=> a.TamanhoArquivo.Conteudo.SaoIguais(linhaInserida.TamanhoArquivo.Conteudo)).ShouldBeTrue();
+                retorno.Erros.Any(a=> a.Cromia.Conteudo.SaoIguais(linhaInserida.Cromia.Conteudo)).ShouldBeTrue();
+                retorno.Erros.Any(a=> a.Resolucao.Conteudo.SaoIguais(linhaInserida.Resolucao.Conteudo)).ShouldBeTrue();
             }
         }
         

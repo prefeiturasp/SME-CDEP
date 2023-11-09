@@ -16,7 +16,7 @@ namespace SME.CDEP.TesteIntegracao
         public Ao_fazer_manutencao_importacao_arquivo_acervo_tridimensional(CollectionFixture collectionFixture) : base(collectionFixture)
         {}
         
-        [Fact(DisplayName = "Importação Arquivo Acervo Tridimensional - ValidarPreenchimentoValorFormatoQtdeCaracteres - Com erros: Titulo, Descrição, Procedência, Quantidade e Tombo")]
+        [Fact(DisplayName = "Importação Arquivo Acervo Tridimensional - ValidarPreenchimentoValorFormatoQtdeCaracteres - Com erros: Titulo, Descrição, Data, Quantidade e Tombo")]
         public async Task Validar_preenchimento_valor_formato_qtde_caracteres()
         {
             var servicoImportacaoArquivo = GetServicoImportacaoArquivoAcervoTridimensional();
@@ -25,7 +25,7 @@ namespace SME.CDEP.TesteIntegracao
 
             acervoTridimensionalLinhas[2].Titulo.Conteudo = string.Empty;
             acervoTridimensionalLinhas[4].Descricao.Conteudo = string.Empty;
-            acervoTridimensionalLinhas[5].Procedencia.Conteudo = faker.Lorem.Paragraph();
+            acervoTridimensionalLinhas[5].Data.Conteudo = faker.Lorem.Paragraph();
             acervoTridimensionalLinhas[7].Quantidade.Conteudo = faker.Lorem.Paragraph();
             acervoTridimensionalLinhas[8].Tombo.Conteudo = string.Empty;
             var linhasComErros = new[] { 3, 5, 6, 8, 9 };
@@ -34,9 +34,9 @@ namespace SME.CDEP.TesteIntegracao
 
             foreach (var linha in acervoTridimensionalLinhas)
             {
-                linha.PossuiErros.ShouldBe(linhasComErros.Any(a=> a == linha.NumeroLinha));
+                linha.PossuiErros.ShouldBe(linhasComErros.Any(a=> a.SaoIguais(linha.NumeroLinha)));
 
-                if (linha.NumeroLinha == 3)
+                if (linha.NumeroLinha.SaoIguais(3))
                 {
                     linha.Titulo.PossuiErro.ShouldBeTrue();
                     linha.Titulo.Mensagem.ShouldNotBeEmpty();
@@ -47,7 +47,7 @@ namespace SME.CDEP.TesteIntegracao
                     linha.Titulo.Mensagem.ShouldBeEmpty();
                 }
                 
-                if (linha.NumeroLinha == 5)
+                if (linha.NumeroLinha.SaoIguais(5))
                 {
                     linha.Descricao.PossuiErro.ShouldBeTrue();
                     linha.Descricao.Mensagem.ShouldNotBeEmpty();
@@ -58,18 +58,18 @@ namespace SME.CDEP.TesteIntegracao
                     linha.Descricao.Mensagem.ShouldBeEmpty();
                 }
                 
-                if (linha.NumeroLinha == 6)
+                if (linha.NumeroLinha.SaoIguais(6))
                 {
-                    linha.Procedencia.PossuiErro.ShouldBeTrue();
-                    linha.Procedencia.Mensagem.ShouldNotBeEmpty();
+                    linha.Data.PossuiErro.ShouldBeTrue();
+                    linha.Data.Mensagem.ShouldNotBeEmpty();
                 }
                 else
                 {
-                    linha.Procedencia.PossuiErro.ShouldBeFalse();
-                    linha.Procedencia.Mensagem.ShouldBeEmpty();
+                    linha.Data.PossuiErro.ShouldBeFalse();
+                    linha.Data.Mensagem.ShouldBeEmpty();
                 }
                 
-                if (linha.NumeroLinha == 8)
+                if (linha.NumeroLinha.SaoIguais(8))
                 {
                     linha.Quantidade.PossuiErro.ShouldBeTrue();
                     linha.Quantidade.Mensagem.ShouldNotBeEmpty();
@@ -80,7 +80,7 @@ namespace SME.CDEP.TesteIntegracao
                     linha.Quantidade.Mensagem.ShouldBeEmpty();
                 }
                 
-                if (linha.NumeroLinha == 9)
+                if (linha.NumeroLinha.SaoIguais(9))
                 {
                     linha.Tombo.PossuiErro.ShouldBeTrue();
                     linha.Tombo.Mensagem.ShouldNotBeEmpty();
@@ -91,7 +91,7 @@ namespace SME.CDEP.TesteIntegracao
                     linha.Tombo.Mensagem.ShouldBeEmpty();
                 }
                    
-                linha.Data.PossuiErro.ShouldBeFalse();
+                linha.Procedencia.PossuiErro.ShouldBeFalse();
                 linha.EstadoConservacao.PossuiErro.ShouldBeFalse();
                 linha.Largura.PossuiErro.ShouldBeFalse();
                 linha.Altura.PossuiErro.ShouldBeFalse();
@@ -113,7 +113,7 @@ namespace SME.CDEP.TesteIntegracao
             {
                 var conservacoesInseridas = linha.EstadoConservacao.Conteudo;
                 var conservacoes = ObterTodos<Conservacao>();
-                conservacoes.Any(a => a.Nome.Equals(conservacoesInseridas)).ShouldBeTrue();
+                conservacoes.Any(a => a.Nome.SaoIguais(conservacoesInseridas)).ShouldBeTrue();
             }
         }
         
@@ -156,21 +156,21 @@ namespace SME.CDEP.TesteIntegracao
             foreach (var linhasComSucesso in acervoTridimensionalLinhas.Where(w=> !w.PossuiErros))
             {
                 //Acervo
-                acervos.Any(a=> a.Titulo.Equals(linhasComSucesso.Titulo.Conteudo)).ShouldBeTrue();
-                acervos.Any(a=> a.Codigo.Equals(linhasComSucesso.Tombo.Conteudo)).ShouldBeTrue();
-                acervos.Any(a=> a.Descricao.Equals(linhasComSucesso.Descricao.Conteudo)).ShouldBeTrue();  
+                acervos.Any(a=> a.Titulo.SaoIguais(linhasComSucesso.Titulo.Conteudo)).ShouldBeTrue();
+                acervos.Any(a=> a.Codigo.SaoIguais(linhasComSucesso.Tombo.Conteudo)).ShouldBeTrue();
+                acervos.Any(a=> a.Descricao.SaoIguais(linhasComSucesso.Descricao.Conteudo)).ShouldBeTrue();  
                 
                 //Referência 1:1
-                acervosTridimensional.Any(a=> a.ConservacaoId == conservacoes.FirstOrDefault(f=> f.Nome.Equals(linhasComSucesso.EstadoConservacao.Conteudo)).Id).ShouldBeTrue();
+                acervosTridimensional.Any(a=> a.ConservacaoId.SaoIguais(conservacoes.FirstOrDefault(f=> f.Nome.SaoIguais(linhasComSucesso.EstadoConservacao.Conteudo)).Id)).ShouldBeTrue();
                 
                 //Campos livres
-                acervosTridimensional.Any(a=> a.Procedencia == linhasComSucesso.Procedencia.Conteudo).ShouldBeTrue();
-                acervosTridimensional.Any(a=> a.DataAcervo == linhasComSucesso.Data.Conteudo).ShouldBeTrue();
-                acervosTridimensional.Any(a=> a.Quantidade == long.Parse(linhasComSucesso.Quantidade.Conteudo)).ShouldBeTrue();
-                acervosTridimensional.Any(a=> a.Largura == double.Parse(linhasComSucesso.Largura.Conteudo)).ShouldBeTrue();
-                acervosTridimensional.Any(a=> a.Altura == double.Parse(linhasComSucesso.Altura.Conteudo)).ShouldBeTrue();
-                acervosTridimensional.Any(a=> a.Profundidade == double.Parse(linhasComSucesso.Profundidade.Conteudo)).ShouldBeTrue();
-                acervosTridimensional.Any(a=> a.Diametro == double.Parse(linhasComSucesso.Diametro.Conteudo)).ShouldBeTrue();
+                acervosTridimensional.Any(a=> a.Procedencia.SaoIguais(linhasComSucesso.Procedencia.Conteudo)).ShouldBeTrue();
+                acervosTridimensional.Any(a=> a.DataAcervo.SaoIguais(linhasComSucesso.Data.Conteudo)).ShouldBeTrue();
+                acervosTridimensional.Any(a=> a.Quantidade.SaoIguais(linhasComSucesso.Quantidade.Conteudo.ObterLongoPorValorDoCampo())).ShouldBeTrue();
+                acervosTridimensional.Any(a=> a.Largura.SaoIguais(linhasComSucesso.Largura.Conteudo.ObterDoubleOuNuloPorValorDoCampo())).ShouldBeTrue();
+                acervosTridimensional.Any(a=> a.Altura.SaoIguais(linhasComSucesso.Altura.Conteudo.ObterDoubleOuNuloPorValorDoCampo())).ShouldBeTrue();
+                acervosTridimensional.Any(a=> a.Profundidade.SaoIguais(linhasComSucesso.Profundidade.Conteudo.ObterDoubleOuNuloPorValorDoCampo())).ShouldBeTrue();
+                acervosTridimensional.Any(a=> a.Diametro.SaoIguais(linhasComSucesso.Diametro.Conteudo.ObterDoubleOuNuloPorValorDoCampo())).ShouldBeTrue();
             }
         }
         
@@ -217,21 +217,21 @@ namespace SME.CDEP.TesteIntegracao
             foreach (var linhasComSucesso in acervoTridimensionalLinhas.Where(w=> !w.PossuiErros))
             {
                 //Acervo
-                acervos.Any(a=> a.Titulo.Equals(linhasComSucesso.Titulo.Conteudo)).ShouldBeTrue();
-                acervos.Any(a=> a.Codigo.Equals(linhasComSucesso.Tombo.Conteudo)).ShouldBeTrue();
-                acervos.Any(a=> a.Descricao.Equals(linhasComSucesso.Descricao.Conteudo)).ShouldBeTrue();  
+                acervos.Any(a=> a.Titulo.SaoIguais(linhasComSucesso.Titulo.Conteudo)).ShouldBeTrue();
+                acervos.Any(a=> a.Codigo.SaoIguais(linhasComSucesso.Tombo.Conteudo)).ShouldBeTrue();
+                acervos.Any(a=> a.Descricao.SaoIguais(linhasComSucesso.Descricao.Conteudo)).ShouldBeTrue();  
                 
                 //Referência 1:1
-                acervosTridimensional.Any(a=> a.ConservacaoId == conservacoes.FirstOrDefault(f=> f.Nome.Equals(linhasComSucesso.EstadoConservacao.Conteudo)).Id).ShouldBeTrue();
+                acervosTridimensional.Any(a=> a.ConservacaoId.SaoIguais(conservacoes.FirstOrDefault(f=> f.Nome.SaoIguais(linhasComSucesso.EstadoConservacao.Conteudo)).Id)).ShouldBeTrue();
                 
                 //Campos livres
-                acervosTridimensional.Any(a=> a.Procedencia == linhasComSucesso.Procedencia.Conteudo).ShouldBeTrue();
-                acervosTridimensional.Any(a=> a.DataAcervo == linhasComSucesso.Data.Conteudo).ShouldBeTrue();
-                acervosTridimensional.Any(a=> a.Quantidade == long.Parse(linhasComSucesso.Quantidade.Conteudo)).ShouldBeTrue();
-                acervosTridimensional.Any(a=> a.Largura == double.Parse(linhasComSucesso.Largura.Conteudo)).ShouldBeTrue();
-                acervosTridimensional.Any(a=> a.Altura == double.Parse(linhasComSucesso.Altura.Conteudo)).ShouldBeTrue();
-                acervosTridimensional.Any(a=> a.Profundidade == double.Parse(linhasComSucesso.Profundidade.Conteudo)).ShouldBeTrue();
-                acervosTridimensional.Any(a=> a.Diametro == double.Parse(linhasComSucesso.Diametro.Conteudo)).ShouldBeTrue();
+                acervosTridimensional.Any(a=> a.Procedencia.SaoIguais(linhasComSucesso.Procedencia.Conteudo)).ShouldBeTrue();
+                acervosTridimensional.Any(a=> a.DataAcervo.SaoIguais(linhasComSucesso.Data.Conteudo)).ShouldBeTrue();
+                acervosTridimensional.Any(a=> a.Quantidade.SaoIguais(linhasComSucesso.Quantidade.Conteudo.ObterLongoPorValorDoCampo())).ShouldBeTrue();
+                acervosTridimensional.Any(a=> a.Largura.SaoIguais(linhasComSucesso.Largura.Conteudo.ObterDoubleOuNuloPorValorDoCampo())).ShouldBeTrue();
+                acervosTridimensional.Any(a=> a.Altura.SaoIguais(linhasComSucesso.Altura.Conteudo.ObterDoubleOuNuloPorValorDoCampo())).ShouldBeTrue();
+                acervosTridimensional.Any(a=> a.Profundidade.SaoIguais(linhasComSucesso.Profundidade.Conteudo.ObterDoubleOuNuloPorValorDoCampo())).ShouldBeTrue();
+                acervosTridimensional.Any(a=> a.Diametro.SaoIguais(linhasComSucesso.Diametro.Conteudo.ObterDoubleOuNuloPorValorDoCampo())).ShouldBeTrue();
             }
         }
         
@@ -266,32 +266,32 @@ namespace SME.CDEP.TesteIntegracao
         
             foreach (var linhaInserida in linhasInseridas.Where(w=> !w.PossuiErros))
             {
-                retorno.Sucesso.Any(a=> a.Titulo.Conteudo.Equals(linhaInserida.Titulo.Conteudo)).ShouldBeTrue();
-                retorno.Sucesso.Any(a=> a.Tombo.Conteudo.Equals(linhaInserida.Tombo.Conteudo)).ShouldBeTrue();
-                retorno.Sucesso.Any(a=> a.Procedencia.Conteudo.Equals(linhaInserida.Procedencia.Conteudo)).ShouldBeTrue();
-                retorno.Sucesso.Any(a=> a.Data.Conteudo.Equals(linhaInserida.Data.Conteudo)).ShouldBeTrue();
-                retorno.Sucesso.Any(a=> a.EstadoConservacao.Conteudo.Equals(linhaInserida.EstadoConservacao.Conteudo)).ShouldBeTrue();
-                retorno.Sucesso.Any(a=> a.Quantidade.Conteudo.Equals(linhaInserida.Quantidade.Conteudo)).ShouldBeTrue();
-                retorno.Sucesso.Any(a=> a.Descricao.Conteudo.Equals(linhaInserida.Descricao.Conteudo)).ShouldBeTrue();
-                retorno.Sucesso.Any(a=> a.Largura.Conteudo.Equals(linhaInserida.Largura.Conteudo)).ShouldBeTrue();
-                retorno.Sucesso.Any(a=> a.Altura.Conteudo.Equals(linhaInserida.Altura.Conteudo)).ShouldBeTrue();
-                retorno.Sucesso.Any(a=> a.Profundidade.Conteudo.Equals(linhaInserida.Profundidade.Conteudo)).ShouldBeTrue();
-                retorno.Sucesso.Any(a=> a.Diametro.Conteudo.Equals(linhaInserida.Diametro.Conteudo)).ShouldBeTrue();
+                retorno.Sucesso.Any(a=> a.Titulo.Conteudo.SaoIguais(linhaInserida.Titulo.Conteudo)).ShouldBeTrue();
+                retorno.Sucesso.Any(a=> a.Tombo.Conteudo.SaoIguais(linhaInserida.Tombo.Conteudo)).ShouldBeTrue();
+                retorno.Sucesso.Any(a=> a.Procedencia.Conteudo.SaoIguais(linhaInserida.Procedencia.Conteudo)).ShouldBeTrue();
+                retorno.Sucesso.Any(a=> a.Data.Conteudo.SaoIguais(linhaInserida.Data.Conteudo)).ShouldBeTrue();
+                retorno.Sucesso.Any(a=> a.EstadoConservacao.Conteudo.SaoIguais(linhaInserida.EstadoConservacao.Conteudo)).ShouldBeTrue();
+                retorno.Sucesso.Any(a=> a.Quantidade.Conteudo.SaoIguais(linhaInserida.Quantidade.Conteudo)).ShouldBeTrue();
+                retorno.Sucesso.Any(a=> a.Descricao.Conteudo.SaoIguais(linhaInserida.Descricao.Conteudo)).ShouldBeTrue();
+                retorno.Sucesso.Any(a=> a.Largura.Conteudo.SaoIguais(linhaInserida.Largura.Conteudo)).ShouldBeTrue();
+                retorno.Sucesso.Any(a=> a.Altura.Conteudo.SaoIguais(linhaInserida.Altura.Conteudo)).ShouldBeTrue();
+                retorno.Sucesso.Any(a=> a.Profundidade.Conteudo.SaoIguais(linhaInserida.Profundidade.Conteudo)).ShouldBeTrue();
+                retorno.Sucesso.Any(a=> a.Diametro.Conteudo.SaoIguais(linhaInserida.Diametro.Conteudo)).ShouldBeTrue();
             }
             
             foreach (var linhaInserida in linhasInseridas.Where(w=> w.PossuiErros))
             {
-                retorno.Erros.Any(a=> a.Titulo.Conteudo.Equals(linhaInserida.Titulo.Conteudo)).ShouldBeTrue();
-                retorno.Erros.Any(a=> a.Tombo.Conteudo.Equals(linhaInserida.Tombo.Conteudo)).ShouldBeTrue();
-                retorno.Erros.Any(a=> a.Procedencia.Conteudo.Equals(linhaInserida.Procedencia.Conteudo)).ShouldBeTrue();
-                retorno.Erros.Any(a=> a.Data.Conteudo.Equals(linhaInserida.Data.Conteudo)).ShouldBeTrue();
-                retorno.Erros.Any(a=> a.EstadoConservacao.Conteudo.Equals(linhaInserida.EstadoConservacao.Conteudo)).ShouldBeTrue();
-                retorno.Erros.Any(a=> a.Quantidade.Conteudo.Equals(linhaInserida.Quantidade.Conteudo)).ShouldBeTrue();
-                retorno.Erros.Any(a=> a.Descricao.Conteudo.Equals(linhaInserida.Descricao.Conteudo)).ShouldBeTrue();
-                retorno.Erros.Any(a=> a.Largura.Conteudo.Equals(linhaInserida.Largura.Conteudo)).ShouldBeTrue();
-                retorno.Erros.Any(a=> a.Altura.Conteudo.Equals(linhaInserida.Altura.Conteudo)).ShouldBeTrue();
-                retorno.Erros.Any(a=> a.Profundidade.Conteudo.Equals(linhaInserida.Profundidade.Conteudo)).ShouldBeTrue();
-                retorno.Erros.Any(a=> a.Diametro.Conteudo.Equals(linhaInserida.Diametro.Conteudo)).ShouldBeTrue();
+                retorno.Erros.Any(a=> a.Titulo.Conteudo.SaoIguais(linhaInserida.Titulo.Conteudo)).ShouldBeTrue();
+                retorno.Erros.Any(a=> a.Tombo.Conteudo.SaoIguais(linhaInserida.Tombo.Conteudo)).ShouldBeTrue();
+                retorno.Erros.Any(a=> a.Procedencia.Conteudo.SaoIguais(linhaInserida.Procedencia.Conteudo)).ShouldBeTrue();
+                retorno.Erros.Any(a=> a.Data.Conteudo.SaoIguais(linhaInserida.Data.Conteudo)).ShouldBeTrue();
+                retorno.Erros.Any(a=> a.EstadoConservacao.Conteudo.SaoIguais(linhaInserida.EstadoConservacao.Conteudo)).ShouldBeTrue();
+                retorno.Erros.Any(a=> a.Quantidade.Conteudo.SaoIguais(linhaInserida.Quantidade.Conteudo)).ShouldBeTrue();
+                retorno.Erros.Any(a=> a.Descricao.Conteudo.SaoIguais(linhaInserida.Descricao.Conteudo)).ShouldBeTrue();
+                retorno.Erros.Any(a=> a.Largura.Conteudo.SaoIguais(linhaInserida.Largura.Conteudo)).ShouldBeTrue();
+                retorno.Erros.Any(a=> a.Altura.Conteudo.SaoIguais(linhaInserida.Altura.Conteudo)).ShouldBeTrue();
+                retorno.Erros.Any(a=> a.Profundidade.Conteudo.SaoIguais(linhaInserida.Profundidade.Conteudo)).ShouldBeTrue();
+                retorno.Erros.Any(a=> a.Diametro.Conteudo.SaoIguais(linhaInserida.Diametro.Conteudo)).ShouldBeTrue();
             }
         }
     }
