@@ -197,6 +197,7 @@ public class RegistradorDeDependencia
         _serviceCollection.TryAddScoped<IServicoImportacaoArquivoAcervoDocumental, ServicoImportacaoArquivoAcervoDocumental>();
         _serviceCollection.TryAddScoped<IServicoImportacaoArquivoAcervoArteGrafica, ServicoImportacaoArquivoAcervoArteGrafica>();
         _serviceCollection.TryAddScoped<IServicoImportacaoArquivoAcervoAudiovisual, ServicoImportacaoArquivoAcervoAudiovisual>();
+        _serviceCollection.TryAddScoped<IServicoImportacaoArquivoAcervoFotografico, ServicoImportacaoArquivoAcervoFotografico>();
     }
     protected virtual void RegistrarHttpClients()
     {

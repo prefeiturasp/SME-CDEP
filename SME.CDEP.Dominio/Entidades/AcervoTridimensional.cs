@@ -8,9 +8,9 @@
         public string DataAcervo { get; set; }
         public long ConservacaoId { get; set; }
         public long Quantidade { get; set; }
-        public float? Largura { get; set; }
-        public float? Altura { get; set; }
-        public float? Profundidade { get; set; }
-        public float? Diametro { get; set; }
+        public double? Largura { get; set; }
+        public double? Altura { get; set; }
+        public double? Profundidade { get; set; }
+        public double? Diametro { get; set; }
     }
 }

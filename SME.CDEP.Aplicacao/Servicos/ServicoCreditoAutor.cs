@@ -64,7 +64,7 @@ namespace SME.CDEP.Aplicacao.Servicos
                 : mapper.Map<IEnumerable<IdNomeTipoExcluidoAuditavelDTO>>(await repositorioCreditoAutor.ObterTodos());
         }
 
-        public Task<long> ObterPorNomeTipo(string nome, TipoCreditoAutoria tipoCreditoAutoria)
+        public Task<long> ObterPorNomeETipo(string nome, TipoCreditoAutoria tipoCreditoAutoria)
         {
             return repositorioCreditoAutor.ObterPorNomeTipo(nome, tipoCreditoAutoria);
         }

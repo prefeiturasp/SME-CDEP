@@ -136,7 +136,7 @@ namespace SME.CDEP.TesteIntegracao
         }
         
         [Fact(DisplayName = "Importação Arquivo Acervo Audiovisual - PersistenciaAcervo")]
-        public async Task Persistencia_acervo_bibliografico()
+        public async Task Persistencia_acervo()
         {
             var servicoImportacaoArquivo = GetServicoImportacaoArquivoAcervoAudiovisual();
         

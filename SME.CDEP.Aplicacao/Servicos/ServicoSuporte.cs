@@ -16,7 +16,7 @@ namespace SME.CDEP.Aplicacao.Servicos
             this.repositorio = repositorio ?? throw new ArgumentNullException(nameof(repositorio));
         }
 
-        public Task<long> ObterPorNomePorTipo(string nome, int tipoSuporte)
+        public Task<long> ObterPorNomeETipo(string nome, int tipoSuporte)
         {
             return repositorio.ObterPorNomeTipo(nome, tipoSuporte);
         }
