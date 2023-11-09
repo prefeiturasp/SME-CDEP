@@ -54,6 +54,7 @@ public class Constantes
     public const string DISPONIBILIDADE = "Disponibilidade";
     public const string FORMATO_IMAGEM = "Formato da imagem";
     public const string RESOLUCAO = "Resolução";
+    public const string PROFUNDIDADE = "Profundidade";
     
     public const string CAMPO_X_NAO_PREENCHIDO = "O campo '{0}' é obrigatório";
     public const string CAMPO_X_ATINGIU_LIMITE_CARACTERES = "Os campos '{0}' atingiu o limite de caracteres";
@@ -162,6 +163,24 @@ public class Constantes
     public const int ACERVO_FOTOGRAFICO_CAMPO_TAMANHO_ARQUIVO = 16;
     public const int ACERVO_FOTOGRAFICO_CAMPO_CROMIA = 17;
     public const int ACERVO_FOTOGRAFICO_CAMPO_RESOLUCAO = 18;
+    
+    public const int ACERVO_TRIDIMENSIONAL_CAMPO_TITULO = 1;
+    public const int ACERVO_TRIDIMENSIONAL_CAMPO_TOMBO = 2;
+    public const int ACERVO_TRIDIMENSIONAL_CAMPO_PROCEDENCIA = 3;
+    public const int ACERVO_TRIDIMENSIONAL_CAMPO_DATA = 4;
+    public const int ACERVO_TRIDIMENSIONAL_CAMPO_ESTADO_CONSERVACAO = 5;
+    public const int ACERVO_TRIDIMENSIONAL_CAMPO_QUANTIDADE = 6;
+    public const int ACERVO_TRIDIMENSIONAL_CAMPO_DESCRICAO = 7;
+    public const int ACERVO_TRIDIMENSIONAL_CAMPO_LARGURA = 8;
+    public const int ACERVO_TRIDIMENSIONAL_CAMPO_ALTURA = 9;
+    public const int ACERVO_TRIDIMENSIONAL_CAMPO_PROFUNDIDADE = 10;
+    public const int ACERVO_TRIDIMENSIONAL_CAMPO_DIAMETRO = 11;
+    
+    public const int ACERVO_TRIDIMENSIONAL_CAMPO_SUPORTE = 14;
+    public const int ACERVO_TRIDIMENSIONAL_CAMPO_FORMATO_IMAGEM = 15;
+    public const int ACERVO_TRIDIMENSIONAL_CAMPO_TAMANHO_ARQUIVO = 16;
+    public const int ACERVO_TRIDIMENSIONAL_CAMPO_CROMIA = 17;
+    public const int ACERVO_TRIDIMENSIONAL_CAMPO_RESOLUCAO = 18;
     
     public const string ContentTypeExcel = "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet";
     public const string BUCKET_CDEP = "cdep";
