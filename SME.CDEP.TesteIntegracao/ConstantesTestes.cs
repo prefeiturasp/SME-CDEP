@@ -4,6 +4,9 @@ namespace SME.CDEP.TesteIntegracao.Constantes;
 
 public class ConstantesTestes
 {
+    public const string OPCAO_SIM = "sim";
+    public const string OPCAO_NAO = "não";
+    
     public static string FORMATO_DOUBLE = "double";
     public static string FORMATO_INTEIRO = "int";
     

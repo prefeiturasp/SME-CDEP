@@ -110,5 +110,20 @@ namespace SME.CDEP.Dominio.Extensions
         {
             return textoComPipes.SplitPipe().Distinct();
         }
+        
+        public static bool EhOpcaoSim(this string valor)
+        {
+            return valor.ToLower().Equals(Constantes.Constantes.OPCAO_SIM);
+        }
+        
+        public static bool EhOpcaoNao(this string valor)
+        {
+            return valor.ToLower().Equals(Constantes.Constantes.OPCAO_NAO);
+        }
+        
+        public static bool SaoIguais(this string valor, string valorAComparar)
+        {
+            return valor.Equals(valorAComparar); 
+        }
     }
 }

@@ -22,5 +22,15 @@ namespace SME.CDEP.Dominio.Extensions
         {
             return valor != valor2; 
         }
+        
+        public static bool SaoIguais(this int valor, int valorAComparar)
+        {
+            return valor == valorAComparar; 
+        }
+        
+        public static bool SaoIguais(this int? valor, int? valorAComparar)
+        {
+            return valor == valorAComparar; 
+        }
     }
 }

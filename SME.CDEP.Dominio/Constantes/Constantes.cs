@@ -3,6 +3,7 @@
 public class Constantes
 {
     public const string OPCAO_SIM = "sim";
+    public const string OPCAO_NAO = "não";
     
     public const string FORMATO_STRING = "string";
     public const string FORMATO_DOUBLE = "double";
@@ -53,6 +54,7 @@ public class Constantes
     public const string ACESSIBILIDADE = "Acessibilidade";
     public const string DISPONIBILIDADE = "Disponibilidade";
     public const string FORMATO_IMAGEM = "Formato da imagem";
+    public const string FORMATO = "Formato";
     public const string RESOLUCAO = "Resolução";
     public const string PROFUNDIDADE = "Profundidade";
     
@@ -64,6 +66,10 @@ public class Constantes
     public const string OCORREU_UMA_FALHA_INESPERADA_NA_LINHA_X_MOTIVO_Y = "Ocorreu uma falha inesperada na linha '{0}' -  Motivo: '{1}'";
     public const string OCORREU_UMA_FALHA_INESPERADA_NO_CADASTRO_DAS_REFERENCIAS_MOTIVO_X = "Ocorreu uma falha inesperada no cadastrodas referências -  Motivo: '{0}'";
     public const string CAMPO_CODIGO_ANTIGO_OU_CODIGO_NOVO_DEVE_SER_PREENCHIDO = "O campo código antigo ou código novo deve ser preenchido";
+    public const string O_VALOR_DO_CAMPO_X_NAO_FOI_LOCALIZADO = "O valor do campo '{0}' não foi localizado";
+    public const string NAO_FOI_POSSIVEL_LER_A_PLANILHA = "Não foi possível ler a planilha";
+    public const string VALOR_DO_CAMPO_X_NAO_PERMITIDO_ESPERADO_SIM_OU_NAO = "O valor do campo '{0}' não permitido, esperado 'SIM' ou 'NÃO'";
+    public const string O_CAMPO_X_NAO_EH_UM_VALOR_NUMERICO_Y = "O valor '{0}' não é um tipo numérico '{1}'";
     
     public const char PIPE = '|';
     public const int INICIO_LINHA_TITULO = 1;

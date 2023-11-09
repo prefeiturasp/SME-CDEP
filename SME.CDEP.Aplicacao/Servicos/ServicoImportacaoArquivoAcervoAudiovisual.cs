@@ -121,12 +121,12 @@ namespace SME.CDEP.Aplicacao.Servicos
                         Procedencia = acervoAudiovisualLinha.Procedencia.Conteudo,
                         DataAcervo = acervoAudiovisualLinha.Data.Conteudo,
                         Copia = acervoAudiovisualLinha.Copia.Conteudo,
-                        PermiteUsoImagem = acervoAudiovisualLinha.AutorizacaoUsoDeImagem.Conteudo.EstaPreenchido() ? acervoAudiovisualLinha.AutorizacaoUsoDeImagem.Conteudo.ToLower().Equals(Constantes.OPCAO_SIM) : false,
-                        ConservacaoId = Conservacoes.FirstOrDefault(f => f.Nome.Equals(acervoAudiovisualLinha.EstadoConservacao.Conteudo)).Id,
+                        PermiteUsoImagem = ObterAutorizaUsoDeImagemPorValorDoCampo(acervoAudiovisualLinha.AutorizacaoUsoDeImagem.Conteudo),
+                        ConservacaoId = ObterConservacaoIdPorValorDoCampo(acervoAudiovisualLinha.EstadoConservacao.Conteudo),
                         Descricao = acervoAudiovisualLinha.Descricao.Conteudo,
-                        SuporteId = Suportes.FirstOrDefault(f => f.Nome.Equals(acervoAudiovisualLinha.Suporte.Conteudo)).Id,
+                        SuporteId = ObterSuporteVideoIdPorValorDoCampo(acervoAudiovisualLinha.Suporte.Conteudo),
                         Duracao = acervoAudiovisualLinha.Duracao.Conteudo,
-                        CromiaId = Cromias.FirstOrDefault(f => f.Nome.Equals(acervoAudiovisualLinha.Cromia.Conteudo)).Id,
+                        CromiaId = ObterCromiaIdPorValorDoCampo(acervoAudiovisualLinha.Cromia.Conteudo),
                         TamanhoArquivo = acervoAudiovisualLinha.TamanhoArquivo.Conteudo,
                         Acessibilidade = acervoAudiovisualLinha.Acessibilidade.Conteudo,
                         Disponibilizacao = acervoAudiovisualLinha.Disponibilizacao.Conteudo,
@@ -209,7 +209,7 @@ namespace SME.CDEP.Aplicacao.Servicos
                 
                 await ValidarOuInserirCromia(linhasComsucesso.Select(s => s.Cromia.Conteudo).Distinct());
                 
-                await ValidarOuInserirSuporte(linhasComsucesso.Select(s => s.Suporte.Conteudo).Distinct(), TipoSuporte.IMAGEM);
+                await ValidarOuInserirSuporte(linhasComsucesso.Select(s => s.Suporte.Conteudo).Distinct(), TipoSuporte.VIDEO);
                 
                 await ValidarOuInserirConservacao(linhasComsucesso.Select(s => s.EstadoConservacao.Conteudo).Distinct());
                 

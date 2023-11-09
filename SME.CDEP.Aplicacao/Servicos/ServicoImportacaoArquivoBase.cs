@@ -497,5 +497,98 @@ namespace SME.CDEP.Aplicacao.Servicos
         {
             Formatos.Add(new IdNomeTipoDTO() { Id = id, Nome = nome, Tipo = (int)tipoFormato });
         }
+        
+        protected long ObterEditoraIdPorValorDoCampo(string valorDoCampo)
+        {
+            return ObterIdentificadorIdPorValorDoCampo(valorDoCampo, Editoras, Constantes.EDITORA);
+        }
+        protected long ObterSerieColecaoIdPorValorDoCampo(string valorDoCampo)
+        {
+            return ObterIdentificadorIdPorValorDoCampo(valorDoCampo, SeriesColecoes, Constantes.SERIE_COLECAO);
+        }
+        
+        protected long ObterIdiomaIdPorValorDoCampo(string valorDoCampo)
+        {
+            return ObterIdentificadorIdPorValorDoCampo(valorDoCampo, Idiomas, Constantes.IDIOMA);
+        }
+        
+        protected long ObterMaterialDocumentalIdPorValorDoCampo(string valorDoCampo)
+        {
+            return ObterIdentificadorIdPorValorDoCampo(valorDoCampo, Materiais, Constantes.MATERIAL, (int)TipoMaterial.DOCUMENTAL);
+        }
+        
+        protected long ObterMaterialBibliograficoIdPorValorDoCampo(string valorDoCampo)
+        {
+            return ObterIdentificadorIdPorValorDoCampo(valorDoCampo, Materiais, Constantes.MATERIAL, (int)TipoMaterial.BIBLIOGRAFICO);
+        }
+        
+        protected long ObterConservacaoIdPorValorDoCampo(string valorDoCampo)
+        {
+            return ObterIdentificadorIdPorValorDoCampo(valorDoCampo, Conservacoes, Constantes.ESTADO_CONSERVACAO);
+        }
+        
+        protected long ObterCromiaIdPorValorDoCampo(string valorDoCampo)
+        {
+            return ObterIdentificadorIdPorValorDoCampo(valorDoCampo, Cromias, Constantes.CROMIA);
+        }
+        
+        protected long ObterFormatoImagemIdPorValorDoCampo(string valorDoCampo)
+        {
+            return ObterIdentificadorIdPorValorDoCampo(valorDoCampo, Formatos, Constantes.FORMATO_IMAGEM, (int)TipoFormato.ACERVO_FOTOS);
+        }
+        
+        protected long ObterSuporteImagemIdPorValorDoCampo(string valorDoCampo)
+        {
+            return ObterIdentificadorIdPorValorDoCampo(valorDoCampo, Suportes, Constantes.SUPORTE, (int)TipoSuporte.IMAGEM);
+        }
+        
+        protected long ObterSuporteVideoIdPorValorDoCampo(string valorDoCampo)
+        {
+            return ObterIdentificadorIdPorValorDoCampo(valorDoCampo, Suportes, Constantes.SUPORTE, (int)TipoSuporte.VIDEO);
+        }
+        
+        private long ObterIdentificadorIdPorValorDoCampo(string valorDoCampo, List<IdNomeTipoDTO> dominios, string nomeDoCampo, int tipoFormato)
+        {
+            var possuiNome = dominios.Any(f => f.Nome.Equals(valorDoCampo) && f.Tipo == tipoFormato);
+
+            if (!possuiNome)
+                throw new NegocioException(string.Format(Constantes.O_VALOR_DO_CAMPO_X_NAO_FOI_LOCALIZADO, nomeDoCampo));
+
+            return dominios.FirstOrDefault(f => f.Nome.Equals(valorDoCampo) && f.Tipo == tipoFormato).Id;
+        }
+        
+        private long ObterIdentificadorIdPorValorDoCampo(string valorDoCampo, List<IdNomeDTO> dominios, string nomeDoCampo)
+        {
+            var possuiNome = dominios.Any(f => f.Nome.Equals(valorDoCampo));
+
+            if (!possuiNome)
+                throw new NegocioException(string.Format(Constantes.O_VALOR_DO_CAMPO_X_NAO_FOI_LOCALIZADO, nomeDoCampo));
+
+            return dominios.FirstOrDefault(f => f.Nome.Equals(valorDoCampo)).Id;
+        }
+        
+        protected bool ObterCopiaDigitalPorValorDoCampo(string valorDoCampo)
+        {
+            return ObterValorBoleanoPorValorCampo(valorDoCampo,Constantes.COPIA_DIGITAL);
+        }
+        
+        protected bool ObterAutorizaUsoDeImagemPorValorDoCampo(string valorDoCampo)
+        {
+            return ObterValorBoleanoPorValorCampo(valorDoCampo,Constantes.AUTORIZACAO_USO_DE_IMAGEM);
+        }
+
+        private bool ObterValorBoleanoPorValorCampo(string valorDoCampo, string nomeDoCampo)
+        {
+            if (valorDoCampo.EstaPreenchido())
+            {
+                var valoresPermitidos = new List<string>() { Constantes.OPCAO_SIM, Constantes.OPCAO_NAO };
+                
+                if (!valoresPermitidos.Contains(valorDoCampo.ToLower()))
+                    throw new NegocioException(string.Format(Constantes.VALOR_DO_CAMPO_X_NAO_PERMITIDO_ESPERADO_SIM_OU_NAO,nomeDoCampo));
+
+                return valorDoCampo.ToLower().Equals(Constantes.OPCAO_SIM);
+            }
+            return false;
+        }
     }
 }

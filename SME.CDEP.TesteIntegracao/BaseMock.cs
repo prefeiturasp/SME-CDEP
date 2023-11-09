@@ -358,7 +358,7 @@ namespace SME.CDEP.TesteIntegracao
             
             faker.RuleFor(x => x.CopiaDigital, f => new LinhaConteudoAjustarDTO()
             {
-                Conteudo = "Sim",
+                Conteudo = ConstantesTestes.OPCAO_SIM,
                 LimiteCaracteres = ConstantesTestes.CARACTERES_PERMITIDOS_3,
             });
             
@@ -419,14 +419,14 @@ namespace SME.CDEP.TesteIntegracao
             
             faker.RuleFor(x => x.CopiaDigital, f => new LinhaConteudoAjustarDTO()
             {
-                Conteudo = "Sim",
+                Conteudo = ConstantesTestes.OPCAO_SIM,
                 LimiteCaracteres = ConstantesTestes.CARACTERES_PERMITIDOS_3,
                 EhCampoObrigatorio = true
             });
             
             faker.RuleFor(x => x.AutorizacaoUsoDeImagem, f => new LinhaConteudoAjustarDTO()
             {
-                Conteudo = "Sim",
+                Conteudo = ConstantesTestes.OPCAO_SIM,
                 LimiteCaracteres = ConstantesTestes.CARACTERES_PERMITIDOS_3,
                 EhCampoObrigatorio = true
             });
@@ -546,7 +546,7 @@ namespace SME.CDEP.TesteIntegracao
             
             faker.RuleFor(x => x.AutorizacaoUsoDeImagem, f => new LinhaConteudoAjustarDTO()
             {
-                Conteudo = "Sim",
+                Conteudo = ConstantesTestes.OPCAO_SIM,
                 LimiteCaracteres = ConstantesTestes.CARACTERES_PERMITIDOS_3,
                 EhCampoObrigatorio = true
             });
@@ -654,13 +654,13 @@ namespace SME.CDEP.TesteIntegracao
             
             faker.RuleFor(x => x.CopiaDigital, f => new LinhaConteudoAjustarDTO()
             {
-                Conteudo = "Sim",
+                Conteudo = Dominio.Constantes.Constantes.OPCAO_SIM,
                 LimiteCaracteres = ConstantesTestes.CARACTERES_PERMITIDOS_3,
             });
             
             faker.RuleFor(x => x.AutorizacaoUsoDeImagem, f => new LinhaConteudoAjustarDTO()
             {
-                Conteudo = "Sim",
+                Conteudo = Dominio.Constantes.Constantes.OPCAO_SIM,
                 LimiteCaracteres = ConstantesTestes.CARACTERES_PERMITIDOS_3,
             });
             
