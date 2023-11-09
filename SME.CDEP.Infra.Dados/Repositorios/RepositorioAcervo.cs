@@ -63,7 +63,9 @@ namespace SME.CDEP.Infra.Dados.Repositorios
         
         public async Task<IEnumerable<PesquisaAcervo>> ObterPorTextoLivreETipoAcervo(string? textoLivre, TipoAcervo? tipoAcervo)
         {
-            var query = @"  select   distinct a.id as acervoId,
+            var query = $@";with acervosIds as
+                         (
+                             select   distinct a.id as acervoId,
                                      coalesce(a.codigo,a.codigo_novo)  codigo,              
                                      a.tipo, 
                                      a.titulo,              
@@ -77,19 +79,44 @@ namespace SME.CDEP.Infra.Dados.Repositorios
                                 left join acervo_bibliografico_assunto aba on aba.acervo_bibliografico_id = ab.id
                                 left join assunto ast on ast.id = aba.assunto_id      
                             where not a.excluido
+                            {IncluirFiltroPorTipoAcervo(tipoAcervo)}
+                            {IncluirFiltroPorTextoLivre(textoLivre)}
+                         )
+                          select   distinct a.id as acervoId,
+                                     coalesce(a.codigo,a.codigo_novo)  codigo,              
+                                     a.tipo, 
+                                     a.titulo,              
+                                     ca.nome as creditoAutoria,
+                                     ast.nome as assunto,
+                                     a.descricao
+                            from acervo a
+                                join acervosIds aid on aid.acervoId = a.id
+                                left join acervo_credito_autor aca on aca.acervo_id = a.id
+                                left join credito_autor ca on aca.credito_autor_id = ca.id
+                                left join acervo_bibliografico ab on a.id = ab.acervo_id 
+                                left join acervo_bibliografico_assunto aba on aba.acervo_bibliografico_id = ab.id
+                                left join assunto ast on ast.id = aba.assunto_id
                          ";
+            
+	        var retorno  = await conexao.Obter().QueryAsync<PesquisaAcervo>(query, new { tipoAcervo, textoLivre = textoLivre.NaoEhNulo() ? textoLivre.ToLower() : string.Empty});
+            
+            return retorno;
+        }
 
-            if (tipoAcervo.NaoEhNulo())
-                query += $"and a.tipo = @tipoAcervo ";
-
+        private string IncluirFiltroPorTextoLivre(string? textoLivre)
+        {
             if (textoLivre.EstaPreenchido())
-            {
-                textoLivre = textoLivre.ToLower();
-                query += " and ( lower(f_unaccent(a.titulo)) LIKE ('%' || lower(f_unaccent(@textoLivre)) || '%') Or lower(f_unaccent(ca.nome)) LIKE ('%' || lower(f_unaccent(@textoLivre)) || '%')  Or lower(f_unaccent(ast.nome)) LIKE ('%' || lower(f_unaccent(@textoLivre)) || '%'))";
-            }
-                
-	
-            return await conexao.Obter().QueryAsync<PesquisaAcervo>(query, new { tipoAcervo, textoLivre});
+                return " and ( f_unaccent(lower(a.titulo)) LIKE ('%' || f_unaccent(@textoLivre) || '%') Or f_unaccent(lower(ca.nome)) LIKE ('%' || f_unaccent(@textoLivre) || '%')  Or f_unaccent(lower(ast.nome)) LIKE ('%' || f_unaccent(@textoLivre) || '%'))";
+
+            return string.Empty;
+        }
+
+        private string IncluirFiltroPorTipoAcervo(TipoAcervo? tipoAcervo)
+        {
+            if (tipoAcervo.NaoEhNulo())
+                return "and a.tipo = @tipoAcervo ";
+
+            return string.Empty;
         }
     }
 }
