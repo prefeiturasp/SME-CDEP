@@ -5,9 +5,11 @@ namespace SME.CDEP.TesteIntegracao.Constantes;
 public class ConstantesTestes
 {
     public static string FORMATO_DOUBLE = "double";
+    public static string FORMATO_INTEIRO = "int";
     
     public const int CARACTERES_PERMITIDOS_3 = 3;
     public const int CARACTERES_PERMITIDOS_4 = 4;
+    public const int CARACTERES_PERMITIDOS_12 = 12;
     public const int CARACTERES_PERMITIDOS_15 = 15;
     public const int CARACTERES_PERMITIDOS_50 = 50;
     public const int CARACTERES_PERMITIDOS_100 = 100;

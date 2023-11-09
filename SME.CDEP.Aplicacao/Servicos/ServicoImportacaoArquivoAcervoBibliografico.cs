@@ -20,9 +20,9 @@ namespace SME.CDEP.Aplicacao.Servicos
         public ServicoImportacaoArquivoAcervoBibliografico(IRepositorioImportacaoArquivo repositorioImportacaoArquivo, IServicoMaterial servicoMaterial,
             IServicoEditora servicoEditora,IServicoSerieColecao servicoSerieColecao,IServicoIdioma servicoIdioma, IServicoAssunto servicoAssunto,
             IServicoCreditoAutor servicoCreditoAutor,IServicoConservacao servicoConservacao, IServicoAcessoDocumento servicoAcessoDocumento,
-            IServicoAcervoBibliografico servicoAcervoBibliografico)
+            IServicoCromia servicoCromia, IServicoSuporte servicoSuporte,IServicoAcervoBibliografico servicoAcervoBibliografico)
             : base(repositorioImportacaoArquivo, servicoMaterial, servicoEditora,servicoSerieColecao, servicoIdioma, servicoAssunto, servicoCreditoAutor,
-                servicoConservacao,servicoAcessoDocumento)
+                servicoConservacao,servicoAcessoDocumento,servicoCromia,servicoSuporte)
         {
             this.servicoAcervoBibliografico = servicoAcervoBibliografico ?? throw new ArgumentNullException(nameof(servicoAcervoBibliografico));
             this.mapper = mapper ?? throw new ArgumentNullException(nameof(mapper));
@@ -37,7 +37,7 @@ namespace SME.CDEP.Aplicacao.Servicos
         {
             var arquivoImportado = await repositorioImportacaoArquivo.ObterUltimaImportacao(TipoAcervo.Bibliografico);
 
-            return ObterRetornoImportacaoAcervoBibliografico(arquivoImportado, JsonConvert.DeserializeObject<IEnumerable<AcervoBibliograficoLinhaDTO>>(arquivoImportado.Conteudo));
+            return ObterRetornoImportacaoAcervo(arquivoImportado, JsonConvert.DeserializeObject<IEnumerable<AcervoBibliograficoLinhaDTO>>(arquivoImportado.Conteudo));
         }
 
         public async Task<ImportacaoArquivoRetornoDTO<AcervoBibliograficoLinhaRetornoDTO>> ImportarArquivo(IFormFile file)
@@ -57,15 +57,15 @@ namespace SME.CDEP.Aplicacao.Servicos
             await ValidacaoObterOuInserirDominios(acervosBibliograficosLinhas);
             await AtualizarImportacao(importacaoArquivoId, JsonConvert.SerializeObject(acervosBibliograficosLinhas),ImportacaoStatus.ValidacaoDominios);
             
-            await PersistenciaAcervoBibliografico(acervosBibliograficosLinhas, importacaoArquivoId);
+            await PersistenciaAcervo(acervosBibliograficosLinhas);
             await AtualizarImportacao(importacaoArquivoId, JsonConvert.SerializeObject(acervosBibliograficosLinhas), acervosBibliograficosLinhas.Any(a=> a.PossuiErros) ? ImportacaoStatus.Erros : ImportacaoStatus.Sucesso);
             
             var arquivoImportado = await repositorioImportacaoArquivo.ObterPorId(importacaoArquivoId);
 
-            return ObterRetornoImportacaoAcervoBibliografico(arquivoImportado, acervosBibliograficosLinhas);
+            return ObterRetornoImportacaoAcervo(arquivoImportado, acervosBibliograficosLinhas);
         }
 
-        private ImportacaoArquivoRetornoDTO<AcervoBibliograficoLinhaRetornoDTO> ObterRetornoImportacaoAcervoBibliografico(ImportacaoArquivo arquivoImportado, IEnumerable<AcervoBibliograficoLinhaDTO> acervosBibliograficosLinhas)
+        private ImportacaoArquivoRetornoDTO<AcervoBibliograficoLinhaRetornoDTO> ObterRetornoImportacaoAcervo(ImportacaoArquivo arquivoImportado, IEnumerable<AcervoBibliograficoLinhaDTO> acervosBibliograficosLinhas)
         {
             var acervoBibliograficoRetorno = new ImportacaoArquivoRetornoDTO<AcervoBibliograficoLinhaRetornoDTO>()
             {
@@ -139,7 +139,7 @@ namespace SME.CDEP.Aplicacao.Servicos
             };
         }
 
-        public async Task PersistenciaAcervoBibliografico(IEnumerable<AcervoBibliograficoLinhaDTO> acervosBibliograficosLinhas, long importacaoArquivoId)
+        public async Task PersistenciaAcervo(IEnumerable<AcervoBibliograficoLinhaDTO> acervosBibliograficosLinhas)
         {
             foreach (var acervoBibliograficoLinha in acervosBibliograficosLinhas.Where(w=> !w.PossuiErros))
             {

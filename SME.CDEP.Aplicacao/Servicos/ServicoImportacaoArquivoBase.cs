@@ -24,6 +24,8 @@ namespace SME.CDEP.Aplicacao.Servicos
         private readonly IServicoCreditoAutor servicoCreditoAutor;
         private readonly IServicoConservacao servicoConservacao;
         private readonly IServicoAcessoDocumento servicoAcessoDocumento;
+        private readonly IServicoCromia servicoCromia;
+        private readonly IServicoSuporte servicoSuporte;
         protected List<IdNomeTipoDTO> Materiais;
         protected List<IdNomeDTO> Editoras;
         protected List<IdNomeDTO> SeriesColecoes;
@@ -31,12 +33,15 @@ namespace SME.CDEP.Aplicacao.Servicos
         protected List<IdNomeDTO> Assuntos;
         protected List<IdNomeDTO> Conservacoes;
         protected List<IdNomeDTO> AcessoDocumentos;
+        protected List<IdNomeDTO> Cromias;
+        protected List<IdNomeTipoDTO> Suportes;
         
         protected List<IdNomeTipoDTO> CreditosAutores { get; set; }
 
         public ServicoImportacaoArquivoBase(IRepositorioImportacaoArquivo repositorioImportacaoArquivo, IServicoMaterial servicoMaterial,
             IServicoEditora servicoEditora,IServicoSerieColecao servicoSerieColecao,IServicoIdioma servicoIdioma, IServicoAssunto servicoAssunto,
-            IServicoCreditoAutor servicoCreditoAutor,IServicoConservacao servicoConservacao, IServicoAcessoDocumento servicoAcessoDocumento)
+            IServicoCreditoAutor servicoCreditoAutor,IServicoConservacao servicoConservacao, IServicoAcessoDocumento servicoAcessoDocumento,
+            IServicoCromia servicoCromia, IServicoSuporte servicoSuporte)
         {
             this.repositorioImportacaoArquivo = repositorioImportacaoArquivo ?? throw new ArgumentNullException(nameof(repositorioImportacaoArquivo));
             this.servicoMaterial = servicoMaterial ?? throw new ArgumentNullException(nameof(servicoMaterial));
@@ -47,6 +52,8 @@ namespace SME.CDEP.Aplicacao.Servicos
             this.servicoCreditoAutor = servicoCreditoAutor ?? throw new ArgumentNullException(nameof(servicoCreditoAutor));
             this.servicoConservacao = servicoConservacao ?? throw new ArgumentNullException(nameof(servicoConservacao));
             this.servicoAcessoDocumento = servicoAcessoDocumento ?? throw new ArgumentNullException(nameof(servicoAcessoDocumento));
+            this.servicoCromia = servicoCromia ?? throw new ArgumentNullException(nameof(servicoCromia));
+            this.servicoSuporte = servicoSuporte ?? throw new ArgumentNullException(nameof(servicoSuporte));
             Materiais = new List<IdNomeTipoDTO>();
             Editoras = new List<IdNomeDTO>();
             SeriesColecoes = new List<IdNomeDTO>();
@@ -55,6 +62,8 @@ namespace SME.CDEP.Aplicacao.Servicos
             CreditosAutores = new List<IdNomeTipoDTO>();
             Conservacoes = new List<IdNomeDTO>();
             AcessoDocumentos = new List<IdNomeDTO>();
+            Suportes = new List<IdNomeTipoDTO>();
+            Cromias = new List<IdNomeDTO>();
         }
 
         public void ValidarArquivo(IFormFile file)
@@ -386,6 +395,64 @@ namespace SME.CDEP.Aplicacao.Servicos
         private void CachearAcessoDocumento(string nome, long id)
         {
             AcessoDocumentos.Add(new IdNomeDTO() { Id = id, Nome = nome});
+        }
+        
+        public async Task ValidarOuInserirSuporte(IEnumerable<string> suportes, TipoSuporte tipoSuporte)
+        {
+            foreach (var nome in suportes)
+            {
+                if (!await ExisteSuportePorNomeTipo(nome,(int)tipoSuporte))
+                {
+                    var id = await servicoSuporte.Inserir(new IdNomeTipoExcluidoDTO() { Nome = nome, Tipo = (int)tipoSuporte});
+                    CachearSuporte(nome, id, (int)tipoSuporte);
+                }
+            }
+        }
+        
+        private async Task<bool> ExisteSuportePorNomeTipo(string nome, int tipoSuporte)
+        {
+            var id = await servicoSuporte.ObterPorNomePorTipo(nome,tipoSuporte);
+            
+            var existeRegistro = id.EhMaiorQueZero();
+            
+            if (existeRegistro)
+                CachearSuporte(nome, id,tipoSuporte);
+            
+            return existeRegistro;
+        }
+        
+        private void CachearSuporte(string nome, long id, int tipoSuporte)
+        {
+            Suportes.Add(new IdNomeTipoDTO() { Id = id, Nome = nome, Tipo = tipoSuporte});
+        }
+       
+        public async Task ValidarOuInserirCromia(IEnumerable<string> cromias)
+        {
+            foreach (var nome in cromias)
+            {
+                if (!await ExisteCromiaPorNome(nome))
+                {
+                    var id = await servicoCromia.Inserir(new IdNomeExcluidoDTO() { Nome = nome });
+                    CachearCromia(nome, id);
+                }
+            }
+        }
+        
+        private async Task<bool> ExisteCromiaPorNome(string nome)
+        {
+            var id = await servicoCromia.ObterPorNome(nome);
+            
+            var existeRegistro = id.EhMaiorQueZero();
+            
+            if (existeRegistro)
+                CachearCromia(nome, id);
+            
+            return existeRegistro;
+        }
+        
+        private void CachearCromia(string nome, long id)
+        {
+            Cromias.Add(new IdNomeDTO() { Id = id, Nome = nome });
         }
     }
 }

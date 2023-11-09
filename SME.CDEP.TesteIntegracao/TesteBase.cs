@@ -210,7 +210,6 @@ namespace SME.CDEP.TesteIntegracao
             return ServiceProvider.GetService<IServicoUploadArquivo>();
         }
         
-        
         protected IServicoImportacaoArquivoAcervoDocumental GetServicoImportacaoArquivoAcervoDocumental()
         {
             return ServiceProvider.GetService<IServicoImportacaoArquivoAcervoDocumental>();
@@ -219,6 +218,11 @@ namespace SME.CDEP.TesteIntegracao
         protected IServicoImportacaoArquivoAcervoBibliografico GetServicoImportacaoArquivoAcervoBibliografico()
         {
             return ServiceProvider.GetService<IServicoImportacaoArquivoAcervoBibliografico>();
+        }
+        
+        protected IServicoImportacaoArquivoAcervoArteGrafica GetServicoImportacaoArquivoAcervoArteGrafica()
+        {
+            return ServiceProvider.GetService<IServicoImportacaoArquivoAcervoArteGrafica>();
         }
         
         public T ObterServicoAplicacao<T>()

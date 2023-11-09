@@ -323,7 +323,7 @@ namespace SME.CDEP.TesteIntegracao
             });
             
             await servicoImportacaoArquivo.ValidacaoObterOuInserirDominios(acervoBibliograficoLinhas);
-            await servicoImportacaoArquivo.PersistenciaAcervoBibliografico(acervoBibliograficoLinhas,1);
+            await servicoImportacaoArquivo.PersistenciaAcervo(acervoBibliograficoLinhas);
 
             var acervos = ObterTodos<Acervo>();
             var acervosBibliograficos = ObterTodos<AcervoBibliografico>();
@@ -427,7 +427,7 @@ namespace SME.CDEP.TesteIntegracao
             
             servicoImportacaoArquivo.ValidarPreenchimentoValorFormatoQtdeCaracteres(acervoBibliograficoLinhas);
             await servicoImportacaoArquivo.ValidacaoObterOuInserirDominios(acervoBibliograficoLinhas );
-            await servicoImportacaoArquivo.PersistenciaAcervoBibliografico(acervoBibliograficoLinhas,1);
+            await servicoImportacaoArquivo.PersistenciaAcervo(acervoBibliograficoLinhas);
 
             var acervos = ObterTodos<Acervo>();
             var acervosBibliograficos = ObterTodos<AcervoBibliografico>();

@@ -7,7 +7,7 @@ namespace SME.CDEP.Aplicacao.Servicos.Interface
     public interface IServicoImportacaoArquivoAcervoDocumental
     {
         Task<ImportacaoArquivoRetornoDTO<AcervoDocumentalLinhaRetornoDTO>> ImportarArquivo(IFormFile file);
-        Task PersistenciaAcervoDocumental(IEnumerable<AcervoDocumentalLinhaDTO> acervosDocumentalLinhas, long importacaoArquivoId);
+        Task PersistenciaAcervo(IEnumerable<AcervoDocumentalLinhaDTO> acervosDocumentalLinhas);
         void ValidarPreenchimentoValorFormatoQtdeCaracteres(IEnumerable<AcervoDocumentalLinhaDTO> linhas);
         Task ValidacaoObterOuInserirDominios(IEnumerable<AcervoDocumentalLinhaDTO> linhas);
         void DefinirCreditosAutores(List<IdNomeTipoDTO> creditosAutores);
