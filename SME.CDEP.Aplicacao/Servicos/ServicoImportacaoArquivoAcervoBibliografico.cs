@@ -17,11 +17,12 @@ namespace SME.CDEP.Aplicacao.Servicos
         private readonly IServicoAcervoBibliografico servicoAcervoBibliografico;
         private readonly IMapper mapper;
         
-        public ServicoImportacaoArquivoAcervoBibliografico(IRepositorioImportacaoArquivo repositorioImportacaoArquivo, IMapper mapper, IServicoMaterial servicoMaterial,
-            IServicoEditora servicoEditora,IServicoSerieColecao servicoSerieColecao,IServicoIdioma servicoIdioma,
-            IServicoAssunto servicoAssunto,IServicoCreditoAutor servicoCreditoAutor,
+        public ServicoImportacaoArquivoAcervoBibliografico(IRepositorioImportacaoArquivo repositorioImportacaoArquivo, IServicoMaterial servicoMaterial,
+            IServicoEditora servicoEditora,IServicoSerieColecao servicoSerieColecao,IServicoIdioma servicoIdioma, IServicoAssunto servicoAssunto,
+            IServicoCreditoAutor servicoCreditoAutor,IServicoConservacao servicoConservacao, IServicoAcessoDocumento servicoAcessoDocumento,
             IServicoAcervoBibliografico servicoAcervoBibliografico)
-            : base(repositorioImportacaoArquivo, servicoMaterial, servicoEditora,servicoSerieColecao, servicoIdioma, servicoAssunto, servicoCreditoAutor)
+            : base(repositorioImportacaoArquivo, servicoMaterial, servicoEditora,servicoSerieColecao, servicoIdioma, servicoAssunto, servicoCreditoAutor,
+                servicoConservacao,servicoAcessoDocumento)
         {
             this.servicoAcervoBibliografico = servicoAcervoBibliografico ?? throw new ArgumentNullException(nameof(servicoAcervoBibliografico));
             this.mapper = mapper ?? throw new ArgumentNullException(nameof(mapper));
@@ -57,7 +58,8 @@ namespace SME.CDEP.Aplicacao.Servicos
             await AtualizarImportacao(importacaoArquivoId, JsonConvert.SerializeObject(acervosBibliograficosLinhas),ImportacaoStatus.ValidacaoDominios);
             
             await PersistenciaAcervoBibliografico(acervosBibliograficosLinhas, importacaoArquivoId);
-
+            await AtualizarImportacao(importacaoArquivoId, JsonConvert.SerializeObject(acervosBibliograficosLinhas), acervosBibliograficosLinhas.Any(a=> a.PossuiErros) ? ImportacaoStatus.Erros : ImportacaoStatus.Sucesso);
+            
             var arquivoImportado = await repositorioImportacaoArquivo.ObterPorId(importacaoArquivoId);
 
             return ObterRetornoImportacaoAcervoBibliografico(arquivoImportado, acervosBibliograficosLinhas);

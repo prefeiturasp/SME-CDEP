@@ -6,5 +6,6 @@ namespace SME.CDEP.Infra.Dados.Repositorios.Interfaces
     public interface IRepositorioAcessoDocumento : IRepositorioBase<AcessoDocumento>
     {
         Task<IEnumerable<AcessoDocumento>> ObterPorIds(long[] ids);
+        Task<long> ObterPorNome(string nome);
     }
 }
