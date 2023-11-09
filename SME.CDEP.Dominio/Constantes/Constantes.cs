@@ -70,6 +70,11 @@ public class Constantes
     public const string NAO_FOI_POSSIVEL_LER_A_PLANILHA = "Não foi possível ler a planilha";
     public const string VALOR_DO_CAMPO_X_NAO_PERMITIDO_ESPERADO_SIM_OU_NAO = "O valor do campo '{0}' não permitido, esperado 'SIM' ou 'NÃO'";
     public const string O_CAMPO_X_NAO_EH_UM_VALOR_NUMERICO_Y = "O valor '{0}' não é um tipo numérico '{1}'";
+    public const string ARQUIVO_NAO_ENCONTRADO = "Arquivo não encontrado";
+    public const string CONTEUDO_DO_ARQUIVO_INVALIDO = "Conteúdo do arquivo inválido";
+    public const string ESSE_ARQUIVO_NAO_EH_ACERVO_X = "Esse arquivo não é do Acervo {0}";
+    public const string A_LINHA_INFORMADA_NAO_EXISTE_NO_ARQUIVO = "Essa linha não existe no arquivo";
+    public const string NAO_EH_POSSIVEL_EXCLUIR_A_UNICA_LINHA_DO_ARQUIVO = "Não foi possível excluir a linha, pois a única linha do arquivo foi removida e agora o conteúdo do arquivo está vazio";
     
     public const char PIPE = '|';
     public const int INICIO_LINHA_TITULO = 1;

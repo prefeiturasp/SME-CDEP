@@ -3,6 +3,7 @@ using Newtonsoft.Json;
 using Shouldly;
 using SME.CDEP.Aplicacao.DTOS;
 using SME.CDEP.Dominio.Entidades;
+using SME.CDEP.Dominio.Excecoes;
 using SME.CDEP.Dominio.Extensions;
 using SME.CDEP.Infra.Dominio.Enumerados;
 using SME.CDEP.TesteIntegracao.Constantes;
@@ -455,6 +456,74 @@ namespace SME.CDEP.TesteIntegracao
             (await servicoConservacao.ObterPorNome("prÈssÍ")).ShouldBe(4);
             (await servicoConservacao.ObterPorNome("pRÊssi")).ShouldBe(4);
             (await servicoConservacao.ObterPorNome("pressÍ")).ShouldBe(4);
+        }
+        
+        [Fact(DisplayName = "Importação Arquivo Acervo Documental - Deve permitir remover linha do arquivo")]
+        public async Task Deve_permitir_remover_a_linha_do_arquivo()
+        {
+            var servicoImportacaoArquivo = GetServicoImportacaoArquivoAcervoDocumental();
+
+            var linhasInseridas = GerarAcervoDocumentalLinhaDTO().Generate(10);
+
+            await InserirNaBase(new ImportacaoArquivo()
+            {
+                Nome = faker.Hacker.Verb(),
+                TipoAcervo = TipoAcervo.DocumentacaoHistorica,
+                Status = ImportacaoStatus.Pendente,
+                Conteudo = JsonConvert.SerializeObject(linhasInseridas),
+                CriadoEm = DateTimeExtension.HorarioBrasilia().Date, CriadoPor = ConstantesTestes.SISTEMA, CriadoLogin = ConstantesTestes.LOGIN_123456789
+            });
+
+            var retorno = await servicoImportacaoArquivo.RemoverLinhaDoArquivo(1, 5);
+            var arquivo = ObterTodos<ImportacaoArquivo>().FirstOrDefault(f => f.Id.SaoIguais(1));
+            var conteudo = JsonConvert.DeserializeObject<IEnumerable<AcervoDocumentalLinhaDTO>>(arquivo.Conteudo);
+            conteudo.Any(a=> a.NumeroLinha.SaoIguais(5)).ShouldBeFalse();
+            conteudo.Count().ShouldBe(9);
+        }
+        
+        [Fact(DisplayName = "Importação Arquivo Acervo Documental - Não deve permitir remover linha do arquivo")]
+        public async Task Nao_deve_permitir_remover_a_linha_do_arquivo()
+        {
+            var servicoImportacaoArquivo = GetServicoImportacaoArquivoAcervoDocumental();
+
+            var linhasInseridas = GerarAcervoDocumentalLinhaDTO().Generate(10);
+
+            await InserirNaBase(new ImportacaoArquivo()
+            {
+                Nome = faker.Hacker.Verb(),
+                TipoAcervo = TipoAcervo.DocumentacaoHistorica,
+                Status = ImportacaoStatus.Pendente,
+                Conteudo = JsonConvert.SerializeObject(linhasInseridas),
+                CriadoEm = DateTimeExtension.HorarioBrasilia().Date, CriadoPor = ConstantesTestes.SISTEMA, CriadoLogin = ConstantesTestes.LOGIN_123456789
+            });
+
+            await servicoImportacaoArquivo.RemoverLinhaDoArquivo(1, 15).ShouldThrowAsync<NegocioException>();
+        }
+        
+        [Fact(DisplayName = "Importação Arquivo Acervo Documental - Não deve permitir remover todas as linhas do arquivo")]
+        public async Task Nao_deve_permitir_remover_todas_as_linhas_do_arquivo()
+        {
+            var servicoImportacaoArquivo = GetServicoImportacaoArquivoAcervoDocumental();
+
+            var linhasInseridas = GerarAcervoDocumentalLinhaDTO().Generate(10);
+
+            await InserirNaBase(new ImportacaoArquivo()
+            {
+                Nome = faker.Hacker.Verb(),
+                TipoAcervo = TipoAcervo.DocumentacaoHistorica,
+                Status = ImportacaoStatus.Pendente,
+                Conteudo = JsonConvert.SerializeObject(linhasInseridas),
+                CriadoEm = DateTimeExtension.HorarioBrasilia().Date, CriadoPor = ConstantesTestes.SISTEMA, CriadoLogin = ConstantesTestes.LOGIN_123456789
+            });
+
+            for (int i = 1; i < 10; i++)
+                (await servicoImportacaoArquivo.RemoverLinhaDoArquivo(1, i)).ShouldBe(true);
+                
+            var arquivo = ObterTodos<ImportacaoArquivo>().FirstOrDefault();
+            var conteudo = JsonConvert.DeserializeObject<IEnumerable<AcervoDocumentalLinhaDTO>>(arquivo.Conteudo);
+            conteudo.Count().ShouldBe(1);
+            
+            await servicoImportacaoArquivo.RemoverLinhaDoArquivo(1, 10).ShouldThrowAsync<NegocioException>();
         }
     }
 }

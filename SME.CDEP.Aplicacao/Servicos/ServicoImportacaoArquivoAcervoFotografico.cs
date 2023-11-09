@@ -30,6 +30,13 @@ namespace SME.CDEP.Aplicacao.Servicos
         {
             CreditosAutores = creditosAutores;
         }
+        
+        public async Task<bool> RemoverLinhaDoArquivo(long id, int linhaDoArquivo)
+        {
+            await RemoverLinhaDoArquivo<AcervoFotograficoLinhaDTO>(id, linhaDoArquivo, TipoAcervo.Fotografico);
+
+            return true;
+        }
 
         public async Task<ImportacaoArquivoRetornoDTO<AcervoFotograficoLinhaRetornoDTO>> ObterImportacaoPendente()
         {

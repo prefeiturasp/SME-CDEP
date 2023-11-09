@@ -32,4 +32,15 @@ public class ImportacaoArquivoAcervoTridimensionalController: BaseController
     {
         return Ok(await servicoImportacaoArquivoAcervoTridimensional.ObterImportacaoPendente());
     }
+    
+    [HttpPut("{Id}")]
+    [ProducesResponseType(typeof(bool), 200)]
+    [ProducesResponseType(typeof(RetornoBaseDTO), 400)]
+    [ProducesResponseType(typeof(RetornoBaseDTO), 403)]
+    [ProducesResponseType(typeof(RetornoBaseDTO), 601)]
+    [Permissao(Policy = "Bearer")]
+    public async Task<IActionResult> RemoverLinhaDoArquivo([FromRoute] long id, [FromBody] int linhaDoArquivo, [FromServices] IServicoImportacaoArquivoAcervoTridimensional servicoImportacaoArquivoAcervoTridimensional)
+    {
+        return Ok(await servicoImportacaoArquivoAcervoTridimensional.RemoverLinhaDoArquivo(id, linhaDoArquivo));
+    }
 }

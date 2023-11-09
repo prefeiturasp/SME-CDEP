@@ -2,7 +2,7 @@
 
 namespace SME.CDEP.Aplicacao.DTOS;
 
-public class LinhaConteudoAjustarDTO : LinhaDTO
+public class LinhaConteudoAjustarDTO
 {
     public string Conteudo { get; set; }
     public bool PossuiErro { get; set; }

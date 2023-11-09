@@ -32,4 +32,15 @@ public class ImportacaoArquivoAcervoDocumentalController: BaseController
     {
         return Ok(await servicoImportacaoArquivoAcervoDocumental.ObterImportacaoPendente());
     }
+    
+    [HttpPut("{Id}")]
+    [ProducesResponseType(typeof(bool), 200)]
+    [ProducesResponseType(typeof(RetornoBaseDTO), 400)]
+    [ProducesResponseType(typeof(RetornoBaseDTO), 403)]
+    [ProducesResponseType(typeof(RetornoBaseDTO), 601)]
+    [Permissao(Policy = "Bearer")]
+    public async Task<IActionResult> RemoverLinhaDoArquivo([FromRoute] long id, [FromBody] int linhaDoArquivo, [FromServices] IServicoImportacaoArquivoAcervoDocumental servicoImportacaoArquivoAcervoDocumental)
+    {
+        return Ok(await servicoImportacaoArquivoAcervoDocumental.RemoverLinhaDoArquivo(id, linhaDoArquivo));
+    }
 }

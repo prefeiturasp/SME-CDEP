@@ -1,8 +1,7 @@
-﻿using SME.CDEP.Infra.Dominio.Enumerados;
-
+﻿
 namespace SME.CDEP.Aplicacao.DTOS;
 
-public class AcervoArteGraficaLinhaDTO: LinhaDTO
+public class AcervoArteGraficaLinhaDTO: AcervoLinhaDTO
 {
     public LinhaConteudoAjustarDTO Titulo { get; set; }
     public LinhaConteudoAjustarDTO Tombo { get; set; }
@@ -21,8 +20,4 @@ public class AcervoArteGraficaLinhaDTO: LinhaDTO
     public LinhaConteudoAjustarDTO Suporte { get; set; }
     public LinhaConteudoAjustarDTO Quantidade { get; set; }
     public LinhaConteudoAjustarDTO Descricao { get; set; }
-    public ImportacaoStatus Status { get; set; }
-    public string Mensagem { get; set; }
-    public int NumeroLinha { get; set; }
-    public bool PossuiErros { get; set; }
 }

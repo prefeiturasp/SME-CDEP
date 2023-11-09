@@ -2,7 +2,7 @@
 
 namespace SME.CDEP.Aplicacao.DTOS;
 
-public class AcervoDocumentalLinhaRetornoDTO : LinhaDTO
+public class AcervoDocumentalLinhaRetornoDTO : AcervoLinhaRetornoDTO
 {
     public LinhaConteudoAjustarRetornoDTO Titulo { get; set; }
     public LinhaConteudoAjustarRetornoDTO CodigoAntigo { get; set; }
@@ -22,6 +22,4 @@ public class AcervoDocumentalLinhaRetornoDTO : LinhaDTO
     public LinhaConteudoAjustarRetornoDTO Localizacao { get; set; }
     public LinhaConteudoAjustarRetornoDTO CopiaDigital { get; set; }
     public LinhaConteudoAjustarRetornoDTO EstadoConservacao { get; set; }
-    public ImportacaoStatus Status { get; set; }
-    public int NumeroLinha { get; set; }
 }
