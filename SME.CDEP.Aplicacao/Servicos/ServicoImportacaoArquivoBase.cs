@@ -454,5 +454,15 @@ namespace SME.CDEP.Aplicacao.Servicos
         {
             Cromias.Add(new IdNomeDTO() { Id = id, Nome = nome });
         }
+        
+        protected static LinhaConteudoAjustarRetornoDTO ObterConteudoMensagemStatus(LinhaConteudoAjustarDTO linha)
+        {
+            return new LinhaConteudoAjustarRetornoDTO()
+            {
+                Conteudo = linha.Conteudo, 
+                Validado = linha.PossuiErro, 
+                Mensagem = linha.Mensagem
+            };
+        }
     }
 }

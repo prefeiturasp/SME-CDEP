@@ -73,61 +73,36 @@ namespace SME.CDEP.Aplicacao.Servicos
                 DataImportacao = arquivoImportado.CriadoEm,
                 Erros = acervosDocumentalLinhas
                         .Where(w => w.PossuiErros)
-                        .Select(s => new AcervoDocumentalLinhaRetornoDTO()
-                        {
-                            Titulo = ObterConteudoMensagemStatus(s.Titulo),
-                            CodigoAntigo = ObterConteudoMensagemStatus(s.CodigoAntigo),
-                            CodigoNovo = ObterConteudoMensagemStatus(s.CodigoNovo),
-                            Material = ObterConteudoMensagemStatus(s.Material),
-                            Idioma = ObterConteudoMensagemStatus(s.Idioma),
-                            Autor = ObterConteudoMensagemStatus(s.Autor),
-                            Ano = ObterConteudoMensagemStatus(s.Ano),
-                            NumeroPaginas = ObterConteudoMensagemStatus(s.NumeroPaginas),
-                            Volume = ObterConteudoMensagemStatus(s.Volume),
-                            Descricao = ObterConteudoMensagemStatus(s.Descricao),
-                            TipoAnexo = ObterConteudoMensagemStatus(s.TipoAnexo),
-                            Largura = ObterConteudoMensagemStatus(s.Largura),
-                            Altura = ObterConteudoMensagemStatus(s.Altura),
-                            TamanhoArquivo = ObterConteudoMensagemStatus(s.TamanhoArquivo),
-                            AcessoDocumento = ObterConteudoMensagemStatus(s.AcessoDocumento),
-                            Localizacao = ObterConteudoMensagemStatus(s.Localizacao),
-                            CopiaDigital = ObterConteudoMensagemStatus(s.CopiaDigital),
-                            EstadoConservacao = ObterConteudoMensagemStatus(s.EstadoConservacao)
-                        }),
+                        .Select(ObterAcervoDocumentalLinhaRetornoDto),
                 Sucesso = acervosDocumentalLinhas
                         .Where(w => !w.PossuiErros)
-                        .Select(s => new AcervoDocumentalLinhaRetornoDTO()
-                        {
-                            Titulo = ObterConteudoMensagemStatus(s.Titulo),
-                            CodigoAntigo = ObterConteudoMensagemStatus(s.CodigoAntigo),
-                            CodigoNovo = ObterConteudoMensagemStatus(s.CodigoNovo),
-                            Material = ObterConteudoMensagemStatus(s.Material),
-                            Idioma = ObterConteudoMensagemStatus(s.Idioma),
-                            Autor = ObterConteudoMensagemStatus(s.Autor),
-                            Ano = ObterConteudoMensagemStatus(s.Ano),
-                            NumeroPaginas = ObterConteudoMensagemStatus(s.NumeroPaginas),
-                            Volume = ObterConteudoMensagemStatus(s.Volume),
-                            Descricao = ObterConteudoMensagemStatus(s.Descricao),
-                            TipoAnexo = ObterConteudoMensagemStatus(s.TipoAnexo),
-                            Largura = ObterConteudoMensagemStatus(s.Largura),
-                            Altura = ObterConteudoMensagemStatus(s.Altura),
-                            TamanhoArquivo = ObterConteudoMensagemStatus(s.TamanhoArquivo),
-                            AcessoDocumento = ObterConteudoMensagemStatus(s.AcessoDocumento),
-                            Localizacao = ObterConteudoMensagemStatus(s.Localizacao),
-                            CopiaDigital = ObterConteudoMensagemStatus(s.CopiaDigital),
-                            EstadoConservacao = ObterConteudoMensagemStatus(s.EstadoConservacao)
-                        })
+                        .Select(ObterAcervoDocumentalLinhaRetornoDto)
             };
             return acervoDocumentalRetorno;
         }
 
-        private static LinhaConteudoAjustarRetornoDTO ObterConteudoMensagemStatus(LinhaConteudoAjustarDTO linha)
+        private static AcervoDocumentalLinhaRetornoDTO ObterAcervoDocumentalLinhaRetornoDto(AcervoDocumentalLinhaDTO s)
         {
-            return new LinhaConteudoAjustarRetornoDTO()
+            return new AcervoDocumentalLinhaRetornoDTO()
             {
-                Conteudo = linha.Conteudo, 
-                Validado = linha.PossuiErro, 
-                Mensagem = linha.Mensagem
+                Titulo = ObterConteudoMensagemStatus(s.Titulo),
+                CodigoAntigo = ObterConteudoMensagemStatus(s.CodigoAntigo),
+                CodigoNovo = ObterConteudoMensagemStatus(s.CodigoNovo),
+                Material = ObterConteudoMensagemStatus(s.Material),
+                Idioma = ObterConteudoMensagemStatus(s.Idioma),
+                Autor = ObterConteudoMensagemStatus(s.Autor),
+                Ano = ObterConteudoMensagemStatus(s.Ano),
+                NumeroPaginas = ObterConteudoMensagemStatus(s.NumeroPaginas),
+                Volume = ObterConteudoMensagemStatus(s.Volume),
+                Descricao = ObterConteudoMensagemStatus(s.Descricao),
+                TipoAnexo = ObterConteudoMensagemStatus(s.TipoAnexo),
+                Largura = ObterConteudoMensagemStatus(s.Largura),
+                Altura = ObterConteudoMensagemStatus(s.Altura),
+                TamanhoArquivo = ObterConteudoMensagemStatus(s.TamanhoArquivo),
+                AcessoDocumento = ObterConteudoMensagemStatus(s.AcessoDocumento),
+                Localizacao = ObterConteudoMensagemStatus(s.Localizacao),
+                CopiaDigital = ObterConteudoMensagemStatus(s.CopiaDigital),
+                EstadoConservacao = ObterConteudoMensagemStatus(s.EstadoConservacao)
             };
         }
 

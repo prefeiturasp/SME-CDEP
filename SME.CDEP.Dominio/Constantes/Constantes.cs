@@ -40,6 +40,7 @@ public class Constantes
     public const string ACESSO_DOCUMENTO = "Acesso documento";
     public const string LOCALIZACAO = "Localização";
     public const string COPIA_DIGITAL = "Cópia digital";
+    public const string COPIA = "Cópia";
     public const string AUTORIZACAO_USO_DE_IMAGEM = "Autorização de uso de imagem";
     public const string ESTADO_CONSERVACAO = "Estado conservação";
     public const string PROCEDENCIA = "Procedência";
@@ -48,6 +49,9 @@ public class Constantes
     public const string TECNICA = "Técnica";
     public const string SUPORTE = "Suporte";
     public const string QUANTIDADE = "Quantidade";
+    public const string DURACAO = "Duração";
+    public const string ACESSIBILIDADE = "Acessibilidade";
+    public const string DISPONIBILIDADE = "Disponibilidade";
     
     public const string CAMPO_X_NAO_PREENCHIDO = "O campo '{0}' é obrigatório";
     public const string CAMPO_X_ATINGIU_LIMITE_CARACTERES = "Os campos '{0}' atingiu o limite de caracteres";
@@ -120,6 +124,23 @@ public class Constantes
     public const int ACERVO_ARTE_GRAFICA_CAMPO_SUPORTE = 15;
     public const int ACERVO_ARTE_GRAFICA_CAMPO_QUANTIDADE = 16;
     public const int ACERVO_ARTE_GRAFICA_CAMPO_DESCRICAO = 17;
+    
+    public const int ACERVO_AUDIOVISUAL_CAMPO_TITULO = 1;
+    public const int ACERVO_AUDIOVISUAL_CAMPO_TOMBO = 2;
+    public const int ACERVO_AUDIOVISUAL_CAMPO_CREDITO = 3;
+    public const int ACERVO_AUDIOVISUAL_CAMPO_LOCALIZACAO = 4;
+    public const int ACERVO_AUDIOVISUAL_CAMPO_PROCEDENCIA = 5;
+    public const int ACERVO_AUDIOVISUAL_CAMPO_DATA = 6;
+    public const int ACERVO_AUDIOVISUAL_CAMPO_COPIA = 7;
+    public const int ACERVO_AUDIOVISUAL_CAMPO_AUTORIZACAO_USO_DE_IMAGEM = 8;
+    public const int ACERVO_AUDIOVISUAL_CAMPO_ESTADO_CONSERVACAO = 9;
+    public const int ACERVO_AUDIOVISUAL_CAMPO_DESCRICAO = 10;
+    public const int ACERVO_AUDIOVISUAL_CAMPO_SUPORTE = 11;
+    public const int ACERVO_AUDIOVISUAL_CAMPO_DURACAO = 12;
+    public const int ACERVO_AUDIOVISUAL_CAMPO_CROMIA = 13;
+    public const int ACERVO_AUDIOVISUAL_CAMPO_TAMANHO_ARQUIVO = 14;
+    public const int ACERVO_AUDIOVISUAL_CAMPO_ACESSIBILIDADE = 15;
+    public const int ACERVO_AUDIOVISUAL_CAMPO_DISPONIBILIZACAO = 16;
     
     public const string ContentTypeExcel = "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet";
     public const string BUCKET_CDEP = "cdep";

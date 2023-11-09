@@ -20,7 +20,7 @@ namespace SME.CDEP.Aplicacao.Servicos
         public ServicoImportacaoArquivoAcervoBibliografico(IRepositorioImportacaoArquivo repositorioImportacaoArquivo, IServicoMaterial servicoMaterial,
             IServicoEditora servicoEditora,IServicoSerieColecao servicoSerieColecao,IServicoIdioma servicoIdioma, IServicoAssunto servicoAssunto,
             IServicoCreditoAutor servicoCreditoAutor,IServicoConservacao servicoConservacao, IServicoAcessoDocumento servicoAcessoDocumento,
-            IServicoCromia servicoCromia, IServicoSuporte servicoSuporte,IServicoAcervoBibliografico servicoAcervoBibliografico)
+            IServicoCromia servicoCromia, IServicoSuporte servicoSuporte,IServicoAcervoBibliografico servicoAcervoBibliografico,IMapper mapper)
             : base(repositorioImportacaoArquivo, servicoMaterial, servicoEditora,servicoSerieColecao, servicoIdioma, servicoAssunto, servicoCreditoAutor,
                 servicoConservacao,servicoAcessoDocumento,servicoCromia,servicoSuporte)
         {
@@ -75,67 +75,39 @@ namespace SME.CDEP.Aplicacao.Servicos
                 DataImportacao = arquivoImportado.CriadoEm,
                 Erros = acervosBibliograficosLinhas
                         .Where(w => w.PossuiErros)
-                        .Select(s => new AcervoBibliograficoLinhaRetornoDTO()
-                        {
-                            Titulo = ObterConteudoMensagemStatus(s.Titulo),
-                            SubTitulo = ObterConteudoMensagemStatus(s.SubTitulo),
-                            Material = ObterConteudoMensagemStatus(s.Material),
-                            Autor = ObterConteudoMensagemStatus(s.Autor),
-                            CoAutor = ObterConteudoMensagemStatus(s.CoAutor),
-                            TipoAutoria = ObterConteudoMensagemStatus(s.TipoAutoria),
-                            Editora = ObterConteudoMensagemStatus(s.Editora),
-                            Assunto = ObterConteudoMensagemStatus(s.Assunto),
-                            Ano = ObterConteudoMensagemStatus(s.Ano),
-                            Edicao = ObterConteudoMensagemStatus(s.Edicao),
-                            NumeroPaginas = ObterConteudoMensagemStatus(s.NumeroPaginas),
-                            Largura = ObterConteudoMensagemStatus(s.Largura),
-                            Altura = ObterConteudoMensagemStatus(s.Altura),
-                            SerieColecao = ObterConteudoMensagemStatus(s.SerieColecao),
-                            Volume = ObterConteudoMensagemStatus(s.Volume),
-                            Idioma = ObterConteudoMensagemStatus(s.Idioma),
-                            LocalizacaoCDD = ObterConteudoMensagemStatus(s.LocalizacaoCDD),
-                            LocalizacaoPHA = ObterConteudoMensagemStatus(s.LocalizacaoPHA),
-                            NotasGerais = ObterConteudoMensagemStatus(s.NotasGerais),
-                            Isbn = ObterConteudoMensagemStatus(s.Isbn),
-                            Tombo = ObterConteudoMensagemStatus(s.Tombo),
-                        }),
+                        .Select(ObterAcervoBibliograficoLinhaRetornoDto),
                 Sucesso = acervosBibliograficosLinhas
                         .Where(w => !w.PossuiErros)
-                        .Select(s => new AcervoBibliograficoLinhaRetornoDTO()
-                        {
-                            Titulo = ObterConteudoMensagemStatus(s.Titulo),
-                            SubTitulo = ObterConteudoMensagemStatus(s.SubTitulo),
-                            Material = ObterConteudoMensagemStatus(s.Material),
-                            Autor = ObterConteudoMensagemStatus(s.Autor),
-                            CoAutor = ObterConteudoMensagemStatus(s.CoAutor),
-                            TipoAutoria = ObterConteudoMensagemStatus(s.TipoAutoria),
-                            Editora = ObterConteudoMensagemStatus(s.Editora),
-                            Assunto = ObterConteudoMensagemStatus(s.Assunto),
-                            Ano = ObterConteudoMensagemStatus(s.Ano),
-                            Edicao = ObterConteudoMensagemStatus(s.Edicao),
-                            NumeroPaginas = ObterConteudoMensagemStatus(s.NumeroPaginas),
-                            Largura = ObterConteudoMensagemStatus(s.Largura),
-                            Altura = ObterConteudoMensagemStatus(s.Altura),
-                            SerieColecao = ObterConteudoMensagemStatus(s.SerieColecao),
-                            Volume = ObterConteudoMensagemStatus(s.Volume),
-                            Idioma = ObterConteudoMensagemStatus(s.Idioma),
-                            LocalizacaoCDD = ObterConteudoMensagemStatus(s.LocalizacaoCDD),
-                            LocalizacaoPHA = ObterConteudoMensagemStatus(s.LocalizacaoPHA),
-                            NotasGerais = ObterConteudoMensagemStatus(s.NotasGerais),
-                            Isbn = ObterConteudoMensagemStatus(s.Isbn),
-                            Tombo = ObterConteudoMensagemStatus(s.Tombo),
-                        })
+                        .Select(ObterAcervoBibliograficoLinhaRetornoDto)
             };
             return acervoBibliograficoRetorno;
         }
 
-        private static LinhaConteudoAjustarRetornoDTO ObterConteudoMensagemStatus(LinhaConteudoAjustarDTO linha)
+        private static AcervoBibliograficoLinhaRetornoDTO ObterAcervoBibliograficoLinhaRetornoDto(AcervoBibliograficoLinhaDTO s)
         {
-            return new LinhaConteudoAjustarRetornoDTO()
+            return new AcervoBibliograficoLinhaRetornoDTO()
             {
-                Conteudo = linha.Conteudo, 
-                Validado = linha.PossuiErro, 
-                Mensagem = linha.Mensagem
+                Titulo = ObterConteudoMensagemStatus(s.Titulo),
+                SubTitulo = ObterConteudoMensagemStatus(s.SubTitulo),
+                Material = ObterConteudoMensagemStatus(s.Material),
+                Autor = ObterConteudoMensagemStatus(s.Autor),
+                CoAutor = ObterConteudoMensagemStatus(s.CoAutor),
+                TipoAutoria = ObterConteudoMensagemStatus(s.TipoAutoria),
+                Editora = ObterConteudoMensagemStatus(s.Editora),
+                Assunto = ObterConteudoMensagemStatus(s.Assunto),
+                Ano = ObterConteudoMensagemStatus(s.Ano),
+                Edicao = ObterConteudoMensagemStatus(s.Edicao),
+                NumeroPaginas = ObterConteudoMensagemStatus(s.NumeroPaginas),
+                Largura = ObterConteudoMensagemStatus(s.Largura),
+                Altura = ObterConteudoMensagemStatus(s.Altura),
+                SerieColecao = ObterConteudoMensagemStatus(s.SerieColecao),
+                Volume = ObterConteudoMensagemStatus(s.Volume),
+                Idioma = ObterConteudoMensagemStatus(s.Idioma),
+                LocalizacaoCDD = ObterConteudoMensagemStatus(s.LocalizacaoCDD),
+                LocalizacaoPHA = ObterConteudoMensagemStatus(s.LocalizacaoPHA),
+                NotasGerais = ObterConteudoMensagemStatus(s.NotasGerais),
+                Isbn = ObterConteudoMensagemStatus(s.Isbn),
+                Tombo = ObterConteudoMensagemStatus(s.Tombo),
             };
         }
 
