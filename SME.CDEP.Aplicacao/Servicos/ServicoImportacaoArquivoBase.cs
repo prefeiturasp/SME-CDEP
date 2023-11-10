@@ -626,22 +626,6 @@ namespace SME.CDEP.Aplicacao.Servicos
             await repositorioImportacaoArquivo.Remover(id);
             return true;
         }
-        
-        // public async Task<bool> AtualizarLinhaParaSucesso<T>(long id, int linhaDoArquivo, TipoAcervo tipoAcervoEsperado) where T: AcervoLinhaDTO
-        // {
-        //     var conteudo = await ValidacoesImportacaoArquivo<T>(id, linhaDoArquivo, tipoAcervoEsperado);
-        //     
-        //     var novoConteudo = conteudo.FirstOrDefault(w => w.NumeroLinha.SaoIguais(linhaDoArquivo));
-        //     novoConteudo.PossuiErros = false;
-        //     novoConteudo.Mensagem = string.Empty;
-        //
-        //     
-        //     novoConteudo.Status = ImportacaoStatus.Sucesso;
-        //
-        //     await AtualizarImportacao(id, JsonConvert.SerializeObject(novoConteudo));
-        //
-        //     return true;
-        // }
 
         public async Task<IEnumerable<T>> ValidacoesImportacaoArquivo<T>(long id, int linhaDoArquivo, TipoAcervo tipoAcervoEsperado) where T : AcervoLinhaDTO
         {
@@ -649,7 +633,7 @@ namespace SME.CDEP.Aplicacao.Servicos
 
             var conteudo = JsonConvert.DeserializeObject<IEnumerable<T>>(arquivo.Conteudo);
 
-            var existeLinha = conteudo.Any(w => w.NumeroLinha.SaoIguais(linhaDoArquivo));
+            var existeLinha = conteudo?.Any(w => w.NumeroLinha.SaoIguais(linhaDoArquivo)) ?? false;
 
             if (!existeLinha)
                 throw new NegocioException(Constantes.A_LINHA_INFORMADA_NAO_EXISTE_NO_ARQUIVO);
