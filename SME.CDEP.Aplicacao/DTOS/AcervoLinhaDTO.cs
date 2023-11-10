@@ -8,4 +8,11 @@ public class AcervoLinhaDTO
     public string Mensagem { get; set; }
     public int NumeroLinha { get; set; }
     public bool PossuiErros { get; set; }
+    
+    public void DefinirLinhaComoErro(string mensagem)
+    {
+        PossuiErros = true;
+        Status = ImportacaoStatus.Erros;
+        Mensagem = mensagem;
+    }
 }

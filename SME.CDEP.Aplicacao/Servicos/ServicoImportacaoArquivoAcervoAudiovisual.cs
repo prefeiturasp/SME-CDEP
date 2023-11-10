@@ -152,15 +152,11 @@ namespace SME.CDEP.Aplicacao.Servicos
                     };
                     await servicoAcervoAudiovisual.Inserir(acervoAudiovisual);
         
-                    acervoAudiovisualLinha.Status = ImportacaoStatus.Sucesso;
-                    acervoAudiovisualLinha.Mensagem = string.Empty;
-                    acervoAudiovisualLinha.PossuiErros = false;
+                    acervoAudiovisualLinha.DefinirLinhaComoSucesso();
                 }
                 catch (Exception ex)
                 {
-                    acervoAudiovisualLinha.PossuiErros = true;
-                    acervoAudiovisualLinha.Status = ImportacaoStatus.Erros;
-                    acervoAudiovisualLinha.Mensagem = ex.Message;
+                    acervoAudiovisualLinha.DefinirLinhaComoErro(ex.Message);
                 }
             }
         } 
@@ -191,9 +187,7 @@ namespace SME.CDEP.Aplicacao.Servicos
                 }
                 catch (Exception e)
                 {
-                    linha.PossuiErros = true;
-                    linha.Status = ImportacaoStatus.Erros;
-                    linha.Mensagem = string.Format(Constantes.OCORREU_UMA_FALHA_INESPERADA_NA_LINHA_X_MOTIVO_Y, linha.NumeroLinha, e.Message);
+                    linha.DefinirLinhaComoErro(string.Format(Constantes.OCORREU_UMA_FALHA_INESPERADA_NA_LINHA_X_MOTIVO_Y, linha.NumeroLinha, e.Message));
                 }
             }
         }
@@ -236,11 +230,7 @@ namespace SME.CDEP.Aplicacao.Servicos
             catch (Exception e)
             {
                 foreach (var linha in linhas)
-                {
-                    linha.PossuiErros = true;
-                    linha.Status = ImportacaoStatus.Erros;
-                    linha.Mensagem = string.Format(Constantes.OCORREU_UMA_FALHA_INESPERADA_NO_CADASTRO_DAS_REFERENCIAS_MOTIVO_X, e.Message);
-                }
+                    linha.DefinirLinhaComoErro(string.Format(Constantes.OCORREU_UMA_FALHA_INESPERADA_NO_CADASTRO_DAS_REFERENCIAS_MOTIVO_X, e.Message));
             }
         }
         

@@ -155,16 +155,12 @@ namespace SME.CDEP.Aplicacao.Servicos
                         Resolucao = acervoFotograficoLinha.Resolucao.Conteudo,
                     };
                     await servicoAcervoFotografico.Inserir(acervoFotografico);
-        
-                    acervoFotograficoLinha.Status = ImportacaoStatus.Sucesso;
-                    acervoFotograficoLinha.Mensagem = string.Empty;
-                    acervoFotograficoLinha.PossuiErros = false;
+
+                    acervoFotograficoLinha.DefinirLinhaComoSucesso();
                 }
                 catch (Exception ex)
                 {
-                    acervoFotograficoLinha.PossuiErros = true;
-                    acervoFotograficoLinha.Status = ImportacaoStatus.Erros;
-                    acervoFotograficoLinha.Mensagem = ex.Message;
+                    acervoFotograficoLinha.DefinirLinhaComoErro(ex.Message);
                 }
             }
         } 
@@ -197,9 +193,7 @@ namespace SME.CDEP.Aplicacao.Servicos
                 }
                 catch (Exception e)
                 {
-                    linha.PossuiErros = true;
-                    linha.Status = ImportacaoStatus.Erros;
-                    linha.Mensagem = string.Format(Constantes.OCORREU_UMA_FALHA_INESPERADA_NA_LINHA_X_MOTIVO_Y, e.Message);
+                    linha.DefinirLinhaComoErro(string.Format(Constantes.OCORREU_UMA_FALHA_INESPERADA_NA_LINHA_X_MOTIVO_Y, e.Message));
                 }
             }
         }
@@ -246,11 +240,7 @@ namespace SME.CDEP.Aplicacao.Servicos
             catch (Exception e)
             {
                 foreach (var linha in linhas)
-                {
-                    linha.PossuiErros = true;
-                    linha.Status = ImportacaoStatus.Erros;
-                    linha.Mensagem = string.Format(Constantes.OCORREU_UMA_FALHA_INESPERADA_NO_CADASTRO_DAS_REFERENCIAS_MOTIVO_X, e.Message);
-                }
+                    linha.DefinirLinhaComoErro(string.Format(Constantes.OCORREU_UMA_FALHA_INESPERADA_NO_CADASTRO_DAS_REFERENCIAS_MOTIVO_X, e.Message));
             }
         }
         

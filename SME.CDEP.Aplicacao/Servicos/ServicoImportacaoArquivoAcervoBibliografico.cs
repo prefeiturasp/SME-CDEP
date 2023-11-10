@@ -15,7 +15,6 @@ namespace SME.CDEP.Aplicacao.Servicos
     public class ServicoImportacaoArquivoAcervoBibliografico : ServicoImportacaoArquivoBase, IServicoImportacaoArquivoAcervoBibliografico 
     {
         private readonly IServicoAcervoBibliografico servicoAcervoBibliografico;
-        private readonly IMapper mapper;
         
         public ServicoImportacaoArquivoAcervoBibliografico(IRepositorioImportacaoArquivo repositorioImportacaoArquivo, IServicoMaterial servicoMaterial,
             IServicoEditora servicoEditora,IServicoSerieColecao servicoSerieColecao,IServicoIdioma servicoIdioma, IServicoAssunto servicoAssunto,
@@ -25,7 +24,6 @@ namespace SME.CDEP.Aplicacao.Servicos
                 servicoConservacao,servicoAcessoDocumento,servicoCromia,servicoSuporte, servicoFormato)
         {
             this.servicoAcervoBibliografico = servicoAcervoBibliografico ?? throw new ArgumentNullException(nameof(servicoAcervoBibliografico));
-            this.mapper = mapper ?? throw new ArgumentNullException(nameof(mapper));
         }
 
         public void DefinirCreditosAutores(List<IdNomeTipoDTO> creditosAutores)
@@ -180,15 +178,11 @@ namespace SME.CDEP.Aplicacao.Servicos
                     };
                     await servicoAcervoBibliografico.Inserir(acervoBibliografico);
 
-                    acervoBibliograficoLinha.Status = ImportacaoStatus.Sucesso;
-                    acervoBibliograficoLinha.Mensagem = string.Empty;
-                    acervoBibliograficoLinha.PossuiErros = false;
+                    acervoBibliograficoLinha.DefinirLinhaComoSucesso();
                 }
                 catch (Exception ex)
                 {
-                    acervoBibliograficoLinha.PossuiErros = true;
-                    acervoBibliograficoLinha.Status = ImportacaoStatus.Erros;
-                    acervoBibliograficoLinha.Mensagem = ex.Message;
+                    acervoBibliograficoLinha.DefinirLinhaComoErro(ex.Message);
                 }
             }
         }
@@ -258,9 +252,7 @@ namespace SME.CDEP.Aplicacao.Servicos
                 }
                 catch (Exception e)
                 {
-                    linha.PossuiErros = true;
-                    linha.Status = ImportacaoStatus.Erros;
-                    linha.Mensagem = string.Format(Constantes.OCORREU_UMA_FALHA_INESPERADA_NA_LINHA_X_MOTIVO_Y, e.Message);
+                    linha.DefinirLinhaComoErro(string.Format(Constantes.OCORREU_UMA_FALHA_INESPERADA_NA_LINHA_X_MOTIVO_Y, e.Message));
                 }
             }
         }
@@ -313,11 +305,7 @@ namespace SME.CDEP.Aplicacao.Servicos
             catch (Exception e)
             {
                 foreach (var linha in linhas)
-                {
-                    linha.PossuiErros = true;
-                    linha.Status = ImportacaoStatus.Erros;
-                    linha.Mensagem = string.Format(Constantes.OCORREU_UMA_FALHA_INESPERADA_NO_CADASTRO_DAS_REFERENCIAS_MOTIVO_X, e.Message);
-                }
+                    linha.DefinirLinhaComoErro(string.Format(Constantes.OCORREU_UMA_FALHA_INESPERADA_NO_CADASTRO_DAS_REFERENCIAS_MOTIVO_X, e.Message));
             }
         }
 

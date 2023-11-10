@@ -1,12 +1,10 @@
-﻿using AutoMapper;
-using ClosedXML.Excel;
+﻿using ClosedXML.Excel;
 using Microsoft.AspNetCore.Http;
 using Newtonsoft.Json;
 using SME.CDEP.Aplicacao.DTOS;
 using SME.CDEP.Aplicacao.Servicos.Interface;
 using SME.CDEP.Dominio.Constantes;
 using SME.CDEP.Dominio.Entidades;
-using SME.CDEP.Dominio.Excecoes;
 using SME.CDEP.Dominio.Extensions;
 using SME.CDEP.Infra.Dados.Repositorios.Interfaces;
 using SME.CDEP.Infra.Dominio.Enumerados;
@@ -157,15 +155,11 @@ namespace SME.CDEP.Aplicacao.Servicos
                     };
                     await servicoAcervoArteGrafica.Inserir(acervoArteGrafica);
 
-                    acervoArteGraficaLinha.Status = ImportacaoStatus.Sucesso;
-                    acervoArteGraficaLinha.Mensagem = string.Empty;
-                    acervoArteGraficaLinha.PossuiErros = false;
+                    acervoArteGraficaLinha.DefinirLinhaComoSucesso();
                 }
                 catch (Exception ex)
                 {
-                    acervoArteGraficaLinha.PossuiErros = true;
-                    acervoArteGraficaLinha.Status = ImportacaoStatus.Erros;
-                    acervoArteGraficaLinha.Mensagem = ex.Message;
+                    acervoArteGraficaLinha.DefinirLinhaComoErro(ex.Message);
                 }
             }
         } 
@@ -197,9 +191,7 @@ namespace SME.CDEP.Aplicacao.Servicos
                 }
                 catch (Exception e)
                 {
-                    linha.PossuiErros = true;
-                    linha.Status = ImportacaoStatus.Erros;
-                    linha.Mensagem = string.Format(Constantes.OCORREU_UMA_FALHA_INESPERADA_NA_LINHA_X_MOTIVO_Y, linha.NumeroLinha, e.Message);
+                    linha.DefinirLinhaComoErro(string.Format(Constantes.OCORREU_UMA_FALHA_INESPERADA_NA_LINHA_X_MOTIVO_Y, linha.NumeroLinha, e.Message));
                 }
             }
         }
@@ -243,11 +235,7 @@ namespace SME.CDEP.Aplicacao.Servicos
             catch (Exception e)
             {
                 foreach (var linha in linhas)
-                {
-                    linha.PossuiErros = true;
-                    linha.Status = ImportacaoStatus.Erros;
-                    linha.Mensagem = string.Format(Constantes.OCORREU_UMA_FALHA_INESPERADA_NO_CADASTRO_DAS_REFERENCIAS_MOTIVO_X, e.Message);
-                }
+                    linha.DefinirLinhaComoErro(string.Format(Constantes.OCORREU_UMA_FALHA_INESPERADA_NO_CADASTRO_DAS_REFERENCIAS_MOTIVO_X, e.Message));
             }
         }
 

@@ -1,5 +1,4 @@
-﻿using AutoMapper;
-using ClosedXML.Excel;
+﻿using ClosedXML.Excel;
 using Microsoft.AspNetCore.Http;
 using Newtonsoft.Json;
 using SME.CDEP.Aplicacao.DTOS;
@@ -141,15 +140,11 @@ namespace SME.CDEP.Aplicacao.Servicos
                     };
                     await servicoAcervoTridimensional.Inserir(acervoTridimensional);
         
-                    acervoTridimensionalLinha.Status = ImportacaoStatus.Sucesso;
-                    acervoTridimensionalLinha.Mensagem = string.Empty;
-                    acervoTridimensionalLinha.PossuiErros = false;
+                    acervoTridimensionalLinha.DefinirLinhaComoSucesso();
                 }
                 catch (Exception ex)
                 {
-                    acervoTridimensionalLinha.PossuiErros = true;
-                    acervoTridimensionalLinha.Status = ImportacaoStatus.Erros;
-                    acervoTridimensionalLinha.Mensagem = ex.Message;
+                    acervoTridimensionalLinha.DefinirLinhaComoErro(ex.Message);
                 }
             }
         }
@@ -175,9 +170,7 @@ namespace SME.CDEP.Aplicacao.Servicos
                 }
                 catch (Exception e)
                 {
-                    linha.PossuiErros = true;
-                    linha.Status = ImportacaoStatus.Erros;
-                    linha.Mensagem = string.Format(Constantes.OCORREU_UMA_FALHA_INESPERADA_NA_LINHA_X_MOTIVO_Y, linha.NumeroLinha, e.Message);
+                    linha.DefinirLinhaComoErro(string.Format(Constantes.OCORREU_UMA_FALHA_INESPERADA_NA_LINHA_X_MOTIVO_Y, linha.NumeroLinha, e.Message));
                 }
             }
         }
@@ -209,11 +202,7 @@ namespace SME.CDEP.Aplicacao.Servicos
             catch (Exception e)
             {
                 foreach (var linha in linhas)
-                {
-                    linha.PossuiErros = true;
-                    linha.Status = ImportacaoStatus.Erros;
-                    linha.Mensagem = string.Format(Constantes.OCORREU_UMA_FALHA_INESPERADA_NO_CADASTRO_DAS_REFERENCIAS_MOTIVO_X, e.Message);
-                }
+                    linha.DefinirLinhaComoErro(string.Format(Constantes.OCORREU_UMA_FALHA_INESPERADA_NO_CADASTRO_DAS_REFERENCIAS_MOTIVO_X, e.Message));
             }
         }
         
