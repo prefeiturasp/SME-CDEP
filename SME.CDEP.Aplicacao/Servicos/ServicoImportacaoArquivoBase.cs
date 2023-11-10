@@ -613,7 +613,7 @@ namespace SME.CDEP.Aplicacao.Servicos
             
             var conteudo = JsonConvert.DeserializeObject<IEnumerable<T>>(arquivo.Conteudo);
 
-            var existeLinha = conteudo.Any(w => w.NumeroLinha.SaoIguais(linhaDoArquivo));
+            var existeLinha = conteudo?.Any(w => w.NumeroLinha.SaoIguais(linhaDoArquivo)) ?? false;
 
             if (!existeLinha)
                 throw new NegocioException(Constantes.A_LINHA_INFORMADA_NAO_EXISTE_NO_ARQUIVO);
