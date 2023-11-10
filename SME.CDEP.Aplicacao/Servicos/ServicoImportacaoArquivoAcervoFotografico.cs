@@ -145,9 +145,9 @@ namespace SME.CDEP.Aplicacao.Servicos
                         PermiteUsoImagem = ObterAutorizaUsoDeImagemPorValorDoCampo(acervoFotograficoLinha.AutorizacaoUsoDeImagem.Conteudo),
                         ConservacaoId = ObterConservacaoIdPorValorDoCampo(acervoFotograficoLinha.EstadoConservacao.Conteudo),
                         Descricao = acervoFotograficoLinha.Descricao.Conteudo,
-                        Quantidade = long.Parse(acervoFotograficoLinha.Quantidade.Conteudo),
-                        Largura = long.Parse(acervoFotograficoLinha.Largura.Conteudo),
-                        Altura = long.Parse(acervoFotograficoLinha.Altura.Conteudo),
+                        Quantidade = acervoFotograficoLinha.Quantidade.Conteudo.ObterLongoPorValorDoCampo(),
+                        Largura = acervoFotograficoLinha.Largura.Conteudo.ObterDoubleOuNuloPorValorDoCampo(),
+                        Altura = acervoFotograficoLinha.Altura.Conteudo.ObterDoubleOuNuloPorValorDoCampo(),
                         SuporteId = ObterSuporteImagemIdPorValorDoCampo(acervoFotograficoLinha.Suporte.Conteudo),
                         FormatoId = ObterFormatoImagemIdPorValorDoCampo(acervoFotograficoLinha.FormatoImagem.Conteudo),
                         TamanhoArquivo = acervoFotograficoLinha.TamanhoArquivo.Conteudo,
@@ -226,15 +226,15 @@ namespace SME.CDEP.Aplicacao.Servicos
         
             try
             {
-                await ValidarOuInserirCreditoAutoresCoAutoresTipoAutoria(linhasComsucesso.Select(s => s.Credito.Conteudo).ToArray().UnificarPipe().SplitPipe().Distinct(), TipoCreditoAutoria.Autoria);
+                await ValidarOuInserirCreditoAutoresCoAutoresTipoAutoria(linhasComsucesso.Select(s => s.Credito.Conteudo).ToArray().UnificarPipe().SplitPipe().Distinct().Where(w=> w.EstaPreenchido()), TipoCreditoAutoria.Autoria);
                 
-                await ValidarOuInserirCromia(linhasComsucesso.Select(s => s.Cromia.Conteudo).Distinct());
+                await ValidarOuInserirCromia(linhasComsucesso.Select(s => s.Cromia.Conteudo).Distinct().Where(w=> w.EstaPreenchido()));
                 
-                await ValidarOuInserirSuporte(linhasComsucesso.Select(s => s.Suporte.Conteudo).Distinct(), TipoSuporte.IMAGEM);
+                await ValidarOuInserirSuporte(linhasComsucesso.Select(s => s.Suporte.Conteudo).Distinct().Where(w=> w.EstaPreenchido()), TipoSuporte.IMAGEM);
                 
-                await ValidarOuInserirConservacao(linhasComsucesso.Select(s => s.EstadoConservacao.Conteudo).Distinct());
+                await ValidarOuInserirConservacao(linhasComsucesso.Select(s => s.EstadoConservacao.Conteudo).Distinct().Where(w=> w.EstaPreenchido()));
                 
-                await ValidarOuInserirFormato(linhasComsucesso.Select(s => s.FormatoImagem.Conteudo).Distinct(), TipoFormato.ACERVO_FOTOS);
+                await ValidarOuInserirFormato(linhasComsucesso.Select(s => s.FormatoImagem.Conteudo).Distinct().Where(w=> w.EstaPreenchido()), TipoFormato.ACERVO_FOTOS);
                 
             }
             catch (Exception e)

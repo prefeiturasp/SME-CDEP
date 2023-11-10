@@ -464,7 +464,7 @@ namespace SME.CDEP.Aplicacao.Servicos
             return new LinhaConteudoAjustarRetornoDTO()
             {
                 Conteudo = linha.Conteudo, 
-                Validado = linha.PossuiErro, 
+                PossuiErro = linha.PossuiErro, 
                 Mensagem = linha.Mensagem
             };
         }

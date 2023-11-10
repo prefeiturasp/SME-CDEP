@@ -196,7 +196,7 @@ namespace SME.CDEP.Aplicacao.Servicos
         
             try
             {
-                await ValidarOuInserirConservacao(linhasComsucesso.Select(s => s.EstadoConservacao.Conteudo).Distinct());
+                await ValidarOuInserirConservacao(linhasComsucesso.Select(s => s.EstadoConservacao.Conteudo).Distinct().Where(w=> w.EstaPreenchido()));
                 
             }
             catch (Exception e)
@@ -281,13 +281,11 @@ namespace SME.CDEP.Aplicacao.Servicos
                         {
                             Conteudo = planilha.ObterValorDaCelula(numeroLinha, Constantes.ACERVO_TRIDIMENSIONAL_CAMPO_PROFUNDIDADE),
                             LimiteCaracteres = Constantes.CARACTERES_PERMITIDOS_500,
-                            EhCampoObrigatorio = true
                         },
                         Diametro = new LinhaConteudoAjustarDTO()
                         {
                             Conteudo = planilha.ObterValorDaCelula(numeroLinha, Constantes.ACERVO_TRIDIMENSIONAL_CAMPO_DIAMETRO),
                             LimiteCaracteres = Constantes.CARACTERES_PERMITIDOS_500,
-                            EhCampoObrigatorio = true
                         }
                     });
                 }
