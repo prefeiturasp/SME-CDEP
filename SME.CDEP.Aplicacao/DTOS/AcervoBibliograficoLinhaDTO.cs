@@ -2,7 +2,7 @@
 
 namespace SME.CDEP.Aplicacao.DTOS;
 
-public class AcervoBibliograficoLinhaDTO: LinhaDTO
+public class AcervoBibliograficoLinhaDTO: AcervoLinhaDTO
 {
     public LinhaConteudoAjustarDTO Titulo { get; set; }
     public LinhaConteudoAjustarDTO SubTitulo { get; set; }
@@ -25,8 +25,33 @@ public class AcervoBibliograficoLinhaDTO: LinhaDTO
     public LinhaConteudoAjustarDTO NotasGerais { get; set; }
     public LinhaConteudoAjustarDTO Isbn { get; set; }
     public LinhaConteudoAjustarDTO Tombo { get; set; }
-    public ImportacaoStatus Status { get; set; }
-    public string Mensagem { get; set; }
-    public int NumeroLinha { get; set; }
-    public bool PossuiErros { get; set; }
+
+    public void DefinirLinhaComoSucesso()
+    {
+        PossuiErros = false;
+        Mensagem = string.Empty;
+        Status = ImportacaoStatus.Sucesso;
+
+        Titulo.DefinirComoSucesso();
+        SubTitulo.DefinirComoSucesso();
+        Material.DefinirComoSucesso();
+        Autor.DefinirComoSucesso();
+        CoAutor.DefinirComoSucesso();
+        TipoAutoria.DefinirComoSucesso();
+        Editora.DefinirComoSucesso();
+        Assunto.DefinirComoSucesso();
+        Ano.DefinirComoSucesso();
+        Edicao.DefinirComoSucesso();
+        NumeroPaginas.DefinirComoSucesso();
+        Altura.DefinirComoSucesso();
+        Largura.DefinirComoSucesso();
+        SerieColecao.DefinirComoSucesso();
+        Volume.DefinirComoSucesso();
+        Idioma.DefinirComoSucesso();
+        LocalizacaoCDD.DefinirComoSucesso();
+        LocalizacaoPHA.DefinirComoSucesso();
+        NotasGerais.DefinirComoSucesso();
+        Isbn.DefinirComoSucesso();
+        Tombo.DefinirComoSucesso();
+    }
 }

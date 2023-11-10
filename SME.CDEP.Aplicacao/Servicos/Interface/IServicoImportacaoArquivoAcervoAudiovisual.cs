@@ -12,5 +12,7 @@ namespace SME.CDEP.Aplicacao.Servicos.Interface
         Task ValidacaoObterOuInserirDominios(IEnumerable<AcervoAudiovisualLinhaDTO> linhas);
         void DefinirCreditosAutores(List<IdNomeTipoDTO> creditosAutores);
         Task<ImportacaoArquivoRetornoDTO<AcervoAudiovisualLinhaRetornoDTO>> ObterImportacaoPendente();
+        Task<bool> RemoverLinhaDoArquivo(long id, int linhaDoArquivo);
+        Task<bool> AtualizarLinhaParaSucesso(long id, int linhaDoArquivo);
     }
 }

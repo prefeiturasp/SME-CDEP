@@ -56,9 +56,6 @@ namespace SME.CDEP.Infra.Servicos.ServicoArmazenamento
 
             await minioClient.PutObjectAsync(args);
 
-            // if (bucket.Equals(configuracaoArmazenamentoOptions.BucketArquivos))
-            //     await OtimizarArquivos(nomeArquivo);
-
             return await ObterUrl(nomeArquivo, bucket);
         }
 
@@ -88,21 +85,10 @@ namespace SME.CDEP.Infra.Servicos.ServicoArmazenamento
                 await Copiar(nomeArquivo);
 
                 await Excluir(nomeArquivo, configuracaoArmazenamentoOptions.BucketTemp);
-                
-                // await OtimizarArquivos(nomeArquivo);
             }
 
             return $"{configuracaoArmazenamentoOptions.BucketArquivos}/{nomeArquivo}";
         }
-
-        // private async Task OtimizarArquivos(string nomeArquivo)
-        // {
-        //     if (nomeArquivo.EhArquivoImagemParaOtimizar())
-        //     {
-        //         var nomeFila = RotasRabbitSgp.OtimizarArquivoImagem;
-        //         await servicoMensageria.Enviar(nomeArquivo, nomeFila, ExchangeRabbit.Sgp);
-        //     }
-        // }
 
         public async Task<bool> Excluir(string nomeArquivo, string nomeBucket = "")
         {
@@ -142,8 +128,7 @@ namespace SME.CDEP.Infra.Servicos.ServicoArmazenamento
         private async Task<string> ObterUrl(string nomeArquivo, string bucketName)
         {
             var hostAplicacao = configuration["UrlFrontEnd"];
-            // return $"{hostAplicacao}{bucketName}/{nomeArquivo}";
-            return $"https://dev-arquivos.sme.prefeitura.sp.gov.br/{bucketName}/{nomeArquivo}";
+            return $"{hostAplicacao}{bucketName}/{nomeArquivo}";
         }
     }
 }

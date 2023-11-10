@@ -2,7 +2,7 @@
 
 namespace SME.CDEP.Aplicacao.DTOS;
 
-public class AcervoAudiovisualLinhaDTO: LinhaDTO
+public class AcervoAudiovisualLinhaDTO: AcervoLinhaDTO
 {
     public LinhaConteudoAjustarDTO Titulo { get; set; }
     public LinhaConteudoAjustarDTO Tombo { get; set; }
@@ -20,8 +20,27 @@ public class AcervoAudiovisualLinhaDTO: LinhaDTO
     public LinhaConteudoAjustarDTO TamanhoArquivo { get; set; }
     public LinhaConteudoAjustarDTO Acessibilidade { get; set; }
     public LinhaConteudoAjustarDTO Disponibilizacao { get; set; }
-    public ImportacaoStatus Status { get; set; }
-    public string Mensagem { get; set; }
-    public int NumeroLinha { get; set; }
-    public bool PossuiErros { get; set; }
+
+    public void DefinirLinhaComoSucesso()
+    {
+        PossuiErros = false;
+        Mensagem = string.Empty;
+        Status = ImportacaoStatus.Sucesso;
+
+        Titulo.DefinirComoSucesso();
+        Tombo.DefinirComoSucesso();
+        Credito.DefinirComoSucesso();
+        Localizacao.DefinirComoSucesso();
+        Procedencia.DefinirComoSucesso();
+        Data.DefinirComoSucesso();
+        Copia.DefinirComoSucesso();
+        AutorizacaoUsoDeImagem.DefinirComoSucesso();
+        EstadoConservacao.DefinirComoSucesso();
+        Descricao.DefinirComoSucesso();
+        Suporte.DefinirComoSucesso();
+        Cromia.DefinirComoSucesso();
+        TamanhoArquivo.DefinirComoSucesso();
+        Acessibilidade.DefinirComoSucesso();
+        Disponibilizacao.DefinirComoSucesso();
+    }
 }

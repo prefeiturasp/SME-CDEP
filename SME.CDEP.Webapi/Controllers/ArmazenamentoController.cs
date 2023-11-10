@@ -35,7 +35,7 @@ public class ArmazenamentoController: BaseController
         return File(arquivo, contentType, nomeArquivo);
     }
     
-    [HttpPost("TipoArquivo")]
+    [HttpPost("upload/tipo-arquivo")]
     [ProducesResponseType(200)]
     [ProducesResponseType(401)]
     [ProducesResponseType(typeof(RetornoBaseDTO), 500)]
@@ -45,7 +45,7 @@ public class ArmazenamentoController: BaseController
         return Ok(await servicoUploadArquivo.Upload(file,tipoArquivo));
     }
     
-    [HttpGet("TipoAcervo")]
+    [HttpGet("download/tipo-acervo")]
     [ProducesResponseType(200)]
     [ProducesResponseType(401)]
     [ProducesResponseType(typeof(RetornoBaseDTO), 500)]

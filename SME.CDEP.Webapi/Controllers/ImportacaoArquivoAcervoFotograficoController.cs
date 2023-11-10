@@ -32,4 +32,26 @@ public class ImportacaoArquivoAcervoFotograficoController: BaseController
     {
         return Ok(await servicoImportacaoArquivoAcervoFotografico.ObterImportacaoPendente());
     }
+    
+    [HttpPut("{Id}")]
+    [ProducesResponseType(typeof(bool), 200)]
+    [ProducesResponseType(typeof(RetornoBaseDTO), 400)]
+    [ProducesResponseType(typeof(RetornoBaseDTO), 403)]
+    [ProducesResponseType(typeof(RetornoBaseDTO), 601)]
+    [Permissao(Policy = "Bearer")]
+    public async Task<IActionResult> RemoverLinhaDoArquivo([FromRoute] long id, [FromBody] int linhaDoArquivo, [FromServices] IServicoImportacaoArquivoAcervoFotografico servicoImportacaoArquivoAcervoFotografico)
+    {
+        return Ok(await servicoImportacaoArquivoAcervoFotografico.RemoverLinhaDoArquivo(id, linhaDoArquivo));
+    }
+    
+    [HttpPut("atualizar-linha/{id}/sucesso")]
+    [ProducesResponseType(typeof(bool), 200)]
+    [ProducesResponseType(typeof(RetornoBaseDTO), 400)]
+    [ProducesResponseType(typeof(RetornoBaseDTO), 403)]
+    [ProducesResponseType(typeof(RetornoBaseDTO), 601)]
+    [Permissao(Policy = "Bearer")]
+    public async Task<IActionResult> AtualizarLinhaParaSucesso([FromRoute] long id, [FromBody] int linhaDoArquivo, [FromServices] IServicoImportacaoArquivoAcervoFotografico servicoImportacaoArquivoAcervoFotografico)
+    {
+        return Ok(await servicoImportacaoArquivoAcervoFotografico.AtualizarLinhaParaSucesso(id,linhaDoArquivo));
+    }
 }

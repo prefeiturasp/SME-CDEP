@@ -1,5 +1,4 @@
-﻿using AutoMapper;
-using ClosedXML.Excel;
+﻿using ClosedXML.Excel;
 using Microsoft.AspNetCore.Http;
 using Newtonsoft.Json;
 using SME.CDEP.Aplicacao.DTOS;
@@ -36,6 +35,27 @@ namespace SME.CDEP.Aplicacao.Servicos
             var arquivoImportado = await repositorioImportacaoArquivo.ObterUltimaImportacao(TipoAcervo.ArtesGraficas);
 
             return ObterRetornoImportacaoAcervo(arquivoImportado, JsonConvert.DeserializeObject<IEnumerable<AcervoArteGraficaLinhaDTO>>(arquivoImportado.Conteudo));
+        }
+
+        public async Task<bool> RemoverLinhaDoArquivo(long id, int linhaDoArquivo)
+        {
+            await RemoverLinhaDoArquivo<AcervoArteGraficaLinhaDTO>(id, linhaDoArquivo, TipoAcervo.ArtesGraficas);
+
+            return true;
+        }
+        
+        public async Task<bool> AtualizarLinhaParaSucesso(long id, int linhaDoArquivo)
+        {
+            var conteudo = await ValidacoesImportacaoArquivo<AcervoArteGraficaLinhaDTO>(id, linhaDoArquivo, TipoAcervo.ArtesGraficas);
+            
+            var novoConteudo = conteudo.FirstOrDefault(w => w.NumeroLinha.SaoIguais(linhaDoArquivo));
+            novoConteudo.DefinirLinhaComoSucesso();
+
+            var status = conteudo.Any(a => a.PossuiErros) ? ImportacaoStatus.Erros : ImportacaoStatus.Sucesso;
+            
+            await AtualizarImportacao(id,JsonConvert.SerializeObject(conteudo), status);
+
+            return true;
         }
 
         public async Task<ImportacaoArquivoRetornoDTO<AcervoArteGraficaLinhaRetornoDTO>> ImportarArquivo(IFormFile file)
@@ -135,15 +155,11 @@ namespace SME.CDEP.Aplicacao.Servicos
                     };
                     await servicoAcervoArteGrafica.Inserir(acervoArteGrafica);
 
-                    acervoArteGraficaLinha.Status = ImportacaoStatus.Sucesso;
-                    acervoArteGraficaLinha.Mensagem = string.Empty;
-                    acervoArteGraficaLinha.PossuiErros = false;
+                    acervoArteGraficaLinha.DefinirLinhaComoSucesso();
                 }
                 catch (Exception ex)
                 {
-                    acervoArteGraficaLinha.PossuiErros = true;
-                    acervoArteGraficaLinha.Status = ImportacaoStatus.Erros;
-                    acervoArteGraficaLinha.Mensagem = ex.Message;
+                    acervoArteGraficaLinha.DefinirLinhaComoErro(ex.Message);
                 }
             }
         } 
@@ -154,30 +170,28 @@ namespace SME.CDEP.Aplicacao.Servicos
             {
                 try
                 {
-                    ValidarPreenchimentoLimiteCaracteres(linha.Titulo, Constantes.TITULO, linha.NumeroLinha);
-                    ValidarPreenchimentoLimiteCaracteres(linha.Tombo, Constantes.TOMBO, linha.NumeroLinha);
-                    ValidarPreenchimentoLimiteCaracteres(linha.Credito, Constantes.CREDITO, linha.NumeroLinha);
-                    ValidarPreenchimentoLimiteCaracteres(linha.Localizacao,Constantes.LOCALIZACAO, linha.NumeroLinha);
-                    ValidarPreenchimentoLimiteCaracteres(linha.Procedencia,Constantes.PROCEDENCIA, linha.NumeroLinha);
-                    ValidarPreenchimentoLimiteCaracteres(linha.Data,Constantes.DATA, linha.NumeroLinha);
-                    ValidarPreenchimentoLimiteCaracteres(linha.CopiaDigital,Constantes.COPIA_DIGITAL, linha.NumeroLinha);
-                    ValidarPreenchimentoLimiteCaracteres(linha.AutorizacaoUsoDeImagem,Constantes.AUTORIZACAO_USO_DE_IMAGEM, linha.NumeroLinha);
-                    ValidarPreenchimentoLimiteCaracteres(linha.EstadoConservacao,Constantes.ESTADO_CONSERVACAO, linha.NumeroLinha);
-                    ValidarPreenchimentoLimiteCaracteres(linha.Cromia,Constantes.CROMIA, linha.NumeroLinha);
-                    ValidarPreenchimentoLimiteCaracteres(linha.Largura,Constantes.LARGURA, linha.NumeroLinha);
-                    ValidarPreenchimentoLimiteCaracteres(linha.Altura,Constantes.ALTURA, linha.NumeroLinha);
-                    ValidarPreenchimentoLimiteCaracteres(linha.Diametro,Constantes.DIAMETRO, linha.NumeroLinha);
-                    ValidarPreenchimentoLimiteCaracteres(linha.Tecnica,Constantes.TECNICA, linha.NumeroLinha);
-                    ValidarPreenchimentoLimiteCaracteres(linha.Suporte,Constantes.SUPORTE, linha.NumeroLinha);
-                    ValidarPreenchimentoLimiteCaracteres(linha.Quantidade,Constantes.QUANTIDADE, linha.NumeroLinha);
-                    ValidarPreenchimentoLimiteCaracteres(linha.Descricao,Constantes.DESCRICAO, linha.NumeroLinha);
+                    ValidarPreenchimentoLimiteCaracteres(linha.Titulo, Constantes.TITULO);
+                    ValidarPreenchimentoLimiteCaracteres(linha.Tombo, Constantes.TOMBO);
+                    ValidarPreenchimentoLimiteCaracteres(linha.Credito, Constantes.CREDITO);
+                    ValidarPreenchimentoLimiteCaracteres(linha.Localizacao,Constantes.LOCALIZACAO);
+                    ValidarPreenchimentoLimiteCaracteres(linha.Procedencia,Constantes.PROCEDENCIA);
+                    ValidarPreenchimentoLimiteCaracteres(linha.Data,Constantes.DATA);
+                    ValidarPreenchimentoLimiteCaracteres(linha.CopiaDigital,Constantes.COPIA_DIGITAL);
+                    ValidarPreenchimentoLimiteCaracteres(linha.AutorizacaoUsoDeImagem,Constantes.AUTORIZACAO_USO_DE_IMAGEM);
+                    ValidarPreenchimentoLimiteCaracteres(linha.EstadoConservacao,Constantes.ESTADO_CONSERVACAO);
+                    ValidarPreenchimentoLimiteCaracteres(linha.Cromia,Constantes.CROMIA);
+                    ValidarPreenchimentoLimiteCaracteres(linha.Largura,Constantes.LARGURA);
+                    ValidarPreenchimentoLimiteCaracteres(linha.Altura,Constantes.ALTURA);
+                    ValidarPreenchimentoLimiteCaracteres(linha.Diametro,Constantes.DIAMETRO);
+                    ValidarPreenchimentoLimiteCaracteres(linha.Tecnica,Constantes.TECNICA);
+                    ValidarPreenchimentoLimiteCaracteres(linha.Suporte,Constantes.SUPORTE);
+                    ValidarPreenchimentoLimiteCaracteres(linha.Quantidade,Constantes.QUANTIDADE);
+                    ValidarPreenchimentoLimiteCaracteres(linha.Descricao,Constantes.DESCRICAO);
                     linha.PossuiErros = PossuiErro(linha);
                 }
                 catch (Exception e)
                 {
-                    linha.PossuiErros = true;
-                    linha.Status = ImportacaoStatus.Erros;
-                    linha.Mensagem = string.Format(Constantes.OCORREU_UMA_FALHA_INESPERADA_NA_LINHA_X_MOTIVO_Y, linha.NumeroLinha, e.Message);
+                    linha.DefinirLinhaComoErro(string.Format(Constantes.OCORREU_UMA_FALHA_INESPERADA_NA_LINHA_X_MOTIVO_Y, linha.NumeroLinha, e.Message));
                 }
             }
         }
@@ -221,11 +235,7 @@ namespace SME.CDEP.Aplicacao.Servicos
             catch (Exception e)
             {
                 foreach (var linha in linhas)
-                {
-                    linha.PossuiErros = true;
-                    linha.Status = ImportacaoStatus.Erros;
-                    linha.Mensagem = string.Format(Constantes.OCORREU_UMA_FALHA_INESPERADA_NO_CADASTRO_DAS_REFERENCIAS_MOTIVO_X, e.Message);
-                }
+                    linha.DefinirLinhaComoErro(string.Format(Constantes.OCORREU_UMA_FALHA_INESPERADA_NO_CADASTRO_DAS_REFERENCIAS_MOTIVO_X, e.Message));
             }
         }
 

@@ -2,7 +2,7 @@
 
 namespace SME.CDEP.Aplicacao.DTOS;
 
-public class AcervoFotograficoLinhaDTO: LinhaDTO
+public class AcervoFotograficoLinhaDTO: AcervoLinhaDTO
 {
     public LinhaConteudoAjustarDTO Titulo { get; set; }
     public LinhaConteudoAjustarDTO Tombo { get; set; }
@@ -22,8 +22,30 @@ public class AcervoFotograficoLinhaDTO: LinhaDTO
     public LinhaConteudoAjustarDTO TamanhoArquivo { get; set; }
     public LinhaConteudoAjustarDTO Cromia { get; set; }
     public LinhaConteudoAjustarDTO Resolucao { get; set; }
-    public ImportacaoStatus Status { get; set; }
-    public string Mensagem { get; set; }
-    public int NumeroLinha { get; set; }
-    public bool PossuiErros { get; set; }
+
+    public void DefinirLinhaComoSucesso()
+    {
+        PossuiErros = false;
+        Mensagem = string.Empty;
+        Status = ImportacaoStatus.Sucesso;
+
+        Titulo.DefinirComoSucesso();
+        Tombo.DefinirComoSucesso();
+        Credito.DefinirComoSucesso();
+        Localizacao.DefinirComoSucesso();
+        Procedencia.DefinirComoSucesso();
+        Data.DefinirComoSucesso();
+        CopiaDigital.DefinirComoSucesso();
+        AutorizacaoUsoDeImagem.DefinirComoSucesso();
+        EstadoConservacao.DefinirComoSucesso();
+        Descricao.DefinirComoSucesso();
+        Quantidade.DefinirComoSucesso();
+        Altura.DefinirComoSucesso();
+        Largura.DefinirComoSucesso();
+        Suporte.DefinirComoSucesso();
+        FormatoImagem.DefinirComoSucesso();
+        TamanhoArquivo.DefinirComoSucesso();
+        Cromia.DefinirComoSucesso();
+        Resolucao.DefinirComoSucesso();
+    }
 }

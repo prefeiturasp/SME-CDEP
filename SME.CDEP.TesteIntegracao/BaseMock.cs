@@ -369,7 +369,7 @@ namespace SME.CDEP.TesteIntegracao
             });
             return faker;
         }
-        
+
         protected Faker<AcervoArteGraficaLinhaDTO> GerarAcervoArteGraficaLinhaDTO()
         {
             var numeroLinhas = 1;

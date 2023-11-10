@@ -32,5 +32,10 @@ namespace SME.CDEP.Dominio.Extensions
         {
             return valor == valorAComparar; 
         }
+        
+        public static bool SaoDiferentes(this int valor, int valorAComparar)
+        {
+            return valor != valorAComparar; 
+        }
     }
 }

@@ -2,7 +2,7 @@
 
 namespace SME.CDEP.Aplicacao.DTOS;
 
-public class AcervoDocumentalLinhaDTO: LinhaDTO
+public class AcervoDocumentalLinhaDTO: AcervoLinhaDTO
 {
     public LinhaConteudoAjustarDTO Titulo { get; set; }
     public LinhaConteudoAjustarDTO CodigoAntigo { get; set; }
@@ -22,8 +22,30 @@ public class AcervoDocumentalLinhaDTO: LinhaDTO
     public LinhaConteudoAjustarDTO Localizacao { get; set; }
     public LinhaConteudoAjustarDTO CopiaDigital { get; set; }
     public LinhaConteudoAjustarDTO EstadoConservacao { get; set; }
-    public ImportacaoStatus Status { get; set; }
-    public string Mensagem { get; set; }
-    public int NumeroLinha { get; set; }
-    public bool PossuiErros { get; set; }
+
+    public void DefinirLinhaComoSucesso()
+    {
+        PossuiErros = false;
+        Mensagem = string.Empty;
+        Status = ImportacaoStatus.Sucesso;
+
+        Titulo.DefinirComoSucesso();
+        CodigoAntigo.DefinirComoSucesso();
+        CodigoNovo.DefinirComoSucesso();
+        Material.DefinirComoSucesso();
+        Idioma.DefinirComoSucesso();
+        Autor.DefinirComoSucesso();
+        Ano.DefinirComoSucesso();
+        NumeroPaginas.DefinirComoSucesso();
+        Volume.DefinirComoSucesso();
+        Descricao.DefinirComoSucesso();
+        Altura.DefinirComoSucesso();
+        Largura.DefinirComoSucesso();
+        TipoAnexo.DefinirComoSucesso();
+        TamanhoArquivo.DefinirComoSucesso();
+        AcessoDocumento.DefinirComoSucesso();
+        Localizacao.DefinirComoSucesso();
+        CopiaDigital.DefinirComoSucesso();
+        EstadoConservacao.DefinirComoSucesso();
+    }
 }

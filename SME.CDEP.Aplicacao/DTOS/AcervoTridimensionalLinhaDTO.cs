@@ -2,7 +2,7 @@
 
 namespace SME.CDEP.Aplicacao.DTOS;
 
-public class AcervoTridimensionalLinhaDTO: LinhaDTO
+public class AcervoTridimensionalLinhaDTO: AcervoLinhaDTO
 {
     public LinhaConteudoAjustarDTO Titulo { get; set; }
     public LinhaConteudoAjustarDTO Tombo { get; set; }
@@ -15,8 +15,23 @@ public class AcervoTridimensionalLinhaDTO: LinhaDTO
     public LinhaConteudoAjustarDTO Altura { get; set; }
     public LinhaConteudoAjustarDTO Profundidade { get; set; }
     public LinhaConteudoAjustarDTO Diametro { get; set; }
-    public ImportacaoStatus Status { get; set; }
-    public string Mensagem { get; set; }
-    public int NumeroLinha { get; set; }
-    public bool PossuiErros { get; set; }
+
+    public void DefinirLinhaComoSucesso()
+    {
+        PossuiErros = false;
+        Mensagem = string.Empty;
+        Status = ImportacaoStatus.Sucesso;
+
+        Titulo.DefinirComoSucesso();
+        Tombo.DefinirComoSucesso();
+        Procedencia.DefinirComoSucesso();
+        Data.DefinirComoSucesso();
+        EstadoConservacao.DefinirComoSucesso();
+        Descricao.DefinirComoSucesso();
+        Quantidade.DefinirComoSucesso();
+        Altura.DefinirComoSucesso();
+        Largura.DefinirComoSucesso();
+        Profundidade.DefinirComoSucesso();
+        Diametro.DefinirComoSucesso();
+    }
 }

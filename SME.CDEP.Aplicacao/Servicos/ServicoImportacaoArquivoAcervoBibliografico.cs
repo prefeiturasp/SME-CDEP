@@ -15,7 +15,6 @@ namespace SME.CDEP.Aplicacao.Servicos
     public class ServicoImportacaoArquivoAcervoBibliografico : ServicoImportacaoArquivoBase, IServicoImportacaoArquivoAcervoBibliografico 
     {
         private readonly IServicoAcervoBibliografico servicoAcervoBibliografico;
-        private readonly IMapper mapper;
         
         public ServicoImportacaoArquivoAcervoBibliografico(IRepositorioImportacaoArquivo repositorioImportacaoArquivo, IServicoMaterial servicoMaterial,
             IServicoEditora servicoEditora,IServicoSerieColecao servicoSerieColecao,IServicoIdioma servicoIdioma, IServicoAssunto servicoAssunto,
@@ -25,12 +24,30 @@ namespace SME.CDEP.Aplicacao.Servicos
                 servicoConservacao,servicoAcessoDocumento,servicoCromia,servicoSuporte, servicoFormato)
         {
             this.servicoAcervoBibliografico = servicoAcervoBibliografico ?? throw new ArgumentNullException(nameof(servicoAcervoBibliografico));
-            this.mapper = mapper ?? throw new ArgumentNullException(nameof(mapper));
         }
 
         public void DefinirCreditosAutores(List<IdNomeTipoDTO> creditosAutores)
         {
             CreditosAutores = creditosAutores;
+        }
+        
+        public async Task<bool> RemoverLinhaDoArquivo(long id, int linhaDoArquivo)
+        {
+            return await RemoverLinhaDoArquivo<AcervoBibliograficoLinhaDTO>(id, linhaDoArquivo, TipoAcervo.Bibliografico);
+        }
+        
+        public async Task<bool> AtualizarLinhaParaSucesso(long id, int linhaDoArquivo)
+        {
+            var conteudo = await ValidacoesImportacaoArquivo<AcervoBibliograficoLinhaDTO>(id, linhaDoArquivo, TipoAcervo.Bibliografico);
+            
+            var novoConteudo = conteudo.FirstOrDefault(w => w.NumeroLinha.SaoIguais(linhaDoArquivo));
+            novoConteudo.DefinirLinhaComoSucesso();
+
+            var status = conteudo.Any(a => a.PossuiErros) ? ImportacaoStatus.Erros : ImportacaoStatus.Sucesso;
+            
+            await AtualizarImportacao(id,JsonConvert.SerializeObject(conteudo), status);
+
+            return true;
         }
 
         public async Task<ImportacaoArquivoRetornoDTO<AcervoBibliograficoLinhaRetornoDTO>> ObterImportacaoPendente()
@@ -161,15 +178,11 @@ namespace SME.CDEP.Aplicacao.Servicos
                     };
                     await servicoAcervoBibliografico.Inserir(acervoBibliografico);
 
-                    acervoBibliograficoLinha.Status = ImportacaoStatus.Sucesso;
-                    acervoBibliograficoLinha.Mensagem = string.Empty;
-                    acervoBibliograficoLinha.PossuiErros = false;
+                    acervoBibliograficoLinha.DefinirLinhaComoSucesso();
                 }
                 catch (Exception ex)
                 {
-                    acervoBibliograficoLinha.PossuiErros = true;
-                    acervoBibliograficoLinha.Status = ImportacaoStatus.Erros;
-                    acervoBibliograficoLinha.Mensagem = ex.Message;
+                    acervoBibliograficoLinha.DefinirLinhaComoErro(ex.Message);
                 }
             }
         }
@@ -207,41 +220,39 @@ namespace SME.CDEP.Aplicacao.Servicos
             {
                 try
                 {
-                    ValidarPreenchimentoLimiteCaracteres(linha.Titulo, Constantes.TITULO, linha.NumeroLinha);
-                    ValidarPreenchimentoLimiteCaracteres(linha.SubTitulo, Constantes.SUB_TITULO, linha.NumeroLinha);
-                    ValidarPreenchimentoLimiteCaracteres(linha.Material,Constantes.MATERIAL, linha.NumeroLinha);
-                    ValidarPreenchimentoLimiteCaracteres(linha.Autor,Constantes.AUTOR, linha.NumeroLinha);
-                    ValidarPreenchimentoLimiteCaracteres(linha.CoAutor,Constantes.CO_AUTOR, linha.NumeroLinha);
-                    ValidarPreenchimentoLimiteCaracteres(linha.TipoAutoria,Constantes.TIPO_AUTORIA, linha.NumeroLinha);
+                    ValidarPreenchimentoLimiteCaracteres(linha.Titulo, Constantes.TITULO);
+                    ValidarPreenchimentoLimiteCaracteres(linha.SubTitulo, Constantes.SUB_TITULO);
+                    ValidarPreenchimentoLimiteCaracteres(linha.Material,Constantes.MATERIAL);
+                    ValidarPreenchimentoLimiteCaracteres(linha.Autor,Constantes.AUTOR);
+                    ValidarPreenchimentoLimiteCaracteres(linha.CoAutor,Constantes.CO_AUTOR);
+                    ValidarPreenchimentoLimiteCaracteres(linha.TipoAutoria,Constantes.TIPO_AUTORIA);
                     
                     if (linha.TipoAutoria.Conteudo.EstaPreenchido() && linha.CoAutor.Conteudo.NaoEstaPreenchido())
-                        DefinirMensagemErro(linha.TipoAutoria, Constantes.CAMPO_COAUTOR_SEM_PREENCHIMENTO_E_TIPO_AUTORIA_PREENCHIDO, linha.NumeroLinha);
+                        DefinirMensagemErro(linha.TipoAutoria, Constantes.CAMPO_COAUTOR_SEM_PREENCHIMENTO_E_TIPO_AUTORIA_PREENCHIDO);
 
                     if (linha.TipoAutoria.Conteudo.SplitPipe().Count() > linha.CoAutor.Conteudo.SplitPipe().Count())
-                        DefinirMensagemErro(linha.TipoAutoria, Constantes.TEMOS_MAIS_TIPO_AUTORIA_QUE_COAUTORES, linha.NumeroLinha);
+                        DefinirMensagemErro(linha.TipoAutoria, Constantes.TEMOS_MAIS_TIPO_AUTORIA_QUE_COAUTORES);
                     
-                    ValidarPreenchimentoLimiteCaracteres(linha.Editora,Constantes.EDITORA, linha.NumeroLinha);
-                    ValidarPreenchimentoLimiteCaracteres(linha.Assunto,Constantes.ASSUNTO, linha.NumeroLinha);
-                    ValidarPreenchimentoLimiteCaracteres(linha.Ano,Constantes.ANO, linha.NumeroLinha);
-                    ValidarPreenchimentoLimiteCaracteres(linha.Edicao,Constantes.EDICAO, linha.NumeroLinha);
-                    ValidarPreenchimentoLimiteCaracteres(linha.NumeroPaginas,Constantes.NUMERO_PAGINAS, linha.NumeroLinha);
-                    ValidarPreenchimentoLimiteCaracteres(linha.Largura,Constantes.LARGURA, linha.NumeroLinha);
-                    ValidarPreenchimentoLimiteCaracteres(linha.Altura,Constantes.ALTURA, linha.NumeroLinha);
-                    ValidarPreenchimentoLimiteCaracteres(linha.SerieColecao,Constantes.SERIE_COLECAO, linha.NumeroLinha);
-                    ValidarPreenchimentoLimiteCaracteres(linha.Volume,Constantes.VOLUME, linha.NumeroLinha);
-                    ValidarPreenchimentoLimiteCaracteres(linha.Idioma,Constantes.IDIOMA, linha.NumeroLinha);
-                    ValidarPreenchimentoLimiteCaracteres(linha.LocalizacaoCDD,Constantes.LOCALIZACAO_CDD, linha.NumeroLinha);
-                    ValidarPreenchimentoLimiteCaracteres(linha.LocalizacaoPHA,Constantes.LOCALIZACAO_PHA, linha.NumeroLinha);
-                    ValidarPreenchimentoLimiteCaracteres(linha.NotasGerais,Constantes.NOTAS_GERAIS, linha.NumeroLinha);
-                    ValidarPreenchimentoLimiteCaracteres(linha.Isbn,Constantes.ISBN, linha.NumeroLinha);
-                    ValidarPreenchimentoLimiteCaracteres(linha.Tombo,Constantes.TOMBO, linha.NumeroLinha);
+                    ValidarPreenchimentoLimiteCaracteres(linha.Editora,Constantes.EDITORA);
+                    ValidarPreenchimentoLimiteCaracteres(linha.Assunto,Constantes.ASSUNTO);
+                    ValidarPreenchimentoLimiteCaracteres(linha.Ano,Constantes.ANO);
+                    ValidarPreenchimentoLimiteCaracteres(linha.Edicao,Constantes.EDICAO);
+                    ValidarPreenchimentoLimiteCaracteres(linha.NumeroPaginas,Constantes.NUMERO_PAGINAS);
+                    ValidarPreenchimentoLimiteCaracteres(linha.Largura,Constantes.LARGURA);
+                    ValidarPreenchimentoLimiteCaracteres(linha.Altura,Constantes.ALTURA);
+                    ValidarPreenchimentoLimiteCaracteres(linha.SerieColecao,Constantes.SERIE_COLECAO);
+                    ValidarPreenchimentoLimiteCaracteres(linha.Volume,Constantes.VOLUME);
+                    ValidarPreenchimentoLimiteCaracteres(linha.Idioma,Constantes.IDIOMA);
+                    ValidarPreenchimentoLimiteCaracteres(linha.LocalizacaoCDD,Constantes.LOCALIZACAO_CDD);
+                    ValidarPreenchimentoLimiteCaracteres(linha.LocalizacaoPHA,Constantes.LOCALIZACAO_PHA);
+                    ValidarPreenchimentoLimiteCaracteres(linha.NotasGerais,Constantes.NOTAS_GERAIS);
+                    ValidarPreenchimentoLimiteCaracteres(linha.Isbn,Constantes.ISBN);
+                    ValidarPreenchimentoLimiteCaracteres(linha.Tombo,Constantes.TOMBO);
                     linha.PossuiErros = PossuiErro(linha);
                 }
                 catch (Exception e)
                 {
-                    linha.PossuiErros = true;
-                    linha.Status = ImportacaoStatus.Erros;
-                    linha.Mensagem = string.Format(Constantes.OCORREU_UMA_FALHA_INESPERADA_NA_LINHA_X_MOTIVO_Y, linha.NumeroLinha, e.Message);
+                    linha.DefinirLinhaComoErro(string.Format(Constantes.OCORREU_UMA_FALHA_INESPERADA_NA_LINHA_X_MOTIVO_Y, e.Message));
                 }
             }
         }
@@ -294,11 +305,7 @@ namespace SME.CDEP.Aplicacao.Servicos
             catch (Exception e)
             {
                 foreach (var linha in linhas)
-                {
-                    linha.PossuiErros = true;
-                    linha.Status = ImportacaoStatus.Erros;
-                    linha.Mensagem = string.Format(Constantes.OCORREU_UMA_FALHA_INESPERADA_NO_CADASTRO_DAS_REFERENCIAS_MOTIVO_X, e.Message);
-                }
+                    linha.DefinirLinhaComoErro(string.Format(Constantes.OCORREU_UMA_FALHA_INESPERADA_NO_CADASTRO_DAS_REFERENCIAS_MOTIVO_X, e.Message));
             }
         }
 
