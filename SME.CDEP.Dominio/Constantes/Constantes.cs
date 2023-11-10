@@ -2,6 +2,8 @@
 
 public class Constantes
 {
+    public const string TRIDIMENSIONAL = "Tridimensional";
+    
     public const string OPCAO_SIM = "sim";
     public const string OPCAO_NAO = "não";
     
@@ -75,6 +77,7 @@ public class Constantes
     public const string ESSE_ARQUIVO_NAO_EH_ACERVO_X = "Esse arquivo não é do Acervo {0}";
     public const string A_LINHA_INFORMADA_NAO_EXISTE_NO_ARQUIVO = "Essa linha não existe no arquivo";
     public const string NAO_EH_POSSIVEL_EXCLUIR_A_UNICA_LINHA_DO_ARQUIVO = "Não foi possível excluir a linha, pois a única linha do arquivo foi removida e agora o conteúdo do arquivo está vazio";
+    public const string A_PLANLHA_DE_ACERVO_X_NAO_TEM_O_NOME_DA_COLUNA_Y_NA_COLUNA_Z = "A planilha do acervo '{0}' deveria apresentar o nome '{1}' na coluna '{2}', conforme previsto";
     
     public const char PIPE = '|';
     public const int INICIO_LINHA_TITULO = 1;
@@ -187,11 +190,17 @@ public class Constantes
     public const int ACERVO_TRIDIMENSIONAL_CAMPO_PROFUNDIDADE = 10;
     public const int ACERVO_TRIDIMENSIONAL_CAMPO_DIAMETRO = 11;
     
-    public const int ACERVO_TRIDIMENSIONAL_CAMPO_SUPORTE = 14;
-    public const int ACERVO_TRIDIMENSIONAL_CAMPO_FORMATO_IMAGEM = 15;
-    public const int ACERVO_TRIDIMENSIONAL_CAMPO_TAMANHO_ARQUIVO = 16;
-    public const int ACERVO_TRIDIMENSIONAL_CAMPO_CROMIA = 17;
-    public const int ACERVO_TRIDIMENSIONAL_CAMPO_RESOLUCAO = 18;
+    public const string NOME_DA_COLUNA_TITULO = "TÍTULO";
+    public const string NOME_DA_COLUNA_TOMBO = "TOMBO";
+    public const string NOME_DA_COLUNA_PROCEDENCIA = "PROCEDÊNCIA";
+    public const string NOME_DA_COLUNA_DATA = "DATA";
+    public const string NOME_DA_COLUNA_ESTADO_DE_CONSERVACAO = "ESTADO DE CONSERVAÇÃO";
+    public const string NOME_DA_COLUNA_QUANTIDADE = "QUANTIDADE";
+    public const string NOME_DA_COLUNA_DESCRICAO = "DESCRIÇÃO";
+    public const string NOME_DA_COLUNA_DIMENSAO_LARGURA = "DIMENSÃO LARGURA (CM)";
+    public const string NOME_DA_COLUNA_DIMENSAO_ALTURA = "DIMENSÃO ALTURA (CM)";
+    public const string NOME_DA_COLUNA_DIMENSAO_PROFUNDIDADE = "DIMENSÃO PROFUNDIDADE (CM)";
+    public const string NOME_DA_COLUNA_DIMENSAO_DIAMETRO = "DIMENSÃO DIÂMETRO (CM)";
     
     public const string ContentTypeExcel = "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet";
     public const string BUCKET_CDEP = "cdep";
