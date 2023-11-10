@@ -22,4 +22,30 @@ public class AcervoFotograficoLinhaDTO: AcervoLinhaDTO
     public LinhaConteudoAjustarDTO TamanhoArquivo { get; set; }
     public LinhaConteudoAjustarDTO Cromia { get; set; }
     public LinhaConteudoAjustarDTO Resolucao { get; set; }
+
+    public void DefinirLinhaComoSucesso()
+    {
+        PossuiErros = false;
+        Mensagem = string.Empty;
+        Status = ImportacaoStatus.Sucesso;
+
+        Titulo.DefinirComoSucesso();
+        Tombo.DefinirComoSucesso();
+        Credito.DefinirComoSucesso();
+        Localizacao.DefinirComoSucesso();
+        Procedencia.DefinirComoSucesso();
+        Data.DefinirComoSucesso();
+        CopiaDigital.DefinirComoSucesso();
+        AutorizacaoUsoDeImagem.DefinirComoSucesso();
+        EstadoConservacao.DefinirComoSucesso();
+        Descricao.DefinirComoSucesso();
+        Quantidade.DefinirComoSucesso();
+        Altura.DefinirComoSucesso();
+        Largura.DefinirComoSucesso();
+        Suporte.DefinirComoSucesso();
+        FormatoImagem.DefinirComoSucesso();
+        TamanhoArquivo.DefinirComoSucesso();
+        Cromia.DefinirComoSucesso();
+        Resolucao.DefinirComoSucesso();
+    }
 }

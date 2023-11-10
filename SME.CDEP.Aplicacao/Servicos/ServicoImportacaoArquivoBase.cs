@@ -280,7 +280,7 @@ namespace SME.CDEP.Aplicacao.Servicos
             CreditosAutores.Add(new IdNomeTipoDTO() { Id = id, Nome = nome, Tipo = (int)tipoCreditoAutoria});
         }
 
-        public void ValidarPreenchimentoLimiteCaracteres(LinhaConteudoAjustarDTO campo, string nomeCampo, int numeroLinha)
+        public void ValidarPreenchimentoLimiteCaracteres(LinhaConteudoAjustarDTO campo, string nomeCampo)
         {
             var conteudoCampo = campo.Conteudo.Trim();
             
@@ -295,7 +295,7 @@ namespace SME.CDEP.Aplicacao.Servicos
                             DefinirCampoValidado(campo);
                         else
                         {
-                            DefinirMensagemErro(campo, string.Format(Constantes.CAMPO_X_ATINGIU_LIMITE_CARACTERES, nomeCampo),numeroLinha);
+                            DefinirMensagemErro(campo, string.Format(Constantes.CAMPO_X_ATINGIU_LIMITE_CARACTERES, nomeCampo));
                             break;
                         }
                     }
@@ -305,33 +305,33 @@ namespace SME.CDEP.Aplicacao.Servicos
                     if (double.TryParse(conteudoCampo, out double formatoDouble))
                         DefinirCampoValidado(campo);
                     else
-                        DefinirMensagemErro(campo, string.Format(Constantes.CAMPO_X_REQUER_UM_VALOR_NUMERICO, nomeCampo),numeroLinha);  
+                        DefinirMensagemErro(campo, string.Format(Constantes.CAMPO_X_REQUER_UM_VALOR_NUMERICO, nomeCampo));  
                 }
                 else if (campo.FormatoTipoDeCampo.EhFormatoInteiro())
                 {
                     if (int.TryParse(conteudoCampo, out int formatoInteiro))
                         DefinirCampoValidado(campo);
                     else
-                        DefinirMensagemErro(campo, string.Format(Constantes.CAMPO_X_REQUER_UM_VALOR_NUMERICO, nomeCampo),numeroLinha);  
+                        DefinirMensagemErro(campo, string.Format(Constantes.CAMPO_X_REQUER_UM_VALOR_NUMERICO, nomeCampo));  
                 }
                 else if (campo.FormatoTipoDeCampo.EhFormatoLongo())
                 {
                     if (long.TryParse(conteudoCampo, out long formatoInteiro))
                         DefinirCampoValidado(campo);
                     else
-                        DefinirMensagemErro(campo, string.Format(Constantes.CAMPO_X_REQUER_UM_VALOR_NUMERICO, nomeCampo),numeroLinha);  
+                        DefinirMensagemErro(campo, string.Format(Constantes.CAMPO_X_REQUER_UM_VALOR_NUMERICO, nomeCampo));  
                 }
             }
             else
             {
                 if (campo.EhCampoObrigatorio)
-                    DefinirMensagemErro(campo, string.Format(Constantes.CAMPO_X_NAO_PREENCHIDO, nomeCampo),numeroLinha);
+                    DefinirMensagemErro(campo, string.Format(Constantes.CAMPO_X_NAO_PREENCHIDO, nomeCampo));
                 else
                     DefinirCampoValidado(campo);
             }
         }
 
-        protected void DefinirMensagemErro(LinhaConteudoAjustarDTO campo, string mensagemErro, int numeroLinha)
+        protected void DefinirMensagemErro(LinhaConteudoAjustarDTO campo, string mensagemErro)
         {
             campo.PossuiErro = true;
             campo.Mensagem = mensagemErro;
@@ -609,15 +609,8 @@ namespace SME.CDEP.Aplicacao.Servicos
         
         public async Task<bool> RemoverLinhaDoArquivo<T>(long id, int linhaDoArquivo, TipoAcervo tipoAcervoEsperado) where T: AcervoLinhaDTO
         {
-            var arquivo = await ObterImportacaoArquivoPorIdComValidacoes(id, tipoAcervoEsperado);
+            var conteudo = await ValidacoesImportacaoArquivo<T>(id, linhaDoArquivo, tipoAcervoEsperado);
             
-            var conteudo = JsonConvert.DeserializeObject<IEnumerable<T>>(arquivo.Conteudo);
-
-            var existeLinha = conteudo.Any(w => w.NumeroLinha.SaoIguais(linhaDoArquivo));
-
-            if (!existeLinha)
-                throw new NegocioException(Constantes.A_LINHA_INFORMADA_NAO_EXISTE_NO_ARQUIVO);
-
             var novoConteudo = conteudo.Where(w => w.NumeroLinha.SaoDiferentes(linhaDoArquivo));
 
             if (!novoConteudo.Any())
@@ -626,6 +619,42 @@ namespace SME.CDEP.Aplicacao.Servicos
             await AtualizarImportacao(id, JsonConvert.SerializeObject(novoConteudo));
 
             return true;
+        }
+
+        public async Task<bool> Remover(long id)
+        {
+            await repositorioImportacaoArquivo.Remover(id);
+            return true;
+        }
+        
+        // public async Task<bool> AtualizarLinhaParaSucesso<T>(long id, int linhaDoArquivo, TipoAcervo tipoAcervoEsperado) where T: AcervoLinhaDTO
+        // {
+        //     var conteudo = await ValidacoesImportacaoArquivo<T>(id, linhaDoArquivo, tipoAcervoEsperado);
+        //     
+        //     var novoConteudo = conteudo.FirstOrDefault(w => w.NumeroLinha.SaoIguais(linhaDoArquivo));
+        //     novoConteudo.PossuiErros = false;
+        //     novoConteudo.Mensagem = string.Empty;
+        //
+        //     
+        //     novoConteudo.Status = ImportacaoStatus.Sucesso;
+        //
+        //     await AtualizarImportacao(id, JsonConvert.SerializeObject(novoConteudo));
+        //
+        //     return true;
+        // }
+
+        public async Task<IEnumerable<T>> ValidacoesImportacaoArquivo<T>(long id, int linhaDoArquivo, TipoAcervo tipoAcervoEsperado) where T : AcervoLinhaDTO
+        {
+            var arquivo = await ObterImportacaoArquivoPorIdComValidacoes(id, tipoAcervoEsperado);
+
+            var conteudo = JsonConvert.DeserializeObject<IEnumerable<T>>(arquivo.Conteudo);
+
+            var existeLinha = conteudo.Any(w => w.NumeroLinha.SaoIguais(linhaDoArquivo));
+
+            if (!existeLinha)
+                throw new NegocioException(Constantes.A_LINHA_INFORMADA_NAO_EXISTE_NO_ARQUIVO);
+            
+            return conteudo;
         }
     }
 }

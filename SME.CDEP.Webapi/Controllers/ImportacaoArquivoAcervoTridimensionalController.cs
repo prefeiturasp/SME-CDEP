@@ -43,4 +43,15 @@ public class ImportacaoArquivoAcervoTridimensionalController: BaseController
     {
         return Ok(await servicoImportacaoArquivoAcervoTridimensional.RemoverLinhaDoArquivo(id, linhaDoArquivo));
     }
+    
+    [HttpPut("atualizar-linha/{id}/sucesso")]
+    [ProducesResponseType(typeof(bool), 200)]
+    [ProducesResponseType(typeof(RetornoBaseDTO), 400)]
+    [ProducesResponseType(typeof(RetornoBaseDTO), 403)]
+    [ProducesResponseType(typeof(RetornoBaseDTO), 601)]
+    [Permissao(Policy = "Bearer")]
+    public async Task<IActionResult> AtualizarLinhaParaSucesso([FromRoute] long id, [FromBody] int linhaDoArquivo, [FromServices] IServicoImportacaoArquivoAcervoTridimensional servicoImportacaoArquivoAcervoTridimensional)
+    {
+        return Ok(await servicoImportacaoArquivoAcervoTridimensional.AtualizarLinhaParaSucesso(id,linhaDoArquivo));
+    }
 }

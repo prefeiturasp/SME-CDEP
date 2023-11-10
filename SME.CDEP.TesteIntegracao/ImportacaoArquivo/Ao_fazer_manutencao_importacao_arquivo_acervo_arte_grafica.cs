@@ -1,5 +1,4 @@
-﻿using Bogus.Extensions.Brazil;
-using Newtonsoft.Json;
+﻿using Newtonsoft.Json;
 using Shouldly;
 using SME.CDEP.Aplicacao.DTOS;
 using SME.CDEP.Dominio.Entidades;
@@ -511,6 +510,77 @@ namespace SME.CDEP.TesteIntegracao
             var arquivo = ObterTodos<ImportacaoArquivo>();
             arquivo.Count().ShouldBe(1);
             arquivo.Count(w=> w.Excluido).ShouldBe(1);
+        }
+        
+        [Fact(DisplayName = "Importação Arquivo Acervo Arte Grafica - Deve permitir atualizar uma linha do arquivo para sucesso e outra fica com erro")]
+        public async Task Deve_permitir_atualizar_uma_linha_do_arquivo_para_sucesso_e_outra_fica_com_erro()
+        {
+            var servicoImportacaoArquivo = GetServicoImportacaoArquivoAcervoArteGrafica();
+
+            var linhasInseridas = GerarAcervoArteGraficaLinhaDTO().Generate(10);
+            linhasInseridas[3].PossuiErros = true;
+            linhasInseridas[3].Largura.PossuiErro = true;
+            linhasInseridas[3].Largura.Mensagem = string.Format(Dominio.Constantes.Constantes.CAMPO_X_REQUER_UM_VALOR_NUMERICO, Dominio.Constantes.Constantes.LARGURA);
+            linhasInseridas[3].Mensagem = string.Format(Dominio.Constantes.Constantes.CAMPO_X_REQUER_UM_VALOR_NUMERICO, Dominio.Constantes.Constantes.LARGURA); //Mensagem geral
+            
+            linhasInseridas[9].PossuiErros = true;
+            linhasInseridas[9].Suporte.PossuiErro = true;
+            linhasInseridas[9].Suporte.Mensagem = string.Format(Dominio.Constantes.Constantes.CAMPO_X_NAO_PREENCHIDO, Dominio.Constantes.Constantes.SUPORTE);
+            linhasInseridas[9].Mensagem = string.Format(Dominio.Constantes.Constantes.CAMPO_X_NAO_PREENCHIDO, Dominio.Constantes.Constantes.SUPORTE); //Mensagem geral
+
+            await InserirNaBase(new ImportacaoArquivo()
+            {
+                Nome = faker.Hacker.Verb(),
+                TipoAcervo = TipoAcervo.ArtesGraficas,
+                Status = ImportacaoStatus.Erros,
+                Conteudo = JsonConvert.SerializeObject(linhasInseridas),
+                CriadoEm = DateTimeExtension.HorarioBrasilia().Date, CriadoPor = ConstantesTestes.SISTEMA, CriadoLogin = ConstantesTestes.LOGIN_123456789
+            });
+
+            await servicoImportacaoArquivo.AtualizarLinhaParaSucesso(1, 4);
+            var arquivo = ObterTodos<ImportacaoArquivo>().FirstOrDefault();
+            
+            var conteudo = JsonConvert.DeserializeObject<IEnumerable<AcervoArteGraficaLinhaDTO>>(arquivo.Conteudo);
+            conteudo.FirstOrDefault(a=> a.NumeroLinha.SaoIguais(4)).PossuiErros.ShouldBeFalse();
+            conteudo.FirstOrDefault(a=> a.NumeroLinha.SaoIguais(4)).Mensagem.ShouldBeEmpty();
+            
+            conteudo.FirstOrDefault(a=> a.NumeroLinha.SaoIguais(10)).PossuiErros.ShouldBeTrue();
+            conteudo.FirstOrDefault(a=> a.NumeroLinha.SaoIguais(10)).Mensagem.ShouldNotBeEmpty();
+            
+            arquivo.Status.ShouldBe(ImportacaoStatus.Erros);
+        }
+        
+        [Fact(DisplayName = "Importação Arquivo Acervo Arte Grafica - Deve permitir atualizar linha do arquivo para sucesso")]
+        public async Task Deve_permitir_atualizar_linha_do_arquivo_para_sucesso()
+        {
+            var servicoImportacaoArquivo = GetServicoImportacaoArquivoAcervoArteGrafica();
+
+            var linhasInseridas = GerarAcervoArteGraficaLinhaDTO().Generate(10);
+            linhasInseridas[3].PossuiErros = true;
+            linhasInseridas[3].Largura.PossuiErro = true;
+            linhasInseridas[3].Largura.Mensagem = string.Format(Dominio.Constantes.Constantes.CAMPO_X_REQUER_UM_VALOR_NUMERICO, Dominio.Constantes.Constantes.LARGURA);
+            linhasInseridas[3].Mensagem = string.Format(Dominio.Constantes.Constantes.CAMPO_X_REQUER_UM_VALOR_NUMERICO, Dominio.Constantes.Constantes.LARGURA); //Mensagem geral
+            
+            await InserirNaBase(new ImportacaoArquivo()
+            {
+                Nome = faker.Hacker.Verb(),
+                TipoAcervo = TipoAcervo.ArtesGraficas,
+                Status = ImportacaoStatus.Erros,
+                Conteudo = JsonConvert.SerializeObject(linhasInseridas),
+                CriadoEm = DateTimeExtension.HorarioBrasilia().Date, CriadoPor = ConstantesTestes.SISTEMA, CriadoLogin = ConstantesTestes.LOGIN_123456789
+            });
+
+            await servicoImportacaoArquivo.AtualizarLinhaParaSucesso(1, 4);
+            var arquivo = ObterTodos<ImportacaoArquivo>().FirstOrDefault();
+            
+            var conteudo = JsonConvert.DeserializeObject<IEnumerable<AcervoArteGraficaLinhaDTO>>(arquivo.Conteudo);
+            conteudo.FirstOrDefault(a=> a.NumeroLinha.SaoIguais(4)).PossuiErros.ShouldBeFalse();
+            conteudo.FirstOrDefault(a=> a.NumeroLinha.SaoIguais(4)).Mensagem.ShouldBeEmpty();
+            
+            conteudo.Any(a=> a.PossuiErros).ShouldBeFalse();
+            conteudo.Any(a=> !a.PossuiErros).ShouldBeTrue();
+            
+            arquivo.Status.ShouldBe(ImportacaoStatus.Sucesso);
         }
     }
 }

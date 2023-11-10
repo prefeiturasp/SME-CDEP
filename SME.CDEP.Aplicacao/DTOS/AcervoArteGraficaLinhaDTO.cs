@@ -1,4 +1,6 @@
 ﻿
+using SME.CDEP.Infra.Dominio.Enumerados;
+
 namespace SME.CDEP.Aplicacao.DTOS;
 
 public class AcervoArteGraficaLinhaDTO: AcervoLinhaDTO
@@ -20,4 +22,29 @@ public class AcervoArteGraficaLinhaDTO: AcervoLinhaDTO
     public LinhaConteudoAjustarDTO Suporte { get; set; }
     public LinhaConteudoAjustarDTO Quantidade { get; set; }
     public LinhaConteudoAjustarDTO Descricao { get; set; }
+
+    public void DefinirLinhaComoSucesso()
+    {
+        PossuiErros = false;
+        Mensagem = string.Empty;
+        Status = ImportacaoStatus.Sucesso;
+
+        Titulo.DefinirComoSucesso();
+        Tombo.DefinirComoSucesso();
+        Credito.DefinirComoSucesso();
+        Localizacao.DefinirComoSucesso();
+        Procedencia.DefinirComoSucesso();
+        Data.DefinirComoSucesso();
+        CopiaDigital.DefinirComoSucesso();
+        AutorizacaoUsoDeImagem.DefinirComoSucesso();
+        EstadoConservacao.DefinirComoSucesso();
+        Cromia.DefinirComoSucesso();
+        Largura.DefinirComoSucesso();
+        Altura.DefinirComoSucesso();
+        Diametro.DefinirComoSucesso();
+        Tecnica.DefinirComoSucesso();
+        Suporte.DefinirComoSucesso();
+        Quantidade.DefinirComoSucesso();
+        Descricao.DefinirComoSucesso();
+    }
 }

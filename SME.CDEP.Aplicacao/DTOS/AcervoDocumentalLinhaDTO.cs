@@ -22,4 +22,30 @@ public class AcervoDocumentalLinhaDTO: AcervoLinhaDTO
     public LinhaConteudoAjustarDTO Localizacao { get; set; }
     public LinhaConteudoAjustarDTO CopiaDigital { get; set; }
     public LinhaConteudoAjustarDTO EstadoConservacao { get; set; }
+
+    public void DefinirLinhaComoSucesso()
+    {
+        PossuiErros = false;
+        Mensagem = string.Empty;
+        Status = ImportacaoStatus.Sucesso;
+
+        Titulo.DefinirComoSucesso();
+        CodigoAntigo.DefinirComoSucesso();
+        CodigoNovo.DefinirComoSucesso();
+        Material.DefinirComoSucesso();
+        Idioma.DefinirComoSucesso();
+        Autor.DefinirComoSucesso();
+        Ano.DefinirComoSucesso();
+        NumeroPaginas.DefinirComoSucesso();
+        Volume.DefinirComoSucesso();
+        Descricao.DefinirComoSucesso();
+        Altura.DefinirComoSucesso();
+        Largura.DefinirComoSucesso();
+        TipoAnexo.DefinirComoSucesso();
+        TamanhoArquivo.DefinirComoSucesso();
+        AcessoDocumento.DefinirComoSucesso();
+        Localizacao.DefinirComoSucesso();
+        CopiaDigital.DefinirComoSucesso();
+        EstadoConservacao.DefinirComoSucesso();
+    }
 }

@@ -10,4 +10,10 @@ public class LinhaConteudoAjustarDTO
     public int LimiteCaracteres { get; set; }
     public bool EhCampoObrigatorio { get; set; }
     public string FormatoTipoDeCampo { get; set; } = Constantes.FORMATO_STRING;
+
+    public void DefinirComoSucesso()
+    {
+        PossuiErro = false;
+        Mensagem = string.Empty;
+    }
 }

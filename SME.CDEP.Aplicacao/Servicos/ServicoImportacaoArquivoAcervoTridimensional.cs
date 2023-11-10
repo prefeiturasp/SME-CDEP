@@ -34,7 +34,19 @@ namespace SME.CDEP.Aplicacao.Servicos
         
         public async Task<bool> RemoverLinhaDoArquivo(long id, int linhaDoArquivo)
         {
-            await RemoverLinhaDoArquivo<AcervoTridimensionalLinhaDTO>(id, linhaDoArquivo, TipoAcervo.Tridimensional);
+            return await RemoverLinhaDoArquivo<AcervoTridimensionalLinhaDTO>(id, linhaDoArquivo, TipoAcervo.Tridimensional);
+        }
+
+        public async Task<bool> AtualizarLinhaParaSucesso(long id, int linhaDoArquivo)
+        {
+            var conteudo = await ValidacoesImportacaoArquivo<AcervoTridimensionalLinhaDTO>(id, linhaDoArquivo, TipoAcervo.Tridimensional);
+            
+            var novoConteudo = conteudo.FirstOrDefault(w => w.NumeroLinha.SaoIguais(linhaDoArquivo));
+            novoConteudo.DefinirLinhaComoSucesso();
+
+            var status = conteudo.Any(a => a.PossuiErros) ? ImportacaoStatus.Erros : ImportacaoStatus.Sucesso;
+            
+            await AtualizarImportacao(id,JsonConvert.SerializeObject(conteudo), status);
 
             return true;
         }
@@ -148,17 +160,17 @@ namespace SME.CDEP.Aplicacao.Servicos
             {
                 try
                 {
-                    ValidarPreenchimentoLimiteCaracteres(linha.Titulo, Constantes.TITULO, linha.NumeroLinha);
-                    ValidarPreenchimentoLimiteCaracteres(linha.Tombo, Constantes.TOMBO, linha.NumeroLinha);
-                    ValidarPreenchimentoLimiteCaracteres(linha.Procedencia,Constantes.PROCEDENCIA, linha.NumeroLinha);
-                    ValidarPreenchimentoLimiteCaracteres(linha.Data,Constantes.DATA, linha.NumeroLinha);
-                    ValidarPreenchimentoLimiteCaracteres(linha.EstadoConservacao,Constantes.ESTADO_CONSERVACAO, linha.NumeroLinha);
-                    ValidarPreenchimentoLimiteCaracteres(linha.Quantidade,Constantes.QUANTIDADE, linha.NumeroLinha);
-                    ValidarPreenchimentoLimiteCaracteres(linha.Descricao,Constantes.DESCRICAO, linha.NumeroLinha);
-                    ValidarPreenchimentoLimiteCaracteres(linha.Largura,Constantes.LARGURA, linha.NumeroLinha);
-                    ValidarPreenchimentoLimiteCaracteres(linha.Altura,Constantes.ALTURA, linha.NumeroLinha);
-                    ValidarPreenchimentoLimiteCaracteres(linha.Profundidade,Constantes.PROFUNDIDADE, linha.NumeroLinha);
-                    ValidarPreenchimentoLimiteCaracteres(linha.Diametro,Constantes.DIAMETRO, linha.NumeroLinha);
+                    ValidarPreenchimentoLimiteCaracteres(linha.Titulo, Constantes.TITULO);
+                    ValidarPreenchimentoLimiteCaracteres(linha.Tombo, Constantes.TOMBO);
+                    ValidarPreenchimentoLimiteCaracteres(linha.Procedencia,Constantes.PROCEDENCIA);
+                    ValidarPreenchimentoLimiteCaracteres(linha.Data,Constantes.DATA);
+                    ValidarPreenchimentoLimiteCaracteres(linha.EstadoConservacao,Constantes.ESTADO_CONSERVACAO);
+                    ValidarPreenchimentoLimiteCaracteres(linha.Quantidade,Constantes.QUANTIDADE);
+                    ValidarPreenchimentoLimiteCaracteres(linha.Descricao,Constantes.DESCRICAO);
+                    ValidarPreenchimentoLimiteCaracteres(linha.Largura,Constantes.LARGURA);
+                    ValidarPreenchimentoLimiteCaracteres(linha.Altura,Constantes.ALTURA);
+                    ValidarPreenchimentoLimiteCaracteres(linha.Profundidade,Constantes.PROFUNDIDADE);
+                    ValidarPreenchimentoLimiteCaracteres(linha.Diametro,Constantes.DIAMETRO);
                     linha.PossuiErros = PossuiErro(linha);
                 }
                 catch (Exception e)

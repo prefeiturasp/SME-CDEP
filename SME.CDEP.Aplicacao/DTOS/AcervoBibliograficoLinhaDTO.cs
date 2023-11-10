@@ -25,4 +25,33 @@ public class AcervoBibliograficoLinhaDTO: AcervoLinhaDTO
     public LinhaConteudoAjustarDTO NotasGerais { get; set; }
     public LinhaConteudoAjustarDTO Isbn { get; set; }
     public LinhaConteudoAjustarDTO Tombo { get; set; }
+
+    public void DefinirLinhaComoSucesso()
+    {
+        PossuiErros = false;
+        Mensagem = string.Empty;
+        Status = ImportacaoStatus.Sucesso;
+
+        Titulo.DefinirComoSucesso();
+        SubTitulo.DefinirComoSucesso();
+        Material.DefinirComoSucesso();
+        Autor.DefinirComoSucesso();
+        CoAutor.DefinirComoSucesso();
+        TipoAutoria.DefinirComoSucesso();
+        Editora.DefinirComoSucesso();
+        Assunto.DefinirComoSucesso();
+        Ano.DefinirComoSucesso();
+        Edicao.DefinirComoSucesso();
+        NumeroPaginas.DefinirComoSucesso();
+        Altura.DefinirComoSucesso();
+        Largura.DefinirComoSucesso();
+        SerieColecao.DefinirComoSucesso();
+        Volume.DefinirComoSucesso();
+        Idioma.DefinirComoSucesso();
+        LocalizacaoCDD.DefinirComoSucesso();
+        LocalizacaoPHA.DefinirComoSucesso();
+        NotasGerais.DefinirComoSucesso();
+        Isbn.DefinirComoSucesso();
+        Tombo.DefinirComoSucesso();
+    }
 }

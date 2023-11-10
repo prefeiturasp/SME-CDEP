@@ -13,5 +13,6 @@ namespace SME.CDEP.Aplicacao.Servicos.Interface
         void DefinirCreditosAutores(List<IdNomeTipoDTO> creditosAutores);
         Task<ImportacaoArquivoRetornoDTO<AcervoFotograficoLinhaRetornoDTO>> ObterImportacaoPendente();
         Task<bool> RemoverLinhaDoArquivo(long id, int linhaDoArquivo);
+        Task<bool> AtualizarLinhaParaSucesso(long id, int linhaDoArquivo);
     }
 }

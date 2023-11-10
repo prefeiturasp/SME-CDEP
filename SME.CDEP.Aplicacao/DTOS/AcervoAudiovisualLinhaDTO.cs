@@ -20,4 +20,27 @@ public class AcervoAudiovisualLinhaDTO: AcervoLinhaDTO
     public LinhaConteudoAjustarDTO TamanhoArquivo { get; set; }
     public LinhaConteudoAjustarDTO Acessibilidade { get; set; }
     public LinhaConteudoAjustarDTO Disponibilizacao { get; set; }
+
+    public void DefinirLinhaComoSucesso()
+    {
+        PossuiErros = false;
+        Mensagem = string.Empty;
+        Status = ImportacaoStatus.Sucesso;
+
+        Titulo.DefinirComoSucesso();
+        Tombo.DefinirComoSucesso();
+        Credito.DefinirComoSucesso();
+        Localizacao.DefinirComoSucesso();
+        Procedencia.DefinirComoSucesso();
+        Data.DefinirComoSucesso();
+        Copia.DefinirComoSucesso();
+        AutorizacaoUsoDeImagem.DefinirComoSucesso();
+        EstadoConservacao.DefinirComoSucesso();
+        Descricao.DefinirComoSucesso();
+        Suporte.DefinirComoSucesso();
+        Cromia.DefinirComoSucesso();
+        TamanhoArquivo.DefinirComoSucesso();
+        Acessibilidade.DefinirComoSucesso();
+        Disponibilizacao.DefinirComoSucesso();
+    }
 }

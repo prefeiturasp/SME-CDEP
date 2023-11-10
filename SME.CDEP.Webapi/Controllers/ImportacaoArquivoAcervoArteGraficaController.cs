@@ -43,4 +43,15 @@ public class ImportacaoArquivoAcervoArteGraficaController: BaseController
     {
         return Ok(await servicoImportacaoArquivoAcervoArteGrafica.RemoverLinhaDoArquivo(id, linhaDoArquivo));
     }
+    
+    [HttpPut("atualizar-linha/{id}/sucesso")]
+    [ProducesResponseType(typeof(bool), 200)]
+    [ProducesResponseType(typeof(RetornoBaseDTO), 400)]
+    [ProducesResponseType(typeof(RetornoBaseDTO), 403)]
+    [ProducesResponseType(typeof(RetornoBaseDTO), 601)]
+    [Permissao(Policy = "Bearer")]
+    public async Task<IActionResult> AtualizarLinhaParaSucesso([FromRoute] long id, [FromBody] int linhaDoArquivo, [FromServices] IServicoImportacaoArquivoAcervoArteGrafica servicoImportacaoArquivoAcervoArteGrafica)
+    {
+        return Ok(await servicoImportacaoArquivoAcervoArteGrafica.AtualizarLinhaParaSucesso(id,linhaDoArquivo));
+    }
 }
