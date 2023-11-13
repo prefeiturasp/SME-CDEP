@@ -233,15 +233,15 @@ namespace SME.CDEP.Aplicacao.Servicos
 
             try
             {
-                await ValidarOuInserirMateriais(linhasComsucesso.Select(s => s.Material.Conteudo).Distinct(), TipoMaterial.DOCUMENTAL);
+                await ValidarOuInserirMateriais(linhasComsucesso.Select(s => s.Material.Conteudo).Distinct().Where(w=> w.EstaPreenchido()), TipoMaterial.DOCUMENTAL);
 
-                await ValidarOuInserirIdiomas(linhasComsucesso.Select(s => s.Idioma.Conteudo).Distinct());
+                await ValidarOuInserirIdiomas(linhasComsucesso.Select(s => s.Idioma.Conteudo).Distinct().Where(w=> w.EstaPreenchido()));
                 
-                await ValidarOuInserirCreditoAutoresCoAutoresTipoAutoria(linhasComsucesso.Select(s => s.Autor.Conteudo).ToArray().UnificarPipe().SplitPipe().Distinct(), TipoCreditoAutoria.Autoria);
+                await ValidarOuInserirCreditoAutoresCoAutoresTipoAutoria(linhasComsucesso.Select(s => s.Autor.Conteudo).ToArray().UnificarPipe().SplitPipe().Distinct().Where(w=> w.EstaPreenchido()), TipoCreditoAutoria.Autoria);
                 
-                await ValidarOuInserirAcessoDocumento(linhasComsucesso.Select(s => s.AcessoDocumento.Conteudo).ToArray().UnificarPipe().SplitPipe().Distinct());
+                await ValidarOuInserirAcessoDocumento(linhasComsucesso.Select(s => s.AcessoDocumento.Conteudo).ToArray().UnificarPipe().SplitPipe().Distinct().Where(w=> w.EstaPreenchido()));
                 
-                await ValidarOuInserirConservacao(linhasComsucesso.Select(s => s.EstadoConservacao.Conteudo).Distinct());
+                await ValidarOuInserirConservacao(linhasComsucesso.Select(s => s.EstadoConservacao.Conteudo).Distinct().Where(w=> w.EstaPreenchido()));
                 
             }
             catch (Exception e)
@@ -262,6 +262,8 @@ namespace SME.CDEP.Aplicacao.Servicos
                 var planilha = package.Worksheets.FirstOrDefault();
 
                 var totalLinhas = planilha.Rows().Count();
+                
+                ValidarOrdemColunas(planilha, Constantes.INICIO_LINHA_TITULO);
 
                 for (int numeroLinha = Constantes.INICIO_LINHA_DADOS; numeroLinha <= totalLinhas; numeroLinha++)
                 {
@@ -367,6 +369,63 @@ namespace SME.CDEP.Aplicacao.Servicos
             }
 
             return linhas;
+        }
+        
+        private void ValidarOrdemColunas(IXLWorksheet planilha, int numeroLinha)
+        {
+            ValidarTituloDaColuna(planilha, numeroLinha, Constantes.NOME_DA_COLUNA_TITULO, 
+                Constantes.ACERVO_DOCUMENTAL_CAMPO_TITULO, Constantes.DOCUMENTAL);
+            
+            ValidarTituloDaColuna(planilha, numeroLinha, Constantes.NOME_DA_COLUNA_CODIGO_ANTIGO, 
+                Constantes.ACERVO_DOCUMENTAL_CAMPO_CODIGO_ANTIGO, Constantes.DOCUMENTAL);
+            
+            ValidarTituloDaColuna(planilha, numeroLinha, Constantes.NOME_DA_COLUNA_CODIGO_NOVO, 
+                Constantes.ACERVO_DOCUMENTAL_CAMPO_CODIGO_NOVO, Constantes.DOCUMENTAL);
+            
+            ValidarTituloDaColuna(planilha, numeroLinha, Constantes.NOME_DA_COLUNA_MATERIAL, 
+                Constantes.ACERVO_DOCUMENTAL_CAMPO_MATERIAL, Constantes.DOCUMENTAL);
+            
+            ValidarTituloDaColuna(planilha, numeroLinha, Constantes.NOME_DA_COLUNA_IDIOMA, 
+                Constantes.ACERVO_DOCUMENTAL_CAMPO_IDIOMA, Constantes.DOCUMENTAL);
+            
+            ValidarTituloDaColuna(planilha, numeroLinha, Constantes.NOME_DA_COLUNA_AUTOR, 
+                Constantes.ACERVO_DOCUMENTAL_CAMPO_AUTOR, Constantes.DOCUMENTAL);
+            
+            ValidarTituloDaColuna(planilha, numeroLinha, Constantes.NOME_DA_COLUNA_ANO, 
+                Constantes.ACERVO_DOCUMENTAL_CAMPO_ANO, Constantes.DOCUMENTAL);
+            
+            ValidarTituloDaColuna(planilha, numeroLinha, Constantes.NOME_DA_COLUNA_NUMERO_PAGINAS,
+                Constantes.ACERVO_DOCUMENTAL_CAMPO_NUMERO_PAGINAS, Constantes.DOCUMENTAL);
+            
+            ValidarTituloDaColuna(planilha, numeroLinha, Constantes.NOME_DA_COLUNA_VOLUME,
+                Constantes.ACERVO_DOCUMENTAL_CAMPO_VOLUME, Constantes.DOCUMENTAL);
+            
+            ValidarTituloDaColuna(planilha, numeroLinha, Constantes.NOME_DA_COLUNA_DESCRICAO,
+                Constantes.ACERVO_DOCUMENTAL_CAMPO_DESCRICAO, Constantes.DOCUMENTAL);
+            
+            ValidarTituloDaColuna(planilha, numeroLinha, Constantes.NOME_DA_COLUNA_TIPO_DE_ANEXO,
+                Constantes.ACERVO_DOCUMENTAL_CAMPO_TIPO_ANEXO, Constantes.DOCUMENTAL);
+            
+            ValidarTituloDaColuna(planilha, numeroLinha, Constantes.NOME_DA_COLUNA_DIMENSAO_LARGURA,
+                Constantes.ACERVO_DOCUMENTAL_CAMPO_DIMENSAO_LARGURA, Constantes.DOCUMENTAL);
+            
+            ValidarTituloDaColuna(planilha, numeroLinha, Constantes.NOME_DA_COLUNA_DIMENSAO_ALTURA,
+                Constantes.ACERVO_DOCUMENTAL_CAMPO_DIMENSAO_ALTURA, Constantes.DOCUMENTAL);
+            
+            ValidarTituloDaColuna(planilha, numeroLinha, Constantes.NOME_DA_COLUNA_TAMANHO_DO_ARQUIVO,
+                Constantes.ACERVO_DOCUMENTAL_CAMPO_TAMANHO_ARQUIVO, Constantes.DOCUMENTAL);
+            
+            ValidarTituloDaColuna(planilha, numeroLinha, Constantes.NOME_DA_COLUNA_ACESSO_DO_DOCUMENTO,
+                Constantes.ACERVO_DOCUMENTAL_CAMPO_ACESSO_DOCUMENTO, Constantes.DOCUMENTAL);
+            
+            ValidarTituloDaColuna(planilha, numeroLinha, Constantes.NOME_DA_COLUNA_LOCALIZACAO,
+                Constantes.ACERVO_DOCUMENTAL_CAMPO_LOCALIZACAO, Constantes.DOCUMENTAL);
+            
+            ValidarTituloDaColuna(planilha, numeroLinha, Constantes.NOME_DA_COLUNA_COPIA_DIGITAL,
+                Constantes.ACERVO_DOCUMENTAL_CAMPO_COPIA_DIGITAL, Constantes.DOCUMENTAL);
+            
+            ValidarTituloDaColuna(planilha, numeroLinha, Constantes.NOME_DA_COLUNA_ESTADO_DE_CONSERVACAO,
+                Constantes.ACERVO_DOCUMENTAL_CAMPO_ESTADO_CONSERVACAO, Constantes.DOCUMENTAL);
         }
     }
 }

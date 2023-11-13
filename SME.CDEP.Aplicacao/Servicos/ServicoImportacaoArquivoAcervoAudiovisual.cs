@@ -218,13 +218,13 @@ namespace SME.CDEP.Aplicacao.Servicos
         
             try
             {
-                await ValidarOuInserirCreditoAutoresCoAutoresTipoAutoria(linhasComsucesso.Select(s => s.Credito.Conteudo).ToArray().UnificarPipe().SplitPipe().Distinct(), TipoCreditoAutoria.Autoria);
+                await ValidarOuInserirCreditoAutoresCoAutoresTipoAutoria(linhasComsucesso.Select(s => s.Credito.Conteudo).ToArray().UnificarPipe().SplitPipe().Distinct().Where(w=> w.EstaPreenchido()), TipoCreditoAutoria.Autoria);
                 
-                await ValidarOuInserirCromia(linhasComsucesso.Select(s => s.Cromia.Conteudo).Distinct());
+                await ValidarOuInserirCromia(linhasComsucesso.Select(s => s.Cromia.Conteudo).Distinct().Where(w=> w.EstaPreenchido()));
                 
-                await ValidarOuInserirSuporte(linhasComsucesso.Select(s => s.Suporte.Conteudo).Distinct(), TipoSuporte.VIDEO);
+                await ValidarOuInserirSuporte(linhasComsucesso.Select(s => s.Suporte.Conteudo).Distinct().Where(w=> w.EstaPreenchido()), TipoSuporte.VIDEO);
                 
-                await ValidarOuInserirConservacao(linhasComsucesso.Select(s => s.EstadoConservacao.Conteudo).Distinct());
+                await ValidarOuInserirConservacao(linhasComsucesso.Select(s => s.EstadoConservacao.Conteudo).Distinct().Where(w=> w.EstaPreenchido()));
                 
             }
             catch (Exception e)
@@ -245,6 +245,8 @@ namespace SME.CDEP.Aplicacao.Servicos
                 var planilha = package.Worksheets.FirstOrDefault();
         
                 var totalLinhas = planilha.Rows().Count();
+                
+                ValidarOrdemColunas(planilha, Constantes.INICIO_LINHA_TITULO);
         
                 for (int numeroLinha = Constantes.INICIO_LINHA_DADOS; numeroLinha <= totalLinhas; numeroLinha++)
                 {
@@ -341,6 +343,54 @@ namespace SME.CDEP.Aplicacao.Servicos
             }
 
             return linhas;
+        }
+        
+         private void ValidarOrdemColunas(IXLWorksheet planilha, int numeroLinha)
+        {
+            ValidarTituloDaColuna(planilha, numeroLinha, Constantes.NOME_DA_COLUNA_TITULO, 
+                Constantes.ACERVO_AUDIOVISUAL_CAMPO_TITULO, Constantes.AUDIOVISUAL);
+            
+            ValidarTituloDaColuna(planilha, numeroLinha, Constantes.NOME_DA_COLUNA_CREDITO, 
+                Constantes.ACERVO_AUDIOVISUAL_CAMPO_CREDITO, Constantes.AUDIOVISUAL);
+            
+            ValidarTituloDaColuna(planilha, numeroLinha, Constantes.NOME_DA_COLUNA_LOCALIZACAO, 
+                Constantes.ACERVO_AUDIOVISUAL_CAMPO_LOCALIZACAO, Constantes.AUDIOVISUAL);
+            
+            ValidarTituloDaColuna(planilha, numeroLinha, Constantes.NOME_DA_COLUNA_PROCEDENCIA, 
+                Constantes.ACERVO_AUDIOVISUAL_CAMPO_PROCEDENCIA, Constantes.AUDIOVISUAL);
+            
+            ValidarTituloDaColuna(planilha, numeroLinha, Constantes.NOME_DA_COLUNA_DATA, 
+                Constantes.ACERVO_AUDIOVISUAL_CAMPO_DATA, Constantes.AUDIOVISUAL);
+            
+            ValidarTituloDaColuna(planilha, numeroLinha, Constantes.NOME_DA_COLUNA_COPIA_DIGITAL, 
+                Constantes.ACERVO_AUDIOVISUAL_CAMPO_COPIA, Constantes.AUDIOVISUAL);
+            
+            ValidarTituloDaColuna(planilha, numeroLinha, Constantes.NOME_DA_COLUNA_AUTORIZACAO_USO_DE_IMAGEM,
+                Constantes.ACERVO_AUDIOVISUAL_CAMPO_AUTORIZACAO_USO_DE_IMAGEM, Constantes.AUDIOVISUAL);
+            
+            ValidarTituloDaColuna(planilha, numeroLinha, Constantes.NOME_DA_COLUNA_ESTADO_DE_CONSERVACAO,
+                Constantes.ACERVO_AUDIOVISUAL_CAMPO_ESTADO_CONSERVACAO, Constantes.AUDIOVISUAL);
+            
+            ValidarTituloDaColuna(planilha, numeroLinha, Constantes.NOME_DA_COLUNA_DESCRICAO,
+                Constantes.ACERVO_AUDIOVISUAL_CAMPO_DESCRICAO, Constantes.AUDIOVISUAL);
+            
+            ValidarTituloDaColuna(planilha, numeroLinha, Constantes.NOME_DA_COLUNA_SUPORTE,
+                Constantes.ACERVO_AUDIOVISUAL_CAMPO_SUPORTE, Constantes.AUDIOVISUAL);
+            
+            ValidarTituloDaColuna(planilha, numeroLinha, Constantes.NOME_DA_COLUNA_DURACAO,
+                Constantes.ACERVO_AUDIOVISUAL_CAMPO_DURACAO, Constantes.AUDIOVISUAL);
+            
+            ValidarTituloDaColuna(planilha, numeroLinha, Constantes.NOME_DA_COLUNA_CROMIA,
+                Constantes.ACERVO_AUDIOVISUAL_CAMPO_CROMIA, Constantes.AUDIOVISUAL);
+            
+            ValidarTituloDaColuna(planilha, numeroLinha, Constantes.NOME_DA_COLUNA_TAMANHO_DO_ARQUIVO,
+                Constantes.ACERVO_AUDIOVISUAL_CAMPO_TAMANHO_ARQUIVO, Constantes.AUDIOVISUAL);
+            
+            ValidarTituloDaColuna(planilha, numeroLinha, Constantes.NOME_DA_COLUNA_ACESSIBILIDADE,
+                Constantes.ACERVO_AUDIOVISUAL_CAMPO_ACESSIBILIDADE, Constantes.AUDIOVISUAL);
+            
+            ValidarTituloDaColuna(planilha, numeroLinha, Constantes.NOME_DA_COLUNA_DISPONIBILIZACAO,
+                Constantes.ACERVO_AUDIOVISUAL_CAMPO_DISPONIBILIZACAO, Constantes.AUDIOVISUAL);
         }
     }
 }

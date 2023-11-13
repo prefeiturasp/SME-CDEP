@@ -288,19 +288,19 @@ namespace SME.CDEP.Aplicacao.Servicos
 
             try
             {
-                await ValidarOuInserirMateriais(linhasComsucesso.Select(s => s.Material.Conteudo).Distinct(), TipoMaterial.BIBLIOGRAFICO);
+                await ValidarOuInserirMateriais(linhasComsucesso.Select(s => s.Material.Conteudo).Distinct().Where(w=> w.EstaPreenchido()), TipoMaterial.BIBLIOGRAFICO);
 
-                await ValidarOuInserirEditoras(linhasComsucesso.Select(s => s.Editora.Conteudo).Distinct());
+                await ValidarOuInserirEditoras(linhasComsucesso.Select(s => s.Editora.Conteudo).Distinct().Where(w=> w.EstaPreenchido()));
 
-                await ValidarOuInserirSeriesColecoes(linhasComsucesso.Select(s => s.SerieColecao.Conteudo).Distinct());
+                await ValidarOuInserirSeriesColecoes(linhasComsucesso.Select(s => s.SerieColecao.Conteudo).Distinct().Where(w=> w.EstaPreenchido()));
 
-                await ValidarOuInserirIdiomas(linhasComsucesso.Select(s => s.Idioma.Conteudo).Distinct());
+                await ValidarOuInserirIdiomas(linhasComsucesso.Select(s => s.Idioma.Conteudo).Distinct().Where(w=> w.EstaPreenchido()));
 
-                await ValidarOuInserirAssuntos(linhasComsucesso.Select(s => s.Assunto.Conteudo).ToArray().UnificarPipe().SplitPipe().Distinct());
+                await ValidarOuInserirAssuntos(linhasComsucesso.Select(s => s.Assunto.Conteudo).ToArray().UnificarPipe().SplitPipe().Distinct().Where(w=> w.EstaPreenchido()));
 
-                await ValidarOuInserirCreditoAutoresCoAutoresTipoAutoria(linhasComsucesso.Select(s => s.Autor.Conteudo).ToArray().UnificarPipe().SplitPipe().Distinct(), TipoCreditoAutoria.Autoria);
+                await ValidarOuInserirCreditoAutoresCoAutoresTipoAutoria(linhasComsucesso.Select(s => s.Autor.Conteudo).ToArray().UnificarPipe().SplitPipe().Distinct().Where(w=> w.EstaPreenchido()), TipoCreditoAutoria.Autoria);
 
-                await ValidarOuInserirCreditoAutoresCoAutoresTipoAutoria(linhasComsucesso.Select(s => s.CoAutor.Conteudo).ToArray().UnificarPipe().SplitPipe().Distinct(), TipoCreditoAutoria.Autoria);
+                await ValidarOuInserirCreditoAutoresCoAutoresTipoAutoria(linhasComsucesso.Select(s => s.CoAutor.Conteudo).ToArray().UnificarPipe().SplitPipe().Distinct().Where(w=> w.EstaPreenchido()), TipoCreditoAutoria.Autoria);
             }
             catch (Exception e)
             {
@@ -320,6 +320,8 @@ namespace SME.CDEP.Aplicacao.Servicos
                 var planilha = package.Worksheets.FirstOrDefault();
 
                 var totalLinhas = planilha.Rows().Count();
+                
+                ValidarOrdemColunas(planilha, Constantes.INICIO_LINHA_TITULO);
 
                 for (int numeroLinha = Constantes.INICIO_LINHA_DADOS; numeroLinha <= totalLinhas; numeroLinha++)
                 {
@@ -351,7 +353,7 @@ namespace SME.CDEP.Aplicacao.Servicos
                         },
                         CoAutor = new LinhaConteudoAjustarDTO()
                         {
-                            Conteudo = planilha.ObterValorDaCelula(numeroLinha, Constantes.ACERVO_BIBLIOGRAFICO_CAMPO_CO_AUTOR),
+                            Conteudo = planilha.ObterValorDaCelula(numeroLinha, Constantes.ACERVO_BIBLIOGRAFICO_CAMPO_COAUTOR),
                             LimiteCaracteres = Constantes.CARACTERES_PERMITIDOS_200
                         },
                         TipoAutoria = new LinhaConteudoAjustarDTO()
@@ -445,6 +447,72 @@ namespace SME.CDEP.Aplicacao.Servicos
             }
 
             return linhas;
+        }
+        
+        private void ValidarOrdemColunas(IXLWorksheet planilha, int numeroLinha)
+        {
+            ValidarTituloDaColuna(planilha, numeroLinha, Constantes.NOME_DA_COLUNA_TITULO, 
+                Constantes.ACERVO_BIBLIOGRAFICO_CAMPO_TITULO, Constantes.BIBLIOGRAFICO);
+            
+            ValidarTituloDaColuna(planilha, numeroLinha, Constantes.NOME_DA_COLUNA_SUBTITULO, 
+                Constantes.ACERVO_BIBLIOGRAFICO_CAMPO_SUB_TITULO, Constantes.BIBLIOGRAFICO);
+            
+            ValidarTituloDaColuna(planilha, numeroLinha, Constantes.NOME_DA_COLUNA_MATERIAL, 
+                Constantes.ACERVO_BIBLIOGRAFICO_CAMPO_MATERIAL, Constantes.BIBLIOGRAFICO);
+            
+            ValidarTituloDaColuna(planilha, numeroLinha, Constantes.NOME_DA_COLUNA_AUTOR, 
+                Constantes.ACERVO_BIBLIOGRAFICO_CAMPO_AUTOR, Constantes.BIBLIOGRAFICO);
+            
+            ValidarTituloDaColuna(planilha, numeroLinha, Constantes.NOME_DA_COLUNA_COAUTOR, 
+                Constantes.ACERVO_BIBLIOGRAFICO_CAMPO_COAUTOR, Constantes.BIBLIOGRAFICO);
+            
+            ValidarTituloDaColuna(planilha, numeroLinha, Constantes.NOME_DA_COLUNA_TIPO_DE_AUTORIA, 
+                Constantes.ACERVO_BIBLIOGRAFICO_CAMPO_TIPO_DE_AUTORIA, Constantes.BIBLIOGRAFICO);
+            
+            ValidarTituloDaColuna(planilha, numeroLinha, Constantes.NOME_DA_COLUNA_EDITORA,
+                Constantes.ACERVO_BIBLIOGRAFICO_CAMPO_EDITORA, Constantes.BIBLIOGRAFICO);
+            
+            ValidarTituloDaColuna(planilha, numeroLinha, Constantes.NOME_DA_COLUNA_ASSUNTO,
+                Constantes.ACERVO_BIBLIOGRAFICO_CAMPO_ASSUNTO, Constantes.BIBLIOGRAFICO);
+            
+            ValidarTituloDaColuna(planilha, numeroLinha, Constantes.NOME_DA_COLUNA_ANO,
+                Constantes.ACERVO_BIBLIOGRAFICO_CAMPO_ANO, Constantes.BIBLIOGRAFICO);
+            
+            ValidarTituloDaColuna(planilha, numeroLinha, Constantes.NOME_DA_COLUNA_EDICAO,
+                Constantes.ACERVO_BIBLIOGRAFICO_CAMPO_EDICAO, Constantes.BIBLIOGRAFICO);
+            
+            ValidarTituloDaColuna(planilha, numeroLinha, Constantes.NOME_DA_COLUNA_NUMERO_PAGINAS,
+                Constantes.ACERVO_BIBLIOGRAFICO_CAMPO_NUMERO_PAGINAS, Constantes.BIBLIOGRAFICO);
+            
+            ValidarTituloDaColuna(planilha, numeroLinha, Constantes.NOME_DA_COLUNA_DIMENSAO_ALTURA,
+                Constantes.ACERVO_BIBLIOGRAFICO_CAMPO_DIMENSAO_ALTURA, Constantes.BIBLIOGRAFICO);
+            
+            ValidarTituloDaColuna(planilha, numeroLinha, Constantes.NOME_DA_COLUNA_DIMENSAO_LARGURA,
+                Constantes.ACERVO_BIBLIOGRAFICO_CAMPO_DIMENSAO_LARGURA, Constantes.BIBLIOGRAFICO);
+            
+            ValidarTituloDaColuna(planilha, numeroLinha, Constantes.NOME_DA_COLUNA_SERIE_COLECAO,
+                Constantes.ACERVO_BIBLIOGRAFICO_CAMPO_SERIE_COLECAO, Constantes.BIBLIOGRAFICO);
+            
+            ValidarTituloDaColuna(planilha, numeroLinha, Constantes.NOME_DA_COLUNA_VOLUME,
+                Constantes.ACERVO_BIBLIOGRAFICO_CAMPO_VOLUME, Constantes.BIBLIOGRAFICO);
+            
+            ValidarTituloDaColuna(planilha, numeroLinha, Constantes.NOME_DA_COLUNA_IDIOMA,
+                Constantes.ACERVO_BIBLIOGRAFICO_CAMPO_IDIOMA, Constantes.BIBLIOGRAFICO);
+            
+            ValidarTituloDaColuna(planilha, numeroLinha, Constantes.NOME_DA_COLUNA_LOCALIZACAO_CDD,
+                Constantes.ACERVO_BIBLIOGRAFICO_CAMPO_LOCALIZACAO_CDD, Constantes.BIBLIOGRAFICO);
+            
+            ValidarTituloDaColuna(planilha, numeroLinha, Constantes.NOME_DA_COLUNA_LOCALIZACAO_PHA,
+                Constantes.ACERVO_BIBLIOGRAFICO_CAMPO_LOCALIZACAO_PHA, Constantes.BIBLIOGRAFICO);
+            
+            ValidarTituloDaColuna(planilha, numeroLinha, Constantes.NOME_DA_COLUNA_NOTAS_GERAIS,
+                Constantes.ACERVO_BIBLIOGRAFICO_CAMPO_NOTAS_GERAIS, Constantes.BIBLIOGRAFICO);
+            
+            ValidarTituloDaColuna(planilha, numeroLinha, Constantes.NOME_DA_COLUNA_ISBN,
+                Constantes.ACERVO_BIBLIOGRAFICO_CAMPO_ISBN, Constantes.BIBLIOGRAFICO);
+            
+            ValidarTituloDaColuna(planilha, numeroLinha, Constantes.NOME_DA_COLUNA_TOMBO,
+                Constantes.ACERVO_BIBLIOGRAFICO_CAMPO_TOMBO, Constantes.BIBLIOGRAFICO);
         }
     }
 }

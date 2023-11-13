@@ -145,9 +145,9 @@ namespace SME.CDEP.Aplicacao.Servicos
                         PermiteUsoImagem = ObterAutorizaUsoDeImagemPorValorDoCampo(acervoFotograficoLinha.AutorizacaoUsoDeImagem.Conteudo),
                         ConservacaoId = ObterConservacaoIdPorValorDoCampo(acervoFotograficoLinha.EstadoConservacao.Conteudo),
                         Descricao = acervoFotograficoLinha.Descricao.Conteudo,
-                        Quantidade = long.Parse(acervoFotograficoLinha.Quantidade.Conteudo),
-                        Largura = long.Parse(acervoFotograficoLinha.Largura.Conteudo),
-                        Altura = long.Parse(acervoFotograficoLinha.Altura.Conteudo),
+                        Quantidade = acervoFotograficoLinha.Quantidade.Conteudo.ObterLongoPorValorDoCampo(),
+                        Largura = acervoFotograficoLinha.Largura.Conteudo.ObterDoubleOuNuloPorValorDoCampo(),
+                        Altura = acervoFotograficoLinha.Altura.Conteudo.ObterDoubleOuNuloPorValorDoCampo(),
                         SuporteId = ObterSuporteImagemIdPorValorDoCampo(acervoFotograficoLinha.Suporte.Conteudo),
                         FormatoId = ObterFormatoImagemIdPorValorDoCampo(acervoFotograficoLinha.FormatoImagem.Conteudo),
                         TamanhoArquivo = acervoFotograficoLinha.TamanhoArquivo.Conteudo,
@@ -226,15 +226,15 @@ namespace SME.CDEP.Aplicacao.Servicos
         
             try
             {
-                await ValidarOuInserirCreditoAutoresCoAutoresTipoAutoria(linhasComsucesso.Select(s => s.Credito.Conteudo).ToArray().UnificarPipe().SplitPipe().Distinct(), TipoCreditoAutoria.Autoria);
+                await ValidarOuInserirCreditoAutoresCoAutoresTipoAutoria(linhasComsucesso.Select(s => s.Credito.Conteudo).ToArray().UnificarPipe().SplitPipe().Distinct().Where(w=> w.EstaPreenchido()), TipoCreditoAutoria.Autoria);
                 
-                await ValidarOuInserirCromia(linhasComsucesso.Select(s => s.Cromia.Conteudo).Distinct());
+                await ValidarOuInserirCromia(linhasComsucesso.Select(s => s.Cromia.Conteudo).Distinct().Where(w=> w.EstaPreenchido()));
                 
-                await ValidarOuInserirSuporte(linhasComsucesso.Select(s => s.Suporte.Conteudo).Distinct(), TipoSuporte.IMAGEM);
+                await ValidarOuInserirSuporte(linhasComsucesso.Select(s => s.Suporte.Conteudo).Distinct().Where(w=> w.EstaPreenchido()), TipoSuporte.IMAGEM);
                 
-                await ValidarOuInserirConservacao(linhasComsucesso.Select(s => s.EstadoConservacao.Conteudo).Distinct());
+                await ValidarOuInserirConservacao(linhasComsucesso.Select(s => s.EstadoConservacao.Conteudo).Distinct().Where(w=> w.EstaPreenchido()));
                 
-                await ValidarOuInserirFormato(linhasComsucesso.Select(s => s.FormatoImagem.Conteudo).Distinct(), TipoFormato.ACERVO_FOTOS);
+                await ValidarOuInserirFormato(linhasComsucesso.Select(s => s.FormatoImagem.Conteudo).Distinct().Where(w=> w.EstaPreenchido()), TipoFormato.ACERVO_FOTOS);
                 
             }
             catch (Exception e)
@@ -255,6 +255,8 @@ namespace SME.CDEP.Aplicacao.Servicos
                 var planilha = package.Worksheets.FirstOrDefault();
         
                 var totalLinhas = planilha.Rows().Count();
+                
+                ValidarOrdemColunas(planilha, Constantes.INICIO_LINHA_TITULO);
         
                 for (int numeroLinha = Constantes.INICIO_LINHA_DADOS; numeroLinha <= totalLinhas; numeroLinha++)
                 {
@@ -368,6 +370,63 @@ namespace SME.CDEP.Aplicacao.Servicos
             }
 
             return linhas;
+        }
+        
+        private void ValidarOrdemColunas(IXLWorksheet planilha, int numeroLinha)
+        {
+            ValidarTituloDaColuna(planilha, numeroLinha, Constantes.NOME_DA_COLUNA_TITULO, 
+                Constantes.ACERVO_FOTOGRAFICO_CAMPO_TITULO, Constantes.FOTOGRAFICO);
+            
+            ValidarTituloDaColuna(planilha, numeroLinha, Constantes.NOME_DA_COLUNA_TOMBO, 
+                Constantes.ACERVO_FOTOGRAFICO_CAMPO_TOMBO, Constantes.FOTOGRAFICO);
+            
+            ValidarTituloDaColuna(planilha, numeroLinha, Constantes.NOME_DA_COLUNA_CREDITO, 
+                Constantes.ACERVO_FOTOGRAFICO_CAMPO_CREDITO, Constantes.FOTOGRAFICO);
+            
+            ValidarTituloDaColuna(planilha, numeroLinha, Constantes.NOME_DA_COLUNA_LOCALIZACAO, 
+                Constantes.ACERVO_FOTOGRAFICO_CAMPO_LOCALIZACAO, Constantes.FOTOGRAFICO);
+            
+            ValidarTituloDaColuna(planilha, numeroLinha, Constantes.NOME_DA_COLUNA_PROCEDENCIA, 
+                Constantes.ACERVO_FOTOGRAFICO_CAMPO_PROCEDENCIA, Constantes.FOTOGRAFICO);
+            
+            ValidarTituloDaColuna(planilha, numeroLinha, Constantes.NOME_DA_COLUNA_DATA, 
+                Constantes.ACERVO_FOTOGRAFICO_CAMPO_DATA, Constantes.FOTOGRAFICO);
+            
+            ValidarTituloDaColuna(planilha, numeroLinha, Constantes.NOME_DA_COLUNA_COPIA_DIGITAL,
+                Constantes.ACERVO_FOTOGRAFICO_CAMPO_COPIA_DIGITAL, Constantes.FOTOGRAFICO);
+            
+            ValidarTituloDaColuna(planilha, numeroLinha, Constantes.NOME_DA_COLUNA_AUTORIZACAO_USO_DE_IMAGEM,
+                Constantes.ACERVO_FOTOGRAFICO_CAMPO_AUTORIZACAO_USO_DE_IMAGEM, Constantes.FOTOGRAFICO);
+            
+            ValidarTituloDaColuna(planilha, numeroLinha, Constantes.NOME_DA_COLUNA_ESTADO_DE_CONSERVACAO,
+                Constantes.ACERVO_FOTOGRAFICO_CAMPO_ESTADO_CONSERVACAO, Constantes.FOTOGRAFICO);
+            
+            ValidarTituloDaColuna(planilha, numeroLinha, Constantes.NOME_DA_COLUNA_DESCRICAO,
+                Constantes.ACERVO_FOTOGRAFICO_CAMPO_DESCRICAO, Constantes.FOTOGRAFICO);
+            
+            ValidarTituloDaColuna(planilha, numeroLinha, Constantes.NOME_DA_COLUNA_QUANTIDADE,
+                Constantes.ACERVO_FOTOGRAFICO_CAMPO_QUANTIDADE, Constantes.FOTOGRAFICO);
+            
+            ValidarTituloDaColuna(planilha, numeroLinha, Constantes.NOME_DA_COLUNA_DIMENSAO_LARGURA,
+                Constantes.ACERVO_FOTOGRAFICO_CAMPO_LARGURA, Constantes.FOTOGRAFICO);
+            
+            ValidarTituloDaColuna(planilha, numeroLinha, Constantes.NOME_DA_COLUNA_DIMENSAO_ALTURA,
+                Constantes.ACERVO_FOTOGRAFICO_CAMPO_ALTURA, Constantes.FOTOGRAFICO);
+            
+            ValidarTituloDaColuna(planilha, numeroLinha, Constantes.NOME_DA_COLUNA_SUPORTE,
+                Constantes.ACERVO_FOTOGRAFICO_CAMPO_SUPORTE, Constantes.FOTOGRAFICO);
+            
+            ValidarTituloDaColuna(planilha, numeroLinha, Constantes.NOME_DA_COLUNA_FORMATO_DA_IMAGEM,
+                Constantes.ACERVO_FOTOGRAFICO_CAMPO_FORMATO_IMAGEM, Constantes.FOTOGRAFICO);
+            
+            ValidarTituloDaColuna(planilha, numeroLinha, Constantes.NOME_DA_COLUNA_TAMANHO_DO_ARQUIVO,
+                Constantes.ACERVO_FOTOGRAFICO_CAMPO_TAMANHO_ARQUIVO, Constantes.FOTOGRAFICO);
+            
+            ValidarTituloDaColuna(planilha, numeroLinha, Constantes.NOME_DA_COLUNA_CROMIA,
+                Constantes.ACERVO_FOTOGRAFICO_CAMPO_CROMIA, Constantes.FOTOGRAFICO);
+            
+            ValidarTituloDaColuna(planilha, numeroLinha, Constantes.NOME_DA_COLUNA_RESOLUCAO,
+                Constantes.ACERVO_FOTOGRAFICO_CAMPO_RESOLUCAO, Constantes.FOTOGRAFICO);
         }
     }
 }

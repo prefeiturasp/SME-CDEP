@@ -6,7 +6,7 @@ namespace SME.CDEP.Dominio.Extensions
     {
         public static double? ObterDoubleOuNuloPorValorDoCampo(this string valorDoCampo)
         {
-            if (valorDoCampo.NaoEhNulo())
+            if (valorDoCampo.NaoEhNulo() && valorDoCampo.EstaPreenchido())
                 return double.Parse(valorDoCampo);
 
             return default;
@@ -14,7 +14,7 @@ namespace SME.CDEP.Dominio.Extensions
         
         public static double ObterDoublePorValorDoCampo(this string valorDoCampo)
         {
-            if (valorDoCampo.NaoEhNulo())
+            if (valorDoCampo.NaoEhNulo() && valorDoCampo.EstaPreenchido())
                 return double.Parse(valorDoCampo);
 
             throw new NegocioException(string.Format(Constantes.Constantes.O_CAMPO_X_NAO_EH_UM_VALOR_NUMERICO_Y,valorDoCampo, Constantes.Constantes.FORMATO_DOUBLE));

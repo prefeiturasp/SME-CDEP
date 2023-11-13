@@ -125,5 +125,10 @@ namespace SME.CDEP.Dominio.Extensions
         {
             return valor.Equals(valorAComparar); 
         }
+        
+        public static bool SaoDiferentes(this string valor, string valorAComparar)
+        {
+            return !valor.Equals(valorAComparar); 
+        }
     }
 }

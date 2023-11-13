@@ -196,7 +196,7 @@ namespace SME.CDEP.Aplicacao.Servicos
         
             try
             {
-                await ValidarOuInserirConservacao(linhasComsucesso.Select(s => s.EstadoConservacao.Conteudo).Distinct());
+                await ValidarOuInserirConservacao(linhasComsucesso.Select(s => s.EstadoConservacao.Conteudo).Distinct().Where(w=> w.EstaPreenchido()));
                 
             }
             catch (Exception e)
@@ -221,6 +221,8 @@ namespace SME.CDEP.Aplicacao.Servicos
         
                 var totalLinhas = planilha.Rows().Count();
         
+                ValidarOrdemColunas(planilha, Constantes.INICIO_LINHA_TITULO);
+                
                 for (int numeroLinha = Constantes.INICIO_LINHA_DADOS; numeroLinha <= totalLinhas; numeroLinha++)
                 {
                     linhas.Add(new AcervoTridimensionalLinhaDTO()
@@ -281,19 +283,53 @@ namespace SME.CDEP.Aplicacao.Servicos
                         {
                             Conteudo = planilha.ObterValorDaCelula(numeroLinha, Constantes.ACERVO_TRIDIMENSIONAL_CAMPO_PROFUNDIDADE),
                             LimiteCaracteres = Constantes.CARACTERES_PERMITIDOS_500,
-                            EhCampoObrigatorio = true
                         },
                         Diametro = new LinhaConteudoAjustarDTO()
                         {
                             Conteudo = planilha.ObterValorDaCelula(numeroLinha, Constantes.ACERVO_TRIDIMENSIONAL_CAMPO_DIAMETRO),
                             LimiteCaracteres = Constantes.CARACTERES_PERMITIDOS_500,
-                            EhCampoObrigatorio = true
                         }
                     });
                 }
             }
 
             return linhas;
+        }
+
+        private static void ValidarOrdemColunas(IXLWorksheet planilha, int numeroLinha)
+        {
+            ValidarTituloDaColuna(planilha, numeroLinha, Constantes.NOME_DA_COLUNA_TITULO, 
+                Constantes.ACERVO_TRIDIMENSIONAL_CAMPO_TITULO, Constantes.TRIDIMENSIONAL);
+            
+            ValidarTituloDaColuna(planilha, numeroLinha, Constantes.NOME_DA_COLUNA_TOMBO, 
+                Constantes.ACERVO_TRIDIMENSIONAL_CAMPO_TOMBO, Constantes.TRIDIMENSIONAL);
+            
+            ValidarTituloDaColuna(planilha, numeroLinha, Constantes.NOME_DA_COLUNA_PROCEDENCIA, 
+                Constantes.ACERVO_TRIDIMENSIONAL_CAMPO_PROCEDENCIA, Constantes.TRIDIMENSIONAL);
+            
+            ValidarTituloDaColuna(planilha, numeroLinha, Constantes.NOME_DA_COLUNA_DATA, 
+                Constantes.ACERVO_TRIDIMENSIONAL_CAMPO_DATA, Constantes.TRIDIMENSIONAL);
+            
+            ValidarTituloDaColuna(planilha, numeroLinha, Constantes.NOME_DA_COLUNA_ESTADO_DE_CONSERVACAO, 
+                Constantes.ACERVO_TRIDIMENSIONAL_CAMPO_ESTADO_CONSERVACAO, Constantes.TRIDIMENSIONAL);
+            
+            ValidarTituloDaColuna(planilha, numeroLinha, Constantes.NOME_DA_COLUNA_QUANTIDADE,
+                Constantes.ACERVO_TRIDIMENSIONAL_CAMPO_QUANTIDADE, Constantes.TRIDIMENSIONAL);
+            
+            ValidarTituloDaColuna(planilha, numeroLinha, Constantes.NOME_DA_COLUNA_DESCRICAO,
+                Constantes.ACERVO_TRIDIMENSIONAL_CAMPO_DESCRICAO, Constantes.TRIDIMENSIONAL);
+            
+            ValidarTituloDaColuna(planilha, numeroLinha, Constantes.NOME_DA_COLUNA_DIMENSAO_LARGURA,
+                Constantes.ACERVO_TRIDIMENSIONAL_CAMPO_LARGURA, Constantes.TRIDIMENSIONAL);
+            
+            ValidarTituloDaColuna(planilha, numeroLinha, Constantes.NOME_DA_COLUNA_DIMENSAO_ALTURA,
+                Constantes.ACERVO_TRIDIMENSIONAL_CAMPO_ALTURA, Constantes.TRIDIMENSIONAL);
+            
+            ValidarTituloDaColuna(planilha, numeroLinha, Constantes.NOME_DA_COLUNA_DIMENSAO_PROFUNDIDADE,
+                Constantes.ACERVO_TRIDIMENSIONAL_CAMPO_PROFUNDIDADE, Constantes.TRIDIMENSIONAL);
+            
+            ValidarTituloDaColuna(planilha, numeroLinha, Constantes.NOME_DA_COLUNA_DIMENSAO_DIAMETRO,
+                Constantes.ACERVO_TRIDIMENSIONAL_CAMPO_DIAMETRO, Constantes.TRIDIMENSIONAL);
         }
     }
 }

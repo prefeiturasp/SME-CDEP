@@ -27,7 +27,7 @@ namespace SME.CDEP.Dominio.Extensions
         
         public static long? ObterLongoOuNuloPorValorDoCampo(this string valorDoCampo)
         {
-            if (valorDoCampo.NaoEhNulo())
+            if (valorDoCampo.NaoEhNulo() && valorDoCampo.EstaPreenchido())
                 return long.Parse(valorDoCampo);
 
             return default;
@@ -35,7 +35,7 @@ namespace SME.CDEP.Dominio.Extensions
         
         public static long ObterLongoPorValorDoCampo(this string valorDoCampo)
         {
-            if (valorDoCampo.NaoEhNulo() && long.TryParse(valorDoCampo, out long valorLongo))
+            if (valorDoCampo.NaoEhNulo() && valorDoCampo.EstaPreenchido() && long.TryParse(valorDoCampo, out long valorLongo))
                 return valorLongo;
 
             throw new NegocioException(string.Format(Constantes.Constantes.O_CAMPO_X_NAO_EH_UM_VALOR_NUMERICO_Y,valorDoCampo, Constantes.Constantes.FORMATO_LONGO));
