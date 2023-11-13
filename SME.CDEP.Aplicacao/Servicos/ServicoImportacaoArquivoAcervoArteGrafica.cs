@@ -85,7 +85,7 @@ namespace SME.CDEP.Aplicacao.Servicos
 
         private ImportacaoArquivoRetornoDTO<AcervoArteGraficaLinhaRetornoDTO> ObterRetornoImportacaoAcervo(ImportacaoArquivo arquivoImportado, IEnumerable<AcervoArteGraficaLinhaDTO> acervosArtesGraficasLinhas)
         {
-            var acervoARTE_GRAFICARetorno = new ImportacaoArquivoRetornoDTO<AcervoArteGraficaLinhaRetornoDTO>()
+            var acervoArteGraficaRetorno = new ImportacaoArquivoRetornoDTO<AcervoArteGraficaLinhaRetornoDTO>()
             {
                 Id = arquivoImportado.Id,
                 Nome = arquivoImportado.Nome,
@@ -93,15 +93,15 @@ namespace SME.CDEP.Aplicacao.Servicos
                 DataImportacao = arquivoImportado.CriadoEm,
                 Erros = acervosArtesGraficasLinhas
                         .Where(w => w.PossuiErros)
-                        .Select(ObterAcervoARTE_GRAFICALinhaRetornoDto),
+                        .Select(ObterAcervoArteGraficaLinhaRetornoDto),
                 Sucesso = acervosArtesGraficasLinhas
                         .Where(w => !w.PossuiErros)
-                        .Select(ObterAcervoARTE_GRAFICALinhaRetornoDto),
+                        .Select(ObterAcervoArteGraficaLinhaRetornoDto),
             };
-            return acervoARTE_GRAFICARetorno;
+            return acervoArteGraficaRetorno;
         }
 
-        private static AcervoArteGraficaLinhaRetornoDTO ObterAcervoARTE_GRAFICALinhaRetornoDto(AcervoArteGraficaLinhaDTO s)
+        private static AcervoArteGraficaLinhaRetornoDTO ObterAcervoArteGraficaLinhaRetornoDto(AcervoArteGraficaLinhaDTO s)
         {
             return new AcervoArteGraficaLinhaRetornoDTO()
             {
@@ -127,39 +127,39 @@ namespace SME.CDEP.Aplicacao.Servicos
 
         public async Task PersistenciaAcervo(IEnumerable<AcervoArteGraficaLinhaDTO> acervosArtesGraficasLinhas)
         {
-            foreach (var acervoARTE_GRAFICALinha in acervosArtesGraficasLinhas.Where(w=> !w.PossuiErros))
+            foreach (var acervoArteGraficaLinha in acervosArtesGraficasLinhas.Where(w=> !w.PossuiErros))
             {
                 try
                 {
-                    var acervoARTE_GRAFICA = new AcervoArteGraficaCadastroDTO()
+                    var acervoArteGrafica = new AcervoArteGraficaCadastroDTO()
                     {
-                        Titulo = acervoARTE_GRAFICALinha.Titulo.Conteudo,
-                        Codigo = acervoARTE_GRAFICALinha.Tombo.Conteudo,
+                        Titulo = acervoArteGraficaLinha.Titulo.Conteudo,
+                        Codigo = acervoArteGraficaLinha.Tombo.Conteudo,
                         CreditosAutoresIds = CreditosAutores
-                            .Where(f => acervoARTE_GRAFICALinha.Credito.Conteudo.FormatarTextoEmArray().Contains(f.Nome))
+                            .Where(f => acervoArteGraficaLinha.Credito.Conteudo.FormatarTextoEmArray().Contains(f.Nome))
                             .Select(s => s.Id).ToArray(),
-                        Localizacao = acervoARTE_GRAFICALinha.Localizacao.Conteudo,
-                        Procedencia = acervoARTE_GRAFICALinha.Procedencia.Conteudo,
-                        DataAcervo = acervoARTE_GRAFICALinha.Data.Conteudo,
-                        CopiaDigital = ObterCopiaDigitalPorValorDoCampo(acervoARTE_GRAFICALinha.CopiaDigital.Conteudo),
-                        PermiteUsoImagem = ObterAutorizaUsoDeImagemPorValorDoCampo(acervoARTE_GRAFICALinha.AutorizacaoUsoDeImagem.Conteudo),
-                        ConservacaoId = ObterConservacaoIdPorValorDoCampo(acervoARTE_GRAFICALinha.EstadoConservacao.Conteudo),
-                        CromiaId = ObterCromiaIdPorValorDoCampo(acervoARTE_GRAFICALinha.Cromia.Conteudo),
-                        Largura = acervoARTE_GRAFICALinha.Largura.Conteudo.ObterDoubleOuNuloPorValorDoCampo(),
-                        Altura = acervoARTE_GRAFICALinha.Altura.Conteudo.ObterDoubleOuNuloPorValorDoCampo(),
-                        Diametro = acervoARTE_GRAFICALinha.Diametro.Conteudo.ObterDoubleOuNuloPorValorDoCampo(),
-                        Tecnica = acervoARTE_GRAFICALinha.Tecnica.Conteudo,
-                        SuporteId = ObterSuporteImagemIdPorValorDoCampo(acervoARTE_GRAFICALinha.Suporte.Conteudo),
-                        Quantidade = acervoARTE_GRAFICALinha.Quantidade.Conteudo.ObterLongoPorValorDoCampo(),
-                        Descricao = acervoARTE_GRAFICALinha.Descricao.Conteudo,
+                        Localizacao = acervoArteGraficaLinha.Localizacao.Conteudo,
+                        Procedencia = acervoArteGraficaLinha.Procedencia.Conteudo,
+                        DataAcervo = acervoArteGraficaLinha.Data.Conteudo,
+                        CopiaDigital = ObterCopiaDigitalPorValorDoCampo(acervoArteGraficaLinha.CopiaDigital.Conteudo),
+                        PermiteUsoImagem = ObterAutorizaUsoDeImagemPorValorDoCampo(acervoArteGraficaLinha.AutorizacaoUsoDeImagem.Conteudo),
+                        ConservacaoId = ObterConservacaoIdPorValorDoCampo(acervoArteGraficaLinha.EstadoConservacao.Conteudo),
+                        CromiaId = ObterCromiaIdPorValorDoCampo(acervoArteGraficaLinha.Cromia.Conteudo),
+                        Largura = acervoArteGraficaLinha.Largura.Conteudo.ObterDoubleOuNuloPorValorDoCampo(),
+                        Altura = acervoArteGraficaLinha.Altura.Conteudo.ObterDoubleOuNuloPorValorDoCampo(),
+                        Diametro = acervoArteGraficaLinha.Diametro.Conteudo.ObterDoubleOuNuloPorValorDoCampo(),
+                        Tecnica = acervoArteGraficaLinha.Tecnica.Conteudo,
+                        SuporteId = ObterSuporteImagemIdPorValorDoCampo(acervoArteGraficaLinha.Suporte.Conteudo),
+                        Quantidade = acervoArteGraficaLinha.Quantidade.Conteudo.ObterLongoPorValorDoCampo(),
+                        Descricao = acervoArteGraficaLinha.Descricao.Conteudo,
                     };
-                    await servicoAcervoArteGrafica.Inserir(acervoARTE_GRAFICA);
+                    await servicoAcervoArteGrafica.Inserir(acervoArteGrafica);
 
-                    acervoARTE_GRAFICALinha.DefinirLinhaComoSucesso();
+                    acervoArteGraficaLinha.DefinirLinhaComoSucesso();
                 }
                 catch (Exception ex)
                 {
-                    acervoARTE_GRAFICALinha.DefinirLinhaComoErro(ex.Message);
+                    acervoArteGraficaLinha.DefinirLinhaComoErro(ex.Message);
                 }
             }
         } 
