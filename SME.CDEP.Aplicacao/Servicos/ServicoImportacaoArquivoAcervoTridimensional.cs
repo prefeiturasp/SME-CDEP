@@ -299,43 +299,37 @@ namespace SME.CDEP.Aplicacao.Servicos
         private static void ValidarOrdemColunas(IXLWorksheet planilha, int numeroLinha)
         {
             ValidarTituloDaColuna(planilha, numeroLinha, Constantes.NOME_DA_COLUNA_TITULO, 
-                Constantes.ACERVO_TRIDIMENSIONAL_CAMPO_TITULO);
+                Constantes.ACERVO_TRIDIMENSIONAL_CAMPO_TITULO, Constantes.TRIDIMENSIONAL);
             
             ValidarTituloDaColuna(planilha, numeroLinha, Constantes.NOME_DA_COLUNA_TOMBO, 
-                Constantes.ACERVO_TRIDIMENSIONAL_CAMPO_TOMBO);
+                Constantes.ACERVO_TRIDIMENSIONAL_CAMPO_TOMBO, Constantes.TRIDIMENSIONAL);
             
             ValidarTituloDaColuna(planilha, numeroLinha, Constantes.NOME_DA_COLUNA_PROCEDENCIA, 
-                Constantes.ACERVO_TRIDIMENSIONAL_CAMPO_PROCEDENCIA);
+                Constantes.ACERVO_TRIDIMENSIONAL_CAMPO_PROCEDENCIA, Constantes.TRIDIMENSIONAL);
             
             ValidarTituloDaColuna(planilha, numeroLinha, Constantes.NOME_DA_COLUNA_DATA, 
-                Constantes.ACERVO_TRIDIMENSIONAL_CAMPO_DATA);
+                Constantes.ACERVO_TRIDIMENSIONAL_CAMPO_DATA, Constantes.TRIDIMENSIONAL);
             
             ValidarTituloDaColuna(planilha, numeroLinha, Constantes.NOME_DA_COLUNA_ESTADO_DE_CONSERVACAO, 
-                Constantes.ACERVO_TRIDIMENSIONAL_CAMPO_ESTADO_CONSERVACAO);
+                Constantes.ACERVO_TRIDIMENSIONAL_CAMPO_ESTADO_CONSERVACAO, Constantes.TRIDIMENSIONAL);
             
             ValidarTituloDaColuna(planilha, numeroLinha, Constantes.NOME_DA_COLUNA_QUANTIDADE,
-                Constantes.ACERVO_TRIDIMENSIONAL_CAMPO_QUANTIDADE);
+                Constantes.ACERVO_TRIDIMENSIONAL_CAMPO_QUANTIDADE, Constantes.TRIDIMENSIONAL);
             
             ValidarTituloDaColuna(planilha, numeroLinha, Constantes.NOME_DA_COLUNA_DESCRICAO,
-                Constantes.ACERVO_TRIDIMENSIONAL_CAMPO_DESCRICAO);
+                Constantes.ACERVO_TRIDIMENSIONAL_CAMPO_DESCRICAO, Constantes.TRIDIMENSIONAL);
             
             ValidarTituloDaColuna(planilha, numeroLinha, Constantes.NOME_DA_COLUNA_DIMENSAO_LARGURA,
-                Constantes.ACERVO_TRIDIMENSIONAL_CAMPO_LARGURA);
+                Constantes.ACERVO_TRIDIMENSIONAL_CAMPO_LARGURA, Constantes.TRIDIMENSIONAL);
             
             ValidarTituloDaColuna(planilha, numeroLinha, Constantes.NOME_DA_COLUNA_DIMENSAO_ALTURA,
-                Constantes.ACERVO_TRIDIMENSIONAL_CAMPO_ALTURA);
+                Constantes.ACERVO_TRIDIMENSIONAL_CAMPO_ALTURA, Constantes.TRIDIMENSIONAL);
             
             ValidarTituloDaColuna(planilha, numeroLinha, Constantes.NOME_DA_COLUNA_DIMENSAO_PROFUNDIDADE,
-                Constantes.ACERVO_TRIDIMENSIONAL_CAMPO_PROFUNDIDADE);
+                Constantes.ACERVO_TRIDIMENSIONAL_CAMPO_PROFUNDIDADE, Constantes.TRIDIMENSIONAL);
             
             ValidarTituloDaColuna(planilha, numeroLinha, Constantes.NOME_DA_COLUNA_DIMENSAO_DIAMETRO,
-                Constantes.ACERVO_TRIDIMENSIONAL_CAMPO_DIAMETRO);
-        }
-
-        private static void ValidarTituloDaColuna(IXLWorksheet planilha, int numeroLinha, string nomeDaColuna, int numeroDaColuna)
-        {
-            if (planilha.ObterValorDaCelula(numeroLinha, numeroDaColuna).ToLower().SaoDiferentes(nomeDaColuna.ToLower()))
-                throw new NegocioException(string.Format(Constantes.A_PLANLHA_DE_ACERVO_X_NAO_TEM_O_NOME_DA_COLUNA_Y_NA_COLUNA_Z, Constantes.TRIDIMENSIONAL,nomeDaColuna,numeroDaColuna));
+                Constantes.ACERVO_TRIDIMENSIONAL_CAMPO_DIAMETRO, Constantes.TRIDIMENSIONAL);
         }
     }
 }

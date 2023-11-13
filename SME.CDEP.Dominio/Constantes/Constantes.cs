@@ -3,6 +3,11 @@
 public class Constantes
 {
     public const string TRIDIMENSIONAL = "Tridimensional";
+    public const string FOTOGRAFICO = "Fotográfico";
+    public const string DOCUMENTAL = "Documental";
+    public const string BIBLIOGRAFICO = "Bibliográfico";
+    public const string AUDIOVISUAL = "Audiovisual";
+    public const string ARTE_GRAFICA = "Arte Gráfica";
     
     public const string OPCAO_SIM = "sim";
     public const string OPCAO_NAO = "não";
@@ -87,7 +92,7 @@ public class Constantes
     public const int ACERVO_BIBLIOGRAFICO_CAMPO_SUB_TITULO = 2;
     public const int ACERVO_BIBLIOGRAFICO_CAMPO_MATERIAL = 3;
     public const int ACERVO_BIBLIOGRAFICO_CAMPO_AUTOR = 4;
-    public const int ACERVO_BIBLIOGRAFICO_CAMPO_CO_AUTOR = 5;
+    public const int ACERVO_BIBLIOGRAFICO_CAMPO_COAUTOR = 5;
     public const int ACERVO_BIBLIOGRAFICO_CAMPO_TIPO_DE_AUTORIA = 6;
     public const int ACERVO_BIBLIOGRAFICO_CAMPO_EDITORA = 7;
     public const int ACERVO_BIBLIOGRAFICO_CAMPO_ASSUNTO = 8;
@@ -191,7 +196,13 @@ public class Constantes
     public const int ACERVO_TRIDIMENSIONAL_CAMPO_DIAMETRO = 11;
     
     public const string NOME_DA_COLUNA_TITULO = "TÍTULO";
+    public const string NOME_DA_COLUNA_SUBTITULO = "SUBTÍTULO";
     public const string NOME_DA_COLUNA_TOMBO = "TOMBO";
+    public const string NOME_DA_COLUNA_CODIGO_ANTIGO = "Código antigo";
+    public const string NOME_DA_COLUNA_CODIGO_NOVO = "Código novo";
+    public const string NOME_DA_COLUNA_CREDITO = "CRÉDITO";
+    public const string NOME_DA_COLUNA_AUTOR = "AUTOR";
+    public const string NOME_DA_COLUNA_COAUTOR = "COAUTOR";
     public const string NOME_DA_COLUNA_PROCEDENCIA = "PROCEDÊNCIA";
     public const string NOME_DA_COLUNA_DATA = "DATA";
     public const string NOME_DA_COLUNA_ESTADO_DE_CONSERVACAO = "ESTADO DE CONSERVAÇÃO";
@@ -201,6 +212,35 @@ public class Constantes
     public const string NOME_DA_COLUNA_DIMENSAO_ALTURA = "DIMENSÃO ALTURA (CM)";
     public const string NOME_DA_COLUNA_DIMENSAO_PROFUNDIDADE = "DIMENSÃO PROFUNDIDADE (CM)";
     public const string NOME_DA_COLUNA_DIMENSAO_DIAMETRO = "DIMENSÃO DIÂMETRO (CM)";
+    public const string NOME_DA_COLUNA_LOCALIZACAO = "LOCALIZAÇÃO";
+    public const string NOME_DA_COLUNA_COPIA_DIGITAL = "CÓPIA DIGITAL";
+    public const string NOME_DA_COLUNA_AUTORIZACAO_USO_DE_IMAGEM = "AUTORIZAÇÃO DO USO DE IMAGEM";
+    public const string NOME_DA_COLUNA_SUPORTE = "SUPORTE";
+    public const string NOME_DA_COLUNA_FORMATO_DA_IMAGEM = "FORMATO DA IMAGEM";
+    public const string NOME_DA_COLUNA_TAMANHO_DO_ARQUIVO = "TAMANHO DO ARQUIVO";
+    public const string NOME_DA_COLUNA_CROMIA = "CROMIA";
+    public const string NOME_DA_COLUNA_RESOLUCAO = "RESOLUÇÃO";
+    public const string NOME_DA_COLUNA_MATERIAL = "MATERIAL";
+    public const string NOME_DA_COLUNA_IDIOMA = "IDIOMA";
+    public const string NOME_DA_COLUNA_ANO = "ANO";
+    public const string NOME_DA_COLUNA_NUMERO_PAGINAS = "NUMERO PÁGINAS";
+    public const string NOME_DA_COLUNA_VOLUME = "VOLUME";
+    public const string NOME_DA_COLUNA_TIPO_DE_ANEXO = "TIPO DE ANEXO";
+    public const string NOME_DA_COLUNA_ACESSO_DO_DOCUMENTO = "ACESSO DO DOCUMENTO";
+    public const string NOME_DA_COLUNA_TIPO_DE_AUTORIA = "TIPO DE AUTORIA";
+    public const string NOME_DA_COLUNA_EDITORA = "EDITORA";
+    public const string NOME_DA_COLUNA_ASSUNTO = "ASSUNTO";
+    public const string NOME_DA_COLUNA_EDICAO = "EDIÇÃO";
+    public const string NOME_DA_COLUNA_SERIE_COLECAO = "SERIE COLEÇÃO";
+    public const string NOME_DA_COLUNA_LOCALIZACAO_CDD = "LOCALICAÇÃO CDD";
+    public const string NOME_DA_COLUNA_LOCALIZACAO_PHA = "LOCALIZAÇÃO PHA";
+    public const string NOME_DA_COLUNA_NOTAS_GERAIS = "NOTAS GERAIS";
+    public const string NOME_DA_COLUNA_ISBN = "ISBN";
+    public const string NOME_DA_COLUNA_DURACAO = "DURAÇÃO";
+    public const string NOME_DA_COLUNA_ACESSIBILIDADE = "ACESSIBILIDADE";
+    public const string NOME_DA_COLUNA_DISPONIBILIZACAO = "DISPONIBILIZAÇÃO";
+    public const string NOME_DA_COLUNA_TECNICA = "TÉCNICA";
+    
     
     public const string ContentTypeExcel = "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet";
     public const string BUCKET_CDEP = "cdep";

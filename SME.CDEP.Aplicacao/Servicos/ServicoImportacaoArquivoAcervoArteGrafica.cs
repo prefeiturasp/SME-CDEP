@@ -85,7 +85,7 @@ namespace SME.CDEP.Aplicacao.Servicos
 
         private ImportacaoArquivoRetornoDTO<AcervoArteGraficaLinhaRetornoDTO> ObterRetornoImportacaoAcervo(ImportacaoArquivo arquivoImportado, IEnumerable<AcervoArteGraficaLinhaDTO> acervosArtesGraficasLinhas)
         {
-            var acervoArteGraficaRetorno = new ImportacaoArquivoRetornoDTO<AcervoArteGraficaLinhaRetornoDTO>()
+            var acervoARTE_GRAFICARetorno = new ImportacaoArquivoRetornoDTO<AcervoArteGraficaLinhaRetornoDTO>()
             {
                 Id = arquivoImportado.Id,
                 Nome = arquivoImportado.Nome,
@@ -93,15 +93,15 @@ namespace SME.CDEP.Aplicacao.Servicos
                 DataImportacao = arquivoImportado.CriadoEm,
                 Erros = acervosArtesGraficasLinhas
                         .Where(w => w.PossuiErros)
-                        .Select(ObterAcervoArteGraficaLinhaRetornoDto),
+                        .Select(ObterAcervoARTE_GRAFICALinhaRetornoDto),
                 Sucesso = acervosArtesGraficasLinhas
                         .Where(w => !w.PossuiErros)
-                        .Select(ObterAcervoArteGraficaLinhaRetornoDto),
+                        .Select(ObterAcervoARTE_GRAFICALinhaRetornoDto),
             };
-            return acervoArteGraficaRetorno;
+            return acervoARTE_GRAFICARetorno;
         }
 
-        private static AcervoArteGraficaLinhaRetornoDTO ObterAcervoArteGraficaLinhaRetornoDto(AcervoArteGraficaLinhaDTO s)
+        private static AcervoArteGraficaLinhaRetornoDTO ObterAcervoARTE_GRAFICALinhaRetornoDto(AcervoArteGraficaLinhaDTO s)
         {
             return new AcervoArteGraficaLinhaRetornoDTO()
             {
@@ -127,39 +127,39 @@ namespace SME.CDEP.Aplicacao.Servicos
 
         public async Task PersistenciaAcervo(IEnumerable<AcervoArteGraficaLinhaDTO> acervosArtesGraficasLinhas)
         {
-            foreach (var acervoArteGraficaLinha in acervosArtesGraficasLinhas.Where(w=> !w.PossuiErros))
+            foreach (var acervoARTE_GRAFICALinha in acervosArtesGraficasLinhas.Where(w=> !w.PossuiErros))
             {
                 try
                 {
-                    var acervoArteGrafica = new AcervoArteGraficaCadastroDTO()
+                    var acervoARTE_GRAFICA = new AcervoArteGraficaCadastroDTO()
                     {
-                        Titulo = acervoArteGraficaLinha.Titulo.Conteudo,
-                        Codigo = acervoArteGraficaLinha.Tombo.Conteudo,
+                        Titulo = acervoARTE_GRAFICALinha.Titulo.Conteudo,
+                        Codigo = acervoARTE_GRAFICALinha.Tombo.Conteudo,
                         CreditosAutoresIds = CreditosAutores
-                            .Where(f => acervoArteGraficaLinha.Credito.Conteudo.FormatarTextoEmArray().Contains(f.Nome))
+                            .Where(f => acervoARTE_GRAFICALinha.Credito.Conteudo.FormatarTextoEmArray().Contains(f.Nome))
                             .Select(s => s.Id).ToArray(),
-                        Localizacao = acervoArteGraficaLinha.Localizacao.Conteudo,
-                        Procedencia = acervoArteGraficaLinha.Procedencia.Conteudo,
-                        DataAcervo = acervoArteGraficaLinha.Data.Conteudo,
-                        CopiaDigital = ObterCopiaDigitalPorValorDoCampo(acervoArteGraficaLinha.CopiaDigital.Conteudo),
-                        PermiteUsoImagem = ObterAutorizaUsoDeImagemPorValorDoCampo(acervoArteGraficaLinha.AutorizacaoUsoDeImagem.Conteudo),
-                        ConservacaoId = ObterConservacaoIdPorValorDoCampo(acervoArteGraficaLinha.EstadoConservacao.Conteudo),
-                        CromiaId = ObterCromiaIdPorValorDoCampo(acervoArteGraficaLinha.Cromia.Conteudo),
-                        Largura = acervoArteGraficaLinha.Largura.Conteudo.ObterDoubleOuNuloPorValorDoCampo(),
-                        Altura = acervoArteGraficaLinha.Altura.Conteudo.ObterDoubleOuNuloPorValorDoCampo(),
-                        Diametro = acervoArteGraficaLinha.Diametro.Conteudo.ObterDoubleOuNuloPorValorDoCampo(),
-                        Tecnica = acervoArteGraficaLinha.Tecnica.Conteudo,
-                        SuporteId = ObterSuporteImagemIdPorValorDoCampo(acervoArteGraficaLinha.Suporte.Conteudo),
-                        Quantidade = acervoArteGraficaLinha.Quantidade.Conteudo.ObterLongoPorValorDoCampo(),
-                        Descricao = acervoArteGraficaLinha.Descricao.Conteudo,
+                        Localizacao = acervoARTE_GRAFICALinha.Localizacao.Conteudo,
+                        Procedencia = acervoARTE_GRAFICALinha.Procedencia.Conteudo,
+                        DataAcervo = acervoARTE_GRAFICALinha.Data.Conteudo,
+                        CopiaDigital = ObterCopiaDigitalPorValorDoCampo(acervoARTE_GRAFICALinha.CopiaDigital.Conteudo),
+                        PermiteUsoImagem = ObterAutorizaUsoDeImagemPorValorDoCampo(acervoARTE_GRAFICALinha.AutorizacaoUsoDeImagem.Conteudo),
+                        ConservacaoId = ObterConservacaoIdPorValorDoCampo(acervoARTE_GRAFICALinha.EstadoConservacao.Conteudo),
+                        CromiaId = ObterCromiaIdPorValorDoCampo(acervoARTE_GRAFICALinha.Cromia.Conteudo),
+                        Largura = acervoARTE_GRAFICALinha.Largura.Conteudo.ObterDoubleOuNuloPorValorDoCampo(),
+                        Altura = acervoARTE_GRAFICALinha.Altura.Conteudo.ObterDoubleOuNuloPorValorDoCampo(),
+                        Diametro = acervoARTE_GRAFICALinha.Diametro.Conteudo.ObterDoubleOuNuloPorValorDoCampo(),
+                        Tecnica = acervoARTE_GRAFICALinha.Tecnica.Conteudo,
+                        SuporteId = ObterSuporteImagemIdPorValorDoCampo(acervoARTE_GRAFICALinha.Suporte.Conteudo),
+                        Quantidade = acervoARTE_GRAFICALinha.Quantidade.Conteudo.ObterLongoPorValorDoCampo(),
+                        Descricao = acervoARTE_GRAFICALinha.Descricao.Conteudo,
                     };
-                    await servicoAcervoArteGrafica.Inserir(acervoArteGrafica);
+                    await servicoAcervoArteGrafica.Inserir(acervoARTE_GRAFICA);
 
-                    acervoArteGraficaLinha.DefinirLinhaComoSucesso();
+                    acervoARTE_GRAFICALinha.DefinirLinhaComoSucesso();
                 }
                 catch (Exception ex)
                 {
-                    acervoArteGraficaLinha.DefinirLinhaComoErro(ex.Message);
+                    acervoARTE_GRAFICALinha.DefinirLinhaComoErro(ex.Message);
                 }
             }
         } 
@@ -250,6 +250,8 @@ namespace SME.CDEP.Aplicacao.Servicos
                 var planilha = package.Worksheets.FirstOrDefault();
 
                 var totalLinhas = planilha.Rows().Count();
+                
+                ValidarOrdemColunas(planilha, Constantes.INICIO_LINHA_TITULO);
 
                 for (int numeroLinha = Constantes.INICIO_LINHA_DADOS; numeroLinha <= totalLinhas; numeroLinha++)
                 {
@@ -355,6 +357,66 @@ namespace SME.CDEP.Aplicacao.Servicos
             }
 
             return linhas;
+        }
+        
+        private void ValidarOrdemColunas(IXLWorksheet planilha, int numeroLinha)
+        {
+            ValidarTituloDaColuna(planilha, numeroLinha, Constantes.NOME_DA_COLUNA_TITULO, 
+                Constantes.ACERVO_ARTE_GRAFICA_CAMPO_TITULO, Constantes.ARTE_GRAFICA);
+            
+            ValidarTituloDaColuna(planilha, numeroLinha, Constantes.NOME_DA_COLUNA_TOMBO, 
+                Constantes.ACERVO_ARTE_GRAFICA_CAMPO_TOMBO, Constantes.ARTE_GRAFICA);
+            
+            ValidarTituloDaColuna(planilha, numeroLinha, Constantes.NOME_DA_COLUNA_CREDITO, 
+                Constantes.ACERVO_ARTE_GRAFICA_CAMPO_CREDITO, Constantes.ARTE_GRAFICA);
+            
+            ValidarTituloDaColuna(planilha, numeroLinha, Constantes.NOME_DA_COLUNA_LOCALIZACAO, 
+                Constantes.ACERVO_ARTE_GRAFICA_CAMPO_LOCALIZACAO, Constantes.ARTE_GRAFICA);
+            
+            ValidarTituloDaColuna(planilha, numeroLinha, Constantes.NOME_DA_COLUNA_PROCEDENCIA, 
+                Constantes.ACERVO_ARTE_GRAFICA_CAMPO_PROCEDENCIA, Constantes.ARTE_GRAFICA);
+            
+            ValidarTituloDaColuna(planilha, numeroLinha, Constantes.NOME_DA_COLUNA_DATA, 
+                Constantes.ACERVO_ARTE_GRAFICA_CAMPO_DATA, Constantes.ARTE_GRAFICA);
+            
+            ValidarTituloDaColuna(planilha, numeroLinha, Constantes.NOME_DA_COLUNA_COPIA_DIGITAL,
+                Constantes.ACERVO_ARTE_GRAFICA_CAMPO_COPIA_DIGITAL, Constantes.ARTE_GRAFICA);
+            
+            ValidarTituloDaColuna(planilha, numeroLinha, Constantes.NOME_DA_COLUNA_AUTORIZACAO_USO_DE_IMAGEM,
+                Constantes.ACERVO_ARTE_GRAFICA_CAMPO_AUTORIZACAO_USO_DE_IMAGEM, Constantes.ARTE_GRAFICA);
+            
+            ValidarTituloDaColuna(planilha, numeroLinha, Constantes.NOME_DA_COLUNA_ESTADO_DE_CONSERVACAO,
+                Constantes.ACERVO_ARTE_GRAFICA_CAMPO_ESTADO_CONSERVACAO, Constantes.ARTE_GRAFICA);
+            
+            ValidarTituloDaColuna(planilha, numeroLinha, Constantes.NOME_DA_COLUNA_CROMIA,
+                Constantes.ACERVO_ARTE_GRAFICA_CAMPO_CROMIA, Constantes.ARTE_GRAFICA);
+            
+            ValidarTituloDaColuna(planilha, numeroLinha, Constantes.NOME_DA_COLUNA_DIMENSAO_LARGURA,
+                Constantes.ACERVO_ARTE_GRAFICA_CAMPO_DIMENSAO_LARGURA, Constantes.ARTE_GRAFICA);
+            
+            ValidarTituloDaColuna(planilha, numeroLinha, Constantes.NOME_DA_COLUNA_DIMENSAO_ALTURA,
+                Constantes.ACERVO_ARTE_GRAFICA_CAMPO_DIMENSAO_ALTURA, Constantes.ARTE_GRAFICA);
+            
+            ValidarTituloDaColuna(planilha, numeroLinha, Constantes.NOME_DA_COLUNA_DIMENSAO_LARGURA,
+                Constantes.ACERVO_ARTE_GRAFICA_CAMPO_DIMENSAO_LARGURA, Constantes.ARTE_GRAFICA);
+            
+            ValidarTituloDaColuna(planilha, numeroLinha, Constantes.NOME_DA_COLUNA_DIMENSAO_ALTURA,
+                Constantes.ACERVO_ARTE_GRAFICA_CAMPO_DIMENSAO_ALTURA, Constantes.ARTE_GRAFICA);
+            
+            ValidarTituloDaColuna(planilha, numeroLinha, Constantes.NOME_DA_COLUNA_DIMENSAO_DIAMETRO,
+                Constantes.ACERVO_ARTE_GRAFICA_CAMPO_DIMENSAO_DIAMETRO, Constantes.ARTE_GRAFICA);
+            
+            ValidarTituloDaColuna(planilha, numeroLinha, Constantes.NOME_DA_COLUNA_TECNICA,
+                Constantes.ACERVO_ARTE_GRAFICA_CAMPO_TECNICA, Constantes.ARTE_GRAFICA);
+            
+            ValidarTituloDaColuna(planilha, numeroLinha, Constantes.NOME_DA_COLUNA_SUPORTE,
+                Constantes.ACERVO_ARTE_GRAFICA_CAMPO_SUPORTE, Constantes.ARTE_GRAFICA);
+            
+            ValidarTituloDaColuna(planilha, numeroLinha, Constantes.NOME_DA_COLUNA_QUANTIDADE,
+                Constantes.ACERVO_ARTE_GRAFICA_CAMPO_QUANTIDADE, Constantes.ARTE_GRAFICA);
+            
+            ValidarTituloDaColuna(planilha, numeroLinha, Constantes.NOME_DA_COLUNA_DESCRICAO,
+                Constantes.ACERVO_ARTE_GRAFICA_CAMPO_DESCRICAO, Constantes.ARTE_GRAFICA);
         }
     }
 }
