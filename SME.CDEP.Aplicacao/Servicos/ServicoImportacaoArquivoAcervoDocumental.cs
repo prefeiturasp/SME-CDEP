@@ -49,14 +49,14 @@ namespace SME.CDEP.Aplicacao.Servicos
             return true;
         }
         
-        public async Task<ImportacaoArquivoRetornoDTO<AcervoDocumentalLinhaRetornoDTO>> ObterImportacaoPendente()
+        public async Task<ImportacaoArquivoRetornoDTO<AcervoLinhaErroDTO<AcervoDocumentalDTO,AcervoDocumentalLinhaRetornoDTO>,AcervoLinhaRetornoSucessoDTO>> ObterImportacaoPendente()
         {
             var arquivoImportado = await repositorioImportacaoArquivo.ObterUltimaImportacao(TipoAcervo.DocumentacaoHistorica);
 
             return ObterRetornoImportacaoAcervo(arquivoImportado, JsonConvert.DeserializeObject<IEnumerable<AcervoDocumentalLinhaDTO>>(arquivoImportado.Conteudo));
         }
 
-        public async Task<ImportacaoArquivoRetornoDTO<AcervoDocumentalLinhaRetornoDTO>> ImportarArquivo(IFormFile file)
+        public async Task<ImportacaoArquivoRetornoDTO<AcervoLinhaErroDTO<AcervoDocumentalDTO,AcervoDocumentalLinhaRetornoDTO>,AcervoLinhaRetornoSucessoDTO>> ImportarArquivo(IFormFile file)
         {
             ValidarArquivo(file);
         
@@ -81,9 +81,9 @@ namespace SME.CDEP.Aplicacao.Servicos
             return ObterRetornoImportacaoAcervo(arquivoImportado, acervosDocumentalLinhas);
         }
 
-        private ImportacaoArquivoRetornoDTO<AcervoDocumentalLinhaRetornoDTO> ObterRetornoImportacaoAcervo(ImportacaoArquivo arquivoImportado, IEnumerable<AcervoDocumentalLinhaDTO> acervosDocumentalLinhas)
+        private ImportacaoArquivoRetornoDTO<AcervoLinhaErroDTO<AcervoDocumentalDTO,AcervoDocumentalLinhaRetornoDTO>,AcervoLinhaRetornoSucessoDTO> ObterRetornoImportacaoAcervo(ImportacaoArquivo arquivoImportado, IEnumerable<AcervoDocumentalLinhaDTO> acervosDocumentalLinhas)
         {
-            var acervoDocumentalRetorno = new ImportacaoArquivoRetornoDTO<AcervoDocumentalLinhaRetornoDTO>()
+            var acervoDocumentalRetorno = new ImportacaoArquivoRetornoDTO<AcervoLinhaErroDTO<AcervoDocumentalDTO,AcervoDocumentalLinhaRetornoDTO>,AcervoLinhaRetornoSucessoDTO>()
             {
                 Id = arquivoImportado.Id,
                 Nome = arquivoImportado.Nome,
@@ -91,15 +91,64 @@ namespace SME.CDEP.Aplicacao.Servicos
                 DataImportacao = arquivoImportado.CriadoEm,
                 Erros = acervosDocumentalLinhas
                         .Where(w => w.PossuiErros)
-                        .Select(ObterAcervoDocumentalLinhaRetornoDto),
+                        .Select(s=> ObterAcervoLinhaRetornoResumidoDto(s,arquivoImportado.TipoAcervo)),
                 Sucesso = acervosDocumentalLinhas
                         .Where(w => !w.PossuiErros)
-                        .Select(ObterAcervoDocumentalLinhaRetornoDto)
+                        .Select(s=> ObterLinhasComSucesso(s.Titulo.Conteudo, ObterCodigo(s), s.NumeroLinha)),
             };
             return acervoDocumentalRetorno;
         }
 
-        private static AcervoDocumentalLinhaRetornoDTO ObterAcervoDocumentalLinhaRetornoDto(AcervoDocumentalLinhaDTO s)
+        private string ObterCodigo(AcervoDocumentalLinhaDTO s)
+        {
+            if (s.CodigoAntigo.Conteudo.EstaPreenchido() && s.CodigoNovo.Conteudo.EstaPreenchido())
+                return $"{s.CodigoAntigo.Conteudo}/{s.CodigoNovo.Conteudo}";
+            
+            if (s.CodigoAntigo.Conteudo.EstaPreenchido())
+                return s.CodigoAntigo.Conteudo;
+            
+            return s.CodigoNovo.Conteudo.EstaPreenchido() ? s.CodigoNovo.Conteudo : default;
+        }
+        
+        private AcervoLinhaErroDTO<AcervoDocumentalDTO,AcervoDocumentalLinhaRetornoDTO> ObterAcervoLinhaRetornoResumidoDto(AcervoDocumentalLinhaDTO linha, TipoAcervo tipoAcervo)
+        {
+            return new AcervoLinhaErroDTO<AcervoDocumentalDTO,AcervoDocumentalLinhaRetornoDTO>()
+            {
+                Titulo = ObterConteudoTexto(linha.Titulo),
+                Tombo = ObterCodigo(linha),
+                NumeroLinha = linha.NumeroLinha,
+                RetornoObjeto = ObterAcervoDocumentalDto(linha,tipoAcervo),
+                RetornoErro = ObterLinhasComErros(linha),
+            };
+        }
+        
+        private AcervoDocumentalDTO ObterAcervoDocumentalDto(AcervoDocumentalLinhaDTO linha, TipoAcervo tipoAcervo)
+        {
+            return new AcervoDocumentalDTO()
+            {
+                Titulo = ObterConteudoTexto(linha.Titulo),
+                Codigo = ObterConteudoTexto(linha.CodigoAntigo),
+                CodigoNovo = ObterConteudoTexto(linha.CodigoNovo),
+                TipoAcervoId = (int)tipoAcervo,
+                MaterialId = ObterMaterialBibliograficoIdPorValorDoCampo(linha.Material.Conteudo,false),
+                IdiomaId = ObterIdiomaIdPorValorDoCampo(linha.Idioma.Conteudo,false),
+                Ano = ObterConteudoTexto(linha.Ano),
+                NumeroPagina = ObterConteudoTexto(linha.NumeroPaginas),
+                Volume = ObterConteudoTexto(linha.Volume),
+                Descricao = ObterConteudoTexto(linha.Descricao),
+                TipoAnexo = ObterConteudoTexto(linha.TipoAnexo),
+                Largura = ObterConteudoDouble(linha.Largura),
+                Altura = ObterConteudoDouble(linha.Altura),
+                TamanhoArquivo = ObterConteudoTexto(linha.TamanhoArquivo),
+                Localizacao = ObterConteudoTexto(linha.Localizacao),
+                CopiaDigital = ObterConteudoBooleano(linha.CopiaDigital),
+                ConservacaoId = ObterConservacaoIdPorValorDoCampo(linha.EstadoConservacao.Conteudo,false),
+                AcessoDocumentosIds = ObterAcessoDocumentosIdsPorValorDoCampo(linha.AcessoDocumento.Conteudo,false),
+                CreditosAutoresIds = ObterCreditoAutoresIdsPorValorDoCampo(linha.Autor.Conteudo, TipoCreditoAutoria.Autoria),
+            };
+        }
+
+        private static AcervoDocumentalLinhaRetornoDTO ObterLinhasComErros(AcervoDocumentalLinhaDTO s)
         {
             return new AcervoDocumentalLinhaRetornoDTO()
             {
@@ -135,11 +184,9 @@ namespace SME.CDEP.Aplicacao.Servicos
                         Titulo = acervoDocumentalLinha.Titulo.Conteudo,
                         Codigo = acervoDocumentalLinha.CodigoAntigo.Conteudo,
                         CodigoNovo = acervoDocumentalLinha.CodigoNovo.Conteudo,
-                        MaterialId = ObterMaterialDocumentalIdPorValorDoCampo(acervoDocumentalLinha.Material.Conteudo),
+                        MaterialId = ObterMaterialDocumentalIdPorValorDoCampo(acervoDocumentalLinha.Material.Conteudo,false),
                         IdiomaId = ObterIdiomaIdPorValorDoCampo(acervoDocumentalLinha.Idioma.Conteudo),
-                        CreditosAutoresIds = CreditosAutores
-                            .Where(f => acervoDocumentalLinha.Autor.Conteudo.FormatarTextoEmArray().Contains(f.Nome))
-                            .Select(s => s.Id).ToArray(),
+                        CreditosAutoresIds = ObterCreditoAutoresIdsPorValorDoCampo(acervoDocumentalLinha.Autor.Conteudo, TipoCreditoAutoria.Autoria),
                         Ano = acervoDocumentalLinha.Ano.Conteudo,
                         NumeroPagina = acervoDocumentalLinha.NumeroPaginas.Conteudo,
                         Volume = acervoDocumentalLinha.Volume.Conteudo,
@@ -148,9 +195,7 @@ namespace SME.CDEP.Aplicacao.Servicos
                         Largura = acervoDocumentalLinha.Largura.Conteudo.ObterDoubleOuNuloPorValorDoCampo(),
                         Altura = acervoDocumentalLinha.Altura.Conteudo.ObterDoubleOuNuloPorValorDoCampo(),
                         TamanhoArquivo = acervoDocumentalLinha.TamanhoArquivo.Conteudo,
-                        AcessoDocumentosIds = CreditosAutores
-                            .Where(f => acervoDocumentalLinha.AcessoDocumento.Conteudo.FormatarTextoEmArray().Contains(f.Nome))
-                            .Select(s => s.Id).ToArray(),
+                        AcessoDocumentosIds = ObterAcessoDocumentosIdsPorValorDoCampo(acervoDocumentalLinha.AcessoDocumento.Conteudo),
                         Localizacao = acervoDocumentalLinha.Localizacao.Conteudo,
                         CopiaDigital = acervoDocumentalLinha.CopiaDigital.Conteudo.EhOpcaoSim(),
                         ConservacaoId = ObterConservacaoIdPorValorDoCampo(acervoDocumentalLinha.EstadoConservacao.Conteudo)

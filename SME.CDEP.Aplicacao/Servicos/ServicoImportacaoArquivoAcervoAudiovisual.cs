@@ -50,14 +50,14 @@ namespace SME.CDEP.Aplicacao.Servicos
             return true;
         }
 
-        public async Task<ImportacaoArquivoRetornoDTO<AcervoAudiovisualLinhaRetornoDTO>> ObterImportacaoPendente()
+        public async Task<ImportacaoArquivoRetornoDTO<AcervoLinhaErroDTO<AcervoAudiovisualDTO,AcervoAudiovisualLinhaRetornoDTO>,AcervoLinhaRetornoSucessoDTO>> ObterImportacaoPendente()
         {
             var arquivoImportado = await repositorioImportacaoArquivo.ObterUltimaImportacao(TipoAcervo.Audiovisual);
         
             return ObterRetornoImportacaoAcervo(arquivoImportado, JsonConvert.DeserializeObject<IEnumerable<AcervoAudiovisualLinhaDTO>>(arquivoImportado.Conteudo));
         }
 
-        public async Task<ImportacaoArquivoRetornoDTO<AcervoAudiovisualLinhaRetornoDTO>> ImportarArquivo(IFormFile file)
+        public async Task<ImportacaoArquivoRetornoDTO<AcervoLinhaErroDTO<AcervoAudiovisualDTO,AcervoAudiovisualLinhaRetornoDTO>,AcervoLinhaRetornoSucessoDTO>> ImportarArquivo(IFormFile file)
         {
             ValidarArquivo(file);
         
@@ -82,25 +82,61 @@ namespace SME.CDEP.Aplicacao.Servicos
             return ObterRetornoImportacaoAcervo(arquivoImportado, acervosAudiovisualLinhas);
         }
         
-        private ImportacaoArquivoRetornoDTO<AcervoAudiovisualLinhaRetornoDTO> ObterRetornoImportacaoAcervo(ImportacaoArquivo arquivoImportado, IEnumerable<AcervoAudiovisualLinhaDTO> acervosAudiovisualLinhas)
+        private ImportacaoArquivoRetornoDTO<AcervoLinhaErroDTO<AcervoAudiovisualDTO,AcervoAudiovisualLinhaRetornoDTO>,AcervoLinhaRetornoSucessoDTO> ObterRetornoImportacaoAcervo(ImportacaoArquivo arquivoImportado, IEnumerable<AcervoAudiovisualLinhaDTO> acervosAudiovisualLinhas)
         {
-            var acervoAudiovisualRetorno = new ImportacaoArquivoRetornoDTO<AcervoAudiovisualLinhaRetornoDTO>()
+            var acervoAudiovisualRetorno = new ImportacaoArquivoRetornoDTO<AcervoLinhaErroDTO<AcervoAudiovisualDTO,AcervoAudiovisualLinhaRetornoDTO>,AcervoLinhaRetornoSucessoDTO>()
             {
                 Id = arquivoImportado.Id,
                 Nome = arquivoImportado.Nome,
                 TipoAcervo = arquivoImportado.TipoAcervo,
                 DataImportacao = arquivoImportado.CriadoEm,
-                Erros = acervosAudiovisualLinhas
-                        .Where(w => w.PossuiErros)
-                        .Select(ObterAcervoAudiovisualLinhaRetornoDto),
+                Erros =  acervosAudiovisualLinhas
+                    .Where(w => w.PossuiErros)
+                    .Select(s=> ObterAcervoLinhaRetornoResumidoDto(s, arquivoImportado.TipoAcervo)),
                 Sucesso = acervosAudiovisualLinhas
-                        .Where(w => !w.PossuiErros)
-                        .Select(ObterAcervoAudiovisualLinhaRetornoDto)
+                    .Where(w => !w.PossuiErros)
+                    .Select(s=> ObterLinhasComSucesso(s.Titulo.Conteudo, s.Tombo.Conteudo, s.NumeroLinha)),
             };
             return acervoAudiovisualRetorno;
         }
         
-        private static AcervoAudiovisualLinhaRetornoDTO ObterAcervoAudiovisualLinhaRetornoDto(AcervoAudiovisualLinhaDTO s)
+        private AcervoLinhaErroDTO<AcervoAudiovisualDTO,AcervoAudiovisualLinhaRetornoDTO> ObterAcervoLinhaRetornoResumidoDto(AcervoAudiovisualLinhaDTO linha, TipoAcervo tipoAcervo)
+        {
+            return new AcervoLinhaErroDTO<AcervoAudiovisualDTO,AcervoAudiovisualLinhaRetornoDTO>()
+            {
+                Titulo = ObterConteudoTexto(linha.Titulo),
+                Tombo = ObterConteudoTexto(linha.Tombo),
+                NumeroLinha = linha.NumeroLinha,
+                RetornoObjeto = ObterAcervoAudiovisualDto(linha,tipoAcervo),
+                RetornoErro = ObterLinhasComErros(linha),
+            };
+        }
+        
+        private AcervoAudiovisualDTO ObterAcervoAudiovisualDto(AcervoAudiovisualLinhaDTO linha, TipoAcervo tipoAcervo)
+        {
+            return new AcervoAudiovisualDTO()
+            {
+                Titulo = ObterConteudoTexto(linha.Titulo),
+                TipoAcervoId = (int)tipoAcervo,
+                Codigo = ObterConteudoTexto(linha.Tombo),
+                Localizacao = ObterConteudoTexto(linha.Localizacao),
+                Procedencia = ObterConteudoTexto(linha.Procedencia),
+                DataAcervo = ObterConteudoTexto(linha.Data),
+                Copia = ObterConteudoTexto(linha.Copia),
+                PermiteUsoImagem = ObterConteudoBooleano(linha.AutorizacaoUsoDeImagem),
+                ConservacaoId = ObterConservacaoIdPorValorDoCampo(linha.EstadoConservacao.Conteudo,false),
+                Descricao = ObterConteudoTexto(linha.Descricao),
+                SuporteId = ObterSuporteVideoIdPorValorDoCampo(linha.Suporte.Conteudo, false),
+                Duracao = ObterConteudoTexto(linha.Duracao),
+                CromiaId = ObterCromiaIdPorValorDoCampo(linha.Cromia.Conteudo,false),
+                TamanhoArquivo = ObterConteudoTexto(linha.TamanhoArquivo),
+                Acessibilidade = ObterConteudoTexto(linha.Acessibilidade),
+                Disponibilizacao = ObterConteudoTexto(linha.Disponibilizacao),
+                CreditosAutoresIds = ObterCreditoAutoresIdsPorValorDoCampo(linha.Credito.Conteudo, TipoCreditoAutoria.Credito),
+            };
+        }
+        
+        private AcervoAudiovisualLinhaRetornoDTO ObterLinhasComErros(AcervoAudiovisualLinhaDTO s)
         {
             return new AcervoAudiovisualLinhaRetornoDTO()
             {
@@ -119,7 +155,7 @@ namespace SME.CDEP.Aplicacao.Servicos
                 Cromia = ObterConteudoMensagemStatus(s.Cromia),
                 TamanhoArquivo = ObterConteudoMensagemStatus(s.TamanhoArquivo),
                 Acessibilidade = ObterConteudoMensagemStatus(s.Acessibilidade),
-                Disponibilizacao = ObterConteudoMensagemStatus(s.Disponibilizacao)
+                Disponibilizacao = ObterConteudoMensagemStatus(s.Disponibilizacao),
             };
         }
         

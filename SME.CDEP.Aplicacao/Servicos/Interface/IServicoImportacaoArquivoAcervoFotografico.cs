@@ -6,12 +6,12 @@ namespace SME.CDEP.Aplicacao.Servicos.Interface
 {
     public interface IServicoImportacaoArquivoAcervoFotografico
     {
-        Task<ImportacaoArquivoRetornoDTO<AcervoFotograficoLinhaRetornoDTO>> ImportarArquivo(IFormFile file);
+        Task<ImportacaoArquivoRetornoDTO<AcervoLinhaErroDTO<AcervoFotograficoDTO,AcervoFotograficoLinhaRetornoDTO>,AcervoLinhaRetornoSucessoDTO>> ImportarArquivo(IFormFile file);
         Task PersistenciaAcervo(IEnumerable<AcervoFotograficoLinhaDTO> acervosFotograficosLinhas);
         void ValidarPreenchimentoValorFormatoQtdeCaracteres(IEnumerable<AcervoFotograficoLinhaDTO> linhas);
         Task ValidacaoObterOuInserirDominios(IEnumerable<AcervoFotograficoLinhaDTO> linhas);
         void DefinirCreditosAutores(List<IdNomeTipoDTO> creditosAutores);
-        Task<ImportacaoArquivoRetornoDTO<AcervoFotograficoLinhaRetornoDTO>> ObterImportacaoPendente();
+        Task<ImportacaoArquivoRetornoDTO<AcervoLinhaErroDTO<AcervoFotograficoDTO,AcervoFotograficoLinhaRetornoDTO>,AcervoLinhaRetornoSucessoDTO>> ObterImportacaoPendente();
         Task<bool> RemoverLinhaDoArquivo(long id, int linhaDoArquivo);
         Task<bool> AtualizarLinhaParaSucesso(long id, int linhaDoArquivo);
     }

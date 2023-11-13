@@ -123,12 +123,12 @@ namespace SME.CDEP.Dominio.Extensions
         
         public static bool SaoIguais(this string valor, string valorAComparar)
         {
-            return valor.Equals(valorAComparar); 
+            return valor.ToLower().Equals(valorAComparar.ToLower()); 
         }
         
         public static bool SaoDiferentes(this string valor, string valorAComparar)
         {
-            return !valor.Equals(valorAComparar); 
+            return !valor.ToLower().Equals(valorAComparar.ToLower()); 
         }
     }
 }

@@ -14,7 +14,7 @@ namespace SME.CDEP.Webapi.Controllers;
 public class ImportacaoArquivoAcervoAudiovisualController: BaseController
 {
     [HttpPost]
-    [ProducesResponseType(typeof(ImportacaoArquivoRetornoDTO<AcervoAudiovisualLinhaRetornoDTO>),200)]
+    [ProducesResponseType(typeof(ImportacaoArquivoRetornoDTO<AcervoLinhaErroDTO<AcervoAudiovisualDTO,AcervoAudiovisualLinhaRetornoDTO>,AcervoLinhaRetornoSucessoDTO>),200)]
     [ProducesResponseType(401)]
     [ProducesResponseType(typeof(RetornoBaseDTO), 500)]
     [Authorize("Bearer")] 
@@ -24,7 +24,7 @@ public class ImportacaoArquivoAcervoAudiovisualController: BaseController
     }
     
     [HttpGet]
-    [ProducesResponseType(typeof(ImportacaoArquivoRetornoDTO<AcervoAudiovisualLinhaRetornoDTO>),200)]
+    [ProducesResponseType(typeof(ImportacaoArquivoRetornoDTO<AcervoLinhaErroDTO<AcervoAudiovisualDTO,AcervoAudiovisualLinhaRetornoDTO>,AcervoLinhaRetornoSucessoDTO>),200)]
     [ProducesResponseType(401)]
     [ProducesResponseType(typeof(RetornoBaseDTO), 500)]
     [Authorize("Bearer")] 

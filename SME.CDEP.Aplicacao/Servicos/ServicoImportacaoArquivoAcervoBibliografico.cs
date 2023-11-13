@@ -50,14 +50,14 @@ namespace SME.CDEP.Aplicacao.Servicos
             return true;
         }
 
-        public async Task<ImportacaoArquivoRetornoDTO<AcervoBibliograficoLinhaRetornoDTO>> ObterImportacaoPendente()
+        public async Task<ImportacaoArquivoRetornoDTO<AcervoLinhaErroDTO<AcervoBibliograficoDTO,AcervoBibliograficoLinhaRetornoDTO>,AcervoLinhaRetornoSucessoDTO>> ObterImportacaoPendente()
         {
             var arquivoImportado = await repositorioImportacaoArquivo.ObterUltimaImportacao(TipoAcervo.Bibliografico);
 
             return ObterRetornoImportacaoAcervo(arquivoImportado, JsonConvert.DeserializeObject<IEnumerable<AcervoBibliograficoLinhaDTO>>(arquivoImportado.Conteudo));
         }
 
-        public async Task<ImportacaoArquivoRetornoDTO<AcervoBibliograficoLinhaRetornoDTO>> ImportarArquivo(IFormFile file)
+        public async Task<ImportacaoArquivoRetornoDTO<AcervoLinhaErroDTO<AcervoBibliograficoDTO,AcervoBibliograficoLinhaRetornoDTO>,AcervoLinhaRetornoSucessoDTO>> ImportarArquivo(IFormFile file)
         {
             ValidarArquivo(file);
         
@@ -82,9 +82,9 @@ namespace SME.CDEP.Aplicacao.Servicos
             return ObterRetornoImportacaoAcervo(arquivoImportado, acervosBibliograficosLinhas);
         }
 
-        private ImportacaoArquivoRetornoDTO<AcervoBibliograficoLinhaRetornoDTO> ObterRetornoImportacaoAcervo(ImportacaoArquivo arquivoImportado, IEnumerable<AcervoBibliograficoLinhaDTO> acervosBibliograficosLinhas)
+        private ImportacaoArquivoRetornoDTO<AcervoLinhaErroDTO<AcervoBibliograficoDTO,AcervoBibliograficoLinhaRetornoDTO>,AcervoLinhaRetornoSucessoDTO> ObterRetornoImportacaoAcervo(ImportacaoArquivo arquivoImportado, IEnumerable<AcervoBibliograficoLinhaDTO> acervosBibliograficosLinhas)
         {
-            var acervoBibliograficoRetorno = new ImportacaoArquivoRetornoDTO<AcervoBibliograficoLinhaRetornoDTO>()
+            var acervoBibliograficoRetorno = new ImportacaoArquivoRetornoDTO<AcervoLinhaErroDTO<AcervoBibliograficoDTO,AcervoBibliograficoLinhaRetornoDTO>,AcervoLinhaRetornoSucessoDTO>()
             {
                 Id = arquivoImportado.Id,
                 Nome = arquivoImportado.Nome,
@@ -92,15 +92,55 @@ namespace SME.CDEP.Aplicacao.Servicos
                 DataImportacao = arquivoImportado.CriadoEm,
                 Erros = acervosBibliograficosLinhas
                         .Where(w => w.PossuiErros)
-                        .Select(ObterAcervoBibliograficoLinhaRetornoDto),
+                        .Select(s=> ObterAcervoLinhaRetornoResumidoDto(s,arquivoImportado.TipoAcervo)),
                 Sucesso = acervosBibliograficosLinhas
                         .Where(w => !w.PossuiErros)
-                        .Select(ObterAcervoBibliograficoLinhaRetornoDto)
+                        .Select(s=> ObterLinhasComSucesso(s.Titulo.Conteudo, s.Tombo.Conteudo, s.NumeroLinha)),
             };
             return acervoBibliograficoRetorno;
         }
-
-        private static AcervoBibliograficoLinhaRetornoDTO ObterAcervoBibliograficoLinhaRetornoDto(AcervoBibliograficoLinhaDTO s)
+        
+        private AcervoLinhaErroDTO<AcervoBibliograficoDTO,AcervoBibliograficoLinhaRetornoDTO> ObterAcervoLinhaRetornoResumidoDto(AcervoBibliograficoLinhaDTO linha, TipoAcervo tipoAcervo)
+        {
+            return new AcervoLinhaErroDTO<AcervoBibliograficoDTO,AcervoBibliograficoLinhaRetornoDTO>()
+            {
+                Titulo = ObterConteudoTexto(linha.Titulo),
+                Tombo = ObterConteudoTexto(linha.Tombo),
+                NumeroLinha = linha.NumeroLinha,
+                RetornoObjeto = ObterAcervoBibliograficoDto(linha,tipoAcervo),
+                RetornoErro = ObterLinhasComErros(linha),
+            };
+        }
+        
+        private AcervoBibliograficoDTO ObterAcervoBibliograficoDto(AcervoBibliograficoLinhaDTO linha, TipoAcervo tipoAcervo)
+        {
+            return new AcervoBibliograficoDTO()
+            {
+                Titulo = ObterConteudoTexto(linha.Titulo),
+                SubTitulo = ObterConteudoTexto(linha.SubTitulo),
+                TipoAcervoId = (int)tipoAcervo,
+                Codigo = ObterConteudoTexto(linha.Tombo),
+                MaterialId = ObterMaterialBibliograficoIdPorValorDoCampo(linha.Material.Conteudo,false),
+                EditoraId = ObterEditoraIdPorValorDoCampo(linha.Editora.Conteudo, false),
+                AssuntosIds = ObterAssuntosIdsPorValorDoCampo(linha.Assunto.Conteudo),
+                Ano = ObterConteudoTexto(linha.Ano),
+                Edicao = ObterConteudoTexto(linha.Edicao),
+                NumeroPagina = ObterConteudoTexto(linha.NumeroPaginas),
+                Largura = ObterConteudoDouble(linha.Largura),
+                Altura = ObterConteudoDouble(linha.Altura),
+                SerieColecaoId = ObterSerieColecaoIdPorValorDoCampo(linha.SerieColecao.Conteudo,false),
+                IdiomaId = ObterIdiomaIdPorValorDoCampo(linha.Idioma.Conteudo,false),
+                Volume = ObterConteudoTexto(linha.Volume),
+                LocalizacaoCDD = ObterConteudoTexto(linha.LocalizacaoCDD),
+                LocalizacaoPHA = ObterConteudoTexto(linha.LocalizacaoPHA),
+                NotasGerais = ObterConteudoTexto(linha.NotasGerais),
+                Isbn = ObterConteudoTexto(linha.Isbn),
+                CreditosAutoresIds = ObterCreditoAutoresIdsPorValorDoCampo(linha.Autor.Conteudo, TipoCreditoAutoria.Autoria),
+                CoAutores = ObterCoAutoresTipoAutoria(linha.CoAutor.Conteudo, linha.TipoAutoria.Conteudo)
+            };
+        }
+        
+        private AcervoBibliograficoLinhaRetornoDTO ObterLinhasComErros(AcervoBibliograficoLinhaDTO s)
         {
             return new AcervoBibliograficoLinhaRetornoDTO()
             {
@@ -115,8 +155,8 @@ namespace SME.CDEP.Aplicacao.Servicos
                 Ano = ObterConteudoMensagemStatus(s.Ano),
                 Edicao = ObterConteudoMensagemStatus(s.Edicao),
                 NumeroPaginas = ObterConteudoMensagemStatus(s.NumeroPaginas),
-                Largura = ObterConteudoMensagemStatus(s.Largura),
                 Altura = ObterConteudoMensagemStatus(s.Altura),
+                Largura = ObterConteudoMensagemStatus(s.Largura),
                 SerieColecao = ObterConteudoMensagemStatus(s.SerieColecao),
                 Volume = ObterConteudoMensagemStatus(s.Volume),
                 Idioma = ObterConteudoMensagemStatus(s.Idioma),
@@ -142,19 +182,13 @@ namespace SME.CDEP.Aplicacao.Servicos
 
                         MaterialId = ObterMaterialBibliograficoIdPorValorDoCampo(acervoBibliograficoLinha.Material.Conteudo),
 
-                        CreditosAutoresIds = CreditosAutores
-                            .Where(f => acervoBibliograficoLinha.Autor.Conteudo.FormatarTextoEmArray().Contains(f.Nome))
-                            .Select(s => s.Id).ToArray(),
+                        CreditosAutoresIds = ObterCreditoAutoresIdsPorValorDoCampo(acervoBibliograficoLinha.Autor.Conteudo, TipoCreditoAutoria.Autoria),
 
                         CoAutores = ObterCoAutoresTipoAutoria(acervoBibliograficoLinha.CoAutor.Conteudo,acervoBibliograficoLinha.TipoAutoria.Conteudo),
 
-                        EditoraId = acervoBibliograficoLinha.Editora.Conteudo.EstaPreenchido()
-                            ? ObterEditoraIdPorValorDoCampo(acervoBibliograficoLinha.Editora.Conteudo)
-                            : null,
+                        EditoraId = ObterEditoraIdPorValorDoCampo(acervoBibliograficoLinha.Editora.Conteudo, false),
 
-                        AssuntosIds = Assuntos
-                            .Where(f => acervoBibliograficoLinha.Assunto.Conteudo.FormatarTextoEmArray().Contains(f.Nome))
-                            .Select(s => s.Id).ToArray(),
+                        AssuntosIds = ObterAssuntosIdsPorValorDoCampo(acervoBibliograficoLinha.Assunto.Conteudo),
 
                         Ano = acervoBibliograficoLinha.Ano.Conteudo,
                         Edicao = acervoBibliograficoLinha.Edicao.Conteudo,
@@ -162,9 +196,7 @@ namespace SME.CDEP.Aplicacao.Servicos
                         Largura = acervoBibliograficoLinha.Largura.Conteudo.ObterDoubleOuNuloPorValorDoCampo(),
                         Altura = acervoBibliograficoLinha.Altura.Conteudo.ObterDoubleOuNuloPorValorDoCampo(),
 
-                        SerieColecaoId = acervoBibliograficoLinha.SerieColecao.Conteudo.EstaPreenchido()
-                            ? ObterSerieColecaoIdPorValorDoCampo(acervoBibliograficoLinha.SerieColecao.Conteudo)
-                            : null,
+                        SerieColecaoId = ObterSerieColecaoIdPorValorDoCampo(acervoBibliograficoLinha.SerieColecao.Conteudo, false),
 
                         Volume = acervoBibliograficoLinha.Volume.Conteudo,
 

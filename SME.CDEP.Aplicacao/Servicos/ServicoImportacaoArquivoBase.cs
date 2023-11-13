@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using ClosedXML.Excel;
+using DocumentFormat.OpenXml.Office2010.ExcelAc;
 using Microsoft.AspNetCore.Http;
 using Newtonsoft.Json;
 using SME.CDEP.Aplicacao.DTOS;
@@ -469,6 +470,26 @@ namespace SME.CDEP.Aplicacao.Servicos
             };
         }
         
+        protected static string ObterConteudoTexto(LinhaConteudoAjustarDTO linha)
+        {
+            return linha.Conteudo;
+        }
+        
+        protected static bool ObterConteudoBooleano(LinhaConteudoAjustarDTO linha)
+        {
+            return linha.Conteudo.EhOpcaoSim();
+        }
+        
+        protected static long ObterConteudoLongo(LinhaConteudoAjustarDTO linha)
+        {
+            return long.Parse(linha.Conteudo);
+        }
+        
+        protected static double ObterConteudoDouble(LinhaConteudoAjustarDTO linha)
+        {
+            return double.Parse(linha.Conteudo);
+        }
+        
         public async Task ValidarOuInserirFormato(IEnumerable<string> formatos, TipoFormato tipoFormato)
         {
             foreach (var nome in formatos)
@@ -498,71 +519,130 @@ namespace SME.CDEP.Aplicacao.Servicos
             Formatos.Add(new IdNomeTipoDTO() { Id = id, Nome = nome, Tipo = (int)tipoFormato });
         }
         
-        protected long ObterEditoraIdPorValorDoCampo(string valorDoCampo)
+        protected long ObterEditoraIdPorValorDoCampo(string valorDoCampo, bool gerarExcecao = true)
         {
-            return ObterIdentificadorIdPorValorDoCampo(valorDoCampo, Editoras, Constantes.EDITORA);
+            return ObterIdentificadorIdPorValorDoCampo(valorDoCampo, Editoras, Constantes.EDITORA,gerarExcecao);
         }
-        protected long ObterSerieColecaoIdPorValorDoCampo(string valorDoCampo)
+        protected long ObterSerieColecaoIdPorValorDoCampo(string valorDoCampo, bool gerarExcecao = true)
         {
-            return ObterIdentificadorIdPorValorDoCampo(valorDoCampo, SeriesColecoes, Constantes.SERIE_COLECAO);
-        }
-        
-        protected long ObterIdiomaIdPorValorDoCampo(string valorDoCampo)
-        {
-            return ObterIdentificadorIdPorValorDoCampo(valorDoCampo, Idiomas, Constantes.IDIOMA);
+            return ObterIdentificadorIdPorValorDoCampo(valorDoCampo, SeriesColecoes, Constantes.SERIE_COLECAO,gerarExcecao);
         }
         
-        protected long ObterMaterialDocumentalIdPorValorDoCampo(string valorDoCampo)
+        protected long[] ObterCreditoAutoresIdsPorValorDoCampo(string valorDoCampo, TipoCreditoAutoria tipoCreditoAutoria)
         {
-            return ObterIdentificadorIdPorValorDoCampo(valorDoCampo, Materiais, Constantes.MATERIAL, (int)TipoMaterial.DOCUMENTAL);
+            if (valorDoCampo.NaoEstaPreenchido() || !CreditosAutores.Any(a=> a.Equals(valorDoCampo) && a.Tipo.SaoIguais((int)tipoCreditoAutoria)))
+                return null;
+
+            var retorno = new List<long>();
+            
+            var conteudoCampoArray = valorDoCampo.FormatarTextoEmArray().ToList();
+            foreach (var item in conteudoCampoArray)
+                retorno.Add(CreditosAutores.FirstOrDefault(f => f.Nome.SaoIguais(valorDoCampo) && f.Tipo.SaoIguais((int)tipoCreditoAutoria)).Id);
+            
+            return retorno.ToArray();
         }
         
-        protected long ObterMaterialBibliograficoIdPorValorDoCampo(string valorDoCampo)
+        protected long[] ObterAssuntosIdsPorValorDoCampo(string valorDoCampo)
         {
-            return ObterIdentificadorIdPorValorDoCampo(valorDoCampo, Materiais, Constantes.MATERIAL, (int)TipoMaterial.BIBLIOGRAFICO);
+            if (valorDoCampo.NaoEstaPreenchido() || !Assuntos.Any(a=> a.Equals(valorDoCampo)))
+                return null;
+
+            var retorno = new List<long>();
+            
+            var conteudoCampoArray = valorDoCampo.FormatarTextoEmArray().ToList();
+            foreach (var item in conteudoCampoArray)
+                retorno.Add(Assuntos.FirstOrDefault(f => f.Nome.SaoIguais(valorDoCampo)).Id);
+            
+            return retorno.ToArray();
         }
         
-        protected long ObterConservacaoIdPorValorDoCampo(string valorDoCampo)
+        protected long[] ObterAcessoDocumentosIdsPorValorDoCampo(string valorDoCampo, bool gerarExcecao = true)
         {
-            return ObterIdentificadorIdPorValorDoCampo(valorDoCampo, Conservacoes, Constantes.ESTADO_CONSERVACAO);
+            if (valorDoCampo.NaoEstaPreenchido() || !AcessoDocumentos.Any(a=> a.Equals(valorDoCampo)))
+                throw new NegocioException(string.Format(Constantes.O_VALOR_DO_CAMPO_X_NAO_FOI_LOCALIZADO, valorDoCampo));
+
+            var retorno = new List<long>();
+            
+            var conteudoCampoArray = valorDoCampo.FormatarTextoEmArray().ToList();
+            foreach (var item in conteudoCampoArray)
+            {
+                var possuiNome = AcessoDocumentos.Any(f => f.Nome.Equals(valorDoCampo));
+                if (!possuiNome)
+                {
+                    if (gerarExcecao)
+                        throw new NegocioException(string.Format(Constantes.O_VALOR_DO_CAMPO_X_NAO_FOI_LOCALIZADO, valorDoCampo));
+                }
+                else
+                    retorno.Add(AcessoDocumentos.FirstOrDefault(f => f.Nome.SaoIguais(valorDoCampo)).Id);
+            }
+            return retorno.ToArray();
         }
         
-        protected long ObterCromiaIdPorValorDoCampo(string valorDoCampo)
+        protected long ObterIdiomaIdPorValorDoCampo(string valorDoCampo, bool gerarExcecao = true)
         {
-            return ObterIdentificadorIdPorValorDoCampo(valorDoCampo, Cromias, Constantes.CROMIA);
+            return ObterIdentificadorIdPorValorDoCampo(valorDoCampo, Idiomas, Constantes.IDIOMA,gerarExcecao);
         }
         
-        protected long ObterFormatoImagemIdPorValorDoCampo(string valorDoCampo)
+        protected long ObterMaterialDocumentalIdPorValorDoCampo(string valorDoCampo, bool gerarExcecao = true)
         {
-            return ObterIdentificadorIdPorValorDoCampo(valorDoCampo, Formatos, Constantes.FORMATO_IMAGEM, (int)TipoFormato.ACERVO_FOTOS);
+            return ObterIdentificadorIdPorValorDoCampo(valorDoCampo, Materiais, Constantes.MATERIAL, (int)TipoMaterial.DOCUMENTAL,gerarExcecao);
         }
         
-        protected long ObterSuporteImagemIdPorValorDoCampo(string valorDoCampo)
+        protected long ObterMaterialBibliograficoIdPorValorDoCampo(string valorDoCampo, bool gerarExcecao = true)
         {
-            return ObterIdentificadorIdPorValorDoCampo(valorDoCampo, Suportes, Constantes.SUPORTE, (int)TipoSuporte.IMAGEM);
+            return ObterIdentificadorIdPorValorDoCampo(valorDoCampo, Materiais, Constantes.MATERIAL, (int)TipoMaterial.BIBLIOGRAFICO,gerarExcecao);
         }
         
-        protected long ObterSuporteVideoIdPorValorDoCampo(string valorDoCampo)
+        protected long ObterConservacaoIdPorValorDoCampo(string valorDoCampo,bool gerarExcecao = true)
         {
-            return ObterIdentificadorIdPorValorDoCampo(valorDoCampo, Suportes, Constantes.SUPORTE, (int)TipoSuporte.VIDEO);
+            return ObterIdentificadorIdPorValorDoCampo(valorDoCampo, Conservacoes, Constantes.ESTADO_CONSERVACAO,gerarExcecao);
         }
         
-        private long ObterIdentificadorIdPorValorDoCampo(string valorDoCampo, List<IdNomeTipoDTO> dominios, string nomeDoCampo, int tipoFormato)
+        protected long ObterCromiaIdPorValorDoCampo(string valorDoCampo,bool gerarExcecao = true)
+        {
+            return ObterIdentificadorIdPorValorDoCampo(valorDoCampo, Cromias, Constantes.CROMIA,gerarExcecao);
+        }
+        
+        protected long ObterFormatoImagemIdPorValorDoCampo(string valorDoCampo,bool gerarExcecao = true)
+        {
+            return ObterIdentificadorIdPorValorDoCampo(valorDoCampo, Formatos, Constantes.FORMATO_IMAGEM, (int)TipoFormato.ACERVO_FOTOS,gerarExcecao);
+        }
+        
+        protected long ObterSuporteImagemIdPorValorDoCampo(string valorDoCampo,bool gerarExcecao = true)
+        {
+            return ObterIdentificadorIdPorValorDoCampo(valorDoCampo, Suportes, Constantes.SUPORTE, (int)TipoSuporte.IMAGEM,gerarExcecao);
+        }
+        
+        protected long ObterSuporteVideoIdPorValorDoCampo(string valorDoCampo,bool gerarExcecao = true)
+        {
+            return ObterIdentificadorIdPorValorDoCampo(valorDoCampo, Suportes, Constantes.SUPORTE, (int)TipoSuporte.VIDEO,gerarExcecao);
+        }
+        
+        private long ObterIdentificadorIdPorValorDoCampo(string valorDoCampo, List<IdNomeTipoDTO> dominios, string nomeDoCampo, int tipoFormato, bool gerarExcecao = true)
         {
             var possuiNome = dominios.Any(f => f.Nome.Equals(valorDoCampo) && f.Tipo == tipoFormato);
 
             if (!possuiNome)
-                throw new NegocioException(string.Format(Constantes.O_VALOR_DO_CAMPO_X_NAO_FOI_LOCALIZADO, nomeDoCampo));
-
+            {
+                if (gerarExcecao)
+                    throw new NegocioException(string.Format(Constantes.O_VALOR_DO_CAMPO_X_NAO_FOI_LOCALIZADO, nomeDoCampo));
+                
+                return default;
+            }
             return dominios.FirstOrDefault(f => f.Nome.Equals(valorDoCampo) && f.Tipo == tipoFormato).Id;
         }
         
-        private long ObterIdentificadorIdPorValorDoCampo(string valorDoCampo, List<IdNomeDTO> dominios, string nomeDoCampo)
+        private long ObterIdentificadorIdPorValorDoCampo(string valorDoCampo, List<IdNomeDTO> dominios, string nomeDoCampo, bool gerarExecao = true)
         {
             var possuiNome = dominios.Any(f => f.Nome.Equals(valorDoCampo));
 
             if (!possuiNome)
-                throw new NegocioException(string.Format(Constantes.O_VALOR_DO_CAMPO_X_NAO_FOI_LOCALIZADO, nomeDoCampo));
+            {
+                if (gerarExecao)
+                    throw new NegocioException(string.Format(Constantes.O_VALOR_DO_CAMPO_X_NAO_FOI_LOCALIZADO, nomeDoCampo));
+                
+                return default;
+            }
 
             return dominios.FirstOrDefault(f => f.Nome.Equals(valorDoCampo)).Id;
         }
@@ -645,6 +725,16 @@ namespace SME.CDEP.Aplicacao.Servicos
         {
             if (planilha.ObterValorDaCelula(numeroLinha, numeroDaColuna).ToLower().SaoDiferentes(nomeDaColuna.ToLower()))
                 throw new NegocioException(string.Format(Constantes.A_PLANLHA_DE_ACERVO_X_NAO_TEM_O_NOME_DA_COLUNA_Y_NA_COLUNA_Z, nomeDoAcervo,nomeDaColuna,numeroDaColuna));
+        }
+        
+        protected static AcervoLinhaRetornoSucessoDTO ObterLinhasComSucesso(string titulo, string tombo, int numeroLinha)
+        {
+            return new AcervoLinhaRetornoSucessoDTO()
+            {
+                Titulo = titulo,
+                Tombo = tombo,
+                NumeroLinha = numeroLinha,
+            };
         }
     }
 }

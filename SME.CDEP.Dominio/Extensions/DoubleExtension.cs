@@ -12,6 +12,14 @@ namespace SME.CDEP.Dominio.Extensions
             return default;
         }
         
+        public static bool ObterBooleanoPorValorDoCampo(this string valorDoCampo)
+        {
+            if (valorDoCampo.NaoEhNulo() && valorDoCampo.EstaPreenchido())
+                return bool.Parse(valorDoCampo);
+
+            return default;
+        }
+        
         public static double ObterDoublePorValorDoCampo(this string valorDoCampo)
         {
             if (valorDoCampo.NaoEhNulo() && valorDoCampo.EstaPreenchido())
