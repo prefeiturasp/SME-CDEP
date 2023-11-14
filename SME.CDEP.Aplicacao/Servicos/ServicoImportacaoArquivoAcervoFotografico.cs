@@ -1,4 +1,5 @@
-﻿using AutoMapper;
+﻿using System.Text;
+using AutoMapper;
 using ClosedXML.Excel;
 using Microsoft.AspNetCore.Http;
 using Newtonsoft.Json;
@@ -50,14 +51,14 @@ namespace SME.CDEP.Aplicacao.Servicos
             return true;
         }
 
-        public async Task<ImportacaoArquivoRetornoDTO<AcervoFotograficoLinhaRetornoDTO>> ObterImportacaoPendente()
+        public async Task<ImportacaoArquivoRetornoDTO<AcervoLinhaErroDTO<AcervoFotograficoDTO,AcervoFotograficoLinhaRetornoDTO>,AcervoLinhaRetornoSucessoDTO>> ObterImportacaoPendente()
         {
             var arquivoImportado = await repositorioImportacaoArquivo.ObterUltimaImportacao(TipoAcervo.Fotografico);
         
-            return ObterRetornoImportacaoAcervo(arquivoImportado, JsonConvert.DeserializeObject<IEnumerable<AcervoFotograficoLinhaDTO>>(arquivoImportado.Conteudo));
+            return await ObterRetornoImportacaoAcervo(arquivoImportado, JsonConvert.DeserializeObject<IEnumerable<AcervoFotograficoLinhaDTO>>(arquivoImportado.Conteudo), false);
         }
 
-        public async Task<ImportacaoArquivoRetornoDTO<AcervoFotograficoLinhaRetornoDTO>> ImportarArquivo(IFormFile file)
+        public async Task<ImportacaoArquivoRetornoDTO<AcervoLinhaErroDTO<AcervoFotograficoDTO,AcervoFotograficoLinhaRetornoDTO>,AcervoLinhaRetornoSucessoDTO>> ImportarArquivo(IFormFile file)
         {
             ValidarArquivo(file);
         
@@ -79,12 +80,21 @@ namespace SME.CDEP.Aplicacao.Servicos
         
             var arquivoImportado = await repositorioImportacaoArquivo.ObterPorId(importacaoArquivoId);
         
-            return ObterRetornoImportacaoAcervo(arquivoImportado, acervosFotograficoLinhas);
+            return await ObterRetornoImportacaoAcervo(arquivoImportado, acervosFotograficoLinhas);
         }
         
-        private ImportacaoArquivoRetornoDTO<AcervoFotograficoLinhaRetornoDTO> ObterRetornoImportacaoAcervo(ImportacaoArquivo arquivoImportado, IEnumerable<AcervoFotograficoLinhaDTO> acervosFotograficoLinhas)
+        private async Task<ImportacaoArquivoRetornoDTO<AcervoLinhaErroDTO<AcervoFotograficoDTO,AcervoFotograficoLinhaRetornoDTO>,AcervoLinhaRetornoSucessoDTO>> ObterRetornoImportacaoAcervo(ImportacaoArquivo arquivoImportado, IEnumerable<AcervoFotograficoLinhaDTO> acervosFotograficoLinhas, bool estaImportandoArquivo = true)
         {
-            var acervoFotograficoRetorno = new ImportacaoArquivoRetornoDTO<AcervoFotograficoLinhaRetornoDTO>()
+            if (!estaImportandoArquivo)
+            {
+                await ObterConservacoes(acervosFotograficoLinhas.Select(s => s.EstadoConservacao.Conteudo).Distinct().Where(w=> w.EstaPreenchido()));
+                await ObterSuportes(acervosFotograficoLinhas.Select(s => s.Suporte.Conteudo).Distinct().Where(w=> w.EstaPreenchido()), TipoSuporte.IMAGEM);
+                await ObterFormatos(acervosFotograficoLinhas.Select(s => s.FormatoImagem.Conteudo).Distinct().Where(w=> w.EstaPreenchido()), TipoFormato.ACERVO_FOTOS);
+                await ObterCromias(acervosFotograficoLinhas.Select(s => s.Cromia.Conteudo).Distinct().Where(w=> w.EstaPreenchido()));
+                await ObterCreditosAutoresTipoAutoria(acervosFotograficoLinhas.Select(s => s.Credito.Conteudo).ToArray().UnificarPipe().SplitPipe().Distinct().Where(w=> w.EstaPreenchido()), TipoCreditoAutoria.Credito);
+            }
+            
+            var acervoFotograficoRetorno = new ImportacaoArquivoRetornoDTO<AcervoLinhaErroDTO<AcervoFotograficoDTO,AcervoFotograficoLinhaRetornoDTO>,AcervoLinhaRetornoSucessoDTO>()
             {
                 Id = arquivoImportado.Id,
                 Nome = arquivoImportado.Nome,
@@ -92,15 +102,53 @@ namespace SME.CDEP.Aplicacao.Servicos
                 DataImportacao = arquivoImportado.CriadoEm,
                 Erros = acervosFotograficoLinhas
                         .Where(w => w.PossuiErros)
-                        .Select(ObterAcervoFotograficoLinhaRetornoDto),
+                        .Select(s=> ObterAcervoLinhaRetornoResumidoDto(s,arquivoImportado.TipoAcervo)),
                 Sucesso = acervosFotograficoLinhas
                         .Where(w => !w.PossuiErros)
-                        .Select(ObterAcervoFotograficoLinhaRetornoDto)
+                        .Select(s=> ObterLinhasComSucesso(s.Titulo.Conteudo, s.Tombo.Conteudo, s.NumeroLinha)),
             };
             return acervoFotograficoRetorno;
         }
         
-        private static AcervoFotograficoLinhaRetornoDTO ObterAcervoFotograficoLinhaRetornoDto(AcervoFotograficoLinhaDTO s)
+        private AcervoLinhaErroDTO<AcervoFotograficoDTO,AcervoFotograficoLinhaRetornoDTO> ObterAcervoLinhaRetornoResumidoDto(AcervoFotograficoLinhaDTO linha, TipoAcervo tipoAcervo)
+        {
+            return new AcervoLinhaErroDTO<AcervoFotograficoDTO,AcervoFotograficoLinhaRetornoDTO>()
+            {
+                Titulo = ObterConteudoTexto(linha.Titulo),
+                Tombo = ObterConteudoTexto(linha.Tombo),
+                NumeroLinha = linha.NumeroLinha,
+                RetornoObjeto = ObterAcervoFotograficoDto(linha,tipoAcervo),
+                RetornoErro = ObterLinhasComErros(linha),
+            };
+        }
+        
+        private AcervoFotograficoDTO ObterAcervoFotograficoDto(AcervoFotograficoLinhaDTO linha, TipoAcervo tipoAcervo)
+        {
+            return new AcervoFotograficoDTO()
+            {
+                Titulo = ObterConteudoTexto(linha.Titulo),
+                TipoAcervoId = (int)tipoAcervo,
+                Codigo = ObterConteudoTexto(linha.Tombo),
+                Localizacao = ObterConteudoTexto(linha.Localizacao),
+                Procedencia = ObterConteudoTexto(linha.Procedencia),
+                DataAcervo = ObterConteudoTexto(linha.Data),
+                CopiaDigital = ObterConteudoBooleano(linha.CopiaDigital),
+                PermiteUsoImagem = ObterConteudoBooleano(linha.AutorizacaoUsoDeImagem),
+                ConservacaoId = ObterConservacaoIdPorValorDoCampo(linha.EstadoConservacao.Conteudo,false),
+                Descricao = ObterConteudoTexto(linha.Descricao),
+                Quantidade = ObterConteudoLongoOuNulo(linha.Quantidade),
+                Largura = ObterConteudoDoubleOuNulo(linha.Largura),
+                Altura = ObterConteudoDoubleOuNulo(linha.Altura),
+                SuporteId = ObterSuporteImagemIdPorValorDoCampo(linha.Suporte.Conteudo, false),
+                FormatoId = ObterSuporteImagemIdPorValorDoCampo(linha.FormatoImagem.Conteudo, false),
+                CromiaId = ObterSuporteImagemIdPorValorDoCampo(linha.Cromia.Conteudo, false),
+                Resolucao = ObterConteudoTexto(linha.Resolucao),
+                TamanhoArquivo = ObterConteudoTexto(linha.TamanhoArquivo),
+                CreditosAutoresIds = ObterCreditoAutoresIdsPorValorDoCampo(linha.Credito.Conteudo, TipoCreditoAutoria.Credito),
+            };
+        }
+        
+        private AcervoFotograficoLinhaRetornoDTO ObterLinhasComErros(AcervoFotograficoLinhaDTO s)
         {
             return new AcervoFotograficoLinhaRetornoDTO()
             {
@@ -122,7 +170,71 @@ namespace SME.CDEP.Aplicacao.Servicos
                 TamanhoArquivo = ObterConteudoMensagemStatus(s.TamanhoArquivo),
                 Cromia = ObterConteudoMensagemStatus(s.Cromia),
                 Resolucao = ObterConteudoMensagemStatus(s.Resolucao),
+                NumeroLinha = s.NumeroLinha,
+                Status = ImportacaoStatus.Erros,
+                Mensagem = s.Mensagem.NaoEstaPreenchido() ? ObterMensagemErroLinha(s) : s.Mensagem,
             };
+        }
+				
+        private string ObterMensagemErroLinha(AcervoFotograficoLinhaDTO acervoFotograficoLinhaDTO)
+        {
+	        var mensagemErro = new StringBuilder();
+
+	        if (acervoFotograficoLinhaDTO.Titulo.PossuiErro)
+		        mensagemErro.AppendLine(acervoFotograficoLinhaDTO.Titulo.Mensagem);
+	        
+	        if (acervoFotograficoLinhaDTO.Tombo.PossuiErro)
+		        mensagemErro.AppendLine(acervoFotograficoLinhaDTO.Tombo.Mensagem);
+	        
+	        if (acervoFotograficoLinhaDTO.Credito.PossuiErro)
+		        mensagemErro.AppendLine(acervoFotograficoLinhaDTO.Credito.Mensagem);
+			        
+	        if (acervoFotograficoLinhaDTO.Localizacao.PossuiErro)
+		        mensagemErro.AppendLine(acervoFotograficoLinhaDTO.Localizacao.Mensagem);
+			        
+	        if (acervoFotograficoLinhaDTO.Procedencia.PossuiErro)
+		        mensagemErro.AppendLine(acervoFotograficoLinhaDTO.Procedencia.Mensagem);
+			        
+	        if (acervoFotograficoLinhaDTO.Data.PossuiErro)
+		        mensagemErro.AppendLine(acervoFotograficoLinhaDTO.Data.Mensagem);
+			        
+	        if (acervoFotograficoLinhaDTO.CopiaDigital.PossuiErro)
+		        mensagemErro.AppendLine(acervoFotograficoLinhaDTO.CopiaDigital.Mensagem);
+			        
+	        if (acervoFotograficoLinhaDTO.AutorizacaoUsoDeImagem.PossuiErro)
+		        mensagemErro.AppendLine(acervoFotograficoLinhaDTO.AutorizacaoUsoDeImagem.Mensagem);
+			        
+	        if (acervoFotograficoLinhaDTO.EstadoConservacao.PossuiErro)
+		        mensagemErro.AppendLine(acervoFotograficoLinhaDTO.EstadoConservacao.Mensagem);
+	        
+	        if (acervoFotograficoLinhaDTO.Descricao.PossuiErro)
+		        mensagemErro.AppendLine(acervoFotograficoLinhaDTO.Descricao.Mensagem);
+	        
+	        if (acervoFotograficoLinhaDTO.Suporte.PossuiErro)
+		        mensagemErro.AppendLine(acervoFotograficoLinhaDTO.Suporte.Mensagem);
+	        
+	        if (acervoFotograficoLinhaDTO.Quantidade.PossuiErro)
+		        mensagemErro.AppendLine(acervoFotograficoLinhaDTO.Quantidade.Mensagem);
+			        
+	        if (acervoFotograficoLinhaDTO.Cromia.PossuiErro)
+		        mensagemErro.AppendLine(acervoFotograficoLinhaDTO.Cromia.Mensagem);
+			        
+	        if (acervoFotograficoLinhaDTO.TamanhoArquivo.PossuiErro)
+		        mensagemErro.AppendLine(acervoFotograficoLinhaDTO.TamanhoArquivo.Mensagem);
+			        
+	        if (acervoFotograficoLinhaDTO.Largura.PossuiErro)
+		        mensagemErro.AppendLine(acervoFotograficoLinhaDTO.Largura.Mensagem);
+			        
+	        if (acervoFotograficoLinhaDTO.Altura.PossuiErro)
+		        mensagemErro.AppendLine(acervoFotograficoLinhaDTO.Altura.Mensagem);
+            
+            if (acervoFotograficoLinhaDTO.FormatoImagem.PossuiErro)
+                mensagemErro.AppendLine(acervoFotograficoLinhaDTO.FormatoImagem.Mensagem);
+            
+            if (acervoFotograficoLinhaDTO.Resolucao.PossuiErro)
+                mensagemErro.AppendLine(acervoFotograficoLinhaDTO.Resolucao.Mensagem);
+
+	        return mensagemErro.ToString();
         }
         
         public async Task PersistenciaAcervo(IEnumerable<AcervoFotograficoLinhaDTO> acervosFotograficosLinhas)

@@ -1,4 +1,5 @@
-﻿using AutoMapper;
+﻿using System.Text;
+using AutoMapper;
 using ClosedXML.Excel;
 using Microsoft.AspNetCore.Http;
 using Newtonsoft.Json;
@@ -50,14 +51,14 @@ namespace SME.CDEP.Aplicacao.Servicos
             return true;
         }
 
-        public async Task<ImportacaoArquivoRetornoDTO<AcervoAudiovisualLinhaRetornoDTO>> ObterImportacaoPendente()
+        public async Task<ImportacaoArquivoRetornoDTO<AcervoLinhaErroDTO<AcervoAudiovisualDTO,AcervoAudiovisualLinhaRetornoDTO>,AcervoLinhaRetornoSucessoDTO>> ObterImportacaoPendente()
         {
             var arquivoImportado = await repositorioImportacaoArquivo.ObterUltimaImportacao(TipoAcervo.Audiovisual);
         
-            return ObterRetornoImportacaoAcervo(arquivoImportado, JsonConvert.DeserializeObject<IEnumerable<AcervoAudiovisualLinhaDTO>>(arquivoImportado.Conteudo));
+            return await ObterRetornoImportacaoAcervo(arquivoImportado, JsonConvert.DeserializeObject<IEnumerable<AcervoAudiovisualLinhaDTO>>(arquivoImportado.Conteudo), false);
         }
 
-        public async Task<ImportacaoArquivoRetornoDTO<AcervoAudiovisualLinhaRetornoDTO>> ImportarArquivo(IFormFile file)
+        public async Task<ImportacaoArquivoRetornoDTO<AcervoLinhaErroDTO<AcervoAudiovisualDTO,AcervoAudiovisualLinhaRetornoDTO>,AcervoLinhaRetornoSucessoDTO>> ImportarArquivo(IFormFile file)
         {
             ValidarArquivo(file);
         
@@ -79,28 +80,72 @@ namespace SME.CDEP.Aplicacao.Servicos
         
             var arquivoImportado = await repositorioImportacaoArquivo.ObterPorId(importacaoArquivoId);
         
-            return ObterRetornoImportacaoAcervo(arquivoImportado, acervosAudiovisualLinhas);
+            return await ObterRetornoImportacaoAcervo(arquivoImportado, acervosAudiovisualLinhas);
         }
         
-        private ImportacaoArquivoRetornoDTO<AcervoAudiovisualLinhaRetornoDTO> ObterRetornoImportacaoAcervo(ImportacaoArquivo arquivoImportado, IEnumerable<AcervoAudiovisualLinhaDTO> acervosAudiovisualLinhas)
+        private async Task<ImportacaoArquivoRetornoDTO<AcervoLinhaErroDTO<AcervoAudiovisualDTO,AcervoAudiovisualLinhaRetornoDTO>,AcervoLinhaRetornoSucessoDTO>> ObterRetornoImportacaoAcervo(ImportacaoArquivo arquivoImportado, IEnumerable<AcervoAudiovisualLinhaDTO> acervosAudiovisualLinhas, bool estaImportandoArquivo = true)
         {
-            var acervoAudiovisualRetorno = new ImportacaoArquivoRetornoDTO<AcervoAudiovisualLinhaRetornoDTO>()
+            if (!estaImportandoArquivo)
+            {
+                await ObterConservacoes(acervosAudiovisualLinhas.Select(s => s.EstadoConservacao.Conteudo).Distinct().Where(w=> w.EstaPreenchido()));
+                await ObterSuportes(acervosAudiovisualLinhas.Select(s => s.Suporte.Conteudo).Distinct().Where(w=> w.EstaPreenchido()), TipoSuporte.VIDEO);
+                await ObterCromias(acervosAudiovisualLinhas.Select(s => s.Cromia.Conteudo).Distinct().Where(w=> w.EstaPreenchido()));
+                await ObterCreditosAutoresTipoAutoria(acervosAudiovisualLinhas.Select(s => s.Credito.Conteudo).ToArray().UnificarPipe().SplitPipe().Distinct().Where(w=> w.EstaPreenchido()), TipoCreditoAutoria.Credito);
+            }
+            
+            var acervoAudiovisualRetorno = new ImportacaoArquivoRetornoDTO<AcervoLinhaErroDTO<AcervoAudiovisualDTO,AcervoAudiovisualLinhaRetornoDTO>,AcervoLinhaRetornoSucessoDTO>()
             {
                 Id = arquivoImportado.Id,
                 Nome = arquivoImportado.Nome,
                 TipoAcervo = arquivoImportado.TipoAcervo,
                 DataImportacao = arquivoImportado.CriadoEm,
-                Erros = acervosAudiovisualLinhas
-                        .Where(w => w.PossuiErros)
-                        .Select(ObterAcervoAudiovisualLinhaRetornoDto),
+                Erros =  acervosAudiovisualLinhas
+                    .Where(w => w.PossuiErros)
+                    .Select(s=> ObterAcervoLinhaRetornoResumidoDto(s, arquivoImportado.TipoAcervo)),
                 Sucesso = acervosAudiovisualLinhas
-                        .Where(w => !w.PossuiErros)
-                        .Select(ObterAcervoAudiovisualLinhaRetornoDto)
+                    .Where(w => !w.PossuiErros)
+                    .Select(s=> ObterLinhasComSucesso(s.Titulo.Conteudo, s.Tombo.Conteudo, s.NumeroLinha)),
             };
             return acervoAudiovisualRetorno;
         }
         
-        private static AcervoAudiovisualLinhaRetornoDTO ObterAcervoAudiovisualLinhaRetornoDto(AcervoAudiovisualLinhaDTO s)
+        private AcervoLinhaErroDTO<AcervoAudiovisualDTO,AcervoAudiovisualLinhaRetornoDTO> ObterAcervoLinhaRetornoResumidoDto(AcervoAudiovisualLinhaDTO linha, TipoAcervo tipoAcervo)
+        {
+            return new AcervoLinhaErroDTO<AcervoAudiovisualDTO,AcervoAudiovisualLinhaRetornoDTO>()
+            {
+                Titulo = ObterConteudoTexto(linha.Titulo),
+                Tombo = ObterConteudoTexto(linha.Tombo),
+                NumeroLinha = linha.NumeroLinha,
+                RetornoObjeto = ObterAcervoAudiovisualDto(linha,tipoAcervo),
+                RetornoErro = ObterLinhasComErros(linha),
+            };
+        }
+        
+        private AcervoAudiovisualDTO ObterAcervoAudiovisualDto(AcervoAudiovisualLinhaDTO linha, TipoAcervo tipoAcervo)
+        {
+            return new AcervoAudiovisualDTO()
+            {
+                Titulo = ObterConteudoTexto(linha.Titulo),
+                TipoAcervoId = (int)tipoAcervo,
+                Codigo = ObterConteudoTexto(linha.Tombo),
+                Localizacao = ObterConteudoTexto(linha.Localizacao),
+                Procedencia = ObterConteudoTexto(linha.Procedencia),
+                DataAcervo = ObterConteudoTexto(linha.Data),
+                Copia = ObterConteudoTexto(linha.Copia),
+                PermiteUsoImagem = ObterConteudoBooleano(linha.AutorizacaoUsoDeImagem),
+                ConservacaoId = ObterConservacaoIdPorValorDoCampo(linha.EstadoConservacao.Conteudo,false),
+                Descricao = ObterConteudoTexto(linha.Descricao),
+                SuporteId = ObterSuporteVideoIdPorValorDoCampo(linha.Suporte.Conteudo, false),
+                Duracao = ObterConteudoTexto(linha.Duracao),
+                CromiaId = ObterCromiaIdPorValorDoCampo(linha.Cromia.Conteudo,false),
+                TamanhoArquivo = ObterConteudoTexto(linha.TamanhoArquivo),
+                Acessibilidade = ObterConteudoTexto(linha.Acessibilidade),
+                Disponibilizacao = ObterConteudoTexto(linha.Disponibilizacao),
+                CreditosAutoresIds = ObterCreditoAutoresIdsPorValorDoCampo(linha.Credito.Conteudo, TipoCreditoAutoria.Credito),
+            };
+        }
+        
+        private AcervoAudiovisualLinhaRetornoDTO ObterLinhasComErros(AcervoAudiovisualLinhaDTO s)
         {
             return new AcervoAudiovisualLinhaRetornoDTO()
             {
@@ -119,8 +164,66 @@ namespace SME.CDEP.Aplicacao.Servicos
                 Cromia = ObterConteudoMensagemStatus(s.Cromia),
                 TamanhoArquivo = ObterConteudoMensagemStatus(s.TamanhoArquivo),
                 Acessibilidade = ObterConteudoMensagemStatus(s.Acessibilidade),
-                Disponibilizacao = ObterConteudoMensagemStatus(s.Disponibilizacao)
+                Disponibilizacao = ObterConteudoMensagemStatus(s.Disponibilizacao),
+                NumeroLinha = s.NumeroLinha,
+                Status = ImportacaoStatus.Erros,
+                Mensagem = s.Mensagem.NaoEstaPreenchido() ? ObterMensagemErroLinha(s) : s.Mensagem,
             };
+        }
+        
+        private string ObterMensagemErroLinha(AcervoAudiovisualLinhaDTO acervoAudiovisualLinhaDTO)
+        {
+            var mensagemErro = new StringBuilder();
+
+            if (acervoAudiovisualLinhaDTO.Titulo.PossuiErro)
+                mensagemErro.AppendLine(acervoAudiovisualLinhaDTO.Titulo.Mensagem);
+            
+            if (acervoAudiovisualLinhaDTO.Tombo.PossuiErro)
+                mensagemErro.AppendLine(acervoAudiovisualLinhaDTO.Tombo.Mensagem);
+            
+            if (acervoAudiovisualLinhaDTO.Credito.PossuiErro)
+                mensagemErro.AppendLine(acervoAudiovisualLinhaDTO.Credito.Mensagem);
+                    
+            if (acervoAudiovisualLinhaDTO.Localizacao.PossuiErro)
+                mensagemErro.AppendLine(acervoAudiovisualLinhaDTO.Localizacao.Mensagem);
+                    
+            if (acervoAudiovisualLinhaDTO.Procedencia.PossuiErro)
+                mensagemErro.AppendLine(acervoAudiovisualLinhaDTO.Procedencia.Mensagem);
+                    
+            if (acervoAudiovisualLinhaDTO.Data.PossuiErro)
+                mensagemErro.AppendLine(acervoAudiovisualLinhaDTO.Data.Mensagem);
+                    
+            if (acervoAudiovisualLinhaDTO.Copia.PossuiErro)
+                mensagemErro.AppendLine(acervoAudiovisualLinhaDTO.Copia.Mensagem);
+                    
+            if (acervoAudiovisualLinhaDTO.AutorizacaoUsoDeImagem.PossuiErro)
+                mensagemErro.AppendLine(acervoAudiovisualLinhaDTO.AutorizacaoUsoDeImagem.Mensagem);
+                    
+            if (acervoAudiovisualLinhaDTO.EstadoConservacao.PossuiErro)
+                mensagemErro.AppendLine(acervoAudiovisualLinhaDTO.EstadoConservacao.Mensagem);
+            
+            if (acervoAudiovisualLinhaDTO.Descricao.PossuiErro)
+                mensagemErro.AppendLine(acervoAudiovisualLinhaDTO.Descricao.Mensagem);
+            
+            if (acervoAudiovisualLinhaDTO.Suporte.PossuiErro)
+                mensagemErro.AppendLine(acervoAudiovisualLinhaDTO.Suporte.Mensagem);
+            
+            if (acervoAudiovisualLinhaDTO.Duracao.PossuiErro)
+                mensagemErro.AppendLine(acervoAudiovisualLinhaDTO.Suporte.Mensagem);
+                    
+            if (acervoAudiovisualLinhaDTO.Cromia.PossuiErro)
+                mensagemErro.AppendLine(acervoAudiovisualLinhaDTO.Cromia.Mensagem);
+                    
+            if (acervoAudiovisualLinhaDTO.TamanhoArquivo.PossuiErro)
+                mensagemErro.AppendLine(acervoAudiovisualLinhaDTO.TamanhoArquivo.Mensagem);
+                    
+            if (acervoAudiovisualLinhaDTO.Acessibilidade.PossuiErro)
+                mensagemErro.AppendLine(acervoAudiovisualLinhaDTO.Acessibilidade.Mensagem);
+                    
+            if (acervoAudiovisualLinhaDTO.Disponibilizacao.PossuiErro)
+                mensagemErro.AppendLine(acervoAudiovisualLinhaDTO.Disponibilizacao.Mensagem);
+
+            return mensagemErro.ToString();
         }
         
         public async Task PersistenciaAcervo(IEnumerable<AcervoAudiovisualLinhaDTO> acervosAudiovisualLinhas)

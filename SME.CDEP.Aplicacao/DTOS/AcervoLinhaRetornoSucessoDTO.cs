@@ -2,9 +2,9 @@
 
 namespace SME.CDEP.Aplicacao.DTOS;
 
-public class AcervoLinhaRetornoDTO
+public class AcervoLinhaRetornoSucessoDTO
 {
-    public ImportacaoStatus Status { get; set; }
     public int NumeroLinha { get; set; }
-    public string Mensagem { get; set; }
+    public string Titulo { get; set; }
+    public string Tombo { get; set; }
 }

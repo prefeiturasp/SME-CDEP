@@ -14,7 +14,7 @@ namespace SME.CDEP.Webapi.Controllers;
 public class ImportacaoArquivoAcervoTridimensionalController: BaseController
 {
     [HttpPost]
-    [ProducesResponseType(typeof(ImportacaoArquivoRetornoDTO<AcervoTridimensionalLinhaRetornoDTO>),200)]
+    [ProducesResponseType(typeof(ImportacaoArquivoRetornoDTO<AcervoLinhaErroDTO<AcervoTridimensionalDTO,AcervoTridimensionalLinhaRetornoDTO>,AcervoLinhaRetornoSucessoDTO>),200)]
     [ProducesResponseType(401)]
     [ProducesResponseType(typeof(RetornoBaseDTO), 500)]
     [Authorize("Bearer")] 
@@ -24,7 +24,7 @@ public class ImportacaoArquivoAcervoTridimensionalController: BaseController
     }
     
     [HttpGet]
-    [ProducesResponseType(typeof(ImportacaoArquivoRetornoDTO<AcervoTridimensionalLinhaRetornoDTO>),200)]
+    [ProducesResponseType(typeof(ImportacaoArquivoRetornoDTO<AcervoLinhaErroDTO<AcervoTridimensionalDTO,AcervoTridimensionalLinhaRetornoDTO>,AcervoLinhaRetornoSucessoDTO>),200)]
     [ProducesResponseType(401)]
     [ProducesResponseType(typeof(RetornoBaseDTO), 500)]
     [Authorize("Bearer")] 

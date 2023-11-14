@@ -1,4 +1,5 @@
-﻿using AutoMapper;
+﻿using System.Text;
+using AutoMapper;
 using ClosedXML.Excel;
 using Microsoft.AspNetCore.Http;
 using Newtonsoft.Json;
@@ -50,14 +51,14 @@ namespace SME.CDEP.Aplicacao.Servicos
             return true;
         }
 
-        public async Task<ImportacaoArquivoRetornoDTO<AcervoBibliograficoLinhaRetornoDTO>> ObterImportacaoPendente()
+        public async Task<ImportacaoArquivoRetornoDTO<AcervoLinhaErroDTO<AcervoBibliograficoDTO,AcervoBibliograficoLinhaRetornoDTO>,AcervoLinhaRetornoSucessoDTO>> ObterImportacaoPendente()
         {
             var arquivoImportado = await repositorioImportacaoArquivo.ObterUltimaImportacao(TipoAcervo.Bibliografico);
 
-            return ObterRetornoImportacaoAcervo(arquivoImportado, JsonConvert.DeserializeObject<IEnumerable<AcervoBibliograficoLinhaDTO>>(arquivoImportado.Conteudo));
+            return await ObterRetornoImportacaoAcervo(arquivoImportado, JsonConvert.DeserializeObject<IEnumerable<AcervoBibliograficoLinhaDTO>>(arquivoImportado.Conteudo), false);
         }
 
-        public async Task<ImportacaoArquivoRetornoDTO<AcervoBibliograficoLinhaRetornoDTO>> ImportarArquivo(IFormFile file)
+        public async Task<ImportacaoArquivoRetornoDTO<AcervoLinhaErroDTO<AcervoBibliograficoDTO,AcervoBibliograficoLinhaRetornoDTO>,AcervoLinhaRetornoSucessoDTO>> ImportarArquivo(IFormFile file)
         {
             ValidarArquivo(file);
         
@@ -79,12 +80,23 @@ namespace SME.CDEP.Aplicacao.Servicos
             
             var arquivoImportado = await repositorioImportacaoArquivo.ObterPorId(importacaoArquivoId);
 
-            return ObterRetornoImportacaoAcervo(arquivoImportado, acervosBibliograficosLinhas);
+            return await ObterRetornoImportacaoAcervo(arquivoImportado, acervosBibliograficosLinhas);
         }
 
-        private ImportacaoArquivoRetornoDTO<AcervoBibliograficoLinhaRetornoDTO> ObterRetornoImportacaoAcervo(ImportacaoArquivo arquivoImportado, IEnumerable<AcervoBibliograficoLinhaDTO> acervosBibliograficosLinhas)
+        private async Task<ImportacaoArquivoRetornoDTO<AcervoLinhaErroDTO<AcervoBibliograficoDTO,AcervoBibliograficoLinhaRetornoDTO>,AcervoLinhaRetornoSucessoDTO>> ObterRetornoImportacaoAcervo(ImportacaoArquivo arquivoImportado, IEnumerable<AcervoBibliograficoLinhaDTO> acervosBibliograficosLinhas, bool estaImportandoArquivo = true)
         {
-            var acervoBibliograficoRetorno = new ImportacaoArquivoRetornoDTO<AcervoBibliograficoLinhaRetornoDTO>()
+            if (!estaImportandoArquivo)
+            {
+                await ObterMateriais(acervosBibliograficosLinhas.Select(s => s.Material.Conteudo).Distinct().Where(w=> w.EstaPreenchido()), TipoMaterial.BIBLIOGRAFICO);
+                await ObterEditoras(acervosBibliograficosLinhas.Select(s => s.Editora.Conteudo).Distinct().Where(w=> w.EstaPreenchido()));
+                await ObterAssuntos(acervosBibliograficosLinhas.Select(s => s.Assunto.Conteudo).ToArray().UnificarPipe().SplitPipe().Distinct().Where(w=> w.EstaPreenchido()));
+                await ObterSeriesColecoes(acervosBibliograficosLinhas.Select(s => s.SerieColecao.Conteudo).Distinct().Where(w=> w.EstaPreenchido()));
+                await ObterIdiomas(acervosBibliograficosLinhas.Select(s => s.Idioma.Conteudo).Distinct().Where(w=> w.EstaPreenchido()));
+                await ObterCreditosAutoresTipoAutoria(acervosBibliograficosLinhas.Select(s => s.Autor.Conteudo).ToArray().UnificarPipe().SplitPipe().Distinct().Where(w=> w.EstaPreenchido()), TipoCreditoAutoria.Autoria);
+                await ObterCreditosAutoresTipoAutoria(acervosBibliograficosLinhas.Select(s => s.CoAutor.Conteudo).ToArray().UnificarPipe().SplitPipe().Distinct().Where(w=> w.EstaPreenchido()), TipoCreditoAutoria.Autoria);
+            }
+            
+            var acervoBibliograficoRetorno = new ImportacaoArquivoRetornoDTO<AcervoLinhaErroDTO<AcervoBibliograficoDTO,AcervoBibliograficoLinhaRetornoDTO>,AcervoLinhaRetornoSucessoDTO>()
             {
                 Id = arquivoImportado.Id,
                 Nome = arquivoImportado.Nome,
@@ -92,15 +104,55 @@ namespace SME.CDEP.Aplicacao.Servicos
                 DataImportacao = arquivoImportado.CriadoEm,
                 Erros = acervosBibliograficosLinhas
                         .Where(w => w.PossuiErros)
-                        .Select(ObterAcervoBibliograficoLinhaRetornoDto),
+                        .Select(s=> ObterAcervoLinhaRetornoResumidoDto(s,arquivoImportado.TipoAcervo)),
                 Sucesso = acervosBibliograficosLinhas
                         .Where(w => !w.PossuiErros)
-                        .Select(ObterAcervoBibliograficoLinhaRetornoDto)
+                        .Select(s=> ObterLinhasComSucesso(s.Titulo.Conteudo, s.Tombo.Conteudo, s.NumeroLinha)),
             };
             return acervoBibliograficoRetorno;
         }
 
-        private static AcervoBibliograficoLinhaRetornoDTO ObterAcervoBibliograficoLinhaRetornoDto(AcervoBibliograficoLinhaDTO s)
+        private AcervoLinhaErroDTO<AcervoBibliograficoDTO,AcervoBibliograficoLinhaRetornoDTO> ObterAcervoLinhaRetornoResumidoDto(AcervoBibliograficoLinhaDTO linha, TipoAcervo tipoAcervo)
+        {
+            return new AcervoLinhaErroDTO<AcervoBibliograficoDTO,AcervoBibliograficoLinhaRetornoDTO>()
+            {
+                Titulo = ObterConteudoTexto(linha.Titulo),
+                Tombo = ObterConteudoTexto(linha.Tombo),
+                NumeroLinha = linha.NumeroLinha,
+                RetornoObjeto = ObterAcervoBibliograficoDto(linha,tipoAcervo),
+                RetornoErro = ObterLinhasComErros(linha),
+            };
+        }
+        
+        private AcervoBibliograficoDTO ObterAcervoBibliograficoDto(AcervoBibliograficoLinhaDTO linha, TipoAcervo tipoAcervo)
+        {
+            return new AcervoBibliograficoDTO()
+            {
+                Titulo = ObterConteudoTexto(linha.Titulo),
+                SubTitulo = ObterConteudoTexto(linha.SubTitulo),
+                TipoAcervoId = (int)tipoAcervo,
+                Codigo = ObterConteudoTexto(linha.Tombo),
+                MaterialId = ObterMaterialBibliograficoIdPorValorDoCampo(linha.Material.Conteudo,false),
+                EditoraId = ObterEditoraIdPorValorDoCampo(linha.Editora.Conteudo, false),
+                AssuntosIds = ObterAssuntosIdsPorValorDoCampo(linha.Assunto.Conteudo),
+                Ano = ObterConteudoTexto(linha.Ano),
+                Edicao = ObterConteudoTexto(linha.Edicao),
+                NumeroPagina = ObterConteudoTexto(linha.NumeroPaginas),
+                Largura = ObterConteudoDoubleOuNulo(linha.Largura),
+                Altura = ObterConteudoDoubleOuNulo(linha.Altura),
+                SerieColecaoId = ObterSerieColecaoIdPorValorDoCampo(linha.SerieColecao.Conteudo,false),
+                IdiomaId = ObterIdiomaIdPorValorDoCampo(linha.Idioma.Conteudo,false),
+                Volume = ObterConteudoTexto(linha.Volume),
+                LocalizacaoCDD = ObterConteudoTexto(linha.LocalizacaoCDD),
+                LocalizacaoPHA = ObterConteudoTexto(linha.LocalizacaoPHA),
+                NotasGerais = ObterConteudoTexto(linha.NotasGerais),
+                Isbn = ObterConteudoTexto(linha.Isbn),
+                CreditosAutoresIds = ObterCreditoAutoresIdsPorValorDoCampo(linha.Autor.Conteudo, TipoCreditoAutoria.Autoria),
+                CoAutores = ObterCoAutoresTipoAutoria(linha.CoAutor.Conteudo, linha.TipoAutoria.Conteudo)
+            };
+        }
+        
+        private AcervoBibliograficoLinhaRetornoDTO ObterLinhasComErros(AcervoBibliograficoLinhaDTO s)
         {
             return new AcervoBibliograficoLinhaRetornoDTO()
             {
@@ -115,8 +167,8 @@ namespace SME.CDEP.Aplicacao.Servicos
                 Ano = ObterConteudoMensagemStatus(s.Ano),
                 Edicao = ObterConteudoMensagemStatus(s.Edicao),
                 NumeroPaginas = ObterConteudoMensagemStatus(s.NumeroPaginas),
-                Largura = ObterConteudoMensagemStatus(s.Largura),
                 Altura = ObterConteudoMensagemStatus(s.Altura),
+                Largura = ObterConteudoMensagemStatus(s.Largura),
                 SerieColecao = ObterConteudoMensagemStatus(s.SerieColecao),
                 Volume = ObterConteudoMensagemStatus(s.Volume),
                 Idioma = ObterConteudoMensagemStatus(s.Idioma),
@@ -125,7 +177,80 @@ namespace SME.CDEP.Aplicacao.Servicos
                 NotasGerais = ObterConteudoMensagemStatus(s.NotasGerais),
                 Isbn = ObterConteudoMensagemStatus(s.Isbn),
                 Tombo = ObterConteudoMensagemStatus(s.Tombo),
+                NumeroLinha = s.NumeroLinha,
+                Status = ImportacaoStatus.Erros,
+                Mensagem = s.Mensagem.NaoEstaPreenchido() ? ObterMensagemErroLinha(s) : s.Mensagem,
             };
+        }
+        
+        private string ObterMensagemErroLinha(AcervoBibliograficoLinhaDTO acervoBibliograficoLinhaDTO)
+        {
+	        var mensagemErro = new StringBuilder();
+
+	        if (acervoBibliograficoLinhaDTO.Titulo.PossuiErro)
+		        mensagemErro.AppendLine(acervoBibliograficoLinhaDTO.Titulo.Mensagem);
+	        
+	        if (acervoBibliograficoLinhaDTO.Tombo.PossuiErro)
+		        mensagemErro.AppendLine(acervoBibliograficoLinhaDTO.Tombo.Mensagem);
+	        
+	        if (acervoBibliograficoLinhaDTO.SubTitulo.PossuiErro)
+		        mensagemErro.AppendLine(acervoBibliograficoLinhaDTO.SubTitulo.Mensagem);
+			        
+	        if (acervoBibliograficoLinhaDTO.Material.PossuiErro)
+		        mensagemErro.AppendLine(acervoBibliograficoLinhaDTO.Material.Mensagem);
+			        
+	        if (acervoBibliograficoLinhaDTO.Autor.PossuiErro)
+		        mensagemErro.AppendLine(acervoBibliograficoLinhaDTO.Autor.Mensagem);
+			        
+	        if (acervoBibliograficoLinhaDTO.CoAutor.PossuiErro)
+		        mensagemErro.AppendLine(acervoBibliograficoLinhaDTO.CoAutor.Mensagem);
+			        
+	        if (acervoBibliograficoLinhaDTO.TipoAutoria.PossuiErro)
+		        mensagemErro.AppendLine(acervoBibliograficoLinhaDTO.TipoAutoria.Mensagem);
+			        
+	        if (acervoBibliograficoLinhaDTO.Editora.PossuiErro)
+		        mensagemErro.AppendLine(acervoBibliograficoLinhaDTO.Editora.Mensagem);
+			        
+	        if (acervoBibliograficoLinhaDTO.Edicao.PossuiErro)
+		        mensagemErro.AppendLine(acervoBibliograficoLinhaDTO.Edicao.Mensagem);
+	        
+	        if (acervoBibliograficoLinhaDTO.Assunto.PossuiErro)
+		        mensagemErro.AppendLine(acervoBibliograficoLinhaDTO.Assunto.Mensagem);
+	        
+	        if (acervoBibliograficoLinhaDTO.Ano.PossuiErro)
+		        mensagemErro.AppendLine(acervoBibliograficoLinhaDTO.Ano.Mensagem);
+	        
+	        if (acervoBibliograficoLinhaDTO.NumeroPaginas.PossuiErro)
+		        mensagemErro.AppendLine(acervoBibliograficoLinhaDTO.NumeroPaginas.Mensagem);
+			        
+	        if (acervoBibliograficoLinhaDTO.Largura.PossuiErro)
+		        mensagemErro.AppendLine(acervoBibliograficoLinhaDTO.Largura.Mensagem);
+			        
+	        if (acervoBibliograficoLinhaDTO.Altura.PossuiErro)
+		        mensagemErro.AppendLine(acervoBibliograficoLinhaDTO.Altura.Mensagem);
+			        
+	        if (acervoBibliograficoLinhaDTO.SerieColecao.PossuiErro)
+		        mensagemErro.AppendLine(acervoBibliograficoLinhaDTO.SerieColecao.Mensagem);
+			        
+	        if (acervoBibliograficoLinhaDTO.Volume.PossuiErro)
+		        mensagemErro.AppendLine(acervoBibliograficoLinhaDTO.Volume.Mensagem);
+            
+            if (acervoBibliograficoLinhaDTO.Idioma.PossuiErro)
+                mensagemErro.AppendLine(acervoBibliograficoLinhaDTO.Idioma.Mensagem);
+            
+            if (acervoBibliograficoLinhaDTO.LocalizacaoCDD.PossuiErro)
+                mensagemErro.AppendLine(acervoBibliograficoLinhaDTO.LocalizacaoCDD.Mensagem);
+
+            if (acervoBibliograficoLinhaDTO.LocalizacaoPHA.PossuiErro)
+                mensagemErro.AppendLine(acervoBibliograficoLinhaDTO.LocalizacaoPHA.Mensagem);
+            
+            if (acervoBibliograficoLinhaDTO.NotasGerais.PossuiErro)
+                mensagemErro.AppendLine(acervoBibliograficoLinhaDTO.NotasGerais.Mensagem);
+            
+            if (acervoBibliograficoLinhaDTO.Isbn.PossuiErro)
+                mensagemErro.AppendLine(acervoBibliograficoLinhaDTO.Isbn.Mensagem);
+            
+	        return mensagemErro.ToString();
         }
 
         public async Task PersistenciaAcervo(IEnumerable<AcervoBibliograficoLinhaDTO> acervosBibliograficosLinhas)
@@ -142,19 +267,13 @@ namespace SME.CDEP.Aplicacao.Servicos
 
                         MaterialId = ObterMaterialBibliograficoIdPorValorDoCampo(acervoBibliograficoLinha.Material.Conteudo),
 
-                        CreditosAutoresIds = CreditosAutores
-                            .Where(f => acervoBibliograficoLinha.Autor.Conteudo.FormatarTextoEmArray().Contains(f.Nome))
-                            .Select(s => s.Id).ToArray(),
+                        CreditosAutoresIds = ObterCreditoAutoresIdsPorValorDoCampo(acervoBibliograficoLinha.Autor.Conteudo, TipoCreditoAutoria.Autoria),
 
                         CoAutores = ObterCoAutoresTipoAutoria(acervoBibliograficoLinha.CoAutor.Conteudo,acervoBibliograficoLinha.TipoAutoria.Conteudo),
 
-                        EditoraId = acervoBibliograficoLinha.Editora.Conteudo.EstaPreenchido()
-                            ? ObterEditoraIdPorValorDoCampo(acervoBibliograficoLinha.Editora.Conteudo)
-                            : null,
+                        EditoraId = ObterEditoraIdPorValorDoCampo(acervoBibliograficoLinha.Editora.Conteudo, false),
 
-                        AssuntosIds = Assuntos
-                            .Where(f => acervoBibliograficoLinha.Assunto.Conteudo.FormatarTextoEmArray().Contains(f.Nome))
-                            .Select(s => s.Id).ToArray(),
+                        AssuntosIds = ObterAssuntosIdsPorValorDoCampo(acervoBibliograficoLinha.Assunto.Conteudo),
 
                         Ano = acervoBibliograficoLinha.Ano.Conteudo,
                         Edicao = acervoBibliograficoLinha.Edicao.Conteudo,
@@ -162,9 +281,7 @@ namespace SME.CDEP.Aplicacao.Servicos
                         Largura = acervoBibliograficoLinha.Largura.Conteudo.ObterDoubleOuNuloPorValorDoCampo(),
                         Altura = acervoBibliograficoLinha.Altura.Conteudo.ObterDoubleOuNuloPorValorDoCampo(),
 
-                        SerieColecaoId = acervoBibliograficoLinha.SerieColecao.Conteudo.EstaPreenchido()
-                            ? ObterSerieColecaoIdPorValorDoCampo(acervoBibliograficoLinha.SerieColecao.Conteudo)
-                            : null,
+                        SerieColecaoId = ObterSerieColecaoIdPorValorDoCampo(acervoBibliograficoLinha.SerieColecao.Conteudo, false),
 
                         Volume = acervoBibliograficoLinha.Volume.Conteudo,
 
@@ -207,7 +324,7 @@ namespace SME.CDEP.Aplicacao.Servicos
             
             var coAutoresCompletos = coAutoresEmTextoAutoNumerados.Select(coAutorAutoNumerado => new CoAutorDTO
             {
-                CreditoAutorId = CreditosAutores.FirstOrDefault(f=> f.Nome.SaoIguais(coAutorAutoNumerado.Nome)).Id,
+                CreditoAutorId = CreditosAutores.FirstOrDefault(f=> f.Nome.SaoIguais(coAutorAutoNumerado.Nome))?.Id,
                 TipoAutoria = tiposAutoriaEmTextoAutoNumerados.FirstOrDefault(f => f.Id.SaoIguais(coAutorAutoNumerado.Id))?.Nome
             }).ToArray();
 

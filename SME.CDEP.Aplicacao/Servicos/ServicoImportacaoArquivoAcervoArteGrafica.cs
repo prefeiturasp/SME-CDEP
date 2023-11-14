@@ -1,4 +1,5 @@
-﻿using ClosedXML.Excel;
+﻿using System.Text;
+using ClosedXML.Excel;
 using Microsoft.AspNetCore.Http;
 using Newtonsoft.Json;
 using SME.CDEP.Aplicacao.DTOS;
@@ -30,11 +31,11 @@ namespace SME.CDEP.Aplicacao.Servicos
             CreditosAutores = creditosAutores;
         }
 
-        public async Task<ImportacaoArquivoRetornoDTO<AcervoArteGraficaLinhaRetornoDTO>> ObterImportacaoPendente()
+        public async Task<ImportacaoArquivoRetornoDTO<AcervoLinhaErroDTO<AcervoArteGraficaDTO,AcervoArteGraficaLinhaRetornoDTO>,AcervoLinhaRetornoSucessoDTO>> ObterImportacaoPendente()
         {
             var arquivoImportado = await repositorioImportacaoArquivo.ObterUltimaImportacao(TipoAcervo.ArtesGraficas);
 
-            return ObterRetornoImportacaoAcervo(arquivoImportado, JsonConvert.DeserializeObject<IEnumerable<AcervoArteGraficaLinhaDTO>>(arquivoImportado.Conteudo));
+            return await ObterRetornoImportacaoAcervo(arquivoImportado, JsonConvert.DeserializeObject<IEnumerable<AcervoArteGraficaLinhaDTO>>(arquivoImportado.Conteudo), false);
         }
 
         public async Task<bool> RemoverLinhaDoArquivo(long id, int linhaDoArquivo)
@@ -58,7 +59,7 @@ namespace SME.CDEP.Aplicacao.Servicos
             return true;
         }
 
-        public async Task<ImportacaoArquivoRetornoDTO<AcervoArteGraficaLinhaRetornoDTO>> ImportarArquivo(IFormFile file)
+        public async Task<ImportacaoArquivoRetornoDTO<AcervoLinhaErroDTO<AcervoArteGraficaDTO,AcervoArteGraficaLinhaRetornoDTO>,AcervoLinhaRetornoSucessoDTO>> ImportarArquivo(IFormFile file)
         {
             ValidarArquivo(file);
         
@@ -80,28 +81,73 @@ namespace SME.CDEP.Aplicacao.Servicos
 
             var arquivoImportado = await repositorioImportacaoArquivo.ObterPorId(importacaoArquivoId);
 
-            return ObterRetornoImportacaoAcervo(arquivoImportado, acervosArtesGraficasLinhas);
+            return await ObterRetornoImportacaoAcervo(arquivoImportado, acervosArtesGraficasLinhas);
         }
 
-        private ImportacaoArquivoRetornoDTO<AcervoArteGraficaLinhaRetornoDTO> ObterRetornoImportacaoAcervo(ImportacaoArquivo arquivoImportado, IEnumerable<AcervoArteGraficaLinhaDTO> acervosArtesGraficasLinhas)
+        private async Task<ImportacaoArquivoRetornoDTO<AcervoLinhaErroDTO<AcervoArteGraficaDTO,AcervoArteGraficaLinhaRetornoDTO>,AcervoLinhaRetornoSucessoDTO>> ObterRetornoImportacaoAcervo(ImportacaoArquivo arquivoImportado, IEnumerable<AcervoArteGraficaLinhaDTO> acervosArtesGraficasLinhas, bool estaImportandoArquivo = true)
         {
-            var acervoArteGraficaRetorno = new ImportacaoArquivoRetornoDTO<AcervoArteGraficaLinhaRetornoDTO>()
+            if (!estaImportandoArquivo)
+            {
+                await ObterConservacoes(acervosArtesGraficasLinhas.Select(s => s.EstadoConservacao.Conteudo).Distinct().Where(w=> w.EstaPreenchido()));
+                await ObterCromias(acervosArtesGraficasLinhas.Select(s => s.Cromia.Conteudo).Distinct().Where(w=> w.EstaPreenchido()));
+                await ObterSuportes(acervosArtesGraficasLinhas.Select(s => s.Suporte.Conteudo).Distinct().Where(w=> w.EstaPreenchido()), TipoSuporte.IMAGEM);
+                await ObterCreditosAutoresTipoAutoria(acervosArtesGraficasLinhas.Select(s => s.Credito.Conteudo).ToArray().UnificarPipe().SplitPipe().Distinct().Where(w=> w.EstaPreenchido()), TipoCreditoAutoria.Credito);
+            }
+            
+            var acervoArteGraficaRetorno = new ImportacaoArquivoRetornoDTO<AcervoLinhaErroDTO<AcervoArteGraficaDTO,AcervoArteGraficaLinhaRetornoDTO>,AcervoLinhaRetornoSucessoDTO>()
             {
                 Id = arquivoImportado.Id,
                 Nome = arquivoImportado.Nome,
                 TipoAcervo = arquivoImportado.TipoAcervo,
                 DataImportacao = arquivoImportado.CriadoEm,
-                Erros = acervosArtesGraficasLinhas
+                Erros =  acervosArtesGraficasLinhas
                         .Where(w => w.PossuiErros)
-                        .Select(ObterAcervoArteGraficaLinhaRetornoDto),
+                        .Select(s=> ObterAcervoLinhaRetornoResumidoDto(s,arquivoImportado.TipoAcervo)),
                 Sucesso = acervosArtesGraficasLinhas
                         .Where(w => !w.PossuiErros)
-                        .Select(ObterAcervoArteGraficaLinhaRetornoDto),
+                        .Select(s=> ObterLinhasComSucesso(s.Titulo.Conteudo, s.Tombo.Conteudo, s.NumeroLinha)),
             };
             return acervoArteGraficaRetorno;
         }
 
-        private static AcervoArteGraficaLinhaRetornoDTO ObterAcervoArteGraficaLinhaRetornoDto(AcervoArteGraficaLinhaDTO s)
+        private AcervoLinhaErroDTO<AcervoArteGraficaDTO,AcervoArteGraficaLinhaRetornoDTO> ObterAcervoLinhaRetornoResumidoDto(AcervoArteGraficaLinhaDTO linha, TipoAcervo tipoAcervo)
+        {
+            return new AcervoLinhaErroDTO<AcervoArteGraficaDTO,AcervoArteGraficaLinhaRetornoDTO>()
+            {
+                Titulo = ObterConteudoTexto(linha.Titulo),
+                Tombo = ObterConteudoTexto(linha.Tombo),
+                NumeroLinha = linha.NumeroLinha,
+                RetornoObjeto = ObterAcervoArteGraficaDto(linha,tipoAcervo),
+                RetornoErro = ObterLinhasComErros(linha),
+            };
+        }
+        
+        private AcervoArteGraficaDTO ObterAcervoArteGraficaDto(AcervoArteGraficaLinhaDTO linha, TipoAcervo tipoAcervo)
+        {
+            return new AcervoArteGraficaDTO()
+            {
+                Titulo = ObterConteudoTexto(linha.Titulo),
+                TipoAcervoId = (int)tipoAcervo,
+                Codigo = ObterConteudoTexto(linha.Tombo),
+                Localizacao = ObterConteudoTexto(linha.Localizacao),
+                Procedencia = ObterConteudoTexto(linha.Procedencia),
+                DataAcervo = ObterConteudoTexto(linha.Data),
+                CopiaDigital = ObterConteudoBooleano(linha.CopiaDigital),
+                PermiteUsoImagem = ObterConteudoBooleano(linha.AutorizacaoUsoDeImagem),
+                ConservacaoId = ObterConservacaoIdPorValorDoCampo(linha.EstadoConservacao.Conteudo, false),
+                CromiaId = ObterCromiaIdPorValorDoCampo(linha.Cromia.Conteudo, false),
+                Largura = ObterConteudoDoubleOuNulo(linha.Largura),
+                Altura = ObterConteudoDoubleOuNulo(linha.Altura),
+                Diametro = ObterConteudoDoubleOuNulo(linha.Diametro),
+                Tecnica = ObterConteudoTexto(linha.Tecnica),
+                SuporteId = ObterSuporteImagemIdPorValorDoCampo(linha.Suporte.Conteudo,false),
+                Quantidade = ObterConteudoLongoOuNulo(linha.Quantidade),
+                Descricao = ObterConteudoTexto(linha.Descricao),
+                CreditosAutoresIds = ObterCreditoAutoresIdsPorValorDoCampo(linha.Credito.Conteudo, TipoCreditoAutoria.Credito),
+            };
+        }
+        
+        private AcervoArteGraficaLinhaRetornoDTO ObterLinhasComErros(AcervoArteGraficaLinhaDTO s)
         {
             return new AcervoArteGraficaLinhaRetornoDTO()
             {
@@ -122,7 +168,68 @@ namespace SME.CDEP.Aplicacao.Servicos
                 Suporte = ObterConteudoMensagemStatus(s.Suporte),
                 Quantidade = ObterConteudoMensagemStatus(s.Quantidade),
                 Descricao = ObterConteudoMensagemStatus(s.Descricao),
+                NumeroLinha = s.NumeroLinha,
+                Status = ImportacaoStatus.Erros,
+                Mensagem = s.Mensagem.NaoEstaPreenchido() ? ObterMensagemErroLinha(s) : s.Mensagem,
             };
+        }
+
+        private string ObterMensagemErroLinha(AcervoArteGraficaLinhaDTO acervoArteGraficaLinhaDto)
+        {
+            var mensagemErro = new StringBuilder();
+
+            if (acervoArteGraficaLinhaDto.Titulo.PossuiErro)
+                mensagemErro.AppendLine(acervoArteGraficaLinhaDto.Titulo.Mensagem);
+            
+            if (acervoArteGraficaLinhaDto.Tombo.PossuiErro)
+                mensagemErro.AppendLine(acervoArteGraficaLinhaDto.Tombo.Mensagem);
+            
+            if (acervoArteGraficaLinhaDto.Credito.PossuiErro)
+                mensagemErro.AppendLine(acervoArteGraficaLinhaDto.Credito.Mensagem);
+                    
+            if (acervoArteGraficaLinhaDto.Localizacao.PossuiErro)
+                mensagemErro.AppendLine(acervoArteGraficaLinhaDto.Localizacao.Mensagem);
+                    
+            if (acervoArteGraficaLinhaDto.Procedencia.PossuiErro)
+                mensagemErro.AppendLine(acervoArteGraficaLinhaDto.Procedencia.Mensagem);
+                    
+            if (acervoArteGraficaLinhaDto.Data.PossuiErro)
+                mensagemErro.AppendLine(acervoArteGraficaLinhaDto.Data.Mensagem);
+                    
+            if (acervoArteGraficaLinhaDto.CopiaDigital.PossuiErro)
+                mensagemErro.AppendLine(acervoArteGraficaLinhaDto.CopiaDigital.Mensagem);
+                    
+            if (acervoArteGraficaLinhaDto.AutorizacaoUsoDeImagem.PossuiErro)
+                mensagemErro.AppendLine(acervoArteGraficaLinhaDto.AutorizacaoUsoDeImagem.Mensagem);
+                    
+            if (acervoArteGraficaLinhaDto.EstadoConservacao.PossuiErro)
+                mensagemErro.AppendLine(acervoArteGraficaLinhaDto.EstadoConservacao.Mensagem);
+                    
+            if (acervoArteGraficaLinhaDto.Cromia.PossuiErro)
+                mensagemErro.AppendLine(acervoArteGraficaLinhaDto.Cromia.Mensagem);
+                    
+            if (acervoArteGraficaLinhaDto.Largura.PossuiErro)
+                mensagemErro.AppendLine(acervoArteGraficaLinhaDto.Largura.Mensagem);
+                    
+            if (acervoArteGraficaLinhaDto.Altura.PossuiErro)
+                mensagemErro.AppendLine(acervoArteGraficaLinhaDto.Altura.Mensagem);
+                    
+            if (acervoArteGraficaLinhaDto.Diametro.PossuiErro)
+                mensagemErro.AppendLine(acervoArteGraficaLinhaDto.Diametro.Mensagem);
+            
+            if (acervoArteGraficaLinhaDto.Tecnica.PossuiErro)
+                mensagemErro.AppendLine(acervoArteGraficaLinhaDto.Tecnica.Mensagem);
+                    
+            if (acervoArteGraficaLinhaDto.Suporte.PossuiErro)
+                mensagemErro.AppendLine(acervoArteGraficaLinhaDto.Suporte.Mensagem);
+                    
+            if (acervoArteGraficaLinhaDto.Quantidade.PossuiErro)
+                mensagemErro.AppendLine(acervoArteGraficaLinhaDto.Quantidade.Mensagem);
+                    
+            if (acervoArteGraficaLinhaDto.Descricao.PossuiErro)
+                mensagemErro.AppendLine(acervoArteGraficaLinhaDto.Descricao.Mensagem);
+
+            return mensagemErro.ToString();
         }
 
         public async Task PersistenciaAcervo(IEnumerable<AcervoArteGraficaLinhaDTO> acervosArtesGraficasLinhas)

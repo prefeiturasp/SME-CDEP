@@ -1,4 +1,5 @@
-﻿using ClosedXML.Excel;
+﻿using System.Text;
+using ClosedXML.Excel;
 using Microsoft.AspNetCore.Http;
 using Newtonsoft.Json;
 using SME.CDEP.Aplicacao.DTOS;
@@ -50,14 +51,14 @@ namespace SME.CDEP.Aplicacao.Servicos
             return true;
         }
 
-        public async Task<ImportacaoArquivoRetornoDTO<AcervoTridimensionalLinhaRetornoDTO>> ObterImportacaoPendente()
+        public async Task<ImportacaoArquivoRetornoDTO<AcervoLinhaErroDTO<AcervoTridimensionalDTO,AcervoTridimensionalLinhaRetornoDTO>,AcervoLinhaRetornoSucessoDTO>> ObterImportacaoPendente()
         {
             var arquivoImportado = await repositorioImportacaoArquivo.ObterUltimaImportacao(TipoAcervo.Tridimensional);
         
-            return ObterRetornoImportacaoAcervo(arquivoImportado, JsonConvert.DeserializeObject<IEnumerable<AcervoTridimensionalLinhaDTO>>(arquivoImportado.Conteudo));
+            return await ObterRetornoImportacaoAcervo(arquivoImportado, JsonConvert.DeserializeObject<IEnumerable<AcervoTridimensionalLinhaDTO>>(arquivoImportado.Conteudo), false);
         }
 
-        public async Task<ImportacaoArquivoRetornoDTO<AcervoTridimensionalLinhaRetornoDTO>> ImportarArquivo(IFormFile file)
+        public async Task<ImportacaoArquivoRetornoDTO<AcervoLinhaErroDTO<AcervoTridimensionalDTO,AcervoTridimensionalLinhaRetornoDTO>,AcervoLinhaRetornoSucessoDTO>> ImportarArquivo(IFormFile file)
         {
             ValidarArquivo(file);
         
@@ -79,12 +80,15 @@ namespace SME.CDEP.Aplicacao.Servicos
         
             var arquivoImportado = await repositorioImportacaoArquivo.ObterPorId(importacaoArquivoId);
         
-            return ObterRetornoImportacaoAcervo(arquivoImportado, acervosTridimensionalLinhas);
+            return await ObterRetornoImportacaoAcervo(arquivoImportado, acervosTridimensionalLinhas);
         }
         
-        private ImportacaoArquivoRetornoDTO<AcervoTridimensionalLinhaRetornoDTO> ObterRetornoImportacaoAcervo(ImportacaoArquivo arquivoImportado, IEnumerable<AcervoTridimensionalLinhaDTO> acervosTridimensionalLinhas)
+        private async Task<ImportacaoArquivoRetornoDTO<AcervoLinhaErroDTO<AcervoTridimensionalDTO,AcervoTridimensionalLinhaRetornoDTO>,AcervoLinhaRetornoSucessoDTO>> ObterRetornoImportacaoAcervo(ImportacaoArquivo arquivoImportado, IEnumerable<AcervoTridimensionalLinhaDTO> acervosTridimensionalLinhas, bool estaImportandoArquivo = true)
         {
-            var acervoTridimensionalRetorno = new ImportacaoArquivoRetornoDTO<AcervoTridimensionalLinhaRetornoDTO>()
+            if (!estaImportandoArquivo)
+                await ObterConservacoes(acervosTridimensionalLinhas.Select(s => s.EstadoConservacao.Conteudo).Distinct().Where(w=> w.EstaPreenchido()));
+            
+            var acervoTridimensionalRetorno = new ImportacaoArquivoRetornoDTO<AcervoLinhaErroDTO<AcervoTridimensionalDTO,AcervoTridimensionalLinhaRetornoDTO>,AcervoLinhaRetornoSucessoDTO>()
             {
                 Id = arquivoImportado.Id,
                 Nome = arquivoImportado.Nome,
@@ -92,15 +96,46 @@ namespace SME.CDEP.Aplicacao.Servicos
                 DataImportacao = arquivoImportado.CriadoEm,
                 Erros = acervosTridimensionalLinhas
                         .Where(w => w.PossuiErros)
-                        .Select(ObterAcervoTridimensionalLinhaRetornoDto),
+                        .Select(s=> ObterAcervoLinhaRetornoResumidoDto(s,arquivoImportado.TipoAcervo)),
                 Sucesso = acervosTridimensionalLinhas
                         .Where(w => !w.PossuiErros)
-                        .Select(ObterAcervoTridimensionalLinhaRetornoDto)
+                        .Select(s=> ObterLinhasComSucesso(s.Titulo.Conteudo, s.Tombo.Conteudo, s.NumeroLinha)),
             };
             return acervoTridimensionalRetorno;
         }
         
-        private static AcervoTridimensionalLinhaRetornoDTO ObterAcervoTridimensionalLinhaRetornoDto(AcervoTridimensionalLinhaDTO s)
+         private AcervoLinhaErroDTO<AcervoTridimensionalDTO,AcervoTridimensionalLinhaRetornoDTO> ObterAcervoLinhaRetornoResumidoDto(AcervoTridimensionalLinhaDTO linha, TipoAcervo tipoAcervo)
+        {
+            return new AcervoLinhaErroDTO<AcervoTridimensionalDTO,AcervoTridimensionalLinhaRetornoDTO>()
+            {
+                Titulo = ObterConteudoTexto(linha.Titulo),
+                Tombo = ObterConteudoTexto(linha.Tombo),
+                NumeroLinha = linha.NumeroLinha,
+                RetornoObjeto = ObterAcervoTridimensionalDto(linha,tipoAcervo),
+                RetornoErro = ObterLinhasComErros(linha),
+            };
+        }
+        
+        private AcervoTridimensionalDTO ObterAcervoTridimensionalDto(AcervoTridimensionalLinhaDTO linha, TipoAcervo tipoAcervo)
+        {
+            return new AcervoTridimensionalDTO()
+            {
+                Titulo = ObterConteudoTexto(linha.Titulo),
+                TipoAcervoId = (int)tipoAcervo,
+                Codigo = ObterConteudoTexto(linha.Tombo),
+                Procedencia = ObterConteudoTexto(linha.Procedencia),
+                DataAcervo = ObterConteudoTexto(linha.Data),
+                ConservacaoId = ObterConservacaoIdPorValorDoCampo(linha.EstadoConservacao.Conteudo, false),
+                Quantidade = ObterConteudoLongoOuNulo(linha.Quantidade),
+                Descricao = ObterConteudoTexto(linha.Descricao),
+                Largura = ObterConteudoDoubleOuNulo(linha.Largura),
+                Altura = ObterConteudoDoubleOuNulo(linha.Altura),
+                Profundidade = ObterConteudoDoubleOuNulo(linha.Profundidade),
+                Diametro = ObterConteudoDoubleOuNulo(linha.Diametro),
+            };
+        }
+        
+        private AcervoTridimensionalLinhaRetornoDTO ObterLinhasComErros(AcervoTridimensionalLinhaDTO s)
         {
             return new AcervoTridimensionalLinhaRetornoDTO()
             {
@@ -114,8 +149,51 @@ namespace SME.CDEP.Aplicacao.Servicos
                 Largura = ObterConteudoMensagemStatus(s.Largura),
                 Altura = ObterConteudoMensagemStatus(s.Altura),
                 Profundidade = ObterConteudoMensagemStatus(s.Profundidade),
-                Diametro = ObterConteudoMensagemStatus(s.Diametro)
+                Diametro = ObterConteudoMensagemStatus(s.Diametro),
+                NumeroLinha = s.NumeroLinha,
+                Status = ImportacaoStatus.Erros,
+                Mensagem = s.Mensagem.NaoEstaPreenchido() ? ObterMensagemErroLinha(s) : s.Mensagem,
             };
+        }
+        
+        private string ObterMensagemErroLinha(AcervoTridimensionalLinhaDTO acervoTridimensionalLinhaDTO)
+        {
+	        var mensagemErro = new StringBuilder();
+
+	        if (acervoTridimensionalLinhaDTO.Titulo.PossuiErro)
+		        mensagemErro.AppendLine(acervoTridimensionalLinhaDTO.Titulo.Mensagem);
+	        
+	        if (acervoTridimensionalLinhaDTO.Tombo.PossuiErro)
+		        mensagemErro.AppendLine(acervoTridimensionalLinhaDTO.Tombo.Mensagem);
+	        
+	        if (acervoTridimensionalLinhaDTO.Procedencia.PossuiErro)
+		        mensagemErro.AppendLine(acervoTridimensionalLinhaDTO.Procedencia.Mensagem);
+			        
+	        if (acervoTridimensionalLinhaDTO.Data.PossuiErro)
+		        mensagemErro.AppendLine(acervoTridimensionalLinhaDTO.Data.Mensagem);
+			        
+	        if (acervoTridimensionalLinhaDTO.EstadoConservacao.PossuiErro)
+		        mensagemErro.AppendLine(acervoTridimensionalLinhaDTO.EstadoConservacao.Mensagem);
+	        
+	        if (acervoTridimensionalLinhaDTO.Descricao.PossuiErro)
+		        mensagemErro.AppendLine(acervoTridimensionalLinhaDTO.Descricao.Mensagem);
+	        
+	        if (acervoTridimensionalLinhaDTO.Quantidade.PossuiErro)
+		        mensagemErro.AppendLine(acervoTridimensionalLinhaDTO.Quantidade.Mensagem);
+	        
+	        if (acervoTridimensionalLinhaDTO.Largura.PossuiErro)
+		        mensagemErro.AppendLine(acervoTridimensionalLinhaDTO.Largura.Mensagem);
+			        
+	        if (acervoTridimensionalLinhaDTO.Altura.PossuiErro)
+		        mensagemErro.AppendLine(acervoTridimensionalLinhaDTO.Altura.Mensagem);
+			        
+	        if (acervoTridimensionalLinhaDTO.Profundidade.PossuiErro)
+		        mensagemErro.AppendLine(acervoTridimensionalLinhaDTO.Profundidade.Mensagem);
+			        
+	        if (acervoTridimensionalLinhaDTO.Diametro.PossuiErro)
+		        mensagemErro.AppendLine(acervoTridimensionalLinhaDTO.Diametro.Mensagem);
+			        
+	        return mensagemErro.ToString();
         }
         
         public async Task PersistenciaAcervo(IEnumerable<AcervoTridimensionalLinhaDTO> acervosTridimensionalsLinhas)
@@ -135,8 +213,8 @@ namespace SME.CDEP.Aplicacao.Servicos
                         Descricao = acervoTridimensionalLinha.Descricao.Conteudo,
                         Largura = acervoTridimensionalLinha.Largura.Conteudo.ObterDoubleOuNuloPorValorDoCampo(),
                         Altura = acervoTridimensionalLinha.Altura.Conteudo.ObterDoubleOuNuloPorValorDoCampo(),
-                        Profundidade = acervoTridimensionalLinha.Profundidade.Conteudo.ObterLongoOuNuloPorValorDoCampo(),
-                        Diametro = acervoTridimensionalLinha.Diametro.Conteudo.ObterLongoOuNuloPorValorDoCampo(),
+                        Profundidade = acervoTridimensionalLinha.Profundidade.Conteudo.ObterDoubleOuNuloPorValorDoCampo(),
+                        Diametro = acervoTridimensionalLinha.Diametro.Conteudo.ObterDoubleOuNuloPorValorDoCampo(),
                     };
                     await servicoAcervoTridimensional.Inserir(acervoTridimensional);
         
@@ -287,7 +365,7 @@ namespace SME.CDEP.Aplicacao.Servicos
                         Diametro = new LinhaConteudoAjustarDTO()
                         {
                             Conteudo = planilha.ObterValorDaCelula(numeroLinha, Constantes.ACERVO_TRIDIMENSIONAL_CAMPO_DIAMETRO),
-                            LimiteCaracteres = Constantes.CARACTERES_PERMITIDOS_500,
+                            FormatoTipoDeCampo = Constantes.FORMATO_DOUBLE
                         }
                     });
                 }
