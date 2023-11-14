@@ -137,8 +137,8 @@ namespace SME.CDEP.Aplicacao.Servicos
                 Ano = ObterConteudoTexto(linha.Ano),
                 Edicao = ObterConteudoTexto(linha.Edicao),
                 NumeroPagina = ObterConteudoTexto(linha.NumeroPaginas),
-                Largura = ObterConteudoDouble(linha.Largura),
-                Altura = ObterConteudoDouble(linha.Altura),
+                Largura = ObterConteudoDoubleOuNulo(linha.Largura),
+                Altura = ObterConteudoDoubleOuNulo(linha.Altura),
                 SerieColecaoId = ObterSerieColecaoIdPorValorDoCampo(linha.SerieColecao.Conteudo,false),
                 IdiomaId = ObterIdiomaIdPorValorDoCampo(linha.Idioma.Conteudo,false),
                 Volume = ObterConteudoTexto(linha.Volume),
@@ -250,7 +250,7 @@ namespace SME.CDEP.Aplicacao.Servicos
             
             var coAutoresCompletos = coAutoresEmTextoAutoNumerados.Select(coAutorAutoNumerado => new CoAutorDTO
             {
-                CreditoAutorId = CreditosAutores.Any() ? CreditosAutores.FirstOrDefault(f=> f.Nome.SaoIguais(coAutorAutoNumerado.Nome)).Id : default,
+                CreditoAutorId = CreditosAutores.FirstOrDefault(f=> f.Nome.SaoIguais(coAutorAutoNumerado.Nome))?.Id,
                 TipoAutoria = tiposAutoriaEmTextoAutoNumerados.FirstOrDefault(f => f.Id.SaoIguais(coAutorAutoNumerado.Id))?.Nome
             }).ToArray();
 

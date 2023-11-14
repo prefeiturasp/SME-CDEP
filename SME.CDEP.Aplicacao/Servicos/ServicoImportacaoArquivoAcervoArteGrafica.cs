@@ -140,7 +140,7 @@ namespace SME.CDEP.Aplicacao.Servicos
                 Diametro = ObterConteudoDoubleOuNulo(linha.Diametro),
                 Tecnica = ObterConteudoTexto(linha.Tecnica),
                 SuporteId = ObterSuporteImagemIdPorValorDoCampo(linha.Suporte.Conteudo,false),
-                Quantidade = ObterConteudoLongo(linha.Quantidade),
+                Quantidade = ObterConteudoLongoOuNulo(linha.Quantidade),
                 Descricao = ObterConteudoTexto(linha.Descricao),
                 CreditosAutoresIds = ObterCreditoAutoresIdsPorValorDoCampo(linha.Credito.Conteudo, TipoCreditoAutoria.Credito),
             };

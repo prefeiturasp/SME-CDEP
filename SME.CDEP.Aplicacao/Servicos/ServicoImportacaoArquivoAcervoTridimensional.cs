@@ -125,12 +125,12 @@ namespace SME.CDEP.Aplicacao.Servicos
                 Procedencia = ObterConteudoTexto(linha.Procedencia),
                 DataAcervo = ObterConteudoTexto(linha.Data),
                 ConservacaoId = ObterConservacaoIdPorValorDoCampo(linha.EstadoConservacao.Conteudo, false),
-                Quantidade = ObterConteudoLongo(linha.Quantidade),
+                Quantidade = ObterConteudoLongoOuNulo(linha.Quantidade),
                 Descricao = ObterConteudoTexto(linha.Descricao),
-                Largura = ObterConteudoDouble(linha.Largura),
-                Altura = ObterConteudoDouble(linha.Altura),
-                Profundidade = ObterConteudoDouble(linha.Profundidade),
-                Diametro = ObterConteudoDouble(linha.Diametro),
+                Largura = ObterConteudoDoubleOuNulo(linha.Largura),
+                Altura = ObterConteudoDoubleOuNulo(linha.Altura),
+                Profundidade = ObterConteudoDoubleOuNulo(linha.Profundidade),
+                Diametro = ObterConteudoDoubleOuNulo(linha.Diametro),
             };
         }
         

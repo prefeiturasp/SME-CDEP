@@ -15,5 +15,6 @@ namespace SME.CDEP.Aplicacao.Servicos.Interface
         Task<ImportacaoArquivoRetornoDTO<AcervoLinhaErroDTO<AcervoBibliograficoDTO,AcervoBibliograficoLinhaRetornoDTO>,AcervoLinhaRetornoSucessoDTO>> ObterImportacaoPendente();
         Task<bool> RemoverLinhaDoArquivo(long id, int linhaDoArquivo);
         Task<bool> AtualizarLinhaParaSucesso(long id, int linhaDoArquivo);
+        Task<long> AtualizarImportacao(long id, string conteudo, ImportacaoStatus? status = null);
     }
 }

@@ -485,6 +485,11 @@ namespace SME.CDEP.Aplicacao.Servicos
             return long.Parse(linha.Conteudo);
         }
         
+        protected static long ObterConteudoLongoOuNulo(LinhaConteudoAjustarDTO linha)
+        {
+            return linha.PossuiErro ? default : long.Parse(linha.Conteudo);
+        }
+        
         protected static double ObterConteudoDouble(LinhaConteudoAjustarDTO linha)
         {
             return double.Parse(linha.Conteudo);
