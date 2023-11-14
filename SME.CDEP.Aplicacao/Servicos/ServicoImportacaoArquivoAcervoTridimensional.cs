@@ -148,7 +148,10 @@ namespace SME.CDEP.Aplicacao.Servicos
                 Largura = ObterConteudoMensagemStatus(s.Largura),
                 Altura = ObterConteudoMensagemStatus(s.Altura),
                 Profundidade = ObterConteudoMensagemStatus(s.Profundidade),
-                Diametro = ObterConteudoMensagemStatus(s.Diametro)
+                Diametro = ObterConteudoMensagemStatus(s.Diametro),
+                NumeroLinha = s.NumeroLinha,
+                Status = s.Status,
+                Mensagem = s.Mensagem
             };
         }
         
@@ -169,8 +172,8 @@ namespace SME.CDEP.Aplicacao.Servicos
                         Descricao = acervoTridimensionalLinha.Descricao.Conteudo,
                         Largura = acervoTridimensionalLinha.Largura.Conteudo.ObterDoubleOuNuloPorValorDoCampo(),
                         Altura = acervoTridimensionalLinha.Altura.Conteudo.ObterDoubleOuNuloPorValorDoCampo(),
-                        Profundidade = acervoTridimensionalLinha.Profundidade.Conteudo.ObterLongoOuNuloPorValorDoCampo(),
-                        Diametro = acervoTridimensionalLinha.Diametro.Conteudo.ObterLongoOuNuloPorValorDoCampo(),
+                        Profundidade = acervoTridimensionalLinha.Profundidade.Conteudo.ObterDoubleOuNuloPorValorDoCampo(),
+                        Diametro = acervoTridimensionalLinha.Diametro.Conteudo.ObterDoubleOuNuloPorValorDoCampo(),
                     };
                     await servicoAcervoTridimensional.Inserir(acervoTridimensional);
         
@@ -321,7 +324,7 @@ namespace SME.CDEP.Aplicacao.Servicos
                         Diametro = new LinhaConteudoAjustarDTO()
                         {
                             Conteudo = planilha.ObterValorDaCelula(numeroLinha, Constantes.ACERVO_TRIDIMENSIONAL_CAMPO_DIAMETRO),
-                            LimiteCaracteres = Constantes.CARACTERES_PERMITIDOS_500,
+                            FormatoTipoDeCampo = Constantes.FORMATO_DOUBLE
                         }
                     });
                 }

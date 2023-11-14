@@ -164,6 +164,9 @@ namespace SME.CDEP.Aplicacao.Servicos
                 TamanhoArquivo = ObterConteudoMensagemStatus(s.TamanhoArquivo),
                 Acessibilidade = ObterConteudoMensagemStatus(s.Acessibilidade),
                 Disponibilizacao = ObterConteudoMensagemStatus(s.Disponibilizacao),
+                NumeroLinha = s.NumeroLinha,
+                Status = s.Status,
+                Mensagem = s.Mensagem
             };
         }
         

@@ -478,26 +478,16 @@ namespace SME.CDEP.Aplicacao.Servicos
         protected static bool ObterConteudoBooleano(LinhaConteudoAjustarDTO linha)
         {
             return linha.Conteudo.EhOpcaoSim();
-        }
-        
-        protected static long ObterConteudoLongo(LinhaConteudoAjustarDTO linha)
-        {
-            return long.Parse(linha.Conteudo);
-        }
+        } 
         
         protected static long ObterConteudoLongoOuNulo(LinhaConteudoAjustarDTO linha)
         {
-            return linha.PossuiErro ? default : long.Parse(linha.Conteudo);
-        }
-        
-        protected static double ObterConteudoDouble(LinhaConteudoAjustarDTO linha)
-        {
-            return double.Parse(linha.Conteudo);
+            return linha.PossuiErro ? default : linha.Conteudo.EstaPreenchido() ? long.Parse(linha.Conteudo) : default;
         }
         
         protected static double? ObterConteudoDoubleOuNulo(LinhaConteudoAjustarDTO linha)
         {
-            return linha.PossuiErro ? default : double.Parse(linha.Conteudo);
+            return linha.PossuiErro ? null : linha.Conteudo.EstaPreenchido() ? double.Parse(linha.Conteudo) : null;
         }
         
         public async Task ValidarOuInserirFormato(IEnumerable<string> formatos, TipoFormato tipoFormato)

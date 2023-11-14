@@ -176,6 +176,9 @@ namespace SME.CDEP.Aplicacao.Servicos
                 NotasGerais = ObterConteudoMensagemStatus(s.NotasGerais),
                 Isbn = ObterConteudoMensagemStatus(s.Isbn),
                 Tombo = ObterConteudoMensagemStatus(s.Tombo),
+                NumeroLinha = s.NumeroLinha,
+                Status = s.Status,
+                Mensagem = s.Mensagem
             };
         }
 

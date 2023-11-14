@@ -178,7 +178,10 @@ namespace SME.CDEP.Aplicacao.Servicos
                 AcessoDocumento = ObterConteudoMensagemStatus(s.AcessoDocumento),
                 Localizacao = ObterConteudoMensagemStatus(s.Localizacao),
                 CopiaDigital = ObterConteudoMensagemStatus(s.CopiaDigital),
-                EstadoConservacao = ObterConteudoMensagemStatus(s.EstadoConservacao)
+                EstadoConservacao = ObterConteudoMensagemStatus(s.EstadoConservacao),
+                NumeroLinha = s.NumeroLinha,
+                Status = s.Status,
+                Mensagem = s.Mensagem
             };
         }
 
@@ -207,7 +210,7 @@ namespace SME.CDEP.Aplicacao.Servicos
                         AcessoDocumentosIds = ObterAcessoDocumentosIdsPorValorDoCampo(acervoDocumentalLinha.AcessoDocumento.Conteudo),
                         Localizacao = acervoDocumentalLinha.Localizacao.Conteudo,
                         CopiaDigital = acervoDocumentalLinha.CopiaDigital.Conteudo.EhOpcaoSim(),
-                        ConservacaoId = ObterConservacaoIdPorValorDoCampo(acervoDocumentalLinha.EstadoConservacao.Conteudo)
+                        ConservacaoId = ObterConservacaoIdPorValorDoCampo(acervoDocumentalLinha.EstadoConservacao.Conteudo, false)
                     };
                     await servicoAcervoDocumental.Inserir(acervoDocumental);
 

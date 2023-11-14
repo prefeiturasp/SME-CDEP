@@ -167,6 +167,9 @@ namespace SME.CDEP.Aplicacao.Servicos
                 Suporte = ObterConteudoMensagemStatus(s.Suporte),
                 Quantidade = ObterConteudoMensagemStatus(s.Quantidade),
                 Descricao = ObterConteudoMensagemStatus(s.Descricao),
+                NumeroLinha = s.NumeroLinha,
+                Status = s.Status,
+                Mensagem = s.Mensagem
             };
         }
 

@@ -310,12 +310,12 @@ namespace SME.CDEP.TesteIntegracao
                 retorno.Erros.Any(a=> a.RetornoObjeto.TipoAnexo.SaoIguais(linhaInserida.TipoAnexo.Conteudo)).ShouldBeTrue();
                
                 if (linhaInserida.Altura.PossuiErro)
-                    retorno.Erros.Any(a=> a.RetornoObjeto.Altura.Value.SaoIguais(0)).ShouldBeTrue();
+                    retorno.Erros.Any(a=> a.RetornoObjeto.Altura.EhNulo()).ShouldBeTrue();
                 else
                     retorno.Erros.Any(a=> a.RetornoObjeto.Altura.SaoIguais(linhaInserida.Altura.Conteudo.ObterDoubleOuNuloPorValorDoCampo())).ShouldBeTrue();
-                
+
                 if (linhaInserida.Largura.PossuiErro)
-                    retorno.Erros.Any(a=> a.RetornoObjeto.Largura.Value.SaoIguais(0)).ShouldBeTrue();
+                    retorno.Erros.Any(a=> a.RetornoObjeto.Largura.EhNulo()).ShouldBeTrue();
                 else
                     retorno.Erros.Any(a=> a.RetornoObjeto.Largura.SaoIguais(linhaInserida.Largura.Conteudo.ObterDoubleOuNuloPorValorDoCampo())).ShouldBeTrue();
                 
@@ -448,12 +448,12 @@ namespace SME.CDEP.TesteIntegracao
                 retorno.Erros.Any(a=> a.RetornoObjeto.TipoAnexo.SaoIguais(linhaInserida.TipoAnexo.Conteudo)).ShouldBeTrue();
                
                 if (linhaInserida.Altura.PossuiErro)
-                    retorno.Erros.Any(a=> a.RetornoObjeto.Altura.Value.SaoIguais(0)).ShouldBeTrue();
+                    retorno.Erros.Any(a=> a.RetornoObjeto.Altura.EhNulo()).ShouldBeTrue();
                 else
                     retorno.Erros.Any(a=> a.RetornoObjeto.Altura.SaoIguais(linhaInserida.Altura.Conteudo.ObterDoubleOuNuloPorValorDoCampo())).ShouldBeTrue();
-                
+
                 if (linhaInserida.Largura.PossuiErro)
-                    retorno.Erros.Any(a=> a.RetornoObjeto.Largura.Value.SaoIguais(0)).ShouldBeTrue();
+                    retorno.Erros.Any(a=> a.RetornoObjeto.Largura.EhNulo()).ShouldBeTrue();
                 else
                     retorno.Erros.Any(a=> a.RetornoObjeto.Largura.SaoIguais(linhaInserida.Largura.Conteudo.ObterDoubleOuNuloPorValorDoCampo())).ShouldBeTrue();
                 
