@@ -14,5 +14,10 @@ namespace SME.CDEP.Dominio.Extensions
         {
             return tipo == TipoAcervo.ArtesGraficas || tipo == TipoAcervo.Fotografico;  
         }
+        
+        public static bool NaoSaoIguais(this TipoAcervo tipo, TipoAcervo tipoAAvailar)
+        {
+            return tipo != tipoAAvailar;  
+        }
     }
 }

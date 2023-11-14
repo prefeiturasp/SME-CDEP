@@ -18,5 +18,10 @@ namespace SME.CDEP.Infra.Dados.Repositorios
 
             return await conexao.Obter().QueryAsync<AcessoDocumento>(query, new { ids });
         }
+
+        public Task<long> ObterPorNome(string nome)
+        {
+            return conexao.Obter().QueryFirstOrDefaultAsync<long>("select id from acesso_documento where f_unaccent(lower(nome)) = f_unaccent(@nome) and not excluido ",new { nome = nome.ToLower() });
+        }
     }
 }

@@ -4,6 +4,7 @@ using SME.CDEP.Dominio.Constantes;
 using SME.CDEP.Dominio.Contexto;
 using SME.CDEP.Dominio.Entidades;
 using SME.CDEP.Infra.Dados.Repositorios.Interfaces;
+using SME.CDEP.Infra.Dominio.Enumerados;
 
 namespace SME.CDEP.Infra.Dados.Repositorios
 {
@@ -83,6 +84,27 @@ namespace SME.CDEP.Infra.Dados.Repositorios
                             where permite_uso_imagem and af.acervo_id = any(@acervosIds) ";
 
             return await conexao.Obter().QueryAsync<AcervoCodigoNomeResumido>(query, new { acervosIds, tipoConteudo = Constantes.FORMATO_TIFF });
+        }
+
+        public async Task<Arquivo> ObterArquivoPorNomeTipoArquivo(string nome, TipoArquivo tipoArquivo)
+        {
+            var query = @"select id,
+                                  nome,
+                                  codigo,
+                                  tipo,
+                                  tipo_conteudo tipoConteudo,
+                                  criado_em criadoEm,
+                                  criado_por criadoPor,
+                                  criado_login criadoLogin,
+                                  alterado_em alteradoEm,
+                                  alterado_por alteradoPor,
+                                  alterado_login alteradoLogin
+                        from arquivo
+                        where not excluido 
+                        and tipo = @tipoArquivo
+                        and nome = @nome ";
+
+            return await conexao.Obter().QueryFirstAsync<Arquivo>(query, new { tipoArquivo, nome });
         }
 
         public async Task<long> ObterIdPorCodigo(Guid arquivoCodigo)

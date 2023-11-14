@@ -1,5 +1,6 @@
 ﻿using SME.CDEP.Dominio.Entidades;
 using SME.CDEP.Dominio.Repositorios;
+using SME.CDEP.Infra.Dominio.Enumerados;
 
 namespace SME.CDEP.Infra.Dados.Repositorios.Interfaces
 {
@@ -14,5 +15,6 @@ namespace SME.CDEP.Infra.Dados.Repositorios.Interfaces
         Task<bool> ExcluirArquivosPorIds(long[] ids);
         Task<long> SalvarAsync(Arquivo arquivo);
         Task<IEnumerable<AcervoCodigoNomeResumido>> ObterAcervoCodigoNomeArquivoPorAcervoId(long[] acervosIds);
+        Task<Arquivo> ObterArquivoPorNomeTipoArquivo(string nome, TipoArquivo tipoArquivo);
     }
 }

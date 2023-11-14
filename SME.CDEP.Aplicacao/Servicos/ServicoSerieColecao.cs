@@ -55,7 +55,12 @@ namespace SME.CDEP.Aplicacao.Servicos
                 
             return retornoPaginado;
         }
-        
+
+        public Task<long> ObterPorNome(string nome)
+        {
+            return repositorioSerieColecao.ObterPorNome(nome);
+        }
+
         private IOrderedEnumerable<IdNomeExcluidoAuditavelDTO> OrdenarRegistros(Paginacao paginacao, IEnumerable<IdNomeExcluidoAuditavelDTO> registros)
         {
             return paginacao.Ordenacao switch

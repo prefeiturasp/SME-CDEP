@@ -2,10 +2,13 @@
 
 public class MensagemNegocio
 {
+    public const string ARQUIVO_SEM_ABA = "Esse arquivo não possui nenhuma aba";
+    public const string SOMENTE_ARQUIVO_XLSX_SUPORTADO = "Esse arquivo não é um XLSX. Somente arquivos do tipo XLSX são permitidos";
+    public const string ARQUIVO_VAZIO = "O arquivo está vazio";
     public const string SOMENTE_ACERVO_DOCUMENTAL_POSSUI_CODIGO_NOVO = "Somente acervo documental possui código novo";
     public const string ESSE_ACERVO_NAO_POSSUI_CREDITO_OU_AUTOR = "Esse acervo não possui crédito ou autor";
     public const string CREDITO_OU_AUTORES_SAO_OBRIGATORIOS = "O crédito/autor deve ser informado para esse tipo de acervo";
-    public const string IMAGEM_NAO_ENCONTRADO = "A imagem não foi encontrada";
+    public const string ARQUIVO_NAO_ENCONTRADO = "Arquivo não foi encontrada";
     public const string ARQUIVO_INF0RMADO_NAO_ENCONTRADO = "O arquivo informado não foi encontrado";
     public const string NAO_FOI_POSSIVEL_VINCULAR_PERFIL_EXTERNO_CORESSO_USUARIO_SEM_PERFIL = "Não foi possível vincular perfil Externo no CoreSSO - Usuário sem perfil";
     public const string REGISTRO_X_DUPLICADO = "Registro '{0}' duplicado";

@@ -3,5 +3,7 @@
 namespace SME.CDEP.Aplicacao.Servicos.Interface
 {
     public interface IServicoAcessoDocumento : IServicoAplicacao, IServicoIdNomeExcluido
-    {}
+    {
+        Task<long> ObterPorNome(string nome);
+    }
 }

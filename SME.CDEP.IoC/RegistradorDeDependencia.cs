@@ -106,6 +106,7 @@ public class RegistradorDeDependencia
             config.AddMap(new AcervoDocumentalAcessoDocumentoMap());
             config.AddMap(new AcervoBibliograficoMap());
             config.AddMap(new AcervoBibliograficoAssuntoMap());
+            config.AddMap(new ImportacaoArquivoMap());
             config.ForDommel();
         });
     }
@@ -155,6 +156,7 @@ public class RegistradorDeDependencia
         _serviceCollection.TryAddScoped<IRepositorioAcervoDocumentalAcessoDocumento, RepositorioAcervoDocumentalAcessoDocumento>();
         _serviceCollection.TryAddScoped<IRepositorioAcervoBibliografico, RepositorioAcervoBibliografico>();
         _serviceCollection.TryAddScoped<IRepositorioAcervoBibliograficoAssunto, RepositorioAcervoBibliograficoAssunto>();
+        _serviceCollection.TryAddScoped<IRepositorioImportacaoArquivo, RepositorioImportacaoArquivo>();
     }
 
     protected virtual void RegistrarServicos()
@@ -190,6 +192,14 @@ public class RegistradorDeDependencia
         _serviceCollection.TryAddScoped<IServicoAcervoAudiovisual, ServicoAcervoAudiovisual>();
         _serviceCollection.TryAddScoped<IServicoAcervoDocumental, ServicoAcervoDocumental>();
         _serviceCollection.TryAddScoped<IServicoAcervoBibliografico, ServicoAcervoBibliografico>();
+        _serviceCollection.TryAddScoped<IServicoImportacaoArquivoBase, ServicoImportacaoArquivoBase>();
+        _serviceCollection.TryAddScoped<IServicoImportacaoArquivoAcervoBibliografico, ServicoImportacaoArquivoAcervoBibliografico>();
+        _serviceCollection.TryAddScoped<IServicoImportacaoArquivoAcervoDocumental, ServicoImportacaoArquivoAcervoDocumental>();
+        _serviceCollection.TryAddScoped<IServicoImportacaoArquivoAcervoArteGrafica, ServicoImportacaoArquivoAcervoArteGrafica>();
+        _serviceCollection.TryAddScoped<IServicoImportacaoArquivoAcervoAudiovisual, ServicoImportacaoArquivoAcervoAudiovisual>();
+        _serviceCollection.TryAddScoped<IServicoImportacaoArquivoAcervoFotografico, ServicoImportacaoArquivoAcervoFotografico>();
+        _serviceCollection.TryAddScoped<IServicoImportacaoArquivoAcervoTridimensional, ServicoImportacaoArquivoAcervoTridimensional>();
+        _serviceCollection.TryAddScoped<IServicoImportacaoArquivoAcervo, ServicoImportacaoArquivoAcervo>();
     }
     protected virtual void RegistrarHttpClients()
     {

@@ -9,7 +9,16 @@ namespace SME.CDEP.Aplicacao.Servicos
 {
     public class ServicoSuporte : ServicoAplicacao<Suporte, IdNomeTipoExcluidoDTO>,IServicoSuporte
     {
+        private readonly IRepositorioSuporte repositorio;
+
         public ServicoSuporte(IRepositorioSuporte repositorio, IMapper mapper) : base(repositorio, mapper)
-        {}
+        {
+            this.repositorio = repositorio ?? throw new ArgumentNullException(nameof(repositorio));
+        }
+
+        public Task<long> ObterPorNomeETipo(string nome, int tipoSuporte)
+        {
+            return repositorio.ObterPorNomeTipo(nome, tipoSuporte);
+        }
     }
 }
