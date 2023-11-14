@@ -558,7 +558,7 @@ namespace SME.CDEP.Aplicacao.Servicos
         
         protected long[] ObterAcessoDocumentosIdsPorValorDoCampo(string valorDoCampo, bool gerarExcecao = true)
         {
-            if (valorDoCampo.NaoEstaPreenchido() || !AcessoDocumentos.Any(a=> a.Equals(valorDoCampo)))
+            if (valorDoCampo.NaoEstaPreenchido())
                 throw new NegocioException(string.Format(Constantes.O_VALOR_DO_CAMPO_X_NAO_FOI_LOCALIZADO, valorDoCampo));
 
             var retorno = new List<long>();
@@ -566,14 +566,14 @@ namespace SME.CDEP.Aplicacao.Servicos
             var conteudoCampoArray = valorDoCampo.FormatarTextoEmArray().ToList();
             foreach (var item in conteudoCampoArray)
             {
-                var possuiNome = AcessoDocumentos.Any(f => f.Nome.Equals(valorDoCampo));
+                var possuiNome = AcessoDocumentos.Any(f => f.Nome.Equals(item));
                 if (!possuiNome)
                 {
                     if (gerarExcecao)
                         throw new NegocioException(string.Format(Constantes.O_VALOR_DO_CAMPO_X_NAO_FOI_LOCALIZADO, valorDoCampo));
                 }
                 else
-                    retorno.Add(AcessoDocumentos.FirstOrDefault(f => f.Nome.SaoIguais(valorDoCampo)).Id);
+                    retorno.Add(AcessoDocumentos.FirstOrDefault(f => f.Nome.SaoIguais(item)).Id);
             }
             return retorno.ToArray();
         }
@@ -735,6 +735,72 @@ namespace SME.CDEP.Aplicacao.Servicos
                 Tombo = tombo,
                 NumeroLinha = numeroLinha,
             };
+        }
+        
+        protected async Task ObterConservacoes(IEnumerable<string> conservacoes)
+        {
+            foreach (var nome in conservacoes)
+                await ExisteConservacaoPorNome(nome);
+        }
+        
+        protected async Task ObterCromias(IEnumerable<string> cromias)
+        {
+            foreach (var nome in cromias)
+                await ExisteCromiaPorNome(nome);
+        }
+        
+        protected async Task ObterSuportes(IEnumerable<string> suportes, TipoSuporte tipoSuporte)
+        {
+            foreach (var nome in suportes)
+                await ExisteSuportePorNomeETipo(nome, (int)tipoSuporte);
+        }
+        
+        protected async Task ObterCreditosAutoresTipoAutoria(IEnumerable<string> creditosAutores, TipoCreditoAutoria tipoAutoria)
+        {
+            foreach (var nome in creditosAutores)
+                await ExisteCreditoAutorCoAutorPorNomeETipoAutoria(nome, tipoAutoria);
+        }
+
+        protected async Task ObterMateriais(IEnumerable<string> materiais, TipoMaterial tipoMaterial)
+        {
+            foreach (var nome in materiais)
+                await ExisteMaterialPorNomeETipo(tipoMaterial, nome);
+        }
+        
+        protected async Task ObterEditoras(IEnumerable<string> editoras)
+        {
+            foreach (var nome in editoras)
+                await ExisteEditoraPorNome(nome);
+        }
+        
+        protected async Task ObterAssuntos(IEnumerable<string> assuntos)
+        {
+            foreach (var nome in assuntos)
+                await ExisteAssuntoPorNome(nome);
+        }
+        
+        protected async Task ObterSeriesColecoes(IEnumerable<string> seriesColecoes)
+        {
+            foreach (var nome in seriesColecoes)
+                await ExisteSerieColecaoPorNome(nome);
+        }
+        
+        protected async Task ObterIdiomas(IEnumerable<string> idiomas)
+        {
+            foreach (var nome in idiomas)
+                await ExisteIdiomaPorNome(nome);
+        }
+        
+        protected async Task ObterAcessoDocumentos(IEnumerable<string> acessoDocumentos)
+        {
+            foreach (var nome in acessoDocumentos)
+                await ExisteAcessoDocumentoPorNome(nome);
+        }
+        
+        protected async Task ObterFormatos(IEnumerable<string> formatos, TipoFormato tipoFormato)
+        {
+            foreach (var nome in formatos)
+                await ExisteFormatoPorNomeETipo(nome,tipoFormato);
         }
     }
 }
