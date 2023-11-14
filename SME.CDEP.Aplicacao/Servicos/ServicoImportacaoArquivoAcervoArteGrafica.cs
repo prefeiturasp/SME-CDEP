@@ -1,4 +1,5 @@
-﻿using ClosedXML.Excel;
+﻿using System.Text;
+using ClosedXML.Excel;
 using Microsoft.AspNetCore.Http;
 using Newtonsoft.Json;
 using SME.CDEP.Aplicacao.DTOS;
@@ -168,9 +169,67 @@ namespace SME.CDEP.Aplicacao.Servicos
                 Quantidade = ObterConteudoMensagemStatus(s.Quantidade),
                 Descricao = ObterConteudoMensagemStatus(s.Descricao),
                 NumeroLinha = s.NumeroLinha,
-                Status = s.Status,
-                Mensagem = s.Mensagem
+                Status = ImportacaoStatus.Erros,
+                Mensagem = s.Mensagem.NaoEstaPreenchido() ? ObterMensagemErroLinha(s) : s.Mensagem,
             };
+        }
+
+        private string ObterMensagemErroLinha(AcervoArteGraficaLinhaDTO acervoArteGraficaLinhaDto)
+        {
+            var mensagemErro = new StringBuilder();
+
+            if (acervoArteGraficaLinhaDto.Titulo.PossuiErro)
+                mensagemErro.AppendLine(acervoArteGraficaLinhaDto.Titulo.Mensagem);
+            
+            if (acervoArteGraficaLinhaDto.Tombo.PossuiErro)
+                mensagemErro.AppendLine(acervoArteGraficaLinhaDto.Tombo.Mensagem);
+            
+            if (acervoArteGraficaLinhaDto.Credito.PossuiErro)
+                mensagemErro.AppendLine(acervoArteGraficaLinhaDto.Credito.Mensagem);
+                    
+            if (acervoArteGraficaLinhaDto.Localizacao.PossuiErro)
+                mensagemErro.AppendLine(acervoArteGraficaLinhaDto.Localizacao.Mensagem);
+                    
+            if (acervoArteGraficaLinhaDto.Procedencia.PossuiErro)
+                mensagemErro.AppendLine(acervoArteGraficaLinhaDto.Procedencia.Mensagem);
+                    
+            if (acervoArteGraficaLinhaDto.Data.PossuiErro)
+                mensagemErro.AppendLine(acervoArteGraficaLinhaDto.Data.Mensagem);
+                    
+            if (acervoArteGraficaLinhaDto.CopiaDigital.PossuiErro)
+                mensagemErro.AppendLine(acervoArteGraficaLinhaDto.CopiaDigital.Mensagem);
+                    
+            if (acervoArteGraficaLinhaDto.AutorizacaoUsoDeImagem.PossuiErro)
+                mensagemErro.AppendLine(acervoArteGraficaLinhaDto.AutorizacaoUsoDeImagem.Mensagem);
+                    
+            if (acervoArteGraficaLinhaDto.EstadoConservacao.PossuiErro)
+                mensagemErro.AppendLine(acervoArteGraficaLinhaDto.EstadoConservacao.Mensagem);
+                    
+            if (acervoArteGraficaLinhaDto.Cromia.PossuiErro)
+                mensagemErro.AppendLine(acervoArteGraficaLinhaDto.Cromia.Mensagem);
+                    
+            if (acervoArteGraficaLinhaDto.Largura.PossuiErro)
+                mensagemErro.AppendLine(acervoArteGraficaLinhaDto.Largura.Mensagem);
+                    
+            if (acervoArteGraficaLinhaDto.Altura.PossuiErro)
+                mensagemErro.AppendLine(acervoArteGraficaLinhaDto.Altura.Mensagem);
+                    
+            if (acervoArteGraficaLinhaDto.Diametro.PossuiErro)
+                mensagemErro.AppendLine(acervoArteGraficaLinhaDto.Diametro.Mensagem);
+            
+            if (acervoArteGraficaLinhaDto.Tecnica.PossuiErro)
+                mensagemErro.AppendLine(acervoArteGraficaLinhaDto.Tecnica.Mensagem);
+                    
+            if (acervoArteGraficaLinhaDto.Suporte.PossuiErro)
+                mensagemErro.AppendLine(acervoArteGraficaLinhaDto.Suporte.Mensagem);
+                    
+            if (acervoArteGraficaLinhaDto.Quantidade.PossuiErro)
+                mensagemErro.AppendLine(acervoArteGraficaLinhaDto.Quantidade.Mensagem);
+                    
+            if (acervoArteGraficaLinhaDto.Descricao.PossuiErro)
+                mensagemErro.AppendLine(acervoArteGraficaLinhaDto.Descricao.Mensagem);
+
+            return mensagemErro.ToString();
         }
 
         public async Task PersistenciaAcervo(IEnumerable<AcervoArteGraficaLinhaDTO> acervosArtesGraficasLinhas)

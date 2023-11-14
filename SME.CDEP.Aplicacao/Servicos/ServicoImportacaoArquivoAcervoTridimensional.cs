@@ -1,4 +1,5 @@
-﻿using ClosedXML.Excel;
+﻿using System.Text;
+using ClosedXML.Excel;
 using Microsoft.AspNetCore.Http;
 using Newtonsoft.Json;
 using SME.CDEP.Aplicacao.DTOS;
@@ -134,7 +135,7 @@ namespace SME.CDEP.Aplicacao.Servicos
             };
         }
         
-        private static AcervoTridimensionalLinhaRetornoDTO ObterLinhasComErros(AcervoTridimensionalLinhaDTO s)
+        private AcervoTridimensionalLinhaRetornoDTO ObterLinhasComErros(AcervoTridimensionalLinhaDTO s)
         {
             return new AcervoTridimensionalLinhaRetornoDTO()
             {
@@ -150,9 +151,49 @@ namespace SME.CDEP.Aplicacao.Servicos
                 Profundidade = ObterConteudoMensagemStatus(s.Profundidade),
                 Diametro = ObterConteudoMensagemStatus(s.Diametro),
                 NumeroLinha = s.NumeroLinha,
-                Status = s.Status,
-                Mensagem = s.Mensagem
+                Status = ImportacaoStatus.Erros,
+                Mensagem = s.Mensagem.NaoEstaPreenchido() ? ObterMensagemErroLinha(s) : s.Mensagem,
             };
+        }
+        
+        private string ObterMensagemErroLinha(AcervoTridimensionalLinhaDTO acervoTridimensionalLinhaDTO)
+        {
+	        var mensagemErro = new StringBuilder();
+
+	        if (acervoTridimensionalLinhaDTO.Titulo.PossuiErro)
+		        mensagemErro.AppendLine(acervoTridimensionalLinhaDTO.Titulo.Mensagem);
+	        
+	        if (acervoTridimensionalLinhaDTO.Tombo.PossuiErro)
+		        mensagemErro.AppendLine(acervoTridimensionalLinhaDTO.Tombo.Mensagem);
+	        
+	        if (acervoTridimensionalLinhaDTO.Procedencia.PossuiErro)
+		        mensagemErro.AppendLine(acervoTridimensionalLinhaDTO.Procedencia.Mensagem);
+			        
+	        if (acervoTridimensionalLinhaDTO.Data.PossuiErro)
+		        mensagemErro.AppendLine(acervoTridimensionalLinhaDTO.Data.Mensagem);
+			        
+	        if (acervoTridimensionalLinhaDTO.EstadoConservacao.PossuiErro)
+		        mensagemErro.AppendLine(acervoTridimensionalLinhaDTO.EstadoConservacao.Mensagem);
+	        
+	        if (acervoTridimensionalLinhaDTO.Descricao.PossuiErro)
+		        mensagemErro.AppendLine(acervoTridimensionalLinhaDTO.Descricao.Mensagem);
+	        
+	        if (acervoTridimensionalLinhaDTO.Quantidade.PossuiErro)
+		        mensagemErro.AppendLine(acervoTridimensionalLinhaDTO.Quantidade.Mensagem);
+	        
+	        if (acervoTridimensionalLinhaDTO.Largura.PossuiErro)
+		        mensagemErro.AppendLine(acervoTridimensionalLinhaDTO.Largura.Mensagem);
+			        
+	        if (acervoTridimensionalLinhaDTO.Altura.PossuiErro)
+		        mensagemErro.AppendLine(acervoTridimensionalLinhaDTO.Altura.Mensagem);
+			        
+	        if (acervoTridimensionalLinhaDTO.Profundidade.PossuiErro)
+		        mensagemErro.AppendLine(acervoTridimensionalLinhaDTO.Profundidade.Mensagem);
+			        
+	        if (acervoTridimensionalLinhaDTO.Diametro.PossuiErro)
+		        mensagemErro.AppendLine(acervoTridimensionalLinhaDTO.Diametro.Mensagem);
+			        
+	        return mensagemErro.ToString();
         }
         
         public async Task PersistenciaAcervo(IEnumerable<AcervoTridimensionalLinhaDTO> acervosTridimensionalsLinhas)

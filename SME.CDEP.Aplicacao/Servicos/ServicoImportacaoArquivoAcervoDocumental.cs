@@ -1,4 +1,5 @@
-﻿using ClosedXML.Excel;
+﻿using System.Text;
+using ClosedXML.Excel;
 using Microsoft.AspNetCore.Http;
 using Newtonsoft.Json;
 using SME.CDEP.Aplicacao.DTOS;
@@ -157,7 +158,7 @@ namespace SME.CDEP.Aplicacao.Servicos
             };
         }
 
-        private static AcervoDocumentalLinhaRetornoDTO ObterLinhasComErros(AcervoDocumentalLinhaDTO s)
+        private AcervoDocumentalLinhaRetornoDTO ObterLinhasComErros(AcervoDocumentalLinhaDTO s)
         {
             return new AcervoDocumentalLinhaRetornoDTO()
             {
@@ -180,9 +181,70 @@ namespace SME.CDEP.Aplicacao.Servicos
                 CopiaDigital = ObterConteudoMensagemStatus(s.CopiaDigital),
                 EstadoConservacao = ObterConteudoMensagemStatus(s.EstadoConservacao),
                 NumeroLinha = s.NumeroLinha,
-                Status = s.Status,
-                Mensagem = s.Mensagem
+                Status = ImportacaoStatus.Erros,
+                Mensagem = s.Mensagem.NaoEstaPreenchido() ? ObterMensagemErroLinha(s) : s.Mensagem,
             };
+        }
+        
+        private string ObterMensagemErroLinha(AcervoDocumentalLinhaDTO acervoDocumentalLinhaDTO)
+        {
+	        var mensagemErro = new StringBuilder();
+
+	        if (acervoDocumentalLinhaDTO.Titulo.PossuiErro)
+		        mensagemErro.AppendLine(acervoDocumentalLinhaDTO.Titulo.Mensagem);
+	        
+	        if (acervoDocumentalLinhaDTO.CodigoAntigo.PossuiErro)
+		        mensagemErro.AppendLine(acervoDocumentalLinhaDTO.CodigoAntigo.Mensagem);
+	        
+	        if (acervoDocumentalLinhaDTO.CodigoNovo.PossuiErro)
+		        mensagemErro.AppendLine(acervoDocumentalLinhaDTO.CodigoNovo.Mensagem);
+			        
+	        if (acervoDocumentalLinhaDTO.Material.PossuiErro)
+		        mensagemErro.AppendLine(acervoDocumentalLinhaDTO.Material.Mensagem);
+			        
+	        if (acervoDocumentalLinhaDTO.Idioma.PossuiErro)
+		        mensagemErro.AppendLine(acervoDocumentalLinhaDTO.Idioma.Mensagem);
+			        
+	        if (acervoDocumentalLinhaDTO.Autor.PossuiErro)
+		        mensagemErro.AppendLine(acervoDocumentalLinhaDTO.Autor.Mensagem);
+			        
+	        if (acervoDocumentalLinhaDTO.Ano.PossuiErro)
+		        mensagemErro.AppendLine(acervoDocumentalLinhaDTO.Ano.Mensagem);
+			        
+	        if (acervoDocumentalLinhaDTO.NumeroPaginas.PossuiErro)
+		        mensagemErro.AppendLine(acervoDocumentalLinhaDTO.NumeroPaginas.Mensagem);
+			        
+	        if (acervoDocumentalLinhaDTO.Volume.PossuiErro)
+		        mensagemErro.AppendLine(acervoDocumentalLinhaDTO.Volume.Mensagem);
+	        
+	        if (acervoDocumentalLinhaDTO.Descricao.PossuiErro)
+		        mensagemErro.AppendLine(acervoDocumentalLinhaDTO.Descricao.Mensagem);
+	        
+	        if (acervoDocumentalLinhaDTO.TipoAnexo.PossuiErro)
+		        mensagemErro.AppendLine(acervoDocumentalLinhaDTO.TipoAnexo.Mensagem);
+	        
+	        if (acervoDocumentalLinhaDTO.Largura.PossuiErro)
+		        mensagemErro.AppendLine(acervoDocumentalLinhaDTO.Largura.Mensagem);
+			        
+	        if (acervoDocumentalLinhaDTO.Altura.PossuiErro)
+		        mensagemErro.AppendLine(acervoDocumentalLinhaDTO.Altura.Mensagem);
+			        
+	        if (acervoDocumentalLinhaDTO.TamanhoArquivo.PossuiErro)
+		        mensagemErro.AppendLine(acervoDocumentalLinhaDTO.TamanhoArquivo.Mensagem);
+			        
+	        if (acervoDocumentalLinhaDTO.AcessoDocumento.PossuiErro)
+		        mensagemErro.AppendLine(acervoDocumentalLinhaDTO.AcessoDocumento.Mensagem);
+			        
+	        if (acervoDocumentalLinhaDTO.Localizacao.PossuiErro)
+		        mensagemErro.AppendLine(acervoDocumentalLinhaDTO.Localizacao.Mensagem);
+            
+            if (acervoDocumentalLinhaDTO.CopiaDigital.PossuiErro)
+                mensagemErro.AppendLine(acervoDocumentalLinhaDTO.CopiaDigital.Mensagem);
+            
+            if (acervoDocumentalLinhaDTO.EstadoConservacao.PossuiErro)
+                mensagemErro.AppendLine(acervoDocumentalLinhaDTO.EstadoConservacao.Mensagem);
+
+	        return mensagemErro.ToString();
         }
 
         public async Task PersistenciaAcervo(IEnumerable<AcervoDocumentalLinhaDTO> acervosDocumentalLinhas)

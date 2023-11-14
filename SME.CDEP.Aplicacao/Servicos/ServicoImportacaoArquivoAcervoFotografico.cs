@@ -1,4 +1,5 @@
-﻿using AutoMapper;
+﻿using System.Text;
+using AutoMapper;
 using ClosedXML.Excel;
 using Microsoft.AspNetCore.Http;
 using Newtonsoft.Json;
@@ -147,7 +148,7 @@ namespace SME.CDEP.Aplicacao.Servicos
             };
         }
         
-        private static AcervoFotograficoLinhaRetornoDTO ObterLinhasComErros(AcervoFotograficoLinhaDTO s)
+        private AcervoFotograficoLinhaRetornoDTO ObterLinhasComErros(AcervoFotograficoLinhaDTO s)
         {
             return new AcervoFotograficoLinhaRetornoDTO()
             {
@@ -170,9 +171,70 @@ namespace SME.CDEP.Aplicacao.Servicos
                 Cromia = ObterConteudoMensagemStatus(s.Cromia),
                 Resolucao = ObterConteudoMensagemStatus(s.Resolucao),
                 NumeroLinha = s.NumeroLinha,
-                Status = s.Status,
-                Mensagem = s.Mensagem
+                Status = ImportacaoStatus.Erros,
+                Mensagem = s.Mensagem.NaoEstaPreenchido() ? ObterMensagemErroLinha(s) : s.Mensagem,
             };
+        }
+				
+        private string ObterMensagemErroLinha(AcervoFotograficoLinhaDTO acervoFotograficoLinhaDTO)
+        {
+	        var mensagemErro = new StringBuilder();
+
+	        if (acervoFotograficoLinhaDTO.Titulo.PossuiErro)
+		        mensagemErro.AppendLine(acervoFotograficoLinhaDTO.Titulo.Mensagem);
+	        
+	        if (acervoFotograficoLinhaDTO.Tombo.PossuiErro)
+		        mensagemErro.AppendLine(acervoFotograficoLinhaDTO.Tombo.Mensagem);
+	        
+	        if (acervoFotograficoLinhaDTO.Credito.PossuiErro)
+		        mensagemErro.AppendLine(acervoFotograficoLinhaDTO.Credito.Mensagem);
+			        
+	        if (acervoFotograficoLinhaDTO.Localizacao.PossuiErro)
+		        mensagemErro.AppendLine(acervoFotograficoLinhaDTO.Localizacao.Mensagem);
+			        
+	        if (acervoFotograficoLinhaDTO.Procedencia.PossuiErro)
+		        mensagemErro.AppendLine(acervoFotograficoLinhaDTO.Procedencia.Mensagem);
+			        
+	        if (acervoFotograficoLinhaDTO.Data.PossuiErro)
+		        mensagemErro.AppendLine(acervoFotograficoLinhaDTO.Data.Mensagem);
+			        
+	        if (acervoFotograficoLinhaDTO.CopiaDigital.PossuiErro)
+		        mensagemErro.AppendLine(acervoFotograficoLinhaDTO.CopiaDigital.Mensagem);
+			        
+	        if (acervoFotograficoLinhaDTO.AutorizacaoUsoDeImagem.PossuiErro)
+		        mensagemErro.AppendLine(acervoFotograficoLinhaDTO.AutorizacaoUsoDeImagem.Mensagem);
+			        
+	        if (acervoFotograficoLinhaDTO.EstadoConservacao.PossuiErro)
+		        mensagemErro.AppendLine(acervoFotograficoLinhaDTO.EstadoConservacao.Mensagem);
+	        
+	        if (acervoFotograficoLinhaDTO.Descricao.PossuiErro)
+		        mensagemErro.AppendLine(acervoFotograficoLinhaDTO.Descricao.Mensagem);
+	        
+	        if (acervoFotograficoLinhaDTO.Suporte.PossuiErro)
+		        mensagemErro.AppendLine(acervoFotograficoLinhaDTO.Suporte.Mensagem);
+	        
+	        if (acervoFotograficoLinhaDTO.Quantidade.PossuiErro)
+		        mensagemErro.AppendLine(acervoFotograficoLinhaDTO.Quantidade.Mensagem);
+			        
+	        if (acervoFotograficoLinhaDTO.Cromia.PossuiErro)
+		        mensagemErro.AppendLine(acervoFotograficoLinhaDTO.Cromia.Mensagem);
+			        
+	        if (acervoFotograficoLinhaDTO.TamanhoArquivo.PossuiErro)
+		        mensagemErro.AppendLine(acervoFotograficoLinhaDTO.TamanhoArquivo.Mensagem);
+			        
+	        if (acervoFotograficoLinhaDTO.Largura.PossuiErro)
+		        mensagemErro.AppendLine(acervoFotograficoLinhaDTO.Largura.Mensagem);
+			        
+	        if (acervoFotograficoLinhaDTO.Altura.PossuiErro)
+		        mensagemErro.AppendLine(acervoFotograficoLinhaDTO.Altura.Mensagem);
+            
+            if (acervoFotograficoLinhaDTO.FormatoImagem.PossuiErro)
+                mensagemErro.AppendLine(acervoFotograficoLinhaDTO.FormatoImagem.Mensagem);
+            
+            if (acervoFotograficoLinhaDTO.Resolucao.PossuiErro)
+                mensagemErro.AppendLine(acervoFotograficoLinhaDTO.Resolucao.Mensagem);
+
+	        return mensagemErro.ToString();
         }
         
         public async Task PersistenciaAcervo(IEnumerable<AcervoFotograficoLinhaDTO> acervosFotograficosLinhas)
