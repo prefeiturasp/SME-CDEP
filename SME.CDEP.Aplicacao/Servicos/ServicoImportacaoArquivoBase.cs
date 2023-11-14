@@ -490,6 +490,11 @@ namespace SME.CDEP.Aplicacao.Servicos
             return double.Parse(linha.Conteudo);
         }
         
+        protected static double? ObterConteudoDoubleOuNulo(LinhaConteudoAjustarDTO linha)
+        {
+            return linha.PossuiErro ? default : double.Parse(linha.Conteudo);
+        }
+        
         public async Task ValidarOuInserirFormato(IEnumerable<string> formatos, TipoFormato tipoFormato)
         {
             foreach (var nome in formatos)
