@@ -55,6 +55,6 @@ public class ArmazenamentoController: BaseController
         var (arquivo, contentType, nomeArquivo) = await servicoDownloadArquivo.DownloadPorTipoAcervo(tipoAcervo);
         if (arquivo.EhNulo()) return NoContent();
 
-       return File(arquivo, contentType, nomeArquivo);
+        return File(arquivo, contentType, nomeArquivo);
     }
 }
