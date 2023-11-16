@@ -259,7 +259,7 @@ namespace SME.CDEP.Aplicacao.Servicos
                         Codigo = acervoDocumentalLinha.CodigoAntigo.Conteudo,
                         CodigoNovo = acervoDocumentalLinha.CodigoNovo.Conteudo,
                         MaterialId = ObterMaterialDocumentalIdPorValorDoCampo(acervoDocumentalLinha.Material.Conteudo,false),
-                        IdiomaId = ObterMaterialDocumentalIdPorValorDoCampo(acervoDocumentalLinha.Material.Conteudo,false),
+                        IdiomaId = ObterIdiomaIdPorValorDoCampo(acervoDocumentalLinha.Idioma.Conteudo,false),
                         CreditosAutoresIds = ObterCreditoAutoresIdsPorValorDoCampo(acervoDocumentalLinha.Autor.Conteudo, TipoCreditoAutoria.Autoria),
                         Ano = acervoDocumentalLinha.Ano.Conteudo,
                         NumeroPagina = acervoDocumentalLinha.NumeroPaginas.Conteudo,
