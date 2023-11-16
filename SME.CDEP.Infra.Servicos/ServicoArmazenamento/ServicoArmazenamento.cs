@@ -128,7 +128,8 @@ namespace SME.CDEP.Infra.Servicos.ServicoArmazenamento
         private async Task<string> ObterUrl(string nomeArquivo, string bucketName)
         {
             var hostAplicacao = configuration["UrlFrontEnd"];
-            return $"{hostAplicacao}{bucketName}/{nomeArquivo}";
+            //return $"{hostAplicacao}{bucketName}/{nomeArquivo}";
+            return $"https://dev-arquivos.sme.prefeitura.sp.gov.br/{bucketName}/{nomeArquivo}";
         }
     }
 }

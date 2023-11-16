@@ -45,10 +45,9 @@ namespace SME.CDEP.Aplicacao.Servicos
             if (enderecoArquivo.EstaPreenchido())
             {
                 var response = await new HttpClient().GetAsync(enderecoArquivo);
-                
+
                 if (response.StatusCode == System.Net.HttpStatusCode.OK)
-                    arquivoFisico = Encoding.Default.GetBytes(await response.Content.ReadAsStringAsync());
-                    
+                    arquivoFisico = await response.Content.ReadAsByteArrayAsync();
             }
             else
                 throw new NegocioException(MensagemNegocio.ARQUIVO_NAO_ENCONTRADO);
