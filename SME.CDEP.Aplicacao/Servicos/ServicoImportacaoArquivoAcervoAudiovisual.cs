@@ -248,7 +248,7 @@ namespace SME.CDEP.Aplicacao.Servicos
                         Descricao = acervoAudiovisualLinha.Descricao.Conteudo,
                         SuporteId = ObterSuporteVideoIdPorValorDoCampo(acervoAudiovisualLinha.Suporte.Conteudo),
                         Duracao = acervoAudiovisualLinha.Duracao.Conteudo,
-                        CromiaId = ObterCromiaIdOuNuloPorValorDoCampo(acervoAudiovisualLinha.Cromia.Conteudo),
+                        CromiaId = ObterCromiaIdOuNuloPorValorDoCampo(acervoAudiovisualLinha.Cromia.Conteudo, false),
                         TamanhoArquivo = acervoAudiovisualLinha.TamanhoArquivo.Conteudo,
                         Acessibilidade = acervoAudiovisualLinha.Acessibilidade.Conteudo,
                         Disponibilizacao = acervoAudiovisualLinha.Disponibilizacao.Conteudo,
