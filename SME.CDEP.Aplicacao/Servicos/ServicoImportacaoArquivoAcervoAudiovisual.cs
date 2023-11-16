@@ -244,7 +244,7 @@ namespace SME.CDEP.Aplicacao.Servicos
                         DataAcervo = acervoAudiovisualLinha.Data.Conteudo,
                         Copia = acervoAudiovisualLinha.Copia.Conteudo,
                         PermiteUsoImagem = ObterAutorizaUsoDeImagemPorValorDoCampo(acervoAudiovisualLinha.AutorizacaoUsoDeImagem.Conteudo),
-                        ConservacaoId = ObterConservacaoIdPorValorDoCampo(acervoAudiovisualLinha.EstadoConservacao.Conteudo),
+                        ConservacaoId = acervoAudiovisualLinha.EstadoConservacao.Conteudo.EstaPreenchido() ? ObterConservacaoIdPorValorDoCampo(acervoAudiovisualLinha.EstadoConservacao.Conteudo) : null,
                         Descricao = acervoAudiovisualLinha.Descricao.Conteudo,
                         SuporteId = ObterSuporteVideoIdPorValorDoCampo(acervoAudiovisualLinha.Suporte.Conteudo),
                         Duracao = acervoAudiovisualLinha.Duracao.Conteudo,
