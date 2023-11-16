@@ -214,6 +214,7 @@ public class Constantes
     public const string NOME_DA_COLUNA_DIMENSAO_DIAMETRO = "DIMENSÃO DIÂMETRO (CM)";
     public const string NOME_DA_COLUNA_LOCALIZACAO = "LOCALIZAÇÃO";
     public const string NOME_DA_COLUNA_COPIA_DIGITAL = "CÓPIA DIGITAL";
+    public const string NOME_DA_COLUNA_COPIA = "CÓPIA";
     public const string NOME_DA_COLUNA_AUTORIZACAO_USO_DE_IMAGEM = "AUTORIZAÇÃO DO USO DE IMAGEM";
     public const string NOME_DA_COLUNA_SUPORTE = "SUPORTE";
     public const string NOME_DA_COLUNA_FORMATO_DA_IMAGEM = "FORMATO DA IMAGEM";

@@ -465,7 +465,7 @@ namespace SME.CDEP.Aplicacao.Servicos
             ValidarTituloDaColuna(planilha, numeroLinha, Constantes.NOME_DA_COLUNA_DATA, 
                 Constantes.ACERVO_AUDIOVISUAL_CAMPO_DATA, Constantes.AUDIOVISUAL);
             
-            ValidarTituloDaColuna(planilha, numeroLinha, Constantes.NOME_DA_COLUNA_COPIA_DIGITAL, 
+            ValidarTituloDaColuna(planilha, numeroLinha, Constantes.NOME_DA_COLUNA_COPIA, 
                 Constantes.ACERVO_AUDIOVISUAL_CAMPO_COPIA, Constantes.AUDIOVISUAL);
             
             ValidarTituloDaColuna(planilha, numeroLinha, Constantes.NOME_DA_COLUNA_AUTORIZACAO_USO_DE_IMAGEM,

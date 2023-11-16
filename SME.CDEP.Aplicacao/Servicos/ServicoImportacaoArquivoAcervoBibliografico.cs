@@ -281,7 +281,7 @@ namespace SME.CDEP.Aplicacao.Servicos
                         Largura = acervoBibliograficoLinha.Largura.Conteudo.ObterDoubleOuNuloPorValorDoCampo(),
                         Altura = acervoBibliograficoLinha.Altura.Conteudo.ObterDoubleOuNuloPorValorDoCampo(),
 
-                        SerieColecaoId = ObterSerieColecaoIdPorValorDoCampo(acervoBibliograficoLinha.SerieColecao.Conteudo, false),
+                        SerieColecaoId = acervoBibliograficoLinha.SerieColecao.Conteudo.EstaPreenchido() ? ObterSerieColecaoIdPorValorDoCampo(acervoBibliograficoLinha.SerieColecao.Conteudo, false) : null,
 
                         Volume = acervoBibliograficoLinha.Volume.Conteudo,
 
