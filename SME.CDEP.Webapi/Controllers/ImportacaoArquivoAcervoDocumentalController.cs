@@ -17,7 +17,7 @@ public class ImportacaoArquivoAcervoDocumentalController: BaseController
     [ProducesResponseType(typeof(ImportacaoArquivoRetornoDTO<AcervoLinhaErroDTO<AcervoDocumentalDTO,AcervoDocumentalLinhaRetornoDTO>,AcervoLinhaRetornoSucessoDTO>),200)]
     [ProducesResponseType(401)]
     [ProducesResponseType(typeof(RetornoBaseDTO), 500)]
-    [Authorize("Bearer")] 
+    [Permissao(Permissao.ACR_I, Policy = "Bearer")]
     public async Task<IActionResult> ImportarArquivo(IFormFile file,[FromServices] IServicoImportacaoArquivoAcervoDocumental servicoImportacaoArquivoAcervoDocumental)
     {
         return Ok(await servicoImportacaoArquivoAcervoDocumental.ImportarArquivo(file));
@@ -27,7 +27,7 @@ public class ImportacaoArquivoAcervoDocumentalController: BaseController
     [ProducesResponseType(typeof(ImportacaoArquivoRetornoDTO<AcervoLinhaErroDTO<AcervoDocumentalDTO,AcervoDocumentalLinhaRetornoDTO>,AcervoLinhaRetornoSucessoDTO>),200)]
     [ProducesResponseType(401)]
     [ProducesResponseType(typeof(RetornoBaseDTO), 500)]
-    [Authorize("Bearer")] 
+    [Permissao(Permissao.ACR_C, Policy = "Bearer")]
     public async Task<IActionResult> ObterImportacaoPendente([FromServices] IServicoImportacaoArquivoAcervoDocumental servicoImportacaoArquivoAcervoDocumental)
     {
         return Ok(await servicoImportacaoArquivoAcervoDocumental.ObterImportacaoPendente());
@@ -38,7 +38,7 @@ public class ImportacaoArquivoAcervoDocumentalController: BaseController
     [ProducesResponseType(typeof(RetornoBaseDTO), 400)]
     [ProducesResponseType(typeof(RetornoBaseDTO), 403)]
     [ProducesResponseType(typeof(RetornoBaseDTO), 601)]
-    [Permissao(Policy = "Bearer")]
+    [Permissao(Permissao.ACR_E, Policy = "Bearer")]
     public async Task<IActionResult> RemoverLinhaDoArquivo([FromRoute] long id, [FromBody] int linhaDoArquivo, [FromServices] IServicoImportacaoArquivoAcervoDocumental servicoImportacaoArquivoAcervoDocumental)
     {
         return Ok(await servicoImportacaoArquivoAcervoDocumental.RemoverLinhaDoArquivo(id, linhaDoArquivo));
@@ -49,7 +49,7 @@ public class ImportacaoArquivoAcervoDocumentalController: BaseController
     [ProducesResponseType(typeof(RetornoBaseDTO), 400)]
     [ProducesResponseType(typeof(RetornoBaseDTO), 403)]
     [ProducesResponseType(typeof(RetornoBaseDTO), 601)]
-    [Permissao(Policy = "Bearer")]
+    [Permissao(Permissao.ACR_A, Policy = "Bearer")]
     public async Task<IActionResult> AtualizarLinhaParaSucesso([FromRoute] long id, [FromBody] int linhaDoArquivo, [FromServices] IServicoImportacaoArquivoAcervoDocumental servicoImportacaoArquivoAcervoDocumental)
     {
         return Ok(await servicoImportacaoArquivoAcervoDocumental.AtualizarLinhaParaSucesso(id,linhaDoArquivo));

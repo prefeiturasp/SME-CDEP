@@ -17,7 +17,7 @@ public class ImportacaoArquivoAcervoTridimensionalController: BaseController
     [ProducesResponseType(typeof(ImportacaoArquivoRetornoDTO<AcervoLinhaErroDTO<AcervoTridimensionalDTO,AcervoTridimensionalLinhaRetornoDTO>,AcervoLinhaRetornoSucessoDTO>),200)]
     [ProducesResponseType(401)]
     [ProducesResponseType(typeof(RetornoBaseDTO), 500)]
-    [Authorize("Bearer")] 
+    [Permissao(Permissao.ACR_I, Policy = "Bearer")]
     public async Task<IActionResult> ImportarArquivo(IFormFile file,[FromServices] IServicoImportacaoArquivoAcervoTridimensional servicoImportacaoArquivoAcervoTridimensional)
     {
         return Ok(await servicoImportacaoArquivoAcervoTridimensional.ImportarArquivo(file));
@@ -27,7 +27,7 @@ public class ImportacaoArquivoAcervoTridimensionalController: BaseController
     [ProducesResponseType(typeof(ImportacaoArquivoRetornoDTO<AcervoLinhaErroDTO<AcervoTridimensionalDTO,AcervoTridimensionalLinhaRetornoDTO>,AcervoLinhaRetornoSucessoDTO>),200)]
     [ProducesResponseType(401)]
     [ProducesResponseType(typeof(RetornoBaseDTO), 500)]
-    [Authorize("Bearer")] 
+    [Permissao(Permissao.ACR_C, Policy = "Bearer")]
     public async Task<IActionResult> ObterImportacaoPendente([FromServices] IServicoImportacaoArquivoAcervoTridimensional servicoImportacaoArquivoAcervoTridimensional)
     {
         return Ok(await servicoImportacaoArquivoAcervoTridimensional.ObterImportacaoPendente());
@@ -38,7 +38,7 @@ public class ImportacaoArquivoAcervoTridimensionalController: BaseController
     [ProducesResponseType(typeof(RetornoBaseDTO), 400)]
     [ProducesResponseType(typeof(RetornoBaseDTO), 403)]
     [ProducesResponseType(typeof(RetornoBaseDTO), 601)]
-    [Permissao(Policy = "Bearer")]
+    [Permissao(Permissao.ACR_E, Policy = "Bearer")]
     public async Task<IActionResult> RemoverLinhaDoArquivo([FromRoute] long id, [FromBody] int linhaDoArquivo, [FromServices] IServicoImportacaoArquivoAcervoTridimensional servicoImportacaoArquivoAcervoTridimensional)
     {
         return Ok(await servicoImportacaoArquivoAcervoTridimensional.RemoverLinhaDoArquivo(id, linhaDoArquivo));
@@ -49,7 +49,7 @@ public class ImportacaoArquivoAcervoTridimensionalController: BaseController
     [ProducesResponseType(typeof(RetornoBaseDTO), 400)]
     [ProducesResponseType(typeof(RetornoBaseDTO), 403)]
     [ProducesResponseType(typeof(RetornoBaseDTO), 601)]
-    [Permissao(Policy = "Bearer")]
+    [Permissao(Permissao.ACR_A, Policy = "Bearer")]
     public async Task<IActionResult> AtualizarLinhaParaSucesso([FromRoute] long id, [FromBody] int linhaDoArquivo, [FromServices] IServicoImportacaoArquivoAcervoTridimensional servicoImportacaoArquivoAcervoTridimensional)
     {
         return Ok(await servicoImportacaoArquivoAcervoTridimensional.AtualizarLinhaParaSucesso(id,linhaDoArquivo));
