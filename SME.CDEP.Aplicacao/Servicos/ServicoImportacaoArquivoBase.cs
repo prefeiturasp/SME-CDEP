@@ -523,8 +523,25 @@ namespace SME.CDEP.Aplicacao.Servicos
         {
             return ObterIdentificadorIdPorValorDoCampo(valorDoCampo, Editoras, Constantes.EDITORA,gerarExcecao);
         }
+        
+        protected long? ObterEditoraIdOuNuloPorValorDoCampo(string valorDoCampo, bool gerarExcecao = true)
+        {
+            if (!gerarExcecao && valorDoCampo.NaoEstaPreenchido())
+                return default;
+            
+            return ObterIdentificadorIdPorValorDoCampo(valorDoCampo, Editoras, Constantes.EDITORA,gerarExcecao);
+        }
+        
         protected long ObterSerieColecaoIdPorValorDoCampo(string valorDoCampo, bool gerarExcecao = true)
         {
+            return ObterIdentificadorIdPorValorDoCampo(valorDoCampo, SeriesColecoes, Constantes.SERIE_COLECAO,gerarExcecao);
+        }
+        
+        protected long? ObterSerieColecaoIdOuNuloPorValorDoCampo(string valorDoCampo, bool gerarExcecao = true)
+        {
+            if (!gerarExcecao && valorDoCampo.NaoEstaPreenchido())
+                return default;
+            
             return ObterIdentificadorIdPorValorDoCampo(valorDoCampo, SeriesColecoes, Constantes.SERIE_COLECAO,gerarExcecao);
         }
         
@@ -588,6 +605,14 @@ namespace SME.CDEP.Aplicacao.Servicos
             return ObterIdentificadorIdPorValorDoCampo(valorDoCampo, Materiais, Constantes.MATERIAL, (int)TipoMaterial.DOCUMENTAL,gerarExcecao);
         }
         
+        protected long? ObterMaterialDocumentalIdOuNuloPorValorDoCampo(string valorDoCampo, bool gerarExcecao = true)
+        {
+            if (!gerarExcecao && valorDoCampo.NaoEstaPreenchido())
+                return default;
+            
+            return ObterIdentificadorIdPorValorDoCampo(valorDoCampo, Materiais, Constantes.MATERIAL, (int)TipoMaterial.DOCUMENTAL,gerarExcecao);
+        }
+        
         protected long ObterMaterialBibliograficoIdPorValorDoCampo(string valorDoCampo, bool gerarExcecao = true)
         {
             return ObterIdentificadorIdPorValorDoCampo(valorDoCampo, Materiais, Constantes.MATERIAL, (int)TipoMaterial.BIBLIOGRAFICO,gerarExcecao);
@@ -595,11 +620,27 @@ namespace SME.CDEP.Aplicacao.Servicos
         
         protected long ObterConservacaoIdPorValorDoCampo(string valorDoCampo,bool gerarExcecao = true)
         {
+           return ObterIdentificadorIdPorValorDoCampo(valorDoCampo, Conservacoes, Constantes.ESTADO_CONSERVACAO,gerarExcecao);
+        }
+        
+        protected long? ObterConservacaoIdOuNuloPorValorDoCampo(string valorDoCampo,bool gerarExcecao = true)
+        {
+            if (!gerarExcecao && valorDoCampo.NaoEstaPreenchido())
+                return default;
+            
             return ObterIdentificadorIdPorValorDoCampo(valorDoCampo, Conservacoes, Constantes.ESTADO_CONSERVACAO,gerarExcecao);
         }
         
         protected long ObterCromiaIdPorValorDoCampo(string valorDoCampo,bool gerarExcecao = true)
         {
+            return ObterIdentificadorIdPorValorDoCampo(valorDoCampo, Cromias, Constantes.CROMIA,gerarExcecao);
+        }
+        
+        protected long? ObterCromiaIdOuNuloPorValorDoCampo(string valorDoCampo,bool gerarExcecao = true)
+        {
+            if (!gerarExcecao && valorDoCampo.NaoEstaPreenchido())
+                return default;
+            
             return ObterIdentificadorIdPorValorDoCampo(valorDoCampo, Cromias, Constantes.CROMIA,gerarExcecao);
         }
         

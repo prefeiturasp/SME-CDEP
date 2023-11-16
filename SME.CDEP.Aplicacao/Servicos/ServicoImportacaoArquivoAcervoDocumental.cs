@@ -258,7 +258,7 @@ namespace SME.CDEP.Aplicacao.Servicos
                         Titulo = acervoDocumentalLinha.Titulo.Conteudo,
                         Codigo = acervoDocumentalLinha.CodigoAntigo.Conteudo,
                         CodigoNovo = acervoDocumentalLinha.CodigoNovo.Conteudo,
-                        MaterialId = ObterMaterialDocumentalIdPorValorDoCampo(acervoDocumentalLinha.Material.Conteudo,false),
+                        MaterialId = ObterMaterialDocumentalIdOuNuloPorValorDoCampo(acervoDocumentalLinha.Material.Conteudo,false),
                         IdiomaId = ObterIdiomaIdPorValorDoCampo(acervoDocumentalLinha.Idioma.Conteudo,false),
                         CreditosAutoresIds = ObterCreditoAutoresIdsPorValorDoCampo(acervoDocumentalLinha.Autor.Conteudo, TipoCreditoAutoria.Autoria),
                         Ano = acervoDocumentalLinha.Ano.Conteudo,
@@ -272,7 +272,7 @@ namespace SME.CDEP.Aplicacao.Servicos
                         AcessoDocumentosIds = ObterAcessoDocumentosIdsPorValorDoCampo(acervoDocumentalLinha.AcessoDocumento.Conteudo),
                         Localizacao = acervoDocumentalLinha.Localizacao.Conteudo,
                         CopiaDigital = acervoDocumentalLinha.CopiaDigital.Conteudo.EhOpcaoSim(),
-                        ConservacaoId = ObterConservacaoIdPorValorDoCampo(acervoDocumentalLinha.EstadoConservacao.Conteudo, false)
+                        ConservacaoId = ObterConservacaoIdOuNuloPorValorDoCampo(acervoDocumentalLinha.EstadoConservacao.Conteudo, false)
                     };
                     await servicoAcervoDocumental.Inserir(acervoDocumental);
 

@@ -271,7 +271,7 @@ namespace SME.CDEP.Aplicacao.Servicos
 
                         CoAutores = ObterCoAutoresTipoAutoria(acervoBibliograficoLinha.CoAutor.Conteudo,acervoBibliograficoLinha.TipoAutoria.Conteudo),
 
-                        EditoraId = ObterEditoraIdPorValorDoCampo(acervoBibliograficoLinha.Editora.Conteudo, false),
+                        EditoraId = ObterEditoraIdOuNuloPorValorDoCampo(acervoBibliograficoLinha.Editora.Conteudo, false),
 
                         AssuntosIds = ObterAssuntosIdsPorValorDoCampo(acervoBibliograficoLinha.Assunto.Conteudo),
 
@@ -281,7 +281,7 @@ namespace SME.CDEP.Aplicacao.Servicos
                         Largura = acervoBibliograficoLinha.Largura.Conteudo.ObterDoubleOuNuloPorValorDoCampo(),
                         Altura = acervoBibliograficoLinha.Altura.Conteudo.ObterDoubleOuNuloPorValorDoCampo(),
 
-                        SerieColecaoId = acervoBibliograficoLinha.SerieColecao.Conteudo.EstaPreenchido() ? ObterSerieColecaoIdPorValorDoCampo(acervoBibliograficoLinha.SerieColecao.Conteudo, false) : null,
+                        SerieColecaoId = ObterSerieColecaoIdOuNuloPorValorDoCampo(acervoBibliograficoLinha.SerieColecao.Conteudo, false),
 
                         Volume = acervoBibliograficoLinha.Volume.Conteudo,
 
