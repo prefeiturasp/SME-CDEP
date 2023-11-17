@@ -32,16 +32,16 @@ namespace SME.CDEP.Aplicacao.Servicos
             CreditosAutores = creditosAutores;
         }
         
-        public async Task<bool> RemoverLinhaDoArquivo(long id, int linhaDoArquivo)
+        public async Task<bool> RemoverLinhaDoArquivo(long id, LinhaDTO linhaDoArquivo)
         {
             return await RemoverLinhaDoArquivo<AcervoTridimensionalLinhaDTO>(id, linhaDoArquivo, TipoAcervo.Tridimensional);
         }
 
-        public async Task<bool> AtualizarLinhaParaSucesso(long id, int linhaDoArquivo)
+        public async Task<bool> AtualizarLinhaParaSucesso(long id, LinhaDTO linhaDoArquivo)
         {
-            var conteudo = await ValidacoesImportacaoArquivo<AcervoTridimensionalLinhaDTO>(id, linhaDoArquivo, TipoAcervo.Tridimensional);
+            var conteudo = await ValidacoesImportacaoArquivo<AcervoTridimensionalLinhaDTO>(id, linhaDoArquivo.NumeroLinha, TipoAcervo.Tridimensional);
             
-            var novoConteudo = conteudo.FirstOrDefault(w => w.NumeroLinha.SaoIguais(linhaDoArquivo));
+            var novoConteudo = conteudo.FirstOrDefault(w => w.NumeroLinha.SaoIguais(linhaDoArquivo.NumeroLinha));
             novoConteudo.DefinirLinhaComoSucesso();
 
             var status = conteudo.Any(a => a.PossuiErros) ? ImportacaoStatus.Erros : ImportacaoStatus.Sucesso;

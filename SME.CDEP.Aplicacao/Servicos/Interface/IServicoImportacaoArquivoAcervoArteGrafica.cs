@@ -12,8 +12,8 @@ namespace SME.CDEP.Aplicacao.Servicos.Interface
         Task ValidacaoObterOuInserirDominios(IEnumerable<AcervoArteGraficaLinhaDTO> linhas);
         void DefinirCreditosAutores(List<IdNomeTipoDTO> creditosAutores);
         Task<ImportacaoArquivoRetornoDTO<AcervoLinhaErroDTO<AcervoArteGraficaDTO,AcervoArteGraficaLinhaRetornoDTO>,AcervoLinhaRetornoSucessoDTO>> ObterImportacaoPendente();
-        Task<bool> RemoverLinhaDoArquivo(long id, int linhaDoArquivo);
-        Task<bool> AtualizarLinhaParaSucesso(long id, int linhaDoArquivo);
+        Task<bool> RemoverLinhaDoArquivo(long id, LinhaDTO linha);
+        Task<bool> AtualizarLinhaParaSucesso(long id, LinhaDTO linha);
         Task<long> AtualizarImportacao(long id, string conteudo, ImportacaoStatus? status = null);
     }
 }

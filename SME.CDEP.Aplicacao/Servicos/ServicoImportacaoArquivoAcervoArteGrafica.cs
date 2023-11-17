@@ -38,18 +38,18 @@ namespace SME.CDEP.Aplicacao.Servicos
             return await ObterRetornoImportacaoAcervo(arquivoImportado, JsonConvert.DeserializeObject<IEnumerable<AcervoArteGraficaLinhaDTO>>(arquivoImportado.Conteudo), false);
         }
 
-        public async Task<bool> RemoverLinhaDoArquivo(long id, int linhaDoArquivo)
+        public async Task<bool> RemoverLinhaDoArquivo(long id, LinhaDTO linhaDoArquivo)
         {
             await RemoverLinhaDoArquivo<AcervoArteGraficaLinhaDTO>(id, linhaDoArquivo, TipoAcervo.ArtesGraficas);
 
             return true;
         }
         
-        public async Task<bool> AtualizarLinhaParaSucesso(long id, int linhaDoArquivo)
+        public async Task<bool> AtualizarLinhaParaSucesso(long id, LinhaDTO linha)
         {
-            var conteudo = await ValidacoesImportacaoArquivo<AcervoArteGraficaLinhaDTO>(id, linhaDoArquivo, TipoAcervo.ArtesGraficas);
+            var conteudo = await ValidacoesImportacaoArquivo<AcervoArteGraficaLinhaDTO>(id, linha.NumeroLinha, TipoAcervo.ArtesGraficas);
             
-            var novoConteudo = conteudo.FirstOrDefault(w => w.NumeroLinha.SaoIguais(linhaDoArquivo));
+            var novoConteudo = conteudo.FirstOrDefault(w => w.NumeroLinha.SaoIguais(linha.NumeroLinha));
             novoConteudo.DefinirLinhaComoSucesso();
 
             var status = conteudo.Any(a => a.PossuiErros) ? ImportacaoStatus.Erros : ImportacaoStatus.Sucesso;

@@ -501,7 +501,7 @@ namespace SME.CDEP.TesteIntegracao
                 CriadoEm = DateTimeExtension.HorarioBrasilia().Date, CriadoPor = ConstantesTestes.SISTEMA, CriadoLogin = ConstantesTestes.LOGIN_123456789
             });
 
-            var retorno = await servicoImportacaoArquivo.RemoverLinhaDoArquivo(1, 5);
+            var retorno = await servicoImportacaoArquivo.RemoverLinhaDoArquivo(1, new LinhaDTO(){NumeroLinha = 5});
             var arquivo = ObterTodos<ImportacaoArquivo>().FirstOrDefault(f => f.Id.SaoIguais(1));
             var conteudo = JsonConvert.DeserializeObject<IEnumerable<AcervoArteGraficaLinhaDTO>>(arquivo.Conteudo);
             conteudo.Any(a=> a.NumeroLinha.SaoIguais(5)).ShouldBeFalse();
@@ -524,7 +524,7 @@ namespace SME.CDEP.TesteIntegracao
                 CriadoEm = DateTimeExtension.HorarioBrasilia().Date, CriadoPor = ConstantesTestes.SISTEMA, CriadoLogin = ConstantesTestes.LOGIN_123456789
             });
 
-            await servicoImportacaoArquivo.RemoverLinhaDoArquivo(1, 15).ShouldThrowAsync<NegocioException>();
+            await servicoImportacaoArquivo.RemoverLinhaDoArquivo(1, new LinhaDTO(){NumeroLinha = 15}).ShouldThrowAsync<NegocioException>();
         }
         
         [Fact(DisplayName = "Importação Arquivo Acervo Arte Grafica - Não deve permitir remover todas as linhas do arquivo")]
@@ -544,13 +544,13 @@ namespace SME.CDEP.TesteIntegracao
             });
 
             for (int i = 1; i < 10; i++)
-                (await servicoImportacaoArquivo.RemoverLinhaDoArquivo(1, i)).ShouldBe(true);
+                (await servicoImportacaoArquivo.RemoverLinhaDoArquivo(1, new LinhaDTO(){NumeroLinha = i})).ShouldBe(true);
                 
             var arquivo = ObterTodos<ImportacaoArquivo>().FirstOrDefault();
             var conteudo = JsonConvert.DeserializeObject<IEnumerable<AcervoArteGraficaLinhaDTO>>(arquivo.Conteudo);
             conteudo.Count().ShouldBe(1);
             
-            await servicoImportacaoArquivo.RemoverLinhaDoArquivo(1, 10).ShouldThrowAsync<NegocioException>();
+            await servicoImportacaoArquivo.RemoverLinhaDoArquivo(1, new LinhaDTO(){NumeroLinha = 10}).ShouldThrowAsync<NegocioException>();
         }
         
         [Fact(DisplayName = "Importação Arquivo Acervo Arte Grafica - Deve permitir excluir o arquivo - GERAL")]
@@ -601,7 +601,7 @@ namespace SME.CDEP.TesteIntegracao
                 CriadoEm = DateTimeExtension.HorarioBrasilia().Date, CriadoPor = ConstantesTestes.SISTEMA, CriadoLogin = ConstantesTestes.LOGIN_123456789
             });
 
-            await servicoImportacaoArquivo.AtualizarLinhaParaSucesso(1, 4);
+            await servicoImportacaoArquivo.AtualizarLinhaParaSucesso(1, new LinhaDTO(){NumeroLinha = 4});
             var arquivo = ObterTodos<ImportacaoArquivo>().FirstOrDefault();
             
             var conteudo = JsonConvert.DeserializeObject<IEnumerable<AcervoArteGraficaLinhaDTO>>(arquivo.Conteudo);
@@ -634,7 +634,7 @@ namespace SME.CDEP.TesteIntegracao
                 CriadoEm = DateTimeExtension.HorarioBrasilia().Date, CriadoPor = ConstantesTestes.SISTEMA, CriadoLogin = ConstantesTestes.LOGIN_123456789
             });
 
-            await servicoImportacaoArquivo.AtualizarLinhaParaSucesso(1, 4);
+            await servicoImportacaoArquivo.AtualizarLinhaParaSucesso(1, new LinhaDTO(){NumeroLinha = 4});
             var arquivo = ObterTodos<ImportacaoArquivo>().FirstOrDefault();
             
             var conteudo = JsonConvert.DeserializeObject<IEnumerable<AcervoArteGraficaLinhaDTO>>(arquivo.Conteudo);

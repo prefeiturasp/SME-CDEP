@@ -41,7 +41,7 @@ public class ImportacaoArquivoAcervoAudiovisualController: BaseController
     [Permissao(Permissao.ACR_E, Policy = "Bearer")]
     public async Task<IActionResult> RemoverLinhaDoArquivo([FromRoute] long id, [FromBody] LinhaDTO linha, [FromServices] IServicoImportacaoArquivoAcervoAudiovisual servicoImportacaoArquivoAcervoAudiovisual)
     {
-        return Ok(await servicoImportacaoArquivoAcervoAudiovisual.RemoverLinhaDoArquivo(id, linha.NumeroLinha));
+        return Ok(await servicoImportacaoArquivoAcervoAudiovisual.RemoverLinhaDoArquivo(id, linha));
     }
     
     [HttpPatch("atualizar-linha/{id}/sucesso")]
@@ -52,6 +52,6 @@ public class ImportacaoArquivoAcervoAudiovisualController: BaseController
     [Permissao(Permissao.ACR_A, Policy = "Bearer")]
     public async Task<IActionResult> AtualizarLinhaParaSucesso([FromRoute] long id, [FromBody] LinhaDTO linha, [FromServices] IServicoImportacaoArquivoAcervoAudiovisual servicoImportacaoArquivoAcervoAudiovisual)
     {
-        return Ok(await servicoImportacaoArquivoAcervoAudiovisual.AtualizarLinhaParaSucesso(id,linha.NumeroLinha));
+        return Ok(await servicoImportacaoArquivoAcervoAudiovisual.AtualizarLinhaParaSucesso(id,linha));
     }
 }

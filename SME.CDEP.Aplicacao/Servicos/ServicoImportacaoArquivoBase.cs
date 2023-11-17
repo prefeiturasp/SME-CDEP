@@ -728,11 +728,11 @@ namespace SME.CDEP.Aplicacao.Servicos
             return arquivo;
         }
         
-        public async Task<bool> RemoverLinhaDoArquivo<T>(long id, int linhaDoArquivo, TipoAcervo tipoAcervoEsperado) where T: AcervoLinhaDTO
+        public async Task<bool> RemoverLinhaDoArquivo<T>(long id, LinhaDTO linhaDto, TipoAcervo tipoAcervoEsperado) where T: AcervoLinhaDTO
         {
-            var conteudo = await ValidacoesImportacaoArquivo<T>(id, linhaDoArquivo, tipoAcervoEsperado);
+            var conteudo = await ValidacoesImportacaoArquivo<T>(id, linhaDto.NumeroLinha, tipoAcervoEsperado);
             
-            var novoConteudo = conteudo.Where(w => w.NumeroLinha.SaoDiferentes(linhaDoArquivo));
+            var novoConteudo = conteudo.Where(w => w.NumeroLinha.SaoDiferentes(linhaDto.NumeroLinha));
 
             if (!novoConteudo.Any())
                 throw new NegocioException(Constantes.NAO_EH_POSSIVEL_EXCLUIR_A_UNICA_LINHA_DO_ARQUIVO);
