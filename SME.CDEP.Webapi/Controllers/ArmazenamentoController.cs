@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Authorization;
+﻿using System.Net.Http.Headers;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using SME.CDEP.Aplicacao.DTOS;
 using SME.CDEP.Aplicacao.Servicos.Interface;
@@ -55,6 +56,15 @@ public class ArmazenamentoController: BaseController
         var (arquivo, contentType, nomeArquivo) = await servicoDownloadArquivo.DownloadPorTipoAcervo(tipoAcervo);
         if (arquivo.EhNulo()) return NoContent();
 
-        return File(arquivo, contentType, nomeArquivo);
+        var fileResult= File(arquivo, contentType, nomeArquivo);
+        
+        if (fileResult.FileDownloadName != null)
+        {
+            fileResult.FileDownloadName = ContentDispositionHeaderValue
+                .Parse("attachment; filename=" + fileResult.FileDownloadName + "")
+                .FileName;
+        }
+
+        return fileResult;
     }
 }
