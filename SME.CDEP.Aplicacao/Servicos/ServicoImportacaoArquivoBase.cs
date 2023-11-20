@@ -299,6 +299,13 @@ namespace SME.CDEP.Aplicacao.Servicos
                             DefinirMensagemErro(campo, string.Format(Constantes.CAMPO_X_ATINGIU_LIMITE_CARACTERES, nomeCampo));
                             break;
                         }
+
+                        if (campo.ValoresPermitidos.NaoEhNulo())
+                        {
+                            if (!campo.ValoresPermitidos.Contains(campo.Conteudo))
+                                DefinirMensagemErro(campo, string.Format(Constantes.VALOR_DO_CAMPO_X_NAO_PERMITIDO_ESPERADO_X, string.Join(", ", campo.ValoresPermitidos)));
+                            break;
+                        }
                     }
                 }
                 else if (campo.FormatoTipoDeCampo.EhFormatoDouble())

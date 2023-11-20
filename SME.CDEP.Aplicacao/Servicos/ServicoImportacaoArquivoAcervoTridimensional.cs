@@ -152,7 +152,8 @@ namespace SME.CDEP.Aplicacao.Servicos
                 Diametro = ObterConteudoMensagemStatus(s.Diametro),
                 NumeroLinha = s.NumeroLinha,
                 Status = ImportacaoStatus.Erros,
-                Mensagem = s.Mensagem.NaoEstaPreenchido() ? ObterMensagemErroLinha(s) : s.Mensagem,
+                Mensagem = s.Mensagem,
+                ErrosCampos = ObterMensagemErroLinha(s),
             };
         }
         

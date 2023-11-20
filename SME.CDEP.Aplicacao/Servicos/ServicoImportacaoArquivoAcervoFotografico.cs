@@ -172,7 +172,8 @@ namespace SME.CDEP.Aplicacao.Servicos
                 Resolucao = ObterConteudoMensagemStatus(s.Resolucao),
                 NumeroLinha = s.NumeroLinha,
                 Status = ImportacaoStatus.Erros,
-                Mensagem = s.Mensagem.NaoEstaPreenchido() ? ObterMensagemErroLinha(s) : s.Mensagem,
+                Mensagem = s.Mensagem,
+                ErrosCampos = ObterMensagemErroLinha(s),
             };
         }
 				
@@ -414,11 +415,13 @@ namespace SME.CDEP.Aplicacao.Servicos
                         {
                             Conteudo = planilha.ObterValorDaCelula(numeroLinha, Constantes.ACERVO_FOTOGRAFICO_CAMPO_COPIA_DIGITAL),
                             LimiteCaracteres = Constantes.CARACTERES_PERMITIDOS_3, 
+                            ValoresPermitidos  = new List<string>() { Constantes.OPCAO_SIM, Constantes.OPCAO_NAO }
                         },
                         AutorizacaoUsoDeImagem = new LinhaConteudoAjustarDTO()
                         {
                             Conteudo = planilha.ObterValorDaCelula(numeroLinha, Constantes.ACERVO_FOTOGRAFICO_CAMPO_AUTORIZACAO_USO_DE_IMAGEM),
                             LimiteCaracteres = Constantes.CARACTERES_PERMITIDOS_3,
+                            ValoresPermitidos  = new List<string>() { Constantes.OPCAO_SIM, Constantes.OPCAO_NAO }
                         },
                         EstadoConservacao = new LinhaConteudoAjustarDTO()
                         {

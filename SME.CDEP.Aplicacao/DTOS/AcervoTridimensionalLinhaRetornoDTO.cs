@@ -2,7 +2,7 @@
 
 namespace SME.CDEP.Aplicacao.DTOS;
 
-public class AcervoTridimensionalLinhaRetornoDTO : AcervoLinhaDTO
+public class AcervoTridimensionalLinhaRetornoDTO : AcervoLinhaRetornoDTO
 {
     public LinhaConteudoAjustarRetornoDTO Titulo { get; set; }
     public LinhaConteudoAjustarRetornoDTO Tombo { get; set; }

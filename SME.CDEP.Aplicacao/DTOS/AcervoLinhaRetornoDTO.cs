@@ -7,4 +7,5 @@ public class AcervoLinhaRetornoDTO
     public ImportacaoStatus Status { get; set; }
     public int NumeroLinha { get; set; }
     public string Mensagem { get; set; }
+    public string ErrosCampos { get; set; }
 }

@@ -9,6 +9,7 @@ public class LinhaConteudoAjustarDTO
     public string Mensagem { get; set; }
     public int LimiteCaracteres { get; set; }
     public bool EhCampoObrigatorio { get; set; }
+    public IEnumerable<string> ValoresPermitidos { get; set; }
     public string FormatoTipoDeCampo { get; set; } = Constantes.FORMATO_STRING;
 
     public void DefinirComoSucesso()

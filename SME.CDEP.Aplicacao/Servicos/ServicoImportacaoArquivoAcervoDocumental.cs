@@ -182,7 +182,8 @@ namespace SME.CDEP.Aplicacao.Servicos
                 EstadoConservacao = ObterConteudoMensagemStatus(s.EstadoConservacao),
                 NumeroLinha = s.NumeroLinha,
                 Status = ImportacaoStatus.Erros,
-                Mensagem = s.Mensagem.NaoEstaPreenchido() ? ObterMensagemErroLinha(s) : s.Mensagem,
+                Mensagem = s.Mensagem,
+                ErrosCampos = ObterMensagemErroLinha(s),
             };
         }
         
@@ -476,7 +477,8 @@ namespace SME.CDEP.Aplicacao.Servicos
                         CopiaDigital = new LinhaConteudoAjustarDTO()
                         {
                             Conteudo = planilha.ObterValorDaCelula(numeroLinha, Constantes.ACERVO_DOCUMENTAL_CAMPO_COPIA_DIGITAL),
-                            LimiteCaracteres = Constantes.CARACTERES_PERMITIDOS_3, //aqui nas planilhas, não parece um campo booleano
+                            LimiteCaracteres = Constantes.CARACTERES_PERMITIDOS_3, 
+                            ValoresPermitidos  = new List<string>() { Constantes.OPCAO_SIM, Constantes.OPCAO_NAO }
                         },
                         EstadoConservacao = new LinhaConteudoAjustarDTO()
                         {
