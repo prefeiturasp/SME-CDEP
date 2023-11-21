@@ -302,7 +302,7 @@ namespace SME.CDEP.Aplicacao.Servicos
 
                         if (campo.ValoresPermitidos.NaoEhNulo())
                         {
-                            if (!campo.ValoresPermitidos.Contains(campo.Conteudo))
+                            if (!campo.ValoresPermitidos.Contains(campo.Conteudo.ToLower()))
                                 DefinirMensagemErro(campo, string.Format(Constantes.VALOR_DO_CAMPO_X_NAO_PERMITIDO_ESPERADO_X, nomeCampo, string.Join(", ", campo.ValoresPermitidos)));
                             break;
                         }
