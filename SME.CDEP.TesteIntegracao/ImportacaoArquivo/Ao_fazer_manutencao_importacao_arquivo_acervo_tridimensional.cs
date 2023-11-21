@@ -220,7 +220,7 @@ namespace SME.CDEP.TesteIntegracao
             retorno.Id.ShouldBe(1);
             retorno.Nome.ShouldNotBeEmpty();
             retorno.TipoAcervo.ShouldBe(TipoAcervo.Tridimensional);
-            retorno.DataImportacao.Date.ShouldBe(DateTimeExtension.HorarioBrasilia().Date);
+            retorno.DataImportacao.Value.Date.ShouldBe(DateTimeExtension.HorarioBrasilia().Date);
             
             foreach (var linhaInserida in acervoTridimensionalLinhas.Where(w=> !w.PossuiErros))
             {
@@ -330,7 +330,6 @@ namespace SME.CDEP.TesteIntegracao
                 retorno.Erros.Any(a=> a.RetornoObjeto.Codigo.SaoIguais(linhaInserida.Codigo.Conteudo)).ShouldBeTrue();
                 retorno.Erros.Any(a=> a.RetornoObjeto.Procedencia.SaoIguais(linhaInserida.Procedencia.Conteudo)).ShouldBeTrue();
                 retorno.Erros.Any(a=> a.RetornoObjeto.DataAcervo.SaoIguais(linhaInserida.Data.Conteudo)).ShouldBeTrue();
-                retorno.Erros.Any(a=> a.RetornoObjeto.ConservacaoId.NaoEhNulo()).ShouldBeTrue();
                 retorno.Erros.Any(a=> a.RetornoObjeto.Largura.SaoIguais(linhaInserida.Largura.Conteudo.ObterDoubleOuNuloPorValorDoCampo())).ShouldBeTrue();
                 retorno.Erros.Any(a=> a.RetornoObjeto.Altura.SaoIguais(linhaInserida.Altura.Conteudo.ObterDoubleOuNuloPorValorDoCampo())).ShouldBeTrue();
                 retorno.Erros.Any(a=> a.RetornoObjeto.Diametro.SaoIguais(linhaInserida.Diametro.Conteudo.ObterDoubleOuNuloPorValorDoCampo())).ShouldBeTrue();

@@ -89,7 +89,7 @@ namespace SME.CDEP.Aplicacao.Servicos
         {
             if (!estaImportandoArquivo)
             {
-                await ObterMateriais(acervosDocumentalLinhas.Select(s => s.Material.Conteudo).Distinct().Where(w=> w.EstaPreenchido()), TipoMaterial.BIBLIOGRAFICO);
+                await ObterMateriais(acervosDocumentalLinhas.Select(s => s.Material.Conteudo).Distinct().Where(w=> w.EstaPreenchido()), TipoMaterial.DOCUMENTAL);
                 await ObterIdiomas(acervosDocumentalLinhas.Select(s => s.Idioma.Conteudo).Distinct().Where(w=> w.EstaPreenchido()));
                 await ObterConservacoes(acervosDocumentalLinhas.Select(s => s.EstadoConservacao.Conteudo).Distinct().Where(w=> w.EstaPreenchido()));
                 await ObterAcessoDocumentos(acervosDocumentalLinhas.Select(s => s.AcessoDocumento.Conteudo).ToArray().UnificarPipe().SplitPipe().Distinct().Where(w=> w.EstaPreenchido()));
@@ -143,8 +143,8 @@ namespace SME.CDEP.Aplicacao.Servicos
                 Codigo = ObterConteudoTexto(linha.Codigo),
                 CodigoNovo = ObterConteudoTexto(linha.CodigoNovo),
                 TipoAcervoId = (int)tipoAcervo,
-                MaterialId = ObterMaterialBibliograficoIdPorValorDoCampo(linha.Material.Conteudo,false),
-                IdiomaId = ObterIdiomaIdPorValorDoCampo(linha.Idioma.Conteudo,false),
+                MaterialId = ObterMaterialDocumentalIdOuNuloPorValorDoCampo(linha.Material.Conteudo),
+                IdiomaId = ObterIdiomaIdOuNuloPorValorDoCampo(linha.Idioma.Conteudo),
                 Ano = ObterConteudoTexto(linha.Ano),
                 NumeroPagina = ObterConteudoTexto(linha.NumeroPaginas),
                 Volume = ObterConteudoTexto(linha.Volume),
@@ -155,7 +155,7 @@ namespace SME.CDEP.Aplicacao.Servicos
                 TamanhoArquivo = ObterConteudoTexto(linha.TamanhoArquivo),
                 Localizacao = ObterConteudoTexto(linha.Localizacao),
                 CopiaDigital = ObterConteudoSimNao(linha.CopiaDigital),
-                ConservacaoId = ObterConservacaoIdPorValorDoCampo(linha.EstadoConservacao.Conteudo,false),
+                ConservacaoId = ObterConservacaoIdOuNuloPorValorDoCampo(linha.EstadoConservacao.Conteudo),
                 AcessoDocumentosIds = ObterAcessoDocumentosIdsPorValorDoCampo(linha.AcessoDocumento.Conteudo,false),
                 CreditosAutoresIds = ObterCreditoAutoresIdsPorValorDoCampo(linha.Autor.Conteudo, TipoCreditoAutoria.Autoria),
             };
@@ -262,8 +262,8 @@ namespace SME.CDEP.Aplicacao.Servicos
                         Titulo = acervoDocumentalLinha.Titulo.Conteudo,
                         Codigo = acervoDocumentalLinha.Codigo.Conteudo,
                         CodigoNovo = acervoDocumentalLinha.CodigoNovo.Conteudo,
-                        MaterialId = ObterMaterialDocumentalIdOuNuloPorValorDoCampo(acervoDocumentalLinha.Material.Conteudo,false),
-                        IdiomaId = ObterIdiomaIdPorValorDoCampo(acervoDocumentalLinha.Idioma.Conteudo,false),
+                        MaterialId = ObterMaterialDocumentalIdOuNuloPorValorDoCampo(acervoDocumentalLinha.Material.Conteudo),
+                        IdiomaId = ObterIdiomaIdPorValorDoCampo(acervoDocumentalLinha.Idioma.Conteudo),
                         CreditosAutoresIds = ObterCreditoAutoresIdsPorValorDoCampo(acervoDocumentalLinha.Autor.Conteudo, TipoCreditoAutoria.Autoria),
                         Ano = acervoDocumentalLinha.Ano.Conteudo,
                         NumeroPagina = acervoDocumentalLinha.NumeroPaginas.Conteudo,
@@ -276,7 +276,7 @@ namespace SME.CDEP.Aplicacao.Servicos
                         AcessoDocumentosIds = ObterAcessoDocumentosIdsPorValorDoCampo(acervoDocumentalLinha.AcessoDocumento.Conteudo),
                         Localizacao = acervoDocumentalLinha.Localizacao.Conteudo,
                         CopiaDigital = acervoDocumentalLinha.CopiaDigital.Conteudo.EhOpcaoSim(),
-                        ConservacaoId = ObterConservacaoIdOuNuloPorValorDoCampo(acervoDocumentalLinha.EstadoConservacao.Conteudo, false)
+                        ConservacaoId = ObterConservacaoIdOuNuloPorValorDoCampo(acervoDocumentalLinha.EstadoConservacao.Conteudo)
                     };
                     await servicoAcervoDocumental.Inserir(acervoDocumental);
 

@@ -128,7 +128,7 @@ namespace SME.CDEP.Aplicacao.Servicos
                 Codigo = ObterConteudoTexto(linha.Codigo),
                 Procedencia = ObterConteudoTexto(linha.Procedencia),
                 DataAcervo = ObterConteudoTexto(linha.Data),
-                ConservacaoId = ObterConservacaoIdPorValorDoCampo(linha.EstadoConservacao.Conteudo, false),
+                ConservacaoId = ObterConservacaoIdOuNuloPorValorDoCampo(linha.EstadoConservacao.Conteudo),
                 Quantidade = ObterConteudoLongoOuNulo(linha.Quantidade),
                 Descricao = ObterConteudoTexto(linha.Descricao),
                 Largura = ObterConteudoDoubleOuNulo(linha.Largura),

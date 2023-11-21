@@ -259,7 +259,7 @@ namespace SME.CDEP.TesteIntegracao
             retorno.Id.ShouldBe(1);
             retorno.Nome.ShouldNotBeEmpty();
             retorno.TipoAcervo.ShouldBe(TipoAcervo.ArtesGraficas);
-            retorno.DataImportacao.Date.ShouldBe(DateTimeExtension.HorarioBrasilia().Date);
+            retorno.DataImportacao.Value.Date.ShouldBe(DateTimeExtension.HorarioBrasilia().Date);
             
             foreach (var linhaInserida in acervoArteGraficaLinhas.Where(w=> w.PossuiErros))
             {
@@ -391,8 +391,6 @@ namespace SME.CDEP.TesteIntegracao
                 retorno.Erros.Any(a=> a.RetornoObjeto.Codigo.SaoIguais(linhaInserida.Codigo.Conteudo)).ShouldBeTrue();
                 retorno.Erros.Any(a=> a.RetornoObjeto.Procedencia.SaoIguais(linhaInserida.Procedencia.Conteudo)).ShouldBeTrue();
                 retorno.Erros.Any(a=> a.RetornoObjeto.DataAcervo.SaoIguais(linhaInserida.Data.Conteudo)).ShouldBeTrue();
-                retorno.Erros.Any(a=> a.RetornoObjeto.ConservacaoId.NaoEhNulo()).ShouldBeTrue();
-                retorno.Erros.Any(a=> a.RetornoObjeto.CromiaId.NaoEhNulo()).ShouldBeTrue();
 
                 if (linhaInserida.Altura.PossuiErro)
                     retorno.Erros.Any(a=> a.RetornoObjeto.Altura.Value.SaoIguais(0)).ShouldBeTrue();
@@ -401,7 +399,6 @@ namespace SME.CDEP.TesteIntegracao
                 
                 retorno.Erros.Any(a=> a.RetornoObjeto.Diametro.SaoIguais(linhaInserida.Diametro.Conteudo.ObterDoubleOuNuloPorValorDoCampo())).ShouldBeTrue();
                 retorno.Erros.Any(a=> a.RetornoObjeto.Tecnica.SaoIguais(linhaInserida.Tecnica.Conteudo)).ShouldBeTrue();
-                retorno.Erros.Any(a=> a.RetornoObjeto.SuporteId.NaoEhNulo()).ShouldBeTrue();
                 retorno.Erros.Any(a=> a.RetornoObjeto.Quantidade.SaoIguais(linhaInserida.Quantidade.Conteudo.ObterLongoPorValorDoCampo())).ShouldBeTrue();
                 retorno.Erros.Any(a=> a.RetornoObjeto.Descricao.SaoIguais(linhaInserida.Descricao.Conteudo)).ShouldBeTrue();
                 

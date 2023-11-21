@@ -459,7 +459,7 @@ namespace SME.CDEP.TesteIntegracao
             retorno.Id.ShouldBe(1);
             retorno.Nome.ShouldNotBeEmpty();
             retorno.TipoAcervo.ShouldBe(TipoAcervo.Bibliografico);
-            retorno.DataImportacao.Date.ShouldBe(DateTimeExtension.HorarioBrasilia().Date);
+            retorno.DataImportacao.Value.Date.ShouldBe(DateTimeExtension.HorarioBrasilia().Date);
             
             foreach (var linhaInserida in acervoBibliograficoLinhas.Where(w=> !w.PossuiErros))
             {
@@ -626,9 +626,7 @@ namespace SME.CDEP.TesteIntegracao
                 
                 retorno.Erros.Any(a=> a.RetornoObjeto.Titulo.SaoIguais(linhaInserida.Titulo.Conteudo)).ShouldBeTrue();
                 retorno.Erros.Any(a=> a.RetornoObjeto.SubTitulo.SaoIguais(linhaInserida.SubTitulo.Conteudo)).ShouldBeTrue();
-                retorno.Erros.Any(a=> a.RetornoObjeto.MaterialId.NaoEhNulo()).ShouldBeTrue();
                 retorno.Erros.Any(a=> a.RetornoObjeto.CoAutores.NaoEhNulo()).ShouldBeTrue();
-                retorno.Erros.Any(a=> a.RetornoObjeto.EditoraId.NaoEhNulo()).ShouldBeTrue();
                 retorno.Erros.Any(a=> a.RetornoObjeto.Ano.SaoIguais(linhaInserida.Ano.Conteudo)).ShouldBeTrue();
                 retorno.Erros.Any(a=> a.RetornoObjeto.Edicao.SaoIguais(linhaInserida.Edicao.Conteudo)).ShouldBeTrue();
                 retorno.Erros.Any(a=> a.RetornoObjeto.NumeroPagina.SaoIguais(linhaInserida.NumeroPaginas.Conteudo)).ShouldBeTrue();
@@ -639,9 +637,7 @@ namespace SME.CDEP.TesteIntegracao
                 else
                     retorno.Erros.Any(a=> a.RetornoObjeto.Altura.SaoIguais(linhaInserida.Altura.Conteudo.ObterDoubleOuNuloPorValorDoCampo())).ShouldBeTrue();
                 
-                retorno.Erros.Any(a=> a.RetornoObjeto.SerieColecaoId.NaoEhNulo()).ShouldBeTrue();
                 retorno.Erros.Any(a=> a.RetornoObjeto.Volume.SaoIguais(linhaInserida.Volume.Conteudo)).ShouldBeTrue();
-                retorno.Erros.Any(a=> a.RetornoObjeto.IdiomaId.NaoEhNulo()).ShouldBeTrue();
                 retorno.Erros.Any(a=> a.RetornoObjeto.LocalizacaoCDD.SaoIguais(linhaInserida.LocalizacaoCDD.Conteudo)).ShouldBeTrue();
                 retorno.Erros.Any(a=> a.RetornoObjeto.LocalizacaoPHA.SaoIguais(linhaInserida.LocalizacaoPHA.Conteudo)).ShouldBeTrue();
                 retorno.Erros.Any(a=> a.RetornoObjeto.NotasGerais.SaoIguais(linhaInserida.NotasGerais.Conteudo)).ShouldBeTrue();

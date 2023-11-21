@@ -135,16 +135,16 @@ namespace SME.CDEP.Aplicacao.Servicos
                 SubTitulo = ObterConteudoTexto(linha.SubTitulo),
                 TipoAcervoId = (int)tipoAcervo,
                 Codigo = ObterConteudoTexto(linha.Codigo),
-                MaterialId = ObterMaterialBibliograficoIdPorValorDoCampo(linha.Material.Conteudo,false),
-                EditoraId = ObterEditoraIdPorValorDoCampo(linha.Editora.Conteudo, false),
+                MaterialId = ObterMaterialBibliograficoIdOuNuloPorValorDoCampo(linha.Material.Conteudo),
+                EditoraId = ObterEditoraIdOuNuloPorValorDoCampo(linha.Editora.Conteudo),
                 AssuntosIds = ObterAssuntosIdsPorValorDoCampo(linha.Assunto.Conteudo),
                 Ano = ObterConteudoTexto(linha.Ano),
                 Edicao = ObterConteudoTexto(linha.Edicao),
                 NumeroPagina = ObterConteudoTexto(linha.NumeroPaginas),
                 Largura = ObterConteudoDoubleOuNulo(linha.Largura),
                 Altura = ObterConteudoDoubleOuNulo(linha.Altura),
-                SerieColecaoId = ObterSerieColecaoIdPorValorDoCampo(linha.SerieColecao.Conteudo,false),
-                IdiomaId = ObterIdiomaIdPorValorDoCampo(linha.Idioma.Conteudo,false),
+                SerieColecaoId = ObterSerieColecaoIdOuNuloPorValorDoCampo(linha.SerieColecao.Conteudo),
+                IdiomaId = ObterIdiomaIdOuNuloPorValorDoCampo(linha.Idioma.Conteudo),
                 Volume = ObterConteudoTexto(linha.Volume),
                 LocalizacaoCDD = ObterConteudoTexto(linha.LocalizacaoCDD),
                 LocalizacaoPHA = ObterConteudoTexto(linha.LocalizacaoPHA),
@@ -275,7 +275,7 @@ namespace SME.CDEP.Aplicacao.Servicos
 
                         CoAutores = ObterCoAutoresTipoAutoria(acervoBibliograficoLinha.CoAutor.Conteudo,acervoBibliograficoLinha.TipoAutoria.Conteudo),
 
-                        EditoraId = ObterEditoraIdOuNuloPorValorDoCampo(acervoBibliograficoLinha.Editora.Conteudo, false),
+                        EditoraId = ObterEditoraIdOuNuloPorValorDoCampo(acervoBibliograficoLinha.Editora.Conteudo),
 
                         AssuntosIds = ObterAssuntosIdsPorValorDoCampo(acervoBibliograficoLinha.Assunto.Conteudo),
 
@@ -285,7 +285,7 @@ namespace SME.CDEP.Aplicacao.Servicos
                         Largura = acervoBibliograficoLinha.Largura.Conteudo.ObterDoubleOuNuloPorValorDoCampo(),
                         Altura = acervoBibliograficoLinha.Altura.Conteudo.ObterDoubleOuNuloPorValorDoCampo(),
 
-                        SerieColecaoId = ObterSerieColecaoIdOuNuloPorValorDoCampo(acervoBibliograficoLinha.SerieColecao.Conteudo, false),
+                        SerieColecaoId = ObterSerieColecaoIdOuNuloPorValorDoCampo(acervoBibliograficoLinha.SerieColecao.Conteudo),
 
                         Volume = acervoBibliograficoLinha.Volume.Conteudo,
 

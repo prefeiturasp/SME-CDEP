@@ -22,7 +22,7 @@ public class AcervoBibliograficoDTO
     public double? Altura { get; set; }
     public long? SerieColecaoId { get; set; }
     public string? Volume { get; set; }
-    public long IdiomaId { get; set; }
+    public long? IdiomaId { get; set; }
     public string LocalizacaoCDD { get; set; }
     public string LocalizacaoPHA { get; set; }
     public string? NotasGerais { get; set; }

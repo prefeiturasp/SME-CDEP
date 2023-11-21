@@ -268,7 +268,7 @@ namespace SME.CDEP.TesteIntegracao
             retorno.Id.ShouldBe(1);
             retorno.Nome.ShouldNotBeEmpty();
             retorno.TipoAcervo.ShouldBe(TipoAcervo.Fotografico);
-            retorno.DataImportacao.Date.ShouldBe(DateTimeExtension.HorarioBrasilia().Date);
+            retorno.DataImportacao.Value.Date.ShouldBe(DateTimeExtension.HorarioBrasilia().Date);
             
             foreach (var linhaInserida in acervoFotograficoLinhas.Where(w=> !w.PossuiErros))
             {
@@ -402,15 +402,11 @@ namespace SME.CDEP.TesteIntegracao
                 retorno.Erros.Any(a=> a.RetornoObjeto.Localizacao.SaoIguais(linhaInserida.Localizacao.Conteudo)).ShouldBeTrue();
                 retorno.Erros.Any(a=> a.RetornoObjeto.Procedencia.SaoIguais(linhaInserida.Procedencia.Conteudo)).ShouldBeTrue();
                 retorno.Erros.Any(a=> a.RetornoObjeto.DataAcervo.SaoIguais(linhaInserida.Data.Conteudo)).ShouldBeTrue();
-                retorno.Erros.Any(a=> a.RetornoObjeto.ConservacaoId.NaoEhNulo()).ShouldBeTrue();
                 retorno.Erros.Any(a=> a.RetornoObjeto.Descricao.SaoIguais(linhaInserida.Descricao.Conteudo)).ShouldBeTrue();
                 retorno.Erros.Any(a=> a.RetornoObjeto.Quantidade.SaoIguais(linhaInserida.Quantidade.Conteudo.ObterLongoPorValorDoCampo())).ShouldBeTrue();
                 retorno.Erros.Any(a=> a.RetornoObjeto.Largura.SaoIguais(linhaInserida.Largura.Conteudo.ObterDoubleOuNuloPorValorDoCampo())).ShouldBeTrue();
                 retorno.Erros.Any(a=> a.RetornoObjeto.Altura.SaoIguais(linhaInserida.Altura.Conteudo.ObterDoubleOuNuloPorValorDoCampo())).ShouldBeTrue();
-                retorno.Erros.Any(a=> a.RetornoObjeto.SuporteId.NaoEhNulo()).ShouldBeTrue();
-                retorno.Erros.Any(a=> a.RetornoObjeto.FormatoId.NaoEhNulo()).ShouldBeTrue();
                 retorno.Erros.Any(a=> a.RetornoObjeto.TamanhoArquivo.SaoIguais(linhaInserida.TamanhoArquivo.Conteudo)).ShouldBeTrue();
-                retorno.Erros.Any(a=> a.RetornoObjeto.CromiaId.NaoEhNulo()).ShouldBeTrue();
                 retorno.Erros.Any(a=> a.RetornoObjeto.Resolucao.SaoIguais(linhaInserida.Resolucao.Conteudo)).ShouldBeTrue();
                 
                 retorno.Erros.Any(a=> a.RetornoErro.Titulo.Conteudo.SaoIguais(linhaInserida.Titulo.Conteudo)).ShouldBeTrue();
