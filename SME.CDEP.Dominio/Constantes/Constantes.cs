@@ -75,8 +75,7 @@ public class Constantes
     public const string CAMPO_CODIGO_ANTIGO_OU_CODIGO_NOVO_DEVE_SER_PREENCHIDO = "O campo código antigo ou código novo deve ser preenchido";
     public const string O_VALOR_DO_CAMPO_X_NAO_FOI_LOCALIZADO = "O valor do campo '{0}' não foi localizado";
     public const string NAO_FOI_POSSIVEL_LER_A_PLANILHA = "Não foi possível ler a planilha";
-    public const string VALOR_DO_CAMPO_X_NAO_PERMITIDO_ESPERADO_SIM_OU_NAO = "O valor do campo '{0}' não permitido, esperado 'SIM' ou 'NÃO'";
-    public const string VALOR_DO_CAMPO_X_NAO_PERMITIDO_ESPERADO_X = "O valor do campo '{0}' não permitido, esperado: '{0}'";
+    public const string VALOR_DO_CAMPO_X_NAO_PERMITIDO_ESPERADO_X = "O valor do campo '{0}' não permitido, esperado: '{1}'";
     public const string O_CAMPO_X_NAO_EH_UM_VALOR_NUMERICO_Y = "O valor '{0}' não é um tipo numérico '{1}'";
     public const string ARQUIVO_NAO_ENCONTRADO = "Arquivo não encontrado";
     public const string CONTEUDO_DO_ARQUIVO_INVALIDO = "Conteúdo do arquivo inválido";

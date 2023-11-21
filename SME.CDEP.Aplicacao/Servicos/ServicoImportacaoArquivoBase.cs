@@ -303,7 +303,7 @@ namespace SME.CDEP.Aplicacao.Servicos
                         if (campo.ValoresPermitidos.NaoEhNulo())
                         {
                             if (!campo.ValoresPermitidos.Contains(campo.Conteudo))
-                                DefinirMensagemErro(campo, string.Format(Constantes.VALOR_DO_CAMPO_X_NAO_PERMITIDO_ESPERADO_X, string.Join(", ", campo.ValoresPermitidos)));
+                                DefinirMensagemErro(campo, string.Format(Constantes.VALOR_DO_CAMPO_X_NAO_PERMITIDO_ESPERADO_X, nomeCampo, string.Join(", ", campo.ValoresPermitidos)));
                             break;
                         }
                     }
@@ -738,7 +738,7 @@ namespace SME.CDEP.Aplicacao.Servicos
                 var valoresPermitidos = new List<string>() { Constantes.OPCAO_SIM, Constantes.OPCAO_NAO };
                 
                 if (!valoresPermitidos.Contains(valorDoCampo.ToLower()))
-                    throw new NegocioException(string.Format(Constantes.VALOR_DO_CAMPO_X_NAO_PERMITIDO_ESPERADO_SIM_OU_NAO,nomeDoCampo));
+                    throw new NegocioException(string.Format(Constantes.VALOR_DO_CAMPO_X_NAO_PERMITIDO_ESPERADO_X,nomeDoCampo));
 
                 return valorDoCampo.ToLower().Equals(Constantes.OPCAO_SIM);
             }
