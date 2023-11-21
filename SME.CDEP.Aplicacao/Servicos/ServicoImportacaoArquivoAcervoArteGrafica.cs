@@ -35,6 +35,9 @@ namespace SME.CDEP.Aplicacao.Servicos
         {
             var arquivoImportado = await repositorioImportacaoArquivo.ObterUltimaImportacao(TipoAcervo.ArtesGraficas);
 
+            if (arquivoImportado.EhNulo())
+                return default;
+
             return await ObterRetornoImportacaoAcervo(arquivoImportado, JsonConvert.DeserializeObject<IEnumerable<AcervoArteGraficaLinhaDTO>>(arquivoImportado.Conteudo), false);
         }
 

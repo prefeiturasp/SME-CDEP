@@ -25,7 +25,7 @@ namespace SME.CDEP.Infra.Dados.Repositorios
 						and ia.tipo_acervo = @tipoAcervo
 						order by ia.id desc";
 
-            return await conexao.Obter().QueryFirstAsync<ImportacaoArquivo>(query, new { tipoAcervo});
+            return await conexao.Obter().QueryFirstOrDefaultAsync<ImportacaoArquivo>(query, new { tipoAcervo});
         }
 
         public async Task<long> Salvar(ImportacaoArquivo importacaoArquivo)
