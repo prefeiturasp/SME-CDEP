@@ -107,7 +107,7 @@ namespace SME.CDEP.Aplicacao.Servicos
                         .Select(s=> ObterAcervoLinhaRetornoResumidoDto(s,arquivoImportado.TipoAcervo)),
                 Sucesso = acervosBibliograficosLinhas
                         .Where(w => !w.PossuiErros)
-                        .Select(s=> ObterLinhasComSucesso(s.Titulo.Conteudo, s.Tombo.Conteudo, s.NumeroLinha)),
+                        .Select(s=> ObterLinhasComSucesso(s.Titulo.Conteudo, s.Codigo.Conteudo, s.NumeroLinha)),
             };
             return acervoBibliograficoRetorno;
         }
@@ -117,7 +117,7 @@ namespace SME.CDEP.Aplicacao.Servicos
             return new AcervoLinhaErroDTO<AcervoBibliograficoDTO,AcervoBibliograficoLinhaRetornoDTO>()
             {
                 Titulo = ObterConteudoTexto(linha.Titulo),
-                Tombo = ObterConteudoTexto(linha.Tombo),
+                Tombo = ObterConteudoTexto(linha.Codigo),
                 NumeroLinha = linha.NumeroLinha,
                 RetornoObjeto = ObterAcervoBibliograficoDto(linha,tipoAcervo),
                 RetornoErro = ObterLinhasComErros(linha),
@@ -131,7 +131,7 @@ namespace SME.CDEP.Aplicacao.Servicos
                 Titulo = ObterConteudoTexto(linha.Titulo),
                 SubTitulo = ObterConteudoTexto(linha.SubTitulo),
                 TipoAcervoId = (int)tipoAcervo,
-                Codigo = ObterConteudoTexto(linha.Tombo),
+                Codigo = ObterConteudoTexto(linha.Codigo),
                 MaterialId = ObterMaterialBibliograficoIdPorValorDoCampo(linha.Material.Conteudo,false),
                 EditoraId = ObterEditoraIdPorValorDoCampo(linha.Editora.Conteudo, false),
                 AssuntosIds = ObterAssuntosIdsPorValorDoCampo(linha.Assunto.Conteudo),
@@ -176,7 +176,7 @@ namespace SME.CDEP.Aplicacao.Servicos
                 LocalizacaoPHA = ObterConteudoMensagemStatus(s.LocalizacaoPHA),
                 NotasGerais = ObterConteudoMensagemStatus(s.NotasGerais),
                 Isbn = ObterConteudoMensagemStatus(s.Isbn),
-                Tombo = ObterConteudoMensagemStatus(s.Tombo),
+                Codigo = ObterConteudoMensagemStatus(s.Codigo),
                 NumeroLinha = s.NumeroLinha,
                 Status = ImportacaoStatus.Erros,
                 Mensagem = s.Mensagem,
@@ -191,8 +191,8 @@ namespace SME.CDEP.Aplicacao.Servicos
 	        if (acervoBibliograficoLinhaDTO.Titulo.PossuiErro)
 		        mensagemErro.AppendLine(acervoBibliograficoLinhaDTO.Titulo.Mensagem);
 	        
-	        if (acervoBibliograficoLinhaDTO.Tombo.PossuiErro)
-		        mensagemErro.AppendLine(acervoBibliograficoLinhaDTO.Tombo.Mensagem);
+	        if (acervoBibliograficoLinhaDTO.Codigo.PossuiErro)
+		        mensagemErro.AppendLine(acervoBibliograficoLinhaDTO.Codigo.Mensagem);
 	        
 	        if (acervoBibliograficoLinhaDTO.SubTitulo.PossuiErro)
 		        mensagemErro.AppendLine(acervoBibliograficoLinhaDTO.SubTitulo.Mensagem);
@@ -292,7 +292,7 @@ namespace SME.CDEP.Aplicacao.Servicos
                         LocalizacaoPHA = acervoBibliograficoLinha.LocalizacaoPHA.Conteudo,
                         NotasGerais = acervoBibliograficoLinha.NotasGerais.Conteudo,
                         Isbn = acervoBibliograficoLinha.Isbn.Conteudo,
-                        Codigo = acervoBibliograficoLinha.Tombo.Conteudo
+                        Codigo = acervoBibliograficoLinha.Codigo.Conteudo
                     };
                     await servicoAcervoBibliografico.Inserir(acervoBibliografico);
 
@@ -365,7 +365,7 @@ namespace SME.CDEP.Aplicacao.Servicos
                     ValidarPreenchimentoLimiteCaracteres(linha.LocalizacaoPHA,Constantes.LOCALIZACAO_PHA);
                     ValidarPreenchimentoLimiteCaracteres(linha.NotasGerais,Constantes.NOTAS_GERAIS);
                     ValidarPreenchimentoLimiteCaracteres(linha.Isbn,Constantes.ISBN);
-                    ValidarPreenchimentoLimiteCaracteres(linha.Tombo,Constantes.TOMBO);
+                    ValidarPreenchimentoLimiteCaracteres(linha.Codigo,Constantes.TOMBO);
                     linha.PossuiErros = PossuiErro(linha);
                 }
                 catch (Exception e)
@@ -397,7 +397,7 @@ namespace SME.CDEP.Aplicacao.Servicos
                    || linha.LocalizacaoPHA.PossuiErro
                    || linha.NotasGerais.PossuiErro
                    || linha.Isbn.PossuiErro
-                   || linha.Tombo.PossuiErro;
+                   || linha.Codigo.PossuiErro;
         }
 
         public async Task ValidacaoObterOuInserirDominios(IEnumerable<AcervoBibliograficoLinhaDTO> linhas)
@@ -554,7 +554,7 @@ namespace SME.CDEP.Aplicacao.Servicos
                             Conteudo = planilha.ObterValorDaCelula(numeroLinha, Constantes.ACERVO_BIBLIOGRAFICO_CAMPO_ISBN),
                             LimiteCaracteres = Constantes.CARACTERES_PERMITIDOS_50,
                         },
-                        Tombo = new LinhaConteudoAjustarDTO()
+                        Codigo = new LinhaConteudoAjustarDTO()
                         {
                             Conteudo = planilha.ObterValorDaCelula(numeroLinha, Constantes.ACERVO_BIBLIOGRAFICO_CAMPO_TOMBO),
                             LimiteCaracteres = Constantes.CARACTERES_PERMITIDOS_15,

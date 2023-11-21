@@ -111,11 +111,11 @@ namespace SME.CDEP.Aplicacao.Servicos
 
         private string ObterCodigo(AcervoDocumentalLinhaDTO s)
         {
-            if (s.CodigoAntigo.Conteudo.EstaPreenchido() && s.CodigoNovo.Conteudo.EstaPreenchido())
-                return $"{s.CodigoAntigo.Conteudo}/{s.CodigoNovo.Conteudo}";
+            if (s.Codigo.Conteudo.EstaPreenchido() && s.CodigoNovo.Conteudo.EstaPreenchido())
+                return $"{s.Codigo.Conteudo}/{s.CodigoNovo.Conteudo}";
             
-            if (s.CodigoAntigo.Conteudo.EstaPreenchido())
-                return s.CodigoAntigo.Conteudo;
+            if (s.Codigo.Conteudo.EstaPreenchido())
+                return s.Codigo.Conteudo;
             
             return s.CodigoNovo.Conteudo.EstaPreenchido() ? s.CodigoNovo.Conteudo : default;
         }
@@ -137,7 +137,7 @@ namespace SME.CDEP.Aplicacao.Servicos
             return new AcervoDocumentalDTO()
             {
                 Titulo = ObterConteudoTexto(linha.Titulo),
-                Codigo = ObterConteudoTexto(linha.CodigoAntigo),
+                Codigo = ObterConteudoTexto(linha.Codigo),
                 CodigoNovo = ObterConteudoTexto(linha.CodigoNovo),
                 TipoAcervoId = (int)tipoAcervo,
                 MaterialId = ObterMaterialBibliograficoIdPorValorDoCampo(linha.Material.Conteudo,false),
@@ -151,7 +151,7 @@ namespace SME.CDEP.Aplicacao.Servicos
                 Altura = ObterConteudoDoubleOuNulo(linha.Altura),
                 TamanhoArquivo = ObterConteudoTexto(linha.TamanhoArquivo),
                 Localizacao = ObterConteudoTexto(linha.Localizacao),
-                CopiaDigital = ObterConteudoBooleano(linha.CopiaDigital),
+                CopiaDigital = ObterConteudoSimNao(linha.CopiaDigital),
                 ConservacaoId = ObterConservacaoIdPorValorDoCampo(linha.EstadoConservacao.Conteudo,false),
                 AcessoDocumentosIds = ObterAcessoDocumentosIdsPorValorDoCampo(linha.AcessoDocumento.Conteudo,false),
                 CreditosAutoresIds = ObterCreditoAutoresIdsPorValorDoCampo(linha.Autor.Conteudo, TipoCreditoAutoria.Autoria),
@@ -163,7 +163,7 @@ namespace SME.CDEP.Aplicacao.Servicos
             return new AcervoDocumentalLinhaRetornoDTO()
             {
                 Titulo = ObterConteudoMensagemStatus(s.Titulo),
-                CodigoAntigo = ObterConteudoMensagemStatus(s.CodigoAntigo),
+                Codigo = ObterConteudoMensagemStatus(s.Codigo),
                 CodigoNovo = ObterConteudoMensagemStatus(s.CodigoNovo),
                 Material = ObterConteudoMensagemStatus(s.Material),
                 Idioma = ObterConteudoMensagemStatus(s.Idioma),
@@ -194,8 +194,8 @@ namespace SME.CDEP.Aplicacao.Servicos
 	        if (acervoDocumentalLinhaDTO.Titulo.PossuiErro)
 		        mensagemErro.AppendLine(acervoDocumentalLinhaDTO.Titulo.Mensagem);
 	        
-	        if (acervoDocumentalLinhaDTO.CodigoAntigo.PossuiErro)
-		        mensagemErro.AppendLine(acervoDocumentalLinhaDTO.CodigoAntigo.Mensagem);
+	        if (acervoDocumentalLinhaDTO.Codigo.PossuiErro)
+		        mensagemErro.AppendLine(acervoDocumentalLinhaDTO.Codigo.Mensagem);
 	        
 	        if (acervoDocumentalLinhaDTO.CodigoNovo.PossuiErro)
 		        mensagemErro.AppendLine(acervoDocumentalLinhaDTO.CodigoNovo.Mensagem);
@@ -257,7 +257,7 @@ namespace SME.CDEP.Aplicacao.Servicos
                     var acervoDocumental = new AcervoDocumentalCadastroDTO()
                     {
                         Titulo = acervoDocumentalLinha.Titulo.Conteudo,
-                        Codigo = acervoDocumentalLinha.CodigoAntigo.Conteudo,
+                        Codigo = acervoDocumentalLinha.Codigo.Conteudo,
                         CodigoNovo = acervoDocumentalLinha.CodigoNovo.Conteudo,
                         MaterialId = ObterMaterialDocumentalIdOuNuloPorValorDoCampo(acervoDocumentalLinha.Material.Conteudo,false),
                         IdiomaId = ObterIdiomaIdPorValorDoCampo(acervoDocumentalLinha.Idioma.Conteudo,false),
@@ -293,7 +293,7 @@ namespace SME.CDEP.Aplicacao.Servicos
                 try
                 {
                     ValidarPreenchimentoLimiteCaracteres(linha.Titulo, Constantes.TITULO);
-                    ValidarPreenchimentoLimiteCaracteres(linha.CodigoAntigo, Constantes.CODIGO_ANTIGO);
+                    ValidarPreenchimentoLimiteCaracteres(linha.Codigo, Constantes.CODIGO_ANTIGO);
                     ValidarPreenchimentoLimiteCaracteres(linha.CodigoNovo, Constantes.CODIGO_NOVO);
                     ValidarPreenchimentoLimiteCaracteres(linha.Material,Constantes.MATERIAL);
                     ValidarPreenchimentoLimiteCaracteres(linha.Idioma,Constantes.IDIOMA);
@@ -311,9 +311,9 @@ namespace SME.CDEP.Aplicacao.Servicos
                     ValidarPreenchimentoLimiteCaracteres(linha.CopiaDigital,Constantes.COPIA_DIGITAL);
                     ValidarPreenchimentoLimiteCaracteres(linha.EstadoConservacao,Constantes.ESTADO_CONSERVACAO);
 
-                    if (linha.CodigoAntigo.Conteudo.NaoEstaPreenchido() && linha.CodigoNovo.Conteudo.NaoEstaPreenchido())
+                    if (linha.Codigo.Conteudo.NaoEstaPreenchido() && linha.CodigoNovo.Conteudo.NaoEstaPreenchido())
                     {
-                        DefinirMensagemErro(linha.CodigoAntigo, Constantes.CAMPO_CODIGO_ANTIGO_OU_CODIGO_NOVO_DEVE_SER_PREENCHIDO);
+                        DefinirMensagemErro(linha.Codigo, Constantes.CAMPO_CODIGO_ANTIGO_OU_CODIGO_NOVO_DEVE_SER_PREENCHIDO);
                         DefinirMensagemErro(linha.CodigoNovo, Constantes.CAMPO_CODIGO_ANTIGO_OU_CODIGO_NOVO_DEVE_SER_PREENCHIDO);
                     }
                     linha.PossuiErros = PossuiErro(linha);
@@ -328,7 +328,7 @@ namespace SME.CDEP.Aplicacao.Servicos
         private bool PossuiErro(AcervoDocumentalLinhaDTO linha)
         {
             return linha.Titulo.PossuiErro 
-                   || linha.CodigoAntigo.PossuiErro 
+                   || linha.Codigo.PossuiErro 
                    || linha.CodigoNovo.PossuiErro 
                    || linha.Material.PossuiErro
                    || linha.Idioma.PossuiErro
@@ -396,7 +396,7 @@ namespace SME.CDEP.Aplicacao.Servicos
                             LimiteCaracteres = Constantes.CARACTERES_PERMITIDOS_500,
                             EhCampoObrigatorio = true
                         },
-                        CodigoAntigo = new LinhaConteudoAjustarDTO()
+                        Codigo = new LinhaConteudoAjustarDTO()
                         {
                             Conteudo = planilha.ObterValorDaCelula(numeroLinha, Constantes.ACERVO_DOCUMENTAL_CAMPO_CODIGO_ANTIGO),
                             LimiteCaracteres = Constantes.CARACTERES_PERMITIDOS_15,

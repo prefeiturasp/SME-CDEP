@@ -24,5 +24,5 @@ public class AcervoBibliograficoLinhaRetornoDTO : AcervoLinhaRetornoDTO
     public LinhaConteudoAjustarRetornoDTO LocalizacaoPHA { get; set; }
     public LinhaConteudoAjustarRetornoDTO NotasGerais { get; set; }
     public LinhaConteudoAjustarRetornoDTO Isbn { get; set; }
-    public LinhaConteudoAjustarRetornoDTO Tombo { get; set; }
+    public LinhaConteudoAjustarRetornoDTO Codigo { get; set; }
 }

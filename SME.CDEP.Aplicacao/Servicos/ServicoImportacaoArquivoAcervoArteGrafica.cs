@@ -105,7 +105,7 @@ namespace SME.CDEP.Aplicacao.Servicos
                         .Select(s=> ObterAcervoLinhaRetornoResumidoDto(s,arquivoImportado.TipoAcervo)),
                 Sucesso = acervosArtesGraficasLinhas
                         .Where(w => !w.PossuiErros)
-                        .Select(s=> ObterLinhasComSucesso(s.Titulo.Conteudo, s.Tombo.Conteudo, s.NumeroLinha)),
+                        .Select(s=> ObterLinhasComSucesso(s.Titulo.Conteudo, s.Codigo.Conteudo, s.NumeroLinha)),
             };
             return acervoArteGraficaRetorno;
         }
@@ -115,7 +115,7 @@ namespace SME.CDEP.Aplicacao.Servicos
             return new AcervoLinhaErroDTO<AcervoArteGraficaDTO,AcervoArteGraficaLinhaRetornoDTO>()
             {
                 Titulo = ObterConteudoTexto(linha.Titulo),
-                Tombo = ObterConteudoTexto(linha.Tombo),
+                Tombo = ObterConteudoTexto(linha.Codigo),
                 NumeroLinha = linha.NumeroLinha,
                 RetornoObjeto = ObterAcervoArteGraficaDto(linha,tipoAcervo),
                 RetornoErro = ObterLinhasComErros(linha),
@@ -128,12 +128,12 @@ namespace SME.CDEP.Aplicacao.Servicos
             {
                 Titulo = ObterConteudoTexto(linha.Titulo),
                 TipoAcervoId = (int)tipoAcervo,
-                Codigo = ObterConteudoTexto(linha.Tombo),
+                Codigo = ObterConteudoTexto(linha.Codigo),
                 Localizacao = ObterConteudoTexto(linha.Localizacao),
                 Procedencia = ObterConteudoTexto(linha.Procedencia),
                 DataAcervo = ObterConteudoTexto(linha.Data),
-                CopiaDigital = ObterConteudoBooleano(linha.CopiaDigital),
-                PermiteUsoImagem = ObterConteudoBooleano(linha.AutorizacaoUsoDeImagem),
+                CopiaDigital = ObterConteudoSimNao(linha.CopiaDigital),
+                PermiteUsoImagem = ObterConteudoSimNao(linha.PermiteUsoImagem),
                 ConservacaoId = ObterConservacaoIdPorValorDoCampo(linha.EstadoConservacao.Conteudo, false),
                 CromiaId = ObterCromiaIdPorValorDoCampo(linha.Cromia.Conteudo, false),
                 Largura = ObterConteudoDoubleOuNulo(linha.Largura),
@@ -152,13 +152,13 @@ namespace SME.CDEP.Aplicacao.Servicos
             return new AcervoArteGraficaLinhaRetornoDTO()
             {
                 Titulo = ObterConteudoMensagemStatus(s.Titulo),
-                Tombo = ObterConteudoMensagemStatus(s.Tombo),
+                Codigo = ObterConteudoMensagemStatus(s.Codigo),
                 Credito = ObterConteudoMensagemStatus(s.Credito),
                 Localizacao = ObterConteudoMensagemStatus(s.Localizacao),
                 Procedencia = ObterConteudoMensagemStatus(s.Procedencia),
                 Data = ObterConteudoMensagemStatus(s.Data),
                 CopiaDigital = ObterConteudoMensagemStatus(s.CopiaDigital),
-                AutorizacaoUsoDeImagem = ObterConteudoMensagemStatus(s.AutorizacaoUsoDeImagem),
+                PermiteUsoImagem = ObterConteudoMensagemStatus(s.PermiteUsoImagem),
                 EstadoConservacao = ObterConteudoMensagemStatus(s.EstadoConservacao),
                 Cromia = ObterConteudoMensagemStatus(s.Cromia),
                 Largura = ObterConteudoMensagemStatus(s.Largura),
@@ -182,8 +182,8 @@ namespace SME.CDEP.Aplicacao.Servicos
             if (acervoArteGraficaLinhaDto.Titulo.PossuiErro)
                 mensagemErro.AppendLine(acervoArteGraficaLinhaDto.Titulo.Mensagem);
             
-            if (acervoArteGraficaLinhaDto.Tombo.PossuiErro)
-                mensagemErro.AppendLine(acervoArteGraficaLinhaDto.Tombo.Mensagem);
+            if (acervoArteGraficaLinhaDto.Codigo.PossuiErro)
+                mensagemErro.AppendLine(acervoArteGraficaLinhaDto.Codigo.Mensagem);
             
             if (acervoArteGraficaLinhaDto.Credito.PossuiErro)
                 mensagemErro.AppendLine(acervoArteGraficaLinhaDto.Credito.Mensagem);
@@ -200,8 +200,8 @@ namespace SME.CDEP.Aplicacao.Servicos
             if (acervoArteGraficaLinhaDto.CopiaDigital.PossuiErro)
                 mensagemErro.AppendLine(acervoArteGraficaLinhaDto.CopiaDigital.Mensagem);
                     
-            if (acervoArteGraficaLinhaDto.AutorizacaoUsoDeImagem.PossuiErro)
-                mensagemErro.AppendLine(acervoArteGraficaLinhaDto.AutorizacaoUsoDeImagem.Mensagem);
+            if (acervoArteGraficaLinhaDto.PermiteUsoImagem.PossuiErro)
+                mensagemErro.AppendLine(acervoArteGraficaLinhaDto.PermiteUsoImagem.Mensagem);
                     
             if (acervoArteGraficaLinhaDto.EstadoConservacao.PossuiErro)
                 mensagemErro.AppendLine(acervoArteGraficaLinhaDto.EstadoConservacao.Mensagem);
@@ -242,7 +242,7 @@ namespace SME.CDEP.Aplicacao.Servicos
                     var acervoArteGrafica = new AcervoArteGraficaCadastroDTO()
                     {
                         Titulo = acervoArteGraficaLinha.Titulo.Conteudo,
-                        Codigo = acervoArteGraficaLinha.Tombo.Conteudo,
+                        Codigo = acervoArteGraficaLinha.Codigo.Conteudo,
                         CreditosAutoresIds = CreditosAutores
                             .Where(f => acervoArteGraficaLinha.Credito.Conteudo.FormatarTextoEmArray().Contains(f.Nome))
                             .Select(s => s.Id).ToArray(),
@@ -250,7 +250,7 @@ namespace SME.CDEP.Aplicacao.Servicos
                         Procedencia = acervoArteGraficaLinha.Procedencia.Conteudo,
                         DataAcervo = acervoArteGraficaLinha.Data.Conteudo,
                         CopiaDigital = ObterCopiaDigitalPorValorDoCampo(acervoArteGraficaLinha.CopiaDigital.Conteudo),
-                        PermiteUsoImagem = ObterAutorizaUsoDeImagemPorValorDoCampo(acervoArteGraficaLinha.AutorizacaoUsoDeImagem.Conteudo),
+                        PermiteUsoImagem = ObterAutorizaUsoDeImagemPorValorDoCampo(acervoArteGraficaLinha.PermiteUsoImagem.Conteudo),
                         ConservacaoId = ObterConservacaoIdPorValorDoCampo(acervoArteGraficaLinha.EstadoConservacao.Conteudo),
                         CromiaId = ObterCromiaIdPorValorDoCampo(acervoArteGraficaLinha.Cromia.Conteudo),
                         Largura = acervoArteGraficaLinha.Largura.Conteudo.ObterDoubleOuNuloPorValorDoCampo(),
@@ -279,13 +279,13 @@ namespace SME.CDEP.Aplicacao.Servicos
                 try
                 {
                     ValidarPreenchimentoLimiteCaracteres(linha.Titulo, Constantes.TITULO);
-                    ValidarPreenchimentoLimiteCaracteres(linha.Tombo, Constantes.TOMBO);
+                    ValidarPreenchimentoLimiteCaracteres(linha.Codigo, Constantes.TOMBO);
                     ValidarPreenchimentoLimiteCaracteres(linha.Credito, Constantes.CREDITO);
                     ValidarPreenchimentoLimiteCaracteres(linha.Localizacao,Constantes.LOCALIZACAO);
                     ValidarPreenchimentoLimiteCaracteres(linha.Procedencia,Constantes.PROCEDENCIA);
                     ValidarPreenchimentoLimiteCaracteres(linha.Data,Constantes.DATA);
                     ValidarPreenchimentoLimiteCaracteres(linha.CopiaDigital,Constantes.COPIA_DIGITAL);
-                    ValidarPreenchimentoLimiteCaracteres(linha.AutorizacaoUsoDeImagem,Constantes.AUTORIZACAO_USO_DE_IMAGEM);
+                    ValidarPreenchimentoLimiteCaracteres(linha.PermiteUsoImagem,Constantes.AUTORIZACAO_USO_DE_IMAGEM);
                     ValidarPreenchimentoLimiteCaracteres(linha.EstadoConservacao,Constantes.ESTADO_CONSERVACAO);
                     ValidarPreenchimentoLimiteCaracteres(linha.Cromia,Constantes.CROMIA);
                     ValidarPreenchimentoLimiteCaracteres(linha.Largura,Constantes.LARGURA);
@@ -307,13 +307,13 @@ namespace SME.CDEP.Aplicacao.Servicos
         private bool PossuiErro(AcervoArteGraficaLinhaDTO linha)
         {
             return linha.Titulo.PossuiErro 
-                   || linha.Tombo.PossuiErro 
+                   || linha.Codigo.PossuiErro 
                    || linha.Credito.PossuiErro
                    || linha.Localizacao.PossuiErro 
                    || linha.Procedencia.PossuiErro
                    || linha.Data.PossuiErro
                    || linha.CopiaDigital.PossuiErro 
-                   || linha.AutorizacaoUsoDeImagem.PossuiErro 
+                   || linha.PermiteUsoImagem.PossuiErro 
                    || linha.EstadoConservacao.PossuiErro
                    || linha.Cromia.PossuiErro 
                    || linha.Largura.PossuiErro 
@@ -372,7 +372,7 @@ namespace SME.CDEP.Aplicacao.Servicos
                             LimiteCaracteres = Constantes.CARACTERES_PERMITIDOS_500,
                             EhCampoObrigatorio = true
                         },
-                        Tombo = new LinhaConteudoAjustarDTO()
+                        Codigo = new LinhaConteudoAjustarDTO()
                         {
                             Conteudo = planilha.ObterValorDaCelula(numeroLinha, Constantes.ACERVO_ARTE_GRAFICA_CAMPO_TOMBO),
                             LimiteCaracteres = Constantes.CARACTERES_PERMITIDOS_15,
@@ -406,7 +406,7 @@ namespace SME.CDEP.Aplicacao.Servicos
                             EhCampoObrigatorio = true,
                             ValoresPermitidos  = new List<string>() { Constantes.OPCAO_SIM, Constantes.OPCAO_NAO }
                         },
-                        AutorizacaoUsoDeImagem = new LinhaConteudoAjustarDTO()
+                        PermiteUsoImagem = new LinhaConteudoAjustarDTO()
                         {
                             Conteudo = planilha.ObterValorDaCelula(numeroLinha, Constantes.ACERVO_ARTE_GRAFICA_CAMPO_AUTORIZACAO_USO_DE_IMAGEM),
                             LimiteCaracteres = Constantes.CARACTERES_PERMITIDOS_3,

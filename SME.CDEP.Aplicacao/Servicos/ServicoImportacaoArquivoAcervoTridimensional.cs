@@ -99,7 +99,7 @@ namespace SME.CDEP.Aplicacao.Servicos
                         .Select(s=> ObterAcervoLinhaRetornoResumidoDto(s,arquivoImportado.TipoAcervo)),
                 Sucesso = acervosTridimensionalLinhas
                         .Where(w => !w.PossuiErros)
-                        .Select(s=> ObterLinhasComSucesso(s.Titulo.Conteudo, s.Tombo.Conteudo, s.NumeroLinha)),
+                        .Select(s=> ObterLinhasComSucesso(s.Titulo.Conteudo, s.Codigo.Conteudo, s.NumeroLinha)),
             };
             return acervoTridimensionalRetorno;
         }
@@ -109,7 +109,7 @@ namespace SME.CDEP.Aplicacao.Servicos
             return new AcervoLinhaErroDTO<AcervoTridimensionalDTO,AcervoTridimensionalLinhaRetornoDTO>()
             {
                 Titulo = ObterConteudoTexto(linha.Titulo),
-                Tombo = ObterConteudoTexto(linha.Tombo),
+                Tombo = ObterConteudoTexto(linha.Codigo),
                 NumeroLinha = linha.NumeroLinha,
                 RetornoObjeto = ObterAcervoTridimensionalDto(linha,tipoAcervo),
                 RetornoErro = ObterLinhasComErros(linha),
@@ -122,7 +122,7 @@ namespace SME.CDEP.Aplicacao.Servicos
             {
                 Titulo = ObterConteudoTexto(linha.Titulo),
                 TipoAcervoId = (int)tipoAcervo,
-                Codigo = ObterConteudoTexto(linha.Tombo),
+                Codigo = ObterConteudoTexto(linha.Codigo),
                 Procedencia = ObterConteudoTexto(linha.Procedencia),
                 DataAcervo = ObterConteudoTexto(linha.Data),
                 ConservacaoId = ObterConservacaoIdPorValorDoCampo(linha.EstadoConservacao.Conteudo, false),
@@ -140,7 +140,7 @@ namespace SME.CDEP.Aplicacao.Servicos
             return new AcervoTridimensionalLinhaRetornoDTO()
             {
                 Titulo = ObterConteudoMensagemStatus(s.Titulo),
-                Tombo = ObterConteudoMensagemStatus(s.Tombo),
+                Codigo = ObterConteudoMensagemStatus(s.Codigo),
                 Procedencia = ObterConteudoMensagemStatus(s.Procedencia),
                 Data = ObterConteudoMensagemStatus(s.Data),
                 EstadoConservacao = ObterConteudoMensagemStatus(s.EstadoConservacao),
@@ -164,8 +164,8 @@ namespace SME.CDEP.Aplicacao.Servicos
 	        if (acervoTridimensionalLinhaDTO.Titulo.PossuiErro)
 		        mensagemErro.AppendLine(acervoTridimensionalLinhaDTO.Titulo.Mensagem);
 	        
-	        if (acervoTridimensionalLinhaDTO.Tombo.PossuiErro)
-		        mensagemErro.AppendLine(acervoTridimensionalLinhaDTO.Tombo.Mensagem);
+	        if (acervoTridimensionalLinhaDTO.Codigo.PossuiErro)
+		        mensagemErro.AppendLine(acervoTridimensionalLinhaDTO.Codigo.Mensagem);
 	        
 	        if (acervoTridimensionalLinhaDTO.Procedencia.PossuiErro)
 		        mensagemErro.AppendLine(acervoTridimensionalLinhaDTO.Procedencia.Mensagem);
@@ -206,7 +206,7 @@ namespace SME.CDEP.Aplicacao.Servicos
                     var acervoTridimensional = new AcervoTridimensionalCadastroDTO()
                     {
                         Titulo = acervoTridimensionalLinha.Titulo.Conteudo,
-                        Codigo = acervoTridimensionalLinha.Tombo.Conteudo,
+                        Codigo = acervoTridimensionalLinha.Codigo.Conteudo,
                         Procedencia = acervoTridimensionalLinha.Procedencia.Conteudo,
                         DataAcervo = acervoTridimensionalLinha.Data.Conteudo,
                         ConservacaoId = ObterConservacaoIdPorValorDoCampo(acervoTridimensionalLinha.EstadoConservacao.Conteudo),
@@ -235,7 +235,7 @@ namespace SME.CDEP.Aplicacao.Servicos
                 try
                 {
                     ValidarPreenchimentoLimiteCaracteres(linha.Titulo, Constantes.TITULO);
-                    ValidarPreenchimentoLimiteCaracteres(linha.Tombo, Constantes.TOMBO);
+                    ValidarPreenchimentoLimiteCaracteres(linha.Codigo, Constantes.TOMBO);
                     ValidarPreenchimentoLimiteCaracteres(linha.Procedencia,Constantes.PROCEDENCIA);
                     ValidarPreenchimentoLimiteCaracteres(linha.Data,Constantes.DATA);
                     ValidarPreenchimentoLimiteCaracteres(linha.EstadoConservacao,Constantes.ESTADO_CONSERVACAO);
@@ -257,7 +257,7 @@ namespace SME.CDEP.Aplicacao.Servicos
         private bool PossuiErro(AcervoTridimensionalLinhaDTO linha)
         {
             return linha.Titulo.PossuiErro 
-                   || linha.Tombo.PossuiErro 
+                   || linha.Codigo.PossuiErro 
                    || linha.Procedencia.PossuiErro
                    || linha.Data.PossuiErro
                    || linha.EstadoConservacao.PossuiErro
@@ -313,7 +313,7 @@ namespace SME.CDEP.Aplicacao.Servicos
                             LimiteCaracteres = Constantes.CARACTERES_PERMITIDOS_500,
                             EhCampoObrigatorio = true
                         },
-                        Tombo = new LinhaConteudoAjustarDTO()
+                        Codigo = new LinhaConteudoAjustarDTO()
                         {
                             Conteudo = planilha.ObterValorDaCelula(numeroLinha, Constantes.ACERVO_TRIDIMENSIONAL_CAMPO_TOMBO),
                             LimiteCaracteres = Constantes.CARACTERES_PERMITIDOS_15,

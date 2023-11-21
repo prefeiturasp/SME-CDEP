@@ -257,7 +257,7 @@ namespace SME.CDEP.TesteIntegracao
                 linha.LocalizacaoPHA.PossuiErro.ShouldBeFalse();
                 linha.NotasGerais.PossuiErro.ShouldBeFalse();
                 linha.Isbn.PossuiErro.ShouldBeFalse();
-                linha.Tombo.PossuiErro.ShouldBeFalse();
+                linha.Codigo.PossuiErro.ShouldBeFalse();
             }
         }
         
@@ -354,7 +354,7 @@ namespace SME.CDEP.TesteIntegracao
                 //Acervo
                 acervos.Any(a=> a.Titulo.SaoIguais(linhasComSucesso.Titulo.Conteudo)).ShouldBeTrue();
                 acervos.Any(a=> a.SubTitulo.SaoIguais(linhasComSucesso.SubTitulo.Conteudo)).ShouldBeTrue();
-                acervos.Any(a=> a.Codigo.SaoIguais(linhasComSucesso.Tombo.Conteudo)).ShouldBeTrue();  
+                acervos.Any(a=> a.Codigo.SaoIguais(linhasComSucesso.Codigo.Conteudo)).ShouldBeTrue();  
                 
                 //Referência 1:1
                 acervosBibliograficos.Any(a=> a.MaterialId.SaoIguais(materiais.FirstOrDefault(f=> f.Nome.SaoIguais(linhasComSucesso.Material.Conteudo)).Id)).ShouldBeTrue();
@@ -415,7 +415,7 @@ namespace SME.CDEP.TesteIntegracao
            
             acervoBibliograficoLinhas[3].Largura.Conteudo = "ABC3512";
             acervoBibliograficoLinhas[5].Altura.Conteudo = "1212ABC";
-            acervoBibliograficoLinhas[7].Tombo.Conteudo = acervoBibliograficoLinhas[0].Tombo.Conteudo;
+            acervoBibliograficoLinhas[7].Codigo.Conteudo = acervoBibliograficoLinhas[0].Codigo.Conteudo;
             
             await InserirNaBase(new ImportacaoArquivo()
             {
@@ -464,14 +464,14 @@ namespace SME.CDEP.TesteIntegracao
             foreach (var linhaInserida in acervoBibliograficoLinhas.Where(w=> !w.PossuiErros))
             {
                 retorno.Sucesso.Any(a=> a.Titulo.SaoIguais(linhaInserida.Titulo.Conteudo)).ShouldBeTrue();
-                retorno.Sucesso.Any(a=> a.Tombo.SaoIguais(linhaInserida.Tombo.Conteudo)).ShouldBeTrue();
+                retorno.Sucesso.Any(a=> a.Tombo.SaoIguais(linhaInserida.Codigo.Conteudo)).ShouldBeTrue();
                 retorno.Sucesso.Any(a=> a.NumeroLinha.SaoIguais(linhaInserida.NumeroLinha)).ShouldBeTrue();
             }
             
             foreach (var linhaInserida in acervoBibliograficoLinhas.Where(w=> w.PossuiErros))
             {
                 retorno.Erros.Any(a=> a.Titulo.SaoIguais(linhaInserida.Titulo.Conteudo)).ShouldBeTrue();
-                retorno.Erros.Any(a=> a.Tombo.SaoIguais(linhaInserida.Tombo.Conteudo)).ShouldBeTrue();
+                retorno.Erros.Any(a=> a.Tombo.SaoIguais(linhaInserida.Codigo.Conteudo)).ShouldBeTrue();
                 retorno.Erros.Any(a=> a.NumeroLinha.SaoIguais(linhaInserida.NumeroLinha)).ShouldBeTrue();
                 
                 retorno.Erros.Any(a=> a.RetornoObjeto.Titulo.SaoIguais(linhaInserida.Titulo.Conteudo)).ShouldBeTrue();
@@ -500,7 +500,7 @@ namespace SME.CDEP.TesteIntegracao
                 retorno.Erros.Any(a=> a.RetornoObjeto.LocalizacaoPHA.SaoIguais(linhaInserida.LocalizacaoPHA.Conteudo)).ShouldBeTrue();
                 retorno.Erros.Any(a=> a.RetornoObjeto.NotasGerais.SaoIguais(linhaInserida.NotasGerais.Conteudo)).ShouldBeTrue();
                 retorno.Erros.Any(a=> a.RetornoObjeto.Isbn.SaoIguais(linhaInserida.Isbn.Conteudo)).ShouldBeTrue();
-                retorno.Erros.Any(a=> a.RetornoObjeto.Codigo.SaoIguais(linhaInserida.Tombo.Conteudo)).ShouldBeTrue();
+                retorno.Erros.Any(a=> a.RetornoObjeto.Codigo.SaoIguais(linhaInserida.Codigo.Conteudo)).ShouldBeTrue();
                 
                 retorno.Erros.Any(a=> a.RetornoErro.Titulo.Conteudo.SaoIguais(linhaInserida.Titulo.Conteudo)).ShouldBeTrue();
                 retorno.Erros.Any(a=> a.RetornoErro.SubTitulo.Conteudo.SaoIguais(linhaInserida.SubTitulo.Conteudo)).ShouldBeTrue();
@@ -521,7 +521,7 @@ namespace SME.CDEP.TesteIntegracao
                 retorno.Erros.Any(a=> a.RetornoErro.LocalizacaoPHA.Conteudo.SaoIguais(linhaInserida.LocalizacaoPHA.Conteudo)).ShouldBeTrue();
                 retorno.Erros.Any(a=> a.RetornoErro.NotasGerais.Conteudo.SaoIguais(linhaInserida.NotasGerais.Conteudo)).ShouldBeTrue();
                 retorno.Erros.Any(a=> a.RetornoErro.Isbn.Conteudo.SaoIguais(linhaInserida.Isbn.Conteudo)).ShouldBeTrue();
-                retorno.Erros.Any(a=> a.RetornoErro.Tombo.Conteudo.SaoIguais(linhaInserida.Tombo.Conteudo)).ShouldBeTrue();
+                retorno.Erros.Any(a=> a.RetornoErro.Codigo.Conteudo.SaoIguais(linhaInserida.Codigo.Conteudo)).ShouldBeTrue();
             }
 
             foreach (var linhasComSucesso in acervoBibliograficoLinhas.Where(w=> !w.PossuiErros))
@@ -529,7 +529,7 @@ namespace SME.CDEP.TesteIntegracao
                 //Acervo
                 acervos.Any(a=> a.Titulo.SaoIguais(linhasComSucesso.Titulo.Conteudo)).ShouldBeTrue();
                 acervos.Any(a=> a.SubTitulo.SaoIguais(linhasComSucesso.SubTitulo.Conteudo)).ShouldBeTrue();
-                acervos.Any(a=> a.Codigo.SaoIguais(linhasComSucesso.Tombo.Conteudo)).ShouldBeTrue();  
+                acervos.Any(a=> a.Codigo.SaoIguais(linhasComSucesso.Codigo.Conteudo)).ShouldBeTrue();  
                 
                 //Referência 1:1
                 acervosBibliograficos.Any(a=> a.MaterialId.SaoIguais(materiais.FirstOrDefault(f=> f.Nome.SaoIguais(linhasComSucesso.Material.Conteudo)).Id)).ShouldBeTrue();
@@ -614,14 +614,14 @@ namespace SME.CDEP.TesteIntegracao
             foreach (var linhaInserida in linhasInseridas.Where(w=> !w.PossuiErros))
             {
                 retorno.Sucesso.Any(a=> a.Titulo.SaoIguais(linhaInserida.Titulo.Conteudo)).ShouldBeTrue();
-                retorno.Sucesso.Any(a=> a.Tombo.SaoIguais(linhaInserida.Tombo.Conteudo)).ShouldBeTrue();
+                retorno.Sucesso.Any(a=> a.Tombo.SaoIguais(linhaInserida.Codigo.Conteudo)).ShouldBeTrue();
                 retorno.Sucesso.Any(a=> a.NumeroLinha.SaoIguais(linhaInserida.NumeroLinha)).ShouldBeTrue();
             }
             
             foreach (var linhaInserida in linhasInseridas.Where(w=> w.PossuiErros))
             {
                 retorno.Erros.Any(a=> a.Titulo.SaoIguais(linhaInserida.Titulo.Conteudo)).ShouldBeTrue();
-                retorno.Erros.Any(a=> a.Tombo.SaoIguais(linhaInserida.Tombo.Conteudo)).ShouldBeTrue();
+                retorno.Erros.Any(a=> a.Tombo.SaoIguais(linhaInserida.Codigo.Conteudo)).ShouldBeTrue();
                 retorno.Erros.Any(a=> a.NumeroLinha.SaoIguais(linhaInserida.NumeroLinha)).ShouldBeTrue();
                 
                 retorno.Erros.Any(a=> a.RetornoObjeto.Titulo.SaoIguais(linhaInserida.Titulo.Conteudo)).ShouldBeTrue();
@@ -646,7 +646,7 @@ namespace SME.CDEP.TesteIntegracao
                 retorno.Erros.Any(a=> a.RetornoObjeto.LocalizacaoPHA.SaoIguais(linhaInserida.LocalizacaoPHA.Conteudo)).ShouldBeTrue();
                 retorno.Erros.Any(a=> a.RetornoObjeto.NotasGerais.SaoIguais(linhaInserida.NotasGerais.Conteudo)).ShouldBeTrue();
                 retorno.Erros.Any(a=> a.RetornoObjeto.Isbn.SaoIguais(linhaInserida.Isbn.Conteudo)).ShouldBeTrue();
-                retorno.Erros.Any(a=> a.RetornoObjeto.Codigo.SaoIguais(linhaInserida.Tombo.Conteudo)).ShouldBeTrue();
+                retorno.Erros.Any(a=> a.RetornoObjeto.Codigo.SaoIguais(linhaInserida.Codigo.Conteudo)).ShouldBeTrue();
                 
                 retorno.Erros.Any(a=> a.RetornoErro.Titulo.Conteudo.SaoIguais(linhaInserida.Titulo.Conteudo)).ShouldBeTrue();
                 retorno.Erros.Any(a=> a.RetornoErro.SubTitulo.Conteudo.SaoIguais(linhaInserida.SubTitulo.Conteudo)).ShouldBeTrue();
@@ -667,7 +667,7 @@ namespace SME.CDEP.TesteIntegracao
                 retorno.Erros.Any(a=> a.RetornoErro.LocalizacaoPHA.Conteudo.SaoIguais(linhaInserida.LocalizacaoPHA.Conteudo)).ShouldBeTrue();
                 retorno.Erros.Any(a=> a.RetornoErro.NotasGerais.Conteudo.SaoIguais(linhaInserida.NotasGerais.Conteudo)).ShouldBeTrue();
                 retorno.Erros.Any(a=> a.RetornoErro.Isbn.Conteudo.SaoIguais(linhaInserida.Isbn.Conteudo)).ShouldBeTrue();
-                retorno.Erros.Any(a=> a.RetornoErro.Tombo.Conteudo.SaoIguais(linhaInserida.Tombo.Conteudo)).ShouldBeTrue();
+                retorno.Erros.Any(a=> a.RetornoErro.Codigo.Conteudo.SaoIguais(linhaInserida.Codigo.Conteudo)).ShouldBeTrue();
             }
         }
 

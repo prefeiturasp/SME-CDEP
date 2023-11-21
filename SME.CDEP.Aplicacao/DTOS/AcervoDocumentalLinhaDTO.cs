@@ -5,7 +5,7 @@ namespace SME.CDEP.Aplicacao.DTOS;
 public class AcervoDocumentalLinhaDTO: AcervoLinhaDTO
 {
     public LinhaConteudoAjustarDTO Titulo { get; set; }
-    public LinhaConteudoAjustarDTO CodigoAntigo { get; set; }
+    public LinhaConteudoAjustarDTO Codigo { get; set; }
     public LinhaConteudoAjustarDTO CodigoNovo { get; set; }
     public LinhaConteudoAjustarDTO Material { get; set; }
     public LinhaConteudoAjustarDTO Idioma { get; set; }
@@ -30,7 +30,7 @@ public class AcervoDocumentalLinhaDTO: AcervoLinhaDTO
         Status = ImportacaoStatus.Sucesso;
 
         Titulo.DefinirComoSucesso();
-        CodigoAntigo.DefinirComoSucesso();
+        Codigo.DefinirComoSucesso();
         CodigoNovo.DefinirComoSucesso();
         Material.DefinirComoSucesso();
         Idioma.DefinirComoSucesso();

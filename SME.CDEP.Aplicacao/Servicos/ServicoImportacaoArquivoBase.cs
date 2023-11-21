@@ -482,9 +482,14 @@ namespace SME.CDEP.Aplicacao.Servicos
             return linha.Conteudo;
         }
         
-        protected static bool ObterConteudoBooleano(LinhaConteudoAjustarDTO linha)
+        protected static bool? ObterConteudoSimNao(LinhaConteudoAjustarDTO linha)
         {
-            return linha.Conteudo.EhOpcaoSim();
+            var valoresPermitidos = new List<string>() { Constantes.OPCAO_SIM, Constantes.OPCAO_NAO };
+            
+            if (valoresPermitidos.Contains(linha.Conteudo))
+                return linha.Conteudo.EhOpcaoSim();
+            
+            return default;
         } 
         
         protected static long ObterConteudoLongoOuNulo(LinhaConteudoAjustarDTO linha)

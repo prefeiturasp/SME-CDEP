@@ -24,7 +24,7 @@ public class AcervoBibliograficoLinhaDTO: AcervoLinhaDTO
     public LinhaConteudoAjustarDTO LocalizacaoPHA { get; set; }
     public LinhaConteudoAjustarDTO NotasGerais { get; set; }
     public LinhaConteudoAjustarDTO Isbn { get; set; }
-    public LinhaConteudoAjustarDTO Tombo { get; set; }
+    public LinhaConteudoAjustarDTO Codigo { get; set; }
 
     public void DefinirLinhaComoSucesso()
     {
@@ -52,6 +52,6 @@ public class AcervoBibliograficoLinhaDTO: AcervoLinhaDTO
         LocalizacaoPHA.DefinirComoSucesso();
         NotasGerais.DefinirComoSucesso();
         Isbn.DefinirComoSucesso();
-        Tombo.DefinirComoSucesso();
+        Codigo.DefinirComoSucesso();
     }
 }

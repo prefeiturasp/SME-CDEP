@@ -93,7 +93,7 @@ namespace SME.CDEP.TesteIntegracao
                 }
                 
                 linha.Titulo.PossuiErro.ShouldBeFalse();
-                linha.CodigoAntigo.PossuiErro.ShouldBeFalse();
+                linha.Codigo.PossuiErro.ShouldBeFalse();
                 linha.CodigoNovo.PossuiErro.ShouldBeFalse();
                 linha.Material.PossuiErro.ShouldBeFalse();
                 linha.Autor.PossuiErro.ShouldBeFalse();
@@ -188,7 +188,7 @@ namespace SME.CDEP.TesteIntegracao
             {
                 //Acervo
                 acervos.Any(a=> a.Titulo.SaoIguais(linhasComSucesso.Titulo.Conteudo)).ShouldBeTrue();
-                acervos.Any(a=> a.Codigo.SaoIguais(linhasComSucesso.CodigoAntigo.Conteudo)).ShouldBeTrue();
+                acervos.Any(a=> a.Codigo.SaoIguais(linhasComSucesso.Codigo.Conteudo)).ShouldBeTrue();
                 acervos.Any(a=> a.CodigoNovo.SaoIguais(linhasComSucesso.CodigoNovo.Conteudo)).ShouldBeTrue();  
                 acervos.Any(a=> a.Descricao.SaoIguais(linhasComSucesso.Descricao.Conteudo)).ShouldBeTrue();  
                 
@@ -239,7 +239,7 @@ namespace SME.CDEP.TesteIntegracao
            
             acervoDocumentalLinhas[3].Largura.Conteudo = "ABC3512";
             acervoDocumentalLinhas[5].Altura.Conteudo = "1212ABC";
-            acervoDocumentalLinhas[7].CodigoAntigo.Conteudo = acervoDocumentalLinhas[0].CodigoAntigo.Conteudo;
+            acervoDocumentalLinhas[7].Codigo.Conteudo = acervoDocumentalLinhas[0].Codigo.Conteudo;
             
             await InserirNaBase(new ImportacaoArquivo()
             {
@@ -298,7 +298,7 @@ namespace SME.CDEP.TesteIntegracao
                 retorno.Erros.Any(a=> a.NumeroLinha.SaoIguais(linhaInserida.NumeroLinha)).ShouldBeTrue();
                 
                 retorno.Erros.Any(a=> a.RetornoObjeto.Titulo.SaoIguais(linhaInserida.Titulo.Conteudo)).ShouldBeTrue();
-                retorno.Erros.Any(a=> a.RetornoObjeto.Codigo.SaoIguais(linhaInserida.CodigoAntigo.Conteudo)).ShouldBeTrue();
+                retorno.Erros.Any(a=> a.RetornoObjeto.Codigo.SaoIguais(linhaInserida.Codigo.Conteudo)).ShouldBeTrue();
                 retorno.Erros.Any(a=> a.RetornoObjeto.CodigoNovo.SaoIguais(linhaInserida.CodigoNovo.Conteudo)).ShouldBeTrue();
                 retorno.Erros.Any(a=> a.RetornoObjeto.MaterialId.NaoEhNulo()).ShouldBeTrue();
                 retorno.Erros.Any(a=> a.RetornoObjeto.IdiomaId.NaoEhNulo()).ShouldBeTrue();
@@ -326,7 +326,7 @@ namespace SME.CDEP.TesteIntegracao
                 retorno.Erros.Any(a=> a.RetornoObjeto.ConservacaoId.NaoEhNulo()).ShouldBeTrue();
                 
                 retorno.Erros.Any(a=> a.RetornoErro.Titulo.Conteudo.SaoIguais(linhaInserida.Titulo.Conteudo)).ShouldBeTrue();
-                retorno.Erros.Any(a=> a.RetornoErro.CodigoAntigo.Conteudo.SaoIguais(linhaInserida.CodigoAntigo.Conteudo)).ShouldBeTrue();
+                retorno.Erros.Any(a=> a.RetornoErro.Codigo.Conteudo.SaoIguais(linhaInserida.Codigo.Conteudo)).ShouldBeTrue();
                 retorno.Erros.Any(a=> a.RetornoErro.CodigoNovo.Conteudo.SaoIguais(linhaInserida.CodigoNovo.Conteudo)).ShouldBeTrue();
                 retorno.Erros.Any(a=> a.RetornoErro.Material.Conteudo.SaoIguais(linhaInserida.Material.Conteudo)).ShouldBeTrue();
                 retorno.Erros.Any(a=> a.RetornoErro.Idioma.Conteudo.SaoIguais(linhaInserida.Idioma.Conteudo)).ShouldBeTrue();
@@ -351,7 +351,7 @@ namespace SME.CDEP.TesteIntegracao
             {
                 //Acervo
                 acervos.Any(a=> a.Titulo.SaoIguais(linhasComSucesso.Titulo.Conteudo)).ShouldBeTrue();
-                acervos.Any(a=> a.Codigo.SaoIguais(linhasComSucesso.CodigoAntigo.Conteudo)).ShouldBeTrue();
+                acervos.Any(a=> a.Codigo.SaoIguais(linhasComSucesso.Codigo.Conteudo)).ShouldBeTrue();
                 acervos.Any(a=> a.CodigoNovo.SaoIguais(linhasComSucesso.CodigoNovo.Conteudo)).ShouldBeTrue();  
                 acervos.Any(a=> a.Descricao.SaoIguais(linhasComSucesso.Descricao.Conteudo)).ShouldBeTrue();  
                 
@@ -436,7 +436,7 @@ namespace SME.CDEP.TesteIntegracao
                 retorno.Erros.Any(a=> a.NumeroLinha.SaoIguais(linhaInserida.NumeroLinha)).ShouldBeTrue();
                 
                 retorno.Erros.Any(a=> a.RetornoObjeto.Titulo.SaoIguais(linhaInserida.Titulo.Conteudo)).ShouldBeTrue();
-                retorno.Erros.Any(a=> a.RetornoObjeto.Codigo.SaoIguais(linhaInserida.CodigoAntigo.Conteudo)).ShouldBeTrue();
+                retorno.Erros.Any(a=> a.RetornoObjeto.Codigo.SaoIguais(linhaInserida.Codigo.Conteudo)).ShouldBeTrue();
                 retorno.Erros.Any(a=> a.RetornoObjeto.CodigoNovo.SaoIguais(linhaInserida.CodigoNovo.Conteudo)).ShouldBeTrue();
                 retorno.Erros.Any(a=> a.RetornoObjeto.MaterialId.NaoEhNulo()).ShouldBeTrue();
                 retorno.Erros.Any(a=> a.RetornoObjeto.IdiomaId.NaoEhNulo()).ShouldBeTrue();
@@ -464,7 +464,7 @@ namespace SME.CDEP.TesteIntegracao
                 retorno.Erros.Any(a=> a.RetornoObjeto.ConservacaoId.NaoEhNulo()).ShouldBeTrue();
                 
                 retorno.Erros.Any(a=> a.RetornoErro.Titulo.Conteudo.SaoIguais(linhaInserida.Titulo.Conteudo)).ShouldBeTrue();
-                retorno.Erros.Any(a=> a.RetornoErro.CodigoAntigo.Conteudo.SaoIguais(linhaInserida.CodigoAntigo.Conteudo)).ShouldBeTrue();
+                retorno.Erros.Any(a=> a.RetornoErro.Codigo.Conteudo.SaoIguais(linhaInserida.Codigo.Conteudo)).ShouldBeTrue();
                 retorno.Erros.Any(a=> a.RetornoErro.CodigoNovo.Conteudo.SaoIguais(linhaInserida.CodigoNovo.Conteudo)).ShouldBeTrue();
                 retorno.Erros.Any(a=> a.RetornoErro.Material.Conteudo.SaoIguais(linhaInserida.Material.Conteudo)).ShouldBeTrue();
                 retorno.Erros.Any(a=> a.RetornoErro.Idioma.Conteudo.SaoIguais(linhaInserida.Idioma.Conteudo)).ShouldBeTrue();
@@ -488,11 +488,11 @@ namespace SME.CDEP.TesteIntegracao
         
         private string ObterCodigo(AcervoDocumentalLinhaDTO s)
         {
-            if (s.CodigoAntigo.Conteudo.EstaPreenchido() && s.CodigoNovo.Conteudo.EstaPreenchido())
-                return $"{s.CodigoAntigo.Conteudo}/{s.CodigoNovo.Conteudo}";
+            if (s.Codigo.Conteudo.EstaPreenchido() && s.CodigoNovo.Conteudo.EstaPreenchido())
+                return $"{s.Codigo.Conteudo}/{s.CodigoNovo.Conteudo}";
             
-            if (s.CodigoAntigo.Conteudo.EstaPreenchido())
-                return s.CodigoAntigo.Conteudo;
+            if (s.Codigo.Conteudo.EstaPreenchido())
+                return s.Codigo.Conteudo;
             
             return s.CodigoNovo.Conteudo.EstaPreenchido() ? s.CodigoNovo.Conteudo : default;
         }

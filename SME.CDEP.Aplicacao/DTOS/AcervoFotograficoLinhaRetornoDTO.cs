@@ -5,13 +5,13 @@ namespace SME.CDEP.Aplicacao.DTOS;
 public class AcervoFotograficoLinhaRetornoDTO : AcervoLinhaRetornoDTO
 {
     public LinhaConteudoAjustarRetornoDTO Titulo { get; set; }
-    public LinhaConteudoAjustarRetornoDTO Tombo { get; set; }
+    public LinhaConteudoAjustarRetornoDTO Codigo { get; set; }
     public LinhaConteudoAjustarRetornoDTO Credito { get; set; }
     public LinhaConteudoAjustarRetornoDTO Localizacao { get; set; }
     public LinhaConteudoAjustarRetornoDTO Procedencia { get; set; }
     public LinhaConteudoAjustarRetornoDTO Data { get; set; }
     public LinhaConteudoAjustarRetornoDTO CopiaDigital { get; set; }
-    public LinhaConteudoAjustarRetornoDTO AutorizacaoUsoDeImagem { get; set; }
+    public LinhaConteudoAjustarRetornoDTO PermiteUsoImagem { get; set; }
     public LinhaConteudoAjustarRetornoDTO EstadoConservacao { get; set; }
     public LinhaConteudoAjustarRetornoDTO Descricao { get; set; }
     public LinhaConteudoAjustarRetornoDTO Quantidade { get; set; }

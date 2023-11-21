@@ -105,7 +105,7 @@ namespace SME.CDEP.Aplicacao.Servicos
                         .Select(s=> ObterAcervoLinhaRetornoResumidoDto(s,arquivoImportado.TipoAcervo)),
                 Sucesso = acervosFotograficoLinhas
                         .Where(w => !w.PossuiErros)
-                        .Select(s=> ObterLinhasComSucesso(s.Titulo.Conteudo, s.Tombo.Conteudo, s.NumeroLinha)),
+                        .Select(s=> ObterLinhasComSucesso(s.Titulo.Conteudo, s.Codigo.Conteudo, s.NumeroLinha)),
             };
             return acervoFotograficoRetorno;
         }
@@ -115,7 +115,7 @@ namespace SME.CDEP.Aplicacao.Servicos
             return new AcervoLinhaErroDTO<AcervoFotograficoDTO,AcervoFotograficoLinhaRetornoDTO>()
             {
                 Titulo = ObterConteudoTexto(linha.Titulo),
-                Tombo = ObterConteudoTexto(linha.Tombo),
+                Tombo = ObterConteudoTexto(linha.Codigo),
                 NumeroLinha = linha.NumeroLinha,
                 RetornoObjeto = ObterAcervoFotograficoDto(linha,tipoAcervo),
                 RetornoErro = ObterLinhasComErros(linha),
@@ -128,12 +128,12 @@ namespace SME.CDEP.Aplicacao.Servicos
             {
                 Titulo = ObterConteudoTexto(linha.Titulo),
                 TipoAcervoId = (int)tipoAcervo,
-                Codigo = ObterConteudoTexto(linha.Tombo),
+                Codigo = ObterConteudoTexto(linha.Codigo),
                 Localizacao = ObterConteudoTexto(linha.Localizacao),
                 Procedencia = ObterConteudoTexto(linha.Procedencia),
                 DataAcervo = ObterConteudoTexto(linha.Data),
-                CopiaDigital = ObterConteudoBooleano(linha.CopiaDigital),
-                PermiteUsoImagem = ObterConteudoBooleano(linha.AutorizacaoUsoDeImagem),
+                CopiaDigital = ObterConteudoSimNao(linha.CopiaDigital),
+                PermiteUsoImagem = ObterConteudoSimNao(linha.PermiteUsoImagem),
                 ConservacaoId = ObterConservacaoIdPorValorDoCampo(linha.EstadoConservacao.Conteudo,false),
                 Descricao = ObterConteudoTexto(linha.Descricao),
                 Quantidade = ObterConteudoLongoOuNulo(linha.Quantidade),
@@ -153,13 +153,13 @@ namespace SME.CDEP.Aplicacao.Servicos
             return new AcervoFotograficoLinhaRetornoDTO()
             {
                 Titulo = ObterConteudoMensagemStatus(s.Titulo),
-                Tombo = ObterConteudoMensagemStatus(s.Tombo),
+                Codigo = ObterConteudoMensagemStatus(s.Codigo),
                 Credito = ObterConteudoMensagemStatus(s.Credito),
                 Localizacao = ObterConteudoMensagemStatus(s.Localizacao),
                 Procedencia = ObterConteudoMensagemStatus(s.Procedencia),
                 Data = ObterConteudoMensagemStatus(s.Data),
                 CopiaDigital = ObterConteudoMensagemStatus(s.CopiaDigital),
-                AutorizacaoUsoDeImagem = ObterConteudoMensagemStatus(s.AutorizacaoUsoDeImagem),
+                PermiteUsoImagem = ObterConteudoMensagemStatus(s.PermiteUsoImagem),
                 EstadoConservacao = ObterConteudoMensagemStatus(s.EstadoConservacao),
                 Descricao = ObterConteudoMensagemStatus(s.Descricao),
                 Quantidade = ObterConteudoMensagemStatus(s.Quantidade),
@@ -184,8 +184,8 @@ namespace SME.CDEP.Aplicacao.Servicos
 	        if (acervoFotograficoLinhaDTO.Titulo.PossuiErro)
 		        mensagemErro.AppendLine(acervoFotograficoLinhaDTO.Titulo.Mensagem);
 	        
-	        if (acervoFotograficoLinhaDTO.Tombo.PossuiErro)
-		        mensagemErro.AppendLine(acervoFotograficoLinhaDTO.Tombo.Mensagem);
+	        if (acervoFotograficoLinhaDTO.Codigo.PossuiErro)
+		        mensagemErro.AppendLine(acervoFotograficoLinhaDTO.Codigo.Mensagem);
 	        
 	        if (acervoFotograficoLinhaDTO.Credito.PossuiErro)
 		        mensagemErro.AppendLine(acervoFotograficoLinhaDTO.Credito.Mensagem);
@@ -202,8 +202,8 @@ namespace SME.CDEP.Aplicacao.Servicos
 	        if (acervoFotograficoLinhaDTO.CopiaDigital.PossuiErro)
 		        mensagemErro.AppendLine(acervoFotograficoLinhaDTO.CopiaDigital.Mensagem);
 			        
-	        if (acervoFotograficoLinhaDTO.AutorizacaoUsoDeImagem.PossuiErro)
-		        mensagemErro.AppendLine(acervoFotograficoLinhaDTO.AutorizacaoUsoDeImagem.Mensagem);
+	        if (acervoFotograficoLinhaDTO.PermiteUsoImagem.PossuiErro)
+		        mensagemErro.AppendLine(acervoFotograficoLinhaDTO.PermiteUsoImagem.Mensagem);
 			        
 	        if (acervoFotograficoLinhaDTO.EstadoConservacao.PossuiErro)
 		        mensagemErro.AppendLine(acervoFotograficoLinhaDTO.EstadoConservacao.Mensagem);
@@ -247,7 +247,7 @@ namespace SME.CDEP.Aplicacao.Servicos
                     var acervoFotografico = new AcervoFotograficoCadastroDTO()
                     {
                         Titulo = acervoFotograficoLinha.Titulo.Conteudo,
-                        Codigo = acervoFotograficoLinha.Tombo.Conteudo,
+                        Codigo = acervoFotograficoLinha.Codigo.Conteudo,
                         CreditosAutoresIds = CreditosAutores
                             .Where(f => acervoFotograficoLinha.Credito.Conteudo.FormatarTextoEmArray().Contains(f.Nome))
                             .Select(s => s.Id).ToArray(),
@@ -255,7 +255,7 @@ namespace SME.CDEP.Aplicacao.Servicos
                         Procedencia = acervoFotograficoLinha.Procedencia.Conteudo,
                         DataAcervo = acervoFotograficoLinha.Data.Conteudo,
                         CopiaDigital = ObterCopiaDigitalPorValorDoCampo(acervoFotograficoLinha.CopiaDigital.Conteudo),
-                        PermiteUsoImagem = ObterAutorizaUsoDeImagemPorValorDoCampo(acervoFotograficoLinha.AutorizacaoUsoDeImagem.Conteudo),
+                        PermiteUsoImagem = ObterAutorizaUsoDeImagemPorValorDoCampo(acervoFotograficoLinha.PermiteUsoImagem.Conteudo),
                         ConservacaoId = ObterConservacaoIdPorValorDoCampo(acervoFotograficoLinha.EstadoConservacao.Conteudo),
                         Descricao = acervoFotograficoLinha.Descricao.Conteudo,
                         Quantidade = acervoFotograficoLinha.Quantidade.Conteudo.ObterLongoPorValorDoCampo(),
@@ -285,13 +285,13 @@ namespace SME.CDEP.Aplicacao.Servicos
                 try
                 {
                     ValidarPreenchimentoLimiteCaracteres(linha.Titulo, Constantes.TITULO);
-                    ValidarPreenchimentoLimiteCaracteres(linha.Tombo, Constantes.TOMBO);
+                    ValidarPreenchimentoLimiteCaracteres(linha.Codigo, Constantes.TOMBO);
                     ValidarPreenchimentoLimiteCaracteres(linha.Credito, Constantes.CREDITO);
                     ValidarPreenchimentoLimiteCaracteres(linha.Localizacao,Constantes.LOCALIZACAO);
                     ValidarPreenchimentoLimiteCaracteres(linha.Procedencia,Constantes.PROCEDENCIA);
                     ValidarPreenchimentoLimiteCaracteres(linha.Data,Constantes.DATA);
                     ValidarPreenchimentoLimiteCaracteres(linha.CopiaDigital,Constantes.COPIA_DIGITAL);
-                    ValidarPreenchimentoLimiteCaracteres(linha.AutorizacaoUsoDeImagem,Constantes.AUTORIZACAO_USO_DE_IMAGEM);
+                    ValidarPreenchimentoLimiteCaracteres(linha.PermiteUsoImagem,Constantes.AUTORIZACAO_USO_DE_IMAGEM);
                     ValidarPreenchimentoLimiteCaracteres(linha.EstadoConservacao,Constantes.ESTADO_CONSERVACAO);
                     ValidarPreenchimentoLimiteCaracteres(linha.Descricao,Constantes.DESCRICAO);
                     ValidarPreenchimentoLimiteCaracteres(linha.Quantidade,Constantes.QUANTIDADE);
@@ -314,13 +314,13 @@ namespace SME.CDEP.Aplicacao.Servicos
         private bool PossuiErro(AcervoFotograficoLinhaDTO linha)
         {
             return linha.Titulo.PossuiErro 
-                   || linha.Tombo.PossuiErro 
+                   || linha.Codigo.PossuiErro 
                    || linha.Credito.PossuiErro
                    || linha.Localizacao.PossuiErro 
                    || linha.Procedencia.PossuiErro
                    || linha.Data.PossuiErro
                    || linha.CopiaDigital.PossuiErro 
-                   || linha.AutorizacaoUsoDeImagem.PossuiErro 
+                   || linha.PermiteUsoImagem.PossuiErro 
                    || linha.EstadoConservacao.PossuiErro
                    || linha.Descricao.PossuiErro
                    || linha.Quantidade.PossuiErro
@@ -382,9 +382,9 @@ namespace SME.CDEP.Aplicacao.Servicos
                             LimiteCaracteres = Constantes.CARACTERES_PERMITIDOS_500,
                             EhCampoObrigatorio = true
                         },
-                        Tombo = new LinhaConteudoAjustarDTO()
+                        Codigo = new LinhaConteudoAjustarDTO()
                         {
-                            Conteudo = planilha.ObterValorDaCelula(numeroLinha, Constantes.ACERVO_FOTOGRAFICO_CAMPO_TOMBO),
+                            Conteudo = planilha.ObterValorDaCelula(numeroLinha, Constantes.ACERVO_FOTOGRAFICO_CAMPO_CODIGO),
                             LimiteCaracteres = Constantes.CARACTERES_PERMITIDOS_15,
                             EhCampoObrigatorio = true
                         },
@@ -417,7 +417,7 @@ namespace SME.CDEP.Aplicacao.Servicos
                             LimiteCaracteres = Constantes.CARACTERES_PERMITIDOS_3, 
                             ValoresPermitidos  = new List<string>() { Constantes.OPCAO_SIM, Constantes.OPCAO_NAO }
                         },
-                        AutorizacaoUsoDeImagem = new LinhaConteudoAjustarDTO()
+                        PermiteUsoImagem = new LinhaConteudoAjustarDTO()
                         {
                             Conteudo = planilha.ObterValorDaCelula(numeroLinha, Constantes.ACERVO_FOTOGRAFICO_CAMPO_AUTORIZACAO_USO_DE_IMAGEM),
                             LimiteCaracteres = Constantes.CARACTERES_PERMITIDOS_3,
@@ -493,7 +493,7 @@ namespace SME.CDEP.Aplicacao.Servicos
                 Constantes.ACERVO_FOTOGRAFICO_CAMPO_TITULO, Constantes.FOTOGRAFICO);
             
             ValidarTituloDaColuna(planilha, numeroLinha, Constantes.NOME_DA_COLUNA_TOMBO, 
-                Constantes.ACERVO_FOTOGRAFICO_CAMPO_TOMBO, Constantes.FOTOGRAFICO);
+                Constantes.ACERVO_FOTOGRAFICO_CAMPO_CODIGO, Constantes.FOTOGRAFICO);
             
             ValidarTituloDaColuna(planilha, numeroLinha, Constantes.NOME_DA_COLUNA_CREDITO, 
                 Constantes.ACERVO_FOTOGRAFICO_CAMPO_CREDITO, Constantes.FOTOGRAFICO);

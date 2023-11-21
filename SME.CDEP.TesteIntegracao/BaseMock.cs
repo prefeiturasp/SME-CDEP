@@ -239,7 +239,7 @@ namespace SME.CDEP.TesteIntegracao
                 Conteudo = f.Lorem.Sentence().Limite(50),
                 LimiteCaracteres = ConstantesTestes.CARACTERES_PERMITIDOS_50,
             });
-            faker.RuleFor(x => x.Tombo, f => new LinhaConteudoAjustarDTO()
+            faker.RuleFor(x => x.Codigo, f => new LinhaConteudoAjustarDTO()
             {
                 Conteudo = f.Lorem.Sentence().Limite(15),
                 LimiteCaracteres = ConstantesTestes.CARACTERES_PERMITIDOS_15,
@@ -263,7 +263,7 @@ namespace SME.CDEP.TesteIntegracao
                 EhCampoObrigatorio = true
             });
             
-            faker.RuleFor(x => x.CodigoAntigo, f => new LinhaConteudoAjustarDTO()
+            faker.RuleFor(x => x.Codigo, f => new LinhaConteudoAjustarDTO()
             {
                 Conteudo = f.Lorem.Sentence().Limite(15),
                 LimiteCaracteres = ConstantesTestes.CARACTERES_PERMITIDOS_15,
@@ -385,7 +385,7 @@ namespace SME.CDEP.TesteIntegracao
                 EhCampoObrigatorio = true
             });
             
-            faker.RuleFor(x => x.Tombo, f => new LinhaConteudoAjustarDTO()
+            faker.RuleFor(x => x.Codigo, f => new LinhaConteudoAjustarDTO()
             {
                 Conteudo = $"{f.Lorem.Sentence().Limite(12)}.AG",
                 LimiteCaracteres = ConstantesTestes.CARACTERES_PERMITIDOS_15,
@@ -424,7 +424,7 @@ namespace SME.CDEP.TesteIntegracao
                 EhCampoObrigatorio = true
             });
             
-            faker.RuleFor(x => x.AutorizacaoUsoDeImagem, f => new LinhaConteudoAjustarDTO()
+            faker.RuleFor(x => x.PermiteUsoImagem, f => new LinhaConteudoAjustarDTO()
             {
                 Conteudo = ConstantesTestes.OPCAO_SIM,
                 LimiteCaracteres = ConstantesTestes.CARACTERES_PERMITIDOS_3,
@@ -506,7 +506,7 @@ namespace SME.CDEP.TesteIntegracao
                 EhCampoObrigatorio = true
             });
             
-            faker.RuleFor(x => x.Tombo, f => new LinhaConteudoAjustarDTO()
+            faker.RuleFor(x => x.Codigo, f => new LinhaConteudoAjustarDTO()
             {
                 Conteudo = $"{f.Lorem.Sentence().Limite(12)}.AV",
                 LimiteCaracteres = ConstantesTestes.CARACTERES_PERMITIDOS_15,
@@ -544,7 +544,7 @@ namespace SME.CDEP.TesteIntegracao
                 LimiteCaracteres = ConstantesTestes.CARACTERES_PERMITIDOS_100,
             });
             
-            faker.RuleFor(x => x.AutorizacaoUsoDeImagem, f => new LinhaConteudoAjustarDTO()
+            faker.RuleFor(x => x.PermiteUsoImagem, f => new LinhaConteudoAjustarDTO()
             {
                 Conteudo = ConstantesTestes.OPCAO_SIM,
                 LimiteCaracteres = ConstantesTestes.CARACTERES_PERMITIDOS_3,
@@ -618,7 +618,7 @@ namespace SME.CDEP.TesteIntegracao
                 EhCampoObrigatorio = true
             });
             
-            faker.RuleFor(x => x.Tombo, f => new LinhaConteudoAjustarDTO()
+            faker.RuleFor(x => x.Codigo, f => new LinhaConteudoAjustarDTO()
             {
                 Conteudo = $"{f.Lorem.Sentence().Limite(12)}.FT",
                 LimiteCaracteres = ConstantesTestes.CARACTERES_PERMITIDOS_15,
@@ -658,7 +658,7 @@ namespace SME.CDEP.TesteIntegracao
                 LimiteCaracteres = ConstantesTestes.CARACTERES_PERMITIDOS_3,
             });
             
-            faker.RuleFor(x => x.AutorizacaoUsoDeImagem, f => new LinhaConteudoAjustarDTO()
+            faker.RuleFor(x => x.PermiteUsoImagem, f => new LinhaConteudoAjustarDTO()
             {
                 Conteudo = Dominio.Constantes.Constantes.OPCAO_SIM,
                 LimiteCaracteres = ConstantesTestes.CARACTERES_PERMITIDOS_3,
@@ -749,7 +749,7 @@ namespace SME.CDEP.TesteIntegracao
                 EhCampoObrigatorio = true
             });
             
-            faker.RuleFor(x => x.Tombo, f => new LinhaConteudoAjustarDTO()
+            faker.RuleFor(x => x.Codigo, f => new LinhaConteudoAjustarDTO()
             {
                 Conteudo = $"{f.Lorem.Sentence().Limite(12)}.TD",
                 LimiteCaracteres = ConstantesTestes.CARACTERES_PERMITIDOS_15,

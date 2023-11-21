@@ -104,7 +104,7 @@ namespace SME.CDEP.Aplicacao.Servicos
                     .Select(s=> ObterAcervoLinhaRetornoResumidoDto(s, arquivoImportado.TipoAcervo)),
                 Sucesso = acervosAudiovisualLinhas
                     .Where(w => !w.PossuiErros)
-                    .Select(s=> ObterLinhasComSucesso(s.Titulo.Conteudo, s.Tombo.Conteudo, s.NumeroLinha)),
+                    .Select(s=> ObterLinhasComSucesso(s.Titulo.Conteudo, s.Codigo.Conteudo, s.NumeroLinha)),
             };
             return acervoAudiovisualRetorno;
         }
@@ -114,7 +114,7 @@ namespace SME.CDEP.Aplicacao.Servicos
             return new AcervoLinhaErroDTO<AcervoAudiovisualDTO,AcervoAudiovisualLinhaRetornoDTO>()
             {
                 Titulo = ObterConteudoTexto(linha.Titulo),
-                Tombo = ObterConteudoTexto(linha.Tombo),
+                Tombo = ObterConteudoTexto(linha.Codigo),
                 NumeroLinha = linha.NumeroLinha,
                 RetornoObjeto = ObterAcervoAudiovisualDto(linha,tipoAcervo),
                 RetornoErro = ObterLinhasComErros(linha),
@@ -127,12 +127,12 @@ namespace SME.CDEP.Aplicacao.Servicos
             {
                 Titulo = ObterConteudoTexto(linha.Titulo),
                 TipoAcervoId = (int)tipoAcervo,
-                Codigo = ObterConteudoTexto(linha.Tombo),
+                Codigo = ObterConteudoTexto(linha.Codigo),
                 Localizacao = ObterConteudoTexto(linha.Localizacao),
                 Procedencia = ObterConteudoTexto(linha.Procedencia),
                 DataAcervo = ObterConteudoTexto(linha.Data),
                 Copia = ObterConteudoTexto(linha.Copia),
-                PermiteUsoImagem = ObterConteudoBooleano(linha.AutorizacaoUsoDeImagem),
+                PermiteUsoImagem = ObterConteudoSimNao(linha.PermiteUsoImagem),
                 ConservacaoId = ObterConservacaoIdPorValorDoCampo(linha.EstadoConservacao.Conteudo,false),
                 Descricao = ObterConteudoTexto(linha.Descricao),
                 SuporteId = ObterSuporteVideoIdPorValorDoCampo(linha.Suporte.Conteudo, false),
@@ -150,13 +150,13 @@ namespace SME.CDEP.Aplicacao.Servicos
             return new AcervoAudiovisualLinhaRetornoDTO()
             {
                 Titulo = ObterConteudoMensagemStatus(s.Titulo),
-                Tombo = ObterConteudoMensagemStatus(s.Tombo),
+                Codigo = ObterConteudoMensagemStatus(s.Codigo),
                 Credito = ObterConteudoMensagemStatus(s.Credito),
                 Localizacao = ObterConteudoMensagemStatus(s.Localizacao),
                 Procedencia = ObterConteudoMensagemStatus(s.Procedencia),
                 Data = ObterConteudoMensagemStatus(s.Data),
                 Copia = ObterConteudoMensagemStatus(s.Copia),
-                AutorizacaoUsoDeImagem = ObterConteudoMensagemStatus(s.AutorizacaoUsoDeImagem),
+                PermiteUsoImagem = ObterConteudoMensagemStatus(s.PermiteUsoImagem),
                 EstadoConservacao = ObterConteudoMensagemStatus(s.EstadoConservacao),
                 Descricao = ObterConteudoMensagemStatus(s.Descricao),
                 Suporte = ObterConteudoMensagemStatus(s.Suporte),
@@ -179,8 +179,8 @@ namespace SME.CDEP.Aplicacao.Servicos
             if (acervoAudiovisualLinhaDTO.Titulo.PossuiErro)
                 mensagemErro.AppendLine(acervoAudiovisualLinhaDTO.Titulo.Mensagem);
             
-            if (acervoAudiovisualLinhaDTO.Tombo.PossuiErro)
-                mensagemErro.AppendLine(acervoAudiovisualLinhaDTO.Tombo.Mensagem);
+            if (acervoAudiovisualLinhaDTO.Codigo.PossuiErro)
+                mensagemErro.AppendLine(acervoAudiovisualLinhaDTO.Codigo.Mensagem);
             
             if (acervoAudiovisualLinhaDTO.Credito.PossuiErro)
                 mensagemErro.AppendLine(acervoAudiovisualLinhaDTO.Credito.Mensagem);
@@ -197,8 +197,8 @@ namespace SME.CDEP.Aplicacao.Servicos
             if (acervoAudiovisualLinhaDTO.Copia.PossuiErro)
                 mensagemErro.AppendLine(acervoAudiovisualLinhaDTO.Copia.Mensagem);
                     
-            if (acervoAudiovisualLinhaDTO.AutorizacaoUsoDeImagem.PossuiErro)
-                mensagemErro.AppendLine(acervoAudiovisualLinhaDTO.AutorizacaoUsoDeImagem.Mensagem);
+            if (acervoAudiovisualLinhaDTO.PermiteUsoImagem.PossuiErro)
+                mensagemErro.AppendLine(acervoAudiovisualLinhaDTO.PermiteUsoImagem.Mensagem);
                     
             if (acervoAudiovisualLinhaDTO.EstadoConservacao.PossuiErro)
                 mensagemErro.AppendLine(acervoAudiovisualLinhaDTO.EstadoConservacao.Mensagem);
@@ -236,7 +236,7 @@ namespace SME.CDEP.Aplicacao.Servicos
                     var acervoAudiovisual = new AcervoAudiovisualCadastroDTO()
                     {
                         Titulo = acervoAudiovisualLinha.Titulo.Conteudo,
-                        Codigo = acervoAudiovisualLinha.Tombo.Conteudo,
+                        Codigo = acervoAudiovisualLinha.Codigo.Conteudo,
                         CreditosAutoresIds = CreditosAutores
                             .Where(f => acervoAudiovisualLinha.Credito.Conteudo.FormatarTextoEmArray().Contains(f.Nome))
                             .Select(s => s.Id).ToArray(),
@@ -244,7 +244,7 @@ namespace SME.CDEP.Aplicacao.Servicos
                         Procedencia = acervoAudiovisualLinha.Procedencia.Conteudo,
                         DataAcervo = acervoAudiovisualLinha.Data.Conteudo,
                         Copia = acervoAudiovisualLinha.Copia.Conteudo,
-                        PermiteUsoImagem = ObterAutorizaUsoDeImagemPorValorDoCampo(acervoAudiovisualLinha.AutorizacaoUsoDeImagem.Conteudo),
+                        PermiteUsoImagem = ObterAutorizaUsoDeImagemPorValorDoCampo(acervoAudiovisualLinha.PermiteUsoImagem.Conteudo),
                         ConservacaoId = ObterConservacaoIdOuNuloPorValorDoCampo(acervoAudiovisualLinha.EstadoConservacao.Conteudo,false),
                         Descricao = acervoAudiovisualLinha.Descricao.Conteudo,
                         SuporteId = ObterSuporteVideoIdPorValorDoCampo(acervoAudiovisualLinha.Suporte.Conteudo),
@@ -272,13 +272,13 @@ namespace SME.CDEP.Aplicacao.Servicos
                 try
                 {
                     ValidarPreenchimentoLimiteCaracteres(linha.Titulo, Constantes.TITULO);
-                    ValidarPreenchimentoLimiteCaracteres(linha.Tombo, Constantes.TOMBO);
+                    ValidarPreenchimentoLimiteCaracteres(linha.Codigo, Constantes.TOMBO);
                     ValidarPreenchimentoLimiteCaracteres(linha.Credito, Constantes.CREDITO);
                     ValidarPreenchimentoLimiteCaracteres(linha.Localizacao,Constantes.LOCALIZACAO);
                     ValidarPreenchimentoLimiteCaracteres(linha.Procedencia,Constantes.PROCEDENCIA);
                     ValidarPreenchimentoLimiteCaracteres(linha.Data,Constantes.DATA);
                     ValidarPreenchimentoLimiteCaracteres(linha.Copia,Constantes.COPIA);
-                    ValidarPreenchimentoLimiteCaracteres(linha.AutorizacaoUsoDeImagem,Constantes.AUTORIZACAO_USO_DE_IMAGEM);
+                    ValidarPreenchimentoLimiteCaracteres(linha.PermiteUsoImagem,Constantes.AUTORIZACAO_USO_DE_IMAGEM);
                     ValidarPreenchimentoLimiteCaracteres(linha.EstadoConservacao,Constantes.ESTADO_CONSERVACAO);
                     ValidarPreenchimentoLimiteCaracteres(linha.Descricao,Constantes.DESCRICAO);
                     ValidarPreenchimentoLimiteCaracteres(linha.Suporte,Constantes.SUPORTE);
@@ -299,13 +299,13 @@ namespace SME.CDEP.Aplicacao.Servicos
         private bool PossuiErro(AcervoAudiovisualLinhaDTO linha)
         {
             return linha.Titulo.PossuiErro 
-                   || linha.Tombo.PossuiErro 
+                   || linha.Codigo.PossuiErro 
                    || linha.Credito.PossuiErro
                    || linha.Localizacao.PossuiErro 
                    || linha.Procedencia.PossuiErro
                    || linha.Data.PossuiErro
                    || linha.Copia.PossuiErro 
-                   || linha.AutorizacaoUsoDeImagem.PossuiErro 
+                   || linha.PermiteUsoImagem.PossuiErro 
                    || linha.EstadoConservacao.PossuiErro
                    || linha.Descricao.PossuiErro
                    || linha.Suporte.PossuiErro
@@ -363,7 +363,7 @@ namespace SME.CDEP.Aplicacao.Servicos
                             LimiteCaracteres = Constantes.CARACTERES_PERMITIDOS_500,
                             EhCampoObrigatorio = true
                         },
-                        Tombo = new LinhaConteudoAjustarDTO()
+                        Codigo = new LinhaConteudoAjustarDTO()
                         {
                             Conteudo = planilha.ObterValorDaCelula(numeroLinha, Constantes.ACERVO_AUDIOVISUAL_CAMPO_TOMBO),
                             LimiteCaracteres = Constantes.CARACTERES_PERMITIDOS_15,
@@ -395,7 +395,7 @@ namespace SME.CDEP.Aplicacao.Servicos
                             Conteudo = planilha.ObterValorDaCelula(numeroLinha, Constantes.ACERVO_AUDIOVISUAL_CAMPO_COPIA),
                             LimiteCaracteres = Constantes.CARACTERES_PERMITIDOS_100, 
                         },
-                        AutorizacaoUsoDeImagem = new LinhaConteudoAjustarDTO()
+                        PermiteUsoImagem = new LinhaConteudoAjustarDTO()
                         {
                             Conteudo = planilha.ObterValorDaCelula(numeroLinha, Constantes.ACERVO_AUDIOVISUAL_CAMPO_AUTORIZACAO_USO_DE_IMAGEM),
                             LimiteCaracteres = Constantes.CARACTERES_PERMITIDOS_3,

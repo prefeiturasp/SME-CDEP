@@ -66,7 +66,7 @@ public class Constantes
     public const string PROFUNDIDADE = "Profundidade";
     
     public const string CAMPO_X_NAO_PREENCHIDO = "O campo '{0}' é obrigatório";
-    public const string CAMPO_X_ATINGIU_LIMITE_CARACTERES = "Os campos '{0}' atingiu o limite de caracteres";
+    public const string CAMPO_X_ATINGIU_LIMITE_CARACTERES = "O campo '{0}' atingiu o limite de caracteres";
     public const string CAMPO_X_REQUER_UM_VALOR_NUMERICO = "O campo '{0}' requer um valor numérico";
     public const string CAMPO_COAUTOR_SEM_PREENCHIMENTO_E_TIPO_AUTORIA_PREENCHIDO = "O preenchimento do campo coautor é obrigatório quando o tipo de autoria está especificado";
     public const string TEMOS_MAIS_TIPO_AUTORIA_QUE_COAUTORES = "A quantidade de tipos de autoria excede a de coautores. É aceitável ter coautores desprovidos de tipo de autoria, mas o contrário não é permitido";
@@ -166,7 +166,7 @@ public class Constantes
     public const int ACERVO_AUDIOVISUAL_CAMPO_DISPONIBILIZACAO = 16;
     
     public const int ACERVO_FOTOGRAFICO_CAMPO_TITULO = 1;
-    public const int ACERVO_FOTOGRAFICO_CAMPO_TOMBO = 2;
+    public const int ACERVO_FOTOGRAFICO_CAMPO_CODIGO = 2;
     public const int ACERVO_FOTOGRAFICO_CAMPO_CREDITO = 3;
     public const int ACERVO_FOTOGRAFICO_CAMPO_LOCALIZACAO = 4;
     public const int ACERVO_FOTOGRAFICO_CAMPO_PROCEDENCIA = 5;
