@@ -177,7 +177,7 @@ namespace SME.CDEP.Aplicacao.Servicos
             };
         }
         
-        private string ObterMensagemErroLinha(AcervoAudiovisualLinhaDTO acervoAudiovisualLinhaDTO)
+        private string[] ObterMensagemErroLinha(AcervoAudiovisualLinhaDTO acervoAudiovisualLinhaDTO)
         {
             var mensagemErro = new StringBuilder();
 
@@ -229,7 +229,7 @@ namespace SME.CDEP.Aplicacao.Servicos
             if (acervoAudiovisualLinhaDTO.Disponibilizacao.PossuiErro)
                 mensagemErro.AppendLine(acervoAudiovisualLinhaDTO.Disponibilizacao.Mensagem);
 
-            return mensagemErro.ToString();
+            return mensagemErro.ToString().Split("TABTAB").ToArray();
         }
         
         public async Task PersistenciaAcervo(IEnumerable<AcervoAudiovisualLinhaDTO> acervosAudiovisualLinhas)

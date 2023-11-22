@@ -189,7 +189,7 @@ namespace SME.CDEP.Aplicacao.Servicos
             };
         }
         
-        private string ObterMensagemErroLinha(AcervoBibliograficoLinhaDTO acervoBibliograficoLinhaDTO)
+        private string[] ObterMensagemErroLinha(AcervoBibliograficoLinhaDTO acervoBibliograficoLinhaDTO)
         {
 	        var mensagemErro = new StringBuilder();
 
@@ -256,7 +256,7 @@ namespace SME.CDEP.Aplicacao.Servicos
             if (acervoBibliograficoLinhaDTO.Isbn.PossuiErro)
                 mensagemErro.AppendLine(acervoBibliograficoLinhaDTO.Isbn.Mensagem);
             
-	        return mensagemErro.ToString();
+	        return mensagemErro.ToString().Split("TABTAB").ToArray();
         }
 
         public async Task PersistenciaAcervo(IEnumerable<AcervoBibliograficoLinhaDTO> acervosBibliograficosLinhas)

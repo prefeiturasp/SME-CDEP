@@ -161,7 +161,7 @@ namespace SME.CDEP.Aplicacao.Servicos
             };
         }
         
-        private string ObterMensagemErroLinha(AcervoTridimensionalLinhaDTO acervoTridimensionalLinhaDTO)
+        private string[] ObterMensagemErroLinha(AcervoTridimensionalLinhaDTO acervoTridimensionalLinhaDTO)
         {
 	        var mensagemErro = new StringBuilder();
 
@@ -198,7 +198,7 @@ namespace SME.CDEP.Aplicacao.Servicos
 	        if (acervoTridimensionalLinhaDTO.Diametro.PossuiErro)
 		        mensagemErro.AppendLine(acervoTridimensionalLinhaDTO.Diametro.Mensagem);
 			        
-	        return mensagemErro.ToString();
+            return mensagemErro.ToString().Split("TABTAB").ToArray();
         }
         
         public async Task PersistenciaAcervo(IEnumerable<AcervoTridimensionalLinhaDTO> acervosTridimensionalsLinhas)
