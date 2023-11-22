@@ -191,72 +191,72 @@ namespace SME.CDEP.Aplicacao.Servicos
         
         private string[] ObterMensagemErroLinha(AcervoBibliograficoLinhaDTO acervoBibliograficoLinhaDTO)
         {
-	        var mensagemErro = new StringBuilder();
+            var mensagemErro = new List<string>();
 
 	        if (acervoBibliograficoLinhaDTO.Titulo.PossuiErro)
-		        mensagemErro.AppendLine(acervoBibliograficoLinhaDTO.Titulo.Mensagem);
+		        mensagemErro.Add(acervoBibliograficoLinhaDTO.Titulo.Mensagem);
 	        
 	        if (acervoBibliograficoLinhaDTO.Codigo.PossuiErro)
-		        mensagemErro.AppendLine(acervoBibliograficoLinhaDTO.Codigo.Mensagem);
+		        mensagemErro.Add(acervoBibliograficoLinhaDTO.Codigo.Mensagem);
 	        
 	        if (acervoBibliograficoLinhaDTO.SubTitulo.PossuiErro)
-		        mensagemErro.AppendLine(acervoBibliograficoLinhaDTO.SubTitulo.Mensagem);
+		        mensagemErro.Add(acervoBibliograficoLinhaDTO.SubTitulo.Mensagem);
 			        
 	        if (acervoBibliograficoLinhaDTO.Material.PossuiErro)
-		        mensagemErro.AppendLine(acervoBibliograficoLinhaDTO.Material.Mensagem);
+		        mensagemErro.Add(acervoBibliograficoLinhaDTO.Material.Mensagem);
 			        
 	        if (acervoBibliograficoLinhaDTO.Autor.PossuiErro)
-		        mensagemErro.AppendLine(acervoBibliograficoLinhaDTO.Autor.Mensagem);
+		        mensagemErro.Add(acervoBibliograficoLinhaDTO.Autor.Mensagem);
 			        
 	        if (acervoBibliograficoLinhaDTO.CoAutor.PossuiErro)
-		        mensagemErro.AppendLine(acervoBibliograficoLinhaDTO.CoAutor.Mensagem);
+		        mensagemErro.Add(acervoBibliograficoLinhaDTO.CoAutor.Mensagem);
 			        
 	        if (acervoBibliograficoLinhaDTO.TipoAutoria.PossuiErro)
-		        mensagemErro.AppendLine(acervoBibliograficoLinhaDTO.TipoAutoria.Mensagem);
+		        mensagemErro.Add(acervoBibliograficoLinhaDTO.TipoAutoria.Mensagem);
 			        
 	        if (acervoBibliograficoLinhaDTO.Editora.PossuiErro)
-		        mensagemErro.AppendLine(acervoBibliograficoLinhaDTO.Editora.Mensagem);
+		        mensagemErro.Add(acervoBibliograficoLinhaDTO.Editora.Mensagem);
 			        
 	        if (acervoBibliograficoLinhaDTO.Edicao.PossuiErro)
-		        mensagemErro.AppendLine(acervoBibliograficoLinhaDTO.Edicao.Mensagem);
+		        mensagemErro.Add(acervoBibliograficoLinhaDTO.Edicao.Mensagem);
 	        
 	        if (acervoBibliograficoLinhaDTO.Assunto.PossuiErro)
-		        mensagemErro.AppendLine(acervoBibliograficoLinhaDTO.Assunto.Mensagem);
+		        mensagemErro.Add(acervoBibliograficoLinhaDTO.Assunto.Mensagem);
 	        
 	        if (acervoBibliograficoLinhaDTO.Ano.PossuiErro)
-		        mensagemErro.AppendLine(acervoBibliograficoLinhaDTO.Ano.Mensagem);
+		        mensagemErro.Add(acervoBibliograficoLinhaDTO.Ano.Mensagem);
 	        
 	        if (acervoBibliograficoLinhaDTO.NumeroPaginas.PossuiErro)
-		        mensagemErro.AppendLine(acervoBibliograficoLinhaDTO.NumeroPaginas.Mensagem);
+		        mensagemErro.Add(acervoBibliograficoLinhaDTO.NumeroPaginas.Mensagem);
 			        
 	        if (acervoBibliograficoLinhaDTO.Largura.PossuiErro)
-		        mensagemErro.AppendLine(acervoBibliograficoLinhaDTO.Largura.Mensagem);
+		        mensagemErro.Add(acervoBibliograficoLinhaDTO.Largura.Mensagem);
 			        
 	        if (acervoBibliograficoLinhaDTO.Altura.PossuiErro)
-		        mensagemErro.AppendLine(acervoBibliograficoLinhaDTO.Altura.Mensagem);
+		        mensagemErro.Add(acervoBibliograficoLinhaDTO.Altura.Mensagem);
 			        
 	        if (acervoBibliograficoLinhaDTO.SerieColecao.PossuiErro)
-		        mensagemErro.AppendLine(acervoBibliograficoLinhaDTO.SerieColecao.Mensagem);
+		        mensagemErro.Add(acervoBibliograficoLinhaDTO.SerieColecao.Mensagem);
 			        
 	        if (acervoBibliograficoLinhaDTO.Volume.PossuiErro)
-		        mensagemErro.AppendLine(acervoBibliograficoLinhaDTO.Volume.Mensagem);
+		        mensagemErro.Add(acervoBibliograficoLinhaDTO.Volume.Mensagem);
             
             if (acervoBibliograficoLinhaDTO.Idioma.PossuiErro)
-                mensagemErro.AppendLine(acervoBibliograficoLinhaDTO.Idioma.Mensagem);
+                mensagemErro.Add(acervoBibliograficoLinhaDTO.Idioma.Mensagem);
             
             if (acervoBibliograficoLinhaDTO.LocalizacaoCDD.PossuiErro)
-                mensagemErro.AppendLine(acervoBibliograficoLinhaDTO.LocalizacaoCDD.Mensagem);
+                mensagemErro.Add(acervoBibliograficoLinhaDTO.LocalizacaoCDD.Mensagem);
 
             if (acervoBibliograficoLinhaDTO.LocalizacaoPHA.PossuiErro)
-                mensagemErro.AppendLine(acervoBibliograficoLinhaDTO.LocalizacaoPHA.Mensagem);
+                mensagemErro.Add(acervoBibliograficoLinhaDTO.LocalizacaoPHA.Mensagem);
             
             if (acervoBibliograficoLinhaDTO.NotasGerais.PossuiErro)
-                mensagemErro.AppendLine(acervoBibliograficoLinhaDTO.NotasGerais.Mensagem);
+                mensagemErro.Add(acervoBibliograficoLinhaDTO.NotasGerais.Mensagem);
             
             if (acervoBibliograficoLinhaDTO.Isbn.PossuiErro)
-                mensagemErro.AppendLine(acervoBibliograficoLinhaDTO.Isbn.Mensagem);
+                mensagemErro.Add(acervoBibliograficoLinhaDTO.Isbn.Mensagem);
 
-            return mensagemErro.ToString().Split("\r\n").Where(s => s.EstaPreenchido()).ToArray();
+            return mensagemErro.ToArray();
         }
 
         public async Task PersistenciaAcervo(IEnumerable<AcervoBibliograficoLinhaDTO> acervosBibliograficosLinhas)

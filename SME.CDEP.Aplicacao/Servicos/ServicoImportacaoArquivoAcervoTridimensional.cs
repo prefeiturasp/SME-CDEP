@@ -163,42 +163,42 @@ namespace SME.CDEP.Aplicacao.Servicos
         
         private string[] ObterMensagemErroLinha(AcervoTridimensionalLinhaDTO acervoTridimensionalLinhaDTO)
         {
-	        var mensagemErro = new StringBuilder();
+	        var mensagemErro = new List<string>();
 
 	        if (acervoTridimensionalLinhaDTO.Titulo.PossuiErro)
-		        mensagemErro.AppendLine(acervoTridimensionalLinhaDTO.Titulo.Mensagem);
+		        mensagemErro.Add(acervoTridimensionalLinhaDTO.Titulo.Mensagem);
 	        
 	        if (acervoTridimensionalLinhaDTO.Codigo.PossuiErro)
-		        mensagemErro.AppendLine(acervoTridimensionalLinhaDTO.Codigo.Mensagem);
+		        mensagemErro.Add(acervoTridimensionalLinhaDTO.Codigo.Mensagem);
 	        
 	        if (acervoTridimensionalLinhaDTO.Procedencia.PossuiErro)
-		        mensagemErro.AppendLine(acervoTridimensionalLinhaDTO.Procedencia.Mensagem);
+		        mensagemErro.Add(acervoTridimensionalLinhaDTO.Procedencia.Mensagem);
 			        
 	        if (acervoTridimensionalLinhaDTO.Data.PossuiErro)
-		        mensagemErro.AppendLine(acervoTridimensionalLinhaDTO.Data.Mensagem);
+		        mensagemErro.Add(acervoTridimensionalLinhaDTO.Data.Mensagem);
 			        
 	        if (acervoTridimensionalLinhaDTO.EstadoConservacao.PossuiErro)
-		        mensagemErro.AppendLine(acervoTridimensionalLinhaDTO.EstadoConservacao.Mensagem);
+		        mensagemErro.Add(acervoTridimensionalLinhaDTO.EstadoConservacao.Mensagem);
 	        
 	        if (acervoTridimensionalLinhaDTO.Descricao.PossuiErro)
-		        mensagemErro.AppendLine(acervoTridimensionalLinhaDTO.Descricao.Mensagem);
+		        mensagemErro.Add(acervoTridimensionalLinhaDTO.Descricao.Mensagem);
 	        
 	        if (acervoTridimensionalLinhaDTO.Quantidade.PossuiErro)
-		        mensagemErro.AppendLine(acervoTridimensionalLinhaDTO.Quantidade.Mensagem);
+		        mensagemErro.Add(acervoTridimensionalLinhaDTO.Quantidade.Mensagem);
 	        
 	        if (acervoTridimensionalLinhaDTO.Largura.PossuiErro)
-		        mensagemErro.AppendLine(acervoTridimensionalLinhaDTO.Largura.Mensagem);
+		        mensagemErro.Add(acervoTridimensionalLinhaDTO.Largura.Mensagem);
 			        
 	        if (acervoTridimensionalLinhaDTO.Altura.PossuiErro)
-		        mensagemErro.AppendLine(acervoTridimensionalLinhaDTO.Altura.Mensagem);
+		        mensagemErro.Add(acervoTridimensionalLinhaDTO.Altura.Mensagem);
 			        
 	        if (acervoTridimensionalLinhaDTO.Profundidade.PossuiErro)
-		        mensagemErro.AppendLine(acervoTridimensionalLinhaDTO.Profundidade.Mensagem);
+		        mensagemErro.Add(acervoTridimensionalLinhaDTO.Profundidade.Mensagem);
 			        
 	        if (acervoTridimensionalLinhaDTO.Diametro.PossuiErro)
-		        mensagemErro.AppendLine(acervoTridimensionalLinhaDTO.Diametro.Mensagem);
+		        mensagemErro.Add(acervoTridimensionalLinhaDTO.Diametro.Mensagem);
 			        
-            return mensagemErro.ToString().Split("\r\n").Where(s => s.EstaPreenchido()).ToArray();
+            return mensagemErro.ToArray();
         }
         
         public async Task PersistenciaAcervo(IEnumerable<AcervoTridimensionalLinhaDTO> acervosTridimensionalsLinhas)

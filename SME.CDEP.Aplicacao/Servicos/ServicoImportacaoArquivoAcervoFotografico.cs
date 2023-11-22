@@ -184,63 +184,63 @@ namespace SME.CDEP.Aplicacao.Servicos
 				
         private string[] ObterMensagemErroLinha(AcervoFotograficoLinhaDTO acervoFotograficoLinhaDTO)
         {
-	        var mensagemErro = new StringBuilder();
+            var mensagemErro = new List<string>();
 
 	        if (acervoFotograficoLinhaDTO.Titulo.PossuiErro)
-		        mensagemErro.AppendLine(acervoFotograficoLinhaDTO.Titulo.Mensagem);
+		        mensagemErro.Add(acervoFotograficoLinhaDTO.Titulo.Mensagem);
 	        
 	        if (acervoFotograficoLinhaDTO.Codigo.PossuiErro)
-		        mensagemErro.AppendLine(acervoFotograficoLinhaDTO.Codigo.Mensagem);
+		        mensagemErro.Add(acervoFotograficoLinhaDTO.Codigo.Mensagem);
 	        
 	        if (acervoFotograficoLinhaDTO.Credito.PossuiErro)
-		        mensagemErro.AppendLine(acervoFotograficoLinhaDTO.Credito.Mensagem);
+		        mensagemErro.Add(acervoFotograficoLinhaDTO.Credito.Mensagem);
 			        
 	        if (acervoFotograficoLinhaDTO.Localizacao.PossuiErro)
-		        mensagemErro.AppendLine(acervoFotograficoLinhaDTO.Localizacao.Mensagem);
+		        mensagemErro.Add(acervoFotograficoLinhaDTO.Localizacao.Mensagem);
 			        
 	        if (acervoFotograficoLinhaDTO.Procedencia.PossuiErro)
-		        mensagemErro.AppendLine(acervoFotograficoLinhaDTO.Procedencia.Mensagem);
+		        mensagemErro.Add(acervoFotograficoLinhaDTO.Procedencia.Mensagem);
 			        
 	        if (acervoFotograficoLinhaDTO.Data.PossuiErro)
-		        mensagemErro.AppendLine(acervoFotograficoLinhaDTO.Data.Mensagem);
+		        mensagemErro.Add(acervoFotograficoLinhaDTO.Data.Mensagem);
 			        
 	        if (acervoFotograficoLinhaDTO.CopiaDigital.PossuiErro)
-		        mensagemErro.AppendLine(acervoFotograficoLinhaDTO.CopiaDigital.Mensagem);
+		        mensagemErro.Add(acervoFotograficoLinhaDTO.CopiaDigital.Mensagem);
 			        
 	        if (acervoFotograficoLinhaDTO.PermiteUsoImagem.PossuiErro)
-		        mensagemErro.AppendLine(acervoFotograficoLinhaDTO.PermiteUsoImagem.Mensagem);
+		        mensagemErro.Add(acervoFotograficoLinhaDTO.PermiteUsoImagem.Mensagem);
 			        
 	        if (acervoFotograficoLinhaDTO.EstadoConservacao.PossuiErro)
-		        mensagemErro.AppendLine(acervoFotograficoLinhaDTO.EstadoConservacao.Mensagem);
+		        mensagemErro.Add(acervoFotograficoLinhaDTO.EstadoConservacao.Mensagem);
 	        
 	        if (acervoFotograficoLinhaDTO.Descricao.PossuiErro)
-		        mensagemErro.AppendLine(acervoFotograficoLinhaDTO.Descricao.Mensagem);
+		        mensagemErro.Add(acervoFotograficoLinhaDTO.Descricao.Mensagem);
 	        
 	        if (acervoFotograficoLinhaDTO.Suporte.PossuiErro)
-		        mensagemErro.AppendLine(acervoFotograficoLinhaDTO.Suporte.Mensagem);
+		        mensagemErro.Add(acervoFotograficoLinhaDTO.Suporte.Mensagem);
 	        
 	        if (acervoFotograficoLinhaDTO.Quantidade.PossuiErro)
-		        mensagemErro.AppendLine(acervoFotograficoLinhaDTO.Quantidade.Mensagem);
+		        mensagemErro.Add(acervoFotograficoLinhaDTO.Quantidade.Mensagem);
 			        
 	        if (acervoFotograficoLinhaDTO.Cromia.PossuiErro)
-		        mensagemErro.AppendLine(acervoFotograficoLinhaDTO.Cromia.Mensagem);
+		        mensagemErro.Add(acervoFotograficoLinhaDTO.Cromia.Mensagem);
 			        
 	        if (acervoFotograficoLinhaDTO.TamanhoArquivo.PossuiErro)
-		        mensagemErro.AppendLine(acervoFotograficoLinhaDTO.TamanhoArquivo.Mensagem);
+		        mensagemErro.Add(acervoFotograficoLinhaDTO.TamanhoArquivo.Mensagem);
 			        
 	        if (acervoFotograficoLinhaDTO.Largura.PossuiErro)
-		        mensagemErro.AppendLine(acervoFotograficoLinhaDTO.Largura.Mensagem);
+		        mensagemErro.Add(acervoFotograficoLinhaDTO.Largura.Mensagem);
 			        
 	        if (acervoFotograficoLinhaDTO.Altura.PossuiErro)
-		        mensagemErro.AppendLine(acervoFotograficoLinhaDTO.Altura.Mensagem);
+		        mensagemErro.Add(acervoFotograficoLinhaDTO.Altura.Mensagem);
             
             if (acervoFotograficoLinhaDTO.FormatoImagem.PossuiErro)
-                mensagemErro.AppendLine(acervoFotograficoLinhaDTO.FormatoImagem.Mensagem);
+                mensagemErro.Add(acervoFotograficoLinhaDTO.FormatoImagem.Mensagem);
             
             if (acervoFotograficoLinhaDTO.Resolucao.PossuiErro)
-                mensagemErro.AppendLine(acervoFotograficoLinhaDTO.Resolucao.Mensagem);
+                mensagemErro.Add(acervoFotograficoLinhaDTO.Resolucao.Mensagem);
 
-            return mensagemErro.ToString().Split("\r\n").Where(s => s.EstaPreenchido()).ToArray();
+            return mensagemErro.ToArray();
         }
         
         public async Task PersistenciaAcervo(IEnumerable<AcervoFotograficoLinhaDTO> acervosFotograficosLinhas)

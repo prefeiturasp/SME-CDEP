@@ -179,57 +179,57 @@ namespace SME.CDEP.Aplicacao.Servicos
         
         private string[] ObterMensagemErroLinha(AcervoAudiovisualLinhaDTO acervoAudiovisualLinhaDTO)
         {
-            var mensagemErro = new StringBuilder();
+            var mensagemErro = new List<string>();
 
             if (acervoAudiovisualLinhaDTO.Titulo.PossuiErro)
-                mensagemErro.AppendLine(acervoAudiovisualLinhaDTO.Titulo.Mensagem);
+                mensagemErro.Add(acervoAudiovisualLinhaDTO.Titulo.Mensagem);
             
             if (acervoAudiovisualLinhaDTO.Codigo.PossuiErro)
-                mensagemErro.AppendLine(acervoAudiovisualLinhaDTO.Codigo.Mensagem);
+                mensagemErro.Add(acervoAudiovisualLinhaDTO.Codigo.Mensagem);
             
             if (acervoAudiovisualLinhaDTO.Credito.PossuiErro)
-                mensagemErro.AppendLine(acervoAudiovisualLinhaDTO.Credito.Mensagem);
+                mensagemErro.Add(acervoAudiovisualLinhaDTO.Credito.Mensagem);
                     
             if (acervoAudiovisualLinhaDTO.Localizacao.PossuiErro)
-                mensagemErro.AppendLine(acervoAudiovisualLinhaDTO.Localizacao.Mensagem);
+                mensagemErro.Add(acervoAudiovisualLinhaDTO.Localizacao.Mensagem);
                     
             if (acervoAudiovisualLinhaDTO.Procedencia.PossuiErro)
-                mensagemErro.AppendLine(acervoAudiovisualLinhaDTO.Procedencia.Mensagem);
+                mensagemErro.Add(acervoAudiovisualLinhaDTO.Procedencia.Mensagem);
                     
             if (acervoAudiovisualLinhaDTO.Data.PossuiErro)
-                mensagemErro.AppendLine(acervoAudiovisualLinhaDTO.Data.Mensagem);
+                mensagemErro.Add(acervoAudiovisualLinhaDTO.Data.Mensagem);
                     
             if (acervoAudiovisualLinhaDTO.Copia.PossuiErro)
-                mensagemErro.AppendLine(acervoAudiovisualLinhaDTO.Copia.Mensagem);
+                mensagemErro.Add(acervoAudiovisualLinhaDTO.Copia.Mensagem);
                     
             if (acervoAudiovisualLinhaDTO.PermiteUsoImagem.PossuiErro)
-                mensagemErro.AppendLine(acervoAudiovisualLinhaDTO.PermiteUsoImagem.Mensagem);
+                mensagemErro.Add(acervoAudiovisualLinhaDTO.PermiteUsoImagem.Mensagem);
                     
             if (acervoAudiovisualLinhaDTO.EstadoConservacao.PossuiErro)
-                mensagemErro.AppendLine(acervoAudiovisualLinhaDTO.EstadoConservacao.Mensagem);
+                mensagemErro.Add(acervoAudiovisualLinhaDTO.EstadoConservacao.Mensagem);
             
             if (acervoAudiovisualLinhaDTO.Descricao.PossuiErro)
-                mensagemErro.AppendLine(acervoAudiovisualLinhaDTO.Descricao.Mensagem);
+                mensagemErro.Add(acervoAudiovisualLinhaDTO.Descricao.Mensagem);
             
             if (acervoAudiovisualLinhaDTO.Suporte.PossuiErro)
-                mensagemErro.AppendLine(acervoAudiovisualLinhaDTO.Suporte.Mensagem);
+                mensagemErro.Add(acervoAudiovisualLinhaDTO.Suporte.Mensagem);
             
             if (acervoAudiovisualLinhaDTO.Duracao.PossuiErro)
-                mensagemErro.AppendLine(acervoAudiovisualLinhaDTO.Suporte.Mensagem);
+                mensagemErro.Add(acervoAudiovisualLinhaDTO.Suporte.Mensagem);
                     
             if (acervoAudiovisualLinhaDTO.Cromia.PossuiErro)
-                mensagemErro.AppendLine(acervoAudiovisualLinhaDTO.Cromia.Mensagem);
+                mensagemErro.Add(acervoAudiovisualLinhaDTO.Cromia.Mensagem);
                     
             if (acervoAudiovisualLinhaDTO.TamanhoArquivo.PossuiErro)
-                mensagemErro.AppendLine(acervoAudiovisualLinhaDTO.TamanhoArquivo.Mensagem);
+                mensagemErro.Add(acervoAudiovisualLinhaDTO.TamanhoArquivo.Mensagem);
                     
             if (acervoAudiovisualLinhaDTO.Acessibilidade.PossuiErro)
-                mensagemErro.AppendLine(acervoAudiovisualLinhaDTO.Acessibilidade.Mensagem);
+                mensagemErro.Add(acervoAudiovisualLinhaDTO.Acessibilidade.Mensagem);
                     
             if (acervoAudiovisualLinhaDTO.Disponibilizacao.PossuiErro)
-                mensagemErro.AppendLine(acervoAudiovisualLinhaDTO.Disponibilizacao.Mensagem);
+                mensagemErro.Add(acervoAudiovisualLinhaDTO.Disponibilizacao.Mensagem);
 
-            return mensagemErro.ToString().Split("\r\n").Where(s => s.EstaPreenchido()).ToArray();
+            return mensagemErro.ToArray();
         }
         
         public async Task PersistenciaAcervo(IEnumerable<AcervoAudiovisualLinhaDTO> acervosAudiovisualLinhas)
