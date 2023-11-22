@@ -244,6 +244,7 @@ public class Constantes
     
     
     public const string ContentTypeExcel = "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet";
+    public const string FORMATO_TIFF = "image/tiff";
     public const string BUCKET_CDEP = "cdep";
     public const string PLANILHA_ACERVO_BIBLIOGRAFICO = "planilha_acervo_bibliografico.xlsx";
     public const string PLANILHA_ACERVO_DOCUMENTAL = "planilha_acervo_documental.xlsx";
