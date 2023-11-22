@@ -240,7 +240,7 @@ namespace SME.CDEP.Aplicacao.Servicos
             if (acervoFotograficoLinhaDTO.Resolucao.PossuiErro)
                 mensagemErro.AppendLine(acervoFotograficoLinhaDTO.Resolucao.Mensagem);
 
-            return mensagemErro.ToString().Split("TABTAB").ToArray();
+            return mensagemErro.ToString().Split("\r\n").Where(s => s.EstaPreenchido()).ToArray();
         }
         
         public async Task PersistenciaAcervo(IEnumerable<AcervoFotograficoLinhaDTO> acervosFotograficosLinhas)

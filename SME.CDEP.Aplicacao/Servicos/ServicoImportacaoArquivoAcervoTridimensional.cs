@@ -198,7 +198,7 @@ namespace SME.CDEP.Aplicacao.Servicos
 	        if (acervoTridimensionalLinhaDTO.Diametro.PossuiErro)
 		        mensagemErro.AppendLine(acervoTridimensionalLinhaDTO.Diametro.Mensagem);
 			        
-            return mensagemErro.ToString().Split("TABTAB").ToArray();
+            return mensagemErro.ToString().Split("\r\n").Where(s => s.EstaPreenchido()).ToArray();
         }
         
         public async Task PersistenciaAcervo(IEnumerable<AcervoTridimensionalLinhaDTO> acervosTridimensionalsLinhas)
