@@ -328,23 +328,23 @@ namespace SME.CDEP.TesteIntegracao
                 retorno.Erros.Any(a=> a.RetornoErro.Titulo.Conteudo.SaoIguais(linhaInserida.Titulo.Conteudo)).ShouldBeTrue();
                 retorno.Erros.Any(a=> a.RetornoErro.Codigo.Conteudo.SaoIguais(linhaInserida.Codigo.Conteudo)).ShouldBeTrue();
                 retorno.Erros.Any(a=> a.RetornoErro.CodigoNovo.Conteudo.SaoIguais(linhaInserida.CodigoNovo.Conteudo)).ShouldBeTrue();
-                retorno.Erros.Any(a=> a.RetornoErro.Material.Conteudo.SaoIguais(linhaInserida.Material.Conteudo)).ShouldBeTrue();
-                retorno.Erros.Any(a=> a.RetornoErro.Idioma.Conteudo.SaoIguais(linhaInserida.Idioma.Conteudo)).ShouldBeTrue();
+                retorno.Erros.Any(a=> a.RetornoErro.MaterialId.Conteudo.SaoIguais(linhaInserida.Material.Conteudo)).ShouldBeTrue();
+                retorno.Erros.Any(a=> a.RetornoErro.IdiomaId.Conteudo.SaoIguais(linhaInserida.Idioma.Conteudo)).ShouldBeTrue();
                 retorno.Erros.Any(a=> a.RetornoErro.CopiaDigital.Conteudo.SaoIguais(linhaInserida.CopiaDigital.Conteudo)).ShouldBeTrue();
-                retorno.Erros.Any(a=> a.RetornoErro.Autor.Conteudo.SaoIguais(linhaInserida.Autor.Conteudo)).ShouldBeTrue();
-                retorno.Erros.Any(a=> a.RetornoErro.EstadoConservacao.Conteudo.SaoIguais(linhaInserida.EstadoConservacao.Conteudo)).ShouldBeTrue();
+                retorno.Erros.Any(a=> a.RetornoErro.CreditosAutoresIds.Conteudo.SaoIguais(linhaInserida.Autor.Conteudo)).ShouldBeTrue();
+                retorno.Erros.Any(a=> a.RetornoErro.ConservacaoId.Conteudo.SaoIguais(linhaInserida.EstadoConservacao.Conteudo)).ShouldBeTrue();
                 retorno.Erros.Any(a=> a.RetornoErro.Ano.Conteudo.SaoIguais(linhaInserida.Ano.Conteudo)).ShouldBeTrue();
-                retorno.Erros.Any(a=> a.RetornoErro.NumeroPaginas.Conteudo.SaoIguais(linhaInserida.NumeroPaginas.Conteudo)).ShouldBeTrue();
+                retorno.Erros.Any(a=> a.RetornoErro.NumeroPagina.Conteudo.SaoIguais(linhaInserida.NumeroPaginas.Conteudo)).ShouldBeTrue();
                 retorno.Erros.Any(a=> a.RetornoErro.Volume.Conteudo.SaoIguais(linhaInserida.Volume.Conteudo)).ShouldBeTrue();
                 retorno.Erros.Any(a=> a.RetornoErro.Descricao.Conteudo.SaoIguais(linhaInserida.Descricao.Conteudo)).ShouldBeTrue();
                 retorno.Erros.Any(a=> a.RetornoErro.TipoAnexo.Conteudo.SaoIguais(linhaInserida.TipoAnexo.Conteudo)).ShouldBeTrue();
                 retorno.Erros.Any(a=> a.RetornoErro.Largura.Conteudo.SaoIguais(linhaInserida.Largura.Conteudo)).ShouldBeTrue();
                 retorno.Erros.Any(a=> a.RetornoErro.Altura.Conteudo.SaoIguais(linhaInserida.Altura.Conteudo)).ShouldBeTrue();
                 retorno.Erros.Any(a=> a.RetornoErro.TamanhoArquivo.Conteudo.SaoIguais(linhaInserida.TamanhoArquivo.Conteudo)).ShouldBeTrue();
-                retorno.Erros.Any(a=> a.RetornoErro.AcessoDocumento.Conteudo.SaoIguais(linhaInserida.AcessoDocumento.Conteudo)).ShouldBeTrue();
+                retorno.Erros.Any(a=> a.RetornoErro.AcessoDocumentosIds.Conteudo.SaoIguais(linhaInserida.AcessoDocumento.Conteudo)).ShouldBeTrue();
                 retorno.Erros.Any(a=> a.RetornoErro.Localizacao.Conteudo.SaoIguais(linhaInserida.Localizacao.Conteudo)).ShouldBeTrue();
                 retorno.Erros.Any(a=> a.RetornoErro.CopiaDigital.Conteudo.SaoIguais(linhaInserida.CopiaDigital.Conteudo)).ShouldBeTrue();
-                retorno.Erros.Any(a=> a.RetornoErro.EstadoConservacao.Conteudo.SaoIguais(linhaInserida.EstadoConservacao.Conteudo)).ShouldBeTrue();
+                retorno.Erros.Any(a=> a.RetornoErro.ConservacaoId.Conteudo.SaoIguais(linhaInserida.EstadoConservacao.Conteudo)).ShouldBeTrue();
             }
         
             foreach (var linhasComSucesso in acervoDocumentalLinhas.Where(w=> !w.PossuiErros))
@@ -463,23 +463,23 @@ namespace SME.CDEP.TesteIntegracao
                 retorno.Erros.Any(a=> a.RetornoErro.Titulo.Conteudo.SaoIguais(linhaInserida.Titulo.Conteudo)).ShouldBeTrue();
                 retorno.Erros.Any(a=> a.RetornoErro.Codigo.Conteudo.SaoIguais(linhaInserida.Codigo.Conteudo)).ShouldBeTrue();
                 retorno.Erros.Any(a=> a.RetornoErro.CodigoNovo.Conteudo.SaoIguais(linhaInserida.CodigoNovo.Conteudo)).ShouldBeTrue();
-                retorno.Erros.Any(a=> a.RetornoErro.Material.Conteudo.SaoIguais(linhaInserida.Material.Conteudo)).ShouldBeTrue();
-                retorno.Erros.Any(a=> a.RetornoErro.Idioma.Conteudo.SaoIguais(linhaInserida.Idioma.Conteudo)).ShouldBeTrue();
+                retorno.Erros.Any(a=> a.RetornoErro.MaterialId.Conteudo.SaoIguais(linhaInserida.Material.Conteudo)).ShouldBeTrue();
+                retorno.Erros.Any(a=> a.RetornoErro.IdiomaId.Conteudo.SaoIguais(linhaInserida.Idioma.Conteudo)).ShouldBeTrue();
                 retorno.Erros.Any(a=> a.RetornoErro.CopiaDigital.Conteudo.SaoIguais(linhaInserida.CopiaDigital.Conteudo)).ShouldBeTrue();
-                retorno.Erros.Any(a=> a.RetornoErro.Autor.Conteudo.SaoIguais(linhaInserida.Autor.Conteudo)).ShouldBeTrue();
-                retorno.Erros.Any(a=> a.RetornoErro.EstadoConservacao.Conteudo.SaoIguais(linhaInserida.EstadoConservacao.Conteudo)).ShouldBeTrue();
+                retorno.Erros.Any(a=> a.RetornoErro.CreditosAutoresIds.Conteudo.SaoIguais(linhaInserida.Autor.Conteudo)).ShouldBeTrue();
+                retorno.Erros.Any(a=> a.RetornoErro.ConservacaoId.Conteudo.SaoIguais(linhaInserida.EstadoConservacao.Conteudo)).ShouldBeTrue();
                 retorno.Erros.Any(a=> a.RetornoErro.Ano.Conteudo.SaoIguais(linhaInserida.Ano.Conteudo)).ShouldBeTrue();
-                retorno.Erros.Any(a=> a.RetornoErro.NumeroPaginas.Conteudo.SaoIguais(linhaInserida.NumeroPaginas.Conteudo)).ShouldBeTrue();
+                retorno.Erros.Any(a=> a.RetornoErro.NumeroPagina.Conteudo.SaoIguais(linhaInserida.NumeroPaginas.Conteudo)).ShouldBeTrue();
                 retorno.Erros.Any(a=> a.RetornoErro.Volume.Conteudo.SaoIguais(linhaInserida.Volume.Conteudo)).ShouldBeTrue();
                 retorno.Erros.Any(a=> a.RetornoErro.Descricao.Conteudo.SaoIguais(linhaInserida.Descricao.Conteudo)).ShouldBeTrue();
                 retorno.Erros.Any(a=> a.RetornoErro.TipoAnexo.Conteudo.SaoIguais(linhaInserida.TipoAnexo.Conteudo)).ShouldBeTrue();
                 retorno.Erros.Any(a=> a.RetornoErro.Largura.Conteudo.SaoIguais(linhaInserida.Largura.Conteudo)).ShouldBeTrue();
                 retorno.Erros.Any(a=> a.RetornoErro.Altura.Conteudo.SaoIguais(linhaInserida.Altura.Conteudo)).ShouldBeTrue();
                 retorno.Erros.Any(a=> a.RetornoErro.TamanhoArquivo.Conteudo.SaoIguais(linhaInserida.TamanhoArquivo.Conteudo)).ShouldBeTrue();
-                retorno.Erros.Any(a=> a.RetornoErro.AcessoDocumento.Conteudo.SaoIguais(linhaInserida.AcessoDocumento.Conteudo)).ShouldBeTrue();
+                retorno.Erros.Any(a=> a.RetornoErro.AcessoDocumentosIds.Conteudo.SaoIguais(linhaInserida.AcessoDocumento.Conteudo)).ShouldBeTrue();
                 retorno.Erros.Any(a=> a.RetornoErro.Localizacao.Conteudo.SaoIguais(linhaInserida.Localizacao.Conteudo)).ShouldBeTrue();
                 retorno.Erros.Any(a=> a.RetornoErro.CopiaDigital.Conteudo.SaoIguais(linhaInserida.CopiaDigital.Conteudo)).ShouldBeTrue();
-                retorno.Erros.Any(a=> a.RetornoErro.EstadoConservacao.Conteudo.SaoIguais(linhaInserida.EstadoConservacao.Conteudo)).ShouldBeTrue();
+                retorno.Erros.Any(a=> a.RetornoErro.ConservacaoId.Conteudo.SaoIguais(linhaInserida.EstadoConservacao.Conteudo)).ShouldBeTrue();
             }
         }
         

@@ -81,7 +81,7 @@ public class Constantes
     public const string CONTEUDO_DO_ARQUIVO_INVALIDO = "Conteúdo do arquivo inválido";
     public const string ESSE_ARQUIVO_NAO_EH_ACERVO_X = "Esse arquivo não é do Acervo {0}";
     public const string A_LINHA_INFORMADA_NAO_EXISTE_NO_ARQUIVO = "Essa linha não existe no arquivo";
-    public const string NAO_EH_POSSIVEL_EXCLUIR_A_UNICA_LINHA_DO_ARQUIVO = "Não foi possível excluir a linha, pois a única linha do arquivo foi removida e agora o conteúdo do arquivo está vazio";
+    public const string NAO_EH_POSSIVEL_EXCLUIR_A_UNICA_LINHA_DO_ARQUIVO = "Não foi possível excluir a linha, pois a remoção da única linha resultaria em um arquivo vazio";
     public const string A_PLANLHA_DE_ACERVO_X_NAO_TEM_O_NOME_DA_COLUNA_Y_NA_COLUNA_Z = "A planilha do acervo '{0}' deveria apresentar o nome '{1}' na coluna '{2}', conforme previsto";
     
     public const char PIPE = '|';
