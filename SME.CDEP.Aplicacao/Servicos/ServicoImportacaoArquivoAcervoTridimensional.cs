@@ -273,10 +273,8 @@ namespace SME.CDEP.Aplicacao.Servicos
                    || linha.Diametro.PossuiErro;
         }
         
-        public async Task ValidacaoObterOuInserirDominios(IEnumerable<AcervoTridimensionalLinhaDTO> linhas)
+        public async Task ValidacaoObterOuInserirDominios(IEnumerable<AcervoTridimensionalLinhaDTO> linhasComsucesso)
         {
-            var linhasComsucesso = linhas.Where(w => !w.PossuiErros);
-        
             try
             {
                 await ValidarOuInserirConservacao(linhasComsucesso.Select(s => s.EstadoConservacao.Conteudo).Distinct().Where(w=> w.EstaPreenchido()));
@@ -284,7 +282,7 @@ namespace SME.CDEP.Aplicacao.Servicos
             }
             catch (Exception e)
             {
-                foreach (var linha in linhas)
+                foreach (var linha in linhasComsucesso)
                     linha.DefinirLinhaComoErro(string.Format(Constantes.OCORREU_UMA_FALHA_INESPERADA_NO_CADASTRO_DAS_REFERENCIAS_MOTIVO_X, e.Message));
             }
         }

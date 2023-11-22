@@ -332,8 +332,6 @@ namespace SME.CDEP.Aplicacao.Servicos
 
         public async Task ValidacaoObterOuInserirDominios(IEnumerable<AcervoArteGraficaLinhaDTO> linhasComsucesso)
         {
-            // var linhasComsucesso = linhas.Where(w => !w.PossuiErros);
-
             try
             {
                 await ValidarOuInserirCreditoAutoresCoAutoresTipoAutoria(linhasComsucesso.Select(s => s.Credito.Conteudo).ToArray().UnificarPipe().SplitPipe().Distinct().Where(w=> w.EstaPreenchido()), TipoCreditoAutoria.Autoria);

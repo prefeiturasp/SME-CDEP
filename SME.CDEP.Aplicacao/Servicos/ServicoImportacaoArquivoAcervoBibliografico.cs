@@ -407,8 +407,6 @@ namespace SME.CDEP.Aplicacao.Servicos
 
         public async Task ValidacaoObterOuInserirDominios(IEnumerable<AcervoBibliograficoLinhaDTO> linhasComsucesso)
         {
-            // var linhasComsucesso = linhas.Where(w => !w.PossuiErros);
-
             try
             {
                 await ValidarOuInserirMateriais(linhasComsucesso.Select(s => s.Material.Conteudo).Distinct().Where(w=> w.EstaPreenchido()), TipoMaterial.BIBLIOGRAFICO);
