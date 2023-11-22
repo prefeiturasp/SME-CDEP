@@ -97,6 +97,7 @@ namespace SME.CDEP.Aplicacao.Servicos
                 Nome = arquivoImportado.Nome,
                 TipoAcervo = arquivoImportado.TipoAcervo,
                 DataImportacao = arquivoImportado.CriadoEm,
+                Status = arquivoImportado.Status,
                 Erros = acervosTridimensionalLinhas
                         .Where(w => w.PossuiErros)
                         .Select(s=> ObterAcervoLinhaRetornoResumidoDto(s,arquivoImportado.TipoAcervo)),
@@ -302,6 +303,9 @@ namespace SME.CDEP.Aplicacao.Servicos
                     throw new NegocioException(Constantes.NAO_FOI_POSSIVEL_LER_A_PLANILHA);
         
                 var totalLinhas = planilha.Rows().Count();
+                
+                if (totalLinhas >= Constantes.INICIO_LINHA_DADOS)
+                    throw new NegocioException(MensagemNegocio.PLANILHA_VAZIA);
         
                 ValidarOrdemColunas(planilha, Constantes.INICIO_LINHA_TITULO);
                 

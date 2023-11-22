@@ -7,6 +7,7 @@ using SME.CDEP.Aplicacao.DTOS;
 using SME.CDEP.Aplicacao.Servicos.Interface;
 using SME.CDEP.Dominio.Constantes;
 using SME.CDEP.Dominio.Entidades;
+using SME.CDEP.Dominio.Excecoes;
 using SME.CDEP.Dominio.Extensions;
 using SME.CDEP.Infra.Dados.Repositorios.Interfaces;
 using SME.CDEP.Infra.Dominio.Enumerados;
@@ -105,6 +106,7 @@ namespace SME.CDEP.Aplicacao.Servicos
                 Nome = arquivoImportado.Nome,
                 TipoAcervo = arquivoImportado.TipoAcervo,
                 DataImportacao = arquivoImportado.CriadoEm,
+                Status = arquivoImportado.Status,
                 Erros = acervosBibliograficosLinhas
                         .Where(w => w.PossuiErros)
                         .Select(s=> ObterAcervoLinhaRetornoResumidoDto(s,arquivoImportado.TipoAcervo)),
@@ -441,6 +443,9 @@ namespace SME.CDEP.Aplicacao.Servicos
                 var planilha = package.Worksheets.FirstOrDefault();
 
                 var totalLinhas = planilha.Rows().Count();
+                
+                if (totalLinhas >= Constantes.INICIO_LINHA_DADOS)
+                    throw new NegocioException(MensagemNegocio.PLANILHA_VAZIA);
                 
                 ValidarOrdemColunas(planilha, Constantes.INICIO_LINHA_TITULO);
 

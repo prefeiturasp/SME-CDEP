@@ -9,5 +9,6 @@ public class ImportacaoArquivoRetornoDTO<T,U>
     public TipoAcervo TipoAcervo { get; set; }
     public DateTime? DataImportacao { get; set; }
     public IEnumerable<T> Erros { get; set; } 
-    public IEnumerable<U> Sucesso { get; set; } 
+    public IEnumerable<U> Sucesso { get; set; }
+    public ImportacaoStatus Status { get; set; }
 }
