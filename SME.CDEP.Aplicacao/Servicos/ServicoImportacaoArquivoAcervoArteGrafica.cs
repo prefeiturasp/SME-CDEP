@@ -364,7 +364,7 @@ namespace SME.CDEP.Aplicacao.Servicos
 
                 var totalLinhas = planilha.Rows().Count();
 
-                if (totalLinhas >= Constantes.INICIO_LINHA_DADOS)
+                if (totalLinhas <= Constantes.INICIO_LINHA_TITULO)
                     throw new NegocioException(MensagemNegocio.PLANILHA_VAZIA);
                 
                 ValidarOrdemColunas(planilha, Constantes.INICIO_LINHA_TITULO);
