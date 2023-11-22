@@ -330,9 +330,9 @@ namespace SME.CDEP.Aplicacao.Servicos
                    || linha.Descricao.PossuiErro;
         }
 
-        public async Task ValidacaoObterOuInserirDominios(IEnumerable<AcervoArteGraficaLinhaDTO> linhas)
+        public async Task ValidacaoObterOuInserirDominios(IEnumerable<AcervoArteGraficaLinhaDTO> linhasComsucesso)
         {
-            var linhasComsucesso = linhas.Where(w => !w.PossuiErros);
+            // var linhasComsucesso = linhas.Where(w => !w.PossuiErros);
 
             try
             {
@@ -347,7 +347,7 @@ namespace SME.CDEP.Aplicacao.Servicos
             }
             catch (Exception e)
             {
-                foreach (var linha in linhas)
+                foreach (var linha in linhasComsucesso)
                     linha.DefinirLinhaComoErro(string.Format(Constantes.OCORREU_UMA_FALHA_INESPERADA_NO_CADASTRO_DAS_REFERENCIAS_MOTIVO_X, e.Message));
             }
         }
