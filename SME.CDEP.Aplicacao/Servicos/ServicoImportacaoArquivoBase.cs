@@ -553,7 +553,7 @@ namespace SME.CDEP.Aplicacao.Servicos
         
         protected long[] ObterCreditoAutoresIdsPorValorDoCampo(string valorDoCampo, TipoCreditoAutoria tipoCreditoAutoria)
         {
-            if (valorDoCampo.NaoEstaPreenchido() || !CreditosAutores.Any(a=> a.Equals(valorDoCampo) && a.Tipo.SaoIguais((int)tipoCreditoAutoria)))
+            if (valorDoCampo.NaoEstaPreenchido() || !CreditosAutores.Any(a=> a.Nome.Equals(valorDoCampo) && a.Tipo.SaoIguais((int)tipoCreditoAutoria)))
                 return null;
 
             var retorno = new List<long>();
@@ -567,7 +567,7 @@ namespace SME.CDEP.Aplicacao.Servicos
         
         protected long[] ObterAssuntosIdsPorValorDoCampo(string valorDoCampo)
         {
-            if (valorDoCampo.NaoEstaPreenchido() || !Assuntos.Any(a=> a.Equals(valorDoCampo)))
+            if (valorDoCampo.NaoEstaPreenchido() || !Assuntos.Any(a=> a.Nome.Equals(valorDoCampo)))
                 return null;
 
             var retorno = new List<long>();
