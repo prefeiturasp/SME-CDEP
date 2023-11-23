@@ -8,6 +8,4 @@ public interface IRepositorioBaseSomenteId<TEntidade> where TEntidade : Entidade
     Task<IEnumerable<TEntidade>> ObterTodos();
     Task<long> Inserir(TEntidade entidade);
     Task<TEntidade> Atualizar(TEntidade entidade);
-    Task Remover(TEntidade entidade);
-    Task Remover(long id);
 }

@@ -22,5 +22,8 @@ namespace SME.CDEP.Infra.Dominio.Enumerados
         
         [Display(Name ="acervo-documental")] 
         AcervoDocumental = 6,
+        
+        [Display(Name ="sistema")] 
+        Sistema = 7,
     }
 }

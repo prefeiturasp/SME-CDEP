@@ -13,7 +13,7 @@ public class AcervoDocumentalDTO
     public string Codigo { get; set; }
     public string CodigoNovo { get; set; }
     public long? MaterialId { get; set; }
-    public long IdiomaId { get; set; }
+    public long? IdiomaId { get; set; }
     public string? Ano { get; set; }
     public string NumeroPagina { get; set; }
     public string? Volume { get; set; }
@@ -23,7 +23,7 @@ public class AcervoDocumentalDTO
     public double? Altura { get; set; }
     public string? TamanhoArquivo { get; set; }
     public string? Localizacao { get; set; }
-    public bool CopiaDigital { get; set; }
+    public bool? CopiaDigital { get; set; }
     public long? ConservacaoId { get; set; }
     public ArquivoResumidoDTO[]? Arquivos { get; set; }
     public long[] AcessoDocumentosIds { get; set; }

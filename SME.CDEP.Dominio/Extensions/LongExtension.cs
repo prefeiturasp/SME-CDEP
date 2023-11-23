@@ -1,4 +1,4 @@
-﻿
+﻿using SME.CDEP.Dominio.Excecoes;
 using SME.CDEP.Infra.Dominio.Enumerados;
 
 namespace SME.CDEP.Dominio.Extensions
@@ -18,6 +18,37 @@ namespace SME.CDEP.Dominio.Extensions
         public static bool EhMaiorQueZero(this long valor)
         {
             return valor > 0; 
+        }
+        
+        public static bool EhMenorIgualQueZero(this long valor)
+        {
+            return valor <= 0; 
+        }
+        
+        public static long? ObterLongoOuNuloPorValorDoCampo(this string valorDoCampo)
+        {
+            if (valorDoCampo.NaoEhNulo() && valorDoCampo.EstaPreenchido())
+                return long.Parse(valorDoCampo);
+
+            return default;
+        }
+        
+        public static long ObterLongoPorValorDoCampo(this string valorDoCampo)
+        {
+            if (valorDoCampo.NaoEhNulo() && valorDoCampo.EstaPreenchido() && long.TryParse(valorDoCampo, out long valorLongo))
+                return valorLongo;
+
+            throw new NegocioException(string.Format(Constantes.Constantes.O_CAMPO_X_NAO_EH_UM_VALOR_NUMERICO_Y,valorDoCampo, Constantes.Constantes.FORMATO_LONGO));
+        }
+        
+        public static bool SaoIguais(this long valor, long valorAComparar)
+        {
+            return valor == valorAComparar; 
+        }
+        
+        public static bool SaoIguais(this long? valor, long? valorAComparar)
+        {
+            return valor == valorAComparar; 
         }
     }
 }

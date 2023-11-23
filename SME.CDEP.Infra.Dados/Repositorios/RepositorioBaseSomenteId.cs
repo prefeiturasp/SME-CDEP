@@ -56,14 +56,4 @@ public abstract class RepositorioBaseSomenteId<TEntidade> : IRepositorioBaseSome
             throw;
         }
     }
-
-    public async Task Remover(TEntidade entidade)
-    {
-        throw new NotImplementedException();
-    }
-
-    public async Task Remover(long id)
-    {
-        throw new NotImplementedException();
-    }
 }

@@ -15,10 +15,10 @@ public class AcervoAudiovisualDTO
     public string? Procedencia { get; set; }
     public string DataAcervo { get; set; }
     public string? Copia { get; set; }
-    public bool PermiteUsoImagem { get; set; }
+    public bool? PermiteUsoImagem { get; set; }
     public long? ConservacaoId { get; set; }
     public string Descricao { get; set; }
-    public long SuporteId { get; set; }
+    public long? SuporteId { get; set; }
     public string Duracao { get; set; }
     public long? CromiaId { get; set; }
     public string? TamanhoArquivo { get; set; }

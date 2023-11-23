@@ -8,5 +8,6 @@ namespace SME.CDEP.Infra.Dados.Repositorios.Interfaces
         Task<bool> Existe(string nome, long id);
         Task<IEnumerable<Assunto>> PesquisarPorNome(string nome);
         Task<IEnumerable<Assunto>> ObterPorIds(long[] ids);
+        Task<long> ObterPorNome(string nome);
     }
 }
