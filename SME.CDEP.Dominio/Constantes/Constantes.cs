@@ -233,7 +233,7 @@ public class Constantes
     public const string NOME_DA_COLUNA_ASSUNTO = "ASSUNTO";
     public const string NOME_DA_COLUNA_EDICAO = "EDIÇÃO";
     public const string NOME_DA_COLUNA_SERIE_COLECAO = "SERIE COLEÇÃO";
-    public const string NOME_DA_COLUNA_LOCALIZACAO_CDD = "LOCALICAÇÃO CDD";
+    public const string NOME_DA_COLUNA_LOCALIZACAO_CDD = "LOCALIZAÇÃO CDD";
     public const string NOME_DA_COLUNA_LOCALIZACAO_PHA = "LOCALIZAÇÃO PHA";
     public const string NOME_DA_COLUNA_NOTAS_GERAIS = "NOTAS GERAIS";
     public const string NOME_DA_COLUNA_ISBN = "ISBN";
