@@ -329,5 +329,81 @@ namespace SME.CDEP.TesteIntegracao
                 });
             }
         }
+        
+        protected async Task InserirAcessoDocumentos(IEnumerable<string> acessosDocumentos)
+        {
+            foreach (var acessoDocumento in acessosDocumentos)
+                await InserirNaBase(new AcessoDocumento()
+                {
+                    Nome = acessoDocumento
+                });
+        }
+
+
+        protected async Task InserirCreditosAutorias(IEnumerable<string> creditos, TipoCreditoAutoria tipoCreditoAutoria = TipoCreditoAutoria.Credito)
+        {
+            foreach (var credito in creditos)
+                await InserirNaBase(new CreditoAutor()
+                {
+                    Nome = credito, Tipo = tipoCreditoAutoria, CriadoPor = ConstantesTestes.SISTEMA,
+                    CriadoEm = DateTimeExtension.HorarioBrasilia(), CriadoLogin = ConstantesTestes.LOGIN_123456789
+                });
+        }
+
+        protected async Task InserirFormatos(IEnumerable<string> formatos, TipoFormato tipoFormato)
+        {
+            foreach (var formato in formatos)
+                await InserirNaBase(new Formato() { Nome = formato, Tipo = tipoFormato });
+        }
+
+        protected async Task InserirSuportes(IEnumerable<string> suportes, TipoSuporte tipo = TipoSuporte.IMAGEM)
+        {
+            foreach (var suporte in suportes)
+                await InserirNaBase(new Suporte() { Nome = suporte, Tipo = tipo });
+        }
+
+        protected async Task InserirCromias(IEnumerable<string> cromias)
+        {
+            foreach (var cromia in cromias)
+                await InserirNaBase(new Cromia() { Nome = cromia });
+        }
+
+        protected async Task InserirConservacoes(IEnumerable<string> conservacoes)
+        {
+            foreach (var conservacao in conservacoes)
+                await InserirNaBase(new Conservacao() { Nome = conservacao });
+        }
+
+        protected async Task InserirIdiomas(IEnumerable<string> idiomas)
+        {
+            foreach (var idioma in idiomas)
+                await InserirNaBase(new Idioma() { Nome = idioma });
+        }
+
+        protected async Task InserirSeriesColecoes(IEnumerable<string> seriesColecoes)
+        {
+            foreach (var serieColecao in seriesColecoes)
+                await InserirNaBase(new SerieColecao() { Nome = serieColecao, CriadoPor = ConstantesTestes.SISTEMA,
+                    CriadoEm = DateTimeExtension.HorarioBrasilia(), CriadoLogin = ConstantesTestes.LOGIN_123456789 });
+        }
+
+        protected async Task InserirAssuntos(IEnumerable<string> assuntos)
+        {
+            foreach (var assunto in assuntos)
+                await InserirNaBase(new Assunto() { Nome = assunto, CriadoPor = ConstantesTestes.SISTEMA,
+                    CriadoEm = DateTimeExtension.HorarioBrasilia(), CriadoLogin = ConstantesTestes.LOGIN_123456789 });
+        }
+
+        protected async Task InserirEditoras(IEnumerable<string> editoras)
+        {
+            foreach (var editora in editoras)
+                await InserirNaBase(new Suporte() { Nome = editora });
+        }
+
+        protected async Task InserirMateriais(IEnumerable<string> materiais, TipoMaterial tipoMaterial)
+        {
+            foreach (var material in materiais)
+                await InserirNaBase(new Material() { Nome = material, Tipo = tipoMaterial });
+        }
     }
 }

@@ -605,6 +605,14 @@ namespace SME.CDEP.TesteIntegracao
                 Conteudo = JsonConvert.SerializeObject(linhasInseridas),
                 CriadoEm = DateTimeExtension.HorarioBrasilia().Date, CriadoPor = ConstantesTestes.SISTEMA, CriadoLogin = ConstantesTestes.LOGIN_123456789
             });
+
+            await InserirMateriais(linhasInseridas.Select(s => s.Material.Conteudo).Distinct().Where(w => w.EstaPreenchido()), TipoMaterial.BIBLIOGRAFICO);
+            await InserirEditoras(linhasInseridas.Select(s => s.Editora.Conteudo).Distinct().Where(w=> w.EstaPreenchido()));
+            await InserirAssuntos(linhasInseridas.Select(s => s.Assunto.Conteudo).ToArray().UnificarPipe().SplitPipe().Distinct().Where(w=> w.EstaPreenchido()));
+            await InserirSeriesColecoes(linhasInseridas.Select(s => s.SerieColecao.Conteudo).Distinct().Where(w=> w.EstaPreenchido()));
+            await InserirIdiomas(linhasInseridas.Select(s => s.Idioma.Conteudo).Distinct().Where(w=> w.EstaPreenchido()));
+            await InserirCreditosAutorias(linhasInseridas.Select(s => s.Autor.Conteudo).ToArray().UnificarPipe().SplitPipe().Distinct().Where(w=> w.EstaPreenchido()), TipoCreditoAutoria.Autoria);
+            await InserirCreditosAutorias(linhasInseridas.Select(s => s.CoAutor.Conteudo).ToArray().UnificarPipe().SplitPipe().Distinct().Where(w=> w.EstaPreenchido()), TipoCreditoAutoria.Autoria);
             
             var retorno = await servicoImportacaoArquivo.ObterImportacaoPendente();
             retorno.ShouldNotBeNull();

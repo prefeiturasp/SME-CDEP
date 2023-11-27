@@ -368,6 +368,14 @@ namespace SME.CDEP.TesteIntegracao
                 Conteudo = JsonConvert.SerializeObject(linhasInseridas),
                 CriadoEm = DateTimeExtension.HorarioBrasilia().Date, CriadoPor = ConstantesTestes.SISTEMA, CriadoLogin = ConstantesTestes.LOGIN_123456789
             });
+
+            await InserirConservacoes(linhasInseridas.Select(s => s.EstadoConservacao.Conteudo).Distinct().Where(w => w.EstaPreenchido()));
+            
+            await InserirCromias(linhasInseridas.Select(s => s.Cromia.Conteudo).Distinct().Where(w => w.EstaPreenchido()));
+            
+            await InserirSuportes(linhasInseridas.Select(s => s.Suporte.Conteudo).Distinct().Where(w => w.EstaPreenchido()));
+            
+            await InserirCreditosAutorias(linhasInseridas.Select(s => s.Credito.Conteudo).ToArray().UnificarPipe().SplitPipe().Distinct().Where(w=> w.EstaPreenchido()));
             
             var retorno = await servicoImportacaoArquivo.ObterImportacaoPendente();
             retorno.ShouldNotBeNull();
@@ -419,7 +427,7 @@ namespace SME.CDEP.TesteIntegracao
                 retorno.Erros.Any(a=> a.RetornoErro.Descricao.Conteudo.SaoIguais(linhaInserida.Descricao.Conteudo)).ShouldBeTrue();
             }
         }
-        
+
         [Fact(DisplayName = "Importação Arquivo Acervo Arte Grafica - Validar Suporte sem caracteres especiais")]
         public async Task Validar_suporte_sem_caracteres_especiais()
         {
