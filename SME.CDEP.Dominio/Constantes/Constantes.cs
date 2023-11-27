@@ -277,4 +277,7 @@ public class Constantes
     public const int CARACTERES_PERMITIDOS_15 = 15;
     public const int CARACTERES_PERMITIDOS_4 = 4;
     public const int CARACTERES_PERMITIDOS_3 = 3;
+    
+    public const string CREDITOS_AUTORES = "Créditos/Autores";
+    public const string ASSUNTOS = "Assuntos";
 }

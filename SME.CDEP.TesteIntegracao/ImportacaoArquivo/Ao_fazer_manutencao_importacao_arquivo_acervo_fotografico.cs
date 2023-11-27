@@ -379,6 +379,13 @@ namespace SME.CDEP.TesteIntegracao
                 CriadoEm = DateTimeExtension.HorarioBrasilia().Date, CriadoPor = ConstantesTestes.SISTEMA, CriadoLogin = ConstantesTestes.LOGIN_123456789
             });
             
+            await InserirConservacoes(linhasInseridas.Select(s => s.EstadoConservacao.Conteudo).Distinct().Where(w=> w.EstaPreenchido()));
+            await InserirSuportes(linhasInseridas.Select(s => s.Suporte.Conteudo).Distinct().Where(w=> w.EstaPreenchido()), TipoSuporte.IMAGEM);
+            await InserirFormatos(linhasInseridas.Select(s => s.FormatoImagem.Conteudo).Distinct().Where(w=> w.EstaPreenchido()), TipoFormato.ACERVO_FOTOS);
+            await InserirCromias(linhasInseridas.Select(s => s.Cromia.Conteudo).Distinct().Where(w=> w.EstaPreenchido()));
+            await InserirCreditosAutorias(linhasInseridas.Select(s => s.Credito.Conteudo).ToArray().UnificarPipe().SplitPipe().Distinct().Where(w=> w.EstaPreenchido()), TipoCreditoAutoria.Credito);
+
+            
             var retorno = await servicoImportacaoArquivo.ObterImportacaoPendente();
             retorno.ShouldNotBeNull();
             retorno.Sucesso.Count().ShouldBe(8);
@@ -429,7 +436,7 @@ namespace SME.CDEP.TesteIntegracao
                 retorno.Erros.Any(a=> a.RetornoErro.Resolucao.Conteudo.SaoIguais(linhaInserida.Resolucao.Conteudo)).ShouldBeTrue();
             }
         }
-        
+
         [Fact(DisplayName = "Importação Arquivo Acervo Fotografico - Validar Formatos sem caracteres especiais")]
         public async Task Validar_formato_sem_caracteres_especiais()
         {

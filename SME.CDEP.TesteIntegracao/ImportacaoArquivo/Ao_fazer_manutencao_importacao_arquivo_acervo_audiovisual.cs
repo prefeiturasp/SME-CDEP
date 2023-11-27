@@ -363,6 +363,14 @@ namespace SME.CDEP.TesteIntegracao
                 CriadoEm = DateTimeExtension.HorarioBrasilia().Date, CriadoPor = ConstantesTestes.SISTEMA, CriadoLogin = ConstantesTestes.LOGIN_123456789
             });
             
+            await InserirCreditosAutorias(linhasInseridas.Select(s => s.Credito.Conteudo).ToArray().UnificarPipe().SplitPipe().Distinct().Where(w => w.EstaPreenchido()));
+                
+            await InserirConservacoes(linhasInseridas.Select(s => s.EstadoConservacao.Conteudo).Distinct().Where(w=> w.EstaPreenchido()));
+                
+            await InserirCromias(linhasInseridas.Select(s => s.Cromia.Conteudo).Distinct().Where(w=> w.EstaPreenchido()));
+            
+            await InserirSuportes(linhasInseridas.Select(s => s.Cromia.Conteudo).Distinct().Where(w=> w.EstaPreenchido()), TipoSuporte.VIDEO);
+            
             var retorno = await servicoImportacaoArquivo.ObterImportacaoPendente();
             retorno.ShouldNotBeNull();
             retorno.Sucesso.Count().ShouldBe(8);

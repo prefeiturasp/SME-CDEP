@@ -553,28 +553,40 @@ namespace SME.CDEP.Aplicacao.Servicos
         
         protected long[] ObterCreditoAutoresIdsPorValorDoCampo(string valorDoCampo, TipoCreditoAutoria tipoCreditoAutoria)
         {
-            if (valorDoCampo.NaoEstaPreenchido() || !CreditosAutores.Any(a=> a.Nome.Equals(valorDoCampo) && a.Tipo.SaoIguais((int)tipoCreditoAutoria)))
+            if (valorDoCampo.NaoEstaPreenchido())
                 return null;
 
             var retorno = new List<long>();
             
             var conteudoCampoArray = valorDoCampo.FormatarTextoEmArray().ToList();
             foreach (var item in conteudoCampoArray)
-                retorno.Add(CreditosAutores.FirstOrDefault(f => f.Nome.SaoIguais(valorDoCampo) && f.Tipo.SaoIguais((int)tipoCreditoAutoria)).Id);
+            {
+                if (CreditosAutores.Any(f => f.Nome.SaoIguais(item) && f.Tipo.SaoIguais((int)tipoCreditoAutoria)))
+                    retorno.Add(CreditosAutores.FirstOrDefault(f => f.Nome.SaoIguais(item) && f.Tipo.SaoIguais((int)tipoCreditoAutoria)).Id);
+                else
+                    throw new NegocioException(string.Format(MensagemNegocio.O_ITEM_X_DO_DOMINIO_X_NAO_ENCONTRADO, Constantes.CREDITOS_AUTORES, item));
+            }
+                
             
             return retorno.ToArray();
         }
         
         protected long[] ObterAssuntosIdsPorValorDoCampo(string valorDoCampo)
         {
-            if (valorDoCampo.NaoEstaPreenchido() || !Assuntos.Any(a=> a.Nome.Equals(valorDoCampo)))
+            if (valorDoCampo.NaoEstaPreenchido())
                 return null;
 
             var retorno = new List<long>();
             
             var conteudoCampoArray = valorDoCampo.FormatarTextoEmArray().ToList();
             foreach (var item in conteudoCampoArray)
-                retorno.Add(Assuntos.FirstOrDefault(f => f.Nome.SaoIguais(valorDoCampo)).Id);
+            {
+                if (Assuntos.Any(f => f.Nome.SaoIguais(item)))
+                    retorno.Add(Assuntos.FirstOrDefault(f => f.Nome.SaoIguais(item)).Id);
+                else
+                    throw new NegocioException(string.Format(MensagemNegocio.O_ITEM_X_DO_DOMINIO_X_NAO_ENCONTRADO, Constantes.ASSUNTOS, item));
+            }
+                
             
             return retorno.ToArray();
         }
