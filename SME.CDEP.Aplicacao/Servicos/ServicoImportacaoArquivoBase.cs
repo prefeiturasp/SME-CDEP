@@ -553,28 +553,28 @@ namespace SME.CDEP.Aplicacao.Servicos
         
         protected long[] ObterCreditoAutoresIdsPorValorDoCampo(string valorDoCampo, TipoCreditoAutoria tipoCreditoAutoria)
         {
-            if (valorDoCampo.NaoEstaPreenchido() || !CreditosAutores.Any(a=> a.Nome.Equals(valorDoCampo) && a.Tipo.SaoIguais((int)tipoCreditoAutoria)))
+            if (valorDoCampo.NaoEstaPreenchido())
                 return null;
 
             var retorno = new List<long>();
             
             var conteudoCampoArray = valorDoCampo.FormatarTextoEmArray().ToList();
             foreach (var item in conteudoCampoArray)
-                retorno.Add(CreditosAutores.FirstOrDefault(f => f.Nome.SaoIguais(valorDoCampo) && f.Tipo.SaoIguais((int)tipoCreditoAutoria)).Id);
+                retorno.Add(CreditosAutores.FirstOrDefault(f => f.Nome.SaoIguais(item) && f.Tipo.SaoIguais((int)tipoCreditoAutoria)).Id);
             
             return retorno.ToArray();
         }
         
         protected long[] ObterAssuntosIdsPorValorDoCampo(string valorDoCampo)
         {
-            if (valorDoCampo.NaoEstaPreenchido() || !Assuntos.Any(a=> a.Nome.Equals(valorDoCampo)))
+            if (valorDoCampo.NaoEstaPreenchido())
                 return null;
 
             var retorno = new List<long>();
             
             var conteudoCampoArray = valorDoCampo.FormatarTextoEmArray().ToList();
             foreach (var item in conteudoCampoArray)
-                retorno.Add(Assuntos.FirstOrDefault(f => f.Nome.SaoIguais(valorDoCampo)).Id);
+                retorno.Add(Assuntos.FirstOrDefault(f => f.Nome.SaoIguais(item)).Id);
             
             return retorno.ToArray();
         }
