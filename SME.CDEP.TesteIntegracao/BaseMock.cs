@@ -156,7 +156,7 @@ namespace SME.CDEP.TesteIntegracao
             });
             faker.RuleFor(x => x.CoAutor, f => new LinhaConteudoAjustarDTO()
             {
-                Conteudo = $"{f.Lorem.Text().Limite(200)}|{f.Lorem.Text().Limite(200)}|{f.Lorem.Text().Limite(200)}|{f.Lorem.Text().Limite(200)}|{f.Lorem.Text().Limite(200)}|{f.Lorem.Text().Limite(200)}",
+                Conteudo = $"{f.Person.FirstName.Limite(200)}|{f.Person.FullName.Limite(200)}|{f.Person.LastName.Limite(200)}|{f.Person.UserName.Limite(200)}|{f.Company.CompanyName().Limite(200)}|{f.Company.CompanySuffix().Limite(200)}",
                 LimiteCaracteres = ConstantesTestes.CARACTERES_PERMITIDOS_200
             });
             faker.RuleFor(x => x.TipoAutoria, f => new LinhaConteudoAjustarDTO()
