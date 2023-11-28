@@ -21,7 +21,7 @@ namespace SME.CDEP.TesteIntegracao
         {
             var servicoImportacaoArquivo = GetServicoImportacaoArquivoAcervoArteGrafica();
 
-            var acervoArteGraficaLinhas = GerarAcervoArteGraficaLinhaDTO().Generate(10);
+            var acervoArteGraficaLinhas = AcervoArteGraficaLinhaMock.GerarAcervoArteGraficaLinhaDTO().Generate(10);
 
             acervoArteGraficaLinhas[2].Titulo.Conteudo = string.Empty;
             acervoArteGraficaLinhas[4].Cromia.Conteudo = string.Empty;
@@ -111,7 +111,7 @@ namespace SME.CDEP.TesteIntegracao
         {
             var servicoImportacaoArquivo = GetServicoImportacaoArquivoAcervoArteGrafica();
         
-            var acervoArteGraficaLinhas = GerarAcervoArteGraficaLinhaDTO().Generate(10);
+            var acervoArteGraficaLinhas = AcervoArteGraficaLinhaMock.GerarAcervoArteGraficaLinhaDTO().Generate(10);
            
             await servicoImportacaoArquivo.ValidacaoObterOuInserirDominios(acervoArteGraficaLinhas);
         
@@ -141,7 +141,7 @@ namespace SME.CDEP.TesteIntegracao
         {
             var servicoImportacaoArquivo = GetServicoImportacaoArquivoAcervoArteGrafica();
         
-            var acervoArteGraficaLinhas = GerarAcervoArteGraficaLinhaDTO().Generate(10);
+            var acervoArteGraficaLinhas = AcervoArteGraficaLinhaMock.GerarAcervoArteGraficaLinhaDTO().Generate(10);
         
             await InserirNaBase(new ImportacaoArquivo()
             {
@@ -209,13 +209,14 @@ namespace SME.CDEP.TesteIntegracao
             }
         }
         
-        [Fact(DisplayName = "Importação Arquivo Acervo Arte Grafica - Geral - Com erros em 3 linhas")]
+        [Fact(DisplayName = "Importação Arquivo Acervo Arte Grafica - Geral - Com erros em 4 linhas")]
         public async Task Importacao_geral()
         {
             var servicoImportacaoArquivo = GetServicoImportacaoArquivoAcervoArteGrafica();
         
-            var acervoArteGraficaLinhas = GerarAcervoArteGraficaLinhaDTO().Generate(10);
+            var acervoArteGraficaLinhas = AcervoArteGraficaLinhaMock.GerarAcervoArteGraficaLinhaDTO().Generate(10);
            
+            acervoArteGraficaLinhas[1].CopiaDigital.Conteudo = acervoArteGraficaLinhas[1].Titulo.Conteudo;
             acervoArteGraficaLinhas[3].Largura.Conteudo = "ABC3512";
             acervoArteGraficaLinhas[5].Altura.Conteudo = "1212ABC";
             acervoArteGraficaLinhas[7].Codigo.Conteudo = acervoArteGraficaLinhas[0].Codigo.Conteudo;
@@ -245,15 +246,15 @@ namespace SME.CDEP.TesteIntegracao
             
             //Acervos inseridos
             acervos.ShouldNotBeNull();
-            acervos.Count().ShouldBe(7);
+            acervos.Count().ShouldBe(6);
             
             //Acervos auxiliares inseridos
             acervosArtesGraficas.ShouldNotBeNull();
-            acervosArtesGraficas.Count().ShouldBe(7);
+            acervosArtesGraficas.Count().ShouldBe(6);
             
             //Linhas com erros
-            acervoArteGraficaLinhas.Count(w=> !w.PossuiErros).ShouldBe(7);
-            acervoArteGraficaLinhas.Count(w=> w.PossuiErros).ShouldBe(3);
+            acervoArteGraficaLinhas.Count(w=> !w.PossuiErros).ShouldBe(6);
+            acervoArteGraficaLinhas.Count(w=> w.PossuiErros).ShouldBe(4);
         
             //Retorno front
             retorno.Id.ShouldBe(1);
@@ -350,7 +351,7 @@ namespace SME.CDEP.TesteIntegracao
         {
             var servicoImportacaoArquivo = GetServicoImportacaoArquivoAcervoArteGrafica();
         
-            var linhasInseridas = GerarAcervoArteGraficaLinhaDTO().Generate(10);
+            var linhasInseridas = AcervoArteGraficaLinhaMock.GerarAcervoArteGraficaLinhaDTO().Generate(10);
         
             linhasInseridas[3].PossuiErros = true;
             linhasInseridas[3].Largura.PossuiErro = true;
@@ -495,7 +496,7 @@ namespace SME.CDEP.TesteIntegracao
         {
             var servicoImportacaoArquivo = GetServicoImportacaoArquivoAcervoArteGrafica();
 
-            var linhasInseridas = GerarAcervoArteGraficaLinhaDTO().Generate(10);
+            var linhasInseridas = AcervoArteGraficaLinhaMock.GerarAcervoArteGraficaLinhaDTO().Generate(10);
 
             await InserirNaBase(new ImportacaoArquivo()
             {
@@ -518,7 +519,7 @@ namespace SME.CDEP.TesteIntegracao
         {
             var servicoImportacaoArquivo = GetServicoImportacaoArquivoAcervoArteGrafica();
 
-            var linhasInseridas = GerarAcervoArteGraficaLinhaDTO().Generate(10);
+            var linhasInseridas = AcervoArteGraficaLinhaMock.GerarAcervoArteGraficaLinhaDTO().Generate(10);
 
             await InserirNaBase(new ImportacaoArquivo()
             {
@@ -537,7 +538,7 @@ namespace SME.CDEP.TesteIntegracao
         {
             var servicoImportacaoArquivo = GetServicoImportacaoArquivoAcervoArteGrafica();
 
-            var linhasInseridas = GerarAcervoArteGraficaLinhaDTO().Generate(10);
+            var linhasInseridas = AcervoArteGraficaLinhaMock.GerarAcervoArteGraficaLinhaDTO().Generate(10);
 
             await InserirNaBase(new ImportacaoArquivo()
             {
@@ -563,7 +564,7 @@ namespace SME.CDEP.TesteIntegracao
         {
             var servicoImportacaoArquivo = GetServicoImportacaoArquivoAcervo();
 
-            var linhasInseridas = GerarAcervoArteGraficaLinhaDTO().Generate(10);
+            var linhasInseridas = AcervoArteGraficaLinhaMock.GerarAcervoArteGraficaLinhaDTO().Generate(10);
 
             await InserirNaBase(new ImportacaoArquivo()
             {
@@ -586,7 +587,7 @@ namespace SME.CDEP.TesteIntegracao
         {
             var servicoImportacaoArquivo = GetServicoImportacaoArquivoAcervoArteGrafica();
 
-            var linhasInseridas = GerarAcervoArteGraficaLinhaDTO().Generate(10);
+            var linhasInseridas = AcervoArteGraficaLinhaMock.GerarAcervoArteGraficaLinhaDTO().Generate(10);
             linhasInseridas[3].PossuiErros = true;
             linhasInseridas[3].Largura.PossuiErro = true;
             linhasInseridas[3].Largura.Mensagem = string.Format(Dominio.Constantes.Constantes.CAMPO_X_REQUER_UM_VALOR_NUMERICO, Dominio.Constantes.Constantes.LARGURA);
@@ -624,7 +625,7 @@ namespace SME.CDEP.TesteIntegracao
         {
             var servicoImportacaoArquivo = GetServicoImportacaoArquivoAcervoArteGrafica();
 
-            var linhasInseridas = GerarAcervoArteGraficaLinhaDTO().Generate(10);
+            var linhasInseridas = AcervoArteGraficaLinhaMock.GerarAcervoArteGraficaLinhaDTO().Generate(10);
             linhasInseridas[3].PossuiErros = true;
             linhasInseridas[3].Largura.PossuiErro = true;
             linhasInseridas[3].Largura.Mensagem = string.Format(Dominio.Constantes.Constantes.CAMPO_X_REQUER_UM_VALOR_NUMERICO, Dominio.Constantes.Constantes.LARGURA);

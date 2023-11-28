@@ -292,18 +292,18 @@ namespace SME.CDEP.Aplicacao.Servicos
                     var conteudoCampoArray = conteudoCampo.FormatarTextoEmArray().ToList();
                     foreach (var item in conteudoCampoArray)
                     {
+                        if (campo.ValoresPermitidos.NaoEhNulo())
+                        {
+                            if (!campo.ValoresPermitidos.Contains(campo.Conteudo.ToLower()))
+                                DefinirMensagemErro(campo, string.Format(Constantes.VALOR_DO_CAMPO_X_NAO_PERMITIDO_ESPERADO_X, nomeCampo, string.Join(", ", campo.ValoresPermitidos)));
+                            break;
+                        }
+                        
                         if (item.ValidarLimiteDeCaracteres(campo.LimiteCaracteres))
                             DefinirCampoValidado(campo);
                         else
                         {
                             DefinirMensagemErro(campo, string.Format(Constantes.CAMPO_X_ATINGIU_LIMITE_CARACTERES, nomeCampo));
-                            break;
-                        }
-
-                        if (campo.ValoresPermitidos.NaoEhNulo())
-                        {
-                            if (!campo.ValoresPermitidos.Contains(campo.Conteudo.ToLower()))
-                                DefinirMensagemErro(campo, string.Format(Constantes.VALOR_DO_CAMPO_X_NAO_PERMITIDO_ESPERADO_X, nomeCampo, string.Join(", ", campo.ValoresPermitidos)));
                             break;
                         }
                     }

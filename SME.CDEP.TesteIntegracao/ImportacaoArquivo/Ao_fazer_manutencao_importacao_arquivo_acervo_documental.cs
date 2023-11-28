@@ -22,7 +22,7 @@ namespace SME.CDEP.TesteIntegracao
         {
             var servicoImportacaoArquivo = GetServicoImportacaoArquivoAcervoDocumental();
 
-            var acervoDocumentalLinhas = GerarAcervoDocumentalLinhaDTO().Generate(10);
+            var acervoDocumentalLinhas = AcervoDocumentalLinhaMock.GerarAcervoDocumentalLinhaDTO().Generate(10);
 
             acervoDocumentalLinhas[2].Ano.Conteudo = faker.Lorem.Paragraph();
             acervoDocumentalLinhas[4].Idioma.Conteudo = string.Empty;
@@ -113,7 +113,7 @@ namespace SME.CDEP.TesteIntegracao
         {
             var servicoImportacaoArquivo = GetServicoImportacaoArquivoAcervoDocumental();
         
-            var acervoDocumentalLinhas = GerarAcervoDocumentalLinhaDTO().Generate(10);
+            var acervoDocumentalLinhas = AcervoDocumentalLinhaMock.GerarAcervoDocumentalLinhaDTO().Generate(10);
            
             await servicoImportacaoArquivo.ValidacaoObterOuInserirDominios(acervoDocumentalLinhas);
         
@@ -148,7 +148,7 @@ namespace SME.CDEP.TesteIntegracao
         {
             var servicoImportacaoArquivo = GetServicoImportacaoArquivoAcervoDocumental();
         
-            var acervoDocumentalLinhas = GerarAcervoDocumentalLinhaDTO().Generate(10);
+            var acervoDocumentalLinhas = AcervoDocumentalLinhaMock.GerarAcervoDocumentalLinhaDTO().Generate(10);
         
             await InserirNaBase(new ImportacaoArquivo()
             {
@@ -230,13 +230,14 @@ namespace SME.CDEP.TesteIntegracao
             }
         }
         
-        [Fact(DisplayName = "Importação Arquivo Acervo Documental - Geral - Com erros em 3 linhas")]
+        [Fact(DisplayName = "Importação Arquivo Acervo Documental - Geral - Com erros em 4 linhas")]
         public async Task Importacao_geral()
         {
             var servicoImportacaoArquivo = GetServicoImportacaoArquivoAcervoDocumental();
         
-            var acervoDocumentalLinhas = GerarAcervoDocumentalLinhaDTO().Generate(10);
+            var acervoDocumentalLinhas = AcervoDocumentalLinhaMock.GerarAcervoDocumentalLinhaDTO().Generate(10);
            
+            acervoDocumentalLinhas[1].CopiaDigital.Conteudo = acervoDocumentalLinhas[1].Titulo.Conteudo;
             acervoDocumentalLinhas[3].Largura.Conteudo = "ABC3512";
             acervoDocumentalLinhas[5].Altura.Conteudo = "1212ABC";
             acervoDocumentalLinhas[7].Codigo.Conteudo = acervoDocumentalLinhas[0].Codigo.Conteudo;
@@ -268,15 +269,15 @@ namespace SME.CDEP.TesteIntegracao
             
             //Acervos inseridos
             acervos.ShouldNotBeNull();
-            acervos.Count().ShouldBe(7);
+            acervos.Count().ShouldBe(6);
             
             //Acervos Documentals inseridos
             acervosDocumentais.ShouldNotBeNull();
-            acervosDocumentais.Count().ShouldBe(7);
+            acervosDocumentais.Count().ShouldBe(6);
             
             //Linhas com erros
-            acervoDocumentalLinhas.Count(w=> !w.PossuiErros).ShouldBe(7);
-            acervoDocumentalLinhas.Count(w=> w.PossuiErros).ShouldBe(3);
+            acervoDocumentalLinhas.Count(w=> !w.PossuiErros).ShouldBe(6);
+            acervoDocumentalLinhas.Count(w=> w.PossuiErros).ShouldBe(4);
             
             //Retorno front
             retorno.Id.ShouldBe(1);
@@ -398,7 +399,7 @@ namespace SME.CDEP.TesteIntegracao
         {
             var servicoImportacaoArquivo = GetServicoImportacaoArquivoAcervoDocumental();
         
-            var linhasInseridas = GerarAcervoDocumentalLinhaDTO().Generate(10);
+            var linhasInseridas = AcervoDocumentalLinhaMock.GerarAcervoDocumentalLinhaDTO().Generate(10);
         
             linhasInseridas[3].PossuiErros = true;
             linhasInseridas[3].Volume.PossuiErro = true;
@@ -422,7 +423,6 @@ namespace SME.CDEP.TesteIntegracao
             await InserirConservacoes(linhasInseridas.Select(s => s.EstadoConservacao.Conteudo).Distinct().Where(w=> w.EstaPreenchido()));
             await InserirAcessoDocumentos(linhasInseridas.Select(s => s.AcessoDocumento.Conteudo).ToArray().UnificarPipe().SplitPipe().Distinct().Where(w=> w.EstaPreenchido()));
             await InserirCreditosAutorias(linhasInseridas.Select(s => s.Autor.Conteudo).ToArray().UnificarPipe().SplitPipe().Distinct().Where(w=> w.EstaPreenchido()), TipoCreditoAutoria.Autoria);
-
             
             var retorno = await servicoImportacaoArquivo.ObterImportacaoPendente();
             retorno.ShouldNotBeNull();
@@ -567,7 +567,7 @@ namespace SME.CDEP.TesteIntegracao
         {
             var servicoImportacaoArquivo = GetServicoImportacaoArquivoAcervoDocumental();
 
-            var linhasInseridas = GerarAcervoDocumentalLinhaDTO().Generate(10);
+            var linhasInseridas = AcervoDocumentalLinhaMock.GerarAcervoDocumentalLinhaDTO().Generate(10);
 
             await InserirNaBase(new ImportacaoArquivo()
             {
@@ -590,7 +590,7 @@ namespace SME.CDEP.TesteIntegracao
         {
             var servicoImportacaoArquivo = GetServicoImportacaoArquivoAcervoDocumental();
 
-            var linhasInseridas = GerarAcervoDocumentalLinhaDTO().Generate(10);
+            var linhasInseridas = AcervoDocumentalLinhaMock.GerarAcervoDocumentalLinhaDTO().Generate(10);
 
             await InserirNaBase(new ImportacaoArquivo()
             {
@@ -609,7 +609,7 @@ namespace SME.CDEP.TesteIntegracao
         {
             var servicoImportacaoArquivo = GetServicoImportacaoArquivoAcervoDocumental();
 
-            var linhasInseridas = GerarAcervoDocumentalLinhaDTO().Generate(10);
+            var linhasInseridas = AcervoDocumentalLinhaMock.GerarAcervoDocumentalLinhaDTO().Generate(10);
 
             await InserirNaBase(new ImportacaoArquivo()
             {
@@ -635,7 +635,7 @@ namespace SME.CDEP.TesteIntegracao
         {
             var servicoImportacaoArquivo = GetServicoImportacaoArquivoAcervoDocumental();
 
-            var linhasInseridas = GerarAcervoDocumentalLinhaDTO().Generate(10);
+            var linhasInseridas = AcervoDocumentalLinhaMock.GerarAcervoDocumentalLinhaDTO().Generate(10);
             linhasInseridas[3].PossuiErros = true;
             linhasInseridas[3].Altura.PossuiErro = true;
             linhasInseridas[3].Altura.Mensagem = string.Format(Dominio.Constantes.Constantes.CAMPO_X_REQUER_UM_VALOR_NUMERICO, Dominio.Constantes.Constantes.LARGURA);
@@ -673,7 +673,7 @@ namespace SME.CDEP.TesteIntegracao
         {
             var servicoImportacaoArquivo = GetServicoImportacaoArquivoAcervoDocumental();
 
-            var linhasInseridas = GerarAcervoDocumentalLinhaDTO().Generate(10);
+            var linhasInseridas = AcervoDocumentalLinhaMock.GerarAcervoDocumentalLinhaDTO().Generate(10);
             linhasInseridas[3].PossuiErros = true;
             linhasInseridas[3].Altura.PossuiErro = true;
             linhasInseridas[3].Altura.Mensagem = string.Format(Dominio.Constantes.Constantes.CAMPO_X_REQUER_UM_VALOR_NUMERICO, Dominio.Constantes.Constantes.ALTURA);

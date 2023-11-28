@@ -21,7 +21,7 @@ namespace SME.CDEP.TesteIntegracao
         {
             var servicoImportacaoArquivo = GetServicoImportacaoArquivoAcervoAudiovisual();
 
-            var acervoAudiovisualLinhas = GerarAcervoAudiovisualLinhaDTO().Generate(10);
+            var acervoAudiovisualLinhas = AcervoAudiovisualLinhaMock.GerarAcervoAudiovisualLinhaDTO().Generate(10);
 
             acervoAudiovisualLinhas[2].Titulo.Conteudo = string.Empty;
             acervoAudiovisualLinhas[4].Suporte.Conteudo = string.Empty;
@@ -110,7 +110,7 @@ namespace SME.CDEP.TesteIntegracao
         {
             var servicoImportacaoArquivo = GetServicoImportacaoArquivoAcervoAudiovisual();
         
-            var acervoAudiovisualLinhas = GerarAcervoAudiovisualLinhaDTO().Generate(10);
+            var acervoAudiovisualLinhas = AcervoAudiovisualLinhaMock.GerarAcervoAudiovisualLinhaDTO().Generate(10);
            
             await servicoImportacaoArquivo.ValidacaoObterOuInserirDominios(acervoAudiovisualLinhas);
         
@@ -140,7 +140,7 @@ namespace SME.CDEP.TesteIntegracao
         {
             var servicoImportacaoArquivo = GetServicoImportacaoArquivoAcervoAudiovisual();
         
-            var acervoAudiovisualLinhas = GerarAcervoAudiovisualLinhaDTO().Generate(10);
+            var acervoAudiovisualLinhas = AcervoAudiovisualLinhaMock.GerarAcervoAudiovisualLinhaDTO().Generate(10);
         
             await InserirNaBase(new ImportacaoArquivo()
             {
@@ -207,13 +207,14 @@ namespace SME.CDEP.TesteIntegracao
             }
         }
         
-        [Fact(DisplayName = "Importação Arquivo Acervo Audiovisual - Geral - Com erros em 3 linhas")]
+        [Fact(DisplayName = "Importação Arquivo Acervo Audiovisual - Geral - Com erros em 4 linhas")]
         public async Task Importacao_geral()
         {
             var servicoImportacaoArquivo = GetServicoImportacaoArquivoAcervoAudiovisual();
         
-            var acervoAudiovisualLinhas = GerarAcervoAudiovisualLinhaDTO().Generate(10);
+            var acervoAudiovisualLinhas = AcervoAudiovisualLinhaMock.GerarAcervoAudiovisualLinhaDTO().Generate(10);
            
+            acervoAudiovisualLinhas[1].PermiteUsoImagem.Conteudo = acervoAudiovisualLinhas[1].Titulo.Conteudo;
             acervoAudiovisualLinhas[3].Descricao.Conteudo = string.Empty;
             acervoAudiovisualLinhas[5].Duracao.Conteudo = faker.Lorem.Paragraph();
             acervoAudiovisualLinhas[7].Codigo.Conteudo = acervoAudiovisualLinhas[0].Codigo.Conteudo;
@@ -243,15 +244,15 @@ namespace SME.CDEP.TesteIntegracao
             
             //Acervos inseridos
             acervos.ShouldNotBeNull();
-            acervos.Count().ShouldBe(7);
+            acervos.Count().ShouldBe(6);
             
             //Acervos auxiliares inseridos
             acervosAudiovisual.ShouldNotBeNull();
-            acervosAudiovisual.Count().ShouldBe(7);
+            acervosAudiovisual.Count().ShouldBe(6);
             
             //Linhas com erros
-            acervoAudiovisualLinhas.Count(w=> !w.PossuiErros).ShouldBe(7);
-            acervoAudiovisualLinhas.Count(w=> w.PossuiErros).ShouldBe(3);
+            acervoAudiovisualLinhas.Count(w=> !w.PossuiErros).ShouldBe(6);
+            acervoAudiovisualLinhas.Count(w=> w.PossuiErros).ShouldBe(4);
             
             //Retorno front
             retorno.Id.ShouldBe(1);
@@ -344,7 +345,7 @@ namespace SME.CDEP.TesteIntegracao
         {
             var servicoImportacaoArquivo = GetServicoImportacaoArquivoAcervoAudiovisual();
         
-            var linhasInseridas = GerarAcervoAudiovisualLinhaDTO().Generate(10);
+            var linhasInseridas = AcervoAudiovisualLinhaMock.GerarAcervoAudiovisualLinhaDTO().Generate(10);
         
             linhasInseridas[3].PossuiErros = true;
             linhasInseridas[3].Duracao.PossuiErro = true;
@@ -426,7 +427,7 @@ namespace SME.CDEP.TesteIntegracao
         {
             var servicoImportacaoArquivo = GetServicoImportacaoArquivoAcervoAudiovisual();
 
-            var linhasInseridas = GerarAcervoAudiovisualLinhaDTO().Generate(10);
+            var linhasInseridas = AcervoAudiovisualLinhaMock.GerarAcervoAudiovisualLinhaDTO().Generate(10);
 
             await InserirNaBase(new ImportacaoArquivo()
             {
@@ -449,7 +450,7 @@ namespace SME.CDEP.TesteIntegracao
         {
             var servicoImportacaoArquivo = GetServicoImportacaoArquivoAcervoAudiovisual();
 
-            var linhasInseridas = GerarAcervoAudiovisualLinhaDTO().Generate(10);
+            var linhasInseridas = AcervoAudiovisualLinhaMock.GerarAcervoAudiovisualLinhaDTO().Generate(10);
 
             await InserirNaBase(new ImportacaoArquivo()
             {
@@ -468,7 +469,7 @@ namespace SME.CDEP.TesteIntegracao
         {
             var servicoImportacaoArquivo = GetServicoImportacaoArquivoAcervoAudiovisual();
 
-            var linhasInseridas = GerarAcervoAudiovisualLinhaDTO().Generate(10);
+            var linhasInseridas = AcervoAudiovisualLinhaMock.GerarAcervoAudiovisualLinhaDTO().Generate(10);
 
             await InserirNaBase(new ImportacaoArquivo()
             {
@@ -494,7 +495,7 @@ namespace SME.CDEP.TesteIntegracao
         {
             var servicoImportacaoArquivo = GetServicoImportacaoArquivoAcervoAudiovisual();
 
-            var linhasInseridas = GerarAcervoAudiovisualLinhaDTO().Generate(10);
+            var linhasInseridas = AcervoAudiovisualLinhaMock.GerarAcervoAudiovisualLinhaDTO().Generate(10);
             linhasInseridas[3].PossuiErros = true;
             linhasInseridas[3].Cromia.PossuiErro = true;
             linhasInseridas[3].Cromia.Mensagem = string.Format(Dominio.Constantes.Constantes.CAMPO_X_REQUER_UM_VALOR_NUMERICO, Dominio.Constantes.Constantes.LARGURA);
@@ -532,7 +533,7 @@ namespace SME.CDEP.TesteIntegracao
         {
             var servicoImportacaoArquivo = GetServicoImportacaoArquivoAcervoAudiovisual();
 
-            var linhasInseridas = GerarAcervoAudiovisualLinhaDTO().Generate(10);
+            var linhasInseridas = AcervoAudiovisualLinhaMock.GerarAcervoAudiovisualLinhaDTO().Generate(10);
             linhasInseridas[3].PossuiErros = true;
             linhasInseridas[3].Cromia.PossuiErro = true;
             linhasInseridas[3].Cromia.Mensagem = string.Format(Dominio.Constantes.Constantes.CAMPO_X_REQUER_UM_VALOR_NUMERICO, Dominio.Constantes.Constantes.LARGURA);

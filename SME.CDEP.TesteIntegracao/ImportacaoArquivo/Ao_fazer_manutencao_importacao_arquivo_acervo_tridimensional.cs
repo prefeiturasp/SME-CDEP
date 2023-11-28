@@ -21,7 +21,7 @@ namespace SME.CDEP.TesteIntegracao
         {
             var servicoImportacaoArquivo = GetServicoImportacaoArquivoAcervoTridimensional();
 
-            var acervoTridimensionalLinhas = GerarAcervoTridimensionalLinhaDTO().Generate(10);
+            var acervoTridimensionalLinhas = AcervoTridimensionalLinhaMock.GerarAcervoTridimensionalLinhaDTO().Generate(10);
 
             acervoTridimensionalLinhas[2].Titulo.Conteudo = string.Empty;
             acervoTridimensionalLinhas[4].Descricao.Conteudo = string.Empty;
@@ -105,7 +105,7 @@ namespace SME.CDEP.TesteIntegracao
         {
             var servicoImportacaoArquivo = GetServicoImportacaoArquivoAcervoTridimensional();
         
-            var acervoTridimensionalLinhas = GerarAcervoTridimensionalLinhaDTO().Generate(10);
+            var acervoTridimensionalLinhas = AcervoTridimensionalLinhaMock.GerarAcervoTridimensionalLinhaDTO().Generate(10);
            
             await servicoImportacaoArquivo.ValidacaoObterOuInserirDominios(acervoTridimensionalLinhas);
         
@@ -122,7 +122,7 @@ namespace SME.CDEP.TesteIntegracao
         {
             var servicoImportacaoArquivo = GetServicoImportacaoArquivoAcervoTridimensional();
         
-            var acervoTridimensionalLinhas = GerarAcervoTridimensionalLinhaDTO().Generate(10);
+            var acervoTridimensionalLinhas = AcervoTridimensionalLinhaMock.GerarAcervoTridimensionalLinhaDTO().Generate(10);
         
             await InserirNaBase(new ImportacaoArquivo()
             {
@@ -179,7 +179,7 @@ namespace SME.CDEP.TesteIntegracao
         {
             var servicoImportacaoArquivo = GetServicoImportacaoArquivoAcervoTridimensional();
         
-            var acervoTridimensionalLinhas = GerarAcervoTridimensionalLinhaDTO().Generate(10);
+            var acervoTridimensionalLinhas = AcervoTridimensionalLinhaMock.GerarAcervoTridimensionalLinhaDTO().Generate(10);
            
             acervoTridimensionalLinhas[3].Descricao.Conteudo = string.Empty;
             acervoTridimensionalLinhas[5].Quantidade.Conteudo = faker.Lorem.Paragraph();
@@ -289,7 +289,7 @@ namespace SME.CDEP.TesteIntegracao
         {
             var servicoImportacaoArquivo = GetServicoImportacaoArquivoAcervoTridimensional();
         
-            var linhasInseridas = GerarAcervoTridimensionalLinhaDTO().Generate(10);
+            var linhasInseridas = AcervoTridimensionalLinhaMock.GerarAcervoTridimensionalLinhaDTO().Generate(10);
         
             linhasInseridas[3].PossuiErros = true;
             linhasInseridas[3].Data.PossuiErro = true;
@@ -354,7 +354,7 @@ namespace SME.CDEP.TesteIntegracao
         {
             var servicoImportacaoArquivo = GetServicoImportacaoArquivoAcervoTridimensional();
 
-            var linhasInseridas = GerarAcervoTridimensionalLinhaDTO().Generate(10);
+            var linhasInseridas = AcervoTridimensionalLinhaMock.GerarAcervoTridimensionalLinhaDTO().Generate(10);
 
             await InserirNaBase(new ImportacaoArquivo()
             {
@@ -377,7 +377,7 @@ namespace SME.CDEP.TesteIntegracao
         {
             var servicoImportacaoArquivo = GetServicoImportacaoArquivoAcervoTridimensional();
 
-            var linhasInseridas = GerarAcervoTridimensionalLinhaDTO().Generate(10);
+            var linhasInseridas = AcervoTridimensionalLinhaMock.GerarAcervoTridimensionalLinhaDTO().Generate(10);
 
             await InserirNaBase(new ImportacaoArquivo()
             {
@@ -396,7 +396,7 @@ namespace SME.CDEP.TesteIntegracao
         {
             var servicoImportacaoArquivo = GetServicoImportacaoArquivoAcervoTridimensional();
 
-            var linhasInseridas = GerarAcervoTridimensionalLinhaDTO().Generate(10);
+            var linhasInseridas = AcervoTridimensionalLinhaMock.GerarAcervoTridimensionalLinhaDTO().Generate(10);
 
             await InserirNaBase(new ImportacaoArquivo()
             {
@@ -422,7 +422,7 @@ namespace SME.CDEP.TesteIntegracao
         {
             var servicoImportacaoArquivo = GetServicoImportacaoArquivoAcervoTridimensional();
 
-            var linhasInseridas = GerarAcervoTridimensionalLinhaDTO().Generate(10);
+            var linhasInseridas = AcervoTridimensionalLinhaMock.GerarAcervoTridimensionalLinhaDTO().Generate(10);
             linhasInseridas[3].PossuiErros = true;
             linhasInseridas[3].Altura.PossuiErro = true;
             linhasInseridas[3].Altura.Mensagem = string.Format(Dominio.Constantes.Constantes.CAMPO_X_REQUER_UM_VALOR_NUMERICO, Dominio.Constantes.Constantes.LARGURA);
@@ -460,7 +460,7 @@ namespace SME.CDEP.TesteIntegracao
         {
             var servicoImportacaoArquivo = GetServicoImportacaoArquivoAcervoTridimensional();
 
-            var linhasInseridas = GerarAcervoTridimensionalLinhaDTO().Generate(10);
+            var linhasInseridas = AcervoTridimensionalLinhaMock.GerarAcervoTridimensionalLinhaDTO().Generate(10);
             linhasInseridas[3].PossuiErros = true;
             linhasInseridas[3].Altura.PossuiErro = true;
             linhasInseridas[3].Altura.Mensagem = string.Format(Dominio.Constantes.Constantes.CAMPO_X_REQUER_UM_VALOR_NUMERICO, Dominio.Constantes.Constantes.ALTURA);
