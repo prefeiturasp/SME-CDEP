@@ -21,7 +21,7 @@ namespace SME.CDEP.TesteIntegracao
         {
             var servicoImportacaoArquivo = GetServicoImportacaoArquivoAcervoFotografico();
 
-            var acervoFotograficoLinhas = GerarAcervoFotograficoLinhaDTO().Generate(10);
+            var acervoFotograficoLinhas = AcervoFotograficoLinhaMock.GerarAcervoFotograficoLinhaDTO().Generate(10);
 
             acervoFotograficoLinhas[2].Titulo.Conteudo = string.Empty;
             acervoFotograficoLinhas[4].Suporte.Conteudo = string.Empty;
@@ -112,7 +112,7 @@ namespace SME.CDEP.TesteIntegracao
         {
             var servicoImportacaoArquivo = GetServicoImportacaoArquivoAcervoFotografico();
         
-            var acervoFotograficoLinhas = GerarAcervoFotograficoLinhaDTO().Generate(10);
+            var acervoFotograficoLinhas = AcervoFotograficoLinhaMock.GerarAcervoFotograficoLinhaDTO().Generate(10);
            
             await servicoImportacaoArquivo.ValidacaoObterOuInserirDominios(acervoFotograficoLinhas);
         
@@ -146,7 +146,7 @@ namespace SME.CDEP.TesteIntegracao
         {
             var servicoImportacaoArquivo = GetServicoImportacaoArquivoAcervoFotografico();
         
-            var acervoFotograficoLinhas = GerarAcervoFotograficoLinhaDTO().Generate(10);
+            var acervoFotograficoLinhas = AcervoFotograficoLinhaMock.GerarAcervoFotograficoLinhaDTO().Generate(10);
         
             await InserirNaBase(new ImportacaoArquivo()
             {
@@ -217,13 +217,14 @@ namespace SME.CDEP.TesteIntegracao
             }
         }
 
-        [Fact(DisplayName = "Importação Arquivo Acervo Fotografico - Geral - Com erros em 3 linhas")]
+        [Fact(DisplayName = "Importação Arquivo Acervo Fotografico - Geral - Com erros em 4 linhas")]
         public async Task Importacao_geral()
         {
             var servicoImportacaoArquivo = GetServicoImportacaoArquivoAcervoFotografico();
         
-            var acervoFotograficoLinhas = GerarAcervoFotograficoLinhaDTO().Generate(10);
+            var acervoFotograficoLinhas = AcervoFotograficoLinhaMock.GerarAcervoFotograficoLinhaDTO().Generate(10);
            
+            acervoFotograficoLinhas[1].CopiaDigital.Conteudo = acervoFotograficoLinhas[1].Titulo.Conteudo;
             acervoFotograficoLinhas[3].Descricao.Conteudo = string.Empty;
             acervoFotograficoLinhas[5].TamanhoArquivo.Conteudo = faker.Lorem.Paragraph();
             acervoFotograficoLinhas[7].Codigo.Conteudo = acervoFotograficoLinhas[0].Codigo.Conteudo;
@@ -254,15 +255,15 @@ namespace SME.CDEP.TesteIntegracao
             
             //Acervos inseridos
             acervos.ShouldNotBeNull();
-            acervos.Count().ShouldBe(7);
+            acervos.Count().ShouldBe(6);
             
             //Acervos auxiliares inseridos
             acervosFotografico.ShouldNotBeNull();
-            acervosFotografico.Count().ShouldBe(7);
+            acervosFotografico.Count().ShouldBe(6);
             
             //Linhas com erros
-            acervoFotograficoLinhas.Count(w=> !w.PossuiErros).ShouldBe(7);
-            acervoFotograficoLinhas.Count(w=> w.PossuiErros).ShouldBe(3);
+            acervoFotograficoLinhas.Count(w=> !w.PossuiErros).ShouldBe(6);
+            acervoFotograficoLinhas.Count(w=> w.PossuiErros).ShouldBe(4);
             
             //Retorno front
             retorno.Id.ShouldBe(1);
@@ -360,7 +361,7 @@ namespace SME.CDEP.TesteIntegracao
         {
             var servicoImportacaoArquivo = GetServicoImportacaoArquivoAcervoFotografico();
         
-            var linhasInseridas = GerarAcervoFotograficoLinhaDTO().Generate(10);
+            var linhasInseridas = AcervoFotograficoLinhaMock.GerarAcervoFotograficoLinhaDTO().Generate(10);
         
             linhasInseridas[3].PossuiErros = true;
             linhasInseridas[3].TamanhoArquivo.PossuiErro = true;
@@ -473,7 +474,7 @@ namespace SME.CDEP.TesteIntegracao
         {
             var servicoImportacaoArquivo = GetServicoImportacaoArquivoAcervoFotografico();
 
-            var linhasInseridas = GerarAcervoFotograficoLinhaDTO().Generate(10);
+            var linhasInseridas = AcervoFotograficoLinhaMock.GerarAcervoFotograficoLinhaDTO().Generate(10);
 
             await InserirNaBase(new ImportacaoArquivo()
             {
@@ -496,7 +497,7 @@ namespace SME.CDEP.TesteIntegracao
         {
             var servicoImportacaoArquivo = GetServicoImportacaoArquivoAcervoFotografico();
 
-            var linhasInseridas = GerarAcervoFotograficoLinhaDTO().Generate(10);
+            var linhasInseridas = AcervoFotograficoLinhaMock.GerarAcervoFotograficoLinhaDTO().Generate(10);
 
             await InserirNaBase(new ImportacaoArquivo()
             {
@@ -515,7 +516,7 @@ namespace SME.CDEP.TesteIntegracao
         {
             var servicoImportacaoArquivo = GetServicoImportacaoArquivoAcervoFotografico();
 
-            var linhasInseridas = GerarAcervoFotograficoLinhaDTO().Generate(10);
+            var linhasInseridas = AcervoFotograficoLinhaMock.GerarAcervoFotograficoLinhaDTO().Generate(10);
 
             await InserirNaBase(new ImportacaoArquivo()
             {
@@ -541,7 +542,7 @@ namespace SME.CDEP.TesteIntegracao
         {
             var servicoImportacaoArquivo = GetServicoImportacaoArquivoAcervoFotografico();
 
-            var linhasInseridas = GerarAcervoFotograficoLinhaDTO().Generate(10);
+            var linhasInseridas = AcervoFotograficoLinhaMock.GerarAcervoFotograficoLinhaDTO().Generate(10);
             linhasInseridas[3].PossuiErros = true;
             linhasInseridas[3].Altura.PossuiErro = true;
             linhasInseridas[3].Altura.Mensagem = string.Format(Dominio.Constantes.Constantes.CAMPO_X_REQUER_UM_VALOR_NUMERICO, Dominio.Constantes.Constantes.LARGURA);
@@ -579,7 +580,7 @@ namespace SME.CDEP.TesteIntegracao
         {
             var servicoImportacaoArquivo = GetServicoImportacaoArquivoAcervoFotografico();
 
-            var linhasInseridas = GerarAcervoFotograficoLinhaDTO().Generate(10);
+            var linhasInseridas = AcervoFotograficoLinhaMock.GerarAcervoFotograficoLinhaDTO().Generate(10);
             linhasInseridas[3].PossuiErros = true;
             linhasInseridas[3].Altura.PossuiErro = true;
             linhasInseridas[3].Altura.Mensagem = string.Format(Dominio.Constantes.Constantes.CAMPO_X_REQUER_UM_VALOR_NUMERICO, Dominio.Constantes.Constantes.ALTURA);

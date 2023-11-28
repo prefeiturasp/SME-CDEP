@@ -172,7 +172,7 @@ namespace SME.CDEP.TesteIntegracao
         {
             var servicoImportacaoArquivo = GetServicoImportacaoArquivoAcervoBibliografico();
 
-            var acervoBibliograficoLinhas = GerarAcervoBibliograficoLinhaDTO().Generate(10);
+            var acervoBibliograficoLinhas = AcervoBibliograficoLinhaMock.GerarAcervoBibliograficoLinhaDTO().Generate(10);
 
             acervoBibliograficoLinhas[2].Ano.Conteudo = faker.Lorem.Paragraph();
             acervoBibliograficoLinhas[4].Material.Conteudo = string.Empty;
@@ -266,7 +266,7 @@ namespace SME.CDEP.TesteIntegracao
         {
             var servicoImportacaoArquivo = GetServicoImportacaoArquivoAcervoBibliografico();
 
-            var acervoBibliograficoLinhas = GerarAcervoBibliograficoLinhaDTO().Generate(10);
+            var acervoBibliograficoLinhas = AcervoBibliograficoLinhaMock.GerarAcervoBibliograficoLinhaDTO().Generate(10);
            
             await servicoImportacaoArquivo.ValidacaoObterOuInserirDominios(acervoBibliograficoLinhas);
 
@@ -312,7 +312,7 @@ namespace SME.CDEP.TesteIntegracao
         {
             var servicoImportacaoArquivo = GetServicoImportacaoArquivoAcervoBibliografico();
 
-            var acervoBibliograficoLinhas = GerarAcervoBibliograficoLinhaDTO().Generate(10);
+            var acervoBibliograficoLinhas = AcervoBibliograficoLinhaMock.GerarAcervoBibliograficoLinhaDTO().Generate(10);
 
             await InserirNaBase(new ImportacaoArquivo()
             {
@@ -411,7 +411,7 @@ namespace SME.CDEP.TesteIntegracao
         {
             var servicoImportacaoArquivo = GetServicoImportacaoArquivoAcervoBibliografico();
 
-            var acervoBibliograficoLinhas = GerarAcervoBibliograficoLinhaDTO().Generate(10);
+            var acervoBibliograficoLinhas = AcervoBibliograficoLinhaMock.GerarAcervoBibliograficoLinhaDTO().Generate(10);
            
             acervoBibliograficoLinhas[3].Largura.Conteudo = "ABC3512";
             acervoBibliograficoLinhas[5].Altura.Conteudo = "1212ABC";
@@ -587,7 +587,7 @@ namespace SME.CDEP.TesteIntegracao
         {
             var servicoImportacaoArquivo = GetServicoImportacaoArquivoAcervoBibliografico();
 
-            var linhasInseridas = GerarAcervoBibliograficoLinhaDTO().Generate(10);
+            var linhasInseridas = AcervoBibliograficoLinhaMock.GerarAcervoBibliograficoLinhaDTO().Generate(10);
 
             linhasInseridas[3].PossuiErros = true;
             linhasInseridas[3].Volume.PossuiErro = true;
@@ -866,7 +866,7 @@ namespace SME.CDEP.TesteIntegracao
         {
             var servicoImportacaoArquivo = GetServicoImportacaoArquivoAcervoBibliografico();
 
-            var linhasInseridas = GerarAcervoBibliograficoLinhaDTO().Generate(10);
+            var linhasInseridas = AcervoBibliograficoLinhaMock.GerarAcervoBibliograficoLinhaDTO().Generate(10);
 
             await InserirNaBase(new ImportacaoArquivo()
             {
@@ -889,7 +889,7 @@ namespace SME.CDEP.TesteIntegracao
         {
             var servicoImportacaoArquivo = GetServicoImportacaoArquivoAcervoBibliografico();
 
-            var linhasInseridas = GerarAcervoBibliograficoLinhaDTO().Generate(10);
+            var linhasInseridas = AcervoBibliograficoLinhaMock.GerarAcervoBibliograficoLinhaDTO().Generate(10);
 
             await InserirNaBase(new ImportacaoArquivo()
             {
@@ -908,7 +908,7 @@ namespace SME.CDEP.TesteIntegracao
         {
             var servicoImportacaoArquivo = GetServicoImportacaoArquivoAcervoBibliografico();
 
-            var linhasInseridas = GerarAcervoBibliograficoLinhaDTO().Generate(10);
+            var linhasInseridas = AcervoBibliograficoLinhaMock.GerarAcervoBibliograficoLinhaDTO().Generate(10);
 
             await InserirNaBase(new ImportacaoArquivo()
             {
@@ -934,7 +934,7 @@ namespace SME.CDEP.TesteIntegracao
         {
             var servicoImportacaoArquivo = GetServicoImportacaoArquivoAcervoBibliografico();
 
-            var linhasInseridas = GerarAcervoBibliograficoLinhaDTO().Generate(10);
+            var linhasInseridas = AcervoBibliograficoLinhaMock.GerarAcervoBibliograficoLinhaDTO().Generate(10);
             linhasInseridas[3].PossuiErros = true;
             linhasInseridas[3].Altura.PossuiErro = true;
             linhasInseridas[3].Altura.Mensagem = string.Format(Dominio.Constantes.Constantes.CAMPO_X_REQUER_UM_VALOR_NUMERICO, Dominio.Constantes.Constantes.LARGURA);
@@ -972,7 +972,7 @@ namespace SME.CDEP.TesteIntegracao
         {
             var servicoImportacaoArquivo = GetServicoImportacaoArquivoAcervoBibliografico();
 
-            var linhasInseridas = GerarAcervoBibliograficoLinhaDTO().Generate(10);
+            var linhasInseridas = AcervoBibliograficoLinhaMock.GerarAcervoBibliograficoLinhaDTO().Generate(10);
             linhasInseridas[3].PossuiErros = true;
             linhasInseridas[3].Altura.PossuiErro = true;
             linhasInseridas[3].Altura.Mensagem = string.Format(Dominio.Constantes.Constantes.CAMPO_X_REQUER_UM_VALOR_NUMERICO, Dominio.Constantes.Constantes.ALTURA);

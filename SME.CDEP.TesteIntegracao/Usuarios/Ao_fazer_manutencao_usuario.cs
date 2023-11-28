@@ -17,7 +17,7 @@ namespace SME.CDEP.TesteIntegracao.Usuario
         public async Task Cadastrar_usuario()
         {
             var servicoUsuario = GetServicoUsuario();
-            var usuarioDto = GerarUsuarioDTO(TipoUsuario.SERVIDOR_PUBLICO).Generate(); 
+            var usuarioDto = UsuarioDTOMock.GerarUsuarioDTO(TipoUsuario.SERVIDOR_PUBLICO).Generate(); 
 
             var usuarioId = await servicoUsuario.Inserir(usuarioDto);
             usuarioId.ShouldBeGreaterThan(0);
@@ -86,7 +86,7 @@ namespace SME.CDEP.TesteIntegracao.Usuario
         {
             var servicoUsuario = GetServicoUsuario();
 
-            var usuariosDTOs = GerarUsuarioDTO(tipoUsuario).Generate(10);
+            var usuariosDTOs = UsuarioDTOMock.GerarUsuarioDTO(tipoUsuario).Generate(10);
 
             var contador = 1;
 

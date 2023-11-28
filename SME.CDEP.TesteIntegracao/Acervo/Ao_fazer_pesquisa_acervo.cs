@@ -20,12 +20,12 @@ namespace SME.CDEP.TesteIntegracao
             var servicoAcervoArteGrafica = GetServicoAcervoArteGrafica();
             var servicoAcervo = GetServicoAcervo();
 
-            var arquivos = GerarArquivo(TipoArquivo.AcervoArteGrafica).Generate(10);
+            var arquivos = ArquivoMock.Instance.GerarArquivo(TipoArquivo.AcervoArteGrafica).Generate(10);
 
             foreach (var arquivo in arquivos)
                 await InserirNaBase(arquivo);
 
-            var acervoArteGraficas = GerarAcervoArteGraficaCadastroDTO().Generate(25);
+            var acervoArteGraficas = AcervoArteGraficaDTOMock.GerarAcervoArteGraficaCadastroDTO().Generate(25);
 
             var contador = 1;
 
@@ -65,12 +65,12 @@ namespace SME.CDEP.TesteIntegracao
             var servicoAcervoArteGrafica = GetServicoAcervoArteGrafica();
             var servicoAcervo = GetServicoAcervo();
 
-            var arquivos = GerarArquivo(TipoArquivo.AcervoArteGrafica).Generate(10);
+            var arquivos = ArquivoMock.Instance.GerarArquivo(TipoArquivo.AcervoArteGrafica).Generate(10);
 
             foreach (var arquivo in arquivos)
                 await InserirNaBase(arquivo);
 
-            var acervoArteGraficas = GerarAcervoArteGraficaCadastroDTO().Generate(25);
+            var acervoArteGraficas = AcervoArteGraficaDTOMock.GerarAcervoArteGraficaCadastroDTO().Generate(25);
 
             var contador = 1;
 
@@ -111,12 +111,12 @@ namespace SME.CDEP.TesteIntegracao
             var servicoAcervoArteGrafica = GetServicoAcervoArteGrafica();
             var servicoAcervo = GetServicoAcervo();
 
-            var arquivos = GerarArquivo(TipoArquivo.AcervoArteGrafica).Generate(10);
+            var arquivos = ArquivoMock.Instance.GerarArquivo(TipoArquivo.AcervoArteGrafica).Generate(10);
 
             foreach (var arquivo in arquivos)
                 await InserirNaBase(arquivo);
 
-            var acervoArteGraficas = GerarAcervoArteGraficaCadastroDTO().Generate(25);
+            var acervoArteGraficas =  AcervoArteGraficaDTOMock.GerarAcervoArteGraficaCadastroDTO().Generate(25);
             var contador = 1;
 
             foreach (var arteGrafica in acervoArteGraficas)
