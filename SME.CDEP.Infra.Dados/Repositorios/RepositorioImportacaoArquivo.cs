@@ -43,5 +43,22 @@ namespace SME.CDEP.Infra.Dados.Repositorios
 	        
 	        return await Inserir(importacaoArquivo);
         }
+
+        public async Task<ImportacaoArquivo> ObterImportacaoPorId(long id)
+        {
+	        var query = @"select ia.id,
+								  ia.nome,
+								  ia.tipo_acervo as TipoAcervo,
+								  ia.status as StatusArquivo,
+								  ia.conteudo,
+								  ia.criado_em criadoEm
+						from importacao_arquivo ia
+						where not ia.excluido						
+						and ia.id = @id ";
+
+	        var importacao = await conexao.Obter().QueryFirstOrDefaultAsync<ImportacaoArquivo>(query, new { id});
+
+	        return importacao;
+        }
     }
 }
