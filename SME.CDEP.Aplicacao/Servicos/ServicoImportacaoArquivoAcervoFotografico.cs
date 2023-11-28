@@ -91,11 +91,11 @@ namespace SME.CDEP.Aplicacao.Servicos
         {
             if (!estaImportandoArquivo)
             {
-                await ObterConservacoes(acervosFotograficoLinhas.Select(s => s.EstadoConservacao.Conteudo).Distinct().Where(w=> w.EstaPreenchido()));
-                await ObterSuportes(acervosFotograficoLinhas.Select(s => s.Suporte.Conteudo).Distinct().Where(w=> w.EstaPreenchido()), TipoSuporte.IMAGEM);
-                await ObterFormatos(acervosFotograficoLinhas.Select(s => s.FormatoImagem.Conteudo).Distinct().Where(w=> w.EstaPreenchido()), TipoFormato.ACERVO_FOTOS);
-                await ObterCromias(acervosFotograficoLinhas.Select(s => s.Cromia.Conteudo).Distinct().Where(w=> w.EstaPreenchido()));
-                await ObterCreditosAutoresTipoAutoria(acervosFotograficoLinhas.Select(s => s.Credito.Conteudo).ToArray().UnificarPipe().SplitPipe().Distinct().Where(w=> w.EstaPreenchido()), TipoCreditoAutoria.Credito);
+                await ObterConservacoes(acervosFotograficoLinhas.Where(w=> !w.EstadoConservacao.PossuiErro).Select(s => s.EstadoConservacao.Conteudo).Distinct().Where(w=> w.EstaPreenchido()));
+                await ObterSuportes(acervosFotograficoLinhas.Where(w=> !w.Suporte.PossuiErro).Select(s => s.Suporte.Conteudo).Distinct().Where(w=> w.EstaPreenchido()), TipoSuporte.IMAGEM);
+                await ObterFormatos(acervosFotograficoLinhas.Where(w=> !w.FormatoImagem.PossuiErro).Select(s => s.FormatoImagem.Conteudo).Distinct().Where(w=> w.EstaPreenchido()), TipoFormato.ACERVO_FOTOS);
+                await ObterCromias(acervosFotograficoLinhas.Where(w=> !w.Cromia.PossuiErro).Select(s => s.Cromia.Conteudo).Distinct().Where(w=> w.EstaPreenchido()));
+                await ObterCreditosAutoresTipoAutoria(acervosFotograficoLinhas.Where(w=> !w.Credito.PossuiErro).Select(s => s.Credito.Conteudo).ToArray().UnificarPipe().SplitPipe().Distinct().Where(w=> w.EstaPreenchido()), TipoCreditoAutoria.Credito);
             }
             
             var acervoFotograficoRetorno = new ImportacaoArquivoRetornoDTO<AcervoLinhaErroDTO<AcervoFotograficoDTO,AcervoFotograficoLinhaRetornoDTO>,AcervoLinhaRetornoSucessoDTO>()
@@ -342,15 +342,15 @@ namespace SME.CDEP.Aplicacao.Servicos
         {
             try
             {
-                await ValidarOuInserirCreditoAutoresCoAutoresTipoAutoria(linhasComsucesso.Where(w=> !w.PossuiErros).Select(s => s.Credito.Conteudo).ToArray().UnificarPipe().SplitPipe().Distinct().Where(w=> w.EstaPreenchido()), TipoCreditoAutoria.Credito);
+                await ValidarOuInserirCreditoAutoresCoAutoresTipoAutoria(linhasComsucesso.Where(w=> !w.Credito.PossuiErro).Select(s => s.Credito.Conteudo).ToArray().UnificarPipe().SplitPipe().Distinct().Where(w=> w.EstaPreenchido()), TipoCreditoAutoria.Credito);
                 
-                await ValidarOuInserirCromia(linhasComsucesso.Where(w=> !w.PossuiErros).Select(s => s.Cromia.Conteudo).Distinct().Where(w=> w.EstaPreenchido()));
+                await ValidarOuInserirCromia(linhasComsucesso.Where(w=> !w.Cromia.PossuiErro).Select(s => s.Cromia.Conteudo).Distinct().Where(w=> w.EstaPreenchido()));
                 
-                await ValidarOuInserirSuporte(linhasComsucesso.Where(w=> !w.PossuiErros).Select(s => s.Suporte.Conteudo).Distinct().Where(w=> w.EstaPreenchido()), TipoSuporte.IMAGEM);
+                await ValidarOuInserirSuporte(linhasComsucesso.Where(w=> !w.Suporte.PossuiErro).Select(s => s.Suporte.Conteudo).Distinct().Where(w=> w.EstaPreenchido()), TipoSuporte.IMAGEM);
                 
-                await ValidarOuInserirConservacao(linhasComsucesso.Where(w=> !w.PossuiErros).Select(s => s.EstadoConservacao.Conteudo).Distinct().Where(w=> w.EstaPreenchido()));
+                await ValidarOuInserirConservacao(linhasComsucesso.Where(w=> !w.EstadoConservacao.PossuiErro).Select(s => s.EstadoConservacao.Conteudo).Distinct().Where(w=> w.EstaPreenchido()));
                 
-                await ValidarOuInserirFormato(linhasComsucesso.Where(w=> !w.PossuiErros).Select(s => s.FormatoImagem.Conteudo).Distinct().Where(w=> w.EstaPreenchido()), TipoFormato.ACERVO_FOTOS);
+                await ValidarOuInserirFormato(linhasComsucesso.Where(w=> !w.FormatoImagem.PossuiErro).Select(s => s.FormatoImagem.Conteudo).Distinct().Where(w=> w.EstaPreenchido()), TipoFormato.ACERVO_FOTOS);
                 
             }
             catch (Exception e)

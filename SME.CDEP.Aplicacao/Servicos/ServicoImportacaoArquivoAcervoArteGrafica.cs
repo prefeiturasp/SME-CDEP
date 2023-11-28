@@ -92,10 +92,10 @@ namespace SME.CDEP.Aplicacao.Servicos
         {
             if (!estaImportandoArquivo)
             {
-                await ObterConservacoes(acervosArtesGraficasLinhas.Select(s => s.EstadoConservacao.Conteudo).Distinct().Where(w=> w.EstaPreenchido()));
-                await ObterCromias(acervosArtesGraficasLinhas.Select(s => s.Cromia.Conteudo).Distinct().Where(w=> w.EstaPreenchido()));
-                await ObterSuportes(acervosArtesGraficasLinhas.Select(s => s.Suporte.Conteudo).Distinct().Where(w=> w.EstaPreenchido()), TipoSuporte.IMAGEM);
-                await ObterCreditosAutoresTipoAutoria(acervosArtesGraficasLinhas.Select(s => s.Credito.Conteudo).ToArray().UnificarPipe().SplitPipe().Distinct().Where(w=> w.EstaPreenchido()), TipoCreditoAutoria.Credito);
+                await ObterConservacoes(acervosArtesGraficasLinhas.Where(w=> !w.EstadoConservacao.PossuiErro).Select(s => s.EstadoConservacao.Conteudo).Distinct().Where(w=> w.EstaPreenchido()));
+                await ObterCromias(acervosArtesGraficasLinhas.Where(w=> !w.Cromia.PossuiErro).Select(s => s.Cromia.Conteudo).Distinct().Where(w=> w.EstaPreenchido()));
+                await ObterSuportes(acervosArtesGraficasLinhas.Where(w=> !w.Suporte.PossuiErro).Select(s => s.Suporte.Conteudo).Distinct().Where(w=> w.EstaPreenchido()), TipoSuporte.IMAGEM);
+                await ObterCreditosAutoresTipoAutoria(acervosArtesGraficasLinhas.Where(w=> !w.Credito.PossuiErro).Select(s => s.Credito.Conteudo).ToArray().UnificarPipe().SplitPipe().Distinct().Where(w=> w.EstaPreenchido()), TipoCreditoAutoria.Credito);
             }
             
             var acervoArteGraficaRetorno = new ImportacaoArquivoRetornoDTO<AcervoLinhaErroDTO<AcervoArteGraficaDTO,AcervoArteGraficaLinhaRetornoDTO>,AcervoLinhaRetornoSucessoDTO>()
@@ -334,14 +334,14 @@ namespace SME.CDEP.Aplicacao.Servicos
         {
             try
             {
-                await ValidarOuInserirCreditoAutoresCoAutoresTipoAutoria(linhasComsucesso.Where(w=> !w.PossuiErros).Select(s => s.Credito.Conteudo).ToArray().UnificarPipe().SplitPipe().Distinct().Where(w=> w.EstaPreenchido()), TipoCreditoAutoria.Credito);
+                await ValidarOuInserirCreditoAutoresCoAutoresTipoAutoria(linhasComsucesso.Where(w=> !w.Credito.PossuiErro).Select(s => s.Credito.Conteudo).ToArray().UnificarPipe().SplitPipe().Distinct().Where(w=> w.EstaPreenchido()), TipoCreditoAutoria.Credito);
                 
-                await ValidarOuInserirCromia(linhasComsucesso.Where(w=> !w.PossuiErros).Select(s => s.Cromia.Conteudo).Distinct().Where(w=> w.EstaPreenchido()));
+                await ValidarOuInserirCromia(linhasComsucesso.Where(w=> !w.Cromia.PossuiErro).Select(s => s.Cromia.Conteudo).Distinct().Where(w=> w.EstaPreenchido()));
                 
-                await ValidarOuInserirSuporte(linhasComsucesso.Where(w=> !w.PossuiErros).Select(s => s.Suporte.Conteudo).Distinct().Where(w=> w.EstaPreenchido()), TipoSuporte.IMAGEM);
+                await ValidarOuInserirSuporte(linhasComsucesso.Where(w=> !w.Suporte.PossuiErro).Select(s => s.Suporte.Conteudo).Distinct().Where(w=> w.EstaPreenchido()), TipoSuporte.IMAGEM);
                 
-                await ValidarOuInserirConservacao(linhasComsucesso.Where(w=> !w.PossuiErros).Select(s => s.EstadoConservacao.Conteudo).Distinct().Where(w=> w.EstaPreenchido()));
-                
+                await ValidarOuInserirConservacao(linhasComsucesso.Where(w=> !w.EstadoConservacao.PossuiErro).Select(s => s.EstadoConservacao.Conteudo).Distinct().Where(w=> w.EstaPreenchido()));
+
             }
             catch (Exception e)
             {

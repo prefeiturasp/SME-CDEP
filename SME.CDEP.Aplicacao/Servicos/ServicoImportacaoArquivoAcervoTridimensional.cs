@@ -89,7 +89,7 @@ namespace SME.CDEP.Aplicacao.Servicos
         private async Task<ImportacaoArquivoRetornoDTO<AcervoLinhaErroDTO<AcervoTridimensionalDTO,AcervoTridimensionalLinhaRetornoDTO>,AcervoLinhaRetornoSucessoDTO>> ObterRetornoImportacaoAcervo(ImportacaoArquivo arquivoImportado, IEnumerable<AcervoTridimensionalLinhaDTO> acervosTridimensionalLinhas, bool estaImportandoArquivo = true)
         {
             if (!estaImportandoArquivo)
-                await ObterConservacoes(acervosTridimensionalLinhas.Select(s => s.EstadoConservacao.Conteudo).Distinct().Where(w=> w.EstaPreenchido()));
+                await ObterConservacoes(acervosTridimensionalLinhas.Where(w=> !w.EstadoConservacao.PossuiErro).Select(s => s.EstadoConservacao.Conteudo).Distinct().Where(w=> w.EstaPreenchido()));
             
             var acervoTridimensionalRetorno = new ImportacaoArquivoRetornoDTO<AcervoLinhaErroDTO<AcervoTridimensionalDTO,AcervoTridimensionalLinhaRetornoDTO>,AcervoLinhaRetornoSucessoDTO>()
             {
@@ -277,7 +277,7 @@ namespace SME.CDEP.Aplicacao.Servicos
         {
             try
             {
-                await ValidarOuInserirConservacao(linhasComsucesso.Where(w=> !w.PossuiErros).Select(s => s.EstadoConservacao.Conteudo).Distinct().Where(w=> w.EstaPreenchido()));
+                await ValidarOuInserirConservacao(linhasComsucesso.Where(w=> !w.EstadoConservacao.PossuiErro).Select(s => s.EstadoConservacao.Conteudo).Distinct().Where(w=> w.EstaPreenchido()));
                 
             }
             catch (Exception e)

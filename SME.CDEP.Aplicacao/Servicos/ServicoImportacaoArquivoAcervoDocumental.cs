@@ -90,11 +90,11 @@ namespace SME.CDEP.Aplicacao.Servicos
         {
             if (!estaImportandoArquivo)
             {
-                await ObterMateriais(acervosDocumentalLinhas.Select(s => s.Material.Conteudo).Distinct().Where(w=> w.EstaPreenchido()), TipoMaterial.DOCUMENTAL);
-                await ObterIdiomas(acervosDocumentalLinhas.Select(s => s.Idioma.Conteudo).Distinct().Where(w=> w.EstaPreenchido()));
-                await ObterConservacoes(acervosDocumentalLinhas.Select(s => s.EstadoConservacao.Conteudo).Distinct().Where(w=> w.EstaPreenchido()));
-                await ObterAcessoDocumentos(acervosDocumentalLinhas.Select(s => s.AcessoDocumento.Conteudo).ToArray().UnificarPipe().SplitPipe().Distinct().Where(w=> w.EstaPreenchido()));
-                await ObterCreditosAutoresTipoAutoria(acervosDocumentalLinhas.Select(s => s.Autor.Conteudo).ToArray().UnificarPipe().SplitPipe().Distinct().Where(w=> w.EstaPreenchido()), TipoCreditoAutoria.Autoria);
+                await ObterMateriais(acervosDocumentalLinhas.Where(w=> !w.Material.PossuiErro).Select(s => s.Material.Conteudo).Distinct().Where(w=> w.EstaPreenchido()), TipoMaterial.DOCUMENTAL);
+                await ObterIdiomas(acervosDocumentalLinhas.Where(w=> !w.Idioma.PossuiErro).Select(s => s.Idioma.Conteudo).Distinct().Where(w=> w.EstaPreenchido()));
+                await ObterConservacoes(acervosDocumentalLinhas.Where(w=> !w.EstadoConservacao.PossuiErro).Select(s => s.EstadoConservacao.Conteudo).Distinct().Where(w=> w.EstaPreenchido()));
+                await ObterAcessoDocumentos(acervosDocumentalLinhas.Where(w=> !w.AcessoDocumento.PossuiErro).Select(s => s.AcessoDocumento.Conteudo).ToArray().UnificarPipe().SplitPipe().Distinct().Where(w=> w.EstaPreenchido()));
+                await ObterCreditosAutoresTipoAutoria(acervosDocumentalLinhas.Where(w=> !w.Autor.PossuiErro).Select(s => s.Autor.Conteudo).ToArray().UnificarPipe().SplitPipe().Distinct().Where(w=> w.EstaPreenchido()), TipoCreditoAutoria.Autoria);
             }
             
             var acervoDocumentalRetorno = new ImportacaoArquivoRetornoDTO<AcervoLinhaErroDTO<AcervoDocumentalDTO,AcervoDocumentalLinhaRetornoDTO>,AcervoLinhaRetornoSucessoDTO>()
@@ -356,15 +356,15 @@ namespace SME.CDEP.Aplicacao.Servicos
         {
             try
             {
-                await ValidarOuInserirMateriais(linhasComsucesso.Where(w=> !w.PossuiErros).Select(s => s.Material.Conteudo).Distinct().Where(w=> w.EstaPreenchido()), TipoMaterial.DOCUMENTAL);
+                await ValidarOuInserirMateriais(linhasComsucesso.Where(w=> !w.Material.PossuiErro).Select(s => s.Material.Conteudo).Distinct().Where(w=> w.EstaPreenchido()), TipoMaterial.DOCUMENTAL);
 
-                await ValidarOuInserirIdiomas(linhasComsucesso.Where(w=> !w.PossuiErros).Select(s => s.Idioma.Conteudo).Distinct().Where(w=> w.EstaPreenchido()));
+                await ValidarOuInserirIdiomas(linhasComsucesso.Where(w=> !w.Idioma.PossuiErro).Select(s => s.Idioma.Conteudo).Distinct().Where(w=> w.EstaPreenchido()));
                 
-                await ValidarOuInserirCreditoAutoresCoAutoresTipoAutoria(linhasComsucesso.Where(w=> !w.PossuiErros).Select(s => s.Autor.Conteudo).ToArray().UnificarPipe().SplitPipe().Distinct().Where(w=> w.EstaPreenchido()), TipoCreditoAutoria.Autoria);
+                await ValidarOuInserirCreditoAutoresCoAutoresTipoAutoria(linhasComsucesso.Where(w=> !w.Autor.PossuiErro).Select(s => s.Autor.Conteudo).ToArray().UnificarPipe().SplitPipe().Distinct().Where(w=> w.EstaPreenchido()), TipoCreditoAutoria.Autoria);
                 
-                await ValidarOuInserirAcessoDocumento(linhasComsucesso.Where(w=> !w.PossuiErros).Select(s => s.AcessoDocumento.Conteudo).ToArray().UnificarPipe().SplitPipe().Distinct().Where(w=> w.EstaPreenchido()));
+                await ValidarOuInserirAcessoDocumento(linhasComsucesso.Where(w=> !w.AcessoDocumento.PossuiErro).Select(s => s.AcessoDocumento.Conteudo).ToArray().UnificarPipe().SplitPipe().Distinct().Where(w=> w.EstaPreenchido()));
                 
-                await ValidarOuInserirConservacao(linhasComsucesso.Where(w=> !w.PossuiErros).Select(s => s.EstadoConservacao.Conteudo).Distinct().Where(w=> w.EstaPreenchido()));
+                await ValidarOuInserirConservacao(linhasComsucesso.Where(w=> !w.EstadoConservacao.PossuiErro).Select(s => s.EstadoConservacao.Conteudo).Distinct().Where(w=> w.EstaPreenchido()));
                 
             }
             catch (Exception e)
