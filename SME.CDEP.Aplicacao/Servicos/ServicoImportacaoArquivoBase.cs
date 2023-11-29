@@ -551,40 +551,56 @@ namespace SME.CDEP.Aplicacao.Servicos
             return ObterIdentificadorIdOuNuloPorValorDoCampo(valorDoCampo, SeriesColecoes);
         }
         
-        protected long[] ObterCreditoAutoresIdsPorValorDoCampo(string valorDoCampo, TipoCreditoAutoria tipoCreditoAutoria)
+        protected long[] ObterCreditoAutoresIdsPorValorDoCampo(string valorDoCampo, TipoCreditoAutoria tipoCreditoAutoria, bool gerarExcecao = true)
         {
             if (valorDoCampo.NaoEstaPreenchido())
-                return null;
+            {
+                if (gerarExcecao)
+                    throw new NegocioException(string.Format(Constantes.CAMPO_X_NAO_PREENCHIDO, valorDoCampo));
+                
+                return default;
+            }
 
             var retorno = new List<long>();
             
             var conteudoCampoArray = valorDoCampo.FormatarTextoEmArray().ToList();
             foreach (var item in conteudoCampoArray)
             {
-                if (CreditosAutores.Any(f => f.Nome.SaoIguais(item) && f.Tipo.SaoIguais((int)tipoCreditoAutoria)))
-                    retorno.Add(CreditosAutores.FirstOrDefault(f => f.Nome.SaoIguais(item) && f.Tipo.SaoIguais((int)tipoCreditoAutoria)).Id);
+                var possuiNome = CreditosAutores.Any(f => f.Nome.Equals(item));
+                if (!possuiNome)
+                {
+                    if (gerarExcecao)
+                        throw new NegocioException(string.Format(Constantes.O_VALOR_DO_CAMPO_X_NAO_FOI_LOCALIZADO, valorDoCampo));
+                }
                 else
-                    throw new NegocioException(string.Format(MensagemNegocio.O_ITEM_X_DO_DOMINIO_X_NAO_ENCONTRADO, Constantes.CREDITOS_AUTORES, item));
+                    retorno.Add(CreditosAutores.FirstOrDefault(f => f.Nome.SaoIguais(item) && f.Tipo.SaoIguais((int)tipoCreditoAutoria)).Id);
             }
-                
-            
             return retorno.ToArray();
         }
         
-        protected long[] ObterAssuntosIdsPorValorDoCampo(string valorDoCampo)
+        protected long[] ObterAssuntosIdsPorValorDoCampo(string valorDoCampo, bool gerarExcecao = true)
         {
             if (valorDoCampo.NaoEstaPreenchido())
-                return null;
+            {
+                if (gerarExcecao)
+                    throw new NegocioException(string.Format(Constantes.CAMPO_X_NAO_PREENCHIDO, valorDoCampo));
+                
+                return default;
+            }
 
             var retorno = new List<long>();
             
             var conteudoCampoArray = valorDoCampo.FormatarTextoEmArray().ToList();
             foreach (var item in conteudoCampoArray)
             {
-                if (Assuntos.Any(f => f.Nome.SaoIguais(item)))
-                    retorno.Add(Assuntos.FirstOrDefault(f => f.Nome.SaoIguais(item)).Id);
+                var possuiNome = Assuntos.Any(f => f.Nome.Equals(item));
+                if (!possuiNome)
+                {
+                    if (gerarExcecao)
+                        throw new NegocioException(string.Format(Constantes.O_VALOR_DO_CAMPO_X_NAO_FOI_LOCALIZADO, valorDoCampo));
+                }
                 else
-                    throw new NegocioException(string.Format(MensagemNegocio.O_ITEM_X_DO_DOMINIO_X_NAO_ENCONTRADO, Constantes.ASSUNTOS, item));
+                    retorno.Add(Assuntos.FirstOrDefault(f => f.Nome.SaoIguais(item)).Id);
             }
                 
             

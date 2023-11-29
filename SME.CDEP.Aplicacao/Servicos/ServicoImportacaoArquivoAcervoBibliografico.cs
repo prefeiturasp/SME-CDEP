@@ -149,7 +149,7 @@ namespace SME.CDEP.Aplicacao.Servicos
                 Codigo = ObterConteudoTexto(linha.Codigo),
                 MaterialId = ObterMaterialBibliograficoIdOuNuloPorValorDoCampo(linha.Material.Conteudo),
                 EditoraId = ObterEditoraIdOuNuloPorValorDoCampo(linha.Editora.Conteudo),
-                AssuntosIds = ObterAssuntosIdsPorValorDoCampo(linha.Assunto.Conteudo),
+                AssuntosIds = ObterAssuntosIdsPorValorDoCampo(linha.Assunto.Conteudo, false),
                 Ano = ObterConteudoTexto(linha.Ano),
                 Edicao = ObterConteudoTexto(linha.Edicao),
                 NumeroPagina = ObterConteudoTexto(linha.NumeroPaginas),
@@ -162,7 +162,7 @@ namespace SME.CDEP.Aplicacao.Servicos
                 LocalizacaoPHA = ObterConteudoTexto(linha.LocalizacaoPHA),
                 NotasGerais = ObterConteudoTexto(linha.NotasGerais),
                 Isbn = ObterConteudoTexto(linha.Isbn),
-                CreditosAutoresIds = ObterCreditoAutoresIdsPorValorDoCampo(linha.Autor.Conteudo, TipoCreditoAutoria.Autoria),
+                CreditosAutoresIds = ObterCreditoAutoresIdsPorValorDoCampo(linha.Autor.Conteudo, TipoCreditoAutoria.Autoria, false),
                 CoAutores = ObterCoAutoresTipoAutoria(linha.CoAutor.Conteudo, linha.TipoAutoria.Conteudo)
             };
         }

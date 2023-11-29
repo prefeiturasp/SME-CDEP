@@ -156,7 +156,7 @@ namespace SME.CDEP.Aplicacao.Servicos
                 TamanhoArquivo = ObterConteudoTexto(linha.TamanhoArquivo),
                 Acessibilidade = ObterConteudoTexto(linha.Acessibilidade),
                 Disponibilizacao = ObterConteudoTexto(linha.Disponibilizacao),
-                CreditosAutoresIds = ObterCreditoAutoresIdsPorValorDoCampo(linha.Credito.Conteudo, TipoCreditoAutoria.Credito),
+                CreditosAutoresIds = ObterCreditoAutoresIdsPorValorDoCampo(linha.Credito.Conteudo, TipoCreditoAutoria.Credito, false),
             };
         }
         

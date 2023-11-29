@@ -159,7 +159,7 @@ namespace SME.CDEP.Aplicacao.Servicos
                 CromiaId = ObterCromiaIdOuNuloPorValorDoCampo(linha.Cromia.Conteudo),
                 Resolucao = ObterConteudoTexto(linha.Resolucao),
                 TamanhoArquivo = ObterConteudoTexto(linha.TamanhoArquivo),
-                CreditosAutoresIds = ObterCreditoAutoresIdsPorValorDoCampo(linha.Credito.Conteudo, TipoCreditoAutoria.Credito),
+                CreditosAutoresIds = ObterCreditoAutoresIdsPorValorDoCampo(linha.Credito.Conteudo, TipoCreditoAutoria.Credito, false),
             };
         }
         

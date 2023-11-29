@@ -158,7 +158,7 @@ namespace SME.CDEP.Aplicacao.Servicos
                 SuporteId = ObterSuporteImagemIdOuNuloPorValorDoCampo(linha.Suporte.Conteudo),
                 Quantidade = ObterConteudoLongoOuNulo(linha.Quantidade),
                 Descricao = ObterConteudoTexto(linha.Descricao),
-                CreditosAutoresIds = ObterCreditoAutoresIdsPorValorDoCampo(linha.Credito.Conteudo, TipoCreditoAutoria.Credito),
+                CreditosAutoresIds = ObterCreditoAutoresIdsPorValorDoCampo(linha.Credito.Conteudo, TipoCreditoAutoria.Credito, false),
             };
         }
         
