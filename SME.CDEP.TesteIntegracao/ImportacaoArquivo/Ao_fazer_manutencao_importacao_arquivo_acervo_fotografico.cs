@@ -607,5 +607,70 @@ namespace SME.CDEP.TesteIntegracao
             
             arquivo.Status.ShouldBe(ImportacaoStatus.Sucesso);
         }
+        
+        [Fact(DisplayName = "Importação Arquivo Acervo Fotográfico - Validação de RetornoObjeto")]
+        public async Task Validacao_retorno_objeto()
+        {
+            var servicoImportacaoArquivo = GetServicoImportacaoArquivoAcervoFotografico();
+
+            var linhasInseridas = AcervoFotograficoLinhaMock.GerarAcervoFotograficoLinhaDTO().Generate(10);
+            
+            linhasInseridas.Add(new AcervoFotograficoLinhaDTO()
+            {
+                PossuiErros = true,
+                Titulo = new LinhaConteudoAjustarDTO() { PossuiErro = true},
+                Credito = new LinhaConteudoAjustarDTO() { PossuiErro = true},
+                Procedencia = new LinhaConteudoAjustarDTO() { PossuiErro = true},
+                Data = new LinhaConteudoAjustarDTO() { PossuiErro = true},
+                Descricao = new LinhaConteudoAjustarDTO() { PossuiErro = true},
+                PermiteUsoImagem = new LinhaConteudoAjustarDTO() { PossuiErro = true},
+                TamanhoArquivo = new LinhaConteudoAjustarDTO() { PossuiErro = true},
+                Quantidade = new LinhaConteudoAjustarDTO() { PossuiErro = true},
+                Suporte = new LinhaConteudoAjustarDTO() { PossuiErro = true},
+                Localizacao = new LinhaConteudoAjustarDTO() { PossuiErro = true},
+                FormatoImagem = new LinhaConteudoAjustarDTO() { PossuiErro = true},
+                Altura = new LinhaConteudoAjustarDTO() { PossuiErro = true},
+                Largura = new LinhaConteudoAjustarDTO() { PossuiErro = true},
+                CopiaDigital = new LinhaConteudoAjustarDTO() { PossuiErro = true},
+                Cromia = new LinhaConteudoAjustarDTO() { PossuiErro = true},
+                Resolucao = new LinhaConteudoAjustarDTO() { PossuiErro = true},
+                EstadoConservacao = new LinhaConteudoAjustarDTO() { PossuiErro = true},
+                Codigo = new LinhaConteudoAjustarDTO() { PossuiErro = true},
+            });
+            
+            await InserirNaBase(new ImportacaoArquivo()
+            {
+                Nome = faker.Hacker.Verb(),
+                TipoAcervo = TipoAcervo.Fotografico,
+                Status = ImportacaoStatus.Erros,
+                Conteudo = JsonConvert.SerializeObject(linhasInseridas),
+                CriadoEm = DateTimeExtension.HorarioBrasilia().Date, CriadoPor = ConstantesTestes.SISTEMA, CriadoLogin = ConstantesTestes.LOGIN_123456789
+            });
+            
+            var retorno = await servicoImportacaoArquivo.ObterImportacaoPendente();
+            foreach (var erro in retorno.Erros)
+            {
+                erro.RetornoObjeto.Titulo.ShouldBeNull();
+                erro.RetornoObjeto.Procedencia.ShouldBeNull();
+                erro.RetornoObjeto.DataAcervo.ShouldBeNull();
+                erro.RetornoObjeto.Descricao.ShouldBeNull();
+                erro.RetornoObjeto.Quantidade.ShouldBeNull();
+                erro.RetornoObjeto.SuporteId.ShouldBeNull();
+                erro.RetornoObjeto.TamanhoArquivo.ShouldBeNull();
+                erro.RetornoObjeto.FormatoId.ShouldBeNull();
+                erro.RetornoObjeto.Altura.ShouldBeNull();
+                erro.RetornoObjeto.Largura.ShouldBeNull();
+                erro.RetornoObjeto.CromiaId.ShouldBeNull();
+                erro.RetornoObjeto.Resolucao.ShouldBeNull();
+                erro.RetornoObjeto.ConservacaoId.ShouldBeNull();
+                erro.RetornoObjeto.Localizacao.ShouldBeNull();
+                erro.RetornoObjeto.CopiaDigital.ShouldBeNull();
+                erro.RetornoObjeto.PermiteUsoImagem.ShouldBeNull();
+                erro.RetornoObjeto.ConservacaoId.ShouldBeNull();
+                erro.RetornoObjeto.Codigo.ShouldBeNull();
+                erro.RetornoObjeto.CreditosAutoresIds.ShouldBeNull();
+            }
+            retorno.ShouldNotBeNull();
+        }
     }
 }
