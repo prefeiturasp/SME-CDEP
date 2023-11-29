@@ -594,7 +594,12 @@ namespace SME.CDEP.Aplicacao.Servicos
         protected long[] ObterAcessoDocumentosIdsPorValorDoCampo(string valorDoCampo, bool gerarExcecao = true)
         {
             if (valorDoCampo.NaoEstaPreenchido())
-                throw new NegocioException(string.Format(Constantes.O_VALOR_DO_CAMPO_X_NAO_FOI_LOCALIZADO, valorDoCampo));
+            {
+                if (gerarExcecao)
+                    throw new NegocioException(string.Format(Constantes.CAMPO_X_NAO_PREENCHIDO, valorDoCampo));
+                
+                return default;
+            }
 
             var retorno = new List<long>();
             
