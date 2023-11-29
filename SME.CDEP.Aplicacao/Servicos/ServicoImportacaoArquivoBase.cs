@@ -64,11 +64,18 @@ namespace SME.CDEP.Aplicacao.Servicos
             Idiomas = new List<IdNomeDTO>();
             Assuntos = new List<IdNomeDTO>();
             CreditosAutores = new List<IdNomeTipoDTO>();
-            Conservacoes = new List<IdNomeDTO>();
             AcessoDocumentos = new List<IdNomeDTO>();
+            Formatos = new List<IdNomeTipoDTO>();
             Suportes = new List<IdNomeTipoDTO>();
             Cromias = new List<IdNomeDTO>();
-            Formatos = new List<IdNomeTipoDTO>();
+            Conservacoes = new List<IdNomeDTO>();
+        }
+
+        protected async Task ObterDominiosImutaveis()
+        {
+            Suportes = (await servicoSuporte.ObterTodos()).Select(s=> new IdNomeTipoDTO() { Nome = s.Nome, Tipo = s.Tipo}).ToList();
+            Cromias = (await servicoCromia.ObterTodos()).Select(s => new IdNomeDTO() { Nome = s.Nome }).ToList();
+            Conservacoes = (await servicoConservacao.ObterTodos()).Select(s=> new IdNomeDTO() { Nome = s.Nome}).ToList();
         }
 
         public void ValidarArquivo(IFormFile file)

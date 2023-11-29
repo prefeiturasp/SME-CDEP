@@ -18,7 +18,7 @@ namespace SME.CDEP.TesteIntegracao
         [Fact(DisplayName = "Acervo documental - Obter por Id")]
         public async Task Obter_por_id()
         {
-            await InserirDadosBasicos();
+            await InserirDadosBasicosAleatorios();
             await InserirAcervoDocumental();
             var servicoAcervoDocumental = GetServicoAcervoDocumental();
 
@@ -32,7 +32,7 @@ namespace SME.CDEP.TesteIntegracao
         [Fact(DisplayName = "Acervo documental - Obter por Id sem credor")]
         public async Task Obter_por_id_sem_credor()
         {
-            await InserirDadosBasicos();
+            await InserirDadosBasicosAleatorios();
             await InserirAcervoDocumental(false);
             var acervoDocumental = GetServicoAcervoDocumental();
 
@@ -46,7 +46,7 @@ namespace SME.CDEP.TesteIntegracao
         [Fact(DisplayName = "Acervo documental - Obter todos")]
         public async Task Obter_todos()
         {
-            await InserirDadosBasicos();
+            await InserirDadosBasicosAleatorios();
             await InserirAcervoDocumental();
             var acervoDocumental = GetServicoAcervoDocumental();
 
@@ -57,7 +57,7 @@ namespace SME.CDEP.TesteIntegracao
         [Fact(DisplayName = "Acervo documental - Atualizar (Adicionando 4 novos arquivos/documentos, sendo 1 existente)")]
         public async Task Atualizar_com_4_novos()
         {
-            await InserirDadosBasicos();
+            await InserirDadosBasicosAleatorios();
 
             await InserirAcervoDocumental();
             
@@ -145,7 +145,7 @@ namespace SME.CDEP.TesteIntegracao
         [Fact(DisplayName = "Acervo documental - Atualizar (Adicionando 4 novos arquivos/documentos, sendo 1 existente sem código)")]
         public async Task Atualizar_com_4_novos_sem_codigo()
         {
-            await InserirDadosBasicos();
+            await InserirDadosBasicosAleatorios();
 
             await InserirAcervoDocumental();
             
@@ -232,7 +232,7 @@ namespace SME.CDEP.TesteIntegracao
         [Fact(DisplayName = "Acervo documental - Atualizar (Adicionando 4 novos arquivos/documentos, sendo 1 existente sem código novo)")]
         public async Task Atualizar_com_4_novos_sem_codigo_novo()
         {
-            await InserirDadosBasicos();
+            await InserirDadosBasicosAleatorios();
 
             await InserirAcervoDocumental();
             
@@ -319,7 +319,7 @@ namespace SME.CDEP.TesteIntegracao
         [Fact(DisplayName = "Acervo documental - Atualizar (Removendo 1 arquivo/documento, adicionando 5 novos)")]
         public async Task Atualizar_removendo_1_()
         {
-            await InserirDadosBasicos();
+            await InserirDadosBasicosAleatorios();
 
             await InserirAcervoDocumental();
             
@@ -406,7 +406,7 @@ namespace SME.CDEP.TesteIntegracao
         [Fact(DisplayName = "Acervo documental - Atualizar (Removendo todos)")]
         public async Task Atualizar_removendo_todos()
         {
-            await InserirDadosBasicos();
+            await InserirDadosBasicosAleatorios();
 
             await InserirAcervoDocumental();
             
@@ -488,7 +488,7 @@ namespace SME.CDEP.TesteIntegracao
         [Fact(DisplayName = "Acervo documental - Inserir")]
         public async Task Inserir()
         {
-            await InserirDadosBasicos();
+            await InserirDadosBasicosAleatorios();
 
             await InserirAcervoDocumental();
 
@@ -574,7 +574,7 @@ namespace SME.CDEP.TesteIntegracao
         [Fact(DisplayName = "Acervo documental - Não deve inserir código duplicado")]
         public async Task Nao_deve_inserir_codigo_duplicado()
         {
-            await InserirDadosBasicos();
+            await InserirDadosBasicosAleatorios();
 
             await InserirAcervoDocumental();
 
@@ -618,7 +618,7 @@ namespace SME.CDEP.TesteIntegracao
         [Fact(DisplayName = "Acervo documental - Não deve inserir sem código")]
         public async Task Nao_deve_inserir_sem_codigo()
         {
-            await InserirDadosBasicos();
+            await InserirDadosBasicosAleatorios();
 
             await InserirAcervoDocumental();
 
@@ -659,7 +659,7 @@ namespace SME.CDEP.TesteIntegracao
         [Fact(DisplayName = "Acervo documental - Não deve inserir sem código novo")]
         public async Task Nao_deve_inserir_sem_codigo_novo()
         {
-            await InserirDadosBasicos();
+            await InserirDadosBasicosAleatorios();
 
             await InserirAcervoDocumental();
 
@@ -701,7 +701,7 @@ namespace SME.CDEP.TesteIntegracao
         [Fact(DisplayName = "Acervo documental - Não deve inserir código novo a código existente")]
         public async Task Nao_deve_inserir_codigo_novo_a_codigo_existente()
         {
-            await InserirDadosBasicos();
+            await InserirDadosBasicosAleatorios();
 
             await InserirAcervoDocumental();
 
@@ -745,7 +745,7 @@ namespace SME.CDEP.TesteIntegracao
         [Fact(DisplayName = "Acervo documental - Não deve alterar para código existente")]
         public async Task Nao_deve_alterar_para_codigo_existente()
         {
-            await InserirDadosBasicos();
+            await InserirDadosBasicosAleatorios();
 
             await InserirAcervoDocumental();
 
@@ -791,7 +791,7 @@ namespace SME.CDEP.TesteIntegracao
         [Fact(DisplayName = "Acervo documental - Não deve alterar para código novo existente")]
         public async Task Nao_deve_alterar_para_codigo_novo_existente()
         {
-            await InserirDadosBasicos();
+            await InserirDadosBasicosAleatorios();
 
             await InserirAcervoDocumental();
 
@@ -837,7 +837,7 @@ namespace SME.CDEP.TesteIntegracao
         [Fact(DisplayName = "Acervo documental - Não deve alterar sem código")]
         public async Task Nao_deve_alterar_sem_codigo()
         {
-            await InserirDadosBasicos();
+            await InserirDadosBasicosAleatorios();
 
             await InserirAcervoDocumental();
 
@@ -881,7 +881,7 @@ namespace SME.CDEP.TesteIntegracao
         [Fact(DisplayName = "Acervo documental - Não deve alterar sem código novo")]
         public async Task Nao_deve_alterar_sem_codigo_novo()
         {
-            await InserirDadosBasicos();
+            await InserirDadosBasicosAleatorios();
 
             await InserirAcervoDocumental();
 
@@ -925,7 +925,7 @@ namespace SME.CDEP.TesteIntegracao
          [Fact(DisplayName = "Acervo documental - Não deve alterar com código e código novo iguais")]
         public async Task Nao_deve_alterar_com_codigo_e_codigo_novo_iguais()
         {
-            await InserirDadosBasicos();
+            await InserirDadosBasicosAleatorios();
 
             await InserirAcervoDocumental();
 

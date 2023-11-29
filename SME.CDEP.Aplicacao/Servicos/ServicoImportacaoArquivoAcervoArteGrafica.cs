@@ -345,12 +345,14 @@ namespace SME.CDEP.Aplicacao.Servicos
             try
             {
                 await ValidarOuInserirCreditoAutoresCoAutoresTipoAutoria(linhasComsucesso.Where(w=> !w.Credito.PossuiErro).Select(s => s.Credito.Conteudo).ToArray().UnificarPipe().SplitPipe().Distinct().Where(w=> w.EstaPreenchido()), TipoCreditoAutoria.Credito);
+
+                await ObterDominiosImutaveis();
                 
-                await ValidarOuInserirCromia(linhasComsucesso.Where(w=> !w.Cromia.PossuiErro).Select(s => s.Cromia.Conteudo).Distinct().Where(w=> w.EstaPreenchido()));
-                
-                await ValidarOuInserirSuporte(linhasComsucesso.Where(w=> !w.Suporte.PossuiErro).Select(s => s.Suporte.Conteudo).Distinct().Where(w=> w.EstaPreenchido()), TipoSuporte.IMAGEM);
-                
-                await ValidarOuInserirConservacao(linhasComsucesso.Where(w=> !w.EstadoConservacao.PossuiErro).Select(s => s.EstadoConservacao.Conteudo).Distinct().Where(w=> w.EstaPreenchido()));
+                // await ValidarOuInserirCromia(linhasComsucesso.Where(w=> !w.Cromia.PossuiErro).Select(s => s.Cromia.Conteudo).Distinct().Where(w=> w.EstaPreenchido()));
+                //
+                // await ValidarOuInserirSuporte(linhasComsucesso.Where(w=> !w.Suporte.PossuiErro).Select(s => s.Suporte.Conteudo).Distinct().Where(w=> w.EstaPreenchido()), TipoSuporte.IMAGEM);
+                //
+                // await ValidarOuInserirConservacao(linhasComsucesso.Where(w=> !w.EstadoConservacao.PossuiErro).Select(s => s.EstadoConservacao.Conteudo).Distinct().Where(w=> w.EstaPreenchido()));
 
             }
             catch (Exception e)
@@ -398,6 +400,7 @@ namespace SME.CDEP.Aplicacao.Servicos
                         {
                             Conteudo = planilha.ObterValorDaCelula(numeroLinha, Constantes.ACERVO_ARTE_GRAFICA_CAMPO_CREDITO),
                             LimiteCaracteres = Constantes.CARACTERES_PERMITIDOS_200,
+                            PermiteNovoRegistro = true
                         },
                         Localizacao = new LinhaConteudoAjustarDTO()
                         {
@@ -433,13 +436,13 @@ namespace SME.CDEP.Aplicacao.Servicos
                         {
                             Conteudo = planilha.ObterValorDaCelula(numeroLinha, Constantes.ACERVO_ARTE_GRAFICA_CAMPO_ESTADO_CONSERVACAO),
                             LimiteCaracteres = Constantes.CARACTERES_PERMITIDOS_500,
-                            EhCampoObrigatorio = true
+                            EhCampoObrigatorio = true,
                         },
                         Cromia = new LinhaConteudoAjustarDTO()
                         {
                             Conteudo = planilha.ObterValorDaCelula(numeroLinha, Constantes.ACERVO_ARTE_GRAFICA_CAMPO_CROMIA),
                             LimiteCaracteres = Constantes.CARACTERES_PERMITIDOS_500,
-                            EhCampoObrigatorio = true
+                            EhCampoObrigatorio = true,
                         },
                         Largura = new LinhaConteudoAjustarDTO()
                         {
@@ -465,7 +468,8 @@ namespace SME.CDEP.Aplicacao.Servicos
                         {
                             Conteudo = planilha.ObterValorDaCelula(numeroLinha, Constantes.ACERVO_ARTE_GRAFICA_CAMPO_SUPORTE),
                             LimiteCaracteres = Constantes.CARACTERES_PERMITIDOS_500,
-                            EhCampoObrigatorio = true
+                            EhCampoObrigatorio = true,
+                            PermiteNovoRegistro = true
                         },
                         Quantidade = new LinhaConteudoAjustarDTO()
                         {
