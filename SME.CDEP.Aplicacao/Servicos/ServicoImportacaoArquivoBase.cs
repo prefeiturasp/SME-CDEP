@@ -486,7 +486,7 @@ namespace SME.CDEP.Aplicacao.Servicos
         {
             var valoresPermitidos = new List<string>() { Constantes.OPCAO_SIM, Constantes.OPCAO_NAO };
             
-            if (valoresPermitidos.Contains(linha.Conteudo))
+            if (valoresPermitidos.Contains(linha.Conteudo.ToLower()))
                 return linha.Conteudo.EhOpcaoSim();
             
             return default;
