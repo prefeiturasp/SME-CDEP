@@ -485,6 +485,9 @@ namespace SME.CDEP.Aplicacao.Servicos
         protected static bool? ObterConteudoSimNao(LinhaConteudoAjustarDTO linha)
         {
             var valoresPermitidos = new List<string>() { Constantes.OPCAO_SIM, Constantes.OPCAO_NAO };
+
+            if (linha.Conteudo.EhNulo())
+                return default;
             
             if (valoresPermitidos.Contains(linha.Conteudo.ToLower()))
                 return linha.Conteudo.EhOpcaoSim();
@@ -492,9 +495,9 @@ namespace SME.CDEP.Aplicacao.Servicos
             return default;
         } 
         
-        protected static long ObterConteudoLongoOuNulo(LinhaConteudoAjustarDTO linha)
+        protected static long? ObterConteudoLongoOuNulo(LinhaConteudoAjustarDTO linha)
         {
-            return linha.PossuiErro ? default : linha.Conteudo.EstaPreenchido() ? long.Parse(linha.Conteudo) : default;
+            return linha.PossuiErro ? null : linha.Conteudo.EstaPreenchido() ? long.Parse(linha.Conteudo) : null;
         }
         
         protected static double? ObterConteudoDoubleOuNulo(LinhaConteudoAjustarDTO linha)
@@ -558,7 +561,7 @@ namespace SME.CDEP.Aplicacao.Servicos
                 if (gerarExcecao)
                     throw new NegocioException(string.Format(Constantes.CAMPO_X_NAO_PREENCHIDO, valorDoCampo));
                 
-                return default;
+                return null;
             }
 
             var retorno = new List<long>();
@@ -575,7 +578,7 @@ namespace SME.CDEP.Aplicacao.Servicos
                 else
                     retorno.Add(CreditosAutores.FirstOrDefault(f => f.Nome.SaoIguais(item) && f.Tipo.SaoIguais((int)tipoCreditoAutoria)).Id);
             }
-            return retorno.ToArray();
+            return retorno.Any() ? retorno.ToArray() : null;
         }
         
         protected long[] ObterAssuntosIdsPorValorDoCampo(string valorDoCampo, bool gerarExcecao = true)
@@ -585,7 +588,7 @@ namespace SME.CDEP.Aplicacao.Servicos
                 if (gerarExcecao)
                     throw new NegocioException(string.Format(Constantes.CAMPO_X_NAO_PREENCHIDO, valorDoCampo));
                 
-                return default;
+                return null;
             }
 
             var retorno = new List<long>();
@@ -602,9 +605,8 @@ namespace SME.CDEP.Aplicacao.Servicos
                 else
                     retorno.Add(Assuntos.FirstOrDefault(f => f.Nome.SaoIguais(item)).Id);
             }
-                
             
-            return retorno.ToArray();
+            return retorno.Any() ? retorno.ToArray() : null;
         }
         
         protected long[] ObterAcessoDocumentosIdsPorValorDoCampo(string valorDoCampo, bool gerarExcecao = true)
@@ -614,7 +616,7 @@ namespace SME.CDEP.Aplicacao.Servicos
                 if (gerarExcecao)
                     throw new NegocioException(string.Format(Constantes.CAMPO_X_NAO_PREENCHIDO, valorDoCampo));
                 
-                return default;
+                return null;
             }
 
             var retorno = new List<long>();
@@ -631,7 +633,7 @@ namespace SME.CDEP.Aplicacao.Servicos
                 else
                     retorno.Add(AcessoDocumentos.FirstOrDefault(f => f.Nome.SaoIguais(item)).Id);
             }
-            return retorno.ToArray();
+            return retorno.Any() ? retorno.ToArray() : null;
         }
         
         protected long ObterIdiomaIdPorValorDoCampo(string valorDoCampo)
@@ -731,7 +733,7 @@ namespace SME.CDEP.Aplicacao.Servicos
             if (possuiNome)
                 return dominios.FirstOrDefault(f => f.Nome.Equals(valorDoCampo) && f.Tipo == tipoFormato).Id;    
                 
-            return default;
+            return null;
         }
         
         private long ObterIdentificadorIdPorValorDoCampo(string valorDoCampo, List<IdNomeDTO> dominios, string nomeDoCampo)
@@ -751,7 +753,7 @@ namespace SME.CDEP.Aplicacao.Servicos
             if (possuiNome)
                 return dominios.FirstOrDefault(f => f.Nome.Equals(valorDoCampo)).Id;    
                 
-            return default;
+            return null;
         }
         
         protected bool ObterCopiaDigitalPorValorDoCampo(string valorDoCampo)

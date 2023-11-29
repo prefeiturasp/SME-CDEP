@@ -623,9 +623,10 @@ namespace SME.CDEP.TesteIntegracao
         [Fact(DisplayName = "Importação Arquivo Acervo Arte Grafica - Deve permitir atualizar linha do arquivo para sucesso")]
         public async Task Deve_permitir_atualizar_linha_do_arquivo_para_sucesso()
         {
-            var servicoImportacaoArquivo = GetServicoImportacaoArquivoAcervoArteGrafica();
-
+           var servicoImportacaoArquivo = GetServicoImportacaoArquivoAcervoArteGrafica();
+           
             var linhasInseridas = AcervoArteGraficaLinhaMock.GerarAcervoArteGraficaLinhaDTO().Generate(10);
+            
             linhasInseridas[3].PossuiErros = true;
             linhasInseridas[3].Largura.PossuiErro = true;
             linhasInseridas[3].Largura.Mensagem = string.Format(Dominio.Constantes.Constantes.CAMPO_X_REQUER_UM_VALOR_NUMERICO, Dominio.Constantes.Constantes.LARGURA);
@@ -651,6 +652,67 @@ namespace SME.CDEP.TesteIntegracao
             conteudo.Any(a=> !a.PossuiErros).ShouldBeTrue();
             
             arquivo.Status.ShouldBe(ImportacaoStatus.Sucesso);
+        }
+        
+        [Fact(DisplayName = "Importação Arquivo Acervo Arte Grafica - Validação de RetornoObjeto")]
+        public async Task Validacao_retorno_objeto()
+        {
+            var servicoImportacaoArquivo = GetServicoImportacaoArquivoAcervoArteGrafica();
+           
+            var linhasInseridas = AcervoArteGraficaLinhaMock.GerarAcervoArteGraficaLinhaDTO().Generate(9);
+            linhasInseridas.Add(new AcervoArteGraficaLinhaDTO()
+            {
+                PossuiErros = true,
+                Titulo = new LinhaConteudoAjustarDTO() { PossuiErro = true},
+                Localizacao = new LinhaConteudoAjustarDTO() { PossuiErro = true},
+                Codigo = new LinhaConteudoAjustarDTO() { PossuiErro = true},
+                Procedencia = new LinhaConteudoAjustarDTO() { PossuiErro = true},
+                Data = new LinhaConteudoAjustarDTO() { PossuiErro = true},
+                CopiaDigital = new LinhaConteudoAjustarDTO() { PossuiErro = true},
+                PermiteUsoImagem = new LinhaConteudoAjustarDTO() { PossuiErro = true},
+                Largura = new LinhaConteudoAjustarDTO() { PossuiErro = true},
+                Altura = new LinhaConteudoAjustarDTO() { PossuiErro = true},
+                Diametro = new LinhaConteudoAjustarDTO() { PossuiErro = true},
+                Tecnica = new LinhaConteudoAjustarDTO() { PossuiErro = true},
+                Quantidade = new LinhaConteudoAjustarDTO() { PossuiErro = true},
+                Descricao = new LinhaConteudoAjustarDTO() { PossuiErro = true},
+                EstadoConservacao = new LinhaConteudoAjustarDTO() { PossuiErro = true},
+                Cromia = new LinhaConteudoAjustarDTO() { PossuiErro = true},
+                Suporte = new LinhaConteudoAjustarDTO() { PossuiErro = true},
+                Credito = new LinhaConteudoAjustarDTO() { PossuiErro = true},
+            });
+            
+            await InserirNaBase(new ImportacaoArquivo()
+            {
+                Nome = faker.Hacker.Verb(),
+                TipoAcervo = TipoAcervo.ArtesGraficas,
+                Status = ImportacaoStatus.Erros,
+                Conteudo = JsonConvert.SerializeObject(linhasInseridas),
+                CriadoEm = DateTimeExtension.HorarioBrasilia().Date, CriadoPor = ConstantesTestes.SISTEMA, CriadoLogin = ConstantesTestes.LOGIN_123456789
+            });
+            
+            var retorno = await servicoImportacaoArquivo.ObterImportacaoPendente();
+            foreach (var erro in retorno.Erros)
+            {
+                erro.RetornoObjeto.Titulo.ShouldBeNull();
+                erro.RetornoObjeto.Codigo.ShouldBeNull();
+                erro.RetornoObjeto.Localizacao.ShouldBeNull();
+                erro.RetornoObjeto.Procedencia.ShouldBeNull();
+                erro.RetornoObjeto.DataAcervo.ShouldBeNull();
+                erro.RetornoObjeto.CopiaDigital.HasValue.ShouldBeFalse();
+                erro.RetornoObjeto.PermiteUsoImagem.HasValue.ShouldBeFalse();
+                erro.RetornoObjeto.ConservacaoId.ShouldBeNull();
+                erro.RetornoObjeto.CromiaId.ShouldBeNull();
+                erro.RetornoObjeto.Largura.ShouldBeNull();
+                erro.RetornoObjeto.Altura.ShouldBeNull();
+                erro.RetornoObjeto.Diametro.ShouldBeNull();
+                erro.RetornoObjeto.Tecnica.ShouldBeNull();
+                erro.RetornoObjeto.SuporteId.ShouldBeNull();
+                erro.RetornoObjeto.Quantidade.ShouldBeNull();
+                erro.RetornoObjeto.Descricao.ShouldBeNull();
+                erro.RetornoObjeto.CreditosAutoresIds.ShouldBeNull();
+            }
+            retorno.ShouldNotBeNull();
         }
     }
 }

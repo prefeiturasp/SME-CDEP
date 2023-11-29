@@ -138,7 +138,6 @@ namespace SME.CDEP.TesteIntegracao
         
             var acervos = ObterTodos<Acervo>();
             var acervosTridimensional = ObterTodos<AcervoTridimensional>();
-            var acervoCreditoAutors = ObterTodos<AcervoCreditoAutor>();
             var conservacoes = ObterTodos<Conservacao>();
             
             //Acervos inseridos
@@ -245,7 +244,7 @@ namespace SME.CDEP.TesteIntegracao
                 retorno.Erros.Any(a=> a.RetornoObjeto.Diametro.SaoIguais(linhaInserida.Diametro.Conteudo.ObterDoubleOuNuloPorValorDoCampo())).ShouldBeTrue();
 
                 if (linhaInserida.Quantidade.PossuiErro)
-                    retorno.Erros.Any(a=> a.RetornoObjeto.Quantidade.SaoIguais(0)).ShouldBeTrue();
+                    retorno.Erros.Any(a=> a.RetornoObjeto.Quantidade.EhNulo()).ShouldBeTrue();
                 else
                     retorno.Erros.Any(a=> a.RetornoObjeto.Quantidade.SaoIguais(linhaInserida.Quantidade.Conteudo.ObterLongoPorValorDoCampo())).ShouldBeTrue();
                 
@@ -486,6 +485,57 @@ namespace SME.CDEP.TesteIntegracao
             conteudo.Any(a=> !a.PossuiErros).ShouldBeTrue();
             
             arquivo.Status.ShouldBe(ImportacaoStatus.Sucesso);
+        }
+        
+        [Fact(DisplayName = "Importação Arquivo Acervo Tridimensional - Validação de RetornoObjeto")]
+        public async Task Validacao_retorno_objeto()
+        {
+            var servicoImportacaoArquivo = GetServicoImportacaoArquivoAcervoTridimensional();
+
+            var linhasInseridas = AcervoTridimensionalLinhaMock.GerarAcervoTridimensionalLinhaDTO().Generate(10);
+            
+            linhasInseridas.Add(new AcervoTridimensionalLinhaDTO()
+            {
+                PossuiErros = true,
+                Titulo = new LinhaConteudoAjustarDTO() { PossuiErro = true},
+                Profundidade = new LinhaConteudoAjustarDTO() { PossuiErro = true},
+                Procedencia = new LinhaConteudoAjustarDTO() { PossuiErro = true},
+                Data = new LinhaConteudoAjustarDTO() { PossuiErro = true},
+                Descricao = new LinhaConteudoAjustarDTO() { PossuiErro = true},
+                Diametro = new LinhaConteudoAjustarDTO() { PossuiErro = true},
+                Quantidade = new LinhaConteudoAjustarDTO() { PossuiErro = true},
+                Altura = new LinhaConteudoAjustarDTO() { PossuiErro = true},
+                Largura = new LinhaConteudoAjustarDTO() { PossuiErro = true},
+                EstadoConservacao = new LinhaConteudoAjustarDTO() { PossuiErro = true},
+                Codigo = new LinhaConteudoAjustarDTO() { PossuiErro = true},
+            });
+            
+            await InserirNaBase(new ImportacaoArquivo()
+            {
+                Nome = faker.Hacker.Verb(),
+                TipoAcervo = TipoAcervo.Tridimensional,
+                Status = ImportacaoStatus.Erros,
+                Conteudo = JsonConvert.SerializeObject(linhasInseridas),
+                CriadoEm = DateTimeExtension.HorarioBrasilia().Date, CriadoPor = ConstantesTestes.SISTEMA, CriadoLogin = ConstantesTestes.LOGIN_123456789
+            });
+            
+            var retorno = await servicoImportacaoArquivo.ObterImportacaoPendente();
+            foreach (var erro in retorno.Erros)
+            {
+                erro.RetornoObjeto.Titulo.ShouldBeNull();
+                erro.RetornoObjeto.Procedencia.ShouldBeNull();
+                erro.RetornoObjeto.DataAcervo.ShouldBeNull();
+                erro.RetornoObjeto.Descricao.ShouldBeNull();
+                erro.RetornoObjeto.Quantidade.ShouldBeNull();
+                erro.RetornoObjeto.Profundidade.ShouldBeNull();
+                erro.RetornoObjeto.Diametro.ShouldBeNull();
+                erro.RetornoObjeto.Altura.ShouldBeNull();
+                erro.RetornoObjeto.Largura.ShouldBeNull();
+                erro.RetornoObjeto.ConservacaoId.ShouldBeNull();
+                erro.RetornoObjeto.ConservacaoId.ShouldBeNull();
+                erro.RetornoObjeto.Codigo.ShouldBeNull();
+            }
+            retorno.ShouldNotBeNull();
         }
     }
 }

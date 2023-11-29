@@ -1,5 +1,4 @@
-﻿using Bogus.Extensions.Brazil;
-using Newtonsoft.Json;
+﻿using Newtonsoft.Json;
 using Shouldly;
 using SME.CDEP.Aplicacao.DTOS;
 using SME.CDEP.Dominio.Entidades;
@@ -699,6 +698,72 @@ namespace SME.CDEP.TesteIntegracao
             conteudo.Any(a=> !a.PossuiErros).ShouldBeTrue();
             
             arquivo.Status.ShouldBe(ImportacaoStatus.Sucesso);
+        }
+        
+        [Fact(DisplayName = "Importação Arquivo Acervo Documental - Validação de RetornoObjeto")]
+        public async Task Validacao_retorno_objeto()
+        {
+            var servicoImportacaoArquivo = GetServicoImportacaoArquivoAcervoDocumental();
+
+            var acervoDocumentalLinhas = AcervoDocumentalLinhaMock.GerarAcervoDocumentalLinhaDTO().Generate(10);
+            
+            acervoDocumentalLinhas.Add(new AcervoDocumentalLinhaDTO()
+            {
+                PossuiErros = true,
+                Titulo = new LinhaConteudoAjustarDTO() { PossuiErro = true},
+                CodigoNovo = new LinhaConteudoAjustarDTO() { PossuiErro = true},
+                Material = new LinhaConteudoAjustarDTO() { PossuiErro = true},
+                Autor = new LinhaConteudoAjustarDTO() { PossuiErro = true},
+                Descricao = new LinhaConteudoAjustarDTO() { PossuiErro = true},
+                TipoAnexo = new LinhaConteudoAjustarDTO() { PossuiErro = true},
+                TamanhoArquivo = new LinhaConteudoAjustarDTO() { PossuiErro = true},
+                AcessoDocumento = new LinhaConteudoAjustarDTO() { PossuiErro = true},
+                Ano = new LinhaConteudoAjustarDTO() { PossuiErro = true},
+                Localizacao = new LinhaConteudoAjustarDTO() { PossuiErro = true},
+                NumeroPaginas = new LinhaConteudoAjustarDTO() { PossuiErro = true},
+                Altura = new LinhaConteudoAjustarDTO() { PossuiErro = true},
+                Largura = new LinhaConteudoAjustarDTO() { PossuiErro = true},
+                CopiaDigital = new LinhaConteudoAjustarDTO() { PossuiErro = true},
+                Volume = new LinhaConteudoAjustarDTO() { PossuiErro = true},
+                Idioma = new LinhaConteudoAjustarDTO() { PossuiErro = true},
+                EstadoConservacao = new LinhaConteudoAjustarDTO() { PossuiErro = true},
+                Codigo = new LinhaConteudoAjustarDTO() { PossuiErro = true},
+            });
+            
+            await InserirNaBase(new ImportacaoArquivo()
+            {
+                Nome = faker.Hacker.Verb(),
+                TipoAcervo = TipoAcervo.DocumentacaoHistorica,
+                Status = ImportacaoStatus.Pendente,
+                Conteudo = JsonConvert.SerializeObject(acervoDocumentalLinhas),
+                CriadoEm = DateTimeExtension.HorarioBrasilia().Date, CriadoPor = ConstantesTestes.SISTEMA,
+                CriadoLogin = ConstantesTestes.LOGIN_123456789
+            });
+            
+            var retorno = await servicoImportacaoArquivo.ObterImportacaoPendente();
+            foreach (var erro in retorno.Erros)
+            {
+                erro.RetornoObjeto.Titulo.ShouldBeNull();
+                erro.RetornoObjeto.CodigoNovo.ShouldBeNull();
+                erro.RetornoObjeto.MaterialId.ShouldBeNull();
+                erro.RetornoObjeto.Descricao.ShouldBeNull();
+                erro.RetornoObjeto.TipoAnexo.ShouldBeNull();
+                erro.RetornoObjeto.Ano.ShouldBeNull();
+                erro.RetornoObjeto.TamanhoArquivo.ShouldBeNull();
+                erro.RetornoObjeto.NumeroPagina.ShouldBeNull();
+                erro.RetornoObjeto.Altura.ShouldBeNull();
+                erro.RetornoObjeto.Largura.ShouldBeNull();
+                erro.RetornoObjeto.AcessoDocumentosIds.ShouldBeNull();
+                erro.RetornoObjeto.Volume.ShouldBeNull();
+                erro.RetornoObjeto.IdiomaId.ShouldBeNull();
+                erro.RetornoObjeto.Localizacao.ShouldBeNull();
+                erro.RetornoObjeto.CopiaDigital.ShouldBeNull();
+                erro.RetornoObjeto.ConservacaoId.ShouldBeNull();
+                erro.RetornoObjeto.Codigo.ShouldBeNull();
+                erro.RetornoObjeto.Codigo.ShouldBeNull();
+                erro.RetornoObjeto.CreditosAutoresIds.ShouldBeNull();
+            }
+            retorno.ShouldNotBeNull();
         }
     }
 }
