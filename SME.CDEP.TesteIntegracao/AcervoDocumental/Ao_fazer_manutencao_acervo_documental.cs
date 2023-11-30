@@ -123,7 +123,7 @@ namespace SME.CDEP.TesteIntegracao
             acervoDocumental.NumeroPagina.ShouldBe(acervoDocumentalAlteracaoDto.NumeroPagina);
             acervoDocumental.Volume.ShouldBe(acervoDocumentalAlteracaoDto.Volume);
             acervoDocumental.TipoAnexo.ShouldBe(acervoDocumentalAlteracaoDto.TipoAnexo);
-            acervoDocumental.TamanhoArquivo.ShouldBe(acervoDocumentalAlteracaoDto.TamanhoArquivo);
+            acervoDocumental.TamanhoArquivo.ShouldBe(acervoDocumentalAlteracaoDto.TamanhoArquivo);            
             acervoDocumental.CopiaDigital.ShouldBe(acervoDocumentalAlteracaoDto.CopiaDigital);
             
             var acervoDocumentalArquivos = ObterTodos<AcervoDocumentalArquivo>();

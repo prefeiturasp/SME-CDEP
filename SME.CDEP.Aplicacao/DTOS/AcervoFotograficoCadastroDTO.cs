@@ -15,8 +15,8 @@ public class AcervoFotograficoCadastroDTO : AcervoCadastroDTO
     [MaxLength(50, ErrorMessage = "A data do acervo fotográfico não pode conter mais que 50 caracteres")]
     public string DataAcervo { get; set; }
     
-    public bool CopiaDigital { get; set; }
-    public bool PermiteUsoImagem { get; set; }
+    public bool? CopiaDigital { get; set; }
+    public bool? PermiteUsoImagem { get; set; }
     
     [Required(ErrorMessage = "É necessário informar o identificador da conservação do acervo fotografico")]
     [Range(1, long.MaxValue, ErrorMessage = "O identificador da conservação do acervo fotográfico deve ser maior que zero")]

@@ -21,7 +21,7 @@ public class AcervoDocumentalCompleto : EntidadeBaseAuditavel
     public double? Altura { get; set; }
     public string TamanhoArquivo { get; set; }
     public string Localizacao { get; set; }
-    public bool CopiaDigital { get; set; }
+    public bool? CopiaDigital { get; set; }
     public long? ConservacaoId { get; set; }
     public string ConservacaoNome { get; set; }
     public string Descricao { get; set; }
