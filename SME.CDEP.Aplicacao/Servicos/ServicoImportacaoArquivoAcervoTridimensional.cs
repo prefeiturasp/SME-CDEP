@@ -376,7 +376,7 @@ namespace SME.CDEP.Aplicacao.Servicos
                         Profundidade = new LinhaConteudoAjustarDTO()
                         {
                             Conteudo = planilha.ObterValorDaCelula(numeroLinha, Constantes.ACERVO_TRIDIMENSIONAL_CAMPO_PROFUNDIDADE),
-                            LimiteCaracteres = Constantes.CARACTERES_PERMITIDOS_500,
+                            FormatoTipoDeCampo = Constantes.FORMATO_DOUBLE
                         },
                         Diametro = new LinhaConteudoAjustarDTO()
                         {
