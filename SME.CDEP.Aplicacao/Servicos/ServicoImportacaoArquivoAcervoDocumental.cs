@@ -328,8 +328,8 @@ namespace SME.CDEP.Aplicacao.Servicos
 
                     if (linha.Codigo.Conteudo.NaoEstaPreenchido() && linha.CodigoNovo.Conteudo.NaoEstaPreenchido())
                     {
-                        DefinirMensagemErro(linha.Codigo, Constantes.CAMPO_CODIGO_ANTIGO_OU_CODIGO_NOVO_DEVE_SER_PREENCHIDO);
-                        DefinirMensagemErro(linha.CodigoNovo, Constantes.CAMPO_CODIGO_ANTIGO_OU_CODIGO_NOVO_DEVE_SER_PREENCHIDO);
+                        DefinirMensagemErro(linha.Codigo, string.Format(Constantes.CAMPO_X_NAO_PREENCHIDO,Constantes.CODIGO_ANTIGO));
+                        DefinirMensagemErro(linha.CodigoNovo, string.Format(Constantes.CAMPO_X_NAO_PREENCHIDO,Constantes.CODIGO_NOVO));
                     }
                     linha.PossuiErros = PossuiErro(linha);
                 }

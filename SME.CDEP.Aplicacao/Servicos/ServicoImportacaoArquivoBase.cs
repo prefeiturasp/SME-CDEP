@@ -1,6 +1,4 @@
-﻿using AutoMapper;
-using ClosedXML.Excel;
-using DocumentFormat.OpenXml.Office2010.ExcelAc;
+﻿using ClosedXML.Excel;
 using Microsoft.AspNetCore.Http;
 using Newtonsoft.Json;
 using SME.CDEP.Aplicacao.DTOS;
@@ -534,19 +532,9 @@ namespace SME.CDEP.Aplicacao.Servicos
             Formatos.Add(new IdNomeTipoDTO() { Id = id, Nome = nome, Tipo = (int)tipoFormato });
         }
         
-        protected long ObterEditoraIdPorValorDoCampo(string valorDoCampo)
-        {
-            return ObterIdentificadorIdPorValorDoCampo(valorDoCampo, Editoras, Constantes.EDITORA);
-        }
-        
         protected long? ObterEditoraIdOuNuloPorValorDoCampo(string valorDoCampo)
         {
             return ObterIdentificadorIdOuNuloPorValorDoCampo(valorDoCampo, Editoras);
-        }
-        
-        protected long ObterSerieColecaoIdPorValorDoCampo(string valorDoCampo)
-        {
-            return ObterIdentificadorIdPorValorDoCampo(valorDoCampo, SeriesColecoes, Constantes.SERIE_COLECAO);
         }
         
         protected long? ObterSerieColecaoIdOuNuloPorValorDoCampo(string valorDoCampo)
@@ -569,14 +557,17 @@ namespace SME.CDEP.Aplicacao.Servicos
             var conteudoCampoArray = valorDoCampo.FormatarTextoEmArray().ToList();
             foreach (var item in conteudoCampoArray)
             {
-                var possuiNome = CreditosAutores.Any(f => f.Nome.Equals(item));
-                if (!possuiNome)
+                if (item.EstaPreenchido())
                 {
-                    if (gerarExcecao)
-                        throw new NegocioException(string.Format(Constantes.O_VALOR_DO_CAMPO_X_NAO_FOI_LOCALIZADO, valorDoCampo));
+                    var possuiNome = CreditosAutores.Any(f => f.Nome.Equals(item));
+                    if (!possuiNome)
+                    {
+                        if (gerarExcecao)
+                            throw new NegocioException(string.Format(Constantes.O_VALOR_DO_CAMPO_X_NAO_FOI_LOCALIZADO, valorDoCampo));
+                    }
+                    else
+                        retorno.Add(CreditosAutores.FirstOrDefault(f => f.Nome.SaoIguais(item) && f.Tipo.SaoIguais((int)tipoCreditoAutoria)).Id);    
                 }
-                else
-                    retorno.Add(CreditosAutores.FirstOrDefault(f => f.Nome.SaoIguais(item) && f.Tipo.SaoIguais((int)tipoCreditoAutoria)).Id);
             }
             return retorno.Any() ? retorno.ToArray() : null;
         }
@@ -596,14 +587,17 @@ namespace SME.CDEP.Aplicacao.Servicos
             var conteudoCampoArray = valorDoCampo.FormatarTextoEmArray().ToList();
             foreach (var item in conteudoCampoArray)
             {
-                var possuiNome = Assuntos.Any(f => f.Nome.Equals(item));
-                if (!possuiNome)
+                if (item.EstaPreenchido())
                 {
-                    if (gerarExcecao)
-                        throw new NegocioException(string.Format(Constantes.O_VALOR_DO_CAMPO_X_NAO_FOI_LOCALIZADO, valorDoCampo));
+                    var possuiNome = Assuntos.Any(f => f.Nome.Equals(item));
+                    if (!possuiNome)
+                    {
+                        if (gerarExcecao)
+                            throw new NegocioException(string.Format(Constantes.O_VALOR_DO_CAMPO_X_NAO_FOI_LOCALIZADO, valorDoCampo));
+                    }
+                    else
+                        retorno.Add(Assuntos.FirstOrDefault(f => f.Nome.SaoIguais(item)).Id);
                 }
-                else
-                    retorno.Add(Assuntos.FirstOrDefault(f => f.Nome.SaoIguais(item)).Id);
             }
             
             return retorno.Any() ? retorno.ToArray() : null;
@@ -624,14 +618,17 @@ namespace SME.CDEP.Aplicacao.Servicos
             var conteudoCampoArray = valorDoCampo.FormatarTextoEmArray().ToList();
             foreach (var item in conteudoCampoArray)
             {
-                var possuiNome = AcessoDocumentos.Any(f => f.Nome.Equals(item));
-                if (!possuiNome)
+                if (item.EstaPreenchido())
                 {
-                    if (gerarExcecao)
-                        throw new NegocioException(string.Format(Constantes.O_VALOR_DO_CAMPO_X_NAO_FOI_LOCALIZADO, valorDoCampo));
+                    var possuiNome = AcessoDocumentos.Any(f => f.Nome.Equals(item));
+                    if (!possuiNome)
+                    {
+                        if (gerarExcecao)
+                            throw new NegocioException(string.Format(Constantes.O_VALOR_DO_CAMPO_X_NAO_FOI_LOCALIZADO, valorDoCampo));
+                    }
+                    else
+                        retorno.Add(AcessoDocumentos.FirstOrDefault(f => f.Nome.SaoIguais(item)).Id);
                 }
-                else
-                    retorno.Add(AcessoDocumentos.FirstOrDefault(f => f.Nome.SaoIguais(item)).Id);
             }
             return retorno.Any() ? retorno.ToArray() : null;
         }
