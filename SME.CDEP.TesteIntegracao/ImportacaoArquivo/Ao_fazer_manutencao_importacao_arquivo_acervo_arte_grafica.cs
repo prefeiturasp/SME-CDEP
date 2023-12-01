@@ -21,7 +21,7 @@ namespace SME.CDEP.TesteIntegracao
         {
             var servicoImportacaoArquivo = GetServicoImportacaoArquivoAcervoArteGrafica();
 
-            var acervoArteGraficaLinhas = GerarAcervoArteGraficaLinhaDTO().Generate(10);
+            var acervoArteGraficaLinhas = AcervoArteGraficaLinhaMock.GerarAcervoArteGraficaLinhaDTO().Generate(10);
 
             acervoArteGraficaLinhas[2].Titulo.Conteudo = string.Empty;
             acervoArteGraficaLinhas[4].Cromia.Conteudo = string.Empty;
@@ -111,7 +111,7 @@ namespace SME.CDEP.TesteIntegracao
         {
             var servicoImportacaoArquivo = GetServicoImportacaoArquivoAcervoArteGrafica();
         
-            var acervoArteGraficaLinhas = GerarAcervoArteGraficaLinhaDTO().Generate(10);
+            var acervoArteGraficaLinhas = AcervoArteGraficaLinhaMock.GerarAcervoArteGraficaLinhaDTO().Generate(10);
            
             await servicoImportacaoArquivo.ValidacaoObterOuInserirDominios(acervoArteGraficaLinhas);
         
@@ -141,7 +141,7 @@ namespace SME.CDEP.TesteIntegracao
         {
             var servicoImportacaoArquivo = GetServicoImportacaoArquivoAcervoArteGrafica();
         
-            var acervoArteGraficaLinhas = GerarAcervoArteGraficaLinhaDTO().Generate(10);
+            var acervoArteGraficaLinhas = AcervoArteGraficaLinhaMock.GerarAcervoArteGraficaLinhaDTO().Generate(10);
         
             await InserirNaBase(new ImportacaoArquivo()
             {
@@ -209,13 +209,14 @@ namespace SME.CDEP.TesteIntegracao
             }
         }
         
-        [Fact(DisplayName = "Importação Arquivo Acervo Arte Grafica - Geral - Com erros em 3 linhas")]
+        [Fact(DisplayName = "Importação Arquivo Acervo Arte Grafica - Geral - Com erros em 4 linhas")]
         public async Task Importacao_geral()
         {
             var servicoImportacaoArquivo = GetServicoImportacaoArquivoAcervoArteGrafica();
         
-            var acervoArteGraficaLinhas = GerarAcervoArteGraficaLinhaDTO().Generate(10);
+            var acervoArteGraficaLinhas = AcervoArteGraficaLinhaMock.GerarAcervoArteGraficaLinhaDTO().Generate(10);
            
+            acervoArteGraficaLinhas[1].CopiaDigital.Conteudo = acervoArteGraficaLinhas[1].Titulo.Conteudo;
             acervoArteGraficaLinhas[3].Largura.Conteudo = "ABC3512";
             acervoArteGraficaLinhas[5].Altura.Conteudo = "1212ABC";
             acervoArteGraficaLinhas[7].Codigo.Conteudo = acervoArteGraficaLinhas[0].Codigo.Conteudo;
@@ -245,15 +246,15 @@ namespace SME.CDEP.TesteIntegracao
             
             //Acervos inseridos
             acervos.ShouldNotBeNull();
-            acervos.Count().ShouldBe(7);
+            acervos.Count().ShouldBe(6);
             
             //Acervos auxiliares inseridos
             acervosArtesGraficas.ShouldNotBeNull();
-            acervosArtesGraficas.Count().ShouldBe(7);
+            acervosArtesGraficas.Count().ShouldBe(6);
             
             //Linhas com erros
-            acervoArteGraficaLinhas.Count(w=> !w.PossuiErros).ShouldBe(7);
-            acervoArteGraficaLinhas.Count(w=> w.PossuiErros).ShouldBe(3);
+            acervoArteGraficaLinhas.Count(w=> !w.PossuiErros).ShouldBe(6);
+            acervoArteGraficaLinhas.Count(w=> w.PossuiErros).ShouldBe(4);
         
             //Retorno front
             retorno.Id.ShouldBe(1);
@@ -350,7 +351,7 @@ namespace SME.CDEP.TesteIntegracao
         {
             var servicoImportacaoArquivo = GetServicoImportacaoArquivoAcervoArteGrafica();
         
-            var linhasInseridas = GerarAcervoArteGraficaLinhaDTO().Generate(10);
+            var linhasInseridas = AcervoArteGraficaLinhaMock.GerarAcervoArteGraficaLinhaDTO().Generate(10);
         
             linhasInseridas[3].PossuiErros = true;
             linhasInseridas[3].Largura.PossuiErro = true;
@@ -368,6 +369,14 @@ namespace SME.CDEP.TesteIntegracao
                 Conteudo = JsonConvert.SerializeObject(linhasInseridas),
                 CriadoEm = DateTimeExtension.HorarioBrasilia().Date, CriadoPor = ConstantesTestes.SISTEMA, CriadoLogin = ConstantesTestes.LOGIN_123456789
             });
+
+            await InserirConservacoes(linhasInseridas.Select(s => s.EstadoConservacao.Conteudo).Distinct().Where(w => w.EstaPreenchido()));
+            
+            await InserirCromias(linhasInseridas.Select(s => s.Cromia.Conteudo).Distinct().Where(w => w.EstaPreenchido()));
+            
+            await InserirSuportes(linhasInseridas.Select(s => s.Suporte.Conteudo).Distinct().Where(w => w.EstaPreenchido()));
+            
+            await InserirCreditosAutorias(linhasInseridas.Select(s => s.Credito.Conteudo).ToArray().UnificarPipe().SplitPipe().Distinct().Where(w=> w.EstaPreenchido()));
             
             var retorno = await servicoImportacaoArquivo.ObterImportacaoPendente();
             retorno.ShouldNotBeNull();
@@ -419,7 +428,7 @@ namespace SME.CDEP.TesteIntegracao
                 retorno.Erros.Any(a=> a.RetornoErro.Descricao.Conteudo.SaoIguais(linhaInserida.Descricao.Conteudo)).ShouldBeTrue();
             }
         }
-        
+
         [Fact(DisplayName = "Importação Arquivo Acervo Arte Grafica - Validar Suporte sem caracteres especiais")]
         public async Task Validar_suporte_sem_caracteres_especiais()
         {
@@ -487,7 +496,7 @@ namespace SME.CDEP.TesteIntegracao
         {
             var servicoImportacaoArquivo = GetServicoImportacaoArquivoAcervoArteGrafica();
 
-            var linhasInseridas = GerarAcervoArteGraficaLinhaDTO().Generate(10);
+            var linhasInseridas = AcervoArteGraficaLinhaMock.GerarAcervoArteGraficaLinhaDTO().Generate(10);
 
             await InserirNaBase(new ImportacaoArquivo()
             {
@@ -510,7 +519,7 @@ namespace SME.CDEP.TesteIntegracao
         {
             var servicoImportacaoArquivo = GetServicoImportacaoArquivoAcervoArteGrafica();
 
-            var linhasInseridas = GerarAcervoArteGraficaLinhaDTO().Generate(10);
+            var linhasInseridas = AcervoArteGraficaLinhaMock.GerarAcervoArteGraficaLinhaDTO().Generate(10);
 
             await InserirNaBase(new ImportacaoArquivo()
             {
@@ -529,7 +538,7 @@ namespace SME.CDEP.TesteIntegracao
         {
             var servicoImportacaoArquivo = GetServicoImportacaoArquivoAcervoArteGrafica();
 
-            var linhasInseridas = GerarAcervoArteGraficaLinhaDTO().Generate(10);
+            var linhasInseridas = AcervoArteGraficaLinhaMock.GerarAcervoArteGraficaLinhaDTO().Generate(10);
 
             await InserirNaBase(new ImportacaoArquivo()
             {
@@ -555,7 +564,7 @@ namespace SME.CDEP.TesteIntegracao
         {
             var servicoImportacaoArquivo = GetServicoImportacaoArquivoAcervo();
 
-            var linhasInseridas = GerarAcervoArteGraficaLinhaDTO().Generate(10);
+            var linhasInseridas = AcervoArteGraficaLinhaMock.GerarAcervoArteGraficaLinhaDTO().Generate(10);
 
             await InserirNaBase(new ImportacaoArquivo()
             {
@@ -578,7 +587,7 @@ namespace SME.CDEP.TesteIntegracao
         {
             var servicoImportacaoArquivo = GetServicoImportacaoArquivoAcervoArteGrafica();
 
-            var linhasInseridas = GerarAcervoArteGraficaLinhaDTO().Generate(10);
+            var linhasInseridas = AcervoArteGraficaLinhaMock.GerarAcervoArteGraficaLinhaDTO().Generate(10);
             linhasInseridas[3].PossuiErros = true;
             linhasInseridas[3].Largura.PossuiErro = true;
             linhasInseridas[3].Largura.Mensagem = string.Format(Dominio.Constantes.Constantes.CAMPO_X_REQUER_UM_VALOR_NUMERICO, Dominio.Constantes.Constantes.LARGURA);
@@ -614,9 +623,10 @@ namespace SME.CDEP.TesteIntegracao
         [Fact(DisplayName = "Importação Arquivo Acervo Arte Grafica - Deve permitir atualizar linha do arquivo para sucesso")]
         public async Task Deve_permitir_atualizar_linha_do_arquivo_para_sucesso()
         {
-            var servicoImportacaoArquivo = GetServicoImportacaoArquivoAcervoArteGrafica();
-
-            var linhasInseridas = GerarAcervoArteGraficaLinhaDTO().Generate(10);
+           var servicoImportacaoArquivo = GetServicoImportacaoArquivoAcervoArteGrafica();
+           
+            var linhasInseridas = AcervoArteGraficaLinhaMock.GerarAcervoArteGraficaLinhaDTO().Generate(10);
+            
             linhasInseridas[3].PossuiErros = true;
             linhasInseridas[3].Largura.PossuiErro = true;
             linhasInseridas[3].Largura.Mensagem = string.Format(Dominio.Constantes.Constantes.CAMPO_X_REQUER_UM_VALOR_NUMERICO, Dominio.Constantes.Constantes.LARGURA);
@@ -642,6 +652,67 @@ namespace SME.CDEP.TesteIntegracao
             conteudo.Any(a=> !a.PossuiErros).ShouldBeTrue();
             
             arquivo.Status.ShouldBe(ImportacaoStatus.Sucesso);
+        }
+        
+        [Fact(DisplayName = "Importação Arquivo Acervo Arte Grafica - Validação de RetornoObjeto")]
+        public async Task Validacao_retorno_objeto()
+        {
+            var servicoImportacaoArquivo = GetServicoImportacaoArquivoAcervoArteGrafica();
+           
+            var linhasInseridas = AcervoArteGraficaLinhaMock.GerarAcervoArteGraficaLinhaDTO().Generate(9);
+            linhasInseridas.Add(new AcervoArteGraficaLinhaDTO()
+            {
+                PossuiErros = true,
+                Titulo = new LinhaConteudoAjustarDTO() { PossuiErro = true},
+                Localizacao = new LinhaConteudoAjustarDTO() { PossuiErro = true},
+                Codigo = new LinhaConteudoAjustarDTO() { PossuiErro = true},
+                Procedencia = new LinhaConteudoAjustarDTO() { PossuiErro = true},
+                Data = new LinhaConteudoAjustarDTO() { PossuiErro = true},
+                CopiaDigital = new LinhaConteudoAjustarDTO() { PossuiErro = true},
+                PermiteUsoImagem = new LinhaConteudoAjustarDTO() { PossuiErro = true},
+                Largura = new LinhaConteudoAjustarDTO() { PossuiErro = true},
+                Altura = new LinhaConteudoAjustarDTO() { PossuiErro = true},
+                Diametro = new LinhaConteudoAjustarDTO() { PossuiErro = true},
+                Tecnica = new LinhaConteudoAjustarDTO() { PossuiErro = true},
+                Quantidade = new LinhaConteudoAjustarDTO() { PossuiErro = true},
+                Descricao = new LinhaConteudoAjustarDTO() { PossuiErro = true},
+                EstadoConservacao = new LinhaConteudoAjustarDTO() { PossuiErro = true},
+                Cromia = new LinhaConteudoAjustarDTO() { PossuiErro = true},
+                Suporte = new LinhaConteudoAjustarDTO() { PossuiErro = true},
+                Credito = new LinhaConteudoAjustarDTO() { PossuiErro = true},
+            });
+            
+            await InserirNaBase(new ImportacaoArquivo()
+            {
+                Nome = faker.Hacker.Verb(),
+                TipoAcervo = TipoAcervo.ArtesGraficas,
+                Status = ImportacaoStatus.Erros,
+                Conteudo = JsonConvert.SerializeObject(linhasInseridas),
+                CriadoEm = DateTimeExtension.HorarioBrasilia().Date, CriadoPor = ConstantesTestes.SISTEMA, CriadoLogin = ConstantesTestes.LOGIN_123456789
+            });
+            
+            var retorno = await servicoImportacaoArquivo.ObterImportacaoPendente();
+            foreach (var erro in retorno.Erros)
+            {
+                erro.RetornoObjeto.Titulo.ShouldBeNull();
+                erro.RetornoObjeto.Codigo.ShouldBeNull();
+                erro.RetornoObjeto.Localizacao.ShouldBeNull();
+                erro.RetornoObjeto.Procedencia.ShouldBeNull();
+                erro.RetornoObjeto.DataAcervo.ShouldBeNull();
+                erro.RetornoObjeto.CopiaDigital.HasValue.ShouldBeFalse();
+                erro.RetornoObjeto.PermiteUsoImagem.HasValue.ShouldBeFalse();
+                erro.RetornoObjeto.ConservacaoId.ShouldBeNull();
+                erro.RetornoObjeto.CromiaId.ShouldBeNull();
+                erro.RetornoObjeto.Largura.ShouldBeNull();
+                erro.RetornoObjeto.Altura.ShouldBeNull();
+                erro.RetornoObjeto.Diametro.ShouldBeNull();
+                erro.RetornoObjeto.Tecnica.ShouldBeNull();
+                erro.RetornoObjeto.SuporteId.ShouldBeNull();
+                erro.RetornoObjeto.Quantidade.ShouldBeNull();
+                erro.RetornoObjeto.Descricao.ShouldBeNull();
+                erro.RetornoObjeto.CreditosAutoresIds.ShouldBeNull();
+            }
+            retorno.ShouldNotBeNull();
         }
     }
 }

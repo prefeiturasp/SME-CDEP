@@ -1,5 +1,4 @@
-﻿using Bogus.Extensions.Brazil;
-using Newtonsoft.Json;
+﻿using Newtonsoft.Json;
 using Shouldly;
 using SME.CDEP.Aplicacao.DTOS;
 using SME.CDEP.Dominio.Entidades;
@@ -22,7 +21,7 @@ namespace SME.CDEP.TesteIntegracao
         {
             var servicoImportacaoArquivo = GetServicoImportacaoArquivoAcervoDocumental();
 
-            var acervoDocumentalLinhas = GerarAcervoDocumentalLinhaDTO().Generate(10);
+            var acervoDocumentalLinhas = AcervoDocumentalLinhaMock.GerarAcervoDocumentalLinhaDTO().Generate(10);
 
             acervoDocumentalLinhas[2].Ano.Conteudo = faker.Lorem.Paragraph();
             acervoDocumentalLinhas[4].Idioma.Conteudo = string.Empty;
@@ -113,7 +112,7 @@ namespace SME.CDEP.TesteIntegracao
         {
             var servicoImportacaoArquivo = GetServicoImportacaoArquivoAcervoDocumental();
         
-            var acervoDocumentalLinhas = GerarAcervoDocumentalLinhaDTO().Generate(10);
+            var acervoDocumentalLinhas = AcervoDocumentalLinhaMock.GerarAcervoDocumentalLinhaDTO().Generate(10);
            
             await servicoImportacaoArquivo.ValidacaoObterOuInserirDominios(acervoDocumentalLinhas);
         
@@ -148,7 +147,7 @@ namespace SME.CDEP.TesteIntegracao
         {
             var servicoImportacaoArquivo = GetServicoImportacaoArquivoAcervoDocumental();
         
-            var acervoDocumentalLinhas = GerarAcervoDocumentalLinhaDTO().Generate(10);
+            var acervoDocumentalLinhas = AcervoDocumentalLinhaMock.GerarAcervoDocumentalLinhaDTO().Generate(10);
         
             await InserirNaBase(new ImportacaoArquivo()
             {
@@ -207,7 +206,8 @@ namespace SME.CDEP.TesteIntegracao
                 acervosDocumentais.Any(a=> a.Largura.SaoIguais(linhasComSucesso.Largura.Conteudo.ObterDoubleOuNuloPorValorDoCampo())).ShouldBeTrue();
                 acervosDocumentais.Any(a=> a.TamanhoArquivo.SaoIguais(linhasComSucesso.TamanhoArquivo.Conteudo)).ShouldBeTrue();
                 acervosDocumentais.Any(a=> a.Localizacao.SaoIguais(linhasComSucesso.Localizacao.Conteudo)).ShouldBeTrue();
-                acervosDocumentais.Any(a=> a.CopiaDigital.SaoIguais(linhasComSucesso.CopiaDigital.Conteudo.EhOpcaoSim())).ShouldBeTrue();
+                acervosDocumentais.Any(a=> a.CopiaDigital.HasValue).ShouldBeTrue();
+                acervosDocumentais.Any(a=> a.CopiaDigital.Value.SaoIguais(linhasComSucesso.CopiaDigital.Conteudo.EhOpcaoSim())).ShouldBeTrue();
                 
                 //Autor
                 var autorAInserir = linhasComSucesso.Autor.Conteudo.FormatarTextoEmArray().ToArray().UnificarPipe().SplitPipe().Distinct();
@@ -230,13 +230,14 @@ namespace SME.CDEP.TesteIntegracao
             }
         }
         
-        [Fact(DisplayName = "Importação Arquivo Acervo Documental - Geral - Com erros em 3 linhas")]
+        [Fact(DisplayName = "Importação Arquivo Acervo Documental - Geral - Com erros em 4 linhas")]
         public async Task Importacao_geral()
         {
             var servicoImportacaoArquivo = GetServicoImportacaoArquivoAcervoDocumental();
         
-            var acervoDocumentalLinhas = GerarAcervoDocumentalLinhaDTO().Generate(10);
+            var acervoDocumentalLinhas = AcervoDocumentalLinhaMock.GerarAcervoDocumentalLinhaDTO().Generate(10);
            
+            acervoDocumentalLinhas[1].CopiaDigital.Conteudo = acervoDocumentalLinhas[1].Titulo.Conteudo;
             acervoDocumentalLinhas[3].Largura.Conteudo = "ABC3512";
             acervoDocumentalLinhas[5].Altura.Conteudo = "1212ABC";
             acervoDocumentalLinhas[7].Codigo.Conteudo = acervoDocumentalLinhas[0].Codigo.Conteudo;
@@ -268,15 +269,15 @@ namespace SME.CDEP.TesteIntegracao
             
             //Acervos inseridos
             acervos.ShouldNotBeNull();
-            acervos.Count().ShouldBe(7);
+            acervos.Count().ShouldBe(6);
             
             //Acervos Documentals inseridos
             acervosDocumentais.ShouldNotBeNull();
-            acervosDocumentais.Count().ShouldBe(7);
+            acervosDocumentais.Count().ShouldBe(6);
             
             //Linhas com erros
-            acervoDocumentalLinhas.Count(w=> !w.PossuiErros).ShouldBe(7);
-            acervoDocumentalLinhas.Count(w=> w.PossuiErros).ShouldBe(3);
+            acervoDocumentalLinhas.Count(w=> !w.PossuiErros).ShouldBe(6);
+            acervoDocumentalLinhas.Count(w=> w.PossuiErros).ShouldBe(4);
             
             //Retorno front
             retorno.Id.ShouldBe(1);
@@ -370,7 +371,8 @@ namespace SME.CDEP.TesteIntegracao
                 acervosDocumentais.Any(a=> a.Largura.SaoIguais(linhasComSucesso.Largura.Conteudo.ObterDoubleOuNuloPorValorDoCampo())).ShouldBeTrue();
                 acervosDocumentais.Any(a=> a.TamanhoArquivo.SaoIguais(linhasComSucesso.TamanhoArquivo.Conteudo)).ShouldBeTrue();
                 acervosDocumentais.Any(a=> a.Localizacao.SaoIguais(linhasComSucesso.Localizacao.Conteudo)).ShouldBeTrue();
-                acervosDocumentais.Any(a=> a.CopiaDigital.SaoIguais(linhasComSucesso.CopiaDigital.Conteudo.EhOpcaoSim())).ShouldBeTrue();
+                acervosDocumentais.Any(a=> a.CopiaDigital.HasValue).ShouldBeTrue();
+                acervosDocumentais.Any(a=> a.CopiaDigital.Value.SaoIguais(linhasComSucesso.CopiaDigital.Conteudo.EhOpcaoSim())).ShouldBeTrue();
                 
                 //Autor
                 var autorAInserir = linhasComSucesso.Autor.Conteudo.FormatarTextoEmArray().ToArray().UnificarPipe().SplitPipe().Distinct();
@@ -398,7 +400,7 @@ namespace SME.CDEP.TesteIntegracao
         {
             var servicoImportacaoArquivo = GetServicoImportacaoArquivoAcervoDocumental();
         
-            var linhasInseridas = GerarAcervoDocumentalLinhaDTO().Generate(10);
+            var linhasInseridas = AcervoDocumentalLinhaMock.GerarAcervoDocumentalLinhaDTO().Generate(10);
         
             linhasInseridas[3].PossuiErros = true;
             linhasInseridas[3].Volume.PossuiErro = true;
@@ -416,6 +418,12 @@ namespace SME.CDEP.TesteIntegracao
                 Conteudo = JsonConvert.SerializeObject(linhasInseridas),
                 CriadoEm = DateTimeExtension.HorarioBrasilia().Date, CriadoPor = ConstantesTestes.SISTEMA, CriadoLogin = ConstantesTestes.LOGIN_123456789
             });
+            
+            await InserirMateriais(linhasInseridas.Select(s => s.Material.Conteudo).Distinct().Where(w=> w.EstaPreenchido()), TipoMaterial.DOCUMENTAL);
+            await InserirIdiomas(linhasInseridas.Select(s => s.Idioma.Conteudo).Distinct().Where(w=> w.EstaPreenchido()));
+            await InserirConservacoes(linhasInseridas.Select(s => s.EstadoConservacao.Conteudo).Distinct().Where(w=> w.EstaPreenchido()));
+            await InserirAcessoDocumentos(linhasInseridas.Select(s => s.AcessoDocumento.Conteudo).ToArray().UnificarPipe().SplitPipe().Distinct().Where(w=> w.EstaPreenchido()));
+            await InserirCreditosAutorias(linhasInseridas.Select(s => s.Autor.Conteudo).ToArray().UnificarPipe().SplitPipe().Distinct().Where(w=> w.EstaPreenchido()), TipoCreditoAutoria.Autoria);
             
             var retorno = await servicoImportacaoArquivo.ObterImportacaoPendente();
             retorno.ShouldNotBeNull();
@@ -482,7 +490,6 @@ namespace SME.CDEP.TesteIntegracao
                 retorno.Erros.Any(a=> a.RetornoErro.ConservacaoId.Conteudo.SaoIguais(linhaInserida.EstadoConservacao.Conteudo)).ShouldBeTrue();
             }
         }
-        
         private string ObterCodigo(AcervoDocumentalLinhaDTO s)
         {
             if (s.Codigo.Conteudo.EstaPreenchido() && s.CodigoNovo.Conteudo.EstaPreenchido())
@@ -561,7 +568,7 @@ namespace SME.CDEP.TesteIntegracao
         {
             var servicoImportacaoArquivo = GetServicoImportacaoArquivoAcervoDocumental();
 
-            var linhasInseridas = GerarAcervoDocumentalLinhaDTO().Generate(10);
+            var linhasInseridas = AcervoDocumentalLinhaMock.GerarAcervoDocumentalLinhaDTO().Generate(10);
 
             await InserirNaBase(new ImportacaoArquivo()
             {
@@ -584,7 +591,7 @@ namespace SME.CDEP.TesteIntegracao
         {
             var servicoImportacaoArquivo = GetServicoImportacaoArquivoAcervoDocumental();
 
-            var linhasInseridas = GerarAcervoDocumentalLinhaDTO().Generate(10);
+            var linhasInseridas = AcervoDocumentalLinhaMock.GerarAcervoDocumentalLinhaDTO().Generate(10);
 
             await InserirNaBase(new ImportacaoArquivo()
             {
@@ -603,7 +610,7 @@ namespace SME.CDEP.TesteIntegracao
         {
             var servicoImportacaoArquivo = GetServicoImportacaoArquivoAcervoDocumental();
 
-            var linhasInseridas = GerarAcervoDocumentalLinhaDTO().Generate(10);
+            var linhasInseridas = AcervoDocumentalLinhaMock.GerarAcervoDocumentalLinhaDTO().Generate(10);
 
             await InserirNaBase(new ImportacaoArquivo()
             {
@@ -629,7 +636,7 @@ namespace SME.CDEP.TesteIntegracao
         {
             var servicoImportacaoArquivo = GetServicoImportacaoArquivoAcervoDocumental();
 
-            var linhasInseridas = GerarAcervoDocumentalLinhaDTO().Generate(10);
+            var linhasInseridas = AcervoDocumentalLinhaMock.GerarAcervoDocumentalLinhaDTO().Generate(10);
             linhasInseridas[3].PossuiErros = true;
             linhasInseridas[3].Altura.PossuiErro = true;
             linhasInseridas[3].Altura.Mensagem = string.Format(Dominio.Constantes.Constantes.CAMPO_X_REQUER_UM_VALOR_NUMERICO, Dominio.Constantes.Constantes.LARGURA);
@@ -667,7 +674,7 @@ namespace SME.CDEP.TesteIntegracao
         {
             var servicoImportacaoArquivo = GetServicoImportacaoArquivoAcervoDocumental();
 
-            var linhasInseridas = GerarAcervoDocumentalLinhaDTO().Generate(10);
+            var linhasInseridas = AcervoDocumentalLinhaMock.GerarAcervoDocumentalLinhaDTO().Generate(10);
             linhasInseridas[3].PossuiErros = true;
             linhasInseridas[3].Altura.PossuiErro = true;
             linhasInseridas[3].Altura.Mensagem = string.Format(Dominio.Constantes.Constantes.CAMPO_X_REQUER_UM_VALOR_NUMERICO, Dominio.Constantes.Constantes.ALTURA);
@@ -693,6 +700,72 @@ namespace SME.CDEP.TesteIntegracao
             conteudo.Any(a=> !a.PossuiErros).ShouldBeTrue();
             
             arquivo.Status.ShouldBe(ImportacaoStatus.Sucesso);
+        }
+        
+        [Fact(DisplayName = "Importação Arquivo Acervo Documental - Validação de RetornoObjeto")]
+        public async Task Validacao_retorno_objeto()
+        {
+            var servicoImportacaoArquivo = GetServicoImportacaoArquivoAcervoDocumental();
+
+            var acervoDocumentalLinhas = AcervoDocumentalLinhaMock.GerarAcervoDocumentalLinhaDTO().Generate(10);
+            
+            acervoDocumentalLinhas.Add(new AcervoDocumentalLinhaDTO()
+            {
+                PossuiErros = true,
+                Titulo = new LinhaConteudoAjustarDTO() { PossuiErro = true},
+                CodigoNovo = new LinhaConteudoAjustarDTO() { PossuiErro = true},
+                Material = new LinhaConteudoAjustarDTO() { PossuiErro = true},
+                Autor = new LinhaConteudoAjustarDTO() { PossuiErro = true},
+                Descricao = new LinhaConteudoAjustarDTO() { PossuiErro = true},
+                TipoAnexo = new LinhaConteudoAjustarDTO() { PossuiErro = true},
+                TamanhoArquivo = new LinhaConteudoAjustarDTO() { PossuiErro = true},
+                AcessoDocumento = new LinhaConteudoAjustarDTO() { PossuiErro = true},
+                Ano = new LinhaConteudoAjustarDTO() { PossuiErro = true},
+                Localizacao = new LinhaConteudoAjustarDTO() { PossuiErro = true},
+                NumeroPaginas = new LinhaConteudoAjustarDTO() { PossuiErro = true},
+                Altura = new LinhaConteudoAjustarDTO() { PossuiErro = true},
+                Largura = new LinhaConteudoAjustarDTO() { PossuiErro = true},
+                CopiaDigital = new LinhaConteudoAjustarDTO() { PossuiErro = true},
+                Volume = new LinhaConteudoAjustarDTO() { PossuiErro = true},
+                Idioma = new LinhaConteudoAjustarDTO() { PossuiErro = true},
+                EstadoConservacao = new LinhaConteudoAjustarDTO() { PossuiErro = true},
+                Codigo = new LinhaConteudoAjustarDTO() { PossuiErro = true},
+            });
+            
+            await InserirNaBase(new ImportacaoArquivo()
+            {
+                Nome = faker.Hacker.Verb(),
+                TipoAcervo = TipoAcervo.DocumentacaoHistorica,
+                Status = ImportacaoStatus.Pendente,
+                Conteudo = JsonConvert.SerializeObject(acervoDocumentalLinhas),
+                CriadoEm = DateTimeExtension.HorarioBrasilia().Date, CriadoPor = ConstantesTestes.SISTEMA,
+                CriadoLogin = ConstantesTestes.LOGIN_123456789
+            });
+            
+            var retorno = await servicoImportacaoArquivo.ObterImportacaoPendente();
+            foreach (var erro in retorno.Erros)
+            {
+                erro.RetornoObjeto.Titulo.ShouldBeNull();
+                erro.RetornoObjeto.CodigoNovo.ShouldBeNull();
+                erro.RetornoObjeto.MaterialId.ShouldBeNull();
+                erro.RetornoObjeto.Descricao.ShouldBeNull();
+                erro.RetornoObjeto.TipoAnexo.ShouldBeNull();
+                erro.RetornoObjeto.Ano.ShouldBeNull();
+                erro.RetornoObjeto.TamanhoArquivo.ShouldBeNull();
+                erro.RetornoObjeto.NumeroPagina.ShouldBeNull();
+                erro.RetornoObjeto.Altura.ShouldBeNull();
+                erro.RetornoObjeto.Largura.ShouldBeNull();
+                erro.RetornoObjeto.AcessoDocumentosIds.ShouldBeNull();
+                erro.RetornoObjeto.Volume.ShouldBeNull();
+                erro.RetornoObjeto.IdiomaId.ShouldBeNull();
+                erro.RetornoObjeto.Localizacao.ShouldBeNull();
+                erro.RetornoObjeto.CopiaDigital.ShouldBeNull();
+                erro.RetornoObjeto.ConservacaoId.ShouldBeNull();
+                erro.RetornoObjeto.Codigo.ShouldBeNull();
+                erro.RetornoObjeto.Codigo.ShouldBeNull();
+                erro.RetornoObjeto.CreditosAutoresIds.ShouldBeNull();
+            }
+            retorno.ShouldNotBeNull();
         }
     }
 }

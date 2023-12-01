@@ -18,7 +18,7 @@ public class AcervoFotograficoDTO
     public bool? PermiteUsoImagem { get; set; }
     public long? ConservacaoId { get; set; }
     public string Descricao { get; set; }
-    public long Quantidade { get; set; }
+    public long? Quantidade { get; set; }
     public double? Largura { get; set; }
     public double? Altura { get; set; }
     public long? SuporteId { get; set; }

@@ -61,6 +61,16 @@ namespace SME.CDEP.Aplicacao.Servicos
 
             return await ObterRetornoImportacaoAcervo(arquivoImportado, JsonConvert.DeserializeObject<IEnumerable<AcervoBibliograficoLinhaDTO>>(arquivoImportado.Conteudo), false);
         }
+        
+        public async Task<ImportacaoArquivoRetornoDTO<AcervoLinhaErroDTO<AcervoBibliograficoDTO,AcervoBibliograficoLinhaRetornoDTO>,AcervoLinhaRetornoSucessoDTO>> ObterImportacaoPorId(long id)
+        {
+            var arquivoImportado = await repositorioImportacaoArquivo.ObterImportacaoPorId(id);
+            
+            if (arquivoImportado.EhNulo())
+                return default;
+
+            return await ObterRetornoImportacaoAcervo(arquivoImportado, JsonConvert.DeserializeObject<IEnumerable<AcervoBibliograficoLinhaDTO>>(arquivoImportado.Conteudo), false);
+        }
 
         public async Task<ImportacaoArquivoRetornoDTO<AcervoLinhaErroDTO<AcervoBibliograficoDTO,AcervoBibliograficoLinhaRetornoDTO>,AcervoLinhaRetornoSucessoDTO>> ImportarArquivo(IFormFile file)
         {
@@ -91,13 +101,13 @@ namespace SME.CDEP.Aplicacao.Servicos
         {
             if (!estaImportandoArquivo)
             {
-                await ObterMateriais(acervosBibliograficosLinhas.Select(s => s.Material.Conteudo).Distinct().Where(w=> w.EstaPreenchido()), TipoMaterial.BIBLIOGRAFICO);
-                await ObterEditoras(acervosBibliograficosLinhas.Select(s => s.Editora.Conteudo).Distinct().Where(w=> w.EstaPreenchido()));
-                await ObterAssuntos(acervosBibliograficosLinhas.Select(s => s.Assunto.Conteudo).ToArray().UnificarPipe().SplitPipe().Distinct().Where(w=> w.EstaPreenchido()));
-                await ObterSeriesColecoes(acervosBibliograficosLinhas.Select(s => s.SerieColecao.Conteudo).Distinct().Where(w=> w.EstaPreenchido()));
-                await ObterIdiomas(acervosBibliograficosLinhas.Select(s => s.Idioma.Conteudo).Distinct().Where(w=> w.EstaPreenchido()));
-                await ObterCreditosAutoresTipoAutoria(acervosBibliograficosLinhas.Select(s => s.Autor.Conteudo).ToArray().UnificarPipe().SplitPipe().Distinct().Where(w=> w.EstaPreenchido()), TipoCreditoAutoria.Autoria);
-                await ObterCreditosAutoresTipoAutoria(acervosBibliograficosLinhas.Select(s => s.CoAutor.Conteudo).ToArray().UnificarPipe().SplitPipe().Distinct().Where(w=> w.EstaPreenchido()), TipoCreditoAutoria.Autoria);
+                await ObterMateriais(acervosBibliograficosLinhas.Where(w=> !w.Material.PossuiErro).Select(s => s.Material.Conteudo).Distinct().Where(w=> w.EstaPreenchido()), TipoMaterial.BIBLIOGRAFICO);
+                await ObterEditoras(acervosBibliograficosLinhas.Where(w=> !w.Editora.PossuiErro).Select(s => s.Editora.Conteudo).Distinct().Where(w=> w.EstaPreenchido()));
+                await ObterAssuntos(acervosBibliograficosLinhas.Where(w=> !w.Assunto.PossuiErro).Select(s => s.Assunto.Conteudo).ToArray().UnificarPipe().SplitPipe().Distinct().Where(w=> w.EstaPreenchido()));
+                await ObterSeriesColecoes(acervosBibliograficosLinhas.Where(w=> !w.SerieColecao.PossuiErro).Select(s => s.SerieColecao.Conteudo).Distinct().Where(w=> w.EstaPreenchido()));
+                await ObterIdiomas(acervosBibliograficosLinhas.Where(w=> !w.Idioma.PossuiErro).Select(s => s.Idioma.Conteudo).Distinct().Where(w=> w.EstaPreenchido()));
+                await ObterCreditosAutoresTipoAutoria(acervosBibliograficosLinhas.Where(w=> !w.Autor.PossuiErro).Select(s => s.Autor.Conteudo).ToArray().UnificarPipe().SplitPipe().Distinct().Where(w=> w.EstaPreenchido()), TipoCreditoAutoria.Autoria);
+                await ObterCreditosAutoresTipoAutoria(acervosBibliograficosLinhas.Where(w=> !w.CoAutor.PossuiErro).Select(s => s.CoAutor.Conteudo).ToArray().UnificarPipe().SplitPipe().Distinct().Where(w=> w.EstaPreenchido()), TipoCreditoAutoria.Autoria);
             }
             
             var acervoBibliograficoRetorno = new ImportacaoArquivoRetornoDTO<AcervoLinhaErroDTO<AcervoBibliograficoDTO,AcervoBibliograficoLinhaRetornoDTO>,AcervoLinhaRetornoSucessoDTO>()
@@ -139,7 +149,7 @@ namespace SME.CDEP.Aplicacao.Servicos
                 Codigo = ObterConteudoTexto(linha.Codigo),
                 MaterialId = ObterMaterialBibliograficoIdOuNuloPorValorDoCampo(linha.Material.Conteudo),
                 EditoraId = ObterEditoraIdOuNuloPorValorDoCampo(linha.Editora.Conteudo),
-                AssuntosIds = ObterAssuntosIdsPorValorDoCampo(linha.Assunto.Conteudo),
+                AssuntosIds = ObterAssuntosIdsPorValorDoCampo(linha.Assunto.Conteudo, false),
                 Ano = ObterConteudoTexto(linha.Ano),
                 Edicao = ObterConteudoTexto(linha.Edicao),
                 NumeroPagina = ObterConteudoTexto(linha.NumeroPaginas),
@@ -152,7 +162,7 @@ namespace SME.CDEP.Aplicacao.Servicos
                 LocalizacaoPHA = ObterConteudoTexto(linha.LocalizacaoPHA),
                 NotasGerais = ObterConteudoTexto(linha.NotasGerais),
                 Isbn = ObterConteudoTexto(linha.Isbn),
-                CreditosAutoresIds = ObterCreditoAutoresIdsPorValorDoCampo(linha.Autor.Conteudo, TipoCreditoAutoria.Autoria),
+                CreditosAutoresIds = ObterCreditoAutoresIdsPorValorDoCampo(linha.Autor.Conteudo, TipoCreditoAutoria.Autoria, false),
                 CoAutores = ObterCoAutoresTipoAutoria(linha.CoAutor.Conteudo, linha.TipoAutoria.Conteudo)
             };
         }
@@ -323,7 +333,7 @@ namespace SME.CDEP.Aplicacao.Servicos
 
             if (tiposAutoria.EstaPreenchido())
             {
-                var tiposAutoriaEmTexto = tiposAutoria.FormatarTextoEmArray();
+                var tiposAutoriaEmTexto = tiposAutoria.FormatarTextoEmArraySemDistinct();
             
                 tiposAutoriaEmTextoAutoNumerados = tiposAutoriaEmTexto.Select((tipoAutoria, indice) => new IdNomeDTO() { Id = indice + 1, Nome = tipoAutoria });    
             }
@@ -409,19 +419,19 @@ namespace SME.CDEP.Aplicacao.Servicos
         {
             try
             {
-                await ValidarOuInserirMateriais(linhasComsucesso.Select(s => s.Material.Conteudo).Distinct().Where(w=> w.EstaPreenchido()), TipoMaterial.BIBLIOGRAFICO);
+                await ValidarOuInserirMateriais(linhasComsucesso.Where(w=> !w.Material.PossuiErro).Select(s => s.Material.Conteudo).Distinct().Where(w=> w.EstaPreenchido()), TipoMaterial.BIBLIOGRAFICO);
 
-                await ValidarOuInserirEditoras(linhasComsucesso.Select(s => s.Editora.Conteudo).Distinct().Where(w=> w.EstaPreenchido()));
+                await ValidarOuInserirEditoras(linhasComsucesso.Where(w=> !w.Editora.PossuiErro).Select(s => s.Editora.Conteudo).Distinct().Where(w=> w.EstaPreenchido()));
 
-                await ValidarOuInserirSeriesColecoes(linhasComsucesso.Select(s => s.SerieColecao.Conteudo).Distinct().Where(w=> w.EstaPreenchido()));
+                await ValidarOuInserirSeriesColecoes(linhasComsucesso.Where(w=> !w.SerieColecao.PossuiErro).Select(s => s.SerieColecao.Conteudo).Distinct().Where(w=> w.EstaPreenchido()));
 
-                await ValidarOuInserirIdiomas(linhasComsucesso.Select(s => s.Idioma.Conteudo).Distinct().Where(w=> w.EstaPreenchido()));
+                await ValidarOuInserirIdiomas(linhasComsucesso.Where(w=> !w.Idioma.PossuiErro).Select(s => s.Idioma.Conteudo).Distinct().Where(w=> w.EstaPreenchido()));
 
-                await ValidarOuInserirAssuntos(linhasComsucesso.Select(s => s.Assunto.Conteudo).ToArray().UnificarPipe().SplitPipe().Distinct().Where(w=> w.EstaPreenchido()));
+                await ValidarOuInserirAssuntos(linhasComsucesso.Where(w=> !w.Assunto.PossuiErro).Select(s => s.Assunto.Conteudo).ToArray().UnificarPipe().SplitPipe().Distinct().Where(w=> w.EstaPreenchido()));
 
-                await ValidarOuInserirCreditoAutoresCoAutoresTipoAutoria(linhasComsucesso.Select(s => s.Autor.Conteudo).ToArray().UnificarPipe().SplitPipe().Distinct().Where(w=> w.EstaPreenchido()), TipoCreditoAutoria.Autoria);
+                await ValidarOuInserirCreditoAutoresCoAutoresTipoAutoria(linhasComsucesso.Where(w=> !w.Autor.PossuiErro).Select(s => s.Autor.Conteudo).ToArray().UnificarPipe().SplitPipe().Distinct().Where(w=> w.EstaPreenchido()), TipoCreditoAutoria.Autoria);
 
-                await ValidarOuInserirCreditoAutoresCoAutoresTipoAutoria(linhasComsucesso.Select(s => s.CoAutor.Conteudo).ToArray().UnificarPipe().SplitPipe().Distinct().Where(w=> w.EstaPreenchido()), TipoCreditoAutoria.Autoria);
+                await ValidarOuInserirCreditoAutoresCoAutoresTipoAutoria(linhasComsucesso.Where(w=> !w.CoAutor.PossuiErro).Select(s => s.CoAutor.Conteudo).ToArray().UnificarPipe().SplitPipe().Distinct().Where(w=> w.EstaPreenchido()), TipoCreditoAutoria.Autoria);
             }
             catch (Exception e)
             {

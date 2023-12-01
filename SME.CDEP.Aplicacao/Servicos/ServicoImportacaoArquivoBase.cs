@@ -292,18 +292,18 @@ namespace SME.CDEP.Aplicacao.Servicos
                     var conteudoCampoArray = conteudoCampo.FormatarTextoEmArray().ToList();
                     foreach (var item in conteudoCampoArray)
                     {
+                        if (campo.ValoresPermitidos.NaoEhNulo())
+                        {
+                            if (!campo.ValoresPermitidos.Contains(campo.Conteudo.ToLower()))
+                                DefinirMensagemErro(campo, string.Format(Constantes.VALOR_DO_CAMPO_X_NAO_PERMITIDO_ESPERADO_X, nomeCampo, string.Join(", ", campo.ValoresPermitidos)));
+                            break;
+                        }
+                        
                         if (item.ValidarLimiteDeCaracteres(campo.LimiteCaracteres))
                             DefinirCampoValidado(campo);
                         else
                         {
                             DefinirMensagemErro(campo, string.Format(Constantes.CAMPO_X_ATINGIU_LIMITE_CARACTERES, nomeCampo));
-                            break;
-                        }
-
-                        if (campo.ValoresPermitidos.NaoEhNulo())
-                        {
-                            if (!campo.ValoresPermitidos.Contains(campo.Conteudo.ToLower()))
-                                DefinirMensagemErro(campo, string.Format(Constantes.VALOR_DO_CAMPO_X_NAO_PERMITIDO_ESPERADO_X, nomeCampo, string.Join(", ", campo.ValoresPermitidos)));
                             break;
                         }
                     }
@@ -485,16 +485,19 @@ namespace SME.CDEP.Aplicacao.Servicos
         protected static bool? ObterConteudoSimNao(LinhaConteudoAjustarDTO linha)
         {
             var valoresPermitidos = new List<string>() { Constantes.OPCAO_SIM, Constantes.OPCAO_NAO };
+
+            if (linha.Conteudo.EhNulo())
+                return default;
             
-            if (valoresPermitidos.Contains(linha.Conteudo))
+            if (valoresPermitidos.Contains(linha.Conteudo.ToLower()))
                 return linha.Conteudo.EhOpcaoSim();
             
             return default;
         } 
         
-        protected static long ObterConteudoLongoOuNulo(LinhaConteudoAjustarDTO linha)
+        protected static long? ObterConteudoLongoOuNulo(LinhaConteudoAjustarDTO linha)
         {
-            return linha.PossuiErro ? default : linha.Conteudo.EstaPreenchido() ? long.Parse(linha.Conteudo) : default;
+            return linha.PossuiErro ? null : linha.Conteudo.EstaPreenchido() ? long.Parse(linha.Conteudo) : null;
         }
         
         protected static double? ObterConteudoDoubleOuNulo(LinhaConteudoAjustarDTO linha)
@@ -551,38 +554,70 @@ namespace SME.CDEP.Aplicacao.Servicos
             return ObterIdentificadorIdOuNuloPorValorDoCampo(valorDoCampo, SeriesColecoes);
         }
         
-        protected long[] ObterCreditoAutoresIdsPorValorDoCampo(string valorDoCampo, TipoCreditoAutoria tipoCreditoAutoria)
+        protected long[] ObterCreditoAutoresIdsPorValorDoCampo(string valorDoCampo, TipoCreditoAutoria tipoCreditoAutoria, bool gerarExcecao = true)
         {
-            if (valorDoCampo.NaoEstaPreenchido() || !CreditosAutores.Any(a=> a.Equals(valorDoCampo) && a.Tipo.SaoIguais((int)tipoCreditoAutoria)))
+            if (valorDoCampo.NaoEstaPreenchido())
+            {
+                if (gerarExcecao)
+                    throw new NegocioException(string.Format(Constantes.CAMPO_X_NAO_PREENCHIDO, valorDoCampo));
+                
                 return null;
+            }
 
             var retorno = new List<long>();
             
             var conteudoCampoArray = valorDoCampo.FormatarTextoEmArray().ToList();
             foreach (var item in conteudoCampoArray)
-                retorno.Add(CreditosAutores.FirstOrDefault(f => f.Nome.SaoIguais(valorDoCampo) && f.Tipo.SaoIguais((int)tipoCreditoAutoria)).Id);
-            
-            return retorno.ToArray();
+            {
+                var possuiNome = CreditosAutores.Any(f => f.Nome.Equals(item));
+                if (!possuiNome)
+                {
+                    if (gerarExcecao)
+                        throw new NegocioException(string.Format(Constantes.O_VALOR_DO_CAMPO_X_NAO_FOI_LOCALIZADO, valorDoCampo));
+                }
+                else
+                    retorno.Add(CreditosAutores.FirstOrDefault(f => f.Nome.SaoIguais(item) && f.Tipo.SaoIguais((int)tipoCreditoAutoria)).Id);
+            }
+            return retorno.Any() ? retorno.ToArray() : null;
         }
         
-        protected long[] ObterAssuntosIdsPorValorDoCampo(string valorDoCampo)
+        protected long[] ObterAssuntosIdsPorValorDoCampo(string valorDoCampo, bool gerarExcecao = true)
         {
-            if (valorDoCampo.NaoEstaPreenchido() || !Assuntos.Any(a=> a.Equals(valorDoCampo)))
+            if (valorDoCampo.NaoEstaPreenchido())
+            {
+                if (gerarExcecao)
+                    throw new NegocioException(string.Format(Constantes.CAMPO_X_NAO_PREENCHIDO, valorDoCampo));
+                
                 return null;
+            }
 
             var retorno = new List<long>();
             
             var conteudoCampoArray = valorDoCampo.FormatarTextoEmArray().ToList();
             foreach (var item in conteudoCampoArray)
-                retorno.Add(Assuntos.FirstOrDefault(f => f.Nome.SaoIguais(valorDoCampo)).Id);
+            {
+                var possuiNome = Assuntos.Any(f => f.Nome.Equals(item));
+                if (!possuiNome)
+                {
+                    if (gerarExcecao)
+                        throw new NegocioException(string.Format(Constantes.O_VALOR_DO_CAMPO_X_NAO_FOI_LOCALIZADO, valorDoCampo));
+                }
+                else
+                    retorno.Add(Assuntos.FirstOrDefault(f => f.Nome.SaoIguais(item)).Id);
+            }
             
-            return retorno.ToArray();
+            return retorno.Any() ? retorno.ToArray() : null;
         }
         
         protected long[] ObterAcessoDocumentosIdsPorValorDoCampo(string valorDoCampo, bool gerarExcecao = true)
         {
             if (valorDoCampo.NaoEstaPreenchido())
-                throw new NegocioException(string.Format(Constantes.O_VALOR_DO_CAMPO_X_NAO_FOI_LOCALIZADO, valorDoCampo));
+            {
+                if (gerarExcecao)
+                    throw new NegocioException(string.Format(Constantes.CAMPO_X_NAO_PREENCHIDO, valorDoCampo));
+                
+                return null;
+            }
 
             var retorno = new List<long>();
             
@@ -598,7 +633,7 @@ namespace SME.CDEP.Aplicacao.Servicos
                 else
                     retorno.Add(AcessoDocumentos.FirstOrDefault(f => f.Nome.SaoIguais(item)).Id);
             }
-            return retorno.ToArray();
+            return retorno.Any() ? retorno.ToArray() : null;
         }
         
         protected long ObterIdiomaIdPorValorDoCampo(string valorDoCampo)
@@ -698,7 +733,7 @@ namespace SME.CDEP.Aplicacao.Servicos
             if (possuiNome)
                 return dominios.FirstOrDefault(f => f.Nome.Equals(valorDoCampo) && f.Tipo == tipoFormato).Id;    
                 
-            return default;
+            return null;
         }
         
         private long ObterIdentificadorIdPorValorDoCampo(string valorDoCampo, List<IdNomeDTO> dominios, string nomeDoCampo)
@@ -718,7 +753,7 @@ namespace SME.CDEP.Aplicacao.Servicos
             if (possuiNome)
                 return dominios.FirstOrDefault(f => f.Nome.Equals(valorDoCampo)).Id;    
                 
-            return default;
+            return null;
         }
         
         protected bool ObterCopiaDigitalPorValorDoCampo(string valorDoCampo)

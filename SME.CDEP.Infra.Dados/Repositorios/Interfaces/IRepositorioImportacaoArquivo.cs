@@ -8,5 +8,6 @@ namespace SME.CDEP.Infra.Dados.Repositorios.Interfaces
     {
         Task<ImportacaoArquivo> ObterUltimaImportacao(TipoAcervo tipoAcervo);
         Task<long> Salvar(ImportacaoArquivo importacaoArquivo);
+        Task<ImportacaoArquivo> ObterImportacaoPorId(long id);
     }
 }

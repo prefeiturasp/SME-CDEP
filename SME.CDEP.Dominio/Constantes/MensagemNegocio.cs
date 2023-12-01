@@ -2,6 +2,7 @@
 
 public class MensagemNegocio
 {
+    public const string O_ITEM_X_DO_DOMINIO_X_NAO_ENCONTRADO = "O item '{0}' do domínio '{1}' não foi encontrado";
     public const string ARQUIVO_SEM_ABA = "Esse arquivo não possui nenhuma aba";
     public const string SOMENTE_ARQUIVO_XLSX_SUPORTADO = "Esse arquivo não é um XLSX. Somente arquivos do tipo XLSX são permitidos";
     public const string ARQUIVO_VAZIO = "O arquivo está vazio";

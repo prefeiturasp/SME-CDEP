@@ -7,5 +7,6 @@ namespace SME.CDEP.Dominio.Entidades
         public long AcervoId { get; set; }
         public long CreditoAutorId { get; set; }
         public string TipoAutoria { get; set; }
+        public bool EhCoAutor { get; set; }
     }
 }

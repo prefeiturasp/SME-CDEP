@@ -23,7 +23,7 @@ public class AcervoArteGraficaDTO
     public double? Diametro { get; set; }
     public string Tecnica { get; set; }
     public long? SuporteId { get; set; }
-    public long Quantidade { get; set; }
+    public long? Quantidade { get; set; }
     public string Descricao { get; set; }
     public ArquivoResumidoDTO[]? Arquivos { get; set; }
     public AuditoriaDTO Auditoria { get; set; }

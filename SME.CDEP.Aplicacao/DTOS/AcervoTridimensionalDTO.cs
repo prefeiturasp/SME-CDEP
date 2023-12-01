@@ -14,7 +14,7 @@ public class AcervoTridimensionalDTO
     public string Procedencia { get; set; }
     public string DataAcervo { get; set; }
     public long? ConservacaoId { get; set; }
-    public long Quantidade { get; set; }
+    public long? Quantidade { get; set; }
     public string Descricao { get; set; }
     public double? Largura { get; set; }
     public double? Altura { get; set; }

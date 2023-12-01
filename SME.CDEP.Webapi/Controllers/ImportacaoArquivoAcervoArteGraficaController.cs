@@ -33,6 +33,16 @@ public class ImportacaoArquivoAcervoArteGraficaController: BaseController
         return Ok(await servicoImportacaoArquivoAcervoArteGrafica.ObterImportacaoPendente());
     }
     
+    [HttpGet("{id}")]
+    [ProducesResponseType(typeof(ImportacaoArquivoRetornoDTO<AcervoLinhaErroDTO<AcervoArteGraficaDTO,AcervoArteGraficaLinhaRetornoDTO>,AcervoLinhaRetornoSucessoDTO>),200)]
+    [ProducesResponseType(401)]
+    [ProducesResponseType(typeof(RetornoBaseDTO), 500)]
+    [Permissao(Permissao.ACR_C, Policy = "Bearer")]
+    public async Task<IActionResult> ObterImportacaoPorId([FromRoute]long id, [FromServices] IServicoImportacaoArquivoAcervoArteGrafica servicoImportacaoArquivoAcervoArteGrafica)
+    {
+        return Ok(await servicoImportacaoArquivoAcervoArteGrafica.ObterImportacaoPorId(id));
+    }
+    
     [HttpPatch("{Id}")]
     [ProducesResponseType(typeof(bool), 200)]
     [ProducesResponseType(typeof(RetornoBaseDTO), 400)]

@@ -71,7 +71,7 @@ public class Constantes
     public const string CAMPO_COAUTOR_SEM_PREENCHIMENTO_E_TIPO_AUTORIA_PREENCHIDO = "O preenchimento do campo coautor é obrigatório quando o tipo de autoria está especificado";
     public const string TEMOS_MAIS_TIPO_AUTORIA_QUE_COAUTORES = "A quantidade de tipos de autoria excede a de coautores. É aceitável ter coautores desprovidos de tipo de autoria, mas o contrário não é permitido";
     public const string OCORREU_UMA_FALHA_INESPERADA_NA_LINHA_X_MOTIVO_Y = "Ocorreu uma falha inesperada na linha '{0}' -  Motivo: '{1}'";
-    public const string OCORREU_UMA_FALHA_INESPERADA_NO_CADASTRO_DAS_REFERENCIAS_MOTIVO_X = "Ocorreu uma falha inesperada no cadastrodas referências -  Motivo: '{0}'";
+    public const string OCORREU_UMA_FALHA_INESPERADA_NO_CADASTRO_DAS_REFERENCIAS_MOTIVO_X = "Ocorreu uma falha inesperada no cadastro das referências (domínios) -  Motivo: '{0}'";
     public const string CAMPO_CODIGO_ANTIGO_OU_CODIGO_NOVO_DEVE_SER_PREENCHIDO = "O campo código antigo ou código novo deve ser preenchido";
     public const string O_VALOR_DO_CAMPO_X_NAO_FOI_LOCALIZADO = "O valor do campo '{0}' não foi localizado";
     public const string NAO_FOI_POSSIVEL_LER_A_PLANILHA = "Não foi possível ler a planilha";
@@ -233,7 +233,7 @@ public class Constantes
     public const string NOME_DA_COLUNA_ASSUNTO = "ASSUNTO";
     public const string NOME_DA_COLUNA_EDICAO = "EDIÇÃO";
     public const string NOME_DA_COLUNA_SERIE_COLECAO = "SERIE COLEÇÃO";
-    public const string NOME_DA_COLUNA_LOCALIZACAO_CDD = "LOCALICAÇÃO CDD";
+    public const string NOME_DA_COLUNA_LOCALIZACAO_CDD = "LOCALIZAÇÃO CDD";
     public const string NOME_DA_COLUNA_LOCALIZACAO_PHA = "LOCALIZAÇÃO PHA";
     public const string NOME_DA_COLUNA_NOTAS_GERAIS = "NOTAS GERAIS";
     public const string NOME_DA_COLUNA_ISBN = "ISBN";
@@ -277,4 +277,7 @@ public class Constantes
     public const int CARACTERES_PERMITIDOS_15 = 15;
     public const int CARACTERES_PERMITIDOS_4 = 4;
     public const int CARACTERES_PERMITIDOS_3 = 3;
+    
+    public const string CREDITOS_AUTORES = "Créditos/Autores";
+    public const string ASSUNTOS = "Assuntos";
 }
