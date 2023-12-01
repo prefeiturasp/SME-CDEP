@@ -333,7 +333,7 @@ namespace SME.CDEP.Aplicacao.Servicos
 
             if (tiposAutoria.EstaPreenchido())
             {
-                var tiposAutoriaEmTexto = tiposAutoria.FormatarTextoEmArray();
+                var tiposAutoriaEmTexto = tiposAutoria.FormatarTextoEmArraySemDistinct();
             
                 tiposAutoriaEmTextoAutoNumerados = tiposAutoriaEmTexto.Select((tipoAutoria, indice) => new IdNomeDTO() { Id = indice + 1, Nome = tipoAutoria });    
             }

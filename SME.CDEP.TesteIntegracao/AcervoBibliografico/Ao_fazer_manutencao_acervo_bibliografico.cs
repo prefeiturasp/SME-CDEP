@@ -120,14 +120,14 @@ namespace SME.CDEP.TesteIntegracao
             var autores = autoresCoAutores.Where(w => w.TipoAutoria.EhNulo());
             autores.Count().ShouldBe(3);
             foreach (var autorIdInserido in acervoBibliograficoAlteracaoDto.CreditosAutoresIds)
-                autores.Any(a=> a.CreditoAutorId == autorIdInserido).ShouldBeTrue();
+                autores.Any(a=> a.CreditoAutorId == autorIdInserido && !a.EhCoAutor).ShouldBeTrue();
             
             var coAutores = autoresCoAutores.Where(w => w.TipoAutoria.NaoEhNulo());
             coAutores.Count().ShouldBe(1);
             foreach (var coAutorInserido in acervoBibliograficoAlteracaoDto.CoAutores)
             {
-                coAutores.Any(a => a.CreditoAutorId == coAutorInserido.CreditoAutorId).ShouldBeTrue();
-                coAutores.Any(a => a.TipoAutoria == coAutorInserido.TipoAutoria).ShouldBeTrue();
+                coAutores.Any(a => a.CreditoAutorId == coAutorInserido.CreditoAutorId && a.EhCoAutor).ShouldBeTrue();
+                coAutores.Any(a => a.TipoAutoria == coAutorInserido.TipoAutoria && a.EhCoAutor).ShouldBeTrue();
             }
         }
         
@@ -197,14 +197,14 @@ namespace SME.CDEP.TesteIntegracao
             var autores = autoresCoAutores.Where(w => w.TipoAutoria.EhNulo());
             autores.Count().ShouldBe(3);
             foreach (var autorIdInserido in acervoBibliograficoAlteracaoDto.CreditosAutoresIds)
-                autores.Any(a=> a.CreditoAutorId == autorIdInserido).ShouldBeTrue();
+                autores.Any(a=> a.CreditoAutorId == autorIdInserido && !a.EhCoAutor).ShouldBeTrue();
             
             var coAutores = autoresCoAutores.Where(w => w.TipoAutoria.NaoEhNulo());
             coAutores.Count().ShouldBe(1);
             foreach (var coAutorInserido in acervoBibliograficoAlteracaoDto.CoAutores)
             {
                 coAutores.Any(a => a.CreditoAutorId == coAutorInserido.CreditoAutorId).ShouldBeTrue();
-                coAutores.Any(a => a.TipoAutoria == coAutorInserido.TipoAutoria).ShouldBeTrue();
+                coAutores.Any(a => a.TipoAutoria == coAutorInserido.TipoAutoria && a.EhCoAutor).ShouldBeTrue();
             }
         }
         
@@ -329,7 +329,7 @@ namespace SME.CDEP.TesteIntegracao
             var autores = autoresCoAutores.Where(w => w.TipoAutoria.EhNulo());
             autores.Count().ShouldBe(3);
             foreach (var autorIdInserido in acervoBibliograficoAlteracaoDto.CreditosAutoresIds)
-                autores.Any(a=> a.CreditoAutorId == autorIdInserido).ShouldBeTrue();
+                autores.Any(a=> a.CreditoAutorId == autorIdInserido && !a.EhCoAutor).ShouldBeTrue();
             
             var coAutores = autoresCoAutores.Where(w => w.TipoAutoria.NaoEhNulo());
             coAutores.Count().ShouldBe(0);
@@ -397,7 +397,7 @@ namespace SME.CDEP.TesteIntegracao
             var autores = autoresCoAutores.Where(w => w.TipoAutoria.EhNulo());
             autores.Count().ShouldBe(3);
             foreach (var autorIdInserido in acervoBibliograficoCadastroDto.CreditosAutoresIds)
-                autores.Any(a=> a.CreditoAutorId == autorIdInserido).ShouldBeTrue();
+                autores.Any(a=> a.CreditoAutorId == autorIdInserido && !a.EhCoAutor).ShouldBeTrue();
             
             var coAutores = autoresCoAutores.Where(w => w.TipoAutoria.NaoEhNulo());
             coAutores.Count().ShouldBe(1);
