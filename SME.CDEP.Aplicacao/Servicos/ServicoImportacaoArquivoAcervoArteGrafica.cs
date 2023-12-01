@@ -1,4 +1,5 @@
 ﻿using System.Text;
+using AutoMapper;
 using ClosedXML.Excel;
 using Microsoft.AspNetCore.Http;
 using Newtonsoft.Json;
@@ -20,9 +21,9 @@ namespace SME.CDEP.Aplicacao.Servicos
         public ServicoImportacaoArquivoAcervoArteGrafica(IRepositorioImportacaoArquivo repositorioImportacaoArquivo, IServicoMaterial servicoMaterial,
             IServicoEditora servicoEditora,IServicoSerieColecao servicoSerieColecao,IServicoIdioma servicoIdioma, IServicoAssunto servicoAssunto,
             IServicoCreditoAutor servicoCreditoAutor,IServicoConservacao servicoConservacao, IServicoAcessoDocumento servicoAcessoDocumento,
-            IServicoCromia servicoCromia, IServicoSuporte servicoSuporte,IServicoFormato servicoFormato,IServicoAcervoArteGrafica servicoAcervoArteGrafica)
+            IServicoCromia servicoCromia, IServicoSuporte servicoSuporte,IServicoFormato servicoFormato,IServicoAcervoArteGrafica servicoAcervoArteGrafica, IMapper mapper)
             : base(repositorioImportacaoArquivo, servicoMaterial, servicoEditora,servicoSerieColecao, servicoIdioma, servicoAssunto, servicoCreditoAutor,
-                servicoConservacao,servicoAcessoDocumento,servicoCromia,servicoSuporte,servicoFormato)
+                servicoConservacao,servicoAcessoDocumento,servicoCromia,servicoSuporte,servicoFormato, mapper)
         {
             this.servicoAcervoArteGrafica = servicoAcervoArteGrafica ?? throw new ArgumentNullException(nameof(servicoAcervoArteGrafica));
         }
@@ -100,11 +101,10 @@ namespace SME.CDEP.Aplicacao.Servicos
 
         private async Task<ImportacaoArquivoRetornoDTO<AcervoLinhaErroDTO<AcervoArteGraficaDTO,AcervoArteGraficaLinhaRetornoDTO>,AcervoLinhaRetornoSucessoDTO>> ObterRetornoImportacaoAcervo(ImportacaoArquivo arquivoImportado, IEnumerable<AcervoArteGraficaLinhaDTO> acervosArtesGraficasLinhas, bool estaImportandoArquivo = true)
         {
+            await ObterSuportesPorTipo(TipoSuporte.IMAGEM);
+
             if (!estaImportandoArquivo)
             {
-                await ObterConservacoes(acervosArtesGraficasLinhas.Where(w=> !w.EstadoConservacao.PossuiErro).Select(s => s.EstadoConservacao.Conteudo).Distinct().Where(w=> w.EstaPreenchido()));
-                await ObterCromias(acervosArtesGraficasLinhas.Where(w=> !w.Cromia.PossuiErro).Select(s => s.Cromia.Conteudo).Distinct().Where(w=> w.EstaPreenchido()));
-                await ObterSuportes(acervosArtesGraficasLinhas.Where(w=> !w.Suporte.PossuiErro).Select(s => s.Suporte.Conteudo).Distinct().Where(w=> w.EstaPreenchido()), TipoSuporte.IMAGEM);
                 await ObterCreditosAutoresTipoAutoria(acervosArtesGraficasLinhas.Where(w=> !w.Credito.PossuiErro).Select(s => s.Credito.Conteudo).ToArray().UnificarPipe().SplitPipe().Distinct().Where(w=> w.EstaPreenchido()), TipoCreditoAutoria.Credito);
             }
             
@@ -345,13 +345,9 @@ namespace SME.CDEP.Aplicacao.Servicos
             try
             {
                 await ValidarOuInserirCreditoAutoresCoAutoresTipoAutoria(linhasComsucesso.Where(w=> !w.Credito.PossuiErro).Select(s => s.Credito.Conteudo).ToArray().UnificarPipe().SplitPipe().Distinct().Where(w=> w.EstaPreenchido()), TipoCreditoAutoria.Credito);
-                
-                await ValidarOuInserirCromia(linhasComsucesso.Where(w=> !w.Cromia.PossuiErro).Select(s => s.Cromia.Conteudo).Distinct().Where(w=> w.EstaPreenchido()));
-                
-                await ValidarOuInserirSuporte(linhasComsucesso.Where(w=> !w.Suporte.PossuiErro).Select(s => s.Suporte.Conteudo).Distinct().Where(w=> w.EstaPreenchido()), TipoSuporte.IMAGEM);
-                
-                await ValidarOuInserirConservacao(linhasComsucesso.Where(w=> !w.EstadoConservacao.PossuiErro).Select(s => s.EstadoConservacao.Conteudo).Distinct().Where(w=> w.EstaPreenchido()));
 
+                await ObterDominiosImutaveis();
+                
             }
             catch (Exception e)
             {
@@ -398,6 +394,7 @@ namespace SME.CDEP.Aplicacao.Servicos
                         {
                             Conteudo = planilha.ObterValorDaCelula(numeroLinha, Constantes.ACERVO_ARTE_GRAFICA_CAMPO_CREDITO),
                             LimiteCaracteres = Constantes.CARACTERES_PERMITIDOS_200,
+                            PermiteNovoRegistro = true
                         },
                         Localizacao = new LinhaConteudoAjustarDTO()
                         {
@@ -433,13 +430,13 @@ namespace SME.CDEP.Aplicacao.Servicos
                         {
                             Conteudo = planilha.ObterValorDaCelula(numeroLinha, Constantes.ACERVO_ARTE_GRAFICA_CAMPO_ESTADO_CONSERVACAO),
                             LimiteCaracteres = Constantes.CARACTERES_PERMITIDOS_500,
-                            EhCampoObrigatorio = true
+                            EhCampoObrigatorio = true,
                         },
                         Cromia = new LinhaConteudoAjustarDTO()
                         {
                             Conteudo = planilha.ObterValorDaCelula(numeroLinha, Constantes.ACERVO_ARTE_GRAFICA_CAMPO_CROMIA),
                             LimiteCaracteres = Constantes.CARACTERES_PERMITIDOS_500,
-                            EhCampoObrigatorio = true
+                            EhCampoObrigatorio = true,
                         },
                         Largura = new LinhaConteudoAjustarDTO()
                         {
@@ -465,7 +462,8 @@ namespace SME.CDEP.Aplicacao.Servicos
                         {
                             Conteudo = planilha.ObterValorDaCelula(numeroLinha, Constantes.ACERVO_ARTE_GRAFICA_CAMPO_SUPORTE),
                             LimiteCaracteres = Constantes.CARACTERES_PERMITIDOS_500,
-                            EhCampoObrigatorio = true
+                            EhCampoObrigatorio = true,
+                            PermiteNovoRegistro = true
                         },
                         Quantidade = new LinhaConteudoAjustarDTO()
                         {

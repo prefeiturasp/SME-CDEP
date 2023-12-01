@@ -33,6 +33,7 @@ public static class AcervoArteGraficaLinhaMock
             {
                 Conteudo = $"{f.Lorem.Text().Limite(200)}|{f.Lorem.Sentence().Limite(200)}|{f.Lorem.Word().Limite(200)}",
                 LimiteCaracteres = ConstantesTestes.CARACTERES_PERMITIDOS_200,
+                PermiteNovoRegistro = true,
             });
             
             faker.RuleFor(x => x.Localizacao, f => new LinhaConteudoAjustarDTO()
@@ -72,14 +73,14 @@ public static class AcervoArteGraficaLinhaMock
             
             faker.RuleFor(x => x.EstadoConservacao, f => new LinhaConteudoAjustarDTO()
             {
-                Conteudo = f.Lorem.Text().Limite(500),
+                Conteudo = ConstantesTestes.OTIMO,
                 LimiteCaracteres = ConstantesTestes.CARACTERES_PERMITIDOS_500,
                 EhCampoObrigatorio = true
             });
             
             faker.RuleFor(x => x.Cromia, f => new LinhaConteudoAjustarDTO()
             {
-                Conteudo = f.Lorem.Text().Limite(500),
+                Conteudo = ConstantesTestes.COLOR,
                 LimiteCaracteres = ConstantesTestes.CARACTERES_PERMITIDOS_500,
                 EhCampoObrigatorio = true
             });
@@ -110,7 +111,7 @@ public static class AcervoArteGraficaLinhaMock
             
             faker.RuleFor(x => x.Suporte, f => new LinhaConteudoAjustarDTO()
             {
-                Conteudo = f.Lorem.Text().Limite(500),
+                Conteudo = ConstantesTestes.PAPEL,
                 LimiteCaracteres = ConstantesTestes.CARACTERES_PERMITIDOS_500,
                 EhCampoObrigatorio = true
             });

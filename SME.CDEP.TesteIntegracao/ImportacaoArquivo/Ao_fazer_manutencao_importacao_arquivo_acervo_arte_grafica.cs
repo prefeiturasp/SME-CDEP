@@ -19,6 +19,8 @@ namespace SME.CDEP.TesteIntegracao
         [Fact(DisplayName = "Importação Arquivo Acervo Arte Grafica - ValidarPreenchimentoValorFormatoQtdeCaracteres - Com erros: Titulo, Cromia, Largura, Diâmetro e Tombo")]
         public async Task Validar_preenchimento_valor_formato_qtde_caracteres()
         {
+            await InserirDadosBasicos();
+            
             var servicoImportacaoArquivo = GetServicoImportacaoArquivoAcervoArteGrafica();
 
             var acervoArteGraficaLinhas = AcervoArteGraficaLinhaMock.GerarAcervoArteGraficaLinhaDTO().Generate(10);
@@ -109,6 +111,8 @@ namespace SME.CDEP.TesteIntegracao
         [Fact(DisplayName = "Importação Arquivo Acervo Arte Grafica - ValidacaoObterOuInserirDominios")]
         public async Task Validacao_obter_ou_inserir_dominios()
         {
+            await InserirDadosBasicos();
+            
             var servicoImportacaoArquivo = GetServicoImportacaoArquivoAcervoArteGrafica();
         
             var acervoArteGraficaLinhas = AcervoArteGraficaLinhaMock.GerarAcervoArteGraficaLinhaDTO().Generate(10);
@@ -139,6 +143,8 @@ namespace SME.CDEP.TesteIntegracao
         [Fact(DisplayName = "Importação Arquivo Acervo Arte Grafica - PersistenciaAcervo")]
         public async Task Persistencia_acervo()
         {
+            await InserirDadosBasicos();
+            
             var servicoImportacaoArquivo = GetServicoImportacaoArquivoAcervoArteGrafica();
         
             var acervoArteGraficaLinhas = AcervoArteGraficaLinhaMock.GerarAcervoArteGraficaLinhaDTO().Generate(10);
@@ -212,6 +218,8 @@ namespace SME.CDEP.TesteIntegracao
         [Fact(DisplayName = "Importação Arquivo Acervo Arte Grafica - Geral - Com erros em 4 linhas")]
         public async Task Importacao_geral()
         {
+            await InserirDadosBasicos();
+            
             var servicoImportacaoArquivo = GetServicoImportacaoArquivoAcervoArteGrafica();
         
             var acervoArteGraficaLinhas = AcervoArteGraficaLinhaMock.GerarAcervoArteGraficaLinhaDTO().Generate(10);
@@ -349,6 +357,8 @@ namespace SME.CDEP.TesteIntegracao
         [Fact(DisplayName = "Importação Arquivo Acervo Arte Grafica - Obter importação pendente com Erros")]
         public async Task Obter_importacao_pendente_com_erros()
         {
+            await InserirDadosBasicos();
+            
             var servicoImportacaoArquivo = GetServicoImportacaoArquivoAcervoArteGrafica();
         
             var linhasInseridas = AcervoArteGraficaLinhaMock.GerarAcervoArteGraficaLinhaDTO().Generate(10);
@@ -369,12 +379,6 @@ namespace SME.CDEP.TesteIntegracao
                 Conteudo = JsonConvert.SerializeObject(linhasInseridas),
                 CriadoEm = DateTimeExtension.HorarioBrasilia().Date, CriadoPor = ConstantesTestes.SISTEMA, CriadoLogin = ConstantesTestes.LOGIN_123456789
             });
-
-            await InserirConservacoes(linhasInseridas.Select(s => s.EstadoConservacao.Conteudo).Distinct().Where(w => w.EstaPreenchido()));
-            
-            await InserirCromias(linhasInseridas.Select(s => s.Cromia.Conteudo).Distinct().Where(w => w.EstaPreenchido()));
-            
-            await InserirSuportes(linhasInseridas.Select(s => s.Suporte.Conteudo).Distinct().Where(w => w.EstaPreenchido()));
             
             await InserirCreditosAutorias(linhasInseridas.Select(s => s.Credito.Conteudo).ToArray().UnificarPipe().SplitPipe().Distinct().Where(w=> w.EstaPreenchido()));
             
@@ -585,6 +589,8 @@ namespace SME.CDEP.TesteIntegracao
         [Fact(DisplayName = "Importação Arquivo Acervo Arte Grafica - Deve permitir atualizar uma linha do arquivo para sucesso e outra fica com erro")]
         public async Task Deve_permitir_atualizar_uma_linha_do_arquivo_para_sucesso_e_outra_fica_com_erro()
         {
+            await InserirDadosBasicos();
+            
             var servicoImportacaoArquivo = GetServicoImportacaoArquivoAcervoArteGrafica();
 
             var linhasInseridas = AcervoArteGraficaLinhaMock.GerarAcervoArteGraficaLinhaDTO().Generate(10);
@@ -623,10 +629,11 @@ namespace SME.CDEP.TesteIntegracao
         [Fact(DisplayName = "Importação Arquivo Acervo Arte Grafica - Deve permitir atualizar linha do arquivo para sucesso")]
         public async Task Deve_permitir_atualizar_linha_do_arquivo_para_sucesso()
         {
-           var servicoImportacaoArquivo = GetServicoImportacaoArquivoAcervoArteGrafica();
-           
-            var linhasInseridas = AcervoArteGraficaLinhaMock.GerarAcervoArteGraficaLinhaDTO().Generate(10);
+            await InserirDadosBasicos();
             
+            var servicoImportacaoArquivo = GetServicoImportacaoArquivoAcervoArteGrafica();
+
+            var linhasInseridas = AcervoArteGraficaLinhaMock.GerarAcervoArteGraficaLinhaDTO().Generate(10);
             linhasInseridas[3].PossuiErros = true;
             linhasInseridas[3].Largura.PossuiErro = true;
             linhasInseridas[3].Largura.Mensagem = string.Format(Dominio.Constantes.Constantes.CAMPO_X_REQUER_UM_VALOR_NUMERICO, Dominio.Constantes.Constantes.LARGURA);
