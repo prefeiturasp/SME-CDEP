@@ -88,7 +88,6 @@ public class Constantes
     public const string TEMOS_MAIS_TIPO_AUTORIA_QUE_COAUTORES = "A quantidade de tipos de autoria excede a de coautores. É aceitável ter coautores desprovidos de tipo de autoria, mas o contrário não é permitido";
     public const string OCORREU_UMA_FALHA_INESPERADA_NA_LINHA_X_MOTIVO_Y = "Ocorreu uma falha inesperada na linha '{0}' -  Motivo: '{1}'";
     public const string OCORREU_UMA_FALHA_INESPERADA_NO_CADASTRO_DAS_REFERENCIAS_MOTIVO_X = "Ocorreu uma falha inesperada no cadastro das referências (domínios) -  Motivo: '{0}'";
-    public const string CAMPO_CODIGO_ANTIGO_OU_CODIGO_NOVO_DEVE_SER_PREENCHIDO = "O campo código antigo ou código novo deve ser preenchido";
     public const string O_VALOR_DO_CAMPO_X_NAO_FOI_LOCALIZADO = "O valor do campo '{0}' não foi localizado";
     public const string NAO_FOI_POSSIVEL_LER_A_PLANILHA = "Não foi possível ler a planilha";
     public const string VALOR_DO_CAMPO_X_NAO_PERMITIDO_ESPERADO_X = "O valor do campo '{0}' não permitido, esperado: '{1}'";
