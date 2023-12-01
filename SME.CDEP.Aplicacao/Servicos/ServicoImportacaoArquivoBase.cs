@@ -306,7 +306,7 @@ namespace SME.CDEP.Aplicacao.Servicos
                         if (campo.ValoresPermitidos.NaoEhNulo())
                         {
                             if (!campo.ValoresPermitidos.Contains(campo.Conteudo.ToLower()))
-                                DefinirMensagemErro(campo, string.Format(Constantes.VALOR_DO_CAMPO_X_NAO_PERMITIDO_ESPERADO_X, nomeCampo, string.Join(", ", campo.ValoresPermitidos)));
+                                DefinirMensagemErro(campo, string.Format(Constantes.VALOR_X_DO_CAMPO_X_NAO_PERMITIDO_ESPERADO_X, item, nomeCampo, string.Join(", ", campo.ValoresPermitidos)));
                             break;
                         }
                         
@@ -563,7 +563,7 @@ namespace SME.CDEP.Aplicacao.Servicos
                 if (CreditosAutores.Any(f => f.Nome.SaoIguais(item) && f.Tipo.SaoIguais((int)tipoCreditoAutoria)))
                     retorno.Add(CreditosAutores.FirstOrDefault(f => f.Nome.SaoIguais(item) && f.Tipo.SaoIguais((int)tipoCreditoAutoria)).Id);
                 else
-                    throw new NegocioException(string.Format(MensagemNegocio.O_ITEM_X_DO_DOMINIO_X_NAO_ENCONTRADO, Constantes.CREDITOS_AUTORES, item));
+                    throw new NegocioException(string.Format(MensagemNegocio.O_ITEM_X_DO_DOMINIO_X_NAO_ENCONTRADO, item, Constantes.CREDITOS_AUTORES));
             }
                 
             
@@ -583,7 +583,7 @@ namespace SME.CDEP.Aplicacao.Servicos
                 if (Assuntos.Any(f => f.Nome.SaoIguais(item)))
                     retorno.Add(Assuntos.FirstOrDefault(f => f.Nome.SaoIguais(item)).Id);
                 else
-                    throw new NegocioException(string.Format(MensagemNegocio.O_ITEM_X_DO_DOMINIO_X_NAO_ENCONTRADO, Constantes.ASSUNTOS, item));
+                    throw new NegocioException(string.Format(MensagemNegocio.O_ITEM_X_DO_DOMINIO_X_NAO_ENCONTRADO, item, Constantes.ASSUNTOS));
             }
                 
             
@@ -609,7 +609,7 @@ namespace SME.CDEP.Aplicacao.Servicos
                 if (!possuiNome)
                 {
                     if (gerarExcecao)
-                        throw new NegocioException(string.Format(Constantes.O_VALOR_DO_CAMPO_X_NAO_FOI_LOCALIZADO, valorDoCampo));
+                        throw new NegocioException(string.Format(Constantes.O_VALOR_X_DO_CAMPO_X_NAO_FOI_LOCALIZADO, item, Constantes.ACESSO_DOCUMENTO));
                 }
                 else
                     retorno.Add(AcessoDocumentos.FirstOrDefault(f => f.Nome.SaoIguais(item)).Id);
@@ -702,7 +702,7 @@ namespace SME.CDEP.Aplicacao.Servicos
             var possuiNome = dominios.Any(f => f.Nome.SaoIguais(valorDoCampo) && f.Tipo == tipoFormato);
 
             if (!possuiNome)
-                throw new NegocioException(string.Format(Constantes.O_VALOR_DO_CAMPO_X_NAO_FOI_LOCALIZADO, nomeDoCampo));
+                throw new NegocioException(string.Format(Constantes.O_VALOR_X_DO_CAMPO_X_NAO_FOI_LOCALIZADO, valorDoCampo, nomeDoCampo));
             
             return dominios.FirstOrDefault(f => f.Nome.SaoIguais(valorDoCampo) && f.Tipo == tipoFormato).Id;
         }
@@ -722,7 +722,7 @@ namespace SME.CDEP.Aplicacao.Servicos
             var possuiNome = dominios.Any(f => f.Nome.SaoIguais(valorDoCampo));
 
             if (!possuiNome)
-                throw new NegocioException(string.Format(Constantes.O_VALOR_DO_CAMPO_X_NAO_FOI_LOCALIZADO, nomeDoCampo));
+                throw new NegocioException(string.Format(Constantes.O_VALOR_X_DO_CAMPO_X_NAO_FOI_LOCALIZADO, valorDoCampo, nomeDoCampo));
             
             return dominios.FirstOrDefault(f => f.Nome.SaoIguais(valorDoCampo)).Id;
         }
@@ -754,7 +754,7 @@ namespace SME.CDEP.Aplicacao.Servicos
                 var valoresPermitidos = new List<string>() { Constantes.OPCAO_SIM, Constantes.OPCAO_NAO };
                 
                 if (!valoresPermitidos.Contains(valorDoCampo.ToLower()))
-                    throw new NegocioException(string.Format(Constantes.VALOR_DO_CAMPO_X_NAO_PERMITIDO_ESPERADO_X,nomeDoCampo));
+                    throw new NegocioException(string.Format(Constantes.VALOR_X_DO_CAMPO_X_NAO_PERMITIDO_ESPERADO_X,valorDoCampo, nomeDoCampo));
 
                 return valorDoCampo.SaoIguais(Constantes.OPCAO_SIM);
             }
