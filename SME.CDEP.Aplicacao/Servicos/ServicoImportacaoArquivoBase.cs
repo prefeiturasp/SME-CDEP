@@ -605,7 +605,7 @@ namespace SME.CDEP.Aplicacao.Servicos
             var conteudoCampoArray = valorDoCampo.FormatarTextoEmArray().ToList();
             foreach (var item in conteudoCampoArray)
             {
-                var possuiNome = AcessoDocumentos.Any(f => f.Nome.Equals(item));
+                var possuiNome = AcessoDocumentos.Any(f => f.Nome.SaoIguais(item));
                 if (!possuiNome)
                 {
                     if (gerarExcecao)
@@ -699,40 +699,40 @@ namespace SME.CDEP.Aplicacao.Servicos
         
         private long ObterIdentificadorIdPorValorDoCampo(string valorDoCampo, List<IdNomeTipoDTO> dominios, string nomeDoCampo, int tipoFormato)
         {
-            var possuiNome = dominios.Any(f => f.Nome.Equals(valorDoCampo) && f.Tipo == tipoFormato);
+            var possuiNome = dominios.Any(f => f.Nome.SaoIguais(valorDoCampo) && f.Tipo == tipoFormato);
 
             if (!possuiNome)
                 throw new NegocioException(string.Format(Constantes.O_VALOR_DO_CAMPO_X_NAO_FOI_LOCALIZADO, nomeDoCampo));
             
-            return dominios.FirstOrDefault(f => f.Nome.Equals(valorDoCampo) && f.Tipo == tipoFormato).Id;
+            return dominios.FirstOrDefault(f => f.Nome.SaoIguais(valorDoCampo) && f.Tipo == tipoFormato).Id;
         }
         
         private long? ObterIdentificadorIdOuNuloPorValorDoCampo(string valorDoCampo, List<IdNomeTipoDTO> dominios, int tipoFormato)
         {
-            var possuiNome = dominios.Any(f => f.Nome.Equals(valorDoCampo) && f.Tipo == tipoFormato);
+            var possuiNome = dominios.Any(f => f.Nome.SaoIguais(valorDoCampo) && f.Tipo == tipoFormato);
 
             if (possuiNome)
-                return dominios.FirstOrDefault(f => f.Nome.Equals(valorDoCampo) && f.Tipo == tipoFormato).Id;    
+                return dominios.FirstOrDefault(f => f.Nome.SaoIguais(valorDoCampo) && f.Tipo == tipoFormato).Id;    
                 
             return default;
         }
         
         private long ObterIdentificadorIdPorValorDoCampo(string valorDoCampo, List<IdNomeDTO> dominios, string nomeDoCampo)
         {
-            var possuiNome = dominios.Any(f => f.Nome.Equals(valorDoCampo));
+            var possuiNome = dominios.Any(f => f.Nome.SaoIguais(valorDoCampo));
 
             if (!possuiNome)
                 throw new NegocioException(string.Format(Constantes.O_VALOR_DO_CAMPO_X_NAO_FOI_LOCALIZADO, nomeDoCampo));
             
-            return dominios.FirstOrDefault(f => f.Nome.Equals(valorDoCampo)).Id;
+            return dominios.FirstOrDefault(f => f.Nome.SaoIguais(valorDoCampo)).Id;
         }
         
         private long? ObterIdentificadorIdOuNuloPorValorDoCampo(string valorDoCampo, List<IdNomeDTO> dominios)
         {
-            var possuiNome = dominios.Any(f => f.Nome.Equals(valorDoCampo));
+            var possuiNome = dominios.Any(f => f.Nome.SaoIguais(valorDoCampo));
 
             if (possuiNome)
-                return dominios.FirstOrDefault(f => f.Nome.Equals(valorDoCampo)).Id;    
+                return dominios.FirstOrDefault(f => f.Nome.SaoIguais(valorDoCampo)).Id;    
                 
             return default;
         }
@@ -756,7 +756,7 @@ namespace SME.CDEP.Aplicacao.Servicos
                 if (!valoresPermitidos.Contains(valorDoCampo.ToLower()))
                     throw new NegocioException(string.Format(Constantes.VALOR_DO_CAMPO_X_NAO_PERMITIDO_ESPERADO_X,nomeDoCampo));
 
-                return valorDoCampo.ToLower().Equals(Constantes.OPCAO_SIM);
+                return valorDoCampo.SaoIguais(Constantes.OPCAO_SIM);
             }
             return false;
         }
