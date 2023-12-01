@@ -81,7 +81,7 @@ namespace SME.CDEP.Aplicacao.Servicos
             var importacaoArquivo = ObterImportacaoArquivoParaSalvar(file.FileName, TipoAcervo.DocumentacaoHistorica, JsonConvert.SerializeObject(acervosDocumentalLinhas));
             
             var importacaoArquivoId = await PersistirImportacao(importacaoArquivo);
-           
+            
             ValidarPreenchimentoValorFormatoQtdeCaracteres(acervosDocumentalLinhas);
             
             await AtualizarImportacao(importacaoArquivoId, JsonConvert.SerializeObject(acervosDocumentalLinhas),ImportacaoStatus.ValidadoPreenchimentoValorFormatoQtdeCaracteres);
@@ -288,7 +288,7 @@ namespace SME.CDEP.Aplicacao.Servicos
                         AcessoDocumentosIds = ObterAcessoDocumentosIdsPorValorDoCampo(acervoDocumentalLinha.AcessoDocumento.Conteudo),
                         Localizacao = acervoDocumentalLinha.Localizacao.Conteudo,
                         CopiaDigital = acervoDocumentalLinha.CopiaDigital.Conteudo.EhOpcaoSim(),
-                        ConservacaoId = ObterConservacaoIdOuNuloPorValorDoCampo(acervoDocumentalLinha.EstadoConservacao.Conteudo)
+                        ConservacaoId = acervoDocumentalLinha.EstadoConservacao.Conteudo.EstaPreenchido() ? ObterConservacaoIdPorValorDoCampo(acervoDocumentalLinha.EstadoConservacao.Conteudo) : null
                     };
                     await servicoAcervoDocumental.Inserir(acervoDocumental);
 
@@ -372,15 +372,13 @@ namespace SME.CDEP.Aplicacao.Servicos
                 
                 await ValidarOuInserirCreditoAutoresCoAutoresTipoAutoria(linhasComsucesso.Where(w=> !w.Autor.PossuiErro).Select(s => s.Autor.Conteudo).ToArray().UnificarPipe().SplitPipe().Distinct().Where(w=> w.EstaPreenchido()), TipoCreditoAutoria.Autoria);
                 
-                await ValidarOuInserirAcessoDocumento(linhasComsucesso.Where(w=> !w.AcessoDocumento.PossuiErro).Select(s => s.AcessoDocumento.Conteudo).ToArray().UnificarPipe().SplitPipe().Distinct().Where(w=> w.EstaPreenchido()));
-                
                 await ObterDominiosImutaveis();
-
+                
             }
             catch (Exception e)
             {
                 foreach (var linha in linhasComsucesso)
-                    linha.DefinirLinhaComoErro(string.Format(Constantes.OCORREU_UMA_FALHA_INESPERADA_NO_CADASTRO_DAS_REFERENCIAS_MOTIVO_X, e.Message));
+                    linha.DefinirLinhaComoErro(e.Message);
             }
         }
 
