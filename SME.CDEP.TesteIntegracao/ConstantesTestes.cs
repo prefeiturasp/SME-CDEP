@@ -58,6 +58,7 @@ public class ConstantesTestes
     
     public const string DIGITAL = "Digital";
     public const string FISICO = "Físico";
+    public const string ONLINE = "Online";
     public const string NEGATIVO = "Negativo";
     public const string DIGITAL_E_FISICO = "Digital e Físico";
     

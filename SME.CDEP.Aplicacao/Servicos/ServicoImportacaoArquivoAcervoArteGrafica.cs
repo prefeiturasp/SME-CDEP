@@ -1,4 +1,5 @@
 ﻿using System.Text;
+using AutoMapper;
 using ClosedXML.Excel;
 using Microsoft.AspNetCore.Http;
 using Newtonsoft.Json;
@@ -20,9 +21,9 @@ namespace SME.CDEP.Aplicacao.Servicos
         public ServicoImportacaoArquivoAcervoArteGrafica(IRepositorioImportacaoArquivo repositorioImportacaoArquivo, IServicoMaterial servicoMaterial,
             IServicoEditora servicoEditora,IServicoSerieColecao servicoSerieColecao,IServicoIdioma servicoIdioma, IServicoAssunto servicoAssunto,
             IServicoCreditoAutor servicoCreditoAutor,IServicoConservacao servicoConservacao, IServicoAcessoDocumento servicoAcessoDocumento,
-            IServicoCromia servicoCromia, IServicoSuporte servicoSuporte,IServicoFormato servicoFormato,IServicoAcervoArteGrafica servicoAcervoArteGrafica)
+            IServicoCromia servicoCromia, IServicoSuporte servicoSuporte,IServicoFormato servicoFormato,IServicoAcervoArteGrafica servicoAcervoArteGrafica, IMapper mapper)
             : base(repositorioImportacaoArquivo, servicoMaterial, servicoEditora,servicoSerieColecao, servicoIdioma, servicoAssunto, servicoCreditoAutor,
-                servicoConservacao,servicoAcessoDocumento,servicoCromia,servicoSuporte,servicoFormato)
+                servicoConservacao,servicoAcessoDocumento,servicoCromia,servicoSuporte,servicoFormato, mapper)
         {
             this.servicoAcervoArteGrafica = servicoAcervoArteGrafica ?? throw new ArgumentNullException(nameof(servicoAcervoArteGrafica));
         }
@@ -100,11 +101,10 @@ namespace SME.CDEP.Aplicacao.Servicos
 
         private async Task<ImportacaoArquivoRetornoDTO<AcervoLinhaErroDTO<AcervoArteGraficaDTO,AcervoArteGraficaLinhaRetornoDTO>,AcervoLinhaRetornoSucessoDTO>> ObterRetornoImportacaoAcervo(ImportacaoArquivo arquivoImportado, IEnumerable<AcervoArteGraficaLinhaDTO> acervosArtesGraficasLinhas, bool estaImportandoArquivo = true)
         {
+            await ObterSuportesPorTipo(TipoSuporte.IMAGEM);
+
             if (!estaImportandoArquivo)
             {
-                await ObterConservacoes(acervosArtesGraficasLinhas.Where(w=> !w.EstadoConservacao.PossuiErro).Select(s => s.EstadoConservacao.Conteudo).Distinct().Where(w=> w.EstaPreenchido()));
-                await ObterCromias(acervosArtesGraficasLinhas.Where(w=> !w.Cromia.PossuiErro).Select(s => s.Cromia.Conteudo).Distinct().Where(w=> w.EstaPreenchido()));
-                await ObterSuportes(acervosArtesGraficasLinhas.Where(w=> !w.Suporte.PossuiErro).Select(s => s.Suporte.Conteudo).Distinct().Where(w=> w.EstaPreenchido()), TipoSuporte.IMAGEM);
                 await ObterCreditosAutoresTipoAutoria(acervosArtesGraficasLinhas.Where(w=> !w.Credito.PossuiErro).Select(s => s.Credito.Conteudo).ToArray().UnificarPipe().SplitPipe().Distinct().Where(w=> w.EstaPreenchido()), TipoCreditoAutoria.Credito);
             }
             
@@ -348,12 +348,6 @@ namespace SME.CDEP.Aplicacao.Servicos
 
                 await ObterDominiosImutaveis();
                 
-                // await ValidarOuInserirCromia(linhasComsucesso.Where(w=> !w.Cromia.PossuiErro).Select(s => s.Cromia.Conteudo).Distinct().Where(w=> w.EstaPreenchido()));
-                //
-                // await ValidarOuInserirSuporte(linhasComsucesso.Where(w=> !w.Suporte.PossuiErro).Select(s => s.Suporte.Conteudo).Distinct().Where(w=> w.EstaPreenchido()), TipoSuporte.IMAGEM);
-                //
-                // await ValidarOuInserirConservacao(linhasComsucesso.Where(w=> !w.EstadoConservacao.PossuiErro).Select(s => s.EstadoConservacao.Conteudo).Distinct().Where(w=> w.EstaPreenchido()));
-
             }
             catch (Exception e)
             {

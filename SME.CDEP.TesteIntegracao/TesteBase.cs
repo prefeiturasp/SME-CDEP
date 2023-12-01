@@ -335,6 +335,7 @@ namespace SME.CDEP.TesteIntegracao
             await InserirSuportesBase();
             await InserirConservacoesBase();
             await InserirCromiasBase();
+            await InserirAcessoDocumentos();
         }
 
         private async Task InserirSuportesBase()
@@ -390,6 +391,24 @@ namespace SME.CDEP.TesteIntegracao
                 await InserirNaBase(new Cromia()
                 {
                     Nome = cromia.Nome,
+                });
+            }
+        }
+
+        private async Task InserirAcessoDocumentos()
+        {
+            var acessosDocumentos = new List<AcessoDocumento>
+            {
+                new() { Nome = ConstantesTestes.DIGITAL },
+                new() { Nome = ConstantesTestes.FISICO },
+                new() { Nome = ConstantesTestes.ONLINE },
+            };
+
+            foreach (var acessoDocumento in acessosDocumentos)
+            {
+                await InserirNaBase(new AcessoDocumento()
+                {
+                    Nome = acessoDocumento.Nome,
                 });
             }
         }

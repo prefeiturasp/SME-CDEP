@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using ClosedXML.Excel;
+using DocumentFormat.OpenXml.Office2010.Excel;
 using DocumentFormat.OpenXml.Office2010.ExcelAc;
 using Microsoft.AspNetCore.Http;
 using Newtonsoft.Json;
@@ -38,13 +39,14 @@ namespace SME.CDEP.Aplicacao.Servicos
         protected List<IdNomeDTO> Cromias;
         protected List<IdNomeTipoDTO> Suportes;
         protected List<IdNomeTipoDTO> Formatos;
-        
+        private readonly IMapper mapper;
+
         protected List<IdNomeTipoDTO> CreditosAutores { get; set; }
 
         public ServicoImportacaoArquivoBase(IRepositorioImportacaoArquivo repositorioImportacaoArquivo, IServicoMaterial servicoMaterial,
             IServicoEditora servicoEditora,IServicoSerieColecao servicoSerieColecao,IServicoIdioma servicoIdioma, IServicoAssunto servicoAssunto,
             IServicoCreditoAutor servicoCreditoAutor,IServicoConservacao servicoConservacao, IServicoAcessoDocumento servicoAcessoDocumento,
-            IServicoCromia servicoCromia, IServicoSuporte servicoSuporte,IServicoFormato servicoFormato)
+            IServicoCromia servicoCromia, IServicoSuporte servicoSuporte,IServicoFormato servicoFormato, IMapper mapper)
         {
             this.repositorioImportacaoArquivo = repositorioImportacaoArquivo ?? throw new ArgumentNullException(nameof(repositorioImportacaoArquivo));
             this.servicoMaterial = servicoMaterial ?? throw new ArgumentNullException(nameof(servicoMaterial));
@@ -58,6 +60,7 @@ namespace SME.CDEP.Aplicacao.Servicos
             this.servicoCromia = servicoCromia ?? throw new ArgumentNullException(nameof(servicoCromia));
             this.servicoSuporte = servicoSuporte ?? throw new ArgumentNullException(nameof(servicoSuporte));
             this.servicoFormato = servicoFormato ?? throw new ArgumentNullException(nameof(servicoFormato));
+            this.mapper = mapper ?? throw new ArgumentNullException(nameof(mapper));
             Materiais = new List<IdNomeTipoDTO>();
             Editoras = new List<IdNomeDTO>();
             SeriesColecoes = new List<IdNomeDTO>();
@@ -73,9 +76,10 @@ namespace SME.CDEP.Aplicacao.Servicos
 
         protected async Task ObterDominiosImutaveis()
         {
-            Suportes = (await servicoSuporte.ObterTodos()).Select(s=> new IdNomeTipoDTO() { Nome = s.Nome, Tipo = s.Tipo}).ToList();
-            Cromias = (await servicoCromia.ObterTodos()).Select(s => new IdNomeDTO() { Nome = s.Nome }).ToList();
-            Conservacoes = (await servicoConservacao.ObterTodos()).Select(s=> new IdNomeDTO() { Nome = s.Nome}).ToList();
+            Suportes = (await servicoSuporte.ObterTodos()).Select(s=> mapper.Map<IdNomeTipoDTO>(s)).ToList();
+            Cromias = (await servicoCromia.ObterTodos()).Select(s => mapper.Map<IdNomeDTO>(s)).ToList();
+            Conservacoes = (await servicoConservacao.ObterTodos()).Select(s=> mapper.Map<IdNomeDTO>(s)).ToList();
+            AcessoDocumentos = (await servicoAcessoDocumento.ObterTodos()).Select(s=> mapper.Map<IdNomeDTO>(s)).ToList();
         }
 
         public void ValidarArquivo(IFormFile file)
@@ -356,18 +360,6 @@ namespace SME.CDEP.Aplicacao.Servicos
         {
             campo.PossuiErro = false;
             campo.Mensagem = string.Empty;
-        }
-        
-        public async Task ValidarOuInserirConservacao(IEnumerable<string> conservacoes)
-        {
-            foreach (var nome in conservacoes)
-            {
-                if (!await ExisteConservacaoPorNome(nome))
-                {
-                    var id = await servicoConservacao.Inserir(new IdNomeExcluidoDTO() { Nome = nome });
-                    CachearConservacoes(nome, id);
-                }
-            }
         }
         
         private async Task<bool> ExisteConservacaoPorNome(string nome)
@@ -833,26 +825,14 @@ namespace SME.CDEP.Aplicacao.Servicos
                 Tombo = tombo,
                 NumeroLinha = numeroLinha,
             };
-        }
+        }     
         
-        protected async Task ObterConservacoes(IEnumerable<string> conservacoes)
+
+        protected async Task ObterSuportesPorTipo(TipoSuporte tipoSuporte)
         {
-            foreach (var nome in conservacoes)
-                await ExisteConservacaoPorNome(nome);
+            Suportes = Suportes.Where(w=> w.Tipo == (int)tipoSuporte).ToList();
         }
-        
-        protected async Task ObterCromias(IEnumerable<string> cromias)
-        {
-            foreach (var nome in cromias)
-                await ExisteCromiaPorNome(nome);
-        }
-        
-        protected async Task ObterSuportes(IEnumerable<string> suportes, TipoSuporte tipoSuporte)
-        {
-            foreach (var nome in suportes)
-                await ExisteSuportePorNomeETipo(nome, (int)tipoSuporte);
-        }
-        
+
         protected async Task ObterCreditosAutoresTipoAutoria(IEnumerable<string> creditosAutores, TipoCreditoAutoria tipoAutoria)
         {
             foreach (var nome in creditosAutores)
@@ -887,12 +867,6 @@ namespace SME.CDEP.Aplicacao.Servicos
         {
             foreach (var nome in idiomas)
                 await ExisteIdiomaPorNome(nome);
-        }
-        
-        protected async Task ObterAcessoDocumentos(IEnumerable<string> acessoDocumentos)
-        {
-            foreach (var nome in acessoDocumentos)
-                await ExisteAcessoDocumentoPorNome(nome);
         }
         
         protected async Task ObterFormatos(IEnumerable<string> formatos, TipoFormato tipoFormato)
