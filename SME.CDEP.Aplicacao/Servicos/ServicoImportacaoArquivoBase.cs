@@ -1,6 +1,5 @@
-﻿using AutoMapper;
+using AutoMapper;
 using ClosedXML.Excel;
-using DocumentFormat.OpenXml.Office2010.ExcelAc;
 using Microsoft.AspNetCore.Http;
 using Newtonsoft.Json;
 using SME.CDEP.Aplicacao.DTOS;
@@ -38,13 +37,14 @@ namespace SME.CDEP.Aplicacao.Servicos
         protected List<IdNomeDTO> Cromias;
         protected List<IdNomeTipoDTO> Suportes;
         protected List<IdNomeTipoDTO> Formatos;
-        
+        private readonly IMapper mapper;
+
         protected List<IdNomeTipoDTO> CreditosAutores { get; set; }
 
         public ServicoImportacaoArquivoBase(IRepositorioImportacaoArquivo repositorioImportacaoArquivo, IServicoMaterial servicoMaterial,
             IServicoEditora servicoEditora,IServicoSerieColecao servicoSerieColecao,IServicoIdioma servicoIdioma, IServicoAssunto servicoAssunto,
             IServicoCreditoAutor servicoCreditoAutor,IServicoConservacao servicoConservacao, IServicoAcessoDocumento servicoAcessoDocumento,
-            IServicoCromia servicoCromia, IServicoSuporte servicoSuporte,IServicoFormato servicoFormato)
+            IServicoCromia servicoCromia, IServicoSuporte servicoSuporte,IServicoFormato servicoFormato, IMapper mapper)
         {
             this.repositorioImportacaoArquivo = repositorioImportacaoArquivo ?? throw new ArgumentNullException(nameof(repositorioImportacaoArquivo));
             this.servicoMaterial = servicoMaterial ?? throw new ArgumentNullException(nameof(servicoMaterial));
@@ -58,17 +58,26 @@ namespace SME.CDEP.Aplicacao.Servicos
             this.servicoCromia = servicoCromia ?? throw new ArgumentNullException(nameof(servicoCromia));
             this.servicoSuporte = servicoSuporte ?? throw new ArgumentNullException(nameof(servicoSuporte));
             this.servicoFormato = servicoFormato ?? throw new ArgumentNullException(nameof(servicoFormato));
+            this.mapper = mapper ?? throw new ArgumentNullException(nameof(mapper));
             Materiais = new List<IdNomeTipoDTO>();
             Editoras = new List<IdNomeDTO>();
             SeriesColecoes = new List<IdNomeDTO>();
             Idiomas = new List<IdNomeDTO>();
             Assuntos = new List<IdNomeDTO>();
             CreditosAutores = new List<IdNomeTipoDTO>();
-            Conservacoes = new List<IdNomeDTO>();
             AcessoDocumentos = new List<IdNomeDTO>();
+            Formatos = new List<IdNomeTipoDTO>();
             Suportes = new List<IdNomeTipoDTO>();
             Cromias = new List<IdNomeDTO>();
-            Formatos = new List<IdNomeTipoDTO>();
+            Conservacoes = new List<IdNomeDTO>();
+        }
+
+        protected async Task ObterDominiosImutaveis()
+        {
+            Suportes = (await servicoSuporte.ObterTodos()).Select(s=> mapper.Map<IdNomeTipoDTO>(s)).ToList();
+            Cromias = (await servicoCromia.ObterTodos()).Select(s => mapper.Map<IdNomeDTO>(s)).ToList();
+            Conservacoes = (await servicoConservacao.ObterTodos()).Select(s=> mapper.Map<IdNomeDTO>(s)).ToList();
+            AcessoDocumentos = (await servicoAcessoDocumento.ObterTodos()).Select(s=> mapper.Map<IdNomeDTO>(s)).ToList();
         }
 
         public void ValidarArquivo(IFormFile file)
@@ -295,7 +304,7 @@ namespace SME.CDEP.Aplicacao.Servicos
                         if (campo.ValoresPermitidos.NaoEhNulo())
                         {
                             if (!campo.ValoresPermitidos.Contains(campo.Conteudo.ToLower()))
-                                DefinirMensagemErro(campo, string.Format(Constantes.VALOR_DO_CAMPO_X_NAO_PERMITIDO_ESPERADO_X, nomeCampo, string.Join(", ", campo.ValoresPermitidos)));
+                                DefinirMensagemErro(campo, string.Format(Constantes.VALOR_X_DO_CAMPO_X_NAO_PERMITIDO_ESPERADO_X, item, nomeCampo, string.Join(", ", campo.ValoresPermitidos)));
                             break;
                         }
                         
@@ -351,35 +360,6 @@ namespace SME.CDEP.Aplicacao.Servicos
             campo.Mensagem = string.Empty;
         }
         
-        public async Task ValidarOuInserirConservacao(IEnumerable<string> conservacoes)
-        {
-            foreach (var nome in conservacoes)
-            {
-                if (!await ExisteConservacaoPorNome(nome))
-                {
-                    var id = await servicoConservacao.Inserir(new IdNomeExcluidoDTO() { Nome = nome });
-                    CachearConservacoes(nome, id);
-                }
-            }
-        }
-        
-        private async Task<bool> ExisteConservacaoPorNome(string nome)
-        {
-            var id = await servicoConservacao.ObterPorNome(nome);
-            
-            var existeRegistro = id.EhMaiorQueZero();
-            
-            if (existeRegistro)
-                CachearConservacoes(nome, id);
-            
-            return existeRegistro;
-        }
-        
-        private void CachearConservacoes(string nome, long id)
-        {
-            Conservacoes.Add(new IdNomeDTO() { Id = id, Nome = nome });
-        }
-        
         public async Task ValidarOuInserirAcessoDocumento(IEnumerable<string> acessoDocumentos)
         {
             foreach (var nome in acessoDocumentos)
@@ -407,64 +387,6 @@ namespace SME.CDEP.Aplicacao.Servicos
         private void CachearAcessoDocumento(string nome, long id)
         {
             AcessoDocumentos.Add(new IdNomeDTO() { Id = id, Nome = nome});
-        }
-        
-        public async Task ValidarOuInserirSuporte(IEnumerable<string> suportes, TipoSuporte tipoSuporte)
-        {
-            foreach (var nome in suportes)
-            {
-                if (!await ExisteSuportePorNomeETipo(nome,(int)tipoSuporte))
-                {
-                    var id = await servicoSuporte.Inserir(new IdNomeTipoExcluidoDTO() { Nome = nome, Tipo = (int)tipoSuporte});
-                    CachearSuporte(nome, id, (int)tipoSuporte);
-                }
-            }
-        }
-        
-        private async Task<bool> ExisteSuportePorNomeETipo(string nome, int tipoSuporte)
-        {
-            var id = await servicoSuporte.ObterPorNomeETipo(nome,tipoSuporte);
-            
-            var existeRegistro = id.EhMaiorQueZero();
-            
-            if (existeRegistro)
-                CachearSuporte(nome, id,tipoSuporte);
-            
-            return existeRegistro;
-        }
-        
-        private void CachearSuporte(string nome, long id, int tipoSuporte)
-        {
-            Suportes.Add(new IdNomeTipoDTO() { Id = id, Nome = nome, Tipo = tipoSuporte});
-        }
-       
-        public async Task ValidarOuInserirCromia(IEnumerable<string> cromias)
-        {
-            foreach (var nome in cromias)
-            {
-                if (!await ExisteCromiaPorNome(nome))
-                {
-                    var id = await servicoCromia.Inserir(new IdNomeExcluidoDTO() { Nome = nome });
-                    CachearCromia(nome, id);
-                }
-            }
-        }
-        
-        private async Task<bool> ExisteCromiaPorNome(string nome)
-        {
-            var id = await servicoCromia.ObterPorNome(nome);
-            
-            var existeRegistro = id.EhMaiorQueZero();
-            
-            if (existeRegistro)
-                CachearCromia(nome, id);
-            
-            return existeRegistro;
-        }
-        
-        private void CachearCromia(string nome, long id)
-        {
-            Cromias.Add(new IdNomeDTO() { Id = id, Nome = nome });
         }
         
         protected static LinhaConteudoAjustarRetornoDTO ObterConteudoMensagemStatus(LinhaConteudoAjustarDTO linha)
@@ -534,19 +456,9 @@ namespace SME.CDEP.Aplicacao.Servicos
             Formatos.Add(new IdNomeTipoDTO() { Id = id, Nome = nome, Tipo = (int)tipoFormato });
         }
         
-        protected long ObterEditoraIdPorValorDoCampo(string valorDoCampo)
-        {
-            return ObterIdentificadorIdPorValorDoCampo(valorDoCampo, Editoras, Constantes.EDITORA);
-        }
-        
         protected long? ObterEditoraIdOuNuloPorValorDoCampo(string valorDoCampo)
         {
             return ObterIdentificadorIdOuNuloPorValorDoCampo(valorDoCampo, Editoras);
-        }
-        
-        protected long ObterSerieColecaoIdPorValorDoCampo(string valorDoCampo)
-        {
-            return ObterIdentificadorIdPorValorDoCampo(valorDoCampo, SeriesColecoes, Constantes.SERIE_COLECAO);
         }
         
         protected long? ObterSerieColecaoIdOuNuloPorValorDoCampo(string valorDoCampo)
@@ -569,14 +481,17 @@ namespace SME.CDEP.Aplicacao.Servicos
             var conteudoCampoArray = valorDoCampo.FormatarTextoEmArray().ToList();
             foreach (var item in conteudoCampoArray)
             {
-                var possuiNome = CreditosAutores.Any(f => f.Nome.Equals(item));
-                if (!possuiNome)
+                if (item.EstaPreenchido())
                 {
-                    if (gerarExcecao)
-                        throw new NegocioException(string.Format(Constantes.O_VALOR_DO_CAMPO_X_NAO_FOI_LOCALIZADO, valorDoCampo));
+                    var possuiNome = CreditosAutores.Any(f => f.Nome.Equals(item));
+                    if (!possuiNome)
+                    {
+                        if (gerarExcecao)
+                            throw new NegocioException(string.Format(MensagemNegocio.O_ITEM_X_DO_DOMINIO_X_NAO_ENCONTRADO, item, Constantes.CREDITOS_AUTORES));
+                    }
+                    else
+                        retorno.Add(CreditosAutores.FirstOrDefault(f => f.Nome.SaoIguais(item) && f.Tipo.SaoIguais((int)tipoCreditoAutoria)).Id);    
                 }
-                else
-                    retorno.Add(CreditosAutores.FirstOrDefault(f => f.Nome.SaoIguais(item) && f.Tipo.SaoIguais((int)tipoCreditoAutoria)).Id);
             }
             return retorno.Any() ? retorno.ToArray() : null;
         }
@@ -596,14 +511,17 @@ namespace SME.CDEP.Aplicacao.Servicos
             var conteudoCampoArray = valorDoCampo.FormatarTextoEmArray().ToList();
             foreach (var item in conteudoCampoArray)
             {
-                var possuiNome = Assuntos.Any(f => f.Nome.Equals(item));
-                if (!possuiNome)
+                if (item.EstaPreenchido())
                 {
-                    if (gerarExcecao)
-                        throw new NegocioException(string.Format(Constantes.O_VALOR_DO_CAMPO_X_NAO_FOI_LOCALIZADO, valorDoCampo));
+                    var possuiNome = Assuntos.Any(f => f.Nome.Equals(item));
+                    if (!possuiNome)
+                    {
+                        if (gerarExcecao)
+                            throw new NegocioException(string.Format(MensagemNegocio.O_ITEM_X_DO_DOMINIO_X_NAO_ENCONTRADO, item, Constantes.ASSUNTOS));
+                    }
+                    else
+                        retorno.Add(Assuntos.FirstOrDefault(f => f.Nome.SaoIguais(item)).Id);
                 }
-                else
-                    retorno.Add(Assuntos.FirstOrDefault(f => f.Nome.SaoIguais(item)).Id);
             }
             
             return retorno.Any() ? retorno.ToArray() : null;
@@ -624,14 +542,17 @@ namespace SME.CDEP.Aplicacao.Servicos
             var conteudoCampoArray = valorDoCampo.FormatarTextoEmArray().ToList();
             foreach (var item in conteudoCampoArray)
             {
-                var possuiNome = AcessoDocumentos.Any(f => f.Nome.Equals(item));
-                if (!possuiNome)
+                if (item.EstaPreenchido())
                 {
-                    if (gerarExcecao)
-                        throw new NegocioException(string.Format(Constantes.O_VALOR_DO_CAMPO_X_NAO_FOI_LOCALIZADO, valorDoCampo));
+                    var possuiNome = AcessoDocumentos.Any(f => f.Nome.Equals(item));
+                    if (!possuiNome)
+                    {
+                        if (gerarExcecao)
+                            throw new NegocioException(string.Format(Constantes.O_VALOR_X_DO_CAMPO_X_NAO_FOI_LOCALIZADO, item, Constantes.ACESSO_DOCUMENTO));
+                    }
+                    else
+                        retorno.Add(AcessoDocumentos.FirstOrDefault(f => f.Nome.SaoIguais(item)).Id);
                 }
-                else
-                    retorno.Add(AcessoDocumentos.FirstOrDefault(f => f.Nome.SaoIguais(item)).Id);
             }
             return retorno.Any() ? retorno.ToArray() : null;
         }
@@ -644,11 +565,6 @@ namespace SME.CDEP.Aplicacao.Servicos
         protected long? ObterIdiomaIdOuNuloPorValorDoCampo(string valorDoCampo)
         {
             return ObterIdentificadorIdOuNuloPorValorDoCampo(valorDoCampo, Idiomas);
-        }
-        
-        protected long ObterMaterialDocumentalIdPorValorDoCampo(string valorDoCampo)
-        {
-            return ObterIdentificadorIdPorValorDoCampo(valorDoCampo, Materiais, Constantes.MATERIAL, (int)TipoMaterial.DOCUMENTAL);
         }
         
         protected long? ObterMaterialDocumentalIdOuNuloPorValorDoCampo(string valorDoCampo)
@@ -718,40 +634,40 @@ namespace SME.CDEP.Aplicacao.Servicos
         
         private long ObterIdentificadorIdPorValorDoCampo(string valorDoCampo, List<IdNomeTipoDTO> dominios, string nomeDoCampo, int tipoFormato)
         {
-            var possuiNome = dominios.Any(f => f.Nome.Equals(valorDoCampo) && f.Tipo == tipoFormato);
+            var possuiNome = dominios.Any(f => f.Nome.SaoIguais(valorDoCampo) && f.Tipo == tipoFormato);
 
             if (!possuiNome)
-                throw new NegocioException(string.Format(Constantes.O_VALOR_DO_CAMPO_X_NAO_FOI_LOCALIZADO, nomeDoCampo));
+                throw new NegocioException(string.Format(Constantes.O_VALOR_X_DO_CAMPO_X_NAO_FOI_LOCALIZADO, valorDoCampo, nomeDoCampo));
             
-            return dominios.FirstOrDefault(f => f.Nome.Equals(valorDoCampo) && f.Tipo == tipoFormato).Id;
+            return dominios.FirstOrDefault(f => f.Nome.SaoIguais(valorDoCampo) && f.Tipo == tipoFormato).Id;
         }
         
         private long? ObterIdentificadorIdOuNuloPorValorDoCampo(string valorDoCampo, List<IdNomeTipoDTO> dominios, int tipoFormato)
         {
-            var possuiNome = dominios.Any(f => f.Nome.Equals(valorDoCampo) && f.Tipo == tipoFormato);
+            var possuiNome = dominios.Any(f => f.Nome.SaoIguais(valorDoCampo) && f.Tipo == tipoFormato);
 
             if (possuiNome)
-                return dominios.FirstOrDefault(f => f.Nome.Equals(valorDoCampo) && f.Tipo == tipoFormato).Id;    
+                return dominios.FirstOrDefault(f => f.Nome.SaoIguais(valorDoCampo) && f.Tipo == tipoFormato).Id;    
                 
             return null;
         }
         
         private long ObterIdentificadorIdPorValorDoCampo(string valorDoCampo, List<IdNomeDTO> dominios, string nomeDoCampo)
         {
-            var possuiNome = dominios.Any(f => f.Nome.Equals(valorDoCampo));
+            var possuiNome = dominios.Any(f => f.Nome.SaoIguais(valorDoCampo));
 
             if (!possuiNome)
-                throw new NegocioException(string.Format(Constantes.O_VALOR_DO_CAMPO_X_NAO_FOI_LOCALIZADO, nomeDoCampo));
+                throw new NegocioException(string.Format(Constantes.O_VALOR_X_DO_CAMPO_X_NAO_FOI_LOCALIZADO, valorDoCampo, nomeDoCampo));
             
-            return dominios.FirstOrDefault(f => f.Nome.Equals(valorDoCampo)).Id;
+            return dominios.FirstOrDefault(f => f.Nome.SaoIguais(valorDoCampo)).Id;
         }
         
         private long? ObterIdentificadorIdOuNuloPorValorDoCampo(string valorDoCampo, List<IdNomeDTO> dominios)
         {
-            var possuiNome = dominios.Any(f => f.Nome.Equals(valorDoCampo));
+            var possuiNome = dominios.Any(f => f.Nome.SaoIguais(valorDoCampo));
 
             if (possuiNome)
-                return dominios.FirstOrDefault(f => f.Nome.Equals(valorDoCampo)).Id;    
+                return dominios.FirstOrDefault(f => f.Nome.SaoIguais(valorDoCampo)).Id;    
                 
             return null;
         }
@@ -773,9 +689,9 @@ namespace SME.CDEP.Aplicacao.Servicos
                 var valoresPermitidos = new List<string>() { Constantes.OPCAO_SIM, Constantes.OPCAO_NAO };
                 
                 if (!valoresPermitidos.Contains(valorDoCampo.ToLower()))
-                    throw new NegocioException(string.Format(Constantes.VALOR_DO_CAMPO_X_NAO_PERMITIDO_ESPERADO_X,nomeDoCampo));
+                    throw new NegocioException(string.Format(Constantes.VALOR_X_DO_CAMPO_X_NAO_PERMITIDO_ESPERADO_X,valorDoCampo, nomeDoCampo));
 
-                return valorDoCampo.ToLower().Equals(Constantes.OPCAO_SIM);
+                return valorDoCampo.SaoIguais(Constantes.OPCAO_SIM);
             }
             return false;
         }
@@ -844,26 +760,14 @@ namespace SME.CDEP.Aplicacao.Servicos
                 Tombo = tombo,
                 NumeroLinha = numeroLinha,
             };
-        }
+        }     
         
-        protected async Task ObterConservacoes(IEnumerable<string> conservacoes)
+
+        protected async Task ObterSuportesPorTipo(TipoSuporte tipoSuporte)
         {
-            foreach (var nome in conservacoes)
-                await ExisteConservacaoPorNome(nome);
+            Suportes = Suportes.Where(w=> w.Tipo == (int)tipoSuporte).ToList();
         }
-        
-        protected async Task ObterCromias(IEnumerable<string> cromias)
-        {
-            foreach (var nome in cromias)
-                await ExisteCromiaPorNome(nome);
-        }
-        
-        protected async Task ObterSuportes(IEnumerable<string> suportes, TipoSuporte tipoSuporte)
-        {
-            foreach (var nome in suportes)
-                await ExisteSuportePorNomeETipo(nome, (int)tipoSuporte);
-        }
-        
+
         protected async Task ObterCreditosAutoresTipoAutoria(IEnumerable<string> creditosAutores, TipoCreditoAutoria tipoAutoria)
         {
             foreach (var nome in creditosAutores)
@@ -898,12 +802,6 @@ namespace SME.CDEP.Aplicacao.Servicos
         {
             foreach (var nome in idiomas)
                 await ExisteIdiomaPorNome(nome);
-        }
-        
-        protected async Task ObterAcessoDocumentos(IEnumerable<string> acessoDocumentos)
-        {
-            foreach (var nome in acessoDocumentos)
-                await ExisteAcessoDocumentoPorNome(nome);
         }
         
         protected async Task ObterFormatos(IEnumerable<string> formatos, TipoFormato tipoFormato)

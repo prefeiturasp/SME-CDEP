@@ -19,7 +19,7 @@ namespace SME.CDEP.TesteIntegracao
         [Fact(DisplayName = "Acervo - Obter todos")]
         public async Task Obter_todos()
         {
-            await InserirDadosBasicos();
+            await InserirDadosBasicosAleatorios();
             await InserirAcervo();
             var servicoAcervo = GetServicoAcervo();
 
@@ -30,7 +30,7 @@ namespace SME.CDEP.TesteIntegracao
         [Fact(DisplayName = "Acervo - Obter paginado")]
         public async Task Obter_paginado()
         {
-            await InserirDadosBasicos();
+            await InserirDadosBasicosAleatorios();
             await InserirAcervo();
             var servicoAcervo = GetServicoAcervo();
 
@@ -48,7 +48,7 @@ namespace SME.CDEP.TesteIntegracao
         [Fact(DisplayName = "Acervo - Alterar")]
         public async Task Alterar()
         {
-            await InserirDadosBasicos();
+            await InserirDadosBasicosAleatorios();
             await InserirAcervo();
             var servicoAcervo = GetServicoAcervo();
 
@@ -82,7 +82,7 @@ namespace SME.CDEP.TesteIntegracao
         [Fact(DisplayName = "Acervo - Alterar para sem CoAutor")]
         public async Task Alterar_sem_coautor()
         {
-            await InserirDadosBasicos();
+            await InserirDadosBasicosAleatorios();
             await InserirAcervo();
             var servicoAcervo = GetServicoAcervo();
 
@@ -114,7 +114,7 @@ namespace SME.CDEP.TesteIntegracao
         [Fact(DisplayName = "Acervo - Não deve alterar para um código existente dentro do mesmo acervo")]
         public async Task Nao_deve_alterar_com_codigo_existente_dentro_mesmo_acervo()
         {
-            await InserirDadosBasicos();
+            await InserirDadosBasicosAleatorios();
             await InserirAcervo();
             var servicoAcervo = GetServicoAcervo();
 
@@ -134,7 +134,7 @@ namespace SME.CDEP.TesteIntegracao
         [Fact(DisplayName = "Acervo - Deve alterar para um códigos diferentes")]
         public async Task Deve_alterar_com_codigo_diferentes()
         {
-            await InserirDadosBasicos();
+            await InserirDadosBasicosAleatorios();
             await InserirAcervo();
             var servicoAcervo = GetServicoAcervo();
             
@@ -170,7 +170,7 @@ namespace SME.CDEP.TesteIntegracao
         [Fact(DisplayName = "Acervo - Deve alterar para códigos iguais em acervos diferentes")]
         public async Task Deve_alterar_com_codigo_iguais_e_acervos_diferentes()
         {
-            await InserirDadosBasicos();
+            await InserirDadosBasicosAleatorios();
             await InserirAcervo(TipoAcervo.DocumentacaoHistorica);
             var servicoAcervo = GetServicoAcervo();
             
@@ -206,7 +206,7 @@ namespace SME.CDEP.TesteIntegracao
         [Fact(DisplayName = "Acervo - Alterar adicionando mais créditos/autores")]
         public async Task Alterar_adicionando_mais_creditos_autores()
         {
-            await InserirDadosBasicos();
+            await InserirDadosBasicosAleatorios();
             await InserirAcervo();
             var servicoAcervo = GetServicoAcervo();
             
@@ -242,7 +242,7 @@ namespace SME.CDEP.TesteIntegracao
         [Fact(DisplayName = "Acervo - Alterar excluindo todos e adicionando um créditos/autores")]
         public async Task Alterar_excluindo_todos_adicionando_um_creditos_autores()
         {
-            await InserirDadosBasicos();
+            await InserirDadosBasicosAleatorios();
             await InserirAcervo();
             var servicoAcervo = GetServicoAcervo();
             
@@ -278,7 +278,7 @@ namespace SME.CDEP.TesteIntegracao
         [Fact(DisplayName = "Acervo - Inserir")]
         public async Task Inserir()
         {
-            await InserirDadosBasicos();
+            await InserirDadosBasicosAleatorios();
             var servicoAcervo = GetServicoAcervo();
             var random = new Random();
             
@@ -306,7 +306,7 @@ namespace SME.CDEP.TesteIntegracao
         [Fact(DisplayName = "Acervo - Inserir sem CoAutor")]
         public async Task Inserir_sem_coAutor()
         {
-            await InserirDadosBasicos();
+            await InserirDadosBasicosAleatorios();
             var servicoAcervo = GetServicoAcervo();
             
             var acervoInserir = AcervoMock.Instance.GerarAcervo(TipoAcervo.Bibliografico).Generate();
@@ -330,7 +330,7 @@ namespace SME.CDEP.TesteIntegracao
         [Fact(DisplayName = "Acervo - Não deve inserir código existente dentro de mesmo acervo")]
         public async Task Nao_deve_inserir_codigo_existente_dentro_mesmo_acervo()
         {
-            await InserirDadosBasicos();
+            await InserirDadosBasicosAleatorios();
             await InserirAcervo();
             var servicoAcervo = GetServicoAcervo();
             
@@ -349,7 +349,7 @@ namespace SME.CDEP.TesteIntegracao
         [Fact(DisplayName = "Acervo - Deve inserir com códigos iguais e acervos diferentes")]
         public async Task Deve_inserir_com_codigo_iguais_e_acervos_diferentes()
         {
-            await InserirDadosBasicos();
+            await InserirDadosBasicosAleatorios();
             await InserirAcervo(TipoAcervo.DocumentacaoHistorica);
             var servicoAcervo = GetServicoAcervo();
             
@@ -383,7 +383,7 @@ namespace SME.CDEP.TesteIntegracao
         [Fact(DisplayName = "Acervo - Obter por id")]
         public async Task Obter_por_id()
         {
-            await InserirDadosBasicos();
+            await InserirDadosBasicosAleatorios();
 
             await InserirAcervo();
             
@@ -400,7 +400,7 @@ namespace SME.CDEP.TesteIntegracao
         [Fact(DisplayName = "Acervo - Excluir")]
         public async Task Excluir()
         {
-            await InserirDadosBasicos();
+            await InserirDadosBasicosAleatorios();
 
             await InserirAcervo();
             
