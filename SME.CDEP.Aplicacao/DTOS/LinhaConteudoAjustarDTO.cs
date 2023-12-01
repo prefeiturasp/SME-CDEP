@@ -11,6 +11,7 @@ public class LinhaConteudoAjustarDTO
     public bool EhCampoObrigatorio { get; set; }
     public IEnumerable<string> ValoresPermitidos { get; set; }
     public string FormatoTipoDeCampo { get; set; } = Constantes.FORMATO_STRING;
+    public bool PermiteNovoRegistro { get; set; }
 
     public void DefinirComoSucesso()
     {

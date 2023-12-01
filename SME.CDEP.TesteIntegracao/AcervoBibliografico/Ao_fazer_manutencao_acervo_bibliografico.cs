@@ -19,7 +19,7 @@ namespace SME.CDEP.TesteIntegracao
         [Fact(DisplayName = "Acervo bibliografico - Obter por Id")]
         public async Task Obter_por_id()
         {
-            await InserirDadosBasicos();
+            await InserirDadosBasicosAleatorios();
             await InserirAcervoBibliografico();
             var servicoAcervoBibliografico = GetServicoAcervoBibliografico();
 
@@ -33,7 +33,7 @@ namespace SME.CDEP.TesteIntegracao
         [Fact(DisplayName = "Acervo bibliografico - Obter por Id sem coAutor")]
         public async Task Obter_por_id_sem_coautor()
         {
-            await InserirDadosBasicos();
+            await InserirDadosBasicosAleatorios();
             await InserirAcervoBibliografico(false);
             var servicoAcervoBibliografico = GetServicoAcervoBibliografico();
 
@@ -46,7 +46,7 @@ namespace SME.CDEP.TesteIntegracao
         [Fact(DisplayName = "Acervo bibliografico - Obter todos")]
         public async Task Obter_todos()
         {
-            await InserirDadosBasicos();
+            await InserirDadosBasicosAleatorios();
             await InserirAcervoBibliografico();
             var servicoAcervoBibliografico = GetServicoAcervoBibliografico();
 
@@ -57,7 +57,7 @@ namespace SME.CDEP.TesteIntegracao
         [Fact(DisplayName = "Acervo bibliografico - Atualizar - CoAutores: removendo 3 e adicionando 1 novo")]
         public async Task Atualizar_removendo_3_e_inserindo_1_coautor()
         {
-            await InserirDadosBasicos();
+            await InserirDadosBasicosAleatorios();
 
             await InserirAcervoBibliografico();
 
@@ -134,7 +134,7 @@ namespace SME.CDEP.TesteIntegracao
         [Fact(DisplayName = "Acervo bibliografico - Atualizar - CoAutores: removendo 3 e adicionando 1 novo e Código")]
         public async Task Atualizar_removendo_3_e_inserindo_1_coautor_e_codigo()
         {
-            await InserirDadosBasicos();
+            await InserirDadosBasicosAleatorios();
 
             await InserirAcervoBibliografico();
 
@@ -211,7 +211,7 @@ namespace SME.CDEP.TesteIntegracao
         [Fact(DisplayName = "Acervo bibliografico - Não deve atualizar sem Código")]
         public async Task Nao_deve_atualizar_sem_codigo()
         {
-            await InserirDadosBasicos();
+            await InserirDadosBasicosAleatorios();
 
             await InserirAcervoBibliografico();
 
@@ -238,7 +238,7 @@ namespace SME.CDEP.TesteIntegracao
         [Fact(DisplayName = "Acervo bibliografico - Não deve atualizar com Código duplicado")]
         public async Task Nao_deve_atualizar_com_codigo_duplicado()
         {
-            await InserirDadosBasicos();
+            await InserirDadosBasicosAleatorios();
 
             await InserirAcervoBibliografico();
 
@@ -266,7 +266,7 @@ namespace SME.CDEP.TesteIntegracao
         [Fact(DisplayName = "Acervo bibliografico - Atualizar removendo todos os CoAutores")]
         public async Task Atualizar_removendo_todos_coAutores()
         {
-           await InserirDadosBasicos();
+           await InserirDadosBasicosAleatorios();
 
             await InserirAcervoBibliografico();
 
@@ -338,7 +338,7 @@ namespace SME.CDEP.TesteIntegracao
         [Fact(DisplayName = "Acervo bibliografico - Inserir")]
         public async Task Inserir()
         {
-            await InserirDadosBasicos();
+            await InserirDadosBasicosAleatorios();
 
             await InserirAcervoBibliografico();
 
@@ -406,7 +406,7 @@ namespace SME.CDEP.TesteIntegracao
         [Fact(DisplayName = "Acervo bibliografico - Inserindo sem CoAutores")]
         public async Task Inserir_sem_coautores()
         {
-            await InserirDadosBasicos();
+            await InserirDadosBasicosAleatorios();
 
             await InserirAcervoBibliografico();
 
@@ -474,7 +474,7 @@ namespace SME.CDEP.TesteIntegracao
         [Fact(DisplayName = "Acervo bibliografico - Não deve inserir código duplicado")]
         public async Task Nao_deve_inserir_codigo_duplicado()
         {
-            await InserirDadosBasicos();
+            await InserirDadosBasicosAleatorios();
 
             await InserirAcervoBibliografico();
 
@@ -498,7 +498,7 @@ namespace SME.CDEP.TesteIntegracao
         [Fact(DisplayName = "Acervo bibliografico - Não deve inserir sem código")]
         public async Task Nao_deve_inserir_sem_codigo()
         {
-            await InserirDadosBasicos();
+            await InserirDadosBasicosAleatorios();
 
             await InserirAcervoBibliografico();
 

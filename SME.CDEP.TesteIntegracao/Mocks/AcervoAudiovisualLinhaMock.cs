@@ -69,7 +69,7 @@ public static class AcervoAudiovisualLinhaMock
             
             faker.RuleFor(x => x.EstadoConservacao, f => new LinhaConteudoAjustarDTO()
             {
-                Conteudo = f.Lorem.Text().Limite(500),
+                Conteudo = ConstantesTestes.OTIMO,
                 LimiteCaracteres = ConstantesTestes.CARACTERES_PERMITIDOS_500,
             });
             
@@ -81,7 +81,7 @@ public static class AcervoAudiovisualLinhaMock
             
             faker.RuleFor(x => x.Suporte, f => new LinhaConteudoAjustarDTO()
             {
-                Conteudo = f.Lorem.Text().Limite(500),
+                Conteudo = ConstantesTestes.VHS,
                 LimiteCaracteres = ConstantesTestes.CARACTERES_PERMITIDOS_500,
                 EhCampoObrigatorio = true
             });
@@ -94,7 +94,7 @@ public static class AcervoAudiovisualLinhaMock
             
             faker.RuleFor(x => x.Cromia, f => new LinhaConteudoAjustarDTO()
             {
-                Conteudo = f.Lorem.Text().Limite(500),
+                Conteudo = ConstantesTestes.COLOR,
                 LimiteCaracteres = ConstantesTestes.CARACTERES_PERMITIDOS_500,
             });
             

@@ -18,7 +18,7 @@ namespace SME.CDEP.TesteIntegracao
         [Fact(DisplayName = "Acervo fotográfico - Obter por Id")]
         public async Task Obter_por_id()
         {
-            await InserirDadosBasicos();
+            await InserirDadosBasicosAleatorios();
             await InserirAcervoFotografico();
             var servicoAcervoFotografico = GetServicoAcervoFotografico();
 
@@ -29,7 +29,7 @@ namespace SME.CDEP.TesteIntegracao
         [Fact(DisplayName = "Acervo fotográfico - Obter todos")]
         public async Task Obter_todos()
         {
-            await InserirDadosBasicos();
+            await InserirDadosBasicosAleatorios();
             await InserirAcervoFotografico();
             var servicoAcervoFotografico = GetServicoAcervoFotografico();
 
@@ -40,7 +40,7 @@ namespace SME.CDEP.TesteIntegracao
         [Fact(DisplayName = "Acervo fotográfico - Atualizar (Adicionando 4 novos arquivos, sendo 1 existente)")]
         public async Task Atualizar_com_4_novos()
         {
-            await InserirDadosBasicos();
+            await InserirDadosBasicosAleatorios();
 
             await InserirAcervoFotografico();
             
@@ -116,7 +116,7 @@ namespace SME.CDEP.TesteIntegracao
         [Fact(DisplayName = "Acervo fotográfico - Atualizar (Removendo 1 arquivo, adicionando 5 novos)")]
         public async Task Atualizar_removendo_1_()
         {
-            await InserirDadosBasicos();
+            await InserirDadosBasicosAleatorios();
 
             await InserirAcervoFotografico();
             
@@ -192,7 +192,7 @@ namespace SME.CDEP.TesteIntegracao
         [Fact(DisplayName = "Acervo fotográfico - Atualizar (Removendo todos)")]
         public async Task Atualizar_removendo_todos()
         {
-            await InserirDadosBasicos();
+            await InserirDadosBasicosAleatorios();
 
             await InserirAcervoFotografico();
             
@@ -268,7 +268,7 @@ namespace SME.CDEP.TesteIntegracao
         [Fact(DisplayName = "Acervo fotográfico - Inserir")]
         public async Task Inserir()
         {
-            await InserirDadosBasicos();
+            await InserirDadosBasicosAleatorios();
 
             await InserirAcervoFotografico();
             
@@ -342,7 +342,7 @@ namespace SME.CDEP.TesteIntegracao
         [Fact(DisplayName = "Acervo fotográfico - Não deve inserir Tombo duplicado")]
         public async Task Nao_deve_inserir_duplicado()
         {
-            await InserirDadosBasicos();
+            await InserirDadosBasicosAleatorios();
 
             await InserirAcervoFotografico();
 

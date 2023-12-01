@@ -15,7 +15,7 @@ namespace SME.CDEP.TesteIntegracao
         [Fact(DisplayName = "Acervo - Pesquisar acervos por texto")]
         public async Task Pesquisar_acervo_por_texto()
         {
-            await InserirDadosBasicos();
+            await InserirDadosBasicosAleatorios();
 
             var servicoAcervoArteGrafica = GetServicoAcervoArteGrafica();
             var servicoAcervo = GetServicoAcervo();
@@ -60,7 +60,7 @@ namespace SME.CDEP.TesteIntegracao
         [Fact(DisplayName = "Acervo - Pesquisar acervos por texto e tipo de acervo")]
         public async Task Pesquisar_acervo_por_texto_tipo_acervo()
         {
-            await InserirDadosBasicos();
+            await InserirDadosBasicosAleatorios();
 
             var servicoAcervoArteGrafica = GetServicoAcervoArteGrafica();
             var servicoAcervo = GetServicoAcervo();
@@ -106,7 +106,7 @@ namespace SME.CDEP.TesteIntegracao
         [Fact(DisplayName = "Acervo - Não deve retornar pesquisa de acervos")]
         public async Task Nao_deve_retornar_pesquisa_de_acervos()
         {
-            await InserirDadosBasicos();
+            await InserirDadosBasicosAleatorios();
 
             var servicoAcervoArteGrafica = GetServicoAcervoArteGrafica();
             var servicoAcervo = GetServicoAcervo();
