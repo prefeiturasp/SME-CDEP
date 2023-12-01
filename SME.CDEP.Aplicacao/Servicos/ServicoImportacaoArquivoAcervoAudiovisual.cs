@@ -260,11 +260,11 @@ namespace SME.CDEP.Aplicacao.Servicos
                         DataAcervo = acervoAudiovisualLinha.Data.Conteudo,
                         Copia = acervoAudiovisualLinha.Copia.Conteudo,
                         PermiteUsoImagem = ObterAutorizaUsoDeImagemPorValorDoCampo(acervoAudiovisualLinha.PermiteUsoImagem.Conteudo),
-                        ConservacaoId = ObterConservacaoIdOuNuloPorValorDoCampo(acervoAudiovisualLinha.EstadoConservacao.Conteudo),
+                        ConservacaoId = acervoAudiovisualLinha.EstadoConservacao.Conteudo.EstaPreenchido() ? ObterConservacaoIdPorValorDoCampo(acervoAudiovisualLinha.EstadoConservacao.Conteudo) : null,
                         Descricao = acervoAudiovisualLinha.Descricao.Conteudo,
                         SuporteId = ObterSuporteVideoIdPorValorDoCampo(acervoAudiovisualLinha.Suporte.Conteudo),
                         Duracao = acervoAudiovisualLinha.Duracao.Conteudo,
-                        CromiaId = ObterCromiaIdOuNuloPorValorDoCampo(acervoAudiovisualLinha.Cromia.Conteudo),
+                        CromiaId = acervoAudiovisualLinha.Cromia.Conteudo.EstaPreenchido() ? ObterCromiaIdPorValorDoCampo(acervoAudiovisualLinha.Cromia.Conteudo) : null,
                         TamanhoArquivo = acervoAudiovisualLinha.TamanhoArquivo.Conteudo,
                         Acessibilidade = acervoAudiovisualLinha.Acessibilidade.Conteudo,
                         Disponibilizacao = acervoAudiovisualLinha.Disponibilizacao.Conteudo,
@@ -343,7 +343,7 @@ namespace SME.CDEP.Aplicacao.Servicos
             catch (Exception e)
             {
                 foreach (var linha in linhasComsucesso)
-                    linha.DefinirLinhaComoErro(string.Format(Constantes.OCORREU_UMA_FALHA_INESPERADA_NO_CADASTRO_DAS_REFERENCIAS_MOTIVO_X, e.Message));
+                    linha.DefinirLinhaComoErro(e.Message);
             }
         }
         
