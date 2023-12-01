@@ -110,6 +110,8 @@ namespace SME.CDEP.TesteIntegracao
         [Fact(DisplayName = "Importação Arquivo Acervo Documental - ValidacaoObterOuInserirDominios")]
         public async Task Validacao_obter_ou_inserir_dominios()
         {
+            await InserirDadosBasicos();
+
             var servicoImportacaoArquivo = GetServicoImportacaoArquivoAcervoDocumental();
         
             var acervoDocumentalLinhas = AcervoDocumentalLinhaMock.GerarAcervoDocumentalLinhaDTO().Generate(10);
@@ -145,6 +147,8 @@ namespace SME.CDEP.TesteIntegracao
         [Fact(DisplayName = "Importação Arquivo Acervo Documental - PersistenciaAcervo")]
         public async Task Persistencia_acervo()
         {
+            await InserirDadosBasicos();
+
             var servicoImportacaoArquivo = GetServicoImportacaoArquivoAcervoDocumental();
         
             var acervoDocumentalLinhas = AcervoDocumentalLinhaMock.GerarAcervoDocumentalLinhaDTO().Generate(10);
@@ -233,6 +237,8 @@ namespace SME.CDEP.TesteIntegracao
         [Fact(DisplayName = "Importação Arquivo Acervo Documental - Geral - Com erros em 4 linhas")]
         public async Task Importacao_geral()
         {
+            await InserirDadosBasicos();
+
             var servicoImportacaoArquivo = GetServicoImportacaoArquivoAcervoDocumental();
         
             var acervoDocumentalLinhas = AcervoDocumentalLinhaMock.GerarAcervoDocumentalLinhaDTO().Generate(10);
@@ -418,13 +424,13 @@ namespace SME.CDEP.TesteIntegracao
                 Conteudo = JsonConvert.SerializeObject(linhasInseridas),
                 CriadoEm = DateTimeExtension.HorarioBrasilia().Date, CriadoPor = ConstantesTestes.SISTEMA, CriadoLogin = ConstantesTestes.LOGIN_123456789
             });
-            
+
             await InserirMateriais(linhasInseridas.Select(s => s.Material.Conteudo).Distinct().Where(w=> w.EstaPreenchido()), TipoMaterial.DOCUMENTAL);
             await InserirIdiomas(linhasInseridas.Select(s => s.Idioma.Conteudo).Distinct().Where(w=> w.EstaPreenchido()));
             await InserirConservacoes(linhasInseridas.Select(s => s.EstadoConservacao.Conteudo).Distinct().Where(w=> w.EstaPreenchido()));
             await InserirAcessoDocumentos(linhasInseridas.Select(s => s.AcessoDocumento.Conteudo).ToArray().UnificarPipe().SplitPipe().Distinct().Where(w=> w.EstaPreenchido()));
             await InserirCreditosAutorias(linhasInseridas.Select(s => s.Autor.Conteudo).ToArray().UnificarPipe().SplitPipe().Distinct().Where(w=> w.EstaPreenchido()), TipoCreditoAutoria.Autoria);
-            
+
             var retorno = await servicoImportacaoArquivo.ObterImportacaoPendente();
             retorno.ShouldNotBeNull();
             retorno.Sucesso.Count().ShouldBe(8);

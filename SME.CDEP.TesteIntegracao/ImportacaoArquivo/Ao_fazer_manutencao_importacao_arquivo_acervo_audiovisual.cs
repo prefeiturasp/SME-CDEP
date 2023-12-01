@@ -108,6 +108,8 @@ namespace SME.CDEP.TesteIntegracao
         [Fact(DisplayName = "Importação Arquivo Acervo Audiovisual - ValidacaoObterOuInserirDominios")]
         public async Task Validacao_obter_ou_inserir_dominios()
         {
+            await InserirDadosBasicos();
+
             var servicoImportacaoArquivo = GetServicoImportacaoArquivoAcervoAudiovisual();
         
             var acervoAudiovisualLinhas = AcervoAudiovisualLinhaMock.GerarAcervoAudiovisualLinhaDTO().Generate(10);
@@ -138,6 +140,8 @@ namespace SME.CDEP.TesteIntegracao
         [Fact(DisplayName = "Importação Arquivo Acervo Audiovisual - PersistenciaAcervo")]
         public async Task Persistencia_acervo()
         {
+            await InserirDadosBasicos();
+
             var servicoImportacaoArquivo = GetServicoImportacaoArquivoAcervoAudiovisual();
         
             var acervoAudiovisualLinhas = AcervoAudiovisualLinhaMock.GerarAcervoAudiovisualLinhaDTO().Generate(10);
@@ -210,6 +214,8 @@ namespace SME.CDEP.TesteIntegracao
         [Fact(DisplayName = "Importação Arquivo Acervo Audiovisual - Geral - Com erros em 4 linhas")]
         public async Task Importacao_geral()
         {
+            await InserirDadosBasicos();
+
             var servicoImportacaoArquivo = GetServicoImportacaoArquivoAcervoAudiovisual();
         
             var acervoAudiovisualLinhas = AcervoAudiovisualLinhaMock.GerarAcervoAudiovisualLinhaDTO().Generate(10);

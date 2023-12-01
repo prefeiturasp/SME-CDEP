@@ -2,6 +2,22 @@
 
 public class Constantes
 {
+    public const string PAPEL = "Papel";
+    public const string DIGITAL = "Digital";
+    public const string VHS = "VHS";
+    public const string DVD = "DVD";
+
+    public const string OTIMO = "Ótimo";
+    public const string BOM = "Bom";
+    public const string REGULAR = "Regular";
+    public const string RUIM = "Ruim";
+
+    public const string COLOR = "Color";
+    public const string PB = "PB";
+
+    public const string FISICO = "Físico";
+    public const string ONLINE = "Online";
+
     public const string TRIDIMENSIONAL = "Tridimensional";
     public const string FOTOGRAFICO = "Fotográfico";
     public const string DOCUMENTAL = "Documental";

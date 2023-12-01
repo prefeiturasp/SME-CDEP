@@ -45,7 +45,7 @@ public static class AcervoTridimensionalLinhaMock
             
             faker.RuleFor(x => x.EstadoConservacao, f => new LinhaConteudoAjustarDTO()
             {
-                Conteudo = f.Lorem.Text().Limite(500),
+                Conteudo = ConstantesTestes.OTIMO,
                 LimiteCaracteres = ConstantesTestes.CARACTERES_PERMITIDOS_500,
                 EhCampoObrigatorio = true
             });

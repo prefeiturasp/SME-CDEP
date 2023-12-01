@@ -103,7 +103,7 @@ public static class AcervoDocumentalLinhaMock
             
             faker.RuleFor(x => x.AcessoDocumento, f => new LinhaConteudoAjustarDTO()
             {
-                Conteudo = $"{f.Lorem.Text().Limite(500)}|{f.Lorem.Sentence().Limite(500)}|{f.Lorem.Word().Limite(500)}",
+                Conteudo = $"{ConstantesTestes.DIGITAL}|{ConstantesTestes.FISICO}|{ConstantesTestes.ONLINE}",
                 LimiteCaracteres = ConstantesTestes.CARACTERES_PERMITIDOS_500,
                 EhCampoObrigatorio = true
             });
@@ -124,7 +124,7 @@ public static class AcervoDocumentalLinhaMock
             
             faker.RuleFor(x => x.EstadoConservacao, f => new LinhaConteudoAjustarDTO()
             {
-                Conteudo = f.Lorem.Text().Limite(500),
+                Conteudo = ConstantesTestes.REGULAR,
                 LimiteCaracteres = ConstantesTestes.CARACTERES_PERMITIDOS_500,
             });
             return faker;

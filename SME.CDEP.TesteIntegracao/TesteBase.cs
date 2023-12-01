@@ -273,7 +273,7 @@ namespace SME.CDEP.TesteIntegracao
             };
         }
 
-        protected async Task InserirDadosBasicos()
+        protected async Task InserirDadosBasicosAleatorios()
         {
             var random = new Random();
             
@@ -330,6 +330,89 @@ namespace SME.CDEP.TesteIntegracao
             }
         }
         
+        protected async Task InserirDadosBasicos()
+        {
+            await InserirSuportesBase();
+            await InserirConservacoesBase();
+            await InserirCromiasBase();
+            await InserirAcessoDocumentos();
+        }
+
+        private async Task InserirSuportesBase()
+        {
+            var suportes = new List<Suporte>
+            {
+                new() { Nome = ConstantesTestes.PAPEL, Tipo = TipoSuporte.IMAGEM },
+                new() { Nome = ConstantesTestes.DIGITAL, Tipo = TipoSuporte.IMAGEM },
+                new() { Nome = ConstantesTestes.NEGATIVO, Tipo = TipoSuporte.IMAGEM },
+                new() { Nome = ConstantesTestes.VHS, Tipo = TipoSuporte.VIDEO },
+                new() { Nome = ConstantesTestes.DVD, Tipo = TipoSuporte.VIDEO },
+            };
+
+            foreach (var suporte in suportes)
+            {
+                await InserirNaBase(new Suporte()
+                {
+                    Nome = suporte.Nome,
+                    Tipo = suporte.Tipo
+                });
+            }
+        }
+        
+        private async Task InserirConservacoesBase()
+        {
+            var conservacaos = new List<Conservacao>
+            {
+                new() { Nome = ConstantesTestes.OTIMO },
+                new() { Nome = ConstantesTestes.BOM },
+                new() { Nome = ConstantesTestes.REGULAR },
+                new() { Nome = ConstantesTestes.RUIM },
+            };
+
+            foreach (var conservacao in conservacaos)
+            {
+                await InserirNaBase(new Conservacao()
+                {
+                    Nome = conservacao.Nome,
+                });
+            }
+        }
+        
+        private async Task InserirCromiasBase()
+        {
+            var cromias = new List<Cromia>
+            {
+                new() { Nome = ConstantesTestes.COLOR },
+                new() { Nome = ConstantesTestes.PB },
+            };
+
+            foreach (var cromia in cromias)
+            {
+                await InserirNaBase(new Cromia()
+                {
+                    Nome = cromia.Nome,
+                });
+            }
+        }
+
+        private async Task InserirAcessoDocumentos()
+        {
+            var acessosDocumentos = new List<AcessoDocumento>
+            {
+                new() { Nome = ConstantesTestes.DIGITAL },
+                new() { Nome = ConstantesTestes.FISICO },
+                new() { Nome = ConstantesTestes.ONLINE },
+            };
+
+            foreach (var acessoDocumento in acessosDocumentos)
+            {
+                await InserirNaBase(new AcessoDocumento()
+                {
+                    Nome = acessoDocumento.Nome,
+                });
+            }
+        }
+
         protected async Task InserirAcessoDocumentos(IEnumerable<string> acessosDocumentos)
         {
             foreach (var acessoDocumento in acessosDocumentos)
