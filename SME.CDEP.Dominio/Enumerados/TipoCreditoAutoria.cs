@@ -9,4 +9,7 @@ public enum TipoCreditoAutoria
     
     [Display(Name = "Autoria")]
     Autoria = 2,
+    
+    [Display(Name = "CoAutor")]
+    Coautor = 3,
 }

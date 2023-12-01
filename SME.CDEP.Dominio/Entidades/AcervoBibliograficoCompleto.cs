@@ -9,6 +9,7 @@ public class AcervoBibliograficoCompleto : EntidadeBaseAuditavel
     public string Codigo { get; set; }
     public long CreditoAutorId { get; set; }
     public string CreditoAutorNome { get; set; }
+    public bool ehcoautor { get; set; }
     public long AssuntoId { get; set; }
     public string TipoAutoria { get; set; }
     public long? MaterialId { get; set; }

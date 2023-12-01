@@ -413,16 +413,6 @@ namespace SME.CDEP.TesteIntegracao
             }
         }
 
-        protected async Task InserirAcessoDocumentos(IEnumerable<string> acessosDocumentos)
-        {
-            foreach (var acessoDocumento in acessosDocumentos)
-                await InserirNaBase(new AcessoDocumento()
-                {
-                    Nome = acessoDocumento
-                });
-        }
-
-
         protected async Task InserirCreditosAutorias(IEnumerable<string> creditos, TipoCreditoAutoria tipoCreditoAutoria = TipoCreditoAutoria.Credito)
         {
             foreach (var credito in creditos)

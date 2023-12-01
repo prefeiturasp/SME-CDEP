@@ -108,6 +108,7 @@ namespace SME.CDEP.Aplicacao.Servicos
                 await ObterIdiomas(acervosBibliograficosLinhas.Where(w=> !w.Idioma.PossuiErro).Select(s => s.Idioma.Conteudo).Distinct().Where(w=> w.EstaPreenchido()));
                 await ObterCreditosAutoresTipoAutoria(acervosBibliograficosLinhas.Where(w=> !w.Autor.PossuiErro).Select(s => s.Autor.Conteudo).ToArray().UnificarPipe().SplitPipe().Distinct().Where(w=> w.EstaPreenchido()), TipoCreditoAutoria.Autoria);
                 await ObterCreditosAutoresTipoAutoria(acervosBibliograficosLinhas.Where(w=> !w.CoAutor.PossuiErro).Select(s => s.CoAutor.Conteudo).ToArray().UnificarPipe().SplitPipe().Distinct().Where(w=> w.EstaPreenchido()), TipoCreditoAutoria.Autoria);
+                await ObterDominiosImutaveis();
             }
             
             var acervoBibliograficoRetorno = new ImportacaoArquivoRetornoDTO<AcervoLinhaErroDTO<AcervoBibliograficoDTO,AcervoBibliograficoLinhaRetornoDTO>,AcervoLinhaRetornoSucessoDTO>()
@@ -333,7 +334,7 @@ namespace SME.CDEP.Aplicacao.Servicos
 
             if (tiposAutoria.EstaPreenchido())
             {
-                var tiposAutoriaEmTexto = tiposAutoria.FormatarTextoEmArray();
+                var tiposAutoriaEmTexto = tiposAutoria.FormatarTextoEmArraySemDistinct();
             
                 tiposAutoriaEmTextoAutoNumerados = tiposAutoriaEmTexto.Select((tipoAutoria, indice) => new IdNomeDTO() { Id = indice + 1, Nome = tipoAutoria });    
             }

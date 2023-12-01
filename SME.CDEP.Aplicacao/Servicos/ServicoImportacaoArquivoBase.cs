@@ -1,7 +1,5 @@
-﻿using AutoMapper;
+using AutoMapper;
 using ClosedXML.Excel;
-using DocumentFormat.OpenXml.Office2010.Excel;
-using DocumentFormat.OpenXml.Office2010.ExcelAc;
 using Microsoft.AspNetCore.Http;
 using Newtonsoft.Json;
 using SME.CDEP.Aplicacao.DTOS;
@@ -362,23 +360,6 @@ namespace SME.CDEP.Aplicacao.Servicos
             campo.Mensagem = string.Empty;
         }
         
-        private async Task<bool> ExisteConservacaoPorNome(string nome)
-        {
-            var id = await servicoConservacao.ObterPorNome(nome);
-            
-            var existeRegistro = id.EhMaiorQueZero();
-            
-            if (existeRegistro)
-                CachearConservacoes(nome, id);
-            
-            return existeRegistro;
-        }
-        
-        private void CachearConservacoes(string nome, long id)
-        {
-            Conservacoes.Add(new IdNomeDTO() { Id = id, Nome = nome });
-        }
-        
         public async Task ValidarOuInserirAcessoDocumento(IEnumerable<string> acessoDocumentos)
         {
             foreach (var nome in acessoDocumentos)
@@ -406,64 +387,6 @@ namespace SME.CDEP.Aplicacao.Servicos
         private void CachearAcessoDocumento(string nome, long id)
         {
             AcessoDocumentos.Add(new IdNomeDTO() { Id = id, Nome = nome});
-        }
-        
-        public async Task ValidarOuInserirSuporte(IEnumerable<string> suportes, TipoSuporte tipoSuporte)
-        {
-            foreach (var nome in suportes)
-            {
-                if (!await ExisteSuportePorNomeETipo(nome,(int)tipoSuporte))
-                {
-                    var id = await servicoSuporte.Inserir(new IdNomeTipoExcluidoDTO() { Nome = nome, Tipo = (int)tipoSuporte});
-                    CachearSuporte(nome, id, (int)tipoSuporte);
-                }
-            }
-        }
-        
-        private async Task<bool> ExisteSuportePorNomeETipo(string nome, int tipoSuporte)
-        {
-            var id = await servicoSuporte.ObterPorNomeETipo(nome,tipoSuporte);
-            
-            var existeRegistro = id.EhMaiorQueZero();
-            
-            if (existeRegistro)
-                CachearSuporte(nome, id,tipoSuporte);
-            
-            return existeRegistro;
-        }
-        
-        private void CachearSuporte(string nome, long id, int tipoSuporte)
-        {
-            Suportes.Add(new IdNomeTipoDTO() { Id = id, Nome = nome, Tipo = tipoSuporte});
-        }
-       
-        public async Task ValidarOuInserirCromia(IEnumerable<string> cromias)
-        {
-            foreach (var nome in cromias)
-            {
-                if (!await ExisteCromiaPorNome(nome))
-                {
-                    var id = await servicoCromia.Inserir(new IdNomeExcluidoDTO() { Nome = nome });
-                    CachearCromia(nome, id);
-                }
-            }
-        }
-        
-        private async Task<bool> ExisteCromiaPorNome(string nome)
-        {
-            var id = await servicoCromia.ObterPorNome(nome);
-            
-            var existeRegistro = id.EhMaiorQueZero();
-            
-            if (existeRegistro)
-                CachearCromia(nome, id);
-            
-            return existeRegistro;
-        }
-        
-        private void CachearCromia(string nome, long id)
-        {
-            Cromias.Add(new IdNomeDTO() { Id = id, Nome = nome });
         }
         
         protected static LinhaConteudoAjustarRetornoDTO ObterConteudoMensagemStatus(LinhaConteudoAjustarDTO linha)
@@ -533,19 +456,9 @@ namespace SME.CDEP.Aplicacao.Servicos
             Formatos.Add(new IdNomeTipoDTO() { Id = id, Nome = nome, Tipo = (int)tipoFormato });
         }
         
-        protected long ObterEditoraIdPorValorDoCampo(string valorDoCampo)
-        {
-            return ObterIdentificadorIdPorValorDoCampo(valorDoCampo, Editoras, Constantes.EDITORA);
-        }
-        
         protected long? ObterEditoraIdOuNuloPorValorDoCampo(string valorDoCampo)
         {
             return ObterIdentificadorIdOuNuloPorValorDoCampo(valorDoCampo, Editoras);
-        }
-        
-        protected long ObterSerieColecaoIdPorValorDoCampo(string valorDoCampo)
-        {
-            return ObterIdentificadorIdPorValorDoCampo(valorDoCampo, SeriesColecoes, Constantes.SERIE_COLECAO);
         }
         
         protected long? ObterSerieColecaoIdOuNuloPorValorDoCampo(string valorDoCampo)
@@ -568,14 +481,17 @@ namespace SME.CDEP.Aplicacao.Servicos
             var conteudoCampoArray = valorDoCampo.FormatarTextoEmArray().ToList();
             foreach (var item in conteudoCampoArray)
             {
-                var possuiNome = CreditosAutores.Any(f => f.Nome.Equals(item));
-                if (!possuiNome)
+                if (item.EstaPreenchido())
                 {
-                    if (gerarExcecao)
-                        throw new NegocioException(string.Format(MensagemNegocio.O_ITEM_X_DO_DOMINIO_X_NAO_ENCONTRADO, item, Constantes.CREDITOS_AUTORES));
+                    var possuiNome = CreditosAutores.Any(f => f.Nome.Equals(item));
+                    if (!possuiNome)
+                    {
+                        if (gerarExcecao)
+                            throw new NegocioException(string.Format(MensagemNegocio.O_ITEM_X_DO_DOMINIO_X_NAO_ENCONTRADO, item, Constantes.CREDITOS_AUTORES));
+                    }
+                    else
+                        retorno.Add(CreditosAutores.FirstOrDefault(f => f.Nome.SaoIguais(item) && f.Tipo.SaoIguais((int)tipoCreditoAutoria)).Id);    
                 }
-                else
-                    retorno.Add(CreditosAutores.FirstOrDefault(f => f.Nome.SaoIguais(item) && f.Tipo.SaoIguais((int)tipoCreditoAutoria)).Id);
             }
             return retorno.Any() ? retorno.ToArray() : null;
         }
@@ -595,14 +511,17 @@ namespace SME.CDEP.Aplicacao.Servicos
             var conteudoCampoArray = valorDoCampo.FormatarTextoEmArray().ToList();
             foreach (var item in conteudoCampoArray)
             {
-                var possuiNome = Assuntos.Any(f => f.Nome.Equals(item));
-                if (!possuiNome)
+                if (item.EstaPreenchido())
                 {
-                    if (gerarExcecao)
-                        throw new NegocioException(string.Format(MensagemNegocio.O_ITEM_X_DO_DOMINIO_X_NAO_ENCONTRADO, item, Constantes.ASSUNTOS));
+                    var possuiNome = Assuntos.Any(f => f.Nome.Equals(item));
+                    if (!possuiNome)
+                    {
+                        if (gerarExcecao)
+                            throw new NegocioException(string.Format(MensagemNegocio.O_ITEM_X_DO_DOMINIO_X_NAO_ENCONTRADO, item, Constantes.ASSUNTOS));
+                    }
+                    else
+                        retorno.Add(Assuntos.FirstOrDefault(f => f.Nome.SaoIguais(item)).Id);
                 }
-                else
-                    retorno.Add(Assuntos.FirstOrDefault(f => f.Nome.SaoIguais(item)).Id);
             }
             
             return retorno.Any() ? retorno.ToArray() : null;
@@ -623,14 +542,17 @@ namespace SME.CDEP.Aplicacao.Servicos
             var conteudoCampoArray = valorDoCampo.FormatarTextoEmArray().ToList();
             foreach (var item in conteudoCampoArray)
             {
-                var possuiNome = AcessoDocumentos.Any(f => f.Nome.SaoIguais(item));
-                if (!possuiNome)
+                if (item.EstaPreenchido())
                 {
-                    if (gerarExcecao)
-                        throw new NegocioException(string.Format(Constantes.O_VALOR_X_DO_CAMPO_X_NAO_FOI_LOCALIZADO, item, Constantes.ACESSO_DOCUMENTO));
+                    var possuiNome = AcessoDocumentos.Any(f => f.Nome.Equals(item));
+                    if (!possuiNome)
+                    {
+                        if (gerarExcecao)
+                            throw new NegocioException(string.Format(Constantes.O_VALOR_X_DO_CAMPO_X_NAO_FOI_LOCALIZADO, item, Constantes.ACESSO_DOCUMENTO));
+                    }
+                    else
+                        retorno.Add(AcessoDocumentos.FirstOrDefault(f => f.Nome.SaoIguais(item)).Id);
                 }
-                else
-                    retorno.Add(AcessoDocumentos.FirstOrDefault(f => f.Nome.SaoIguais(item)).Id);
             }
             return retorno.Any() ? retorno.ToArray() : null;
         }
@@ -643,11 +565,6 @@ namespace SME.CDEP.Aplicacao.Servicos
         protected long? ObterIdiomaIdOuNuloPorValorDoCampo(string valorDoCampo)
         {
             return ObterIdentificadorIdOuNuloPorValorDoCampo(valorDoCampo, Idiomas);
-        }
-        
-        protected long ObterMaterialDocumentalIdPorValorDoCampo(string valorDoCampo)
-        {
-            return ObterIdentificadorIdPorValorDoCampo(valorDoCampo, Materiais, Constantes.MATERIAL, (int)TipoMaterial.DOCUMENTAL);
         }
         
         protected long? ObterMaterialDocumentalIdOuNuloPorValorDoCampo(string valorDoCampo)

@@ -99,13 +99,14 @@ namespace SME.CDEP.Aplicacao.Servicos
         
         private async Task<ImportacaoArquivoRetornoDTO<AcervoLinhaErroDTO<AcervoFotograficoDTO,AcervoFotograficoLinhaRetornoDTO>,AcervoLinhaRetornoSucessoDTO>> ObterRetornoImportacaoAcervo(ImportacaoArquivo arquivoImportado, IEnumerable<AcervoFotograficoLinhaDTO> acervosFotograficoLinhas, bool estaImportandoArquivo = true)
         {
-            await ObterSuportesPorTipo(TipoSuporte.IMAGEM);
-
             if (!estaImportandoArquivo)
             {
                 await ObterFormatos(acervosFotograficoLinhas.Where(w=> !w.FormatoImagem.PossuiErro).Select(s => s.FormatoImagem.Conteudo).Distinct().Where(w=> w.EstaPreenchido()), TipoFormato.ACERVO_FOTOS);
                 await ObterCreditosAutoresTipoAutoria(acervosFotograficoLinhas.Where(w=> !w.Credito.PossuiErro).Select(s => s.Credito.Conteudo).ToArray().UnificarPipe().SplitPipe().Distinct().Where(w=> w.EstaPreenchido()), TipoCreditoAutoria.Credito);
+                await ObterDominiosImutaveis();
             }
+            
+            await ObterSuportesPorTipo(TipoSuporte.IMAGEM);
             
             var acervoFotograficoRetorno = new ImportacaoArquivoRetornoDTO<AcervoLinhaErroDTO<AcervoFotograficoDTO,AcervoFotograficoLinhaRetornoDTO>,AcervoLinhaRetornoSucessoDTO>()
             {

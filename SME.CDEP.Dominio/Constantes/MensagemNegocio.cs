@@ -3,7 +3,6 @@
 public class MensagemNegocio
 {
     public const string O_ITEM_X_DO_DOMINIO_X_NAO_ENCONTRADO = "O item '{0}' do domínio '{1}' não foi encontrado";
-    public const string ARQUIVO_SEM_ABA = "Esse arquivo não possui nenhuma aba";
     public const string SOMENTE_ARQUIVO_XLSX_SUPORTADO = "Esse arquivo não é um XLSX. Somente arquivos do tipo XLSX são permitidos";
     public const string ARQUIVO_VAZIO = "O arquivo está vazio";
     public const string SOMENTE_ACERVO_DOCUMENTAL_POSSUI_CODIGO_NOVO = "Somente acervo documental possui código novo";
@@ -19,7 +18,6 @@ public class MensagemNegocio
     public const string LOGIN_NAO_ENCONTRADO = "Login não encontrado";
     public const string LOGIN_OU_SENHA_ATUAL_NAO_COMFEREM = "Login ou senha atual não conferem";
     public const string AS_ORIENTAÇÕES_PARA_RECUPERAÇÃO_DE_SENHA_FORAM_ENVIADOS_PARA_EMAIL_VERIFIQUE_SUA_CAIXA_DE_ENTRADA = "As orientações para recuperação de senha foram enviados para {0}, verifique sua caixa de entrada!";
-    public const string O_COMPLEMENTO_NAO_PODE_EXCEDER_20_CARACTERES = "O complemento não pode exceder 20 caracteres";
     public const string PERFIS_DO_USUARIO_NAO_LOCALIZADOS_VERIFIQUE_O_LOGIN = "Os perfis do usuário não foram localizados!Verifique o login.";
     public const string USUARIO_OU_SENHA_INVALIDOS = "Usuário ou senha inválidos";
     public const string A_SENHA_DEVE_CONTER_SOMENTE = "A senha deve conter pelo menos 1 letra maiúscula, 1 minúscula, 1 número e/ou 1 caractere especial e não pode conter acentuação";

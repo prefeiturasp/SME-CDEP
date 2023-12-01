@@ -104,6 +104,7 @@ namespace SME.CDEP.Aplicacao.Servicos
                 await ObterMateriais(acervosDocumentalLinhas.Where(w=> !w.Material.PossuiErro).Select(s => s.Material.Conteudo).Distinct().Where(w=> w.EstaPreenchido()), TipoMaterial.DOCUMENTAL);
                 await ObterIdiomas(acervosDocumentalLinhas.Where(w=> !w.Idioma.PossuiErro).Select(s => s.Idioma.Conteudo).Distinct().Where(w=> w.EstaPreenchido()));
                 await ObterCreditosAutoresTipoAutoria(acervosDocumentalLinhas.Where(w=> !w.Autor.PossuiErro).Select(s => s.Autor.Conteudo).ToArray().UnificarPipe().SplitPipe().Distinct().Where(w=> w.EstaPreenchido()), TipoCreditoAutoria.Autoria);
+                await ObterDominiosImutaveis();
             }
             
             var acervoDocumentalRetorno = new ImportacaoArquivoRetornoDTO<AcervoLinhaErroDTO<AcervoDocumentalDTO,AcervoDocumentalLinhaRetornoDTO>,AcervoLinhaRetornoSucessoDTO>()
@@ -327,8 +328,8 @@ namespace SME.CDEP.Aplicacao.Servicos
 
                     if (linha.Codigo.Conteudo.NaoEstaPreenchido() && linha.CodigoNovo.Conteudo.NaoEstaPreenchido())
                     {
-                        DefinirMensagemErro(linha.Codigo, Constantes.CAMPO_CODIGO_ANTIGO_OU_CODIGO_NOVO_DEVE_SER_PREENCHIDO);
-                        DefinirMensagemErro(linha.CodigoNovo, Constantes.CAMPO_CODIGO_ANTIGO_OU_CODIGO_NOVO_DEVE_SER_PREENCHIDO);
+                        DefinirMensagemErro(linha.Codigo, string.Format(Constantes.CAMPO_X_NAO_PREENCHIDO,Constantes.CODIGO_ANTIGO));
+                        DefinirMensagemErro(linha.CodigoNovo, string.Format(Constantes.CAMPO_X_NAO_PREENCHIDO,Constantes.CODIGO_NOVO));
                     }
                     linha.PossuiErros = PossuiErro(linha);
                 }

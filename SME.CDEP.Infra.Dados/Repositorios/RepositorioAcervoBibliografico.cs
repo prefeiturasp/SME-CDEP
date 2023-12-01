@@ -80,6 +80,7 @@ namespace SME.CDEP.Infra.Dados.Repositorios
                                   ca.id as CreditoAutorId,
                                   ca.nome as CreditoAutorNome,    
                                   aca.tipo_autoria as TipoAutoria,
+                                  aca.ehcoautor,
                                   i.id as IdiomaId,
                                   i.nome as IdiomaNome,
                                   m.id as materialId,
@@ -105,8 +106,8 @@ namespace SME.CDEP.Infra.Dados.Repositorios
             if (retorno.Any())
             {
                 var acervoBi = retorno.FirstOrDefault();
-                acervoBi.CreditosAutoresIds = acervoBi.CreditoAutorId.EhMaiorQueZero() ? retorno.Where(w=> w.TipoAutoria.EhNulo()).Select(s => s.CreditoAutorId).Distinct().ToArray() : Array.Empty<long>();
-                acervoBi.CoAutores = acervoBi.CreditoAutorId.EhMaiorQueZero() ? retorno.Where(w=> w.TipoAutoria.NaoEhNulo()).Select(s => new CoAutor() { CreditoAutorId = s.CreditoAutorId, TipoAutoria = s.TipoAutoria, CreditoAutorNome = s.CreditoAutorNome}).Distinct().ToArray() : Array.Empty<CoAutor>();
+                acervoBi.CreditosAutoresIds = acervoBi.CreditoAutorId.EhMaiorQueZero() ? retorno.Where(w=> !w.ehcoautor).Select(s => s.CreditoAutorId).Distinct().ToArray() : Array.Empty<long>();
+                acervoBi.CoAutores = acervoBi.CreditoAutorId.EhMaiorQueZero() ? retorno.Where(w=> w.ehcoautor).Select(s => new CoAutor() { CreditoAutorId = s.CreditoAutorId, TipoAutoria = s.TipoAutoria, CreditoAutorNome = s.CreditoAutorNome}).Distinct().ToArray() : Array.Empty<CoAutor>();
                 acervoBi.AssuntosIds = acervoBi.AssuntoId.EhMaiorQueZero() ? retorno.Select(s => s.AssuntoId).Distinct().ToArray() : Array.Empty<long>();
                 return acervoBi;    
             }
