@@ -86,9 +86,6 @@ namespace SME.CDEP.Aplicacao.Servicos
             
             await AtualizarImportacao(importacaoArquivoId, JsonConvert.SerializeObject(acervosTridimensionalLinhas),ImportacaoStatus.ValidadoPreenchimentoValorFormatoQtdeCaracteres);
             
-            await ValidacaoObterOuInserirDominios(acervosTridimensionalLinhas);
-            await AtualizarImportacao(importacaoArquivoId, JsonConvert.SerializeObject(acervosTridimensionalLinhas),ImportacaoStatus.ValidacaoDominios);
-            
             await PersistenciaAcervo(acervosTridimensionalLinhas);
             await AtualizarImportacao(importacaoArquivoId, JsonConvert.SerializeObject(acervosTridimensionalLinhas), acervosTridimensionalLinhas.Any(a=> a.PossuiErros) ? ImportacaoStatus.Erros : ImportacaoStatus.Sucesso);
         
@@ -99,7 +96,7 @@ namespace SME.CDEP.Aplicacao.Servicos
         
         private async Task<ImportacaoArquivoRetornoDTO<AcervoLinhaErroDTO<AcervoTridimensionalDTO,AcervoTridimensionalLinhaRetornoDTO>,AcervoLinhaRetornoSucessoDTO>> ObterRetornoImportacaoAcervo(ImportacaoArquivo arquivoImportado, IEnumerable<AcervoTridimensionalLinhaDTO> acervosTridimensionalLinhas, bool estaImportandoArquivo = true)
         {
-            await ObterDominiosImutaveis();
+            await ObterDominios();
             
             var acervoTridimensionalRetorno = new ImportacaoArquivoRetornoDTO<AcervoLinhaErroDTO<AcervoTridimensionalDTO,AcervoTridimensionalLinhaRetornoDTO>,AcervoLinhaRetornoSucessoDTO>()
             {
@@ -213,6 +210,9 @@ namespace SME.CDEP.Aplicacao.Servicos
         
         public async Task PersistenciaAcervo(IEnumerable<AcervoTridimensionalLinhaDTO> acervosTridimensionalsLinhas)
         {
+            
+            await ObterDominios();
+            
             foreach (var acervoTridimensionalLinha in acervosTridimensionalsLinhas.Where(w=> !w.PossuiErros))
             {
                 try
@@ -281,19 +281,6 @@ namespace SME.CDEP.Aplicacao.Servicos
                    || linha.Altura.PossuiErro
                    || linha.Profundidade.PossuiErro
                    || linha.Diametro.PossuiErro;
-        }
-        
-        public async Task ValidacaoObterOuInserirDominios(IEnumerable<AcervoTridimensionalLinhaDTO> linhasComsucesso)
-        {
-            try
-            {
-                await ObterDominiosImutaveis();
-            }
-            catch (Exception e)
-            {
-                foreach (var linha in linhasComsucesso)
-                    linha.DefinirLinhaComoErro(e.Message);
-            }
         }
         
         private async Task<IEnumerable<AcervoTridimensionalLinhaDTO>> LerPlanilha(IFormFile file)

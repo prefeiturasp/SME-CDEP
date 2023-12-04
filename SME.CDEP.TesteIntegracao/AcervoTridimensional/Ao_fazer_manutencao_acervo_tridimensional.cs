@@ -343,7 +343,7 @@ namespace SME.CDEP.TesteIntegracao
                     Quantidade = random.Next(15,55),
                     Largura = random.Next(15,55),
                     Altura = random.Next(15,55),
-                    Profundidade = random.Next(15,55),
+                    Profundidade = 11.21,//random.Next(15,55),
                     Diametro = random.Next(15,55),
                 });
                 
