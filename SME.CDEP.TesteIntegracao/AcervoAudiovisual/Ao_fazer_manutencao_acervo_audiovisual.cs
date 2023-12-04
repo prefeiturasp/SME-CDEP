@@ -19,7 +19,7 @@ namespace SME.CDEP.TesteIntegracao
         [Fact(DisplayName = "Acervo Audiovisual - Obter por Id")]
         public async Task Obter_por_id()
         {
-            await InserirDadosBasicos();
+            await InserirDadosBasicosAleatorios();
             await InserirAcervoAudiovisual();
             var servicoAcervoAudiovisual = GetServicoAcervoAudiovisual();
 
@@ -31,7 +31,7 @@ namespace SME.CDEP.TesteIntegracao
         [Fact(DisplayName = "Acervo Audiovisual - Excluir por Id")]
         public async Task Excluir_por_id()
         {
-            await InserirDadosBasicos();
+            await InserirDadosBasicosAleatorios();
             await InserirAcervoAudiovisual();
             var servicoAcervoAudiovisual = GetServicoAcervoAudiovisual();
 
@@ -45,7 +45,7 @@ namespace SME.CDEP.TesteIntegracao
         [Fact(DisplayName = "Acervo Audiovisual - Obter todos")]
         public async Task Obter_todos()
         {
-            await InserirDadosBasicos();
+            await InserirDadosBasicosAleatorios();
             await InserirAcervoAudiovisual();
             var servicoAcervoAudiovisual = GetServicoAcervoAudiovisual();
 
@@ -56,7 +56,7 @@ namespace SME.CDEP.TesteIntegracao
         [Fact(DisplayName = "Acervo Audiovisual - Atualizar")]
         public async Task Atualizar()
         {
-            await InserirDadosBasicos();
+            await InserirDadosBasicosAleatorios();
 
             await InserirAcervoAudiovisual();
             
@@ -123,7 +123,7 @@ namespace SME.CDEP.TesteIntegracao
         [Fact(DisplayName = "Acervo Audiovisual - Inserir")]
         public async Task Inserir()
         {
-            await InserirDadosBasicos();
+            await InserirDadosBasicosAleatorios();
 
             await InserirAcervoAudiovisual();
 
@@ -189,7 +189,7 @@ namespace SME.CDEP.TesteIntegracao
         [Fact(DisplayName = "Acervo Audiovisual - Não deve inserir Tombo duplicado")]
         public async Task Nao_deve_inserir_duplicado()
         {
-            await InserirDadosBasicos();
+            await InserirDadosBasicosAleatorios();
 
             await InserirAcervoAudiovisual();
 

@@ -111,6 +111,11 @@ namespace SME.CDEP.Dominio.Extensions
             return textoComPipes.SplitPipe().Distinct();
         }
         
+        public static IEnumerable<string> FormatarTextoEmArraySemDistinct(this string textoComPipes)
+        {
+            return textoComPipes.SplitPipe();
+        }
+        
         public static bool EhOpcaoSim(this string valor)
         {
             return valor.ToLower().Equals(Constantes.Constantes.OPCAO_SIM);

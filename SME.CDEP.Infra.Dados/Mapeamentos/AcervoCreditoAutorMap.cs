@@ -12,6 +12,7 @@ namespace SME.CDEP.Infra.Dados.Mapeamentos
             Map(c => c.AcervoId).ToColumn("acervo_id");
             Map(c => c.CreditoAutorId).ToColumn("credito_autor_id");
             Map(c => c.TipoAutoria).ToColumn("tipo_autoria");
+            Map(c => c.EhCoAutor).ToColumn("ehcoautor");
         }
     }
 }

@@ -63,7 +63,8 @@ namespace SME.CDEP.Aplicacao.Servicos
                 {
                     AcervoId = acervoId,
                     CreditoAutorId = coAutor.CreditoAutorId,
-                    TipoAutoria = coAutor.TipoAutoria
+                    TipoAutoria = coAutor.TipoAutoria,
+                    EhCoAutor = true,
                 });
 
             return acervoId;
@@ -136,7 +137,8 @@ namespace SME.CDEP.Aplicacao.Servicos
                 {
                     AcervoId = acervo.Id,
                     CreditoAutorId = creditoAutor.CreditoAutorId,
-                    TipoAutoria = creditoAutor.TipoAutoria
+                    TipoAutoria = creditoAutor.TipoAutoria,
+                    EhCoAutor = true,
                 });
 
             foreach (var coAutorExcluir in coAutoresIdsExcluir)

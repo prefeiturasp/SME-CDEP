@@ -103,6 +103,8 @@ namespace SME.CDEP.TesteIntegracao
         [Fact(DisplayName = "Importação Arquivo Acervo Tridimensional - ValidacaoObterOuInserirDominios")]
         public async Task Validacao_obter_ou_inserir_dominios()
         {
+            await InserirDadosBasicos();
+
             var servicoImportacaoArquivo = GetServicoImportacaoArquivoAcervoTridimensional();
         
             var acervoTridimensionalLinhas = AcervoTridimensionalLinhaMock.GerarAcervoTridimensionalLinhaDTO().Generate(10);
@@ -120,6 +122,8 @@ namespace SME.CDEP.TesteIntegracao
         [Fact(DisplayName = "Importação Arquivo Acervo Tridimensional - PersistenciaAcervo")]
         public async Task Persistencia_acervo()
         {
+            await InserirDadosBasicos();
+
             var servicoImportacaoArquivo = GetServicoImportacaoArquivoAcervoTridimensional();
         
             var acervoTridimensionalLinhas = AcervoTridimensionalLinhaMock.GerarAcervoTridimensionalLinhaDTO().Generate(10);
@@ -176,6 +180,8 @@ namespace SME.CDEP.TesteIntegracao
         [Fact(DisplayName = "Importação Arquivo Acervo Tridimensional - Geral - Com erros em 3 linhas")]
         public async Task Importacao_geral()
         {
+            await InserirDadosBasicos();
+
             var servicoImportacaoArquivo = GetServicoImportacaoArquivoAcervoTridimensional();
         
             var acervoTridimensionalLinhas = AcervoTridimensionalLinhaMock.GerarAcervoTridimensionalLinhaDTO().Generate(10);
