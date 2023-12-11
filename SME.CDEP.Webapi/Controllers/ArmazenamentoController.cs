@@ -22,6 +22,16 @@ public class ArmazenamentoController: BaseController
         return Ok(await servicoUploadArquivo.Upload(file));
     }
     
+    [HttpPost("Converter")]
+    [ProducesResponseType(200)]
+    [ProducesResponseType(401)]
+    [ProducesResponseType(typeof(RetornoBaseDTO), 500)]
+    // [Authorize("Bearer")]
+    public async Task<IActionResult> ConverterTiffToJpeg(Guid codigoArquivo, [FromServices] IServicoDownloadArquivo servicoDownloadArquivo)
+    {
+        return Ok(await servicoDownloadArquivo.Converter(codigoArquivo));
+    }
+    
     [HttpGet("{codigoArquivo}")]
     [ProducesResponseType(200)]
     [ProducesResponseType(401)]
