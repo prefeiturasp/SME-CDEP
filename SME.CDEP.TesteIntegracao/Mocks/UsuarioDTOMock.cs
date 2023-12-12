@@ -14,7 +14,7 @@ public static class UsuarioDTOMock
         faker.RuleFor(x => x.Login, f => f.Person.FirstName.Limite(45));
         faker.RuleFor(x => x.Nome, f => f.Lorem.Text().Limite(100));
         faker.RuleFor(x => x.Endereco, f => f.Address.FullAddress().Limite(200));
-        faker.RuleFor(x => x.Numero, f => int.Parse(f.Address.BuildingNumber().Limite(4)));
+        faker.RuleFor(x => x.Numero, f => f.Address.BuildingNumber().Limite(4).ConverterParaInteiro());
         faker.RuleFor(x => x.Complemento, f => f.Address.StreetSuffix().Limite(20));
         faker.RuleFor(x => x.Cep, f => f.Address.ZipCode());
         faker.RuleFor(x => x.Cidade, f => f.Address.City());

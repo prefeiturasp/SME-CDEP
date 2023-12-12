@@ -29,5 +29,7 @@ namespace SME.CDEP.Dominio.Entidades
                 }
             }           
         }
+
+        public string DataAcervo { get; set; }
     }
 }

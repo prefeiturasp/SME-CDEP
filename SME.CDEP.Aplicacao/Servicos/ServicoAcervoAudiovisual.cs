@@ -75,17 +75,16 @@ namespace SME.CDEP.Aplicacao.Servicos
         public async Task<AcervoAudiovisualDTO> Alterar(AcervoAudiovisualAlteracaoDTO acervoAudiovisualAlteracaoDto)
         {
             var acervoArteGrafica = mapper.Map<AcervoAudiovisual>(acervoAudiovisualAlteracaoDto);
-            var codigo = ObterCodigoAcervo(acervoAudiovisualAlteracaoDto.Codigo);
+            
+            var acervo = mapper.Map<AcervoDTO>(acervoAudiovisualAlteracaoDto);
+            
+            acervo.Codigo = ObterCodigoAcervo(acervoAudiovisualAlteracaoDto.Codigo);
             
             var tran = transacao.Iniciar();
             try
             {
-                await servicoAcervo.Alterar(acervoAudiovisualAlteracaoDto.AcervoId,
-                    acervoAudiovisualAlteracaoDto.Titulo, 
-                    acervoAudiovisualAlteracaoDto.Descricao, 
-                    codigo, 
-                    acervoAudiovisualAlteracaoDto.CreditosAutoresIds);
-                
+                await servicoAcervo.Alterar(acervo);
+                    
                 await repositorioAcervoAcervoAudiovisual.Atualizar(acervoArteGrafica);
                 
                 tran.Commit();

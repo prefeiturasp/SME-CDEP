@@ -6,4 +6,6 @@ public class FiltroTextoLivreTipoAcervoDTO
 {
     public TipoAcervo? TipoAcervo { get; set; }
     public string? TextoLivre { get; set; }
+    public int? AnoInicial { get; set; }
+    public int? AnoFinal { get; set; }
 }

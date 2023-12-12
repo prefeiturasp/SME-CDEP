@@ -12,4 +12,5 @@ public class PesquisaAcervoDTO
     public string Descricao { get; set; }
     public TipoAcervoTag TipoAcervoTag { get; set; }
     public string EnderecoImagem { get; set; }
+    public string DataAcervo { get; set; }
 }

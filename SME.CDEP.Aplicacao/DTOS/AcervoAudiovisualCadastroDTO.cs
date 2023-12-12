@@ -10,10 +10,6 @@ public class AcervoAudiovisualCadastroDTO : AcervoCadastroDTO
     [MaxLength(200, ErrorMessage = "A procedência do acervo audiovisual não pode conter mais que 200 caracteres")]
     public string? Procedencia { get; set; }
     
-    [Required(ErrorMessage = "É necessário informar a data do acervo audiovisual")]
-    [MaxLength(50, ErrorMessage = "A data do acervo audiovisual não pode conter mais que 50 caracteres")]
-    public string DataAcervo { get; set; }
-    
     [MaxLength(100, ErrorMessage = "A cópia do acervo audiovisual não pode conter mais que 100 caracteres")]
     public string? Copia { get; set; }
     

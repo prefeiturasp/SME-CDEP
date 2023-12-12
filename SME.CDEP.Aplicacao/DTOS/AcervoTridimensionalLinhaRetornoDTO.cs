@@ -15,4 +15,5 @@ public class AcervoTridimensionalLinhaRetornoDTO : AcervoLinhaRetornoDTO
     public LinhaConteudoAjustarRetornoDTO Altura { get; set; }
     public LinhaConteudoAjustarRetornoDTO Profundidade { get; set; }
     public LinhaConteudoAjustarRetornoDTO Diametro { get; set; }
+    public LinhaConteudoAjustarRetornoDTO Ano { get; set; }
 }

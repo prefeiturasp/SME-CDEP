@@ -15,6 +15,7 @@ public class AcervoTridimensionalLinhaDTO: AcervoLinhaDTO
     public LinhaConteudoAjustarDTO Altura { get; set; }
     public LinhaConteudoAjustarDTO Profundidade { get; set; }
     public LinhaConteudoAjustarDTO Diametro { get; set; }
+    public LinhaConteudoAjustarDTO Ano { get; set; }
 
     public void DefinirLinhaComoSucesso()
     {

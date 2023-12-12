@@ -19,7 +19,7 @@ namespace SME.CDEP.TesteIntegracao.Setup
             var scripts = ObterScripts();
             DirectoryInfo d = new DirectoryInfo(scripts);
 
-            var files = d.GetFiles("*.sql").OrderBy(a => int.Parse(CleanStringOfNonDigits_V1(a.Name.Replace("\uFEFF",""))));
+            var files = d.GetFiles("*.sql").OrderBy(a => CleanStringOfNonDigits_V1(a.Name.Replace("\uFEFF","")).ConverterParaInteiro());
 
             foreach (var file in files)
             {

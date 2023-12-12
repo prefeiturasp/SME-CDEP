@@ -10,4 +10,5 @@ public class IdTipoTituloCreditoAutoriaCodigoAcervoDTO
     public string Titulo { get; set; }
     public string CreditoAutoria { get; set; }
     public string Codigo { get; set; }
+    public string Data { get; set; }
 }

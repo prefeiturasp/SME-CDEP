@@ -17,7 +17,7 @@ namespace SME.CDEP.Infra.Dados.Repositorios
                                   ab.material_id as materialId,
                                   ab.editora_id as editoraId,
                                   ab.idioma_id as idiomaId,
-                                  ab.ano,
+                                  a.ano,
                                   ab.edicao,
                                   ab.numero_pagina numeroPagina,                                  
                                   ab.largura,
@@ -56,7 +56,7 @@ namespace SME.CDEP.Infra.Dados.Repositorios
         public async Task<AcervoBibliograficoCompleto> ObterPorId(long id)
         {
             var query = @"select  ab.id,
-                                  ab.ano,
+                                  a.ano,
                                   ab.edicao,
                                   ab.numero_pagina numeroPagina,
                                   ab.largura,
