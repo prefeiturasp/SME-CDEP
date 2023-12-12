@@ -14,7 +14,7 @@ public class AcervoDocumentalDTO
     public string CodigoNovo { get; set; }
     public long? MaterialId { get; set; }
     public long? IdiomaId { get; set; }
-    public string? Ano { get; set; }
+    public int? Ano { get; set; }
     public string NumeroPagina { get; set; }
     public string? Volume { get; set; }
     public string Descricao { get; set; }

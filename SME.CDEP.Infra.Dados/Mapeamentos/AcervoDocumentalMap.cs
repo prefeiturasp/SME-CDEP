@@ -10,7 +10,6 @@ namespace SME.CDEP.Infra.Dados.Mapeamentos
             Map(c => c.AcervoId).ToColumn("acervo_id");
             Map(c => c.MaterialId).ToColumn("material_id");
             Map(c => c.IdiomaId).ToColumn("idioma_id");
-            Map(c => c.Ano).ToColumn("ano");
             Map(c => c.NumeroPagina).ToColumn("numero_pagina");
             Map(c => c.Volume).ToColumn("volume");
             Map(c => c.TipoAnexo).ToColumn("tipo_anexo");

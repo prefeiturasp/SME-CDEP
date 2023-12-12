@@ -88,6 +88,8 @@ namespace SME.CDEP.Aplicacao.Servicos
             var assuntosIdsExcluir =  Enumerable.Empty<long>();
             
             var acervoBibliografico = mapper.Map<AcervoBibliografico>(acervoBibliograficoAlteracaoDto);
+
+            var acervoDTO = mapper.Map<AcervoDTO>(acervoBibliograficoAlteracaoDto);
             
             var assuntosExistentes = (await repositorioAcervoBibliograficoAssunto.ObterPorAcervoBibliograficoId(acervoBibliograficoAlteracaoDto.Id)).Select(s => s.AssuntoId).ToArray();
             (assuntosIdsInserir, assuntosIdsExcluir) = await ObterAssuntoInseridosExcluidos(acervoBibliograficoAlteracaoDto.AssuntosIds, assuntosExistentes);
@@ -95,12 +97,14 @@ namespace SME.CDEP.Aplicacao.Servicos
             var tran = transacao.Iniciar();
             try
             {
-                await servicoAcervo.Alterar(acervoBibliograficoAlteracaoDto.AcervoId,
-                    acervoBibliograficoAlteracaoDto.Titulo, 
-                    acervoBibliograficoAlteracaoDto.Codigo,
-                    acervoBibliograficoAlteracaoDto.CreditosAutoresIds,
-                    acervoBibliograficoAlteracaoDto.SubTitulo,
-                    acervoBibliograficoAlteracaoDto.CoAutores);
+                // await servicoAcervo.Alterar(acervoBibliograficoAlteracaoDto.AcervoId,
+                //     acervoBibliograficoAlteracaoDto.Titulo, 
+                //     acervoBibliograficoAlteracaoDto.Codigo,
+                //     acervoBibliograficoAlteracaoDto.CreditosAutoresIds,
+                //     acervoBibliograficoAlteracaoDto.SubTitulo,
+                //     acervoBibliograficoAlteracaoDto.CoAutores);
+
+                await servicoAcervo.Alterar(acervoDTO);
                 
                 await repositorioAcervoBibliografico.Atualizar(acervoBibliografico);
                 

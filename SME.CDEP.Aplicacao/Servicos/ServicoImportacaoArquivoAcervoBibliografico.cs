@@ -151,7 +151,7 @@ namespace SME.CDEP.Aplicacao.Servicos
                 MaterialId = ObterMaterialBibliograficoIdOuNuloPorValorDoCampo(linha.Material.Conteudo),
                 EditoraId = ObterEditoraIdOuNuloPorValorDoCampo(linha.Editora.Conteudo),
                 AssuntosIds = ObterAssuntosIdsPorValorDoCampo(linha.Assunto.Conteudo, false),
-                Ano = ObterConteudoTexto(linha.Ano),
+                Ano = ObterConteudoInteiroOuNulo(linha.Ano),
                 Edicao = ObterConteudoTexto(linha.Edicao),
                 NumeroPagina = ObterConteudoTexto(linha.NumeroPaginas),
                 Largura = ObterConteudoDoubleOuNulo(linha.Largura),
@@ -292,7 +292,7 @@ namespace SME.CDEP.Aplicacao.Servicos
 
                         AssuntosIds = ObterAssuntosIdsPorValorDoCampo(acervoBibliograficoLinha.Assunto.Conteudo),
 
-                        Ano = acervoBibliograficoLinha.Ano.Conteudo,
+                        Ano = acervoBibliograficoLinha.Ano.Conteudo.ConverterParaInteiro(),
                         Edicao = acervoBibliograficoLinha.Edicao.Conteudo,
                         NumeroPagina = acervoBibliograficoLinha.NumeroPaginas.Conteudo.ObterDoubleOuNuloPorValorDoCampo(),
                         Largura = acervoBibliograficoLinha.Largura.Conteudo.ObterDoubleOuNuloPorValorDoCampo(),
@@ -510,7 +510,8 @@ namespace SME.CDEP.Aplicacao.Servicos
                         Ano = new LinhaConteudoAjustarDTO()
                         {
                             Conteudo = planilha.ObterValorDaCelula(numeroLinha, Constantes.ACERVO_BIBLIOGRAFICO_CAMPO_ANO),
-                            LimiteCaracteres = Constantes.CARACTERES_PERMITIDOS_15,
+                            LimiteCaracteres = Constantes.CARACTERES_PERMITIDOS_4,
+                            FormatoTipoDeCampo = Constantes.FORMATO_INTEIRO, 
                             EhCampoObrigatorio = true
                         },
                         Edicao = new LinhaConteudoAjustarDTO()

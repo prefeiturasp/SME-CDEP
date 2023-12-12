@@ -422,6 +422,11 @@ namespace SME.CDEP.Aplicacao.Servicos
             return linha.PossuiErro ? null : linha.Conteudo.EstaPreenchido() ? long.Parse(linha.Conteudo) : null;
         }
         
+        protected static int? ObterConteudoInteiroOuNulo(LinhaConteudoAjustarDTO linha)
+        {
+            return linha.PossuiErro ? null : linha.Conteudo.EstaPreenchido() ? linha.Conteudo.ConverterParaInteiro() : null;
+        }
+        
         protected static double? ObterConteudoDoubleOuNulo(LinhaConteudoAjustarDTO linha)
         {
             return linha.PossuiErro ? null : linha.Conteudo.EstaPreenchido() ? double.Parse(linha.Conteudo) : null;

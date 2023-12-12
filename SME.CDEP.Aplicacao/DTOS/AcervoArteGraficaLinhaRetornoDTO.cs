@@ -21,4 +21,5 @@ public class AcervoArteGraficaLinhaRetornoDTO : AcervoLinhaRetornoDTO
     public LinhaConteudoAjustarRetornoDTO SuporteId { get; set; }
     public LinhaConteudoAjustarRetornoDTO Quantidade { get; set; }
     public LinhaConteudoAjustarRetornoDTO Descricao { get; set; }
+    public LinhaConteudoAjustarRetornoDTO Ano { get; set; }
 }

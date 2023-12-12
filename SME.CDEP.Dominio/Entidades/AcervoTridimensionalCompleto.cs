@@ -9,6 +9,7 @@ public class AcervoTridimensionalCompleto: EntidadeBaseAuditavel
     public long CreditoAutorId { get; set; }
     public string CreditoAutorNome { get; set; }
     public string Procedencia { get; set; }
+    public int Ano { get; set; }
     public string DataAcervo { get; set; }
     public long ConservacaoId { get; set; }
     public long Quantidade { get; set; }

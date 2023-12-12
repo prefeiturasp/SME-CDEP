@@ -1,5 +1,4 @@
-﻿using System.Text;
-using AutoMapper;
+﻿using AutoMapper;
 using ClosedXML.Excel;
 using Microsoft.AspNetCore.Http;
 using Newtonsoft.Json;
@@ -157,7 +156,7 @@ namespace SME.CDEP.Aplicacao.Servicos
                 TipoAcervoId = (int)tipoAcervo,
                 MaterialId = ObterMaterialDocumentalIdOuNuloPorValorDoCampo(linha.Material.Conteudo),
                 IdiomaId = ObterIdiomaIdOuNuloPorValorDoCampo(linha.Idioma.Conteudo),
-                Ano = ObterConteudoTexto(linha.Ano),
+                Ano = ObterConteudoInteiroOuNulo(linha.Ano),
                 NumeroPagina = ObterConteudoTexto(linha.NumeroPaginas),
                 Volume = ObterConteudoTexto(linha.Volume),
                 Descricao = ObterConteudoTexto(linha.Descricao),
@@ -277,7 +276,7 @@ namespace SME.CDEP.Aplicacao.Servicos
                         MaterialId = ObterMaterialDocumentalIdOuNuloPorValorDoCampo(acervoDocumentalLinha.Material.Conteudo),
                         IdiomaId = ObterIdiomaIdPorValorDoCampo(acervoDocumentalLinha.Idioma.Conteudo),
                         CreditosAutoresIds = ObterCreditoAutoresIdsPorValorDoCampo(acervoDocumentalLinha.Autor.Conteudo, TipoCreditoAutoria.Autoria),
-                        Ano = acervoDocumentalLinha.Ano.Conteudo,
+                        Ano = acervoDocumentalLinha.Ano.Conteudo.ConverterParaInteiro(),
                         NumeroPagina = acervoDocumentalLinha.NumeroPaginas.Conteudo,
                         Volume = acervoDocumentalLinha.Volume.Conteudo,
                         Descricao = acervoDocumentalLinha.Descricao.Conteudo,
@@ -439,7 +438,9 @@ namespace SME.CDEP.Aplicacao.Servicos
                         Ano = new LinhaConteudoAjustarDTO()
                         {
                             Conteudo = planilha.ObterValorDaCelula(numeroLinha, Constantes.ACERVO_DOCUMENTAL_CAMPO_ANO),
-                            LimiteCaracteres = Constantes.CARACTERES_PERMITIDOS_15,
+                            LimiteCaracteres = Constantes.CARACTERES_PERMITIDOS_4,
+                            EhCampoObrigatorio = true,
+                            FormatoTipoDeCampo = Constantes.FORMATO_INTEIRO,
                         },
                         NumeroPaginas = new LinhaConteudoAjustarDTO()
                         {

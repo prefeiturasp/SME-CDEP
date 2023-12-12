@@ -10,7 +10,6 @@ namespace SME.CDEP.Infra.Dados.Mapeamentos
             Map(c => c.AcervoId).ToColumn("acervo_id");
             Map(c => c.Localizacao).ToColumn("localizacao");
             Map(c => c.Procedencia).ToColumn("procedencia");
-            Map(c => c.DataAcervo).ToColumn("data_acervo");
             Map(c => c.CopiaDigital).ToColumn("copia_digital");
             Map(c => c.PermiteUsoImagem).ToColumn("permite_uso_imagem");
             Map(c => c.ConservacaoId).ToColumn("conservacao_id");

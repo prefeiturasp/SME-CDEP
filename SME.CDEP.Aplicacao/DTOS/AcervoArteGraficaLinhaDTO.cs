@@ -22,6 +22,8 @@ public class AcervoArteGraficaLinhaDTO: AcervoLinhaDTO
     public LinhaConteudoAjustarDTO Suporte { get; set; }
     public LinhaConteudoAjustarDTO Quantidade { get; set; }
     public LinhaConteudoAjustarDTO Descricao { get; set; }
+    
+    public LinhaConteudoAjustarDTO Ano { get; set; }
 
     public void DefinirLinhaComoSucesso()
     {

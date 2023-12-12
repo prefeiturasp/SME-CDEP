@@ -4,7 +4,8 @@ public class AcervoAudiovisualCompleto: EntidadeBaseAuditavel
 {
     public long AcervoId { get; set; }
     public string Titulo { get; set; }
-    public long TipoAcervoId { get; set; }
+    public int TipoAcervoId { get; set; }
+    public int Ano { get; set; }
     public string Codigo { get; set; }
     public long? CreditoAutorId { get; set; }
     public string CreditoAutorNome { get; set; }

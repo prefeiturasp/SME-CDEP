@@ -1,5 +1,4 @@
-﻿using System.Text;
-using AutoMapper;
+﻿using AutoMapper;
 using ClosedXML.Excel;
 using Microsoft.AspNetCore.Http;
 using Newtonsoft.Json;
@@ -146,6 +145,7 @@ namespace SME.CDEP.Aplicacao.Servicos
                 Codigo = ObterConteudoTexto(linha.Codigo),
                 Localizacao = ObterConteudoTexto(linha.Localizacao),
                 Procedencia = ObterConteudoTexto(linha.Procedencia),
+                Ano = ObterConteudoInteiroOuNulo(linha.Ano),
                 DataAcervo = ObterConteudoTexto(linha.Data),
                 CopiaDigital = ObterConteudoSimNao(linha.CopiaDigital),
                 PermiteUsoImagem = ObterConteudoSimNao(linha.PermiteUsoImagem),
@@ -172,6 +172,7 @@ namespace SME.CDEP.Aplicacao.Servicos
                 CreditosAutoresIds = ObterConteudoMensagemStatus(s.Credito),
                 Localizacao = ObterConteudoMensagemStatus(s.Localizacao),
                 Procedencia = ObterConteudoMensagemStatus(s.Procedencia),
+                Ano = ObterConteudoMensagemStatus(s.Ano),
                 DataAcervo = ObterConteudoMensagemStatus(s.Data),
                 CopiaDigital = ObterConteudoMensagemStatus(s.CopiaDigital),
                 PermiteUsoImagem = ObterConteudoMensagemStatus(s.PermiteUsoImagem),
@@ -210,7 +211,10 @@ namespace SME.CDEP.Aplicacao.Servicos
 			        
 	        if (acervoFotograficoLinhaDTO.Procedencia.PossuiErro)
 		        mensagemErro.Add(acervoFotograficoLinhaDTO.Procedencia.Mensagem);
-			        
+			
+            if (acervoFotograficoLinhaDTO.Ano.PossuiErro)
+                mensagemErro.Add(acervoFotograficoLinhaDTO.Ano.Mensagem);
+            
 	        if (acervoFotograficoLinhaDTO.Data.PossuiErro)
 		        mensagemErro.Add(acervoFotograficoLinhaDTO.Data.Mensagem);
 			        
@@ -268,6 +272,7 @@ namespace SME.CDEP.Aplicacao.Servicos
                             .Select(s => s.Id).ToArray(),
                         Localizacao = acervoFotograficoLinha.Localizacao.Conteudo,
                         Procedencia = acervoFotograficoLinha.Procedencia.Conteudo,
+                        Ano = acervoFotograficoLinha.Ano.Conteudo.ConverterParaInteiro(),
                         DataAcervo = acervoFotograficoLinha.Data.Conteudo,
                         CopiaDigital = ObterCopiaDigitalPorValorDoCampo(acervoFotograficoLinha.CopiaDigital.Conteudo),
                         PermiteUsoImagem = ObterAutorizaUsoDeImagemPorValorDoCampo(acervoFotograficoLinha.PermiteUsoImagem.Conteudo),
@@ -304,6 +309,7 @@ namespace SME.CDEP.Aplicacao.Servicos
                     ValidarPreenchimentoLimiteCaracteres(linha.Credito, Constantes.CREDITO);
                     ValidarPreenchimentoLimiteCaracteres(linha.Localizacao,Constantes.LOCALIZACAO);
                     ValidarPreenchimentoLimiteCaracteres(linha.Procedencia,Constantes.PROCEDENCIA);
+                    ValidarPreenchimentoLimiteCaracteres(linha.Ano,Constantes.ANO);
                     ValidarPreenchimentoLimiteCaracteres(linha.Data,Constantes.DATA);
                     ValidarPreenchimentoLimiteCaracteres(linha.CopiaDigital,Constantes.COPIA_DIGITAL);
                     ValidarPreenchimentoLimiteCaracteres(linha.PermiteUsoImagem,Constantes.AUTORIZACAO_USO_DE_IMAGEM);
@@ -333,6 +339,7 @@ namespace SME.CDEP.Aplicacao.Servicos
                    || linha.Credito.PossuiErro
                    || linha.Localizacao.PossuiErro 
                    || linha.Procedencia.PossuiErro
+                   || linha.Ano.PossuiErro
                    || linha.Data.PossuiErro
                    || linha.CopiaDigital.PossuiErro 
                    || linha.PermiteUsoImagem.PossuiErro 
@@ -416,6 +423,13 @@ namespace SME.CDEP.Aplicacao.Servicos
                             Conteudo = planilha.ObterValorDaCelula(numeroLinha, Constantes.ACERVO_FOTOGRAFICO_CAMPO_PROCEDENCIA),
                             LimiteCaracteres = Constantes.CARACTERES_PERMITIDOS_200,
                             EhCampoObrigatorio = true
+                        },
+                        Ano = new LinhaConteudoAjustarDTO()
+                        {
+                            Conteudo = planilha.ObterValorDaCelula(numeroLinha, Constantes.ACERVO_FOTOGRAFICO_CAMPO_ANO),
+                            LimiteCaracteres = Constantes.CARACTERES_PERMITIDOS_4,
+                            EhCampoObrigatorio = true,
+                            FormatoTipoDeCampo = Constantes.FORMATO_INTEIRO,
                         },
                         Data = new LinhaConteudoAjustarDTO()
                         {
@@ -515,6 +529,9 @@ namespace SME.CDEP.Aplicacao.Servicos
             
             ValidarTituloDaColuna(planilha, numeroLinha, Constantes.NOME_DA_COLUNA_PROCEDENCIA, 
                 Constantes.ACERVO_FOTOGRAFICO_CAMPO_PROCEDENCIA, Constantes.FOTOGRAFICO);
+            
+            ValidarTituloDaColuna(planilha, numeroLinha, Constantes.NOME_DA_COLUNA_ANO, 
+                Constantes.ACERVO_FOTOGRAFICO_CAMPO_ANO, Constantes.FOTOGRAFICO);
             
             ValidarTituloDaColuna(planilha, numeroLinha, Constantes.NOME_DA_COLUNA_DATA, 
                 Constantes.ACERVO_FOTOGRAFICO_CAMPO_DATA, Constantes.FOTOGRAFICO);
