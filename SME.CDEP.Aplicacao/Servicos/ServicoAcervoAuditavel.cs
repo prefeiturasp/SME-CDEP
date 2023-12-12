@@ -150,35 +150,6 @@ namespace SME.CDEP.Aplicacao.Servicos
 
             return acervoAlterado;
         }
-       
-        public async Task<AcervoDTO> Alterar(long id, string titulo, string codigo, long[] creditosAutoresIds, string subTitulo, CoAutorDTO[] coAutores)
-        {
-            var acervo = await repositorioAcervo.ObterPorId(id);
-
-            acervo.Titulo = titulo;
-            acervo.Codigo = codigo;
-            acervo.CreditosAutoresIds = creditosAutoresIds;
-            acervo.CoAutores = coAutores.NaoEhNulo() ? coAutores.Select(s=> new CoAutor() { CreditoAutorId = s.CreditoAutorId.Value, TipoAutoria = s.TipoAutoria}) : null;
-            acervo.SubTitulo = subTitulo;
-            return await Alterar(acervo);
-        }
-
-        public async Task<AcervoDTO> Alterar(long id, string titulo, string descricao, string codigo, long[] creditosAutoresIds, string codigoNovo = "")
-        {
-            var acervo = await repositorioAcervo.ObterPorId(id);
-
-            if (codigoNovo.EstaPreenchido() && acervo.TipoAcervoId != (long)TipoAcervo.DocumentacaoHistorica)
-                throw new NegocioException(MensagemNegocio.SOMENTE_ACERVO_DOCUMENTAL_POSSUI_CODIGO_NOVO);
-            
-            acervo.Titulo = titulo;
-            acervo.Descricao = descricao;
-            acervo.Codigo = codigo;
-            acervo.CreditosAutoresIds = creditosAutoresIds;
-            acervo.CodigoNovo = codigoNovo;
-            return await Alterar(acervo);
-            
-            //remover
-        }
         
         public async Task<AcervoDTO> Alterar(AcervoDTO acervoDTO)
         {
@@ -323,12 +294,6 @@ namespace SME.CDEP.Aplicacao.Servicos
 
                 return new Paginacao(numeroPagina, numeroRegistros == 0 ? 10 : numeroRegistros,ordenacao);
             }
-        }
-
-        public Task<PaginacaoResultadoDTO<IdTipoTituloCreditoAutoriaCodigoAcervoDTO>> ObterPorFiltro(int? tipoAcervo, string titulo, long? creditoAutorId, string codigo, int? anoInicial,
-            int? anoFinal)
-        {
-            throw new NotImplementedException();
         }
     }
 }  
