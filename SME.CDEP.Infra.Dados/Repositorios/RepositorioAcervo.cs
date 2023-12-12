@@ -24,7 +24,7 @@ namespace SME.CDEP.Infra.Dados.Repositorios
      	                                end
                                      else a.codigo end codigo,
                                  a.data_acervo,
-                                 a,ano,
+                                 a.ano,
                                  a.criado_em, 
                                  a.criado_por, 
                                  a.criado_login, 

@@ -97,13 +97,6 @@ namespace SME.CDEP.Aplicacao.Servicos
             var tran = transacao.Iniciar();
             try
             {
-                // await servicoAcervo.Alterar(acervoBibliograficoAlteracaoDto.AcervoId,
-                //     acervoBibliograficoAlteracaoDto.Titulo, 
-                //     acervoBibliograficoAlteracaoDto.Codigo,
-                //     acervoBibliograficoAlteracaoDto.CreditosAutoresIds,
-                //     acervoBibliograficoAlteracaoDto.SubTitulo,
-                //     acervoBibliograficoAlteracaoDto.CoAutores);
-
                 await servicoAcervo.Alterar(acervoDTO);
                 
                 await repositorioAcervoBibliografico.Atualizar(acervoBibliografico);
