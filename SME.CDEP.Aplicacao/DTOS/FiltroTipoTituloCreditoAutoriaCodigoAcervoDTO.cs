@@ -8,4 +8,6 @@ public class FiltroTipoTituloCreditoAutoriaCodigoAcervoDTO
     public string? Titulo { get; set; }
     public long? CreditoAutorId { get; set; }
     public string? Codigo { get; set; }
+    public int? AnoInicial { get; set; }
+    public int? AnoFinal { get; set; }
 }

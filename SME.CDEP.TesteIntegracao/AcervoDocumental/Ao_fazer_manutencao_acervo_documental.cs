@@ -89,7 +89,7 @@ namespace SME.CDEP.TesteIntegracao
                 AcessoDocumentosIds = acessoDocumentosSelecionados,
                 MaterialId = random.Next(1,5),
                 IdiomaId = random.Next(1,5),
-                Ano = faker.Lorem.Text().Limite(15),
+                Ano = faker.Date.Past().Year,
                 NumeroPagina = faker.Lorem.Text().Limite(4),
                 Volume = faker.Lorem.Text().Limite(15),
                 TipoAnexo = faker.Lorem.Text().Limite(50),
@@ -111,6 +111,7 @@ namespace SME.CDEP.TesteIntegracao
             acervo.AlteradoLogin.ShouldNotBeNull();
             acervo.AlteradoEm.HasValue.ShouldBeTrue();
             acervo.AlteradoPor.ShouldNotBeNull();
+            acervo.Ano.ShouldBe(acervoDocumentalAlteracaoDto.Ano);
             
            var acervoDocumental = ObterTodos<AcervoDocumental>().FirstOrDefault(w=> w.AcervoId == 3);
             acervoDocumental.Localizacao.ShouldBe(acervoDocumentalAlteracaoDto.Localizacao);
@@ -119,7 +120,6 @@ namespace SME.CDEP.TesteIntegracao
             acervoDocumental.Altura.ShouldBe(acervoDocumentalAlteracaoDto.Altura.Value);
             acervoDocumental.MaterialId.ShouldBe(acervoDocumentalAlteracaoDto.MaterialId);
             acervoDocumental.IdiomaId.ShouldBe(acervoDocumentalAlteracaoDto.IdiomaId);
-            acervoDocumental.Ano.ShouldBe(acervoDocumentalAlteracaoDto.Ano);
             acervoDocumental.NumeroPagina.ShouldBe(acervoDocumentalAlteracaoDto.NumeroPagina);
             acervoDocumental.Volume.ShouldBe(acervoDocumentalAlteracaoDto.Volume);
             acervoDocumental.TipoAnexo.ShouldBe(acervoDocumentalAlteracaoDto.TipoAnexo);
@@ -176,7 +176,7 @@ namespace SME.CDEP.TesteIntegracao
                 AcessoDocumentosIds = acessoDocumentosSelecionados,
                 MaterialId = random.Next(1,5),
                 IdiomaId = random.Next(1,5),
-                Ano = faker.Lorem.Text().Limite(15),
+                Ano = faker.Date.Past().Year,
                 NumeroPagina = faker.Lorem.Text().Limite(4),
                 Volume = faker.Lorem.Text().Limite(15),
                 TipoAnexo = faker.Lorem.Text().Limite(50),
@@ -198,6 +198,7 @@ namespace SME.CDEP.TesteIntegracao
             acervo.AlteradoLogin.ShouldNotBeNull();
             acervo.AlteradoEm.HasValue.ShouldBeTrue();
             acervo.AlteradoPor.ShouldNotBeNull();
+            acervo.Ano.ShouldBe(acervoDocumentalAlteracaoDto.Ano);
             
            var acervoDocumental = ObterTodos<AcervoDocumental>().FirstOrDefault(w=> w.AcervoId == 3);
             acervoDocumental.Localizacao.ShouldBe(acervoDocumentalAlteracaoDto.Localizacao);
@@ -206,7 +207,6 @@ namespace SME.CDEP.TesteIntegracao
             acervoDocumental.Altura.ShouldBe(acervoDocumentalAlteracaoDto.Altura.Value);
             acervoDocumental.MaterialId.ShouldBe(acervoDocumentalAlteracaoDto.MaterialId);
             acervoDocumental.IdiomaId.ShouldBe(acervoDocumentalAlteracaoDto.IdiomaId);
-            acervoDocumental.Ano.ShouldBe(acervoDocumentalAlteracaoDto.Ano);
             acervoDocumental.NumeroPagina.ShouldBe(acervoDocumentalAlteracaoDto.NumeroPagina);
             acervoDocumental.Volume.ShouldBe(acervoDocumentalAlteracaoDto.Volume);
             acervoDocumental.TipoAnexo.ShouldBe(acervoDocumentalAlteracaoDto.TipoAnexo);
@@ -263,7 +263,7 @@ namespace SME.CDEP.TesteIntegracao
                 AcessoDocumentosIds = acessoDocumentosSelecionados,
                 MaterialId = random.Next(1,5),
                 IdiomaId = random.Next(1,5),
-                Ano = faker.Lorem.Text().Limite(15),
+                Ano = faker.Date.Past().Year,
                 NumeroPagina = faker.Lorem.Text().Limite(4),
                 Volume = faker.Lorem.Text().Limite(15),
                 TipoAnexo = faker.Lorem.Text().Limite(50),
@@ -285,6 +285,7 @@ namespace SME.CDEP.TesteIntegracao
             acervo.AlteradoLogin.ShouldNotBeNull();
             acervo.AlteradoEm.HasValue.ShouldBeTrue();
             acervo.AlteradoPor.ShouldNotBeNull();
+            acervo.Ano.ShouldBe(acervoDocumentalAlteracaoDto.Ano);
             
            var acervoDocumental = ObterTodos<AcervoDocumental>().FirstOrDefault(w=> w.AcervoId == 3);
             acervoDocumental.Localizacao.ShouldBe(acervoDocumentalAlteracaoDto.Localizacao);
@@ -293,7 +294,6 @@ namespace SME.CDEP.TesteIntegracao
             acervoDocumental.Altura.ShouldBe(acervoDocumentalAlteracaoDto.Altura.Value);
             acervoDocumental.MaterialId.ShouldBe(acervoDocumentalAlteracaoDto.MaterialId);
             acervoDocumental.IdiomaId.ShouldBe(acervoDocumentalAlteracaoDto.IdiomaId);
-            acervoDocumental.Ano.ShouldBe(acervoDocumentalAlteracaoDto.Ano);
             acervoDocumental.NumeroPagina.ShouldBe(acervoDocumentalAlteracaoDto.NumeroPagina);
             acervoDocumental.Volume.ShouldBe(acervoDocumentalAlteracaoDto.Volume);
             acervoDocumental.TipoAnexo.ShouldBe(acervoDocumentalAlteracaoDto.TipoAnexo);
@@ -350,7 +350,7 @@ namespace SME.CDEP.TesteIntegracao
                 AcessoDocumentosIds = acessoDocumentosSelecionados,
                 MaterialId = random.Next(1,5),
                 IdiomaId = random.Next(1,5),
-                Ano = faker.Lorem.Text().Limite(15),
+                Ano = faker.Date.Past().Year,
                 NumeroPagina = faker.Lorem.Text().Limite(4),
                 Volume = faker.Lorem.Text().Limite(15),
                 TipoAnexo = faker.Lorem.Text().Limite(50),
@@ -372,6 +372,7 @@ namespace SME.CDEP.TesteIntegracao
             acervo.AlteradoLogin.ShouldNotBeNull();
             acervo.AlteradoEm.HasValue.ShouldBeTrue();
             acervo.AlteradoPor.ShouldNotBeNull();
+            acervo.Ano.ShouldBe(acervoDocumentalAlteracaoDto.Ano);
             
             var acervoDocumental = ObterTodos<AcervoDocumental>().FirstOrDefault(w=> w.AcervoId == 3);
             acervoDocumental.Localizacao.ShouldBe(acervoDocumentalAlteracaoDto.Localizacao);
@@ -380,7 +381,6 @@ namespace SME.CDEP.TesteIntegracao
             acervoDocumental.Altura.ShouldBe(acervoDocumentalAlteracaoDto.Altura.Value);
             acervoDocumental.MaterialId.ShouldBe(acervoDocumentalAlteracaoDto.MaterialId);
             acervoDocumental.IdiomaId.ShouldBe(acervoDocumentalAlteracaoDto.IdiomaId);
-            acervoDocumental.Ano.ShouldBe(acervoDocumentalAlteracaoDto.Ano);
             acervoDocumental.NumeroPagina.ShouldBe(acervoDocumentalAlteracaoDto.NumeroPagina);
             acervoDocumental.Volume.ShouldBe(acervoDocumentalAlteracaoDto.Volume);
             acervoDocumental.TipoAnexo.ShouldBe(acervoDocumentalAlteracaoDto.TipoAnexo);
@@ -434,7 +434,7 @@ namespace SME.CDEP.TesteIntegracao
                 AcessoDocumentosIds = acessoDocumentosSelecionados,
                 MaterialId = random.Next(1,5),
                 IdiomaId = random.Next(1,5),
-                Ano = faker.Lorem.Text().Limite(15),
+                Ano = faker.Date.Past().Year,
                 NumeroPagina = faker.Lorem.Text().Limite(4),
                 Volume = faker.Lorem.Text().Limite(15),
                 TipoAnexo = faker.Lorem.Text().Limite(50),
@@ -456,6 +456,7 @@ namespace SME.CDEP.TesteIntegracao
             acervo.AlteradoLogin.ShouldNotBeNull();
             acervo.AlteradoEm.HasValue.ShouldBeTrue();
             acervo.AlteradoPor.ShouldNotBeNull();
+            acervo.Ano.ShouldBe(acervoDocumentalAlteracaoDto.Ano);
             
             var acervoDocumental = ObterTodos<AcervoDocumental>().FirstOrDefault(w=> w.AcervoId == 3);
             acervoDocumental.Localizacao.ShouldBe(acervoDocumentalAlteracaoDto.Localizacao);
@@ -464,7 +465,6 @@ namespace SME.CDEP.TesteIntegracao
             acervoDocumental.Altura.ShouldBe(acervoDocumentalAlteracaoDto.Altura.Value);
             acervoDocumental.MaterialId.ShouldBe(acervoDocumentalAlteracaoDto.MaterialId);
             acervoDocumental.IdiomaId.ShouldBe(acervoDocumentalAlteracaoDto.IdiomaId);
-            acervoDocumental.Ano.ShouldBe(acervoDocumentalAlteracaoDto.Ano);
             acervoDocumental.NumeroPagina.ShouldBe(acervoDocumentalAlteracaoDto.NumeroPagina);
             acervoDocumental.Volume.ShouldBe(acervoDocumentalAlteracaoDto.Volume);
             acervoDocumental.TipoAnexo.ShouldBe(acervoDocumentalAlteracaoDto.TipoAnexo);
@@ -517,7 +517,7 @@ namespace SME.CDEP.TesteIntegracao
                 AcessoDocumentosIds = acessoDocumentosSelecionados,
                 MaterialId = random.Next(1,5),
                 IdiomaId = random.Next(1,5),
-                Ano = faker.Lorem.Text().Limite(15),
+                Ano = faker.Date.Past().Year,
                 NumeroPagina = faker.Lorem.Text().Limite(4),
                 Volume = faker.Lorem.Text().Limite(15),
                 TipoAnexo = faker.Lorem.Text().Limite(50),
@@ -540,6 +540,7 @@ namespace SME.CDEP.TesteIntegracao
             acervo.AlteradoLogin.ShouldBeNull();
             acervo.AlteradoEm.HasValue.ShouldBeFalse();
             acervo.AlteradoPor.ShouldBeNull();
+            acervo.Ano.ShouldBe(acervoDocumentalCadastroDto.Ano);
             
             var acervoDocumental = ObterTodos<AcervoDocumental>().LastOrDefault();
             acervoDocumental.Localizacao.ShouldBe(acervoDocumentalCadastroDto.Localizacao);
@@ -548,7 +549,6 @@ namespace SME.CDEP.TesteIntegracao
             acervoDocumental.Altura.ShouldBe(acervoDocumentalCadastroDto.Altura.Value);
             acervoDocumental.MaterialId.ShouldBe(acervoDocumentalCadastroDto.MaterialId);
             acervoDocumental.IdiomaId.ShouldBe(acervoDocumentalCadastroDto.IdiomaId);
-            acervoDocumental.Ano.ShouldBe(acervoDocumentalCadastroDto.Ano);
             acervoDocumental.NumeroPagina.ShouldBe(acervoDocumentalCadastroDto.NumeroPagina);
             acervoDocumental.Volume.ShouldBe(acervoDocumentalCadastroDto.Volume);
             acervoDocumental.TipoAnexo.ShouldBe(acervoDocumentalCadastroDto.TipoAnexo);
@@ -603,7 +603,7 @@ namespace SME.CDEP.TesteIntegracao
                 AcessoDocumentosIds = acessoDocumentosSelecionados,
                 MaterialId = random.Next(1,5),
                 IdiomaId = random.Next(1,5),
-                Ano = faker.Lorem.Text().Limite(15),
+                Ano = faker.Date.Past().Year,
                 NumeroPagina = faker.Lorem.Text().Limite(4),
                 Volume = faker.Lorem.Text().Limite(15),
                 TipoAnexo = faker.Lorem.Text().Limite(50),
@@ -644,12 +644,13 @@ namespace SME.CDEP.TesteIntegracao
                 Arquivos = arquivosSelecionados,
                 AcessoDocumentosIds = acessoDocumentosSelecionados,
                 MaterialId = random.Next(1,5),
-                IdiomaId = random.Next(1,5),Ano = faker.Lorem.Text().Limite(15),
+                IdiomaId = random.Next(1,5),
+                Ano = faker.Date.Past().Year,
                 NumeroPagina = faker.Lorem.Text().Limite(4),
                 Volume = faker.Lorem.Text().Limite(15),
                 TipoAnexo = faker.Lorem.Text().Limite(50),
                 TamanhoArquivo = faker.Lorem.Text().Limite(15),
-                CopiaDigital = true,
+                CopiaDigital = true
             };
             
             await servicoAcervoDocumental.Inserir(acervoDocumentalCadastroDto).ShouldThrowAsync<NegocioException>();
@@ -686,7 +687,7 @@ namespace SME.CDEP.TesteIntegracao
                 AcessoDocumentosIds = acessoDocumentosSelecionados,
                 MaterialId = random.Next(1,5),
                 IdiomaId = random.Next(1,5),
-                Ano = faker.Lorem.Text().Limite(15),
+                Ano = faker.Date.Past().Year,
                 NumeroPagina = faker.Lorem.Text().Limite(4),
                 Volume = faker.Lorem.Text().Limite(15),
                 TipoAnexo = faker.Lorem.Text().Limite(50),
@@ -730,7 +731,50 @@ namespace SME.CDEP.TesteIntegracao
                 AcessoDocumentosIds = acessoDocumentosSelecionados,
                 MaterialId = random.Next(1,5),
                 IdiomaId = random.Next(1,5),
-                Ano = faker.Lorem.Text().Limite(15),
+                Ano = faker.Date.Past().Year,
+                NumeroPagina = faker.Lorem.Text().Limite(4),
+                Volume = faker.Lorem.Text().Limite(15),
+                TipoAnexo = faker.Lorem.Text().Limite(50),
+                TamanhoArquivo = faker.Lorem.Text().Limite(15),
+                CopiaDigital = true,
+            };
+            
+            await servicoAcervoDocumental.Inserir(acervoDocumentalCadastroDto).ShouldThrowAsync<NegocioException>();
+        }
+        
+        [Fact(DisplayName = "Acervo documental - Não deve inserir com ano futuro")]
+        public async Task Nao_deve_inserir_com_ano_futuro()
+        {
+            await InserirDadosBasicosAleatorios();
+
+            await InserirAcervoDocumental();
+
+            var servicoAcervoDocumental = GetServicoAcervoDocumental();
+            
+            var random = new Random();
+
+            var arquivos = ObterTodos<Arquivo>();
+            var arquivosSelecionados = arquivos.Take(5).Select(s => s.Id).ToArray();
+            
+            var acessoDocumentos = ObterTodos<AcessoDocumento>();
+            var acessoDocumentosSelecionados = acessoDocumentos.Take(5).Select(s => s.Id).ToArray();
+
+            var acervoDocumentalCadastroDto = new AcervoDocumentalCadastroDTO()
+            {
+                Codigo = "1",
+                CodigoNovo = "1",
+                Titulo = faker.Lorem.Text().Limite(500),
+                CreditosAutoresIds = new long[]{4,5},
+                Localizacao = faker.Lorem.Text().Limite(100),
+                ConservacaoId = random.Next(1, 5),
+                Largura = random.Next(15, 55),
+                Altura = random.Next(15, 55),
+                Descricao = faker.Lorem.Text(),
+                Arquivos = arquivosSelecionados,
+                AcessoDocumentosIds = acessoDocumentosSelecionados,
+                MaterialId = random.Next(1,5),
+                IdiomaId = random.Next(1,5),
+                Ano = faker.Date.Future().Year,
                 NumeroPagina = faker.Lorem.Text().Limite(4),
                 Volume = faker.Lorem.Text().Limite(15),
                 TipoAnexo = faker.Lorem.Text().Limite(50),
@@ -776,7 +820,7 @@ namespace SME.CDEP.TesteIntegracao
                 AcessoDocumentosIds = acessoDocumentosSelecionados,
                 MaterialId = random.Next(1,5),
                 IdiomaId = random.Next(1,5),
-                Ano = faker.Lorem.Text().Limite(15),
+                Ano = faker.Date.Past().Year,
                 NumeroPagina = faker.Lorem.Text().Limite(4),
                 Volume = faker.Lorem.Text().Limite(15),
                 TipoAnexo = faker.Lorem.Text().Limite(50),
@@ -822,7 +866,7 @@ namespace SME.CDEP.TesteIntegracao
                 AcessoDocumentosIds = acessoDocumentosSelecionados,
                 MaterialId = random.Next(1,5),
                 IdiomaId = random.Next(1,5),
-                Ano = faker.Lorem.Text().Limite(15),
+                Ano = faker.Date.Past().Year,
                 NumeroPagina = faker.Lorem.Text().Limite(4),
                 Volume = faker.Lorem.Text().Limite(15),
                 TipoAnexo = faker.Lorem.Text().Limite(50),
@@ -866,7 +910,7 @@ namespace SME.CDEP.TesteIntegracao
                 AcessoDocumentosIds = acessoDocumentosSelecionados,
                 MaterialId = random.Next(1,5),
                 IdiomaId = random.Next(1,5),
-                Ano = faker.Lorem.Text().Limite(15),
+                Ano = faker.Date.Past().Year,
                 NumeroPagina = faker.Lorem.Text().Limite(4),
                 Volume = faker.Lorem.Text().Limite(15),
                 TipoAnexo = faker.Lorem.Text().Limite(50),
@@ -910,7 +954,7 @@ namespace SME.CDEP.TesteIntegracao
                 AcessoDocumentosIds = acessoDocumentosSelecionados,
                 MaterialId = random.Next(1,5),
                 IdiomaId = random.Next(1,5),
-                Ano = faker.Lorem.Text().Limite(15),
+                Ano = faker.Date.Past().Year,
                 NumeroPagina = faker.Lorem.Text().Limite(4),
                 Volume = faker.Lorem.Text().Limite(15),
                 TipoAnexo = faker.Lorem.Text().Limite(50),
@@ -956,7 +1000,53 @@ namespace SME.CDEP.TesteIntegracao
                 AcessoDocumentosIds = acessoDocumentosSelecionados,
                 MaterialId = random.Next(1,5),
                 IdiomaId = random.Next(1,5),
-                Ano = faker.Lorem.Text().Limite(15),
+                Ano = faker.Date.Past().Year,
+                NumeroPagina = faker.Lorem.Text().Limite(4),
+                Volume = faker.Lorem.Text().Limite(15),
+                TipoAnexo = faker.Lorem.Text().Limite(50),
+                TamanhoArquivo = faker.Lorem.Text().Limite(15),
+                CopiaDigital = true,
+            };
+                
+            await servicoAcervoDocumental.Alterar(acervoDocumentalAlteracaoDto).ShouldThrowAsync<NegocioException>();
+           
+        }
+        
+        [Fact(DisplayName = "Acervo documental - Não deve alterar com ano futuro")]
+        public async Task Nao_deve_alterar_com_ano_futuro()
+        {
+            await InserirDadosBasicosAleatorios();
+
+            await InserirAcervoDocumental();
+
+            var servicoAcervoDocumental = GetServicoAcervoDocumental();
+            
+            var random = new Random();
+
+            var arquivos = ObterTodos<Arquivo>();
+            var arquivosSelecionados = arquivos.Take(5).Select(s => s.Id).ToArray();
+            
+            var acessoDocumentos = ObterTodos<AcessoDocumento>();
+            var acessoDocumentosSelecionados = acessoDocumentos.Take(5).Select(s => s.Id).ToArray();
+
+           var acervoDocumentalAlteracaoDto = new AcervoDocumentalAlteracaoDTO()
+            {
+                Id = 3,
+                AcervoId = 3,
+                Codigo = "3.NOVO",
+                CodigoNovo = "3.NOVO",
+                Titulo = faker.Lorem.Text().Limite(500),
+                CreditosAutoresIds = new long[]{1,5},
+                Localizacao = faker.Lorem.Text().Limite(100),
+                ConservacaoId = random.Next(1, 5),
+                Largura = random.Next(15, 55),
+                Altura = random.Next(15, 55),
+                Descricao = faker.Lorem.Text(),
+                Arquivos = arquivosSelecionados,
+                AcessoDocumentosIds = acessoDocumentosSelecionados,
+                MaterialId = random.Next(1,5),
+                IdiomaId = random.Next(1,5),
+                Ano = faker.Date.Future().Year,
                 NumeroPagina = faker.Lorem.Text().Limite(4),
                 Volume = faker.Lorem.Text().Limite(15),
                 TipoAnexo = faker.Lorem.Text().Limite(50),
@@ -1012,7 +1102,6 @@ namespace SME.CDEP.TesteIntegracao
                     AcervoId = j,
                     MaterialId = random.Next(1,5),
                     IdiomaId = random.Next(1,5),
-                    Ano = faker.Lorem.Text().Limite(15),
                     NumeroPagina = faker.Lorem.Text().Limite(4),
                     Volume = faker.Lorem.Text().Limite(15),
                     TipoAnexo = faker.Lorem.Text().Limite(50),

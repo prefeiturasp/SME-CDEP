@@ -11,10 +11,6 @@ public class AcervoFotograficoCadastroDTO : AcervoCadastroDTO
     [MaxLength(200, ErrorMessage = "A procedência do acervo fotográfico não pode conter mais que 200 caracteres")]
     public string Procedencia { get; set; }
     
-    [Required(ErrorMessage = "É necessário informar a data do acervo fotográfico")]
-    [MaxLength(50, ErrorMessage = "A data do acervo fotográfico não pode conter mais que 50 caracteres")]
-    public string DataAcervo { get; set; }
-    
     public bool? CopiaDigital { get; set; }
     public bool? PermiteUsoImagem { get; set; }
     

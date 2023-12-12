@@ -79,9 +79,9 @@ namespace SME.CDEP.Aplicacao.Servicos
                 if (numeroPaginaQueryString.NaoEstaPreenchido() || numeroRegistrosQueryString.NaoEstaPreenchido()|| ordenacaoQueryString.NaoEstaPreenchido())
                     return new Paginacao(0, 0,0);
 
-                var numeroPagina = int.Parse(numeroPaginaQueryString);
-                var numeroRegistros = int.Parse(numeroRegistrosQueryString);
-                var ordenacao = int.Parse(ordenacaoQueryString);
+                var numeroPagina = numeroPaginaQueryString.ConverterParaInteiro();
+                var numeroRegistros = numeroRegistrosQueryString.ConverterParaInteiro();
+                var ordenacao = ordenacaoQueryString.ConverterParaInteiro();
 
                 return new Paginacao(numeroPagina, numeroRegistros == 0 ? 10 : numeroRegistros,ordenacao);
             }

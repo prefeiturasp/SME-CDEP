@@ -6,9 +6,12 @@ public class AcervoDTO : BaseAuditavelDTO
     public string Descricao { get; set; }
     public long TipoAcervoId { get; set; }
     public string Codigo { get; set; }
-    public long CreditoAutorId { get; set; }
+    public long[] CreditosAutoresIds { get; set; }
     public CreditoAutorDTO CreditoAutor { get; set; }
     public string CodigoNovo { get; set; }
     public string SubTitulo { get; set; }
     public IEnumerable<CoAutorDTO> CoAutores { get; set; }
+    public string DataAcervo { get; set; }
+    public int Ano { get; set; }
+    public long AcervoId { get; set; }
 }

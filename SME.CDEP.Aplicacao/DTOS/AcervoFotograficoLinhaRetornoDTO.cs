@@ -22,4 +22,5 @@ public class AcervoFotograficoLinhaRetornoDTO : AcervoLinhaRetornoDTO
     public LinhaConteudoAjustarRetornoDTO TamanhoArquivo { get; set; }
     public LinhaConteudoAjustarRetornoDTO CromiaId { get; set; }
     public LinhaConteudoAjustarRetornoDTO Resolucao { get; set; }
+    public LinhaConteudoAjustarRetornoDTO Ano { get; set; }
 }

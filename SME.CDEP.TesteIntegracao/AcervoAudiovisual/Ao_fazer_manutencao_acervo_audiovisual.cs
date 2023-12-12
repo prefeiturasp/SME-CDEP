@@ -73,6 +73,7 @@ namespace SME.CDEP.TesteIntegracao
                 CreditosAutoresIds = new long[]{4,5},
                 Localizacao = faker.Lorem.Text().Limite(100),
                 Procedencia = faker.Lorem.Text().Limite(200),
+                Ano = DateTimeExtension.HorarioBrasilia().Year,
                 DataAcervo = DateTimeExtension.HorarioBrasilia().Date.ToString("dd/MM/yyyy"),
                 Copia = faker.Lorem.Text().Limite(100),
                 PermiteUsoImagem = true,
@@ -92,6 +93,9 @@ namespace SME.CDEP.TesteIntegracao
             acervo.Titulo.Equals(acervoAudiovisualAlteracaoDto.Titulo).ShouldBeTrue();
             acervo.Descricao.Equals(acervoAudiovisualAlteracaoDto.Descricao).ShouldBeTrue();
             acervo.Codigo.Equals(acervoAudiovisualAlteracaoDto.Codigo).ShouldBeTrue();
+            acervo.Ano.ShouldBe(acervoAudiovisualAlteracaoDto.Ano);
+            acervo.DataAcervo.ShouldBe(acervoAudiovisualAlteracaoDto.DataAcervo);
+            acervo.Ano.ShouldBe(acervoAudiovisualAlteracaoDto.Ano);
             acervo.TipoAcervoId.ShouldBe((int)TipoAcervo.Audiovisual);
             acervo.CriadoLogin.ShouldNotBeEmpty();
             acervo.CriadoEm.Date.ShouldBe(DateTimeExtension.HorarioBrasilia().Date);
@@ -103,7 +107,6 @@ namespace SME.CDEP.TesteIntegracao
            var acervoAudiovisual = ObterTodos<AcervoAudiovisual>().FirstOrDefault(w=> w.AcervoId == 3);
             acervoAudiovisual.Localizacao.ShouldBe(acervoAudiovisualAlteracaoDto.Localizacao);
             acervoAudiovisual.Procedencia.ShouldBe(acervoAudiovisualAlteracaoDto.Procedencia);
-            acervoAudiovisual.DataAcervo.ShouldBe(acervoAudiovisualAlteracaoDto.DataAcervo);
             acervoAudiovisual.Copia.ShouldBe(acervoAudiovisualAlteracaoDto.Copia);
             acervoAudiovisual.PermiteUsoImagem.ShouldBe(acervoAudiovisualAlteracaoDto.PermiteUsoImagem);
             acervoAudiovisual.ConservacaoId.ShouldBe(acervoAudiovisualAlteracaoDto.ConservacaoId);
@@ -118,6 +121,43 @@ namespace SME.CDEP.TesteIntegracao
             acervoCreditoAutor.Count().ShouldBe(2);
             acervoCreditoAutor.FirstOrDefault().CreditoAutorId.ShouldBe(4);
             acervoCreditoAutor.LastOrDefault().CreditoAutorId.ShouldBe(5);
+        }
+        
+        [Fact(DisplayName = "Acervo Audiovisual - Não deve atualizar com ano futuro")]
+        public async Task Nao_deve_atualizar_ano_futuro()
+        {
+            await InserirDadosBasicosAleatorios();
+
+            await InserirAcervoAudiovisual();
+            
+            var random = new Random();
+            
+            var servicoAcervoAudiovisual = GetServicoAcervoAudiovisual();
+
+            var acervoAudiovisualAlteracaoDto = new AcervoAudiovisualAlteracaoDTO()
+            {
+                Id = 3,
+                AcervoId = 3,
+                Codigo = "100.AV",
+                Titulo = faker.Lorem.Text().Limite(500),
+                CreditosAutoresIds = new long[]{4,5},
+                Localizacao = faker.Lorem.Text().Limite(100),
+                Procedencia = faker.Lorem.Text().Limite(200),
+                Ano = faker.Date.Future().Year,
+                DataAcervo = DateTimeExtension.HorarioBrasilia().Date.ToString("dd/MM/yyyy"),
+                Copia = faker.Lorem.Text().Limite(100),
+                PermiteUsoImagem = true,
+                ConservacaoId = random.Next(1, 5),
+                Descricao = faker.Lorem.Text(),
+                SuporteId = random.Next(1, 5),
+                Duracao = faker.Lorem.Text().Limite(15),
+                CromiaId = random.Next(1, 5),
+                TamanhoArquivo = faker.Lorem.Text().Limite(15),
+                Acessibilidade = faker.Lorem.Text().Limite(100),
+                Disponibilizacao = faker.Lorem.Text().Limite(100),
+            };
+            
+            await servicoAcervoAudiovisual.Alterar(acervoAudiovisualAlteracaoDto).ShouldThrowAsync<NegocioException>();
         }
         
         [Fact(DisplayName = "Acervo Audiovisual - Inserir")]
@@ -158,6 +198,8 @@ namespace SME.CDEP.TesteIntegracao
             acervo.Titulo.Equals(acervoAudiovisualCadastroDto.Titulo).ShouldBeTrue();
             acervo.Descricao.Equals(acervoAudiovisualCadastroDto.Descricao).ShouldBeTrue();
             acervo.Codigo.Equals($"{acervoAudiovisualCadastroDto.Codigo}.AV").ShouldBeTrue();
+            acervo.DataAcervo.ShouldBe(acervoAudiovisualCadastroDto.DataAcervo);
+            acervo.Ano.ShouldBe(acervoAudiovisualCadastroDto.Ano);
             acervo.TipoAcervoId.ShouldBe((int)TipoAcervo.Audiovisual);
             acervo.CriadoLogin.ShouldNotBeEmpty();
             acervo.CriadoEm.Date.ShouldBe(DateTimeExtension.HorarioBrasilia().Date);
@@ -169,7 +211,6 @@ namespace SME.CDEP.TesteIntegracao
             var acervoAudiovisual = ObterTodos<AcervoAudiovisual>().LastOrDefault();
             acervoAudiovisual.Localizacao.ShouldBe(acervoAudiovisualCadastroDto.Localizacao);
             acervoAudiovisual.Procedencia.ShouldBe(acervoAudiovisualCadastroDto.Procedencia);
-            acervoAudiovisual.DataAcervo.ShouldBe(acervoAudiovisualCadastroDto.DataAcervo);
             acervoAudiovisual.Copia.ShouldBe(acervoAudiovisualCadastroDto.Copia);
             acervoAudiovisual.PermiteUsoImagem.ShouldBe(acervoAudiovisualCadastroDto.PermiteUsoImagem);
             acervoAudiovisual.ConservacaoId.ShouldBe(acervoAudiovisualCadastroDto.ConservacaoId);
@@ -204,6 +245,42 @@ namespace SME.CDEP.TesteIntegracao
                 CreditosAutoresIds = new long[]{4,5},
                 Localizacao = faker.Lorem.Text().Limite(100),
                 Procedencia = faker.Lorem.Text().Limite(200),
+                Ano = DateTimeExtension.HorarioBrasilia().Year,
+                DataAcervo = DateTimeExtension.HorarioBrasilia().Date.ToString("dd/MM/yyyy"),
+                Copia = faker.Lorem.Text().Limite(100),
+                PermiteUsoImagem = true,
+                ConservacaoId = random.Next(1, 5),
+                Descricao = faker.Lorem.Text(),
+                SuporteId = random.Next(1, 5),
+                Duracao = faker.Lorem.Text().Limite(15),
+                CromiaId = random.Next(1, 5),
+                TamanhoArquivo = faker.Lorem.Text().Limite(15),
+                Acessibilidade = faker.Lorem.Text().Limite(100),
+                Disponibilizacao = faker.Lorem.Text().Limite(100),
+            };
+            
+            await servicoAcervoAudiovisual.Inserir(acervoAudiovisualCadastroDto).ShouldThrowAsync<NegocioException>();
+        }
+        
+        [Fact(DisplayName = "Acervo Audiovisual - Não deve inserir com ano futuro")]
+        public async Task Nao_deve_inserir_com_ano_futuro()
+        {
+            await InserirDadosBasicosAleatorios();
+
+            await InserirAcervoAudiovisual();
+
+            var servicoAcervoAudiovisual = GetServicoAcervoAudiovisual();
+            
+            var random = new Random();
+
+            var acervoAudiovisualCadastroDto = new AcervoAudiovisualCadastroDTO()
+            {
+                Codigo = "1",
+                Titulo = faker.Lorem.Text().Limite(500),
+                CreditosAutoresIds = new long[]{4,5},
+                Localizacao = faker.Lorem.Text().Limite(100),
+                Procedencia = faker.Lorem.Text().Limite(200),
+                Ano = faker.Date.Future().Year,
                 DataAcervo = DateTimeExtension.HorarioBrasilia().Date.ToString("dd/MM/yyyy"),
                 Copia = faker.Lorem.Text().Limite(100),
                 PermiteUsoImagem = true,
@@ -264,7 +341,6 @@ namespace SME.CDEP.TesteIntegracao
                     AcervoId = j,
                     Localizacao = faker.Lorem.Text().Limite(100),
                     Procedencia = faker.Lorem.Text().Limite(200),
-                    DataAcervo = DateTimeExtension.HorarioBrasilia().Date.ToString("dd/MM/yyyy"),
                     Copia = faker.Lorem.Text().Limite(100),
                     PermiteUsoImagem = true,
                     ConservacaoId = random.Next(1,5),

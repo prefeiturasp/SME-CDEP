@@ -18,7 +18,6 @@ public class AcervoBibliograficoMock : AcervoMock
             
         faker.RuleFor(x => x.MaterialId, f => random.Next(1,5));
         faker.RuleFor(x => x.EditoraId, f => random.Next(1,5));
-        faker.RuleFor(x => x.Ano, f => f.Date.Recent().Year.ToString());
         faker.RuleFor(x => x.Edicao, f => f.Lorem.Sentence().Limite(15));
         faker.RuleFor(x => x.NumeroPagina, f => random.Next(15,55));
         faker.RuleFor(x => x.Largura, f => random.Next(15,55));

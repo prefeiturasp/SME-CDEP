@@ -60,6 +60,7 @@ namespace SME.CDEP.TesteIntegracao
                 Descricao = faker.Lorem.Text(),
                 Localizacao = faker.Lorem.Text().Limite(100),
                 Procedencia = faker.Lorem.Text().Limite(200),
+                Ano = DateTimeExtension.HorarioBrasilia().Year,
                 DataAcervo = DateTimeExtension.HorarioBrasilia().Date.ToString("dd/MM/yyyy"),
                 CopiaDigital = true,
                 PermiteUsoImagem = true,
@@ -81,6 +82,8 @@ namespace SME.CDEP.TesteIntegracao
             acervo.Titulo.Equals(acervoFotograficoAlteracaoDto.Titulo).ShouldBeTrue();
             acervo.Descricao.Equals(acervoFotograficoAlteracaoDto.Descricao).ShouldBeTrue();
             acervo.Codigo.Equals(acervoFotograficoAlteracaoDto.Codigo).ShouldBeTrue();
+            acervo.DataAcervo.ShouldBe(acervoFotograficoAlteracaoDto.DataAcervo);
+            acervo.Ano.ShouldBe(acervoFotograficoAlteracaoDto.Ano);
             acervo.TipoAcervoId.ShouldBe((int)TipoAcervo.Fotografico);
             acervo.CriadoLogin.ShouldNotBeEmpty();
             acervo.CriadoEm.Date.ShouldBe(DateTimeExtension.HorarioBrasilia().Date);
@@ -92,7 +95,6 @@ namespace SME.CDEP.TesteIntegracao
             var acervoFotografico = ObterTodos<AcervoFotografico>().FirstOrDefault(w=> w.AcervoId == 3);
             acervoFotografico.Localizacao.ShouldBe(acervoFotograficoAlteracaoDto.Localizacao);
             acervoFotografico.Procedencia.ShouldBe(acervoFotograficoAlteracaoDto.Procedencia);
-            acervoFotografico.DataAcervo.ShouldBe(acervoFotograficoAlteracaoDto.DataAcervo);
             acervoFotografico.CopiaDigital.ShouldBe(acervoFotograficoAlteracaoDto.CopiaDigital);
             acervoFotografico.PermiteUsoImagem.ShouldBe(acervoFotograficoAlteracaoDto.PermiteUsoImagem);
             acervoFotografico.ConservacaoId.ShouldBe(acervoFotograficoAlteracaoDto.ConservacaoId);
@@ -136,6 +138,7 @@ namespace SME.CDEP.TesteIntegracao
                 Descricao = faker.Lorem.Text(),
                 Localizacao = faker.Lorem.Text().Limite(100),
                 Procedencia = faker.Lorem.Text().Limite(200),
+                Ano = DateTimeExtension.HorarioBrasilia().Year,
                 DataAcervo = DateTimeExtension.HorarioBrasilia().Date.ToString("dd/MM/yyyy"),
                 CopiaDigital = true,
                 PermiteUsoImagem = true,
@@ -157,6 +160,8 @@ namespace SME.CDEP.TesteIntegracao
             acervo.Titulo.Equals(acervoFotograficoAlteracaoDto.Titulo).ShouldBeTrue();
             acervo.Descricao.Equals(acervoFotograficoAlteracaoDto.Descricao).ShouldBeTrue();
             acervo.Codigo.Equals(acervoFotograficoAlteracaoDto.Codigo).ShouldBeTrue();
+            acervo.DataAcervo.ShouldBe(acervoFotograficoAlteracaoDto.DataAcervo);
+            acervo.Ano.ShouldBe(acervoFotograficoAlteracaoDto.Ano);
             acervo.TipoAcervoId.ShouldBe((int)TipoAcervo.Fotografico);
             acervo.CriadoLogin.ShouldNotBeEmpty();
             acervo.CriadoEm.Date.ShouldBe(DateTimeExtension.HorarioBrasilia().Date);
@@ -168,7 +173,6 @@ namespace SME.CDEP.TesteIntegracao
             var acervoFotografico = ObterTodos<AcervoFotografico>().FirstOrDefault(w=> w.AcervoId == 3);
             acervoFotografico.Localizacao.ShouldBe(acervoFotograficoAlteracaoDto.Localizacao);
             acervoFotografico.Procedencia.ShouldBe(acervoFotograficoAlteracaoDto.Procedencia);
-            acervoFotografico.DataAcervo.ShouldBe(acervoFotograficoAlteracaoDto.DataAcervo);
             acervoFotografico.CopiaDigital.ShouldBe(acervoFotograficoAlteracaoDto.CopiaDigital);
             acervoFotografico.PermiteUsoImagem.ShouldBe(acervoFotograficoAlteracaoDto.PermiteUsoImagem);
             acervoFotografico.ConservacaoId.ShouldBe(acervoFotograficoAlteracaoDto.ConservacaoId);
@@ -210,6 +214,7 @@ namespace SME.CDEP.TesteIntegracao
                 Descricao = faker.Lorem.Text(),
                 Localizacao = faker.Lorem.Text().Limite(100),
                 Procedencia = faker.Lorem.Text().Limite(200),
+                Ano = DateTimeExtension.HorarioBrasilia().Year,
                 DataAcervo = DateTimeExtension.HorarioBrasilia().Date.ToString("dd/MM/yyyy"),
                 CopiaDigital = true,
                 PermiteUsoImagem = true,
@@ -231,6 +236,8 @@ namespace SME.CDEP.TesteIntegracao
             acervo.Titulo.Equals(acervoFotograficoAlteracaoDto.Titulo).ShouldBeTrue();
             acervo.Descricao.Equals(acervoFotograficoAlteracaoDto.Descricao).ShouldBeTrue();
             acervo.Codigo.Equals(acervoFotograficoAlteracaoDto.Codigo).ShouldBeTrue();
+            acervo.DataAcervo.ShouldBe(acervoFotograficoAlteracaoDto.DataAcervo);
+            acervo.Ano.ShouldBe(acervoFotograficoAlteracaoDto.Ano);
             acervo.TipoAcervoId.ShouldBe((int)TipoAcervo.Fotografico);
             acervo.CriadoLogin.ShouldNotBeEmpty();
             acervo.CriadoEm.Date.ShouldBe(DateTimeExtension.HorarioBrasilia().Date);
@@ -242,7 +249,6 @@ namespace SME.CDEP.TesteIntegracao
             var acervoFotografico = ObterTodos<AcervoFotografico>().FirstOrDefault(w=> w.AcervoId == 3);
             acervoFotografico.Localizacao.ShouldBe(acervoFotograficoAlteracaoDto.Localizacao);
             acervoFotografico.Procedencia.ShouldBe(acervoFotograficoAlteracaoDto.Procedencia);
-            acervoFotografico.DataAcervo.ShouldBe(acervoFotograficoAlteracaoDto.DataAcervo);
             acervoFotografico.CopiaDigital.ShouldBe(acervoFotograficoAlteracaoDto.CopiaDigital);
             acervoFotografico.PermiteUsoImagem.ShouldBe(acervoFotograficoAlteracaoDto.PermiteUsoImagem);
             acervoFotografico.ConservacaoId.ShouldBe(acervoFotograficoAlteracaoDto.ConservacaoId);
@@ -288,6 +294,7 @@ namespace SME.CDEP.TesteIntegracao
                 Descricao = faker.Lorem.Text(),
                 Localizacao = faker.Lorem.Text().Limite(100),
                 Procedencia = faker.Lorem.Text().Limite(200),
+                Ano = DateTimeExtension.HorarioBrasilia().Year,
                 DataAcervo = DateTimeExtension.HorarioBrasilia().Date.ToString("dd/MM/yyyy"),
                 CopiaDigital = true,
                 PermiteUsoImagem = true,
@@ -310,6 +317,8 @@ namespace SME.CDEP.TesteIntegracao
             acervo.Titulo.Equals(acervoFotograficoDto.Titulo).ShouldBeTrue();
             acervo.Descricao.Equals(acervoFotograficoDto.Descricao).ShouldBeTrue();
             acervo.Codigo.Equals($"{acervoFotograficoDto.Codigo}.FT").ShouldBeTrue();
+            acervo.DataAcervo.ShouldBe(acervoFotograficoDto.DataAcervo);
+            acervo.Ano.ShouldBe(acervoFotograficoDto.Ano);
             acervo.TipoAcervoId.ShouldBe((int)TipoAcervo.Fotografico);
             acervo.CriadoLogin.ShouldNotBeEmpty();
             acervo.CriadoEm.Date.ShouldBe(DateTimeExtension.HorarioBrasilia().Date);
@@ -321,7 +330,6 @@ namespace SME.CDEP.TesteIntegracao
             var acervoFotografico = ObterTodos<AcervoFotografico>().LastOrDefault();
             acervoFotografico.Localizacao.ShouldBe(acervoFotograficoDto.Localizacao);
             acervoFotografico.Procedencia.ShouldBe(acervoFotograficoDto.Procedencia);
-            acervoFotografico.DataAcervo.ShouldBe(acervoFotograficoDto.DataAcervo);
             acervoFotografico.CopiaDigital.ShouldBe(acervoFotograficoDto.CopiaDigital);
             acervoFotografico.PermiteUsoImagem.ShouldBe(acervoFotograficoDto.PermiteUsoImagem);
             acervoFotografico.ConservacaoId.ShouldBe(acervoFotograficoDto.ConservacaoId);
@@ -362,6 +370,7 @@ namespace SME.CDEP.TesteIntegracao
                 Descricao = faker.Lorem.Text(),
                 Localizacao = faker.Lorem.Text().Limite(100),
                 Procedencia = faker.Lorem.Text().Limite(200),
+                Ano = DateTimeExtension.HorarioBrasilia().Year,
                 DataAcervo = DateTimeExtension.HorarioBrasilia().Date.ToString("dd/MM/yyyy"),
                 CopiaDigital = true,
                 PermiteUsoImagem = true,
@@ -379,6 +388,89 @@ namespace SME.CDEP.TesteIntegracao
             
             await servicoAcervoFotografico.Inserir(acervoFotograficoDto).ShouldThrowAsync<NegocioException>();
            
+        }
+        
+        [Fact(DisplayName = "Acervo fotográfico - Não deve inserir com ano futuro")]
+        public async Task Nao_deve_inserir_com_ano_futuro()
+        {
+            await InserirDadosBasicosAleatorios();
+
+            await InserirAcervoFotografico();
+
+            var servicoAcervoFotografico = GetServicoAcervoFotografico();
+            
+            var random = new Random();
+
+            var arquivos = ObterTodos<Arquivo>();
+
+            var arquivosSelecionados = arquivos.Take(5).Select(s => s.Id).ToArray();
+
+            var acervoFotograficoDto = new AcervoFotograficoCadastroDTO()
+            {
+                Codigo = "1",
+                Titulo = faker.Lorem.Text().Limite(500),
+                CreditosAutoresIds = new long[]{new Random().Next(1, 5),new Random().Next(1, 5)},
+                Descricao = faker.Lorem.Text(),
+                Localizacao = faker.Lorem.Text().Limite(100),
+                Procedencia = faker.Lorem.Text().Limite(200),
+                Ano = faker.Date.Future().Year,
+                DataAcervo = DateTimeExtension.HorarioBrasilia().Date.ToString("dd/MM/yyyy"),
+                CopiaDigital = true,
+                PermiteUsoImagem = true,
+                ConservacaoId = random.Next(1, 5),
+                Quantidade = random.Next(15, 55),
+                Largura = random.Next(15, 55),
+                Altura = random.Next(15, 55),
+                SuporteId = random.Next(1, 5),
+                FormatoId = random.Next(1, 5),
+                CromiaId = random.Next(1, 5),
+                Resolucao = faker.Lorem.Text().Limite(15),
+                TamanhoArquivo = faker.Lorem.Text().Limite(15),
+                Arquivos = arquivosSelecionados
+            };
+            
+            await servicoAcervoFotografico.Inserir(acervoFotograficoDto).ShouldThrowAsync<NegocioException>();
+           
+        }
+        
+        [Fact(DisplayName = "Acervo fotográfico - Não deve alterar com ano futuro")]
+        public async Task Nao_deve_alterar_com_ano_futuro()
+        {
+             await InserirDadosBasicosAleatorios();
+
+            await InserirAcervoFotografico();
+            
+            var arquivosSelecionados = Array.Empty<long>();
+            
+            var servicoAcervoFotografico = GetServicoAcervoFotografico();
+
+            var acervoFotograficoAlteracaoDto = new AcervoFotograficoAlteracaoDTO()
+            {
+                Id = 3,
+                AcervoId = 3,
+                Codigo = "100.FT",
+                Titulo = faker.Lorem.Text().Limite(500),
+                CreditosAutoresIds = new long[]{4,5},
+                Descricao = faker.Lorem.Text(),
+                Localizacao = faker.Lorem.Text().Limite(100),
+                Procedencia = faker.Lorem.Text().Limite(200),
+                Ano = faker.Date.Future().Year,
+                DataAcervo = DateTimeExtension.HorarioBrasilia().Date.ToString("dd/MM/yyyy"),
+                CopiaDigital = true,
+                PermiteUsoImagem = true,
+                ConservacaoId = 1,
+                Quantidade = 25,
+                Largura = 35,
+                Altura = 45,
+                SuporteId = 2,
+                FormatoId = 3,
+                CromiaId = 4,
+                Resolucao = faker.Lorem.Text().Limite(15),
+                TamanhoArquivo = faker.Lorem.Text().Limite(15),
+                Arquivos = arquivosSelecionados
+            };
+                
+            await servicoAcervoFotografico.Alterar(acervoFotograficoAlteracaoDto).ShouldThrowAsync<NegocioException>();
         }
 
         private async Task InserirAcervoFotografico()
@@ -399,7 +491,8 @@ namespace SME.CDEP.TesteIntegracao
                     CriadoLogin = ConstantesTestes.LOGIN_123456789,
                     AlteradoEm = DateTimeExtension.HorarioBrasilia(),
                     AlteradoPor = ConstantesTestes.SISTEMA,
-                    AlteradoLogin = ConstantesTestes.LOGIN_123456789
+                    AlteradoLogin = ConstantesTestes.LOGIN_123456789,
+                    Ano = DateTimeExtension.HorarioBrasilia().Year,
                 });
                 
                 await InserirNaBase(new AcervoCreditoAutor()
@@ -425,7 +518,6 @@ namespace SME.CDEP.TesteIntegracao
                     AcervoId = j,
                     Localizacao = faker.Lorem.Text().Limite(100),
                     Procedencia = faker.Lorem.Text().Limite(200),
-                    DataAcervo = DateTimeExtension.HorarioBrasilia().Date.ToString("dd/MM/yyyy"),
                     CopiaDigital = true,
                     PermiteUsoImagem = true,
                     ConservacaoId = random.Next(1,5),

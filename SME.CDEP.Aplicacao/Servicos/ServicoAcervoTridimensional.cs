@@ -116,7 +116,9 @@ namespace SME.CDEP.Aplicacao.Servicos
             var arquivosIdsExcluir =  Enumerable.Empty<long>();
             
             var acervoTridimensional = mapper.Map<AcervoTridimensional>(acervoTridimensionalAlteracaoDto);
-            var codigo = ObterCodigoAcervo(acervoTridimensionalAlteracaoDto.Codigo);
+
+            var acervoDTO = mapper.Map<AcervoDTO>(acervoTridimensionalAlteracaoDto);
+            acervoDTO.Codigo = ObterCodigoAcervo(acervoTridimensionalAlteracaoDto.Codigo);
             
             var arquivosExistentes = (await repositorioAcervoTridimensionalArquivo.ObterPorAcervoTridimensionalId(acervoTridimensionalAlteracaoDto.Id)).Select(s => s.ArquivoId).ToArray();
             (arquivosIdsInserir, arquivosIdsExcluir) = await ObterArquivosInseridosExcluidosMovidos(acervoTridimensionalAlteracaoDto.Arquivos, arquivosExistentes);
@@ -124,11 +126,7 @@ namespace SME.CDEP.Aplicacao.Servicos
             var tran = transacao.Iniciar();
             try
             {
-                await servicoAcervo.Alterar(acervoTridimensionalAlteracaoDto.AcervoId,
-                    acervoTridimensionalAlteracaoDto.Titulo, 
-                    acervoTridimensionalAlteracaoDto.Descricao, 
-                    codigo 
-                    );
+                await servicoAcervo.Alterar(acervoDTO);
                 
                 await repositorioAcervoTridimensional.Atualizar(acervoTridimensional);
                 

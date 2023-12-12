@@ -78,6 +78,7 @@ namespace SME.CDEP.TesteIntegracao
             acervoBibliograficoAlteracaoDto.Codigo = acervoAtual.Codigo;
             acervoBibliograficoAlteracaoDto.SubTitulo = acervoBibliograficoCompleto.Acervo.SubTitulo;
             acervoBibliograficoAlteracaoDto.AcervoId = acervoAtual.Id;
+            acervoBibliograficoAlteracaoDto.Ano = DateTimeExtension.HorarioBrasilia().Year;
             
             await servicoAcervobibliografico.Alterar(acervoBibliograficoAlteracaoDto);
 
@@ -92,11 +93,11 @@ namespace SME.CDEP.TesteIntegracao
             acervoAlterado.AlteradoLogin.ShouldNotBeNull();
             acervoAlterado.AlteradoEm.HasValue.ShouldBeTrue();
             acervoAlterado.AlteradoPor.ShouldNotBeNull();
+            acervoAlterado.Ano.ShouldBe(acervoBibliograficoAlteracaoDto.Ano);
             
            var acervoBibliografico = ObterTodos<AcervoBibliografico>().FirstOrDefault(w=> w.AcervoId == 3);
            acervoBibliografico.MaterialId.ShouldBe(acervoBibliograficoAlteracaoDto.MaterialId);
            acervoBibliografico.EditoraId.ShouldBe(acervoBibliograficoAlteracaoDto.EditoraId);
-           acervoBibliografico.Ano.ShouldBe(acervoBibliograficoAlteracaoDto.Ano);
            acervoBibliografico.Edicao.ShouldBe(acervoBibliograficoAlteracaoDto.Edicao);
            acervoBibliografico.NumeroPagina.ShouldBe(acervoBibliograficoAlteracaoDto.NumeroPagina);
            acervoBibliografico.Largura.ShouldBe(acervoBibliograficoAlteracaoDto.Largura.Value);
@@ -131,6 +132,35 @@ namespace SME.CDEP.TesteIntegracao
             }
         }
         
+         [Fact(DisplayName = "Acervo bibliografico - Não deve atualizar com ano futuro")]
+        public async Task Nao_deve_atualizar_com_ano_futuro()
+        {
+            await InserirDadosBasicosAleatorios();
+
+            await InserirAcervoBibliografico();
+
+            var mapper = GetServicoMapper();
+            
+            var servicoAcervobibliografico = GetServicoAcervoBibliografico();
+            
+            var acervoBibliograficoCompleto = AcervoBibliograficoMock.Instance.GerarAcervoBibliografico().Generate();
+            
+            var acervoAtual = ObterTodos<Acervo>().FirstOrDefault(w=> w.Id == 3);
+            
+            var acervoBibliograficoAlteracaoDto = mapper.Map<AcervoBibliograficoAlteracaoDTO>(acervoBibliograficoCompleto);
+            acervoBibliograficoAlteracaoDto.CreditosAutoresIds = new long[] { 1, 2, 3 };
+            acervoBibliograficoAlteracaoDto.CoAutores = new CoAutorDTO[] { new () { CreditoAutorId = 4, TipoAutoria = faker.Lorem.Word().Limite(15)} };
+            acervoBibliograficoAlteracaoDto.AssuntosIds = new long[] { 1, 2 };
+            acervoBibliograficoAlteracaoDto.Id = 3;
+            acervoBibliograficoAlteracaoDto.Titulo = acervoBibliograficoCompleto.Acervo.Titulo;
+            acervoBibliograficoAlteracaoDto.Codigo = acervoAtual.Codigo;
+            acervoBibliograficoAlteracaoDto.SubTitulo = acervoBibliograficoCompleto.Acervo.SubTitulo;
+            acervoBibliograficoAlteracaoDto.AcervoId = acervoAtual.Id;
+            acervoBibliograficoAlteracaoDto.Ano = faker.Date.Future().Year;
+            
+            await servicoAcervobibliografico.Alterar(acervoBibliograficoAlteracaoDto).ShouldThrowAsync<NegocioException>();
+        }
+        
         [Fact(DisplayName = "Acervo bibliografico - Atualizar - CoAutores: removendo 3 e adicionando 1 novo e Código")]
         public async Task Atualizar_removendo_3_e_inserindo_1_coautor_e_codigo()
         {
@@ -155,6 +185,7 @@ namespace SME.CDEP.TesteIntegracao
             acervoBibliograficoAlteracaoDto.Codigo = new Random().Next(100,200).ToString();
             acervoBibliograficoAlteracaoDto.SubTitulo = acervoBibliograficoCompleto.Acervo.SubTitulo;
             acervoBibliograficoAlteracaoDto.AcervoId = acervoAtual.Id;
+            acervoBibliograficoAlteracaoDto.Ano = DateTimeExtension.HorarioBrasilia().Year;
             
             await servicoAcervobibliografico.Alterar(acervoBibliograficoAlteracaoDto);
 
@@ -173,7 +204,6 @@ namespace SME.CDEP.TesteIntegracao
            var acervoBibliografico = ObterTodos<AcervoBibliografico>().FirstOrDefault(w=> w.AcervoId == 3);
            acervoBibliografico.MaterialId.ShouldBe(acervoBibliograficoAlteracaoDto.MaterialId);
            acervoBibliografico.EditoraId.ShouldBe(acervoBibliograficoAlteracaoDto.EditoraId);
-           acervoBibliografico.Ano.ShouldBe(acervoBibliograficoAlteracaoDto.Ano);
            acervoBibliografico.Edicao.ShouldBe(acervoBibliograficoAlteracaoDto.Edicao);
            acervoBibliografico.NumeroPagina.ShouldBe(acervoBibliograficoAlteracaoDto.NumeroPagina);
            acervoBibliografico.Largura.ShouldBe(acervoBibliograficoAlteracaoDto.Largura.Value);
@@ -231,6 +261,7 @@ namespace SME.CDEP.TesteIntegracao
             acervoBibliograficoAlteracaoDto.Titulo = acervoBibliograficoCompleto.Acervo.Titulo;
             acervoBibliograficoAlteracaoDto.SubTitulo = acervoBibliograficoCompleto.Acervo.SubTitulo;
             acervoBibliograficoAlteracaoDto.AcervoId = acervoAtual.Id;
+            acervoBibliograficoAlteracaoDto.Ano = DateTimeExtension.HorarioBrasilia().Year;
             
             await servicoAcervobibliografico.Alterar(acervoBibliograficoAlteracaoDto).ShouldThrowAsync<NegocioException>();
         }
@@ -259,6 +290,7 @@ namespace SME.CDEP.TesteIntegracao
             acervoBibliograficoAlteracaoDto.Codigo = "1";
             acervoBibliograficoAlteracaoDto.SubTitulo = acervoBibliograficoCompleto.Acervo.SubTitulo;
             acervoBibliograficoAlteracaoDto.AcervoId = acervoAtual.Id;
+            acervoBibliograficoAlteracaoDto.Ano = DateTimeExtension.HorarioBrasilia().Year;
             
             await servicoAcervobibliografico.Alterar(acervoBibliograficoAlteracaoDto).ShouldThrowAsync<NegocioException>();
         }
@@ -287,6 +319,7 @@ namespace SME.CDEP.TesteIntegracao
             acervoBibliograficoAlteracaoDto.Codigo = acervoAtual.Codigo;
             acervoBibliograficoAlteracaoDto.SubTitulo = acervoBibliograficoCompleto.Acervo.SubTitulo;
             acervoBibliograficoAlteracaoDto.AcervoId = acervoAtual.Id;
+            acervoBibliograficoAlteracaoDto.Ano = DateTimeExtension.HorarioBrasilia().Year;
             
             await servicoAcervobibliografico.Alterar(acervoBibliograficoAlteracaoDto);
 
@@ -305,7 +338,6 @@ namespace SME.CDEP.TesteIntegracao
            var acervoBibliografico = ObterTodos<AcervoBibliografico>().FirstOrDefault(w=> w.AcervoId == 3);
            acervoBibliografico.MaterialId.ShouldBe(acervoBibliograficoAlteracaoDto.MaterialId);
            acervoBibliografico.EditoraId.ShouldBe(acervoBibliograficoAlteracaoDto.EditoraId);
-           acervoBibliografico.Ano.ShouldBe(acervoBibliograficoAlteracaoDto.Ano);
            acervoBibliografico.Edicao.ShouldBe(acervoBibliograficoAlteracaoDto.Edicao);
            acervoBibliografico.NumeroPagina.ShouldBe(acervoBibliograficoAlteracaoDto.NumeroPagina);
            acervoBibliografico.Largura.ShouldBe(acervoBibliograficoAlteracaoDto.Largura.Value);
@@ -355,6 +387,7 @@ namespace SME.CDEP.TesteIntegracao
             acervoBibliograficoCadastroDto.Titulo = acervoBibliograficoCompleto.Acervo.Titulo;
             acervoBibliograficoCadastroDto.Codigo = new Random().Next(100,200).ToString();
             acervoBibliograficoCadastroDto.SubTitulo = acervoBibliograficoCompleto.Acervo.SubTitulo;
+            acervoBibliograficoCadastroDto.Ano = DateTimeExtension.HorarioBrasilia().Year;
             
             await servicoAcervobibliografico.Inserir(acervoBibliograficoCadastroDto);
 
@@ -369,11 +402,11 @@ namespace SME.CDEP.TesteIntegracao
             acervoInserido.AlteradoLogin.ShouldBeNull();
             acervoInserido.AlteradoEm.ShouldBeNull();
             acervoInserido.AlteradoPor.ShouldBeNull();
+            acervoInserido.Ano.ShouldBe(acervoBibliograficoCadastroDto.Ano);
             
            var acervoBibliografico = ObterTodos<AcervoBibliografico>().OrderBy(o=> o.Id).LastOrDefault();
            acervoBibliografico.MaterialId.ShouldBe(acervoBibliograficoCadastroDto.MaterialId);
            acervoBibliografico.EditoraId.ShouldBe(acervoBibliograficoCadastroDto.EditoraId);
-           acervoBibliografico.Ano.ShouldBe(acervoBibliograficoCadastroDto.Ano);
            acervoBibliografico.Edicao.ShouldBe(acervoBibliograficoCadastroDto.Edicao);
            acervoBibliografico.NumeroPagina.ShouldBe(acervoBibliograficoCadastroDto.NumeroPagina);
            acervoBibliografico.Largura.ShouldBe(acervoBibliograficoCadastroDto.Largura.Value);
@@ -423,6 +456,7 @@ namespace SME.CDEP.TesteIntegracao
             acervoBibliograficoCadastroDto.Titulo = acervoBibliograficoCompleto.Acervo.Titulo;
             acervoBibliograficoCadastroDto.Codigo = new Random().Next(100,200).ToString();
             acervoBibliograficoCadastroDto.SubTitulo = acervoBibliograficoCompleto.Acervo.SubTitulo;
+            acervoBibliograficoCadastroDto.Ano = DateTimeExtension.HorarioBrasilia().Year;
             
             await servicoAcervobibliografico.Inserir(acervoBibliograficoCadastroDto);
 
@@ -437,11 +471,11 @@ namespace SME.CDEP.TesteIntegracao
             acervoInserido.AlteradoLogin.ShouldBeNull();
             acervoInserido.AlteradoEm.ShouldBeNull();
             acervoInserido.AlteradoPor.ShouldBeNull();
+            acervoInserido.Ano.ShouldBe(acervoBibliograficoCadastroDto.Ano);
             
            var acervoBibliografico = ObterTodos<AcervoBibliografico>().OrderBy(o=> o.Id).LastOrDefault();
            acervoBibliografico.MaterialId.ShouldBe(acervoBibliograficoCadastroDto.MaterialId);
            acervoBibliografico.EditoraId.ShouldBe(acervoBibliograficoCadastroDto.EditoraId);
-           acervoBibliografico.Ano.ShouldBe(acervoBibliograficoCadastroDto.Ano);
            acervoBibliografico.Edicao.ShouldBe(acervoBibliograficoCadastroDto.Edicao);
            acervoBibliografico.NumeroPagina.ShouldBe(acervoBibliograficoCadastroDto.NumeroPagina);
            acervoBibliografico.Largura.ShouldBe(acervoBibliograficoCadastroDto.Largura.Value);
@@ -491,6 +525,32 @@ namespace SME.CDEP.TesteIntegracao
             acervoBibliograficoCadastroDto.Titulo = acervoBibliograficoCompleto.Acervo.Titulo;
             acervoBibliograficoCadastroDto.Codigo = new Random().Next(1,35).ToString();
             acervoBibliograficoCadastroDto.SubTitulo = acervoBibliograficoCompleto.Acervo.SubTitulo;
+            acervoBibliograficoCadastroDto.Ano = DateTimeExtension.HorarioBrasilia().Year;
+            
+            await servicoAcervobibliografico.Inserir(acervoBibliograficoCadastroDto).ShouldThrowAsync<NegocioException>();
+        }
+        
+        [Fact(DisplayName = "Acervo bibliografico - Não deve inserir com ano futuro")]
+        public async Task Nao_deve_inserir_com_ano_futuro()
+        {
+            await InserirDadosBasicosAleatorios();
+
+            await InserirAcervoBibliografico();
+
+            var mapper = GetServicoMapper();
+            
+            var servicoAcervobibliografico = GetServicoAcervoBibliografico();
+            
+            var acervoBibliograficoCompleto = AcervoBibliograficoMock.Instance.GerarAcervoBibliografico().Generate();
+            
+            var acervoBibliograficoCadastroDto = mapper.Map<AcervoBibliograficoCadastroDTO>(acervoBibliograficoCompleto);
+            acervoBibliograficoCadastroDto.CreditosAutoresIds = new long[] { 4,5 };
+            acervoBibliograficoCadastroDto.CoAutores = null;
+            acervoBibliograficoCadastroDto.AssuntosIds = new long[] { 1, 2 };
+            acervoBibliograficoCadastroDto.Titulo = acervoBibliograficoCompleto.Acervo.Titulo;
+            acervoBibliograficoCadastroDto.Codigo = new Random().Next(1,35).ToString();
+            acervoBibliograficoCadastroDto.SubTitulo = acervoBibliograficoCompleto.Acervo.SubTitulo;
+            acervoBibliograficoCadastroDto.Ano = faker.Date.Future().Year;
             
             await servicoAcervobibliografico.Inserir(acervoBibliograficoCadastroDto).ShouldThrowAsync<NegocioException>();
         }
@@ -514,7 +574,8 @@ namespace SME.CDEP.TesteIntegracao
             acervoBibliograficoCadastroDto.AssuntosIds = new long[] { 1, 2 };
             acervoBibliograficoCadastroDto.Titulo = acervoBibliograficoCompleto.Acervo.Titulo;
             acervoBibliograficoCadastroDto.SubTitulo = acervoBibliograficoCompleto.Acervo.SubTitulo;
-        
+            acervoBibliograficoCadastroDto.Ano = DateTimeExtension.HorarioBrasilia().Year;
+            
             await servicoAcervobibliografico.Inserir(acervoBibliograficoCadastroDto).ShouldThrowAsync<NegocioException>();
         }
         
@@ -560,21 +621,24 @@ namespace SME.CDEP.TesteIntegracao
                     {
                         AcervoId = j,
                         CreditoAutorId = 1,
-                        TipoAutoria = faker.Lorem.Word().Limite(15)
+                        TipoAutoria = faker.Lorem.Word().Limite(15),
+                        EhCoAutor = true
                     });
 
                     await InserirNaBase(new AcervoCreditoAutor()
                     {
                         AcervoId = j,
                         CreditoAutorId = 2,
-                        TipoAutoria = faker.Lorem.Word().Limite(15)
+                        TipoAutoria = faker.Lorem.Word().Limite(15),
+                        EhCoAutor = true
                     });
 
                     await InserirNaBase(new AcervoCreditoAutor()
                     {
                         AcervoId = j,
                         CreditoAutorId = 3,
-                        TipoAutoria = faker.Lorem.Word().Limite(15)
+                        TipoAutoria = faker.Lorem.Word().Limite(15),
+                        EhCoAutor = true
                     });
                 }
 
@@ -583,7 +647,6 @@ namespace SME.CDEP.TesteIntegracao
                     AcervoId = j,
                     MaterialId = random.Next(1,5),
                     EditoraId = random.Next(1,5),
-                    Ano = faker.Date.Recent().Year.ToString(),
                     Edicao = faker.Lorem.Sentence().Limite(15),
                     NumeroPagina = random.Next(15,55),
                     Largura = random.Next(15,55),

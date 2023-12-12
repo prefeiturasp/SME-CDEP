@@ -23,6 +23,8 @@ namespace SME.CDEP.Infra.Dados.Repositorios
      	                                else a.codigo_novo 
      	                                end
                                      else a.codigo end codigo,
+                                 a.data_acervo,
+                                 a.ano,
                                  a.criado_em, 
                                  a.criado_por, 
                                  a.criado_login, 
@@ -61,7 +63,7 @@ namespace SME.CDEP.Infra.Dados.Repositorios
             return conexao.Obter().QueryFirstOrDefaultAsync<bool>("select 1 from acervo where (lower(codigo) = @codigo or lower(codigo_novo) = @codigo) and not excluido and id != @id and tipo = @tipo",new { id, codigo = codigo.ToLower(), tipo });
         }
         
-        public async Task<IEnumerable<PesquisaAcervo>> ObterPorTextoLivreETipoAcervo(string? textoLivre, TipoAcervo? tipoAcervo)
+        public async Task<IEnumerable<PesquisaAcervo>> ObterPorTextoLivreETipoAcervo(string? textoLivre, TipoAcervo? tipoAcervo, int? anoInicial, int? anoFinal)
         {
             var query = $@";with acervosIds as
                          (
@@ -72,7 +74,7 @@ namespace SME.CDEP.Infra.Dados.Repositorios
                                      ca.nome as creditoAutoria,
                                      ast.nome as assunto,
                                      a.descricao
-                            from acervo a
+                           from acervo a
                                 left join acervo_credito_autor aca on aca.acervo_id = a.id
                                 left join credito_autor ca on aca.credito_autor_id = ca.id
                                 left join acervo_bibliografico ab on a.id = ab.acervo_id 
@@ -81,6 +83,7 @@ namespace SME.CDEP.Infra.Dados.Repositorios
                             where not a.excluido
                             {IncluirFiltroPorTipoAcervo(tipoAcervo)}
                             {IncluirFiltroPorTextoLivre(textoLivre)}
+                            {IncluirFiltroPorAno(anoInicial, anoFinal)}
                          )
                           select   distinct a.id as acervoId,
                                      coalesce(a.codigo,a.codigo_novo)  codigo,              
@@ -88,7 +91,8 @@ namespace SME.CDEP.Infra.Dados.Repositorios
                                      a.titulo,              
                                      ca.nome as creditoAutoria,
                                      ast.nome as assunto,
-                                     a.descricao
+                                     a.descricao,
+                                     a.data_acervo dataAcervo
                             from acervo a
                                 join acervosIds aid on aid.acervoId = a.id
                                 left join acervo_credito_autor aca on aca.acervo_id = a.id
@@ -98,11 +102,29 @@ namespace SME.CDEP.Infra.Dados.Repositorios
                                 left join assunto ast on ast.id = aba.assunto_id
                          ";
             
-	        var retorno  = await conexao.Obter().QueryAsync<PesquisaAcervo>(query, new { tipoAcervo, textoLivre = textoLivre.NaoEhNulo() ? textoLivre.ToLower() : string.Empty});
+	        var retorno  = await conexao.Obter().QueryAsync<PesquisaAcervo>(query, 
+                new
+                {
+                    tipoAcervo, 
+                    textoLivre = textoLivre.NaoEhNulo() ? textoLivre.ToLower() : string.Empty,
+                    anoInicial,
+                    anoFinal
+                });
             
             return retorno;
         }
-
+        
+        private string IncluirFiltroPorAno(int? anoInicial, int? anoFinal)
+        {
+            if (anoInicial.HasValue && anoFinal.HasValue)
+                return "and a.ano between @anoInicial and @anoFinal ";
+            
+            if (anoInicial.HasValue)
+                return "and a.ano >= @anoInicial ";
+                
+            return anoInicial.HasValue ? "and a.ano <= @anoFinal " : string.Empty;
+        }
+        
         private string IncluirFiltroPorTextoLivre(string? textoLivre)
         {
             if (textoLivre.EstaPreenchido())

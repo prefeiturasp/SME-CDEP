@@ -11,10 +11,6 @@ public class AcervoArteGraficaCadastroDTO : AcervoCadastroDTO
     [MaxLength(200, ErrorMessage = "A procedência do acervo arte gráfica não pode conter mais que 200 caracteres")]
     public string Procedencia { get; set; }
     
-    [Required(ErrorMessage = "É necessário informar a data do acervo arte gráfica")]
-    [MaxLength(50, ErrorMessage = "A data do acervo arte gráfica não pode conter mais que 50 caracteres")]
-    public string DataAcervo { get; set; }
-    
     public bool CopiaDigital { get; set; }
     public bool PermiteUsoImagem { get; set; }
     

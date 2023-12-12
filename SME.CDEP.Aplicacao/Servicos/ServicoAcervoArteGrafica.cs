@@ -109,7 +109,9 @@ namespace SME.CDEP.Aplicacao.Servicos
             var arquivosIdsExcluir =  Enumerable.Empty<long>();
             
             var acervoArteGrafica = mapper.Map<AcervoArteGrafica>(acervoArteGraficaAlteracaoDto);
-            var codigo = ObterCodigoAcervo(acervoArteGraficaAlteracaoDto.Codigo);
+
+            var acervoDTO = mapper.Map<AcervoDTO>(acervoArteGraficaAlteracaoDto);
+            acervoDTO.Codigo = ObterCodigoAcervo(acervoArteGraficaAlteracaoDto.Codigo);
             
             var arquivosExistentes = (await repositorioAcervoArteGraficaArquivo.ObterPorAcervoArteGraficaId(acervoArteGraficaAlteracaoDto.Id)).Select(s => s.ArquivoId).ToArray();
             (arquivosIdsInserir, arquivosIdsExcluir) = await ObterArquivosInseridosExcluidosMovidos(acervoArteGraficaAlteracaoDto.Arquivos, arquivosExistentes);
@@ -117,12 +119,8 @@ namespace SME.CDEP.Aplicacao.Servicos
             var tran = transacao.Iniciar();
             try
             {
-                await servicoAcervo.Alterar(acervoArteGraficaAlteracaoDto.AcervoId,
-                    acervoArteGraficaAlteracaoDto.Titulo, 
-                    acervoArteGraficaAlteracaoDto.Descricao, 
-                    codigo, 
-                    acervoArteGraficaAlteracaoDto.CreditosAutoresIds);
-                
+                await servicoAcervo.Alterar(acervoDTO);
+                    
                 await repositorioAcervoArteGrafica.Atualizar(acervoArteGrafica);
                 
                 foreach (var arquivo in arquivosIdsInserir)
