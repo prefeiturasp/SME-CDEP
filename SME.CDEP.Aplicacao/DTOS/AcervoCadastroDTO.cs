@@ -13,9 +13,6 @@ public class AcervoCadastroDTO
     public long[]? CreditosAutoresIds { get; set; }
     public CoAutorDTO[]? CoAutores { get; set; }
     public string? SubTitulo { get; set; }
-    
-    [Required(ErrorMessage = "É necessário informar a data do acervo")]
-    [MaxLength(50, ErrorMessage = "A data do acervo não pode conter mais que 50 caracteres")]
     public string DataAcervo { get; set; }
     
     [Required(ErrorMessage = "É necessário informar o ano do acervo")]
