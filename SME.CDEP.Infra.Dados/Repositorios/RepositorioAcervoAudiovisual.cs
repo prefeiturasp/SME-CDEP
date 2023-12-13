@@ -69,6 +69,7 @@ namespace SME.CDEP.Infra.Dados.Repositorios
                                   a.codigo,
                                   a.tipo as TipoAcervoId,
                                   a.ano,
+                                  a.data_acervo dataacervo,
                                   a.criado_em as CriadoEm,
                                   a.criado_por as CriadoPor,
                                   a.criado_login as CriadoLogin,
