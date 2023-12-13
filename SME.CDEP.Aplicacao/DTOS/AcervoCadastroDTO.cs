@@ -16,6 +16,5 @@ public class AcervoCadastroDTO
     public string DataAcervo { get; set; }
     
     [Required(ErrorMessage = "É necessário informar o ano do acervo")]
-    [MaxLength(4, ErrorMessage = "O ano do acervo não pode conter mais que 4 caracteres")]
     public int Ano { get; set; }
 }
