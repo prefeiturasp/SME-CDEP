@@ -9,7 +9,6 @@ namespace SME.CDEP.Infra.Dados.Mapeamentos
             ToTable("acervo_tridimensional");
             Map(c => c.AcervoId).ToColumn("acervo_id");
             Map(c => c.Procedencia).ToColumn("procedencia");
-            Map(c => c.DataAcervo).ToColumn("data_acervo");
             Map(c => c.ConservacaoId).ToColumn("conservacao_id");
             Map(c => c.Quantidade).ToColumn("quantidade");
             Map(c => c.Largura).ToColumn("largura");

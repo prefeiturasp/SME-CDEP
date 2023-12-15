@@ -22,6 +22,7 @@ public class AcervoFotograficoLinhaDTO: AcervoLinhaDTO
     public LinhaConteudoAjustarDTO TamanhoArquivo { get; set; }
     public LinhaConteudoAjustarDTO Cromia { get; set; }
     public LinhaConteudoAjustarDTO Resolucao { get; set; }
+    public LinhaConteudoAjustarDTO Ano { get; set; }
 
     public void DefinirLinhaComoSucesso()
     {

@@ -14,7 +14,6 @@ namespace SME.CDEP.Infra.Dados.Repositorios
         {
             var query = @"select  at.id,
                                   at.procedencia,
-                                  at.data_acervo DataAcervo,
                                   at.conservacao_id ConservacaoId,
                                   at.quantidade,
                                   a.descricao,                                  
@@ -49,7 +48,6 @@ namespace SME.CDEP.Infra.Dados.Repositorios
         {
             var query = @"select  at.id,
                                   at.procedencia,
-                                  at.data_acervo as DataAcervo,
                                   at.conservacao_id as conservacaoId,
                                   at.quantidade,
                                   a.descricao,                                  
@@ -60,6 +58,8 @@ namespace SME.CDEP.Infra.Dados.Repositorios
                                   a.id as AcervoId,
                                   a.titulo,
                                   a.codigo,
+                                  a.ano,
+                                  a.data_acervo dataacervo,
                                   a.tipo as TipoAcervoId,
                                   a.criado_em as CriadoEm,
                                   a.criado_por as CriadoPor,

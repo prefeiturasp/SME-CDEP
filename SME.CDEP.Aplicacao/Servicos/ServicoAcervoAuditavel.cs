@@ -36,7 +36,7 @@ namespace SME.CDEP.Aplicacao.Servicos
         
         public async Task<long> Inserir(Acervo acervo)
         {
-            ValidarCodigoTomboCodigoNovo(acervo);
+            ValidarCodigoTomboCodigoNovoAno(acervo);
             
             await ValidarCodigoTomboCodigoNovoDuplicado(acervo.Codigo, acervo.Id, (TipoAcervo)acervo.TipoAcervoId, acervo.TipoAcervoId.EhAcervoDocumental() ? "Código antigo" : "Código");
             
@@ -70,7 +70,7 @@ namespace SME.CDEP.Aplicacao.Servicos
             return acervoId;
         }
 
-        private static void ValidarCodigoTomboCodigoNovo(Acervo acervo)
+        private static void ValidarCodigoTomboCodigoNovoAno(Acervo acervo)
         {
             var codigoNaoPreenchido = acervo.Codigo.NaoEstaPreenchido();
             var codigoNovoNaoPreenchido = acervo.CodigoNovo.NaoEstaPreenchido();
@@ -80,6 +80,9 @@ namespace SME.CDEP.Aplicacao.Servicos
             
             if ((!codigoNaoPreenchido && !codigoNovoNaoPreenchido) && acervo.Codigo.Equals(acervo.CodigoNovo))
                 throw new NegocioException(string.Format(MensagemNegocio.REGISTRO_X_DUPLICADO, "Código"));
+            
+            if (acervo.Ano > DateTimeExtension.HorarioBrasilia().Year)
+                throw new NegocioException(MensagemNegocio.NAO_PERMITIDO_ANO_FUTURO);
         }
 
         public async Task ValidarCodigoTomboCodigoNovoDuplicado(string codigo, long id, TipoAcervo tipo, string nomeCampo = "codigo")
@@ -95,7 +98,7 @@ namespace SME.CDEP.Aplicacao.Servicos
 
         public async Task<AcervoDTO> Alterar(Acervo acervo)
         {
-            ValidarCodigoTomboCodigoNovo(acervo);
+            ValidarCodigoTomboCodigoNovoAno(acervo);
             
             await ValidarCodigoTomboCodigoNovoDuplicado(acervo.Codigo, acervo.Id, (TipoAcervo)acervo.TipoAcervoId, acervo.TipoAcervoId.EhAcervoDocumental() ? "Código antigo" : "Código");
 
@@ -147,32 +150,22 @@ namespace SME.CDEP.Aplicacao.Servicos
 
             return acervoAlterado;
         }
-       
-        public async Task<AcervoDTO> Alterar(long id, string titulo, string codigo, long[] creditosAutoresIds, string subTitulo, CoAutorDTO[] coAutores)
+        
+        public async Task<AcervoDTO> Alterar(AcervoDTO acervoDTO)
         {
-            var acervo = await repositorioAcervo.ObterPorId(id);
+            var acervo = await repositorioAcervo.ObterPorId(acervoDTO.Id);
 
-            acervo.Titulo = titulo;
-            acervo.Codigo = codigo;
-            acervo.CreditosAutoresIds = creditosAutoresIds;
-            acervo.CoAutores = coAutores.NaoEhNulo() ? coAutores.Select(s=> new CoAutor() { CreditoAutorId = s.CreditoAutorId.Value, TipoAutoria = s.TipoAutoria}) : null;
-            acervo.SubTitulo = subTitulo;
-            return await Alterar(acervo);
-        }
-
-        public async Task<AcervoDTO> Alterar(long id, string titulo, string descricao, string codigo, long[] creditosAutoresIds, string codigoNovo = "")
-        {
-            var acervo = await repositorioAcervo.ObterPorId(id);
-
-            if (codigoNovo.EstaPreenchido() && acervo.TipoAcervoId != (long)TipoAcervo.DocumentacaoHistorica)
+            if (acervoDTO.CodigoNovo.EstaPreenchido() && acervo.TipoAcervoId != (long)TipoAcervo.DocumentacaoHistorica)
                 throw new NegocioException(MensagemNegocio.SOMENTE_ACERVO_DOCUMENTAL_POSSUI_CODIGO_NOVO);
+
+            var acervoAlterar = mapper.Map<Acervo>(acervoDTO);
+            acervoAlterar.Id = acervo.Id;
+            acervoAlterar.TipoAcervoId = acervo.TipoAcervoId;
+            acervoAlterar.CriadoEm = acervo.CriadoEm;
+            acervoAlterar.CriadoPor = acervo.CriadoPor;
+            acervoAlterar.CriadoLogin = acervo.CriadoLogin;
             
-            acervo.Titulo = titulo;
-            acervo.Descricao = descricao;
-            acervo.Codigo = codigo;
-            acervo.CreditosAutoresIds = creditosAutoresIds;
-            acervo.CodigoNovo = codigoNovo;
-            return await Alterar(acervo);
+            return await Alterar(acervoAlterar);
         }
 
         public async Task<AcervoDTO> ObterPorId(long acervoId)
@@ -201,7 +194,7 @@ namespace SME.CDEP.Aplicacao.Servicos
         {
             var paginacao = Paginacao;
             
-            var acervos = await repositorioAcervo.ObterPorTextoLivreETipoAcervo(filtroTextoLivreTipoAcervo.TextoLivre, filtroTextoLivreTipoAcervo.TipoAcervo);
+            var acervos = await repositorioAcervo.ObterPorTextoLivreETipoAcervo(filtroTextoLivreTipoAcervo.TextoLivre, filtroTextoLivreTipoAcervo.TipoAcervo, filtroTextoLivreTipoAcervo.AnoInicial, filtroTextoLivreTipoAcervo.AnoFinal);
 
             if (acervos.Any())
             {
@@ -212,13 +205,14 @@ namespace SME.CDEP.Aplicacao.Servicos
                 var hostAplicacao = configuration["UrlFrontEnd"];
             
                 var acervosAgrupandoCreditoAutor = acervos
-                    .GroupBy(g => new { g.AcervoId,g.Codigo, g.Titulo, g.Tipo, g.Descricao, g.TipoAcervoTag })
+                    .GroupBy(g => new { g.AcervoId,g.Codigo, g.Titulo, g.Tipo, g.Descricao, g.TipoAcervoTag, g.DataAcervo })
                     .Select(s => new PesquisaAcervoDTO
                     {
                         Codigo = s.Key.Codigo,
                         Tipo = s.Key.Tipo,
                         Titulo = s.Key.Titulo,
                         Descricao = s.Key.Descricao.RemoverTagsHtml(),
+                        DataAcervo = s.Key.DataAcervo.RemoverTagsHtml(),
                         TipoAcervoTag = s.Key.TipoAcervoTag,
                         CreditoAutoria = s.Any(w=> w.CreditoAutoria.NaoEhNulo() ) ? string.Join(", ", s.Select(ca=> ca.CreditoAutoria).Distinct()) : string.Empty,
                         Assunto = s.Any(w=> w.Assunto.NaoEhNulo() ) ? string.Join(", ", s.Select(ca=> ca.Assunto).Distinct()) : string.Empty,
@@ -248,12 +242,14 @@ namespace SME.CDEP.Aplicacao.Servicos
             var registrosOrdenados = OrdenarRegistros(paginacao, registros);
             
             var acervosAgrupandoCreditoAutor = registrosOrdenados
-                .GroupBy(g => new { g.Id, g.Titulo, g.Codigo, g.TipoAcervoId })
+                .GroupBy(g => new { g.Id, g.Titulo, g.Codigo, g.TipoAcervoId,
+                    Data = g.DataAcervo })
                 .Select(s => new IdTipoTituloCreditoAutoriaCodigoAcervoDTO
                 {
                     Titulo = s.Key.Titulo,
                     AcervoId = s.Key.Id,
                     Codigo = s.Key.Codigo,
+                    Data = s.Key.Data,
                     CreditoAutoria = s.Any(w=> w.CreditoAutor.NaoEhNulo() ) ? string.Join(", ", s.Select(ca=> ca.CreditoAutor.Nome)) : string.Empty,
                     TipoAcervo = ((TipoAcervo)s.Key.TipoAcervoId).Nome(),
                     TipoAcervoId = (TipoAcervo)s.Key.TipoAcervoId,
@@ -292,9 +288,9 @@ namespace SME.CDEP.Aplicacao.Servicos
                 if (numeroPaginaQueryString.NaoEstaPreenchido() || numeroRegistrosQueryString.NaoEstaPreenchido()|| ordenacaoQueryString.NaoEstaPreenchido())
                     return new Paginacao(0, 0,0);
 
-                var numeroPagina = int.Parse(numeroPaginaQueryString);
-                var numeroRegistros = int.Parse(numeroRegistrosQueryString);
-                var ordenacao = int.Parse(ordenacaoQueryString);
+                var numeroPagina = numeroPaginaQueryString.ConverterParaInteiro();
+                var numeroRegistros = numeroRegistrosQueryString.ConverterParaInteiro();
+                var ordenacao = ordenacaoQueryString.ConverterParaInteiro();
 
                 return new Paginacao(numeroPagina, numeroRegistros == 0 ? 10 : numeroRegistros,ordenacao);
             }

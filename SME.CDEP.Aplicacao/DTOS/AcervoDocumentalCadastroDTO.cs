@@ -10,9 +10,6 @@ public class AcervoDocumentalCadastroDTO : AcervoCadastroDTO
     [Range(1, long.MaxValue, ErrorMessage = "O identificador do idioma do acervo documental deve ser maior que zero")]
     public long IdiomaId { get; set; }
     
-    [MaxLength(15, ErrorMessage = "O ano do acervo documental não pode conter mais que 15 caracteres")]
-    public string? Ano { get; set; }
-    
     [Required(ErrorMessage = "É necessário informar o número de página do acervo documental")]
     [MaxLength(4, ErrorMessage = "O número de página do acervo documental não pode conter mais que 4 caracteres")]
     public string NumeroPagina { get; set; }

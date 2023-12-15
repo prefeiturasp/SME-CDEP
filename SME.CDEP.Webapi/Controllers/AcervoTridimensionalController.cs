@@ -18,7 +18,7 @@ public class AcervoTridimensionalController: BaseController
     [ProducesResponseType(typeof(RetornoBaseDTO), 422)]
     [ProducesResponseType(typeof(RetornoBaseDTO), 500)]
     [ProducesResponseType(typeof(RetornoBaseDTO), 601)]
-    [Permissao(Permissao.ACR_I, Policy = "Bearer")]
+    // [Permissao(Permissao.ACR_I, Policy = "Bearer")]
     public async Task<IActionResult> Inserir([FromBody] AcervoTridimensionalCadastroDTO acervoTridimensional, [FromServices] IServicoAcervoTridimensional servicoAcervoTridimensional)
     {
         return Ok(await servicoAcervoTridimensional.Inserir(acervoTridimensional));

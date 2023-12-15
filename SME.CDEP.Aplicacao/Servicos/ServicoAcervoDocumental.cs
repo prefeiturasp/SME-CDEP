@@ -128,16 +128,13 @@ namespace SME.CDEP.Aplicacao.Servicos
             
             var acessoDocumentosExistentes = (await repositorioAcervoDocumentalAcessoDocumento.ObterPorAcervoDocumentalId(acervoDocumentalAlteracaoDto.Id)).Select(s => s.AcessoDocumentoId).ToArray();
             (acessosDocumentosIdsInserir, acessosDocumentosIdsExcluir) = await ObterAcessoDocumentosInseridosExcluidos(acervoDocumentalAlteracaoDto.AcessoDocumentosIds, acessoDocumentosExistentes);
+
+            var acervoDTO = mapper.Map<AcervoDTO>(acervoDocumentalAlteracaoDto);
             
             var tran = transacao.Iniciar();
             try
             {
-                await servicoAcervo.Alterar(acervoDocumentalAlteracaoDto.AcervoId,
-                    acervoDocumentalAlteracaoDto.Titulo, 
-                    acervoDocumentalAlteracaoDto.Descricao, 
-                    acervoDocumentalAlteracaoDto.Codigo,
-                    acervoDocumentalAlteracaoDto.CreditosAutoresIds,
-                    acervoDocumentalAlteracaoDto.CodigoNovo);
+                await servicoAcervo.Alterar(acervoDTO);
                 
                 await repositorioAcervoDocumental.Atualizar(acervoDocumental);
                 

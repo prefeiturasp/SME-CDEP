@@ -20,6 +20,7 @@ public class AcervoAudiovisualLinhaDTO: AcervoLinhaDTO
     public LinhaConteudoAjustarDTO TamanhoArquivo { get; set; }
     public LinhaConteudoAjustarDTO Acessibilidade { get; set; }
     public LinhaConteudoAjustarDTO Disponibilizacao { get; set; }
+    public LinhaConteudoAjustarDTO Ano { get; set; }
 
     public void DefinirLinhaComoSucesso()
     {

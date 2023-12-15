@@ -7,6 +7,7 @@ using SME.CDEP.Dominio.Excecoes;
 using SME.CDEP.TesteIntegracao.ServicosFakes;
 using SME.CDEP.TesteIntegracao.Setup;
 using SME.CDEP.Aplicacao.Integracoes.Interfaces;
+using SME.CDEP.Dominio.Extensions;
 using SME.CDEP.Infra.Dominio.Enumerados;
 using SME.CDEP.TesteIntegracao.Constantes;
 using Xunit;
@@ -31,7 +32,7 @@ namespace SME.CDEP.TesteIntegracao.Usuario
                 Login = faker.Person.FirstName,
                 Nome = faker.Person.FullName,
                 Endereco = faker.Address.FullAddress(),
-                Numero = int.Parse(faker.Address.BuildingNumber()),
+                Numero = faker.Address.BuildingNumber().ConverterParaInteiro(),
                 Complemento = faker.Address.StreetSuffix(),
                 Cep = faker.Address.ZipCode(),
                 Cidade = faker.Address.City(),

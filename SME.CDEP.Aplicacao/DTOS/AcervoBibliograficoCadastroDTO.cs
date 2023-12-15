@@ -11,11 +11,6 @@ public class AcervoBibliograficoCadastroDTO : AcervoCadastroDTO
     public long? EditoraId { get; set; }
     
     public long[] AssuntosIds { get; set; }
-    
-    [Required(ErrorMessage = "É necessário informar o ano do acervo bibliográfico")]
-    [MaxLength(15, ErrorMessage = "O ano do acervo bibliográfico não pode conter mais que 15 caracteres")]
-    public string Ano { get; set; }
-    
     public string? Edicao { get; set; }
     public double? NumeroPagina { get; set; }
     public double? Largura { get; set; }

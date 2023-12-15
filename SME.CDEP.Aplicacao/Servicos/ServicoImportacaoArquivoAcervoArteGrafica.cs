@@ -1,5 +1,4 @@
-﻿using System.Text;
-using AutoMapper;
+﻿using AutoMapper;
 using ClosedXML.Excel;
 using Microsoft.AspNetCore.Http;
 using Newtonsoft.Json;
@@ -147,6 +146,7 @@ namespace SME.CDEP.Aplicacao.Servicos
                 Codigo = ObterConteudoTexto(linha.Codigo),
                 Localizacao = ObterConteudoTexto(linha.Localizacao),
                 Procedencia = ObterConteudoTexto(linha.Procedencia),
+                Ano = ObterConteudoInteiroOuNulo(linha.Ano),
                 DataAcervo = ObterConteudoTexto(linha.Data),
                 CopiaDigital = ObterConteudoSimNao(linha.CopiaDigital),
                 PermiteUsoImagem = ObterConteudoSimNao(linha.PermiteUsoImagem),
@@ -172,6 +172,7 @@ namespace SME.CDEP.Aplicacao.Servicos
                 CreditosAutoresIds = ObterConteudoMensagemStatus(s.Credito),
                 Localizacao = ObterConteudoMensagemStatus(s.Localizacao),
                 Procedencia = ObterConteudoMensagemStatus(s.Procedencia),
+                Ano = ObterConteudoMensagemStatus(s.Ano),
                 DataAcervo = ObterConteudoMensagemStatus(s.Data),
                 CopiaDigital = ObterConteudoMensagemStatus(s.CopiaDigital),
                 PermiteUsoImagem = ObterConteudoMensagemStatus(s.PermiteUsoImagem),
@@ -209,7 +210,10 @@ namespace SME.CDEP.Aplicacao.Servicos
                     
             if (acervoArteGraficaLinhaDto.Procedencia.PossuiErro)
                 mensagemErro.Add(acervoArteGraficaLinhaDto.Procedencia.Mensagem);
-                    
+            
+            if (acervoArteGraficaLinhaDto.Ano.PossuiErro)
+                mensagemErro.Add(acervoArteGraficaLinhaDto.Ano.Mensagem);
+            
             if (acervoArteGraficaLinhaDto.Data.PossuiErro)
                 mensagemErro.Add(acervoArteGraficaLinhaDto.Data.Mensagem);
                     
@@ -264,6 +268,7 @@ namespace SME.CDEP.Aplicacao.Servicos
                             .Select(s => s.Id).ToArray(),
                         Localizacao = acervoArteGraficaLinha.Localizacao.Conteudo,
                         Procedencia = acervoArteGraficaLinha.Procedencia.Conteudo,
+                        Ano = acervoArteGraficaLinha.Ano.Conteudo.ConverterParaInteiro(),
                         DataAcervo = acervoArteGraficaLinha.Data.Conteudo,
                         CopiaDigital = ObterCopiaDigitalPorValorDoCampo(acervoArteGraficaLinha.CopiaDigital.Conteudo),
                         PermiteUsoImagem = ObterAutorizaUsoDeImagemPorValorDoCampo(acervoArteGraficaLinha.PermiteUsoImagem.Conteudo),
@@ -299,6 +304,7 @@ namespace SME.CDEP.Aplicacao.Servicos
                     ValidarPreenchimentoLimiteCaracteres(linha.Credito, Constantes.CREDITO);
                     ValidarPreenchimentoLimiteCaracteres(linha.Localizacao,Constantes.LOCALIZACAO);
                     ValidarPreenchimentoLimiteCaracteres(linha.Procedencia,Constantes.PROCEDENCIA);
+                    ValidarPreenchimentoLimiteCaracteres(linha.Ano,Constantes.ANO);
                     ValidarPreenchimentoLimiteCaracteres(linha.Data,Constantes.DATA);
                     ValidarPreenchimentoLimiteCaracteres(linha.CopiaDigital,Constantes.COPIA_DIGITAL);
                     ValidarPreenchimentoLimiteCaracteres(linha.PermiteUsoImagem,Constantes.AUTORIZACAO_USO_DE_IMAGEM);
@@ -327,6 +333,7 @@ namespace SME.CDEP.Aplicacao.Servicos
                    || linha.Credito.PossuiErro
                    || linha.Localizacao.PossuiErro 
                    || linha.Procedencia.PossuiErro
+                   || linha.Ano.PossuiErro
                    || linha.Data.PossuiErro
                    || linha.CopiaDigital.PossuiErro 
                    || linha.PermiteUsoImagem.PossuiErro 
@@ -406,6 +413,13 @@ namespace SME.CDEP.Aplicacao.Servicos
                         {
                             Conteudo = planilha.ObterValorDaCelula(numeroLinha, Constantes.ACERVO_ARTE_GRAFICA_CAMPO_PROCEDENCIA),
                             LimiteCaracteres = Constantes.CARACTERES_PERMITIDOS_200,
+                        },
+                        Ano = new LinhaConteudoAjustarDTO()
+                        {
+                            Conteudo = planilha.ObterValorDaCelula(numeroLinha, Constantes.ACERVO_ARTE_GRAFICA_CAMPO_ANO),
+                            LimiteCaracteres = Constantes.CARACTERES_PERMITIDOS_4,
+                            EhCampoObrigatorio = true,
+                            FormatoTipoDeCampo = Constantes.FORMATO_INTEIRO,
                         },
                         Data = new LinhaConteudoAjustarDTO()
                         {
@@ -500,6 +514,9 @@ namespace SME.CDEP.Aplicacao.Servicos
             
             ValidarTituloDaColuna(planilha, numeroLinha, Constantes.NOME_DA_COLUNA_PROCEDENCIA, 
                 Constantes.ACERVO_ARTE_GRAFICA_CAMPO_PROCEDENCIA, Constantes.ARTE_GRAFICA);
+            
+            ValidarTituloDaColuna(planilha, numeroLinha, Constantes.NOME_DA_COLUNA_ANO, 
+                Constantes.ACERVO_ARTE_GRAFICA_CAMPO_ANO, Constantes.ARTE_GRAFICA);
             
             ValidarTituloDaColuna(planilha, numeroLinha, Constantes.NOME_DA_COLUNA_DATA, 
                 Constantes.ACERVO_ARTE_GRAFICA_CAMPO_DATA, Constantes.ARTE_GRAFICA);

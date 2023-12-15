@@ -15,7 +15,7 @@ namespace SME.CDEP.Infra.Dados.Repositorios
             var query = @"select  ad.id,
                                   ad.material_id as materialId,
                                   ad.idioma_id as idiomaId,
-                                  ad.ano,
+                                  a.ano,
                                   ad.numero_pagina numeroPagina,
                                   ad.volume,
                                   ad.tipo_anexo as tipoAnexo,                                  
@@ -52,7 +52,7 @@ namespace SME.CDEP.Infra.Dados.Repositorios
         public async Task<AcervoDocumentalCompleto> ObterPorId(long id)
         {
             var query = @"select  ad.id,
-                                  ad.ano,
+                                  a.ano,
                                   ad.numero_pagina numeroPagina,
                                   ad.volume,
                                   ad.tipo_anexo as tipoAnexo,                                  

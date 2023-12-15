@@ -135,5 +135,10 @@ namespace SME.CDEP.Dominio.Extensions
         {
             return !valor.ToLower().Equals(valorAComparar.ToLower()); 
         }
+        
+        public static int ConverterParaInteiro(this string valor)
+        {
+            return int.Parse(valor); 
+        }
     }
 }

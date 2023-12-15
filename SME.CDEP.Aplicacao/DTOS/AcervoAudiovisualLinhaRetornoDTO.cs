@@ -20,4 +20,5 @@ public class AcervoAudiovisualLinhaRetornoDTO : AcervoLinhaRetornoDTO
     public LinhaConteudoAjustarRetornoDTO TamanhoArquivo { get; set; }
     public LinhaConteudoAjustarRetornoDTO Acessibilidade { get; set; }
     public LinhaConteudoAjustarRetornoDTO Disponibilizacao { get; set; }
+    public LinhaConteudoAjustarRetornoDTO Ano { get; set; }
 }
