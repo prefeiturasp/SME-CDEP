@@ -205,7 +205,7 @@ namespace SME.CDEP.Aplicacao.Servicos
                 var hostAplicacao = configuration["UrlFrontEnd"];
             
                 var acervosAgrupandoCreditoAutor = acervos
-                    .GroupBy(g => new { g.AcervoId,g.Codigo, g.Titulo, g.Tipo, g.Descricao, g.TipoAcervoTag, g.DataAcervo })
+                    .GroupBy(g => new { g.AcervoId,g.Codigo, g.Titulo, g.Tipo, g.Descricao, g.TipoAcervoTag, g.DataAcervo, g.Ano })
                     .Select(s => new PesquisaAcervoDTO
                     {
                         Codigo = s.Key.Codigo,
@@ -213,6 +213,7 @@ namespace SME.CDEP.Aplicacao.Servicos
                         Titulo = s.Key.Titulo,
                         Descricao = s.Key.Descricao.RemoverTagsHtml(),
                         DataAcervo = s.Key.DataAcervo.RemoverTagsHtml(),
+                        Ano = s.Key.Ano,
                         TipoAcervoTag = s.Key.TipoAcervoTag,
                         CreditoAutoria = s.Any(w=> w.CreditoAutoria.NaoEhNulo() ) ? string.Join(", ", s.Select(ca=> ca.CreditoAutoria).Distinct()) : string.Empty,
                         Assunto = s.Any(w=> w.Assunto.NaoEhNulo() ) ? string.Join(", ", s.Select(ca=> ca.Assunto).Distinct()) : string.Empty,

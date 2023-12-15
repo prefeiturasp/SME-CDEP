@@ -67,13 +67,7 @@ namespace SME.CDEP.Infra.Dados.Repositorios
         {
             var query = $@";with acervosIds as
                          (
-                             select   distinct a.id as acervoId,
-                                     coalesce(a.codigo,a.codigo_novo)  codigo,              
-                                     a.tipo, 
-                                     a.titulo,              
-                                     ca.nome as creditoAutoria,
-                                     ast.nome as assunto,
-                                     a.descricao
+                             select   distinct a.id as acervoId
                            from acervo a
                                 left join acervo_credito_autor aca on aca.acervo_id = a.id
                                 left join credito_autor ca on aca.credito_autor_id = ca.id
@@ -92,7 +86,8 @@ namespace SME.CDEP.Infra.Dados.Repositorios
                                      ca.nome as creditoAutoria,
                                      ast.nome as assunto,
                                      a.descricao,
-                                     a.data_acervo dataAcervo
+                                     a.data_acervo dataAcervo,
+                                     a.ano
                             from acervo a
                                 join acervosIds aid on aid.acervoId = a.id
                                 left join acervo_credito_autor aca on aca.acervo_id = a.id
