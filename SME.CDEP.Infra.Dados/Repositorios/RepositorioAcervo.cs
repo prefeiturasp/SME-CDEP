@@ -122,7 +122,7 @@ namespace SME.CDEP.Infra.Dados.Repositorios
             if (anoInicial.HasValue)
                 return "and a.ano >= @anoInicial ";
                 
-            return anoInicial.HasValue ? "and a.ano <= @anoFinal " : string.Empty;
+            return anoFinal.HasValue ? "and a.ano <= @anoFinal " : string.Empty;
         }
         
         private string IncluirFiltroPorTextoLivre(string? textoLivre)
