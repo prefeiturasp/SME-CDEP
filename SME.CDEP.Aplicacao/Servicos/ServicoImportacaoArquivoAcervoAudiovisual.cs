@@ -128,7 +128,7 @@ namespace SME.CDEP.Aplicacao.Servicos
             return new AcervoLinhaErroDTO<AcervoAudiovisualDTO,AcervoAudiovisualLinhaRetornoDTO>()
             {
                 Titulo = ObterConteudoTexto(linha.Titulo),
-                Tombo = ObterConteudoTexto(linha.Codigo),
+                Tombo = $"{ObterConteudoTexto(linha.Codigo)}{Constantes.SIGLA_ACERVO_AUDIOVISUAL}",
                 NumeroLinha = linha.NumeroLinha,
                 RetornoObjeto = ObterAcervoAudiovisualDto(linha,tipoAcervo),
                 RetornoErro = ObterLinhasComErros(linha),
@@ -141,7 +141,7 @@ namespace SME.CDEP.Aplicacao.Servicos
             {
                 Titulo = ObterConteudoTexto(linha.Titulo),
                 TipoAcervoId = (int)tipoAcervo,
-                Codigo = ObterConteudoTexto(linha.Codigo),
+                Codigo = $"{ObterConteudoTexto(linha.Codigo)}{Constantes.SIGLA_ACERVO_AUDIOVISUAL}",
                 Localizacao = ObterConteudoTexto(linha.Localizacao),
                 Procedencia = ObterConteudoTexto(linha.Procedencia),
                 Ano = ObterConteudoInteiroOuNulo(linha.Ano),
