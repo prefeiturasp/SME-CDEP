@@ -342,7 +342,8 @@ namespace SME.CDEP.Aplicacao.Servicos
             var coAutoresCompletos = coAutoresEmTextoAutoNumerados.Select(coAutorAutoNumerado => new CoAutorDTO
             {
                 CreditoAutorId = CreditosAutores.FirstOrDefault(f=> f.Nome.SaoIguais(coAutorAutoNumerado.Nome))?.Id,
-                TipoAutoria = tiposAutoriaEmTextoAutoNumerados.FirstOrDefault(f => f.Id.SaoIguais(coAutorAutoNumerado.Id))?.Nome
+                TipoAutoria = tiposAutoriaEmTextoAutoNumerados.FirstOrDefault(f => f.Id.SaoIguais(coAutorAutoNumerado.Id))?.Nome,
+                CreditoAutorNome = CreditosAutores.FirstOrDefault(f=> f.Nome.SaoIguais(coAutorAutoNumerado.Nome))?.Nome,
             }).ToArray();
 
             return coAutoresCompletos;

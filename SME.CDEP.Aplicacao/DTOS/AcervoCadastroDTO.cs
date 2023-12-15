@@ -13,7 +13,7 @@ public class AcervoCadastroDTO
     public long[]? CreditosAutoresIds { get; set; }
     public CoAutorDTO[]? CoAutores { get; set; }
     public string? SubTitulo { get; set; }
-    public string DataAcervo { get; set; }
+    public string? DataAcervo { get; set; }
     
     [Required(ErrorMessage = "É necessário informar o ano do acervo")]
     public int Ano { get; set; }
