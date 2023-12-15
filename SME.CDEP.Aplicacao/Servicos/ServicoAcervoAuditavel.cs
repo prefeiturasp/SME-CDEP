@@ -38,10 +38,12 @@ namespace SME.CDEP.Aplicacao.Servicos
         {
             ValidarCodigoTomboCodigoNovoAno(acervo);
             
-            await ValidarCodigoTomboCodigoNovoDuplicado(acervo.Codigo, acervo.Id, (TipoAcervo)acervo.TipoAcervoId, acervo.TipoAcervoId.EhAcervoDocumental() ? "Código antigo" : "Código");
+            var tipo = (TipoAcervo)acervo.TipoAcervoId;
+            
+            await ValidarCodigoTomboCodigoNovoDuplicado(acervo.Codigo, acervo.Id, tipo);
             
             if (acervo.CodigoNovo.EstaPreenchido())
-                await ValidarCodigoTomboCodigoNovoDuplicado(acervo.CodigoNovo, acervo.Id, (TipoAcervo)acervo.TipoAcervoId, "Código Novo");
+                await ValidarCodigoTomboCodigoNovoDuplicado(acervo.CodigoNovo, acervo.Id, tipo);
             
             if (acervo.CodigoNovo.EstaPreenchido() && acervo.TipoAcervoId.NaoEhAcervoDocumental())
                 throw new NegocioException(MensagemNegocio.SOMENTE_ACERVO_DOCUMENTAL_POSSUI_CODIGO_NOVO);
@@ -76,19 +78,30 @@ namespace SME.CDEP.Aplicacao.Servicos
             var codigoNovoNaoPreenchido = acervo.CodigoNovo.NaoEstaPreenchido();
             
             if (codigoNaoPreenchido && codigoNovoNaoPreenchido)
-                throw new NegocioException(string.Format(MensagemNegocio.CAMPO_NAO_INFORMADO, "Código/Tombo/Código Novo"));
+                throw new NegocioException(string.Format(MensagemNegocio.CAMPO_NAO_INFORMADO, ObterCodigoOuTomboPorTipoAcervo((TipoAcervo)acervo.TipoAcervoId)));
             
             if ((!codigoNaoPreenchido && !codigoNovoNaoPreenchido) && acervo.Codigo.Equals(acervo.CodigoNovo))
-                throw new NegocioException(string.Format(MensagemNegocio.REGISTRO_X_DUPLICADO, "Código"));
+                throw new NegocioException(string.Format(MensagemNegocio.REGISTRO_X_DUPLICADO, ObterCodigoOuTomboPorTipoAcervo((TipoAcervo)acervo.TipoAcervoId)));
             
             if (acervo.Ano > DateTimeExtension.HorarioBrasilia().Year)
                 throw new NegocioException(MensagemNegocio.NAO_PERMITIDO_ANO_FUTURO);
         }
 
-        public async Task ValidarCodigoTomboCodigoNovoDuplicado(string codigo, long id, TipoAcervo tipo, string nomeCampo = "codigo")
+        private static string ObterCodigoOuTomboPorTipoAcervo(TipoAcervo tipoAcervo)
+        {
+            switch (tipoAcervo)
+            {
+                case TipoAcervo.DocumentacaoHistorica:
+                    return "Código antigo ou Código novo";
+                default:
+                    return "Tombo";
+            }
+        }
+
+        public async Task ValidarCodigoTomboCodigoNovoDuplicado(string codigo, long id, TipoAcervo tipo)
         {
             if (codigo.EstaPreenchido() && await repositorioAcervo.ExisteCodigo(codigo, id, tipo))
-                throw new NegocioException(string.Format(MensagemNegocio.REGISTRO_X_DUPLICADO,nomeCampo));
+                throw new NegocioException(string.Format(MensagemNegocio.REGISTRO_X_DUPLICADO,ObterCodigoOuTomboPorTipoAcervo(tipo)));
         }
 
         public async Task<IEnumerable<AcervoDTO>> ObterTodos()
@@ -99,11 +112,13 @@ namespace SME.CDEP.Aplicacao.Servicos
         public async Task<AcervoDTO> Alterar(Acervo acervo)
         {
             ValidarCodigoTomboCodigoNovoAno(acervo);
+
+            var tipo = (TipoAcervo)acervo.TipoAcervoId;
             
-            await ValidarCodigoTomboCodigoNovoDuplicado(acervo.Codigo, acervo.Id, (TipoAcervo)acervo.TipoAcervoId, acervo.TipoAcervoId.EhAcervoDocumental() ? "Código antigo" : "Código");
+            await ValidarCodigoTomboCodigoNovoDuplicado(acervo.Codigo, acervo.Id, tipo);
 
             if (acervo.CodigoNovo.EstaPreenchido())
-                await ValidarCodigoTomboCodigoNovoDuplicado(acervo.CodigoNovo, acervo.Id, (TipoAcervo)acervo.TipoAcervoId, "Código Novo");
+                await ValidarCodigoTomboCodigoNovoDuplicado(acervo.CodigoNovo, acervo.Id, tipo);
             
             acervo.AlteradoEm = DateTimeExtension.HorarioBrasilia();
             acervo.AlteradoLogin = contextoAplicacao.UsuarioLogado;
