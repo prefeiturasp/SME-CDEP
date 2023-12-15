@@ -31,7 +31,7 @@ public class AcervoTridimensionalController: BaseController
     [ProducesResponseType(typeof(RetornoBaseDTO), 422)]
     [ProducesResponseType(typeof(RetornoBaseDTO), 500)]
     [ProducesResponseType(typeof(RetornoBaseDTO), 601)]
-    // [Permissao(Permissao.ACR_A, Policy = "Bearer")]
+    [Permissao(Permissao.ACR_A, Policy = "Bearer")]
     public async Task<IActionResult> Alterar([FromBody] AcervoTridimensionalAlteracaoDTO acervoTridimensional, [FromServices] IServicoAcervoTridimensional servicoAcervoTridimensional)
     {
         return Ok(await servicoAcervoTridimensional.Alterar(acervoTridimensional));
