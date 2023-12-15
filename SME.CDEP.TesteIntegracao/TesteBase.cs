@@ -336,6 +336,7 @@ namespace SME.CDEP.TesteIntegracao
             await InserirConservacoesBase();
             await InserirCromiasBase();
             await InserirAcessoDocumentos();
+            await InserirCreditosAutorias();
         }
 
         private async Task InserirSuportesBase()
@@ -409,6 +410,30 @@ namespace SME.CDEP.TesteIntegracao
                 await InserirNaBase(new AcessoDocumento()
                 {
                     Nome = acessoDocumento.Nome,
+                });
+            }
+        }
+        
+        private async Task InserirCreditosAutorias()
+        {
+            for (int i = 0; i < 10; i++)
+            {
+                await InserirNaBase(new CreditoAutor()
+                {
+                    Nome = $"{faker.Person.UserName.Limite(200)}-{i}", 
+                    Tipo = TipoCreditoAutoria.Autoria, 
+                    CriadoPor = ConstantesTestes.SISTEMA,
+                    CriadoEm = DateTimeExtension.HorarioBrasilia(), 
+                    CriadoLogin = ConstantesTestes.LOGIN_123456789
+                });
+                
+                await InserirNaBase(new CreditoAutor()
+                {
+                    Nome = $"{faker.Person.LastName.Limite(200)}-{i}", 
+                    Tipo = TipoCreditoAutoria.Credito, 
+                    CriadoPor = ConstantesTestes.SISTEMA,
+                    CriadoEm = DateTimeExtension.HorarioBrasilia(), 
+                    CriadoLogin = ConstantesTestes.LOGIN_123456789
                 });
             }
         }

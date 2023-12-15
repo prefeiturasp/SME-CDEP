@@ -216,7 +216,7 @@ namespace SME.CDEP.TesteIntegracao
             var acervosArtesGraficas = ObterTodos<AcervoArteGrafica>();
             var suportes = ObterTodos<Suporte>();
             var cromias = ObterTodos<Cromia>();
-            var acervoCreditoAutors = ObterTodos<AcervoCreditoAutor>();
+            var acervoCreditoAutors = ObterTodos<AcervoCreditoAutor>(); //não está carregando esses caras
             var creditoAutores = ObterTodos<CreditoAutor>();
             var conservacoes = ObterTodos<Conservacao>();
             
