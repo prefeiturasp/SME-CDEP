@@ -253,6 +253,10 @@ namespace SME.CDEP.Aplicacao.Servicos
         {
             await ObterDominios();
             
+            await ObterCreditosAutoresPorTipo(TipoCreditoAutoria.Credito);
+            
+            await ObterSuportesPorTipo(TipoSuporte.IMAGEM);
+            
             foreach (var acervoArteGraficaLinha in acervosArtesGraficasLinhas.Where(w=> !w.PossuiErros))
             {
                 try

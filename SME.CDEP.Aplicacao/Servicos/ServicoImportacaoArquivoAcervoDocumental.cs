@@ -262,6 +262,10 @@ namespace SME.CDEP.Aplicacao.Servicos
         {
             await ObterDominios();
             
+            await ObterCreditosAutoresPorTipo(TipoCreditoAutoria.Autoria);
+                
+            await ObterMateriaisPorTipo(TipoMaterial.DOCUMENTAL);
+            
             foreach (var acervoDocumentalLinha in acervosDocumentalLinhas.Where(w=> !w.PossuiErros))
             {
                 try

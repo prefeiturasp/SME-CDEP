@@ -246,6 +246,10 @@ namespace SME.CDEP.Aplicacao.Servicos
         {
             await ObterDominios();
             
+            await ObterSuportesPorTipo(TipoSuporte.VIDEO);
+            
+            await ObterCreditosAutoresPorTipo(TipoCreditoAutoria.Credito);
+            
             foreach (var acervoAudiovisualLinha in acervosAudiovisualLinhas.Where(w=> !w.PossuiErros))
             {
                 try
@@ -334,19 +338,6 @@ namespace SME.CDEP.Aplicacao.Servicos
                    || linha.TamanhoArquivo.PossuiErro 
                    || linha.Acessibilidade.PossuiErro
                    || linha.Disponibilizacao.PossuiErro;
-        }
-        
-        public async Task ValidacaoObterOuInserirDominios(IEnumerable<AcervoAudiovisualLinhaDTO> linhasComsucesso)
-        {
-            try
-            {
-                await ObterDominios();
-            }
-            catch (Exception e)
-            {
-                foreach (var linha in linhasComsucesso)
-                    linha.DefinirLinhaComoErro(e.Message);
-            }
         }
         
         private async Task<IEnumerable<AcervoAudiovisualLinhaDTO>> LerPlanilha(IFormFile file)

@@ -256,8 +256,13 @@ namespace SME.CDEP.Aplicacao.Servicos
         
         public async Task PersistenciaAcervo(IEnumerable<AcervoFotograficoLinhaDTO> acervosFotograficosLinhas)
         {
-            
             await ObterDominios();
+            
+            await ObterCreditosAutoresPorTipo(TipoCreditoAutoria.Credito);
+                
+            await ObterFormatosPorTipo(TipoFormato.ACERVO_FOTOS);
+            
+            await ObterSuportesPorTipo(TipoSuporte.IMAGEM);
             
             foreach (var acervoFotograficoLinha in acervosFotograficosLinhas.Where(w=> !w.PossuiErros))
             {
