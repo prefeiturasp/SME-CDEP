@@ -36,13 +36,13 @@ public static class AcervoDocumentalLinhaMock
             
             faker.RuleFor(x => x.Material, f => new LinhaConteudoAjustarDTO()
             {
-                Conteudo = f.Lorem.Sentence().Limite(500),
+                Conteudo = ConstantesTestes.APOSTILA,
                 LimiteCaracteres = ConstantesTestes.CARACTERES_PERMITIDOS_500,
             });
             
             faker.RuleFor(x => x.Idioma, f => new LinhaConteudoAjustarDTO()
             {
-                Conteudo = f.Lorem.Sentence().Limite(500),
+                Conteudo = ConstantesTestes.PORTUGUES,
                 LimiteCaracteres = ConstantesTestes.CARACTERES_PERMITIDOS_500,
                 EhCampoObrigatorio = true
             });

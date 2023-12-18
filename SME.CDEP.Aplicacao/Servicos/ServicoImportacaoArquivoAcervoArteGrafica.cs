@@ -87,9 +87,6 @@ namespace SME.CDEP.Aplicacao.Servicos
             
             await AtualizarImportacao(importacaoArquivoId, JsonConvert.SerializeObject(acervosArtesGraficasLinhas),ImportacaoStatus.ValidadoPreenchimentoValorFormatoQtdeCaracteres);
             
-            await ValidacaoObterOuInserirDominios(acervosArtesGraficasLinhas);
-            await AtualizarImportacao(importacaoArquivoId, JsonConvert.SerializeObject(acervosArtesGraficasLinhas),ImportacaoStatus.ValidacaoDominios);
-            
             await PersistenciaAcervo(acervosArtesGraficasLinhas);
             await AtualizarImportacao(importacaoArquivoId, JsonConvert.SerializeObject(acervosArtesGraficasLinhas), acervosArtesGraficasLinhas.Any(a=> a.PossuiErros) ? ImportacaoStatus.Erros : ImportacaoStatus.Sucesso);
 
@@ -101,10 +98,9 @@ namespace SME.CDEP.Aplicacao.Servicos
         private async Task<ImportacaoArquivoRetornoDTO<AcervoLinhaErroDTO<AcervoArteGraficaDTO,AcervoArteGraficaLinhaRetornoDTO>,AcervoLinhaRetornoSucessoDTO>> ObterRetornoImportacaoAcervo(ImportacaoArquivo arquivoImportado, IEnumerable<AcervoArteGraficaLinhaDTO> acervosArtesGraficasLinhas, bool estaImportandoArquivo = true)
         {
             if (!estaImportandoArquivo)
-            {
-                await ObterCreditosAutoresTipoAutoria(acervosArtesGraficasLinhas.Where(w=> !w.Credito.PossuiErro).Select(s => s.Credito.Conteudo).ToArray().UnificarPipe().SplitPipe().Distinct().Where(w=> w.EstaPreenchido()), TipoCreditoAutoria.Credito);
-                await ObterDominiosImutaveis();
-            }
+                await ObterDominios();
+            
+            await ObterCreditosAutoresPorTipo(TipoCreditoAutoria.Credito);
             
             await ObterSuportesPorTipo(TipoSuporte.IMAGEM);
             
@@ -120,7 +116,7 @@ namespace SME.CDEP.Aplicacao.Servicos
                         .Select(s=> ObterAcervoLinhaRetornoResumidoDto(s,arquivoImportado.TipoAcervo)),
                 Sucesso = acervosArtesGraficasLinhas
                         .Where(w => !w.PossuiErros)
-                        .Select(s=> ObterLinhasComSucesso(s.Titulo.Conteudo, s.Codigo.Conteudo, s.NumeroLinha)),
+                        .Select(s=> ObterLinhasComSucessoSufixo(s.Titulo.Conteudo, s.Codigo.Conteudo, s.NumeroLinha,Constantes.SIGLA_ACERVO_ARTE_GRAFICA)),
             };
             return acervoArteGraficaRetorno;
         }
@@ -130,7 +126,7 @@ namespace SME.CDEP.Aplicacao.Servicos
             return new AcervoLinhaErroDTO<AcervoArteGraficaDTO,AcervoArteGraficaLinhaRetornoDTO>()
             {
                 Titulo = ObterConteudoTexto(linha.Titulo),
-                Tombo = $"{ObterConteudoTexto(linha.Codigo)}{Constantes.SIGLA_ACERVO_ARTE_GRAFICA}",
+                Tombo = ObterSufixo(ObterConteudoTexto(linha.Codigo),Constantes.SIGLA_ACERVO_ARTE_GRAFICA),
                 NumeroLinha = linha.NumeroLinha,
                 RetornoObjeto = ObterAcervoArteGraficaDto(linha,tipoAcervo),
                 RetornoErro = ObterLinhasComErros(linha),
@@ -143,7 +139,7 @@ namespace SME.CDEP.Aplicacao.Servicos
             {
                 Titulo = ObterConteudoTexto(linha.Titulo),
                 TipoAcervoId = (int)tipoAcervo,
-                Codigo = $"{ObterConteudoTexto(linha.Codigo)}{Constantes.SIGLA_ACERVO_ARTE_GRAFICA}",
+                Codigo = ObterSufixo(ObterConteudoTexto(linha.Codigo),Constantes.SIGLA_ACERVO_ARTE_GRAFICA),
                 Localizacao = ObterConteudoTexto(linha.Localizacao),
                 Procedencia = ObterConteudoTexto(linha.Procedencia),
                 Ano = ObterConteudoInteiroOuNulo(linha.Ano),
@@ -255,6 +251,12 @@ namespace SME.CDEP.Aplicacao.Servicos
 
         public async Task PersistenciaAcervo(IEnumerable<AcervoArteGraficaLinhaDTO> acervosArtesGraficasLinhas)
         {
+            await ObterDominios();
+            
+            await ObterCreditosAutoresPorTipo(TipoCreditoAutoria.Credito);
+            
+            await ObterSuportesPorTipo(TipoSuporte.IMAGEM);
+            
             foreach (var acervoArteGraficaLinha in acervosArtesGraficasLinhas.Where(w=> !w.PossuiErros))
             {
                 try
@@ -354,7 +356,7 @@ namespace SME.CDEP.Aplicacao.Servicos
             {
                 await ValidarOuInserirCreditoAutoresCoAutoresTipoAutoria(linhasComsucesso.Where(w=> !w.Credito.PossuiErro).Select(s => s.Credito.Conteudo).ToArray().UnificarPipe().SplitPipe().Distinct().Where(w=> w.EstaPreenchido()), TipoCreditoAutoria.Credito);
 
-                await ObterDominiosImutaveis();
+                await ObterDominios();
                 
             }
             catch (Exception e)

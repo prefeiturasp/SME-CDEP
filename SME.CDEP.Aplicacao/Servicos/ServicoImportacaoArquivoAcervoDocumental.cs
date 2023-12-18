@@ -85,9 +85,6 @@ namespace SME.CDEP.Aplicacao.Servicos
             
             await AtualizarImportacao(importacaoArquivoId, JsonConvert.SerializeObject(acervosDocumentalLinhas),ImportacaoStatus.ValidadoPreenchimentoValorFormatoQtdeCaracteres);
             
-            await ValidacaoObterOuInserirDominios(acervosDocumentalLinhas);
-            await AtualizarImportacao(importacaoArquivoId, JsonConvert.SerializeObject(acervosDocumentalLinhas),ImportacaoStatus.ValidacaoDominios);
-            
             await PersistenciaAcervo(acervosDocumentalLinhas);
             await AtualizarImportacao(importacaoArquivoId, JsonConvert.SerializeObject(acervosDocumentalLinhas), acervosDocumentalLinhas.Any(a=> a.PossuiErros) ? ImportacaoStatus.Erros : ImportacaoStatus.Sucesso);
 
@@ -99,12 +96,11 @@ namespace SME.CDEP.Aplicacao.Servicos
         private async Task<ImportacaoArquivoRetornoDTO<AcervoLinhaErroDTO<AcervoDocumentalDTO,AcervoDocumentalLinhaRetornoDTO>,AcervoLinhaRetornoSucessoDTO>> ObterRetornoImportacaoAcervo(ImportacaoArquivo arquivoImportado, IEnumerable<AcervoDocumentalLinhaDTO> acervosDocumentalLinhas, bool estaImportandoArquivo = true)
         {
             if (!estaImportandoArquivo)
-            {
-                await ObterMateriais(acervosDocumentalLinhas.Where(w=> !w.Material.PossuiErro).Select(s => s.Material.Conteudo).Distinct().Where(w=> w.EstaPreenchido()), TipoMaterial.DOCUMENTAL);
-                await ObterIdiomas(acervosDocumentalLinhas.Where(w=> !w.Idioma.PossuiErro).Select(s => s.Idioma.Conteudo).Distinct().Where(w=> w.EstaPreenchido()));
-                await ObterCreditosAutoresTipoAutoria(acervosDocumentalLinhas.Where(w=> !w.Autor.PossuiErro).Select(s => s.Autor.Conteudo).ToArray().UnificarPipe().SplitPipe().Distinct().Where(w=> w.EstaPreenchido()), TipoCreditoAutoria.Autoria);
-                await ObterDominiosImutaveis();
-            }
+                await ObterDominios();
+            
+            await ObterCreditosAutoresPorTipo(TipoCreditoAutoria.Autoria);
+                
+            await ObterMateriaisPorTipo(TipoMaterial.DOCUMENTAL);
             
             var acervoDocumentalRetorno = new ImportacaoArquivoRetornoDTO<AcervoLinhaErroDTO<AcervoDocumentalDTO,AcervoDocumentalLinhaRetornoDTO>,AcervoLinhaRetornoSucessoDTO>()
             {
@@ -264,6 +260,12 @@ namespace SME.CDEP.Aplicacao.Servicos
 
         public async Task PersistenciaAcervo(IEnumerable<AcervoDocumentalLinhaDTO> acervosDocumentalLinhas)
         {
+            await ObterDominios();
+            
+            await ObterCreditosAutoresPorTipo(TipoCreditoAutoria.Autoria);
+                
+            await ObterMateriaisPorTipo(TipoMaterial.DOCUMENTAL);
+            
             foreach (var acervoDocumentalLinha in acervosDocumentalLinhas.Where(w=> !w.PossuiErros))
             {
                 try
@@ -365,13 +367,11 @@ namespace SME.CDEP.Aplicacao.Servicos
         {
             try
             {
-                await ValidarOuInserirMateriais(linhasComsucesso.Where(w=> !w.Material.PossuiErro).Select(s => s.Material.Conteudo).Distinct().Where(w=> w.EstaPreenchido()), TipoMaterial.DOCUMENTAL);
-
-                await ValidarOuInserirIdiomas(linhasComsucesso.Where(w=> !w.Idioma.PossuiErro).Select(s => s.Idioma.Conteudo).Distinct().Where(w=> w.EstaPreenchido()));
+                await ObterDominios();
                 
-                await ValidarOuInserirCreditoAutoresCoAutoresTipoAutoria(linhasComsucesso.Where(w=> !w.Autor.PossuiErro).Select(s => s.Autor.Conteudo).ToArray().UnificarPipe().SplitPipe().Distinct().Where(w=> w.EstaPreenchido()), TipoCreditoAutoria.Autoria);
+                await ObterCreditosAutoresPorTipo(TipoCreditoAutoria.Autoria);
                 
-                await ObterDominiosImutaveis();
+                await ObterMateriaisPorTipo(TipoMaterial.DOCUMENTAL);
                 
             }
             catch (Exception e)

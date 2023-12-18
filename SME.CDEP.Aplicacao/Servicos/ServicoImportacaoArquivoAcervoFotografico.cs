@@ -85,9 +85,6 @@ namespace SME.CDEP.Aplicacao.Servicos
             
             await AtualizarImportacao(importacaoArquivoId, JsonConvert.SerializeObject(acervosFotograficoLinhas),ImportacaoStatus.ValidadoPreenchimentoValorFormatoQtdeCaracteres);
             
-            await ValidacaoObterOuInserirDominios(acervosFotograficoLinhas);
-            await AtualizarImportacao(importacaoArquivoId, JsonConvert.SerializeObject(acervosFotograficoLinhas),ImportacaoStatus.ValidacaoDominios);
-            
             await PersistenciaAcervo(acervosFotograficoLinhas);
             await AtualizarImportacao(importacaoArquivoId, JsonConvert.SerializeObject(acervosFotograficoLinhas), acervosFotograficoLinhas.Any(a=> a.PossuiErros) ? ImportacaoStatus.Erros : ImportacaoStatus.Sucesso);
         
@@ -99,11 +96,11 @@ namespace SME.CDEP.Aplicacao.Servicos
         private async Task<ImportacaoArquivoRetornoDTO<AcervoLinhaErroDTO<AcervoFotograficoDTO,AcervoFotograficoLinhaRetornoDTO>,AcervoLinhaRetornoSucessoDTO>> ObterRetornoImportacaoAcervo(ImportacaoArquivo arquivoImportado, IEnumerable<AcervoFotograficoLinhaDTO> acervosFotograficoLinhas, bool estaImportandoArquivo = true)
         {
             if (!estaImportandoArquivo)
-            {
-                await ObterFormatos(acervosFotograficoLinhas.Where(w=> !w.FormatoImagem.PossuiErro).Select(s => s.FormatoImagem.Conteudo).Distinct().Where(w=> w.EstaPreenchido()), TipoFormato.ACERVO_FOTOS);
-                await ObterCreditosAutoresTipoAutoria(acervosFotograficoLinhas.Where(w=> !w.Credito.PossuiErro).Select(s => s.Credito.Conteudo).ToArray().UnificarPipe().SplitPipe().Distinct().Where(w=> w.EstaPreenchido()), TipoCreditoAutoria.Credito);
-                await ObterDominiosImutaveis();
-            }
+                await ObterDominios();
+                
+            await ObterCreditosAutoresPorTipo(TipoCreditoAutoria.Credito);
+                
+            await ObterFormatosPorTipo(TipoFormato.ACERVO_FOTOS);
             
             await ObterSuportesPorTipo(TipoSuporte.IMAGEM);
             
@@ -119,7 +116,7 @@ namespace SME.CDEP.Aplicacao.Servicos
                         .Select(s=> ObterAcervoLinhaRetornoResumidoDto(s,arquivoImportado.TipoAcervo)),
                 Sucesso = acervosFotograficoLinhas
                         .Where(w => !w.PossuiErros)
-                        .Select(s=> ObterLinhasComSucesso(s.Titulo.Conteudo, s.Codigo.Conteudo, s.NumeroLinha)),
+                        .Select(s=> ObterLinhasComSucessoSufixo(s.Titulo.Conteudo, s.Codigo.Conteudo, s.NumeroLinha, Constantes.SIGLA_ACERVO_FOTOGRAFICO)),
             };
             return acervoFotograficoRetorno;
         }
@@ -129,7 +126,7 @@ namespace SME.CDEP.Aplicacao.Servicos
             return new AcervoLinhaErroDTO<AcervoFotograficoDTO,AcervoFotograficoLinhaRetornoDTO>()
             {
                 Titulo = ObterConteudoTexto(linha.Titulo),
-                Tombo = $"{ObterConteudoTexto(linha.Codigo)}{Constantes.SIGLA_ACERVO_FOTOGRAFICO}",
+                Tombo = ObterSufixo(ObterConteudoTexto(linha.Codigo),Constantes.SIGLA_ACERVO_FOTOGRAFICO),
                 NumeroLinha = linha.NumeroLinha,
                 RetornoObjeto = ObterAcervoFotograficoDto(linha,tipoAcervo),
                 RetornoErro = ObterLinhasComErros(linha),
@@ -142,7 +139,7 @@ namespace SME.CDEP.Aplicacao.Servicos
             {
                 Titulo = ObterConteudoTexto(linha.Titulo),
                 TipoAcervoId = (int)tipoAcervo,
-                Codigo = $"{ObterConteudoTexto(linha.Codigo)}{Constantes.SIGLA_ACERVO_FOTOGRAFICO}",
+                Codigo = ObterSufixo(ObterConteudoTexto(linha.Codigo),Constantes.SIGLA_ACERVO_FOTOGRAFICO),
                 Localizacao = ObterConteudoTexto(linha.Localizacao),
                 Procedencia = ObterConteudoTexto(linha.Procedencia),
                 Ano = ObterConteudoInteiroOuNulo(linha.Ano),
@@ -259,6 +256,14 @@ namespace SME.CDEP.Aplicacao.Servicos
         
         public async Task PersistenciaAcervo(IEnumerable<AcervoFotograficoLinhaDTO> acervosFotograficosLinhas)
         {
+            await ObterDominios();
+            
+            await ObterCreditosAutoresPorTipo(TipoCreditoAutoria.Credito);
+                
+            await ObterFormatosPorTipo(TipoFormato.ACERVO_FOTOS);
+            
+            await ObterSuportesPorTipo(TipoSuporte.IMAGEM);
+            
             foreach (var acervoFotograficoLinha in acervosFotograficosLinhas.Where(w=> !w.PossuiErros))
             {
                 try
@@ -353,24 +358,6 @@ namespace SME.CDEP.Aplicacao.Servicos
                    || linha.TamanhoArquivo.PossuiErro
                    || linha.Cromia.PossuiErro 
                    || linha.Resolucao.PossuiErro;
-        }
-        
-        public async Task ValidacaoObterOuInserirDominios(IEnumerable<AcervoFotograficoLinhaDTO> linhasComsucesso)
-        {
-            try
-            {
-                await ValidarOuInserirCreditoAutoresCoAutoresTipoAutoria(linhasComsucesso.Where(w=> !w.Credito.PossuiErro).Select(s => s.Credito.Conteudo).ToArray().UnificarPipe().SplitPipe().Distinct().Where(w=> w.EstaPreenchido()), TipoCreditoAutoria.Credito);
-
-                await ObterDominiosImutaveis();
-                
-                await ValidarOuInserirFormato(linhasComsucesso.Where(w=> !w.FormatoImagem.PossuiErro).Select(s => s.FormatoImagem.Conteudo).Distinct().Where(w=> w.EstaPreenchido()), TipoFormato.ACERVO_FOTOS);
-                
-            }
-            catch (Exception e)
-            {
-                foreach (var linha in linhasComsucesso)
-                    linha.DefinirLinhaComoErro(e.Message);
-            }
         }
         
         private async Task<IEnumerable<AcervoFotograficoLinhaDTO>> LerPlanilha(IFormFile file)

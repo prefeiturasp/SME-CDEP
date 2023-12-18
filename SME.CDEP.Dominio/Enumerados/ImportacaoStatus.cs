@@ -10,13 +10,10 @@ public enum ImportacaoStatus
     [Display(Name = "Validado preenchimento, valor, formato e qtde caracteres")]
     ValidadoPreenchimentoValorFormatoQtdeCaracteres = 2,
     
-    [Display(Name = "Validacao de domínios")]
-    ValidacaoDominios = 3,
-    
     [Display(Name = "Importado com Erros")]
-    Erros = 4,
+    Erros = 3,
     
     [Display(Name = "Importado com Sucesso")]
-    Sucesso = 5,
+    Sucesso = 4,
     
 }

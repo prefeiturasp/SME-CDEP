@@ -261,59 +261,35 @@ namespace SME.CDEP.TesteIntegracao
             }
         }
         
-        [Fact(DisplayName = "Importação Arquivo Acervo Bibliográfico - ValidacaoObterOuInserirDominios")]
-        public async Task Validacao_obter_ou_inserir_dominios()
-        {
-            var servicoImportacaoArquivo = GetServicoImportacaoArquivoAcervoBibliografico();
-
-            var acervoBibliograficoLinhas = AcervoBibliograficoLinhaMock.GerarAcervoBibliograficoLinhaDTO().Generate(10);
-           
-            await servicoImportacaoArquivo.ValidacaoObterOuInserirDominios(acervoBibliograficoLinhas);
-
-            foreach (var linha in acervoBibliograficoLinhas)
-            {
-                var materialInserido = linha.Material.Conteudo;
-                var materiais = ObterTodos<Material>();
-                materiais.Any(a => a.Nome.SaoIguais(materialInserido)).ShouldBeTrue();
-
-                var editoraInserida = linha.Editora.Conteudo;
-                var editoras = ObterTodos<Editora>();
-                editoras.Any(a => a.Nome.SaoIguais(editoraInserida)).ShouldBeTrue();
-
-                var serieColecaoInserida = linha.SerieColecao.Conteudo;
-                var serieColecaos = ObterTodos<SerieColecao>();
-                serieColecaos.Any(a => a.Nome.SaoIguais(serieColecaoInserida)).ShouldBeTrue();
-
-                var idiomaInserido = linha.Idioma.Conteudo;
-                var idiomas = ObterTodos<Idioma>();
-                idiomas.Any(a => a.Nome.SaoIguais(idiomaInserido)).ShouldBeTrue();
-
-                var assuntosInseridos = linha.Assunto.Conteudo.FormatarTextoEmArray().ToArray()
-                    .UnificarPipe().SplitPipe().Distinct();
-                var assuntos = ObterTodos<Assunto>();
-                foreach (var assunto in assuntosInseridos)
-                    assuntos.Any(a => a.Nome.SaoIguais(assunto)).ShouldBeTrue();
-
-                var creditoAutorInseridos = linha.Autor.Conteudo.FormatarTextoEmArray().ToArray()
-                    .UnificarPipe().SplitPipe().Distinct();
-                var creditosAutores = ObterTodos<CreditoAutor>();
-                foreach (var creditoAutor in creditoAutorInseridos)
-                    creditosAutores.Any(a => a.Nome.SaoIguais(creditoAutor)).ShouldBeTrue();
-
-                creditoAutorInseridos = linha.CoAutor.Conteudo.FormatarTextoEmArray().ToArray()
-                    .UnificarPipe().SplitPipe().Distinct();
-                foreach (var creditoAutor in creditoAutorInseridos)
-                    creditosAutores.Any(a => a.Nome.SaoIguais(creditoAutor)).ShouldBeTrue();
-            }
-        }
-        
-        [Fact(DisplayName = "Importação Arquivo Acervo Bibliográfico - PersistenciaAcervobibliografico")]
+       [Fact(DisplayName = "Importação Arquivo Acervo Bibliográfico - PersistenciaAcervobibliografico")]
         public async Task Persistencia_acervo_bibliografico()
         {
+            await InserirDadosBasicos();
+            
             var servicoImportacaoArquivo = GetServicoImportacaoArquivoAcervoBibliografico();
 
             var acervoBibliograficoLinhas = AcervoBibliograficoLinhaMock.GerarAcervoBibliograficoLinhaDTO().Generate(10);
 
+            var autores = acervoBibliograficoLinhas
+                .SelectMany(acervo => acervo.Autor.Conteudo.FormatarTextoEmArray().UnificarPipe().SplitPipe())
+                .Distinct()
+                .ToList();
+
+            await InserirCreditosAutorias(autores,TipoCreditoAutoria.Autoria);
+            
+            var coAutores = acervoBibliograficoLinhas
+                .SelectMany(acervo => acervo.CoAutor.Conteudo.FormatarTextoEmArray().UnificarPipe().SplitPipe())
+                .Distinct()
+                .ToList();
+
+            await InserirCreditosAutorias(coAutores,TipoCreditoAutoria.Autoria);
+            
+            var inserirAssuntos = acervoBibliograficoLinhas
+                .SelectMany(acervo => acervo.Assunto.Conteudo.FormatarTextoEmArray().UnificarPipe().SplitPipe())
+                .Distinct()
+                .ToList();
+            
+            await InserirAssuntos(inserirAssuntos);
             await InserirNaBase(new ImportacaoArquivo()
             {
                 Nome = faker.Hacker.Verb(),
@@ -323,7 +299,6 @@ namespace SME.CDEP.TesteIntegracao
                 CriadoEm = DateTimeExtension.HorarioBrasilia().Date, CriadoPor = ConstantesTestes.SISTEMA, CriadoLogin = ConstantesTestes.LOGIN_123456789
             });
             
-            await servicoImportacaoArquivo.ValidacaoObterOuInserirDominios(acervoBibliograficoLinhas);
             await servicoImportacaoArquivo.PersistenciaAcervo(acervoBibliograficoLinhas);
 
             var acervos = ObterTodos<Acervo>();
@@ -358,7 +333,7 @@ namespace SME.CDEP.TesteIntegracao
                 acervos.Any(a=> a.Ano.SaoIguais(linhasComSucesso.Ano.Conteudo.ConverterParaInteiro())).ShouldBeTrue();
                 
                 //Referência 1:1
-                acervosBibliograficos.Any(a=> a.MaterialId.SaoIguais(materiais.FirstOrDefault(f=> f.Nome.SaoIguais(linhasComSucesso.Material.Conteudo)).Id)).ShouldBeTrue();
+                acervosBibliograficos.Any(a=> a.MaterialId.SaoIguais(materiais.FirstOrDefault(f=> f.Nome.SaoIguais(linhasComSucesso.Material.Conteudo) && f.Tipo == TipoMaterial.BIBLIOGRAFICO).Id)).ShouldBeTrue();
                 acervosBibliograficos.Any(a=> a.EditoraId.SaoIguais(editoras.FirstOrDefault(f=> f.Nome.SaoIguais(linhasComSucesso.Editora.Conteudo)).Id)).ShouldBeTrue();
                 acervosBibliograficos.Any(a=> a.SerieColecaoId.SaoIguais(serieColecoes.FirstOrDefault(f=> f.Nome.SaoIguais(linhasComSucesso.SerieColecao.Conteudo)).Id)).ShouldBeTrue();
                 acervosBibliograficos.Any(a=> a.IdiomaId.SaoIguais(idiomas.FirstOrDefault(f=> f.Nome.SaoIguais(linhasComSucesso.Idioma.Conteudo)).Id)).ShouldBeTrue();
@@ -409,10 +384,33 @@ namespace SME.CDEP.TesteIntegracao
         [Fact(DisplayName = "Importação Arquivo Acervo Bibliográfico - Geral - Com erros em 3 linhas")]
         public async Task Importacao_geral()
         {
+            await InserirDadosBasicos();
+            
             var servicoImportacaoArquivo = GetServicoImportacaoArquivoAcervoBibliografico();
 
             var acervoBibliograficoLinhas = AcervoBibliograficoLinhaMock.GerarAcervoBibliograficoLinhaDTO().Generate(10);
            
+            var autores = acervoBibliograficoLinhas
+                .SelectMany(acervo => acervo.Autor.Conteudo.FormatarTextoEmArray().UnificarPipe().SplitPipe())
+                .Distinct()
+                .ToList();
+
+            await InserirCreditosAutorias(autores,TipoCreditoAutoria.Autoria);
+            
+            var coAutores = acervoBibliograficoLinhas
+                .SelectMany(acervo => acervo.CoAutor.Conteudo.FormatarTextoEmArray().UnificarPipe().SplitPipe())
+                .Distinct()
+                .ToList();
+
+            await InserirCreditosAutorias(coAutores,TipoCreditoAutoria.Autoria);
+            
+            var inserirAssuntos = acervoBibliograficoLinhas
+                .SelectMany(acervo => acervo.Assunto.Conteudo.FormatarTextoEmArray().UnificarPipe().SplitPipe())
+                .Distinct()
+                .ToList();
+
+            await InserirAssuntos(inserirAssuntos);
+            
             acervoBibliograficoLinhas[3].Largura.Conteudo = "ABC3512";
             acervoBibliograficoLinhas[5].Altura.Conteudo = "1212ABC";
             acervoBibliograficoLinhas[7].Codigo.Conteudo = acervoBibliograficoLinhas[0].Codigo.Conteudo;
@@ -427,7 +425,6 @@ namespace SME.CDEP.TesteIntegracao
             });
             
             servicoImportacaoArquivo.ValidarPreenchimentoValorFormatoQtdeCaracteres(acervoBibliograficoLinhas);
-            await servicoImportacaoArquivo.ValidacaoObterOuInserirDominios(acervoBibliograficoLinhas );
             await servicoImportacaoArquivo.PersistenciaAcervo(acervoBibliograficoLinhas);
             await servicoImportacaoArquivo.AtualizarImportacao(1, JsonConvert.SerializeObject(acervoBibliograficoLinhas), acervoBibliograficoLinhas.Any(a=> a.PossuiErros) ? ImportacaoStatus.Erros : ImportacaoStatus.Sucesso);
             var retorno = await servicoImportacaoArquivo.ObterImportacaoPendente();
@@ -533,7 +530,7 @@ namespace SME.CDEP.TesteIntegracao
                 acervos.Any(a=> a.Ano.SaoIguais(linhasComSucesso.Ano.Conteudo.ConverterParaInteiro())).ShouldBeTrue();
                 
                 //Referência 1:1
-                acervosBibliograficos.Any(a=> a.MaterialId.SaoIguais(materiais.FirstOrDefault(f=> f.Nome.SaoIguais(linhasComSucesso.Material.Conteudo)).Id)).ShouldBeTrue();
+                acervosBibliograficos.Any(a=> a.MaterialId.SaoIguais(materiais.FirstOrDefault(f=> f.Nome.SaoIguais(linhasComSucesso.Material.Conteudo) && f.Tipo == TipoMaterial.BIBLIOGRAFICO).Id)).ShouldBeTrue();
                 acervosBibliograficos.Any(a=> a.EditoraId.SaoIguais(editoras.FirstOrDefault(f=> f.Nome.SaoIguais(linhasComSucesso.Editora.Conteudo)).Id)).ShouldBeTrue();
                 acervosBibliograficos.Any(a=> a.SerieColecaoId.SaoIguais(serieColecoes.FirstOrDefault(f=> f.Nome.SaoIguais(linhasComSucesso.SerieColecao.Conteudo)).Id)).ShouldBeTrue();
                 acervosBibliograficos.Any(a=> a.IdiomaId.SaoIguais(idiomas.FirstOrDefault(f=> f.Nome.SaoIguais(linhasComSucesso.Idioma.Conteudo)).Id)).ShouldBeTrue();

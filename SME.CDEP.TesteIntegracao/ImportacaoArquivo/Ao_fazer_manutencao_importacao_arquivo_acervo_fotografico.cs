@@ -108,42 +108,6 @@ namespace SME.CDEP.TesteIntegracao
             }
         }
         
-        [Fact(DisplayName = "Importação Arquivo Acervo Fotografico - ValidacaoObterOuInserirDominios")]
-        public async Task Validacao_obter_ou_inserir_dominios()
-        {
-            await InserirDadosBasicos();
-
-            var servicoImportacaoArquivo = GetServicoImportacaoArquivoAcervoFotografico();
-        
-            var acervoFotograficoLinhas = AcervoFotograficoLinhaMock.GerarAcervoFotograficoLinhaDTO().Generate(10);
-           
-            await servicoImportacaoArquivo.ValidacaoObterOuInserirDominios(acervoFotograficoLinhas);
-        
-            foreach (var linha in acervoFotograficoLinhas)
-            {
-                var creditoAutorInseridos = linha.Credito.Conteudo.FormatarTextoEmArray().ToArray().UnificarPipe().SplitPipe().Distinct();
-                var creditosAutores = ObterTodos<CreditoAutor>();
-                foreach (var creditoAutor in creditoAutorInseridos)
-                    creditosAutores.Any(a => a.Nome.SaoIguais(creditoAutor)).ShouldBeTrue();
-                
-                var cromiaInserido = linha.Cromia.Conteudo;
-                var cromias = ObterTodos<Cromia>();
-                cromias.Any(a => a.Nome.SaoIguais(cromiaInserido)).ShouldBeTrue();
-        
-                var suporteInserido = linha.Suporte.Conteudo;
-                var suportes = ObterTodos<Suporte>();
-                suportes.Any(a => a.Nome.SaoIguais(suporteInserido)).ShouldBeTrue();
-        
-                var conservacoesInseridas = linha.EstadoConservacao.Conteudo;
-                var conservacoes = ObterTodos<Conservacao>();
-                conservacoes.Any(a => a.Nome.SaoIguais(conservacoesInseridas)).ShouldBeTrue();
-                
-                var FormatoInseridas = linha.FormatoImagem.Conteudo;
-                var formato = ObterTodos<Formato>();
-                formato.Any(a => a.Nome.SaoIguais(FormatoInseridas)).ShouldBeTrue();
-            }
-        }
-        
         [Fact(DisplayName = "Importação Arquivo Acervo Fotografico - PersistenciaAcervo")]
         public async Task Persistencia_acervo()
         {
@@ -152,6 +116,13 @@ namespace SME.CDEP.TesteIntegracao
             var servicoImportacaoArquivo = GetServicoImportacaoArquivoAcervoFotografico();
         
             var acervoFotograficoLinhas = AcervoFotograficoLinhaMock.GerarAcervoFotograficoLinhaDTO().Generate(10);
+            
+            var creditos = acervoFotograficoLinhas
+                .SelectMany(acervo => acervo.Credito.Conteudo.FormatarTextoEmArray().UnificarPipe().SplitPipe())
+                .Distinct()
+                .ToList();
+
+            await InserirCreditosAutorias(creditos);
         
             await InserirNaBase(new ImportacaoArquivo()
             {
@@ -162,7 +133,6 @@ namespace SME.CDEP.TesteIntegracao
                 CriadoEm = DateTimeExtension.HorarioBrasilia().Date, CriadoPor = ConstantesTestes.SISTEMA, CriadoLogin = ConstantesTestes.LOGIN_123456789
             });
             
-            await servicoImportacaoArquivo.ValidacaoObterOuInserirDominios(acervoFotograficoLinhas);
             await servicoImportacaoArquivo.PersistenciaAcervo(acervoFotograficoLinhas);
         
             var acervos = ObterTodos<Acervo>();
@@ -216,12 +186,9 @@ namespace SME.CDEP.TesteIntegracao
                 
                 //Crédito
                 var creditoAInserir = linhasComSucesso.Credito.Conteudo.FormatarTextoEmArray().ToArray().UnificarPipe().SplitPipe().Distinct();
-                
+
                 foreach (var credito in creditoAInserir)
                     creditoAutores.Any(a=> a.Nome.SaoIguais(credito)).ShouldBeTrue();
-                
-                foreach (var creditoAutor in acervoCreditoAutors)
-                    creditoAutores.Any(a=> a.Id.SaoIguais(creditoAutor.CreditoAutorId)).ShouldBeTrue();
             }
         }
 
@@ -234,6 +201,13 @@ namespace SME.CDEP.TesteIntegracao
         
             var acervoFotograficoLinhas = AcervoFotograficoLinhaMock.GerarAcervoFotograficoLinhaDTO().Generate(10);
            
+            var creditos = acervoFotograficoLinhas
+                .SelectMany(acervo => acervo.Credito.Conteudo.FormatarTextoEmArray().UnificarPipe().SplitPipe())
+                .Distinct()
+                .ToList();
+
+            await InserirCreditosAutorias(creditos);
+            
             acervoFotograficoLinhas[1].CopiaDigital.Conteudo = acervoFotograficoLinhas[1].Titulo.Conteudo;
             acervoFotograficoLinhas[3].Descricao.Conteudo = string.Empty;
             acervoFotograficoLinhas[5].TamanhoArquivo.Conteudo = faker.Lorem.Paragraph();
@@ -249,7 +223,6 @@ namespace SME.CDEP.TesteIntegracao
             });
             
             servicoImportacaoArquivo.ValidarPreenchimentoValorFormatoQtdeCaracteres(acervoFotograficoLinhas);
-            await servicoImportacaoArquivo.ValidacaoObterOuInserirDominios(acervoFotograficoLinhas );
             await servicoImportacaoArquivo.PersistenciaAcervo(acervoFotograficoLinhas);
             await servicoImportacaoArquivo.AtualizarImportacao(1, JsonConvert.SerializeObject(acervoFotograficoLinhas), acervoFotograficoLinhas.Any(a=> a.PossuiErros) ? ImportacaoStatus.Erros : ImportacaoStatus.Sucesso);
             var retorno = await servicoImportacaoArquivo.ObterImportacaoPendente();
@@ -258,7 +231,6 @@ namespace SME.CDEP.TesteIntegracao
             var acervosFotografico = ObterTodos<AcervoFotografico>();
             var suportes = ObterTodos<Suporte>();
             var cromias = ObterTodos<Cromia>();
-            var acervoCreditoAutors = ObterTodos<AcervoCreditoAutor>();
             var creditoAutores = ObterTodos<CreditoAutor>();
             var conservacoes = ObterTodos<Conservacao>();
             var formatos = ObterTodos<Formato>();
@@ -362,12 +334,9 @@ namespace SME.CDEP.TesteIntegracao
                 
                 //Crédito
                 var creditoAInserir = linhasComSucesso.Credito.Conteudo.FormatarTextoEmArray().ToArray().UnificarPipe().SplitPipe().Distinct();
-                
+
                 foreach (var credito in creditoAInserir)
-                    creditoAutores.Any(a=> a.Nome.SaoIguais(credito)).ShouldBeTrue();
-                
-                foreach (var creditoAutor in acervoCreditoAutors)
-                    creditoAutores.Any(a=> a.Id.SaoIguais(creditoAutor.CreditoAutorId)).ShouldBeTrue();
+                    creditoAutores.Any(a=> a.Nome.SaoIguais(credito)).ShouldBeTrue();	
             }
         }
         

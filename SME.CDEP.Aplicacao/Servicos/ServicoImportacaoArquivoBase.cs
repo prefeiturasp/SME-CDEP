@@ -1,5 +1,6 @@
 using AutoMapper;
 using ClosedXML.Excel;
+using DocumentFormat.OpenXml.Office2016.Drawing.ChartDrawing;
 using Microsoft.AspNetCore.Http;
 using Newtonsoft.Json;
 using SME.CDEP.Aplicacao.DTOS;
@@ -72,12 +73,19 @@ namespace SME.CDEP.Aplicacao.Servicos
             Conservacoes = new List<IdNomeDTO>();
         }
 
-        protected async Task ObterDominiosImutaveis()
+        protected async Task ObterDominios()
         {
             Suportes = (await servicoSuporte.ObterTodos()).Select(s=> mapper.Map<IdNomeTipoDTO>(s)).ToList();
             Cromias = (await servicoCromia.ObterTodos()).Select(s => mapper.Map<IdNomeDTO>(s)).ToList();
             Conservacoes = (await servicoConservacao.ObterTodos()).Select(s=> mapper.Map<IdNomeDTO>(s)).ToList();
             AcessoDocumentos = (await servicoAcessoDocumento.ObterTodos()).Select(s=> mapper.Map<IdNomeDTO>(s)).ToList();
+            CreditosAutores = (await servicoCreditoAutor.ObterTodos()).Select(s=> mapper.Map<IdNomeTipoDTO>(s)).ToList();
+            Materiais = (await servicoMaterial.ObterTodos()).Select(s=> mapper.Map<IdNomeTipoDTO>(s)).ToList();
+            Editoras = (await servicoEditora.ObterTodos()).Select(s=> mapper.Map<IdNomeDTO>(s)).ToList();
+            SeriesColecoes = (await servicoSerieColecao.ObterTodos()).Select(s=> mapper.Map<IdNomeDTO>(s)).ToList();
+            Idiomas = (await servicoIdioma.ObterTodos()).Select(s=> mapper.Map<IdNomeDTO>(s)).ToList();
+            Assuntos = (await servicoAssunto.ObterTodos()).Select(s=> mapper.Map<IdNomeDTO>(s)).ToList();
+            Formatos = (await servicoFormato.ObterTodos()).Select(s=> mapper.Map<IdNomeTipoDTO>(s)).ToList();
         }
 
         public void ValidarArquivo(IFormFile file)
@@ -549,7 +557,7 @@ namespace SME.CDEP.Aplicacao.Servicos
             {
                 if (item.EstaPreenchido())
                 {
-                    var possuiNome = AcessoDocumentos.Any(f => f.Nome.Equals(item));
+                    var possuiNome = AcessoDocumentos.Any(f => f.Nome.SaoIguais(item));
                     if (!possuiNome)
                     {
                         if (gerarExcecao)
@@ -757,7 +765,7 @@ namespace SME.CDEP.Aplicacao.Servicos
                 throw new NegocioException(string.Format(Constantes.A_PLANLHA_DE_ACERVO_X_NAO_TEM_O_NOME_DA_COLUNA_Y_NA_COLUNA_Z, nomeDoAcervo,nomeDaColuna,numeroDaColuna));
         }
         
-        protected static AcervoLinhaRetornoSucessoDTO ObterLinhasComSucesso(string titulo, string tombo, int numeroLinha)
+        protected AcervoLinhaRetornoSucessoDTO ObterLinhasComSucesso(string titulo, string tombo, int numeroLinha)
         {
             return new AcervoLinhaRetornoSucessoDTO()
             {
@@ -765,12 +773,37 @@ namespace SME.CDEP.Aplicacao.Servicos
                 Tombo = tombo,
                 NumeroLinha = numeroLinha,
             };
-        }     
+        }
+        
+        protected AcervoLinhaRetornoSucessoDTO ObterLinhasComSucessoSufixo(string titulo, string tombo, int numeroLinha, string sufixo)
+        {
+            return new AcervoLinhaRetornoSucessoDTO()
+            {
+                Titulo = titulo,
+                Tombo = ObterSufixo(tombo,sufixo),
+                NumeroLinha = numeroLinha,
+            };
+        }
         
 
         protected async Task ObterSuportesPorTipo(TipoSuporte tipoSuporte)
         {
             Suportes = Suportes.Where(w=> w.Tipo == (int)tipoSuporte).ToList();
+        }
+        
+        protected async Task ObterMateriaisPorTipo(TipoMaterial tipoMaterial)
+        {
+            Materiais = Materiais.Where(w=> w.Tipo == (int)tipoMaterial).ToList();
+        }
+        
+        protected async Task ObterCreditosAutoresPorTipo(TipoCreditoAutoria tipoCreditoAutoria)
+        {
+            CreditosAutores = CreditosAutores.Where(w=> w.Tipo == (int)tipoCreditoAutoria).ToList();
+        }
+        
+        protected async Task ObterFormatosPorTipo(TipoFormato tipoFormato)
+        {
+            Formatos = Formatos.Where(w=> w.Tipo == (int)tipoFormato).ToList();
         }
 
         protected async Task ObterCreditosAutoresTipoAutoria(IEnumerable<string> creditosAutores, TipoCreditoAutoria tipoAutoria)
@@ -813,6 +846,13 @@ namespace SME.CDEP.Aplicacao.Servicos
         {
             foreach (var nome in formatos)
                 await ExisteFormatoPorNomeETipo(nome,tipoFormato);
+        }
+        protected string ObterSufixo(string codigo, string sufixo)
+        {
+            if (codigo.NaoEstaPreenchido())
+                return default;
+            
+            return codigo.Contains(sufixo) ? codigo : $"{codigo}{sufixo}";
         }
     }
 }
