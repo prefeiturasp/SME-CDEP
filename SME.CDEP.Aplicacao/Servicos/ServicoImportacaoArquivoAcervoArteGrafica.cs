@@ -126,28 +126,20 @@ namespace SME.CDEP.Aplicacao.Servicos
             return new AcervoLinhaErroDTO<AcervoArteGraficaDTO,AcervoArteGraficaLinhaRetornoDTO>()
             {
                 Titulo = ObterConteudoTexto(linha.Titulo),
-                Tombo = TratarTombo(ObterConteudoTexto(linha.Codigo)),
+                Tombo = ObterSufixo(ObterConteudoTexto(linha.Codigo),Constantes.SIGLA_ACERVO_ARTE_GRAFICA),
                 NumeroLinha = linha.NumeroLinha,
                 RetornoObjeto = ObterAcervoArteGraficaDto(linha,tipoAcervo),
                 RetornoErro = ObterLinhasComErros(linha),
             };
         }
-
-        private static string TratarTombo(string codigo)
-        {
-            if (codigo.NaoEstaPreenchido())
-                return default;
-            
-            return codigo.Contains(Constantes.SIGLA_ACERVO_ARTE_GRAFICA) ? codigo : $"{codigo}{Constantes.SIGLA_ACERVO_ARTE_GRAFICA}";
-        }
-
+        
         private AcervoArteGraficaDTO ObterAcervoArteGraficaDto(AcervoArteGraficaLinhaDTO linha, TipoAcervo tipoAcervo)
         {
             return new AcervoArteGraficaDTO()
             {
                 Titulo = ObterConteudoTexto(linha.Titulo),
                 TipoAcervoId = (int)tipoAcervo,
-                Codigo = TratarTombo(ObterConteudoTexto(linha.Codigo)),
+                Codigo = ObterSufixo(ObterConteudoTexto(linha.Codigo),Constantes.SIGLA_ACERVO_ARTE_GRAFICA),
                 Localizacao = ObterConteudoTexto(linha.Localizacao),
                 Procedencia = ObterConteudoTexto(linha.Procedencia),
                 Ano = ObterConteudoInteiroOuNulo(linha.Ano),

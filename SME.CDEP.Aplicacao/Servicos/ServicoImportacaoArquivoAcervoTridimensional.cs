@@ -119,7 +119,7 @@ namespace SME.CDEP.Aplicacao.Servicos
             return new AcervoLinhaErroDTO<AcervoTridimensionalDTO,AcervoTridimensionalLinhaRetornoDTO>()
             {
                 Titulo = ObterConteudoTexto(linha.Titulo),
-                Tombo = $"{ObterConteudoTexto(linha.Codigo)}{Constantes.SIGLA_ACERVO_TRIDIMENSIONAL}",
+                Tombo = ObterSufixo(ObterConteudoTexto(linha.Codigo),Constantes.SIGLA_ACERVO_TRIDIMENSIONAL),
                 NumeroLinha = linha.NumeroLinha,
                 RetornoObjeto = ObterAcervoTridimensionalDto(linha,tipoAcervo),
                 RetornoErro = ObterLinhasComErros(linha),
@@ -132,7 +132,7 @@ namespace SME.CDEP.Aplicacao.Servicos
             {
                 Titulo = ObterConteudoTexto(linha.Titulo),
                 TipoAcervoId = (int)tipoAcervo,
-                Codigo = $"{ObterConteudoTexto(linha.Codigo)}{Constantes.SIGLA_ACERVO_TRIDIMENSIONAL}",
+                Codigo = ObterSufixo(ObterConteudoTexto(linha.Codigo),Constantes.SIGLA_ACERVO_TRIDIMENSIONAL),
                 Procedencia = ObterConteudoTexto(linha.Procedencia),
                 Ano = ObterConteudoInteiroOuNulo(linha.Ano),
                 DataAcervo = ObterConteudoTexto(linha.Data),
@@ -145,7 +145,7 @@ namespace SME.CDEP.Aplicacao.Servicos
                 Diametro = ObterConteudoDoubleOuNulo(linha.Diametro),
             };
         }
-        
+
         private AcervoTridimensionalLinhaRetornoDTO ObterLinhasComErros(AcervoTridimensionalLinhaDTO s)
         {
             return new AcervoTridimensionalLinhaRetornoDTO()

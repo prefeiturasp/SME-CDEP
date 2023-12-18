@@ -836,5 +836,9 @@ namespace SME.CDEP.Aplicacao.Servicos
             foreach (var nome in formatos)
                 await ExisteFormatoPorNomeETipo(nome,tipoFormato);
         }
+        protected string ObterSufixo(string codigo, string sufixo)
+        {
+            return codigo.Contains(sufixo) ? codigo : $"{codigo}{sufixo}";
+        }
     }
 }
