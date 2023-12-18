@@ -109,7 +109,7 @@ namespace SME.CDEP.Aplicacao.Servicos
                         .Select(s=> ObterAcervoLinhaRetornoResumidoDto(s,arquivoImportado.TipoAcervo)),
                 Sucesso = acervosTridimensionalLinhas
                         .Where(w => !w.PossuiErros)
-                        .Select(s=> ObterLinhasComSucesso(s.Titulo.Conteudo, s.Codigo.Conteudo, s.NumeroLinha)),
+                        .Select(s=> ObterLinhasComSucessoSufixo(s.Titulo.Conteudo, s.Codigo.Conteudo, s.NumeroLinha,Constantes.SIGLA_ACERVO_TRIDIMENSIONAL)),
             };
             return acervoTridimensionalRetorno;
         }
@@ -214,7 +214,6 @@ namespace SME.CDEP.Aplicacao.Servicos
         
         public async Task PersistenciaAcervo(IEnumerable<AcervoTridimensionalLinhaDTO> acervosTridimensionalsLinhas)
         {
-            
             await ObterDominios();
             
             foreach (var acervoTridimensionalLinha in acervosTridimensionalsLinhas.Where(w=> !w.PossuiErros))

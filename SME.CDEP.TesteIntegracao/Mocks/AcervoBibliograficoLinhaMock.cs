@@ -28,7 +28,7 @@ public static class AcervoBibliograficoLinhaMock
             });
             faker.RuleFor(x => x.Material, f => new LinhaConteudoAjustarDTO()
             {
-                Conteudo = f.Lorem.Sentence().Limite(500),
+                Conteudo = ConstantesTestes.LIVRO,
                 LimiteCaracteres = ConstantesTestes.CARACTERES_PERMITIDOS_500,
                 EhCampoObrigatorio = true
             });
@@ -50,7 +50,7 @@ public static class AcervoBibliograficoLinhaMock
             });
             faker.RuleFor(x => x.Editora, f => new LinhaConteudoAjustarDTO()
             {
-                Conteudo = f.Commerce.Department().Limite(200),
+                Conteudo = ConstantesTestes.EDITORA_A,
                 LimiteCaracteres = ConstantesTestes.CARACTERES_PERMITIDOS_200
             });
             faker.RuleFor(x => x.Assunto, f => new LinhaConteudoAjustarDTO()
@@ -87,7 +87,7 @@ public static class AcervoBibliograficoLinhaMock
             });
             faker.RuleFor(x => x.SerieColecao, f => new LinhaConteudoAjustarDTO()
             {
-                Conteudo = f.Lorem.Sentence().Limite(200),
+                Conteudo = ConstantesTestes.SERIE_COLECAO_A,
                 LimiteCaracteres = ConstantesTestes.CARACTERES_PERMITIDOS_200,
             });
             faker.RuleFor(x => x.Volume, f => new LinhaConteudoAjustarDTO()
@@ -97,7 +97,7 @@ public static class AcervoBibliograficoLinhaMock
             });
             faker.RuleFor(x => x.Idioma, f => new LinhaConteudoAjustarDTO()
             {
-                Conteudo = f.Lorem.Sentence().Limite(500),
+                Conteudo = ConstantesTestes.PORTUGUES,
                 LimiteCaracteres = ConstantesTestes.CARACTERES_PERMITIDOS_500,
                 EhCampoObrigatorio = true
             });

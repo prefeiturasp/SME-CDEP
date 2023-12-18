@@ -85,6 +85,7 @@ namespace SME.CDEP.Aplicacao.Servicos
             SeriesColecoes = (await servicoSerieColecao.ObterTodos()).Select(s=> mapper.Map<IdNomeDTO>(s)).ToList();
             Idiomas = (await servicoIdioma.ObterTodos()).Select(s=> mapper.Map<IdNomeDTO>(s)).ToList();
             Assuntos = (await servicoAssunto.ObterTodos()).Select(s=> mapper.Map<IdNomeDTO>(s)).ToList();
+            Formatos = (await servicoFormato.ObterTodos()).Select(s=> mapper.Map<IdNomeTipoDTO>(s)).ToList();
         }
 
         public void ValidarArquivo(IFormFile file)
@@ -764,7 +765,7 @@ namespace SME.CDEP.Aplicacao.Servicos
                 throw new NegocioException(string.Format(Constantes.A_PLANLHA_DE_ACERVO_X_NAO_TEM_O_NOME_DA_COLUNA_Y_NA_COLUNA_Z, nomeDoAcervo,nomeDaColuna,numeroDaColuna));
         }
         
-        protected static AcervoLinhaRetornoSucessoDTO ObterLinhasComSucesso(string titulo, string tombo, int numeroLinha)
+        protected AcervoLinhaRetornoSucessoDTO ObterLinhasComSucesso(string titulo, string tombo, int numeroLinha)
         {
             return new AcervoLinhaRetornoSucessoDTO()
             {
@@ -772,7 +773,17 @@ namespace SME.CDEP.Aplicacao.Servicos
                 Tombo = tombo,
                 NumeroLinha = numeroLinha,
             };
-        }     
+        }
+        
+        protected AcervoLinhaRetornoSucessoDTO ObterLinhasComSucessoSufixo(string titulo, string tombo, int numeroLinha, string sufixo)
+        {
+            return new AcervoLinhaRetornoSucessoDTO()
+            {
+                Titulo = titulo,
+                Tombo = ObterSufixo(tombo,sufixo),
+                NumeroLinha = numeroLinha,
+            };
+        }
         
 
         protected async Task ObterSuportesPorTipo(TipoSuporte tipoSuporte)
@@ -838,6 +849,9 @@ namespace SME.CDEP.Aplicacao.Servicos
         }
         protected string ObterSufixo(string codigo, string sufixo)
         {
+            if (codigo.NaoEstaPreenchido())
+                return default;
+            
             return codigo.Contains(sufixo) ? codigo : $"{codigo}{sufixo}";
         }
     }

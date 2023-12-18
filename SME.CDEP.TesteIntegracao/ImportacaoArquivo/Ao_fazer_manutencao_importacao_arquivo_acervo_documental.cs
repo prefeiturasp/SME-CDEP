@@ -116,6 +116,13 @@ namespace SME.CDEP.TesteIntegracao
         
             var acervoDocumentalLinhas = AcervoDocumentalLinhaMock.GerarAcervoDocumentalLinhaDTO().Generate(10);
         
+            var autores = acervoDocumentalLinhas
+                .SelectMany(acervo => acervo.Autor.Conteudo.FormatarTextoEmArray().UnificarPipe().SplitPipe())
+                .Distinct()
+                .ToList();
+
+            await InserirCreditosAutorias(autores,TipoCreditoAutoria.Autoria);
+            
             await InserirNaBase(new ImportacaoArquivo()
             {
                 Nome = faker.Hacker.Verb(),
@@ -159,7 +166,7 @@ namespace SME.CDEP.TesteIntegracao
                 acervos.Any(a=> a.Ano.SaoIguais(linhasComSucesso.Ano.Conteudo.ConverterParaInteiro())).ShouldBeTrue();
                 
                 //Referência 1:1
-                acervosDocumentais.Any(a=> a.MaterialId.SaoIguais(materiais.FirstOrDefault(f=> f.Nome.SaoIguais(linhasComSucesso.Material.Conteudo)).Id)).ShouldBeTrue();
+                acervosDocumentais.Any(a=> a.MaterialId.SaoIguais(materiais.FirstOrDefault(f=> f.Nome.SaoIguais(linhasComSucesso.Material.Conteudo) && f.Tipo == TipoMaterial.DOCUMENTAL).Id)).ShouldBeTrue();
                 acervosDocumentais.Any(a=> a.IdiomaId.SaoIguais(idiomas.FirstOrDefault(f=> f.Nome.SaoIguais(linhasComSucesso.Idioma.Conteudo)).Id)).ShouldBeTrue();
                 acervosDocumentais.Any(a=> a.ConservacaoId.SaoIguais(conservacoes.FirstOrDefault(f=> f.Nome.SaoIguais(linhasComSucesso.EstadoConservacao.Conteudo)).Id)).ShouldBeTrue();
                 
@@ -205,6 +212,13 @@ namespace SME.CDEP.TesteIntegracao
         
             var acervoDocumentalLinhas = AcervoDocumentalLinhaMock.GerarAcervoDocumentalLinhaDTO().Generate(10);
            
+            var autores = acervoDocumentalLinhas
+                .SelectMany(acervo => acervo.Autor.Conteudo.FormatarTextoEmArray().UnificarPipe().SplitPipe())
+                .Distinct()
+                .ToList();
+
+            await InserirCreditosAutorias(autores,TipoCreditoAutoria.Autoria);
+            
             acervoDocumentalLinhas[1].CopiaDigital.Conteudo = acervoDocumentalLinhas[1].Titulo.Conteudo;
             acervoDocumentalLinhas[3].Largura.Conteudo = "ABC3512";
             acervoDocumentalLinhas[5].Altura.Conteudo = "1212ABC";
@@ -326,7 +340,7 @@ namespace SME.CDEP.TesteIntegracao
                 acervos.Any(a=> a.Ano.SaoIguais(linhasComSucesso.Ano.Conteudo.ConverterParaInteiro())).ShouldBeTrue();
                 
                 //Referência 1:1
-                acervosDocumentais.Any(a=> a.MaterialId.SaoIguais(materiais.FirstOrDefault(f=> f.Nome.SaoIguais(linhasComSucesso.Material.Conteudo)).Id)).ShouldBeTrue();
+                acervosDocumentais.Any(a=> a.MaterialId.SaoIguais(materiais.FirstOrDefault(f=> f.Nome.SaoIguais(linhasComSucesso.Material.Conteudo) && f.Tipo == TipoMaterial.DOCUMENTAL).Id)).ShouldBeTrue();
                 acervosDocumentais.Any(a=> a.IdiomaId.SaoIguais(idiomas.FirstOrDefault(f=> f.Nome.SaoIguais(linhasComSucesso.Idioma.Conteudo)).Id)).ShouldBeTrue();
                 acervosDocumentais.Any(a=> a.ConservacaoId.SaoIguais(conservacoes.FirstOrDefault(f=> f.Nome.SaoIguais(linhasComSucesso.EstadoConservacao.Conteudo)).Id)).ShouldBeTrue();
                 
@@ -372,6 +386,8 @@ namespace SME.CDEP.TesteIntegracao
         
             var linhasInseridas = AcervoDocumentalLinhaMock.GerarAcervoDocumentalLinhaDTO().Generate(10);
             
+            await InserirCreditosAutorias(linhasInseridas.Select(s => s.Autor.Conteudo).ToArray().UnificarPipe().SplitPipe().Distinct().Where(w=> w.EstaPreenchido()), TipoCreditoAutoria.Autoria);
+            
             linhasInseridas[3].PossuiErros = true;
             linhasInseridas[3].Volume.PossuiErro = true;
             linhasInseridas[3].Volume.Mensagem = string.Format(Dominio.Constantes.Constantes.CAMPO_X_REQUER_UM_VALOR_NUMERICO, Dominio.Constantes.Constantes.VOLUME);
@@ -388,10 +404,6 @@ namespace SME.CDEP.TesteIntegracao
                 Conteudo = JsonConvert.SerializeObject(linhasInseridas),
                 CriadoEm = DateTimeExtension.HorarioBrasilia().Date, CriadoPor = ConstantesTestes.SISTEMA, CriadoLogin = ConstantesTestes.LOGIN_123456789
             });
-
-            await InserirMateriais(linhasInseridas.Select(s => s.Material.Conteudo).Distinct().Where(w=> w.EstaPreenchido()), TipoMaterial.DOCUMENTAL);
-            await InserirIdiomas(linhasInseridas.Select(s => s.Idioma.Conteudo).Distinct().Where(w=> w.EstaPreenchido()));
-            await InserirCreditosAutorias(linhasInseridas.Select(s => s.Autor.Conteudo).ToArray().UnificarPipe().SplitPipe().Distinct().Where(w=> w.EstaPreenchido()), TipoCreditoAutoria.Autoria);
 
             var retorno = await servicoImportacaoArquivo.ObterImportacaoPendente();
             retorno.ShouldNotBeNull();

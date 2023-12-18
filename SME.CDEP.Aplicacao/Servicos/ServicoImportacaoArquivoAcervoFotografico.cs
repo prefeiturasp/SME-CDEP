@@ -116,7 +116,7 @@ namespace SME.CDEP.Aplicacao.Servicos
                         .Select(s=> ObterAcervoLinhaRetornoResumidoDto(s,arquivoImportado.TipoAcervo)),
                 Sucesso = acervosFotograficoLinhas
                         .Where(w => !w.PossuiErros)
-                        .Select(s=> ObterLinhasComSucesso(s.Titulo.Conteudo, s.Codigo.Conteudo, s.NumeroLinha)),
+                        .Select(s=> ObterLinhasComSucessoSufixo(s.Titulo.Conteudo, s.Codigo.Conteudo, s.NumeroLinha, Constantes.SIGLA_ACERVO_FOTOGRAFICO)),
             };
             return acervoFotograficoRetorno;
         }

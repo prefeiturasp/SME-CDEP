@@ -114,7 +114,7 @@ namespace SME.CDEP.Aplicacao.Servicos
                     .Select(s=> ObterAcervoLinhaRetornoResumidoDto(s, arquivoImportado.TipoAcervo)),
                 Sucesso = acervosAudiovisualLinhas
                     .Where(w => !w.PossuiErros)
-                    .Select(s=> ObterLinhasComSucesso(s.Titulo.Conteudo, s.Codigo.Conteudo, s.NumeroLinha)),
+                    .Select(s=> ObterLinhasComSucessoSufixo(s.Titulo.Conteudo, s.Codigo.Conteudo, s.NumeroLinha,Constantes.SIGLA_ACERVO_AUDIOVISUAL)),
             };
             return acervoAudiovisualRetorno;
         }

@@ -98,9 +98,9 @@ namespace SME.CDEP.Aplicacao.Servicos
         private async Task<ImportacaoArquivoRetornoDTO<AcervoLinhaErroDTO<AcervoArteGraficaDTO,AcervoArteGraficaLinhaRetornoDTO>,AcervoLinhaRetornoSucessoDTO>> ObterRetornoImportacaoAcervo(ImportacaoArquivo arquivoImportado, IEnumerable<AcervoArteGraficaLinhaDTO> acervosArtesGraficasLinhas, bool estaImportandoArquivo = true)
         {
             if (!estaImportandoArquivo)
-            {
                 await ObterDominios();
-            }
+            
+            await ObterCreditosAutoresPorTipo(TipoCreditoAutoria.Credito);
             
             await ObterSuportesPorTipo(TipoSuporte.IMAGEM);
             
@@ -116,7 +116,7 @@ namespace SME.CDEP.Aplicacao.Servicos
                         .Select(s=> ObterAcervoLinhaRetornoResumidoDto(s,arquivoImportado.TipoAcervo)),
                 Sucesso = acervosArtesGraficasLinhas
                         .Where(w => !w.PossuiErros)
-                        .Select(s=> ObterLinhasComSucesso(s.Titulo.Conteudo, s.Codigo.Conteudo, s.NumeroLinha)),
+                        .Select(s=> ObterLinhasComSucessoSufixo(s.Titulo.Conteudo, s.Codigo.Conteudo, s.NumeroLinha,Constantes.SIGLA_ACERVO_ARTE_GRAFICA)),
             };
             return acervoArteGraficaRetorno;
         }

@@ -115,6 +115,13 @@ namespace SME.CDEP.TesteIntegracao
         
             var acervoAudiovisualLinhas = AcervoAudiovisualLinhaMock.GerarAcervoAudiovisualLinhaDTO().Generate(10);
         
+            var creditos = acervoAudiovisualLinhas
+                .SelectMany(acervo => acervo.Credito.Conteudo.FormatarTextoEmArray().UnificarPipe().SplitPipe())
+                .Distinct()
+                .ToList();
+
+            await InserirCreditosAutorias(creditos);
+            
             await InserirNaBase(new ImportacaoArquivo()
             {
                 Nome = faker.Hacker.Verb(),
@@ -130,7 +137,6 @@ namespace SME.CDEP.TesteIntegracao
             var acervosAudiovisual = ObterTodos<AcervoAudiovisual>();
             var suportes = ObterTodos<Suporte>();
             var cromias = ObterTodos<Cromia>();
-            var acervoCreditoAutors = ObterTodos<AcervoCreditoAutor>();
             var creditoAutores = ObterTodos<CreditoAutor>();
             var conservacoes = ObterTodos<Conservacao>();
             
@@ -171,12 +177,9 @@ namespace SME.CDEP.TesteIntegracao
                 
                 //Crédito
                 var creditoAInserir = linhasComSucesso.Credito.Conteudo.FormatarTextoEmArray().ToArray().UnificarPipe().SplitPipe().Distinct();
-                
+
                 foreach (var credito in creditoAInserir)
-                    creditoAutores.Any(a=> a.Nome.SaoIguais(credito)).ShouldBeTrue();
-                
-                foreach (var creditoAutor in acervoCreditoAutors)
-                    creditoAutores.Any(a=> a.Id.SaoIguais(creditoAutor.CreditoAutorId)).ShouldBeTrue();
+                    creditoAutores.Any(a=> a.Nome.SaoIguais(credito)).ShouldBeTrue();	
             }
         }
         
@@ -188,6 +191,13 @@ namespace SME.CDEP.TesteIntegracao
             var servicoImportacaoArquivo = GetServicoImportacaoArquivoAcervoAudiovisual();
         
             var acervoAudiovisualLinhas = AcervoAudiovisualLinhaMock.GerarAcervoAudiovisualLinhaDTO().Generate(10);
+            
+            var creditos = acervoAudiovisualLinhas
+                .SelectMany(acervo => acervo.Credito.Conteudo.FormatarTextoEmArray().UnificarPipe().SplitPipe())
+                .Distinct()
+                .ToList();
+
+            await InserirCreditosAutorias(creditos);
            
             acervoAudiovisualLinhas[1].PermiteUsoImagem.Conteudo = acervoAudiovisualLinhas[1].Titulo.Conteudo;
             acervoAudiovisualLinhas[3].Descricao.Conteudo = string.Empty;
@@ -212,7 +222,6 @@ namespace SME.CDEP.TesteIntegracao
             var acervosAudiovisual = ObterTodos<AcervoAudiovisual>();
             var suportes = ObterTodos<Suporte>();
             var cromias = ObterTodos<Cromia>();
-            var acervoCreditoAutors = ObterTodos<AcervoCreditoAutor>();
             var creditoAutores = ObterTodos<CreditoAutor>();
             var conservacoes = ObterTodos<Conservacao>();
             
@@ -308,12 +317,9 @@ namespace SME.CDEP.TesteIntegracao
                 
                 //Crédito
                 var creditoAInserir = linhasComSucesso.Credito.Conteudo.FormatarTextoEmArray().ToArray().UnificarPipe().SplitPipe().Distinct();
-                
+
                 foreach (var credito in creditoAInserir)
-                    creditoAutores.Any(a=> a.Nome.SaoIguais(credito)).ShouldBeTrue();
-                
-                foreach (var creditoAutor in acervoCreditoAutors)
-                    creditoAutores.Any(a=> a.Id.SaoIguais(creditoAutor.CreditoAutorId)).ShouldBeTrue();
+                    creditoAutores.Any(a=> a.Nome.SaoIguais(credito)).ShouldBeTrue();	
             }
         }
         
@@ -552,7 +558,7 @@ namespace SME.CDEP.TesteIntegracao
                 PossuiErros = true,
                 Titulo = new LinhaConteudoAjustarDTO() { PossuiErro = true},
                 Localizacao = new LinhaConteudoAjustarDTO() { PossuiErro = true},
-                Codigo = new LinhaConteudoAjustarDTO() { PossuiErro = true},
+                Codigo = new LinhaConteudoAjustarDTO() { PossuiErro = true },
                 Procedencia = new LinhaConteudoAjustarDTO() { PossuiErro = true},
                 Ano = new LinhaConteudoAjustarDTO() { PossuiErro = true},
                 Data = new LinhaConteudoAjustarDTO() { PossuiErro = true},

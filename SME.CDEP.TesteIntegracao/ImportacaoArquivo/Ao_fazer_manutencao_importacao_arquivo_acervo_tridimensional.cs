@@ -108,7 +108,7 @@ namespace SME.CDEP.TesteIntegracao
 
             var servicoImportacaoArquivo = GetServicoImportacaoArquivoAcervoTridimensional();
         
-            var acervoTridimensionalLinhas = AcervoTridimensionalLinhaMock.GerarAcervoTridimensionalLinhaDTO().Generate(1);
+            var acervoTridimensionalLinhas = AcervoTridimensionalLinhaMock.GerarAcervoTridimensionalLinhaDTO().Generate(10);
 
             acervoTridimensionalLinhas[0].Profundidade.Conteudo = "11,22"; 
         

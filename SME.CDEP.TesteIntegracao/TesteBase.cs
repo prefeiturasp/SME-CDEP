@@ -337,8 +337,108 @@ namespace SME.CDEP.TesteIntegracao
             await InserirCromiasBase();
             await InserirAcessoDocumentos();
             await InserirCreditosAutorias();
+            await InserirFormatos();
+            await InserirMateriais();
+            await InserirIdiomas();
+            await InserirSeriesColecoes();
+            await InserirEditoras();
         }
+        
+        private async Task InserirEditoras()
+        {
+            var editoras = new List<Editora>
+            {
+                new() { Nome = ConstantesTestes.EDITORA_A },
+                new() { Nome = ConstantesTestes.EDITORA_B },
+                new() { Nome = ConstantesTestes.EDITORA_C},
+                new() { Nome = ConstantesTestes.EDITORA_D },
+            };
 
+            foreach (var editora in editoras)
+                await InserirNaBase(new Editora() 
+                { 
+                    Nome = editora.Nome, 
+                    CriadoPor = ConstantesTestes.SISTEMA,
+                    CriadoEm = DateTimeExtension.HorarioBrasilia(), 
+                    CriadoLogin = ConstantesTestes.LOGIN_123456789 
+                });
+        }
+        
+        private async Task InserirSeriesColecoes()
+        {
+            var serieColecoes = new List<SerieColecao>
+            {
+                new() { Nome = ConstantesTestes.SERIE_COLECAO_A },
+                new() { Nome = ConstantesTestes.SERIE_COLECAO_B },
+                new() { Nome = ConstantesTestes.SERIE_COLECAO_C},
+                new() { Nome = ConstantesTestes.SERIE_COLECAO_D },
+            };
+
+            foreach (var serieColecao in serieColecoes)
+                await InserirNaBase(new SerieColecao() 
+                { 
+                    Nome = serieColecao.Nome, 
+                    CriadoPor = ConstantesTestes.SISTEMA,
+                    CriadoEm = DateTimeExtension.HorarioBrasilia(), 
+                    CriadoLogin = ConstantesTestes.LOGIN_123456789 
+                });
+        }
+        
+        private async Task InserirIdiomas()
+        {
+            var idiomas = new List<Idioma>
+            {
+                new() { Nome = ConstantesTestes.PORTUGUES },
+                new() { Nome = ConstantesTestes.INGLES },
+                new() { Nome = ConstantesTestes.ESPANHOL},
+                new() { Nome = ConstantesTestes.FRANCES },
+            };
+
+            foreach (var idioma in idiomas)
+                await InserirNaBase(new Idioma() { Nome = idioma.Nome });
+        }
+        
+        private async Task InserirMateriais()
+        {
+            var materiais = new List<Material>
+            {
+                new() { Nome = ConstantesTestes.APOSTILA, Tipo = TipoMaterial.DOCUMENTAL },
+                new() { Nome = ConstantesTestes.LIVRO, Tipo = TipoMaterial.DOCUMENTAL },
+                new() { Nome = ConstantesTestes.PERIODICO, Tipo = TipoMaterial.DOCUMENTAL },
+                
+                new() { Nome = ConstantesTestes.LIVRO, Tipo = TipoMaterial.BIBLIOGRAFICO },
+                new() { Nome = ConstantesTestes.TESE, Tipo = TipoMaterial.BIBLIOGRAFICO },
+                new() { Nome = ConstantesTestes.PERIODICO, Tipo = TipoMaterial.BIBLIOGRAFICO },
+            };
+
+            foreach (var material in materiais)
+            {
+                await InserirNaBase(new Material()
+                {
+                    Nome = material.Nome,
+                    Tipo = material.Tipo
+                });
+            }
+        }
+        
+        private async Task InserirFormatos()
+        {
+            var formatos = new List<Formato>
+            {
+                new() { Nome = ConstantesTestes.JPEG, Tipo = TipoFormato.ACERVO_FOTOS },
+                new() { Nome = ConstantesTestes.TIFF, Tipo = TipoFormato.ACERVO_FOTOS },
+            };
+
+            foreach (var formato in formatos)
+            {
+                await InserirNaBase(new Formato()
+                {
+                    Nome = formato.Nome,
+                    Tipo = formato.Tipo
+                });
+            }
+        }
+        
         private async Task InserirSuportesBase()
         {
             var suportes = new List<Suporte>
