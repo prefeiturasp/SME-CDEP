@@ -96,4 +96,5 @@ public class ConstantesTestes
     public const string PERFIL_EXTERNO_GUID = "3092428D-CA98-4788-9717-E706DF1945A0";
     public const string EMAIL_INTERNO = "email.interno@interno.com.br";
     public const string MIME_TYPE_JPG = "image/jpg";
+    public const string Desconhecido = "Desconhecido";
 }

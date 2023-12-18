@@ -71,6 +71,11 @@ namespace SME.CDEP.Aplicacao.Servicos
             return await ObterRetornoImportacaoAcervo(arquivoImportado, JsonConvert.DeserializeObject<IEnumerable<AcervoAudiovisualLinhaDTO>>(arquivoImportado.Conteudo), false);
         }
 
+        public async Task CarregarDominios()
+        {
+            await ObterDominios();
+        }
+
         public async Task<ImportacaoArquivoRetornoDTO<AcervoLinhaErroDTO<AcervoAudiovisualDTO,AcervoAudiovisualLinhaRetornoDTO>,AcervoLinhaRetornoSucessoDTO>> ImportarArquivo(IFormFile file)
         {
             ValidarArquivo(file);
@@ -80,6 +85,12 @@ namespace SME.CDEP.Aplicacao.Servicos
             var importacaoArquivo = ObterImportacaoArquivoParaSalvar(file.FileName, TipoAcervo.Audiovisual, JsonConvert.SerializeObject(acervosAudiovisualLinhas));
             
             var importacaoArquivoId = await PersistirImportacao(importacaoArquivo);
+            
+            await ObterDominios();
+            
+            await ObterSuportesPorTipo(TipoSuporte.VIDEO);
+            
+            await ObterCreditosAutoresPorTipo(TipoCreditoAutoria.Credito);
            
             ValidarPreenchimentoValorFormatoQtdeCaracteres(acervosAudiovisualLinhas);
             
@@ -244,12 +255,6 @@ namespace SME.CDEP.Aplicacao.Servicos
         
         public async Task PersistenciaAcervo(IEnumerable<AcervoAudiovisualLinhaDTO> acervosAudiovisualLinhas)
         {
-            await ObterDominios();
-            
-            await ObterSuportesPorTipo(TipoSuporte.VIDEO);
-            
-            await ObterCreditosAutoresPorTipo(TipoCreditoAutoria.Credito);
-            
             foreach (var acervoAudiovisualLinha in acervosAudiovisualLinhas.Where(w=> !w.PossuiErros))
             {
                 try
@@ -295,18 +300,33 @@ namespace SME.CDEP.Aplicacao.Servicos
                 {
                     ValidarPreenchimentoLimiteCaracteres(linha.Titulo, Constantes.TITULO);
                     ValidarPreenchimentoLimiteCaracteres(linha.Codigo, Constantes.TOMBO);
+                    
                     ValidarPreenchimentoLimiteCaracteres(linha.Credito, Constantes.CREDITO);
+                    ValidarCreditosComDominio(linha);
+
                     ValidarPreenchimentoLimiteCaracteres(linha.Localizacao,Constantes.LOCALIZACAO);
                     ValidarPreenchimentoLimiteCaracteres(linha.Procedencia,Constantes.PROCEDENCIA);
                     ValidarPreenchimentoLimiteCaracteres(linha.Ano,Constantes.ANO);
                     ValidarPreenchimentoLimiteCaracteres(linha.Data,Constantes.DATA);
                     ValidarPreenchimentoLimiteCaracteres(linha.Copia,Constantes.COPIA);
                     ValidarPreenchimentoLimiteCaracteres(linha.PermiteUsoImagem,Constantes.AUTORIZACAO_USO_DE_IMAGEM);
+                    
                     ValidarPreenchimentoLimiteCaracteres(linha.EstadoConservacao,Constantes.ESTADO_CONSERVACAO);
+                    if (!Conservacoes.Any(a=> a.Nome.SaoIguais(linha.EstadoConservacao.Conteudo)))
+                        DefinirMensagemErro(linha.EstadoConservacao, string.Format(MensagemNegocio.O_ITEM_X_DO_DOMINIO_X_NAO_ENCONTRADO, linha.EstadoConservacao.Conteudo, Constantes.ESTADO_CONSERVACAO));
+                    
                     ValidarPreenchimentoLimiteCaracteres(linha.Descricao,Constantes.DESCRICAO);
+                    
                     ValidarPreenchimentoLimiteCaracteres(linha.Suporte,Constantes.SUPORTE);
+                    if (!Suportes.Any(a=> a.Nome.SaoIguais(linha.Suporte.Conteudo)))
+                        DefinirMensagemErro(linha.Suporte, string.Format(MensagemNegocio.O_ITEM_X_DO_DOMINIO_X_NAO_ENCONTRADO, linha.Suporte.Conteudo, Constantes.SUPORTE));
+                    
                     ValidarPreenchimentoLimiteCaracteres(linha.Duracao,Constantes.DURACAO);
+                    
                     ValidarPreenchimentoLimiteCaracteres(linha.Cromia,Constantes.CROMIA);
+                    if (!Cromias.Any(a=> a.Nome.SaoIguais(linha.Cromia.Conteudo)))
+                        DefinirMensagemErro(linha.Cromia, string.Format(MensagemNegocio.O_ITEM_X_DO_DOMINIO_X_NAO_ENCONTRADO, linha.Cromia.Conteudo, Constantes.CROMIA));
+                    
                     ValidarPreenchimentoLimiteCaracteres(linha.TamanhoArquivo,Constantes.TAMANHO_ARQUIVO);
                     ValidarPreenchimentoLimiteCaracteres(linha.Acessibilidade,Constantes.ACESSIBILIDADE);
                     ValidarPreenchimentoLimiteCaracteres(linha.Disponibilizacao,Constantes.DISPONIBILIDADE);
@@ -318,7 +338,19 @@ namespace SME.CDEP.Aplicacao.Servicos
                 }
             }
         }
-        
+
+        private void ValidarCreditosComDominio(AcervoAudiovisualLinhaDTO linha)
+        {
+            var creditos = linha.Credito.Conteudo.FormatarTextoEmArray().UnificarPipe().SplitPipe().Distinct().ToList();
+
+            var creditosNaoEncontrados = string.Empty;
+            foreach (var credito in creditos.Where(credito => !CreditosAutores.Any(a=> a.Nome.SaoIguais(credito))))
+                creditosNaoEncontrados += creditosNaoEncontrados.NaoEstaPreenchido() ? credito : $" | {credito}";
+                    
+            if (creditosNaoEncontrados.EstaPreenchido())
+                DefinirMensagemErro(linha.Credito, string.Format(MensagemNegocio.O_ITEM_X_DO_DOMINIO_X_NAO_ENCONTRADO, creditosNaoEncontrados, Constantes.CREDITO));
+        }
+
         private bool PossuiErro(AcervoAudiovisualLinhaDTO linha)
         {
             return linha.Titulo.PossuiErro 

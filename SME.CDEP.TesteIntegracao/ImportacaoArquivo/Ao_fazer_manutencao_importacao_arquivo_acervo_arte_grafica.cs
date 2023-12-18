@@ -24,7 +24,13 @@ namespace SME.CDEP.TesteIntegracao
             var servicoImportacaoArquivo = GetServicoImportacaoArquivoAcervoArteGrafica();
 
             var acervoArteGraficaLinhas = AcervoArteGraficaLinhaMock.GerarAcervoArteGraficaLinhaDTO().Generate(10);
+            var creditos = acervoArteGraficaLinhas
+                .SelectMany(acervoArteGraficaLinhaDto => acervoArteGraficaLinhaDto.Credito.Conteudo.FormatarTextoEmArray().UnificarPipe().SplitPipe())
+                .Distinct()
+                .ToList();
 
+            await InserirCreditosAutorias(creditos);
+            
             acervoArteGraficaLinhas[2].Titulo.Conteudo = string.Empty;
             acervoArteGraficaLinhas[4].Cromia.Conteudo = string.Empty;
             acervoArteGraficaLinhas[5].Largura.Conteudo = faker.Lorem.Paragraph();
@@ -32,6 +38,7 @@ namespace SME.CDEP.TesteIntegracao
             acervoArteGraficaLinhas[8].Quantidade.Conteudo = faker.Lorem.Paragraph();
             var linhasComErros = new[] { 3, 5, 6, 8, 9 };
             
+            await servicoImportacaoArquivo.CarregarDominios();
             servicoImportacaoArquivo.ValidarPreenchimentoValorFormatoQtdeCaracteres(acervoArteGraficaLinhas);
 
             foreach (var linha in acervoArteGraficaLinhas)
@@ -109,6 +116,123 @@ namespace SME.CDEP.TesteIntegracao
             }
         }
         
+        [Fact(DisplayName = "Importação Arquivo Acervo Arte Grafica - ValidarPreenchimentoValorFormatoQtdeCaracteres - Com erros: Credito, estado de conservacao, cromia e suporte ")]
+        public async Task Validar_preenchimento_valor_formato_qtde_caracteres_credito_conservacao_cromia_suporte()
+        {
+            await InserirDadosBasicos();
+            
+            var servicoImportacaoArquivo = GetServicoImportacaoArquivoAcervoArteGrafica();
+
+            var acervoArteGraficaLinhas = AcervoArteGraficaLinhaMock.GerarAcervoArteGraficaLinhaDTO().Generate(10);
+            var creditos = acervoArteGraficaLinhas
+                .SelectMany(acervoArteGraficaLinhaDto => acervoArteGraficaLinhaDto.Credito.Conteudo.FormatarTextoEmArray().UnificarPipe().SplitPipe())
+                .Distinct()
+                .ToList();
+
+            await InserirCreditosAutorias(creditos);
+            
+            acervoArteGraficaLinhas[2].Titulo.Conteudo = string.Empty;
+            
+            acervoArteGraficaLinhas[4].Cromia.Conteudo = ConstantesTestes.Desconhecido;
+            acervoArteGraficaLinhas[4].Suporte.Conteudo = ConstantesTestes.Desconhecido;
+            
+            acervoArteGraficaLinhas[5].Largura.Conteudo = faker.Lorem.Paragraph();
+            
+            acervoArteGraficaLinhas[7].Diametro.Conteudo = faker.Lorem.Paragraph();
+            acervoArteGraficaLinhas[7].EstadoConservacao.Conteudo = ConstantesTestes.Desconhecido;
+            
+            acervoArteGraficaLinhas[8].Quantidade.Conteudo = faker.Lorem.Paragraph();
+            acervoArteGraficaLinhas[8].Credito.Conteudo = ConstantesTestes.Desconhecido;
+            
+            var linhasComErros = new[] { 3, 5, 6, 8, 9 };
+            
+            await servicoImportacaoArquivo.CarregarDominios();
+            servicoImportacaoArquivo.ValidarPreenchimentoValorFormatoQtdeCaracteres(acervoArteGraficaLinhas);
+
+            foreach (var linha in acervoArteGraficaLinhas)
+            {
+                linha.PossuiErros.ShouldBe(linhasComErros.Any(a=> a.SaoIguais(linha.NumeroLinha)));
+
+                if (linha.NumeroLinha.SaoIguais(3))
+                {
+                    linha.Titulo.PossuiErro.ShouldBeTrue();
+                    linha.Titulo.Mensagem.ShouldNotBeEmpty();
+                }
+                else
+                {
+                    linha.Titulo.PossuiErro.ShouldBeFalse();
+                    linha.Titulo.Mensagem.ShouldBeEmpty();
+                }
+                
+                if (linha.NumeroLinha.SaoIguais(5))
+                {
+                    linha.Cromia.PossuiErro.ShouldBeTrue();
+                    linha.Cromia.Mensagem.ShouldNotBeEmpty();
+                    linha.Suporte.PossuiErro.ShouldBeTrue();
+                    linha.Suporte.Mensagem.ShouldNotBeEmpty();
+                }
+                else
+                {
+                    linha.Cromia.PossuiErro.ShouldBeFalse();
+                    linha.Cromia.Mensagem.ShouldBeEmpty();
+                    linha.Suporte.PossuiErro.ShouldBeFalse();
+                    linha.Suporte.Mensagem.ShouldBeEmpty();
+                }
+                
+                if (linha.NumeroLinha.SaoIguais(6))
+                {
+                    linha.Largura.PossuiErro.ShouldBeTrue();
+                    linha.Largura.Mensagem.ShouldNotBeEmpty();
+                }
+                else
+                {
+                    linha.Largura.PossuiErro.ShouldBeFalse();
+                    linha.Largura.Mensagem.ShouldBeEmpty();
+                }
+                
+                if (linha.NumeroLinha.SaoIguais(8))
+                {
+                    linha.Diametro.PossuiErro.ShouldBeTrue();
+                    linha.Diametro.Mensagem.ShouldNotBeEmpty();
+                    linha.EstadoConservacao.PossuiErro.ShouldBeTrue();
+                    linha.EstadoConservacao.Mensagem.ShouldNotBeEmpty();
+                }
+                else
+                {
+                    linha.Diametro.PossuiErro.ShouldBeFalse();
+                    linha.Diametro.Mensagem.ShouldBeEmpty();
+                    linha.EstadoConservacao.PossuiErro.ShouldBeFalse();
+                    linha.EstadoConservacao.Mensagem.ShouldBeEmpty();
+                }
+                
+                if (linha.NumeroLinha.SaoIguais(9))
+                {
+                    linha.Quantidade.PossuiErro.ShouldBeTrue();
+                    linha.Quantidade.Mensagem.ShouldNotBeEmpty();
+                    linha.Credito.PossuiErro.ShouldBeTrue();
+                    linha.Credito.Mensagem.ShouldNotBeEmpty();
+                }
+                else
+                {
+                    linha.Quantidade.PossuiErro.ShouldBeFalse();
+                    linha.Quantidade.Mensagem.ShouldBeEmpty();
+                    linha.Credito.PossuiErro.ShouldBeFalse();
+                    linha.Credito.Mensagem.ShouldBeEmpty();
+                }
+                
+                linha.CopiaDigital.PossuiErro.ShouldBeFalse();
+                linha.Localizacao.PossuiErro.ShouldBeFalse();
+                linha.Procedencia.PossuiErro.ShouldBeFalse();
+                linha.Ano.PossuiErro.ShouldBeFalse();
+                linha.Data.PossuiErro.ShouldBeFalse();
+                linha.PermiteUsoImagem.PossuiErro.ShouldBeFalse();
+                linha.Altura.PossuiErro.ShouldBeFalse();
+                linha.Tecnica.PossuiErro.ShouldBeFalse();
+                linha.Codigo.PossuiErro.ShouldBeFalse();
+                linha.Descricao.PossuiErro.ShouldBeFalse();
+            }
+        }
+        
         [Fact(DisplayName = "Importação Arquivo Acervo Arte Grafica - PersistenciaAcervo")]
         public async Task Persistencia_acervo()
         {
@@ -134,6 +258,7 @@ namespace SME.CDEP.TesteIntegracao
                 CriadoEm = DateTimeExtension.HorarioBrasilia().Date, CriadoPor = ConstantesTestes.SISTEMA, CriadoLogin = ConstantesTestes.LOGIN_123456789
             });
             
+            await servicoImportacaoArquivo.CarregarDominios();
             await servicoImportacaoArquivo.PersistenciaAcervo(acervoArteGraficaLinhas);
         
             var acervos = ObterTodos<Acervo>();
@@ -217,6 +342,7 @@ namespace SME.CDEP.TesteIntegracao
                 CriadoEm = DateTimeExtension.HorarioBrasilia().Date, CriadoPor = ConstantesTestes.SISTEMA, CriadoLogin = ConstantesTestes.LOGIN_123456789
             });
             
+            await servicoImportacaoArquivo.CarregarDominios();
             servicoImportacaoArquivo.ValidarPreenchimentoValorFormatoQtdeCaracteres(acervoArteGraficaLinhas);
             await servicoImportacaoArquivo.PersistenciaAcervo(acervoArteGraficaLinhas);
             await servicoImportacaoArquivo.AtualizarImportacao(1, JsonConvert.SerializeObject(acervoArteGraficaLinhas), acervoArteGraficaLinhas.Any(a=> a.PossuiErros) ? ImportacaoStatus.Erros : ImportacaoStatus.Sucesso);

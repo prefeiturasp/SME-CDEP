@@ -71,6 +71,11 @@ namespace SME.CDEP.Aplicacao.Servicos
             return await ObterRetornoImportacaoAcervo(arquivoImportado, JsonConvert.DeserializeObject<IEnumerable<AcervoDocumentalLinhaDTO>>(arquivoImportado.Conteudo), false);
         }
 
+        public async Task CarregarDominios()
+        {
+            await ObterDominios();
+        }
+
         public async Task<ImportacaoArquivoRetornoDTO<AcervoLinhaErroDTO<AcervoDocumentalDTO,AcervoDocumentalLinhaRetornoDTO>,AcervoLinhaRetornoSucessoDTO>> ImportarArquivo(IFormFile file)
         {
             ValidarArquivo(file);
@@ -80,7 +85,13 @@ namespace SME.CDEP.Aplicacao.Servicos
             var importacaoArquivo = ObterImportacaoArquivoParaSalvar(file.FileName, TipoAcervo.DocumentacaoHistorica, JsonConvert.SerializeObject(acervosDocumentalLinhas));
             
             var importacaoArquivoId = await PersistirImportacao(importacaoArquivo);
+           
+            await ObterDominios();
             
+            await ObterCreditosAutoresPorTipo(TipoCreditoAutoria.Autoria);
+                
+            await ObterMateriaisPorTipo(TipoMaterial.DOCUMENTAL);
+
             ValidarPreenchimentoValorFormatoQtdeCaracteres(acervosDocumentalLinhas);
             
             await AtualizarImportacao(importacaoArquivoId, JsonConvert.SerializeObject(acervosDocumentalLinhas),ImportacaoStatus.ValidadoPreenchimentoValorFormatoQtdeCaracteres);
@@ -260,12 +271,6 @@ namespace SME.CDEP.Aplicacao.Servicos
 
         public async Task PersistenciaAcervo(IEnumerable<AcervoDocumentalLinhaDTO> acervosDocumentalLinhas)
         {
-            await ObterDominios();
-            
-            await ObterCreditosAutoresPorTipo(TipoCreditoAutoria.Autoria);
-                
-            await ObterMateriaisPorTipo(TipoMaterial.DOCUMENTAL);
-            
             foreach (var acervoDocumentalLinha in acervosDocumentalLinhas.Where(w=> !w.PossuiErros))
             {
                 try
@@ -311,9 +316,18 @@ namespace SME.CDEP.Aplicacao.Servicos
                     ValidarPreenchimentoLimiteCaracteres(linha.Titulo, Constantes.TITULO);
                     ValidarPreenchimentoLimiteCaracteres(linha.Codigo, Constantes.CODIGO_ANTIGO);
                     ValidarPreenchimentoLimiteCaracteres(linha.CodigoNovo, Constantes.CODIGO_NOVO);
+                    
                     ValidarPreenchimentoLimiteCaracteres(linha.Material,Constantes.MATERIAL);
+                    if (!Materiais.Any(a=> a.Nome.SaoIguais(linha.Material.Conteudo)))
+                        DefinirMensagemErro(linha.Material, string.Format(MensagemNegocio.O_ITEM_X_DO_DOMINIO_X_NAO_ENCONTRADO, linha.Material.Conteudo, Constantes.MATERIAL));
+                    
                     ValidarPreenchimentoLimiteCaracteres(linha.Idioma,Constantes.IDIOMA);
+                    if (!Idiomas.Any(a=> a.Nome.SaoIguais(linha.Idioma.Conteudo)))
+                        DefinirMensagemErro(linha.Idioma, string.Format(MensagemNegocio.O_ITEM_X_DO_DOMINIO_X_NAO_ENCONTRADO, linha.Idioma.Conteudo, Constantes.IDIOMA));
+                    
                     ValidarPreenchimentoLimiteCaracteres(linha.Autor,Constantes.AUTOR);
+                    ValidarAutoresComDominio(linha);
+
                     ValidarPreenchimentoLimiteCaracteres(linha.Ano,Constantes.ANO);
                     ValidarPreenchimentoLimiteCaracteres(linha.NumeroPaginas,Constantes.NUMERO_PAGINAS);
                     ValidarPreenchimentoLimiteCaracteres(linha.Volume,Constantes.VOLUME);
@@ -322,10 +336,16 @@ namespace SME.CDEP.Aplicacao.Servicos
                     ValidarPreenchimentoLimiteCaracteres(linha.Largura,Constantes.LARGURA);
                     ValidarPreenchimentoLimiteCaracteres(linha.Altura,Constantes.ALTURA);
                     ValidarPreenchimentoLimiteCaracteres(linha.TamanhoArquivo,Constantes.TAMANHO_ARQUIVO);
+                    
                     ValidarPreenchimentoLimiteCaracteres(linha.AcessoDocumento,Constantes.ACESSO_DOCUMENTO);
+                    ValidarAcessoDocumentosComDominio(linha);
+
                     ValidarPreenchimentoLimiteCaracteres(linha.Localizacao,Constantes.LOCALIZACAO);
                     ValidarPreenchimentoLimiteCaracteres(linha.CopiaDigital,Constantes.COPIA_DIGITAL);
+                    
                     ValidarPreenchimentoLimiteCaracteres(linha.EstadoConservacao,Constantes.ESTADO_CONSERVACAO);
+                    if (!Conservacoes.Any(a=> a.Nome.SaoIguais(linha.EstadoConservacao.Conteudo)))
+                        DefinirMensagemErro(linha.EstadoConservacao, string.Format(MensagemNegocio.O_ITEM_X_DO_DOMINIO_X_NAO_ENCONTRADO, linha.EstadoConservacao.Conteudo, Constantes.ESTADO_CONSERVACAO));
 
                     if (linha.Codigo.Conteudo.NaoEstaPreenchido() && linha.CodigoNovo.Conteudo.NaoEstaPreenchido())
                     {
@@ -339,6 +359,28 @@ namespace SME.CDEP.Aplicacao.Servicos
                     linha.DefinirLinhaComoErro(string.Format(Constantes.OCORREU_UMA_FALHA_INESPERADA_NA_LINHA_X_MOTIVO_Y, linha.NumeroLinha, e.Message));
                 }
             }
+        }
+
+        private void ValidarAutoresComDominio(AcervoDocumentalLinhaDTO linha)
+        {
+            var autores = linha.Autor.Conteudo.FormatarTextoEmArray().UnificarPipe().SplitPipe().Distinct().ToList();
+            var autoresNaoEncontrados = string.Empty;
+            foreach (var autor in autores.Where(credito => !CreditosAutores.Any(a=> a.Nome.SaoIguais(credito))))
+                autoresNaoEncontrados += autoresNaoEncontrados.NaoEstaPreenchido() ? autor : $" | {autor}";
+                    
+            if (autoresNaoEncontrados.EstaPreenchido())
+                DefinirMensagemErro(linha.Autor, string.Format(MensagemNegocio.O_ITEM_X_DO_DOMINIO_X_NAO_ENCONTRADO, autoresNaoEncontrados, Constantes.AUTOR));
+        }
+
+        private void ValidarAcessoDocumentosComDominio(AcervoDocumentalLinhaDTO linha)
+        {
+            var acessoDocumentos = linha.AcessoDocumento.Conteudo.FormatarTextoEmArray().UnificarPipe().SplitPipe().Distinct().ToList();
+            var acessoDocumentosNaoEncontrados = string.Empty;
+            foreach (var acessoDocumento in acessoDocumentos.Where(acessoDocumento => !AcessoDocumentos.Any(a=> a.Nome.SaoIguais(acessoDocumento))))
+                acessoDocumentosNaoEncontrados += acessoDocumentosNaoEncontrados.NaoEstaPreenchido() ? acessoDocumento : $" | {acessoDocumento}";
+                    
+            if (acessoDocumentosNaoEncontrados.EstaPreenchido())
+                DefinirMensagemErro(linha.AcessoDocumento, string.Format(MensagemNegocio.O_ITEM_X_DO_DOMINIO_X_NAO_ENCONTRADO, acessoDocumentosNaoEncontrados, Constantes.ACESSO_DOCUMENTO));
         }
 
         private bool PossuiErro(AcervoDocumentalLinhaDTO linha)

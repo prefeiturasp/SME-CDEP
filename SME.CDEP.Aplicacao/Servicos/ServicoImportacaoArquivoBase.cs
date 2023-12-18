@@ -1,6 +1,5 @@
 using AutoMapper;
 using ClosedXML.Excel;
-using DocumentFormat.OpenXml.Office2016.Drawing.ChartDrawing;
 using Microsoft.AspNetCore.Http;
 using Newtonsoft.Json;
 using SME.CDEP.Aplicacao.DTOS;
@@ -361,40 +360,11 @@ namespace SME.CDEP.Aplicacao.Servicos
             campo.PossuiErro = true;
             campo.Mensagem = mensagemErro;
         }
-
+        
         private void DefinirCampoValidado(LinhaConteudoAjustarDTO campo)
         {
             campo.PossuiErro = false;
-            campo.Mensagem = string.Empty;
-        }
-        
-        public async Task ValidarOuInserirAcessoDocumento(IEnumerable<string> acessoDocumentos)
-        {
-            foreach (var nome in acessoDocumentos)
-            {
-                if (!await ExisteAcessoDocumentoPorNome(nome))
-                {
-                    var id  = await servicoAcessoDocumento.Inserir(new IdNomeExcluidoDTO() { Nome = nome});
-                    CachearAcessoDocumento(nome, id);
-                }
-            }
-        }
-
-        private async Task<bool> ExisteAcessoDocumentoPorNome(string nome)
-        {
-            var id = await servicoAcessoDocumento.ObterPorNome(nome);
-
-            var existeRegistro = id.EhMaiorQueZero();
-            
-            if (existeRegistro)
-                CachearAcessoDocumento(nome, id);
-
-            return existeRegistro;
-        }
-
-        private void CachearAcessoDocumento(string nome, long id)
-        {
-            AcessoDocumentos.Add(new IdNomeDTO() { Id = id, Nome = nome});
+            campo.Mensagem = null;
         }
         
         protected static LinhaConteudoAjustarRetornoDTO ObterConteudoMensagemStatus(LinhaConteudoAjustarDTO linha)
@@ -403,7 +373,7 @@ namespace SME.CDEP.Aplicacao.Servicos
             {
                 Conteudo = linha.Conteudo, 
                 PossuiErro = linha.PossuiErro, 
-                Mensagem = linha.Mensagem
+                Mensagem = linha.Mensagem,
             };
         }
         

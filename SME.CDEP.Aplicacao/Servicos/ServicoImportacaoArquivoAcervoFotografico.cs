@@ -71,6 +71,11 @@ namespace SME.CDEP.Aplicacao.Servicos
             return await ObterRetornoImportacaoAcervo(arquivoImportado, JsonConvert.DeserializeObject<IEnumerable<AcervoFotograficoLinhaDTO>>(arquivoImportado.Conteudo), false);
         }
 
+        public async Task CarregarDominios()
+        {
+            await base.ObterDominios();
+        }
+
         public async Task<ImportacaoArquivoRetornoDTO<AcervoLinhaErroDTO<AcervoFotograficoDTO,AcervoFotograficoLinhaRetornoDTO>,AcervoLinhaRetornoSucessoDTO>> ImportarArquivo(IFormFile file)
         {
             ValidarArquivo(file);
@@ -80,6 +85,14 @@ namespace SME.CDEP.Aplicacao.Servicos
             var importacaoArquivo = ObterImportacaoArquivoParaSalvar(file.FileName, TipoAcervo.Fotografico, JsonConvert.SerializeObject(acervosFotograficoLinhas));
             
             var importacaoArquivoId = await PersistirImportacao(importacaoArquivo);
+
+            await base.ObterDominios();
+            
+            await ObterCreditosAutoresPorTipo(TipoCreditoAutoria.Credito);
+                
+            await ObterFormatosPorTipo(TipoFormato.ACERVO_FOTOS);
+            
+            await ObterSuportesPorTipo(TipoSuporte.IMAGEM);
            
             ValidarPreenchimentoValorFormatoQtdeCaracteres(acervosFotograficoLinhas);
             
@@ -96,7 +109,7 @@ namespace SME.CDEP.Aplicacao.Servicos
         private async Task<ImportacaoArquivoRetornoDTO<AcervoLinhaErroDTO<AcervoFotograficoDTO,AcervoFotograficoLinhaRetornoDTO>,AcervoLinhaRetornoSucessoDTO>> ObterRetornoImportacaoAcervo(ImportacaoArquivo arquivoImportado, IEnumerable<AcervoFotograficoLinhaDTO> acervosFotograficoLinhas, bool estaImportandoArquivo = true)
         {
             if (!estaImportandoArquivo)
-                await ObterDominios();
+                await base.ObterDominios();
                 
             await ObterCreditosAutoresPorTipo(TipoCreditoAutoria.Credito);
                 
@@ -256,14 +269,6 @@ namespace SME.CDEP.Aplicacao.Servicos
         
         public async Task PersistenciaAcervo(IEnumerable<AcervoFotograficoLinhaDTO> acervosFotograficosLinhas)
         {
-            await ObterDominios();
-            
-            await ObterCreditosAutoresPorTipo(TipoCreditoAutoria.Credito);
-                
-            await ObterFormatosPorTipo(TipoFormato.ACERVO_FOTOS);
-            
-            await ObterSuportesPorTipo(TipoSuporte.IMAGEM);
-            
             foreach (var acervoFotograficoLinha in acervosFotograficosLinhas.Where(w=> !w.PossuiErros))
             {
                 try
@@ -311,22 +316,40 @@ namespace SME.CDEP.Aplicacao.Servicos
                 {
                     ValidarPreenchimentoLimiteCaracteres(linha.Titulo, Constantes.TITULO);
                     ValidarPreenchimentoLimiteCaracteres(linha.Codigo, Constantes.TOMBO);
+                    
                     ValidarPreenchimentoLimiteCaracteres(linha.Credito, Constantes.CREDITO);
+                    ValidarCreditosComDominio(linha);
+
                     ValidarPreenchimentoLimiteCaracteres(linha.Localizacao,Constantes.LOCALIZACAO);
                     ValidarPreenchimentoLimiteCaracteres(linha.Procedencia,Constantes.PROCEDENCIA);
                     ValidarPreenchimentoLimiteCaracteres(linha.Ano,Constantes.ANO);
                     ValidarPreenchimentoLimiteCaracteres(linha.Data,Constantes.DATA);
                     ValidarPreenchimentoLimiteCaracteres(linha.CopiaDigital,Constantes.COPIA_DIGITAL);
                     ValidarPreenchimentoLimiteCaracteres(linha.PermiteUsoImagem,Constantes.AUTORIZACAO_USO_DE_IMAGEM);
+                    
                     ValidarPreenchimentoLimiteCaracteres(linha.EstadoConservacao,Constantes.ESTADO_CONSERVACAO);
+                    if (!Conservacoes.Any(a=> a.Nome.SaoIguais(linha.EstadoConservacao.Conteudo)))
+                        DefinirMensagemErro(linha.EstadoConservacao, string.Format(MensagemNegocio.O_ITEM_X_DO_DOMINIO_X_NAO_ENCONTRADO, linha.EstadoConservacao.Conteudo, Constantes.ESTADO_CONSERVACAO));
+                    
                     ValidarPreenchimentoLimiteCaracteres(linha.Descricao,Constantes.DESCRICAO);
                     ValidarPreenchimentoLimiteCaracteres(linha.Quantidade,Constantes.QUANTIDADE);
                     ValidarPreenchimentoLimiteCaracteres(linha.Largura,Constantes.LARGURA);
                     ValidarPreenchimentoLimiteCaracteres(linha.Altura,Constantes.ALTURA);
+                    
                     ValidarPreenchimentoLimiteCaracteres(linha.Suporte,Constantes.SUPORTE);
+                    if (!Suportes.Any(a=> a.Nome.SaoIguais(linha.Suporte.Conteudo)))
+                        DefinirMensagemErro(linha.Suporte, string.Format(MensagemNegocio.O_ITEM_X_DO_DOMINIO_X_NAO_ENCONTRADO, linha.Suporte.Conteudo, Constantes.SUPORTE));
+                    
                     ValidarPreenchimentoLimiteCaracteres(linha.FormatoImagem,Constantes.FORMATO_IMAGEM);
+                    if (!Formatos.Any(a=> a.Nome.SaoIguais(linha.FormatoImagem.Conteudo)))
+                        DefinirMensagemErro(linha.FormatoImagem, string.Format(MensagemNegocio.O_ITEM_X_DO_DOMINIO_X_NAO_ENCONTRADO, linha.FormatoImagem.Conteudo, Constantes.FORMATO));
+                    
                     ValidarPreenchimentoLimiteCaracteres(linha.TamanhoArquivo,Constantes.TAMANHO_ARQUIVO);
+                    
                     ValidarPreenchimentoLimiteCaracteres(linha.Cromia,Constantes.CROMIA);
+                    if (!Cromias.Any(a=> a.Nome.SaoIguais(linha.Cromia.Conteudo)))
+                        DefinirMensagemErro(linha.Cromia, string.Format(MensagemNegocio.O_ITEM_X_DO_DOMINIO_X_NAO_ENCONTRADO, linha.Cromia.Conteudo, Constantes.CROMIA));
+                    
                     ValidarPreenchimentoLimiteCaracteres(linha.Resolucao,Constantes.RESOLUCAO);
                     linha.PossuiErros = PossuiErro(linha);
                 }
@@ -336,7 +359,19 @@ namespace SME.CDEP.Aplicacao.Servicos
                 }
             }
         }
-        
+
+        private void ValidarCreditosComDominio(AcervoFotograficoLinhaDTO linha)
+        {
+            var creditos = linha.Credito.Conteudo.FormatarTextoEmArray().UnificarPipe().SplitPipe().Distinct().ToList();
+
+            var creditosNaoEncontrados = string.Empty;
+            foreach (var credito in creditos.Where(credito => !CreditosAutores.Any(a => a.Nome.SaoIguais(credito))))
+                creditosNaoEncontrados += creditosNaoEncontrados.NaoEstaPreenchido() ? credito : $" | {credito}";
+
+            if (creditosNaoEncontrados.EstaPreenchido())
+                DefinirMensagemErro(linha.Credito, string.Format(MensagemNegocio.O_ITEM_X_DO_DOMINIO_X_NAO_ENCONTRADO, creditosNaoEncontrados, Constantes.CREDITO));
+        }
+
         private bool PossuiErro(AcervoFotograficoLinhaDTO linha)
         {
             return linha.Titulo.PossuiErro 

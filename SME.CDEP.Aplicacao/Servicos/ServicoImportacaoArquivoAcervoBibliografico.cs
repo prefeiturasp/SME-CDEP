@@ -72,6 +72,11 @@ namespace SME.CDEP.Aplicacao.Servicos
             return await ObterRetornoImportacaoAcervo(arquivoImportado, JsonConvert.DeserializeObject<IEnumerable<AcervoBibliograficoLinhaDTO>>(arquivoImportado.Conteudo), false);
         }
 
+        public async Task CarregarDominios()
+        {
+            await ObterDominios();
+        }
+
         public async Task<ImportacaoArquivoRetornoDTO<AcervoLinhaErroDTO<AcervoBibliograficoDTO,AcervoBibliograficoLinhaRetornoDTO>,AcervoLinhaRetornoSucessoDTO>> ImportarArquivo(IFormFile file)
         {
             ValidarArquivo(file);
@@ -81,7 +86,13 @@ namespace SME.CDEP.Aplicacao.Servicos
             var importacaoArquivo = ObterImportacaoArquivoParaSalvar(file.FileName, TipoAcervo.Bibliografico, JsonConvert.SerializeObject(acervosBibliograficosLinhas));
             
             var importacaoArquivoId = await PersistirImportacao(importacaoArquivo);
-           
+            
+            await ObterDominios();
+            
+            await ObterMateriaisPorTipo(TipoMaterial.BIBLIOGRAFICO);
+                
+            await ObterCreditosAutoresPorTipo(TipoCreditoAutoria.Autoria);
+
             ValidarPreenchimentoValorFormatoQtdeCaracteres(acervosBibliograficosLinhas);
             
             await AtualizarImportacao(importacaoArquivoId, JsonConvert.SerializeObject(acervosBibliograficosLinhas),ImportacaoStatus.ValidadoPreenchimentoValorFormatoQtdeCaracteres);
@@ -264,12 +275,6 @@ namespace SME.CDEP.Aplicacao.Servicos
 
         public async Task PersistenciaAcervo(IEnumerable<AcervoBibliograficoLinhaDTO> acervosBibliograficosLinhas)
         {
-            await ObterDominios();
-            
-            await ObterMateriaisPorTipo(TipoMaterial.BIBLIOGRAFICO);
-                
-            await ObterCreditosAutoresPorTipo(TipoCreditoAutoria.Autoria);
-            
             foreach (var acervoBibliograficoLinha in acervosBibliograficosLinhas.Where(w=> !w.PossuiErros))
             {
                 try
@@ -355,9 +360,17 @@ namespace SME.CDEP.Aplicacao.Servicos
                 {
                     ValidarPreenchimentoLimiteCaracteres(linha.Titulo, Constantes.TITULO);
                     ValidarPreenchimentoLimiteCaracteres(linha.SubTitulo, Constantes.SUB_TITULO);
+                    
                     ValidarPreenchimentoLimiteCaracteres(linha.Material,Constantes.MATERIAL);
+                    if (!Materiais.Any(a=> a.Nome.SaoIguais(linha.Material.Conteudo)))
+                        DefinirMensagemErro(linha.Material, string.Format(MensagemNegocio.O_ITEM_X_DO_DOMINIO_X_NAO_ENCONTRADO, linha.Material.Conteudo, Constantes.MATERIAL));
+                    
                     ValidarPreenchimentoLimiteCaracteres(linha.Autor,Constantes.AUTOR);
+                    ValidarAutoresComDominio(linha);
+
                     ValidarPreenchimentoLimiteCaracteres(linha.CoAutor,Constantes.CO_AUTOR);
+                    ValidarCoAutoresComDominio(linha);
+
                     ValidarPreenchimentoLimiteCaracteres(linha.TipoAutoria,Constantes.TIPO_AUTORIA);
                     
                     if (linha.TipoAutoria.Conteudo.EstaPreenchido() && linha.CoAutor.Conteudo.NaoEstaPreenchido())
@@ -367,15 +380,28 @@ namespace SME.CDEP.Aplicacao.Servicos
                         DefinirMensagemErro(linha.TipoAutoria, Constantes.TEMOS_MAIS_TIPO_AUTORIA_QUE_COAUTORES);
                     
                     ValidarPreenchimentoLimiteCaracteres(linha.Editora,Constantes.EDITORA);
+                    if (!Editoras.Any(a=> a.Nome.SaoIguais(linha.Editora.Conteudo)))
+                        DefinirMensagemErro(linha.Editora, string.Format(MensagemNegocio.O_ITEM_X_DO_DOMINIO_X_NAO_ENCONTRADO, linha.Editora.Conteudo, Constantes.EDITORA));
+                    
                     ValidarPreenchimentoLimiteCaracteres(linha.Assunto,Constantes.ASSUNTO);
+                    ValidarAssuntosComDominio(linha);
+
                     ValidarPreenchimentoLimiteCaracteres(linha.Ano,Constantes.ANO);
                     ValidarPreenchimentoLimiteCaracteres(linha.Edicao,Constantes.EDICAO);
                     ValidarPreenchimentoLimiteCaracteres(linha.NumeroPaginas,Constantes.NUMERO_PAGINAS);
                     ValidarPreenchimentoLimiteCaracteres(linha.Largura,Constantes.LARGURA);
                     ValidarPreenchimentoLimiteCaracteres(linha.Altura,Constantes.ALTURA);
+                    
                     ValidarPreenchimentoLimiteCaracteres(linha.SerieColecao,Constantes.SERIE_COLECAO);
+                    if (!SeriesColecoes.Any(a=> a.Nome.SaoIguais(linha.SerieColecao.Conteudo)))
+                        DefinirMensagemErro(linha.SerieColecao, string.Format(MensagemNegocio.O_ITEM_X_DO_DOMINIO_X_NAO_ENCONTRADO, linha.SerieColecao.Conteudo, Constantes.SERIE_COLECAO));
+                    
                     ValidarPreenchimentoLimiteCaracteres(linha.Volume,Constantes.VOLUME);
+                    
                     ValidarPreenchimentoLimiteCaracteres(linha.Idioma,Constantes.IDIOMA);
+                    if (!Idiomas.Any(a=> a.Nome.SaoIguais(linha.Idioma.Conteudo)))
+                        DefinirMensagemErro(linha.Idioma, string.Format(MensagemNegocio.O_ITEM_X_DO_DOMINIO_X_NAO_ENCONTRADO, linha.Idioma.Conteudo, Constantes.IDIOMA));
+                    
                     ValidarPreenchimentoLimiteCaracteres(linha.LocalizacaoCDD,Constantes.LOCALIZACAO_CDD);
                     ValidarPreenchimentoLimiteCaracteres(linha.LocalizacaoPHA,Constantes.LOCALIZACAO_PHA);
                     ValidarPreenchimentoLimiteCaracteres(linha.NotasGerais,Constantes.NOTAS_GERAIS);
@@ -388,6 +414,41 @@ namespace SME.CDEP.Aplicacao.Servicos
                     linha.DefinirLinhaComoErro(string.Format(Constantes.OCORREU_UMA_FALHA_INESPERADA_NA_LINHA_X_MOTIVO_Y, e.Message));
                 }
             }
+        }
+
+        private void ValidarAssuntosComDominio(AcervoBibliograficoLinhaDTO linha)
+        {
+            var assuntos = linha.Assunto.Conteudo.FormatarTextoEmArray().UnificarPipe().SplitPipe().Distinct().ToList();
+            var assuntosNaoEncontrados = string.Empty;
+            foreach (var assunto in assuntos.Where(assunto => !Assuntos.Any(a=> a.Nome.SaoIguais(assunto))))
+                assuntosNaoEncontrados += assuntosNaoEncontrados.NaoEstaPreenchido() ? assunto : $" | {assunto}";
+                    
+            if (assuntosNaoEncontrados.EstaPreenchido())
+                DefinirMensagemErro(linha.Assunto, string.Format(MensagemNegocio.O_ITEM_X_DO_DOMINIO_X_NAO_ENCONTRADO, assuntosNaoEncontrados, Constantes.ASSUNTO));
+        }
+
+        private void ValidarCoAutoresComDominio(AcervoBibliograficoLinhaDTO linha)
+        {
+            var coAutores = linha.CoAutor.Conteudo.FormatarTextoEmArray().UnificarPipe().SplitPipe().Distinct().ToList();
+            var coAutoresNaoEncontrados = string.Empty;
+                    
+            foreach (var coAutor in coAutores.Where(coAutor => !CreditosAutores.Any(a=> a.Nome.SaoIguais(coAutor))))
+                coAutoresNaoEncontrados += coAutoresNaoEncontrados.NaoEstaPreenchido() ? coAutor : $" | {coAutor}";
+                    
+            if (coAutoresNaoEncontrados.EstaPreenchido())
+                DefinirMensagemErro(linha.CoAutor, string.Format(MensagemNegocio.O_ITEM_X_DO_DOMINIO_X_NAO_ENCONTRADO, coAutoresNaoEncontrados, Constantes.CO_AUTOR));
+        }
+
+        private void ValidarAutoresComDominio(AcervoBibliograficoLinhaDTO linha)
+        {
+            var autores = linha.Autor.Conteudo.FormatarTextoEmArray().UnificarPipe().SplitPipe().Distinct().ToList();
+            var autoresNaoEncontrados = string.Empty;
+                    
+            foreach (var autor in autores.Where(autor => !CreditosAutores.Any(a=> a.Nome.SaoIguais(autor))))
+                autoresNaoEncontrados += autoresNaoEncontrados.NaoEstaPreenchido() ? autor : $" | {autor}";
+                    
+            if (autoresNaoEncontrados.EstaPreenchido())
+                DefinirMensagemErro(linha.Autor, string.Format(MensagemNegocio.O_ITEM_X_DO_DOMINIO_X_NAO_ENCONTRADO, autoresNaoEncontrados, Constantes.AUTOR));
         }
 
         private bool PossuiErro(AcervoBibliograficoLinhaDTO linha)
