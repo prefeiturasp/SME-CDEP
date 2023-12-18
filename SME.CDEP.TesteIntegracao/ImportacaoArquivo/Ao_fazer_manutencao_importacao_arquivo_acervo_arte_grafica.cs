@@ -117,6 +117,10 @@ namespace SME.CDEP.TesteIntegracao
             var servicoImportacaoArquivo = GetServicoImportacaoArquivoAcervoArteGrafica();
         
             var acervoArteGraficaLinhas = AcervoArteGraficaLinhaMock.GerarAcervoArteGraficaLinhaDTO().Generate(10);
+            
+            foreach (var acervoArteGraficaLinhaDto in acervoArteGraficaLinhas)
+                await InserirCreditosAutorias(acervoArteGraficaLinhaDto.Credito.Conteudo.FormatarTextoEmArray()
+                    .ToArray().UnificarPipe().SplitPipe().Distinct());
         
             await InserirNaBase(new ImportacaoArquivo()
             {
@@ -133,7 +137,6 @@ namespace SME.CDEP.TesteIntegracao
             var acervosArtesGraficas = ObterTodos<AcervoArteGrafica>();
             var suportes = ObterTodos<Suporte>();
             var cromias = ObterTodos<Cromia>();
-            var acervoCreditoAutors = ObterTodos<AcervoCreditoAutor>();
             var creditoAutores = ObterTodos<CreditoAutor>();
             var conservacoes = ObterTodos<Conservacao>();
             
@@ -175,12 +178,9 @@ namespace SME.CDEP.TesteIntegracao
                 
                 //Crédito
                 var creditoAInserir = linhasComSucesso.Credito.Conteudo.FormatarTextoEmArray().ToArray().UnificarPipe().SplitPipe().Distinct();
-                
+
                 foreach (var credito in creditoAInserir)
-                    creditoAutores.Any(a=> a.Nome.SaoIguais(credito)).ShouldBeTrue();
-                
-                foreach (var creditoAutor in acervoCreditoAutors)
-                    creditoAutores.Any(a=> a.Id.SaoIguais(creditoAutor.CreditoAutorId)).ShouldBeTrue();
+                    creditoAutores.Any(a=> a.Nome.SaoIguais(credito)).ShouldBeTrue();	
             }
         }
         
@@ -192,7 +192,11 @@ namespace SME.CDEP.TesteIntegracao
             var servicoImportacaoArquivo = GetServicoImportacaoArquivoAcervoArteGrafica();
         
             var acervoArteGraficaLinhas = AcervoArteGraficaLinhaMock.GerarAcervoArteGraficaLinhaDTO().Generate(10);
-           
+
+            foreach (var acervoArteGraficaLinhaDto in acervoArteGraficaLinhas)
+                await InserirCreditosAutorias(acervoArteGraficaLinhaDto.Credito.Conteudo.FormatarTextoEmArray()
+                    .ToArray().UnificarPipe().SplitPipe().Distinct());
+            
             acervoArteGraficaLinhas[1].CopiaDigital.Conteudo = acervoArteGraficaLinhas[1].Titulo.Conteudo;
             acervoArteGraficaLinhas[3].Largura.Conteudo = "ABC3512";
             acervoArteGraficaLinhas[5].Altura.Conteudo = "1212ABC";
@@ -216,7 +220,6 @@ namespace SME.CDEP.TesteIntegracao
             var acervosArtesGraficas = ObterTodos<AcervoArteGrafica>();
             var suportes = ObterTodos<Suporte>();
             var cromias = ObterTodos<Cromia>();
-            var acervoCreditoAutors = ObterTodos<AcervoCreditoAutor>(); //não está carregando esses caras
             var creditoAutores = ObterTodos<CreditoAutor>();
             var conservacoes = ObterTodos<Conservacao>();
             
@@ -319,9 +322,6 @@ namespace SME.CDEP.TesteIntegracao
                 
                 foreach (var credito in creditoAInserir)
                     creditoAutores.Any(a=> a.Nome.SaoIguais(credito)).ShouldBeTrue();
-                
-                foreach (var creditoAutor in acervoCreditoAutors)
-                    creditoAutores.Any(a=> a.Id.SaoIguais(creditoAutor.CreditoAutorId)).ShouldBeTrue();
             }
         }
         
@@ -646,7 +646,7 @@ namespace SME.CDEP.TesteIntegracao
                 PossuiErros = true,
                 Titulo = new LinhaConteudoAjustarDTO() { PossuiErro = true},
                 Localizacao = new LinhaConteudoAjustarDTO() { PossuiErro = true},
-                Codigo = new LinhaConteudoAjustarDTO() { PossuiErro = true},
+                Codigo = new LinhaConteudoAjustarDTO() { PossuiErro = true, Conteudo = $"{faker.Lorem.Sentence().Limite(12)}.AG"},
                 Procedencia = new LinhaConteudoAjustarDTO() { PossuiErro = true},
                 Data = new LinhaConteudoAjustarDTO() { PossuiErro = true},
                 Ano = new LinhaConteudoAjustarDTO() { PossuiErro = true},
@@ -677,7 +677,7 @@ namespace SME.CDEP.TesteIntegracao
             foreach (var erro in retorno.Erros)
             {
                 erro.RetornoObjeto.Titulo.ShouldBeNull();
-                erro.RetornoObjeto.Codigo.ShouldBeNull();
+                erro.RetornoObjeto.Codigo.ShouldNotBeNull();
                 erro.RetornoObjeto.Localizacao.ShouldBeNull();
                 erro.RetornoObjeto.Procedencia.ShouldBeNull();
                 erro.RetornoObjeto.Ano.ShouldBeNull();

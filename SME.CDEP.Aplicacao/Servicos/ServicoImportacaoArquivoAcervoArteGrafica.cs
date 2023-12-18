@@ -135,6 +135,9 @@ namespace SME.CDEP.Aplicacao.Servicos
 
         private static string TratarTombo(string codigo)
         {
+            if (codigo.NaoEstaPreenchido())
+                return default;
+            
             return codigo.Contains(Constantes.SIGLA_ACERVO_ARTE_GRAFICA) ? codigo : $"{codigo}{Constantes.SIGLA_ACERVO_ARTE_GRAFICA}";
         }
 
