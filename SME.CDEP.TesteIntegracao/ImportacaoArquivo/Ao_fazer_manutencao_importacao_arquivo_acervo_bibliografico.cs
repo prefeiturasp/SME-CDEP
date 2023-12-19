@@ -179,13 +179,13 @@ namespace SME.CDEP.TesteIntegracao
                 .SelectMany(acervoArteGraficaLinhaDto => acervoArteGraficaLinhaDto.Autor.Conteudo.FormatarTextoEmArray().UnificarPipe().SplitPipe())
                 .Distinct()
                 .ToList();
-            await InserirCreditosAutorias(autores);	
+            await InserirCreditosAutorias(autores, TipoCreditoAutoria.Autoria);	
             
             var coAutores = acervoBibliograficoLinhas
                 .SelectMany(acervoArteGraficaLinhaDto => acervoArteGraficaLinhaDto.CoAutor.Conteudo.FormatarTextoEmArray().UnificarPipe().SplitPipe())
                 .Distinct()
                 .ToList();
-            await InserirCreditosAutorias(coAutores);
+            await InserirCreditosAutorias(coAutores, TipoCreditoAutoria.Autoria);
             
             var inserirAssuntos = acervoBibliograficoLinhas
                 .SelectMany(acervo => acervo.Assunto.Conteudo.FormatarTextoEmArray().UnificarPipe().SplitPipe())
@@ -293,13 +293,13 @@ namespace SME.CDEP.TesteIntegracao
                 .SelectMany(acervoArteGraficaLinhaDto => acervoArteGraficaLinhaDto.Autor.Conteudo.FormatarTextoEmArray().UnificarPipe().SplitPipe())
                 .Distinct()
                 .ToList();
-            await InserirCreditosAutorias(autores);	
+            await InserirCreditosAutorias(autores, TipoCreditoAutoria.Autoria);	
             
             var coAutores = acervoBibliograficoLinhas
                 .SelectMany(acervoArteGraficaLinhaDto => acervoArteGraficaLinhaDto.CoAutor.Conteudo.FormatarTextoEmArray().UnificarPipe().SplitPipe())
                 .Distinct()
                 .ToList();
-            await InserirCreditosAutorias(coAutores);
+            await InserirCreditosAutorias(coAutores, TipoCreditoAutoria.Autoria);
             
             var inserirAssuntos = acervoBibliograficoLinhas
                 .SelectMany(acervo => acervo.Assunto.Conteudo.FormatarTextoEmArray().UnificarPipe().SplitPipe())

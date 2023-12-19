@@ -29,7 +29,7 @@ namespace SME.CDEP.TesteIntegracao
                 .SelectMany(acervoArteGraficaLinhaDto => acervoArteGraficaLinhaDto.Autor.Conteudo.FormatarTextoEmArray().UnificarPipe().SplitPipe())
                 .Distinct()
                 .ToList();
-            await InserirCreditosAutorias(autores);
+            await InserirCreditosAutorias(autores, TipoCreditoAutoria.Autoria);
             
             acervoDocumentalLinhas[2].Ano.Conteudo = faker.Lorem.Paragraph();
             acervoDocumentalLinhas[4].Idioma.Conteudo = string.Empty;
@@ -129,7 +129,7 @@ namespace SME.CDEP.TesteIntegracao
                 .SelectMany(acervoArteGraficaLinhaDto => acervoArteGraficaLinhaDto.Autor.Conteudo.FormatarTextoEmArray().UnificarPipe().SplitPipe())
                 .Distinct()
                 .ToList();
-            await InserirCreditosAutorias(autores);
+            await InserirCreditosAutorias(autores, TipoCreditoAutoria.Autoria);
             
             acervoDocumentalLinhas[2].Ano.Conteudo = faker.Lorem.Paragraph();
             acervoDocumentalLinhas[2].Material.Conteudo = ConstantesTestes.Desconhecido;

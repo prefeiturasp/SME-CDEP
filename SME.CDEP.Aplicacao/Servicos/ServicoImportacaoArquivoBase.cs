@@ -364,7 +364,7 @@ namespace SME.CDEP.Aplicacao.Servicos
         private void DefinirCampoValidado(LinhaConteudoAjustarDTO campo)
         {
             campo.PossuiErro = false;
-            campo.Mensagem = null;
+            campo.Mensagem = string.Empty;
         }
         
         protected static LinhaConteudoAjustarRetornoDTO ObterConteudoMensagemStatus(LinhaConteudoAjustarDTO linha)
