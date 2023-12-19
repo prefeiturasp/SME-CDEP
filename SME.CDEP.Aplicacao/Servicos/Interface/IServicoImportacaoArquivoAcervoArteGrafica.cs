@@ -15,5 +15,6 @@ namespace SME.CDEP.Aplicacao.Servicos.Interface
         Task<bool> AtualizarLinhaParaSucesso(long id, LinhaDTO linha);
         Task<long> AtualizarImportacao(long id, string conteudo, ImportacaoStatus? status = null);
         Task<ImportacaoArquivoRetornoDTO<AcervoLinhaErroDTO<AcervoArteGraficaDTO, AcervoArteGraficaLinhaRetornoDTO>, AcervoLinhaRetornoSucessoDTO>> ObterImportacaoPorId(long id);
+        Task CarregarDominios();
     }
 }

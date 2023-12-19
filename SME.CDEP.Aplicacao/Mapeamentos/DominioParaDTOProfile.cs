@@ -108,6 +108,7 @@ namespace SME.CDEP.Aplicacao.Mapeamentos
             CreateMap<IdNomeExcluidoDTO, IdNomeDTO>().ReverseMap();
             CreateMap<IdNomeTipoExcluidoAuditavelDTO, IdNomeTipoDTO>().ReverseMap();
             CreateMap<IdNomeExcluidoAuditavelDTO, IdNomeDTO>().ReverseMap();
+            CreateMap<IdNomeTipoDTO, IdNomeDTO>().ReverseMap();
         }
     }
 }

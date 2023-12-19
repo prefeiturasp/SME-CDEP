@@ -19,10 +19,18 @@ namespace SME.CDEP.TesteIntegracao
         [Fact(DisplayName = "Importação Arquivo Acervo Audiovisual - ValidarPreenchimentoValorFormatoQtdeCaracteres - Com erros: Titulo, Suporte, Duracao, Cópia e Tombo")]
         public async Task Validar_preenchimento_valor_formato_qtde_caracteres()
         {
+            await InserirDadosBasicos();
+            
             var servicoImportacaoArquivo = GetServicoImportacaoArquivoAcervoAudiovisual();
 
             var acervoAudiovisualLinhas = AcervoAudiovisualLinhaMock.GerarAcervoAudiovisualLinhaDTO().Generate(10);
+            var creditos = acervoAudiovisualLinhas
+                .SelectMany(acervoArteGraficaLinhaDto => acervoArteGraficaLinhaDto.Credito.Conteudo.FormatarTextoEmArray().UnificarPipe().SplitPipe())
+                .Distinct()
+                .ToList();
 
+            await InserirCreditosAutorias(creditos);	
+            
             acervoAudiovisualLinhas[2].Titulo.Conteudo = string.Empty;
             acervoAudiovisualLinhas[4].Suporte.Conteudo = string.Empty;
             acervoAudiovisualLinhas[5].Duracao.Conteudo = faker.Lorem.Paragraph();
@@ -30,6 +38,7 @@ namespace SME.CDEP.TesteIntegracao
             acervoAudiovisualLinhas[8].Codigo.Conteudo = string.Empty;
             var linhasComErros = new[] { 3, 5, 6, 8, 9 };
             
+            await servicoImportacaoArquivo.CarregarDominios();
             servicoImportacaoArquivo.ValidarPreenchimentoValorFormatoQtdeCaracteres(acervoAudiovisualLinhas);
 
             foreach (var linha in acervoAudiovisualLinhas)
@@ -106,6 +115,121 @@ namespace SME.CDEP.TesteIntegracao
             }
         }
         
+        [Fact(DisplayName = "Importação Arquivo Acervo Audiovisual - ValidarPreenchimentoValorFormatoQtdeCaracteres - Com erros: Crédito, Conservação, Suporte e Cromia")]
+        public async Task Validar_preenchimento_valores_de_dominio_invalido()
+        {
+            await InserirDadosBasicos();
+            
+            var servicoImportacaoArquivo = GetServicoImportacaoArquivoAcervoAudiovisual();
+
+            var acervoAudiovisualLinhas = AcervoAudiovisualLinhaMock.GerarAcervoAudiovisualLinhaDTO().Generate(10);
+            var creditos = acervoAudiovisualLinhas
+                .SelectMany(acervoArteGraficaLinhaDto => acervoArteGraficaLinhaDto.Credito.Conteudo.FormatarTextoEmArray().UnificarPipe().SplitPipe())
+                .Distinct()
+                .ToList();
+
+            await InserirCreditosAutorias(creditos);	
+            
+            acervoAudiovisualLinhas[2].Titulo.Conteudo = string.Empty;
+            acervoAudiovisualLinhas[2].Credito.Conteudo = ConstantesTestes.Desconhecido;
+            
+            acervoAudiovisualLinhas[4].Suporte.Conteudo = ConstantesTestes.Desconhecido;
+            
+            acervoAudiovisualLinhas[5].Duracao.Conteudo = faker.Lorem.Paragraph();
+            acervoAudiovisualLinhas[5].EstadoConservacao.Conteudo = ConstantesTestes.Desconhecido;
+            
+            acervoAudiovisualLinhas[7].Copia.Conteudo = faker.Lorem.Paragraphs();
+            acervoAudiovisualLinhas[7].Cromia.Conteudo = ConstantesTestes.Desconhecido;
+            
+            acervoAudiovisualLinhas[8].Codigo.Conteudo = string.Empty;
+            var linhasComErros = new[] { 3, 5, 6, 8, 9 };
+            
+            await servicoImportacaoArquivo.CarregarDominios();
+            servicoImportacaoArquivo.ValidarPreenchimentoValorFormatoQtdeCaracteres(acervoAudiovisualLinhas);
+
+            foreach (var linha in acervoAudiovisualLinhas)
+            {
+                linha.PossuiErros.ShouldBe(linhasComErros.Any(a=> a.SaoIguais(linha.NumeroLinha)));
+
+                if (linha.NumeroLinha.SaoIguais(3))
+                {
+                    linha.Titulo.PossuiErro.ShouldBeTrue();
+                    linha.Titulo.Mensagem.ShouldNotBeEmpty();
+                    linha.Credito.PossuiErro.ShouldBeTrue();
+                    linha.Credito.Mensagem.ShouldNotBeEmpty();
+                }
+                else
+                {
+                    linha.Titulo.PossuiErro.ShouldBeFalse();
+                    linha.Titulo.Mensagem.ShouldBeEmpty();
+                    linha.Credito.PossuiErro.ShouldBeFalse();
+                    linha.Credito.Mensagem.ShouldBeEmpty();
+                }
+                
+                if (linha.NumeroLinha.SaoIguais(5))
+                {
+                    linha.Suporte.PossuiErro.ShouldBeTrue();
+                    linha.Suporte.Mensagem.ShouldNotBeEmpty();
+                }
+                else
+                {
+                    linha.Suporte.PossuiErro.ShouldBeFalse();
+                    linha.Suporte.Mensagem.ShouldBeEmpty();
+                }
+                
+                if (linha.NumeroLinha.SaoIguais(6))
+                {
+                    linha.Duracao.PossuiErro.ShouldBeTrue();
+                    linha.Duracao.Mensagem.ShouldNotBeEmpty();
+                    linha.EstadoConservacao.PossuiErro.ShouldBeTrue();
+                    linha.EstadoConservacao.Mensagem.ShouldNotBeEmpty();
+                }
+                else
+                {
+                    linha.Duracao.PossuiErro.ShouldBeFalse();
+                    linha.Duracao.Mensagem.ShouldBeEmpty();
+                    linha.EstadoConservacao.PossuiErro.ShouldBeFalse();
+                    linha.EstadoConservacao.Mensagem.ShouldBeEmpty();
+                }
+                
+                if (linha.NumeroLinha.SaoIguais(8))
+                {
+                    linha.Copia.PossuiErro.ShouldBeTrue();
+                    linha.Copia.Mensagem.ShouldNotBeEmpty();
+                    linha.Cromia.PossuiErro.ShouldBeTrue();
+                    linha.Cromia.Mensagem.ShouldNotBeEmpty();
+                }
+                else
+                {
+                    linha.Copia.PossuiErro.ShouldBeFalse();
+                    linha.Copia.Mensagem.ShouldBeEmpty();
+                    linha.Cromia.PossuiErro.ShouldBeFalse();
+                    linha.Cromia.Mensagem.ShouldBeEmpty();
+                }
+                
+                if (linha.NumeroLinha.SaoIguais(9))
+                {
+                    linha.Codigo.PossuiErro.ShouldBeTrue();
+                    linha.Codigo.Mensagem.ShouldNotBeEmpty();
+                }
+                else
+                {
+                    linha.Codigo.PossuiErro.ShouldBeFalse();
+                    linha.Codigo.Mensagem.ShouldBeEmpty();
+                }
+                
+                linha.Localizacao.PossuiErro.ShouldBeFalse();
+                linha.Procedencia.PossuiErro.ShouldBeFalse();
+                linha.Ano.PossuiErro.ShouldBeFalse();
+                linha.Data.PossuiErro.ShouldBeFalse();
+                linha.PermiteUsoImagem.PossuiErro.ShouldBeFalse();
+                linha.Descricao.PossuiErro.ShouldBeFalse();
+                linha.TamanhoArquivo.PossuiErro.ShouldBeFalse();
+                linha.Acessibilidade.PossuiErro.ShouldBeFalse();
+                linha.Disponibilizacao.PossuiErro.ShouldBeFalse();
+            }
+        }
+        
         [Fact(DisplayName = "Importação Arquivo Acervo Audiovisual - PersistenciaAcervo")]
         public async Task Persistencia_acervo()
         {
@@ -131,6 +255,7 @@ namespace SME.CDEP.TesteIntegracao
                 CriadoEm = DateTimeExtension.HorarioBrasilia().Date, CriadoPor = ConstantesTestes.SISTEMA, CriadoLogin = ConstantesTestes.LOGIN_123456789
             });
             
+            await servicoImportacaoArquivo.CarregarDominios();
             await servicoImportacaoArquivo.PersistenciaAcervo(acervoAudiovisualLinhas);
         
             var acervos = ObterTodos<Acervo>();
@@ -213,6 +338,7 @@ namespace SME.CDEP.TesteIntegracao
                 CriadoEm = DateTimeExtension.HorarioBrasilia().Date, CriadoPor = ConstantesTestes.SISTEMA, CriadoLogin = ConstantesTestes.LOGIN_123456789
             });
             
+            await servicoImportacaoArquivo.CarregarDominios();
             servicoImportacaoArquivo.ValidarPreenchimentoValorFormatoQtdeCaracteres(acervoAudiovisualLinhas);
             await servicoImportacaoArquivo.PersistenciaAcervo(acervoAudiovisualLinhas);
             await servicoImportacaoArquivo.AtualizarImportacao(1, JsonConvert.SerializeObject(acervoAudiovisualLinhas), acervoAudiovisualLinhas.Any(a=> a.PossuiErros) ? ImportacaoStatus.Erros : ImportacaoStatus.Sucesso);

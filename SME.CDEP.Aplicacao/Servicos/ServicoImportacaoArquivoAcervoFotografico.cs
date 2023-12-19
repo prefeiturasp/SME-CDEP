@@ -16,6 +16,7 @@ namespace SME.CDEP.Aplicacao.Servicos
     public class ServicoImportacaoArquivoAcervoFotografico : ServicoImportacaoArquivoBase, IServicoImportacaoArquivoAcervoFotografico 
     {
         private readonly IServicoAcervoFotografico servicoAcervoFotografico;
+        private readonly IMapper mapper;
         
         public ServicoImportacaoArquivoAcervoFotografico(IRepositorioImportacaoArquivo repositorioImportacaoArquivo, IServicoMaterial servicoMaterial,
             IServicoEditora servicoEditora,IServicoSerieColecao servicoSerieColecao,IServicoIdioma servicoIdioma, IServicoAssunto servicoAssunto,
@@ -25,6 +26,7 @@ namespace SME.CDEP.Aplicacao.Servicos
                 servicoConservacao,servicoAcessoDocumento,servicoCromia,servicoSuporte,servicoFormato, mapper)
         {
             this.servicoAcervoFotografico = servicoAcervoFotografico ?? throw new ArgumentNullException(nameof(servicoAcervoFotografico));
+            this.mapper = mapper ?? throw new ArgumentNullException(nameof(mapper));
         }
 
         public void DefinirCreditosAutores(List<IdNomeTipoDTO> creditosAutores)
@@ -71,6 +73,11 @@ namespace SME.CDEP.Aplicacao.Servicos
             return await ObterRetornoImportacaoAcervo(arquivoImportado, JsonConvert.DeserializeObject<IEnumerable<AcervoFotograficoLinhaDTO>>(arquivoImportado.Conteudo), false);
         }
 
+        public async Task CarregarDominios()
+        {
+            await base.ObterDominios();
+        }
+
         public async Task<ImportacaoArquivoRetornoDTO<AcervoLinhaErroDTO<AcervoFotograficoDTO,AcervoFotograficoLinhaRetornoDTO>,AcervoLinhaRetornoSucessoDTO>> ImportarArquivo(IFormFile file)
         {
             ValidarArquivo(file);
@@ -80,6 +87,14 @@ namespace SME.CDEP.Aplicacao.Servicos
             var importacaoArquivo = ObterImportacaoArquivoParaSalvar(file.FileName, TipoAcervo.Fotografico, JsonConvert.SerializeObject(acervosFotograficoLinhas));
             
             var importacaoArquivoId = await PersistirImportacao(importacaoArquivo);
+
+            await base.ObterDominios();
+            
+            await ObterCreditosAutoresPorTipo(TipoCreditoAutoria.Credito);
+                
+            await ObterFormatosPorTipo(TipoFormato.ACERVO_FOTOS);
+            
+            await ObterSuportesPorTipo(TipoSuporte.IMAGEM);
            
             ValidarPreenchimentoValorFormatoQtdeCaracteres(acervosFotograficoLinhas);
             
@@ -96,7 +111,7 @@ namespace SME.CDEP.Aplicacao.Servicos
         private async Task<ImportacaoArquivoRetornoDTO<AcervoLinhaErroDTO<AcervoFotograficoDTO,AcervoFotograficoLinhaRetornoDTO>,AcervoLinhaRetornoSucessoDTO>> ObterRetornoImportacaoAcervo(ImportacaoArquivo arquivoImportado, IEnumerable<AcervoFotograficoLinhaDTO> acervosFotograficoLinhas, bool estaImportandoArquivo = true)
         {
             if (!estaImportandoArquivo)
-                await ObterDominios();
+                await base.ObterDominios();
                 
             await ObterCreditosAutoresPorTipo(TipoCreditoAutoria.Credito);
                 
@@ -256,14 +271,6 @@ namespace SME.CDEP.Aplicacao.Servicos
         
         public async Task PersistenciaAcervo(IEnumerable<AcervoFotograficoLinhaDTO> acervosFotograficosLinhas)
         {
-            await ObterDominios();
-            
-            await ObterCreditosAutoresPorTipo(TipoCreditoAutoria.Credito);
-                
-            await ObterFormatosPorTipo(TipoFormato.ACERVO_FOTOS);
-            
-            await ObterSuportesPorTipo(TipoSuporte.IMAGEM);
-            
             foreach (var acervoFotograficoLinha in acervosFotograficosLinhas.Where(w=> !w.PossuiErros))
             {
                 try
@@ -305,28 +312,51 @@ namespace SME.CDEP.Aplicacao.Servicos
         
         public void ValidarPreenchimentoValorFormatoQtdeCaracteres(IEnumerable<AcervoFotograficoLinhaDTO> linhas)
         {
+            var creditos = CreditosAutores.Where(w => w.Tipo == (int)TipoCreditoAutoria.Credito).Select(s=> mapper.Map<IdNomeDTO>(s));
+            
+            var formatosFotos = Formatos.Where(w => w.Tipo == (int)TipoFormato.ACERVO_FOTOS).Select(s=> mapper.Map<IdNomeDTO>(s));
+
+            var suporteImagens = Suportes.Where(w => w.Tipo == (int)TipoSuporte.IMAGEM).Select(s=> mapper.Map<IdNomeDTO>(s));
+            
             foreach (var linha in linhas)
             {
                 try
                 {
                     ValidarPreenchimentoLimiteCaracteres(linha.Titulo, Constantes.TITULO);
                     ValidarPreenchimentoLimiteCaracteres(linha.Codigo, Constantes.TOMBO);
+                    
                     ValidarPreenchimentoLimiteCaracteres(linha.Credito, Constantes.CREDITO);
+                    ValidarConteudoCampoListaComDominio(linha.Credito, creditos, Constantes.CREDITO);
+
                     ValidarPreenchimentoLimiteCaracteres(linha.Localizacao,Constantes.LOCALIZACAO);
                     ValidarPreenchimentoLimiteCaracteres(linha.Procedencia,Constantes.PROCEDENCIA);
+                    
                     ValidarPreenchimentoLimiteCaracteres(linha.Ano,Constantes.ANO);
                     ValidarPreenchimentoLimiteCaracteres(linha.Data,Constantes.DATA);
+                    
                     ValidarPreenchimentoLimiteCaracteres(linha.CopiaDigital,Constantes.COPIA_DIGITAL);
                     ValidarPreenchimentoLimiteCaracteres(linha.PermiteUsoImagem,Constantes.AUTORIZACAO_USO_DE_IMAGEM);
+                    
                     ValidarPreenchimentoLimiteCaracteres(linha.EstadoConservacao,Constantes.ESTADO_CONSERVACAO);
+                    ValidarConteudoCampoComDominio(linha.EstadoConservacao, Conservacoes, Constantes.ESTADO_CONSERVACAO);
+                    
                     ValidarPreenchimentoLimiteCaracteres(linha.Descricao,Constantes.DESCRICAO);
                     ValidarPreenchimentoLimiteCaracteres(linha.Quantidade,Constantes.QUANTIDADE);
+                    
                     ValidarPreenchimentoLimiteCaracteres(linha.Largura,Constantes.LARGURA);
                     ValidarPreenchimentoLimiteCaracteres(linha.Altura,Constantes.ALTURA);
+                    
                     ValidarPreenchimentoLimiteCaracteres(linha.Suporte,Constantes.SUPORTE);
+                    ValidarConteudoCampoComDominio(linha.Suporte, suporteImagens, Constantes.SUPORTE);
+                    
                     ValidarPreenchimentoLimiteCaracteres(linha.FormatoImagem,Constantes.FORMATO_IMAGEM);
+                    ValidarConteudoCampoComDominio(linha.FormatoImagem, formatosFotos, Constantes.FORMATO_IMAGEM);
+                    
                     ValidarPreenchimentoLimiteCaracteres(linha.TamanhoArquivo,Constantes.TAMANHO_ARQUIVO);
+                    
                     ValidarPreenchimentoLimiteCaracteres(linha.Cromia,Constantes.CROMIA);
+                    ValidarConteudoCampoComDominio(linha.Cromia, Cromias, Constantes.CROMIA);
+                    
                     ValidarPreenchimentoLimiteCaracteres(linha.Resolucao,Constantes.RESOLUCAO);
                     linha.PossuiErros = PossuiErro(linha);
                 }
@@ -336,7 +366,7 @@ namespace SME.CDEP.Aplicacao.Servicos
                 }
             }
         }
-        
+
         private bool PossuiErro(AcervoFotograficoLinhaDTO linha)
         {
             return linha.Titulo.PossuiErro 

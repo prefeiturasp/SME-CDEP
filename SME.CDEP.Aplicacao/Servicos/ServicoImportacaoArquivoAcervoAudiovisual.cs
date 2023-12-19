@@ -16,6 +16,7 @@ namespace SME.CDEP.Aplicacao.Servicos
     public class ServicoImportacaoArquivoAcervoAudiovisual : ServicoImportacaoArquivoBase, IServicoImportacaoArquivoAcervoAudiovisual 
     {
         private readonly IServicoAcervoAudiovisual servicoAcervoAudiovisual;
+        private readonly IMapper mapper;
         
         public ServicoImportacaoArquivoAcervoAudiovisual(IRepositorioImportacaoArquivo repositorioImportacaoArquivo, IServicoMaterial servicoMaterial,
             IServicoEditora servicoEditora,IServicoSerieColecao servicoSerieColecao,IServicoIdioma servicoIdioma, IServicoAssunto servicoAssunto,
@@ -25,6 +26,7 @@ namespace SME.CDEP.Aplicacao.Servicos
                 servicoConservacao,servicoAcessoDocumento,servicoCromia,servicoSuporte, servicoFormato, mapper)
         {
             this.servicoAcervoAudiovisual = servicoAcervoAudiovisual ?? throw new ArgumentNullException(nameof(servicoAcervoAudiovisual));
+            this.mapper = mapper ?? throw new ArgumentNullException(nameof(mapper));
         }
 
         public void DefinirCreditosAutores(List<IdNomeTipoDTO> creditosAutores)
@@ -71,6 +73,11 @@ namespace SME.CDEP.Aplicacao.Servicos
             return await ObterRetornoImportacaoAcervo(arquivoImportado, JsonConvert.DeserializeObject<IEnumerable<AcervoAudiovisualLinhaDTO>>(arquivoImportado.Conteudo), false);
         }
 
+        public async Task CarregarDominios()
+        {
+            await ObterDominios();
+        }
+
         public async Task<ImportacaoArquivoRetornoDTO<AcervoLinhaErroDTO<AcervoAudiovisualDTO,AcervoAudiovisualLinhaRetornoDTO>,AcervoLinhaRetornoSucessoDTO>> ImportarArquivo(IFormFile file)
         {
             ValidarArquivo(file);
@@ -80,6 +87,12 @@ namespace SME.CDEP.Aplicacao.Servicos
             var importacaoArquivo = ObterImportacaoArquivoParaSalvar(file.FileName, TipoAcervo.Audiovisual, JsonConvert.SerializeObject(acervosAudiovisualLinhas));
             
             var importacaoArquivoId = await PersistirImportacao(importacaoArquivo);
+            
+            await ObterDominios();
+            
+            await ObterSuportesPorTipo(TipoSuporte.VIDEO);
+            
+            await ObterCreditosAutoresPorTipo(TipoCreditoAutoria.Credito);
            
             ValidarPreenchimentoValorFormatoQtdeCaracteres(acervosAudiovisualLinhas);
             
@@ -244,12 +257,6 @@ namespace SME.CDEP.Aplicacao.Servicos
         
         public async Task PersistenciaAcervo(IEnumerable<AcervoAudiovisualLinhaDTO> acervosAudiovisualLinhas)
         {
-            await ObterDominios();
-            
-            await ObterSuportesPorTipo(TipoSuporte.VIDEO);
-            
-            await ObterCreditosAutoresPorTipo(TipoCreditoAutoria.Credito);
-            
             foreach (var acervoAudiovisualLinha in acervosAudiovisualLinhas.Where(w=> !w.PossuiErros))
             {
                 try
@@ -289,26 +296,44 @@ namespace SME.CDEP.Aplicacao.Servicos
         
         public void ValidarPreenchimentoValorFormatoQtdeCaracteres(IEnumerable<AcervoAudiovisualLinhaDTO> linhas)
         {
+            var creditos = CreditosAutores.Where(w => w.Tipo == (int)TipoCreditoAutoria.Credito).Select(s=> mapper.Map<IdNomeDTO>(s));
+            var suportesDeVideo = Suportes.Where(w => w.Tipo == (int)TipoSuporte.VIDEO).Select(s=> mapper.Map<IdNomeDTO>(s));
+            
             foreach (var linha in linhas)
             {
                 try
                 {
                     ValidarPreenchimentoLimiteCaracteres(linha.Titulo, Constantes.TITULO);
                     ValidarPreenchimentoLimiteCaracteres(linha.Codigo, Constantes.TOMBO);
+                    
                     ValidarPreenchimentoLimiteCaracteres(linha.Credito, Constantes.CREDITO);
+                    ValidarConteudoCampoListaComDominio(linha.Credito, creditos, Constantes.CREDITO);	
+
                     ValidarPreenchimentoLimiteCaracteres(linha.Localizacao,Constantes.LOCALIZACAO);
                     ValidarPreenchimentoLimiteCaracteres(linha.Procedencia,Constantes.PROCEDENCIA);
+                    
                     ValidarPreenchimentoLimiteCaracteres(linha.Ano,Constantes.ANO);
                     ValidarPreenchimentoLimiteCaracteres(linha.Data,Constantes.DATA);
+                    
                     ValidarPreenchimentoLimiteCaracteres(linha.Copia,Constantes.COPIA);
                     ValidarPreenchimentoLimiteCaracteres(linha.PermiteUsoImagem,Constantes.AUTORIZACAO_USO_DE_IMAGEM);
+                    
                     ValidarPreenchimentoLimiteCaracteres(linha.EstadoConservacao,Constantes.ESTADO_CONSERVACAO);
+                    ValidarConteudoCampoComDominio(linha.EstadoConservacao, Conservacoes, Constantes.ESTADO_CONSERVACAO);
+                    
                     ValidarPreenchimentoLimiteCaracteres(linha.Descricao,Constantes.DESCRICAO);
+                    
                     ValidarPreenchimentoLimiteCaracteres(linha.Suporte,Constantes.SUPORTE);
+                    ValidarConteudoCampoComDominio(linha.Suporte, suportesDeVideo, Constantes.SUPORTE);
+                    
                     ValidarPreenchimentoLimiteCaracteres(linha.Duracao,Constantes.DURACAO);
+                    
                     ValidarPreenchimentoLimiteCaracteres(linha.Cromia,Constantes.CROMIA);
+                    ValidarConteudoCampoComDominio(linha.Cromia, Cromias, Constantes.CROMIA);
+                    
                     ValidarPreenchimentoLimiteCaracteres(linha.TamanhoArquivo,Constantes.TAMANHO_ARQUIVO);
                     ValidarPreenchimentoLimiteCaracteres(linha.Acessibilidade,Constantes.ACESSIBILIDADE);
+                    
                     ValidarPreenchimentoLimiteCaracteres(linha.Disponibilizacao,Constantes.DISPONIBILIDADE);
                     linha.PossuiErros = PossuiErro(linha);
                 }
@@ -318,7 +343,7 @@ namespace SME.CDEP.Aplicacao.Servicos
                 }
             }
         }
-        
+
         private bool PossuiErro(AcervoAudiovisualLinhaDTO linha)
         {
             return linha.Titulo.PossuiErro 

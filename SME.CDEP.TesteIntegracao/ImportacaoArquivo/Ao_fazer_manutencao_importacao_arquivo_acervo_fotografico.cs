@@ -19,9 +19,17 @@ namespace SME.CDEP.TesteIntegracao
         [Fact(DisplayName = "Importação Arquivo Acervo Fotografico - ValidarPreenchimentoValorFormatoQtdeCaracteres - Com erros: Titulo, Suporte, Resolução, Quantidade e Tombo")]
         public async Task Validar_preenchimento_valor_formato_qtde_caracteres()
         {
+            await InserirDadosBasicos();
+            
             var servicoImportacaoArquivo = GetServicoImportacaoArquivoAcervoFotografico();
 
             var acervoFotograficoLinhas = AcervoFotograficoLinhaMock.GerarAcervoFotograficoLinhaDTO().Generate(10);
+            var creditos = acervoFotograficoLinhas
+                .SelectMany(acervoArteGraficaLinhaDto => acervoArteGraficaLinhaDto.Credito.Conteudo.FormatarTextoEmArray().UnificarPipe().SplitPipe())
+                .Distinct()
+                .ToList();
+
+            await InserirCreditosAutorias(creditos);
 
             acervoFotograficoLinhas[2].Titulo.Conteudo = string.Empty;
             acervoFotograficoLinhas[4].Suporte.Conteudo = string.Empty;
@@ -30,6 +38,7 @@ namespace SME.CDEP.TesteIntegracao
             acervoFotograficoLinhas[8].Codigo.Conteudo = string.Empty;
             var linhasComErros = new[] { 3, 5, 6, 8, 9 };
             
+            await servicoImportacaoArquivo.CarregarDominios();
             servicoImportacaoArquivo.ValidarPreenchimentoValorFormatoQtdeCaracteres(acervoFotograficoLinhas);
 
             foreach (var linha in acervoFotograficoLinhas)
@@ -108,6 +117,111 @@ namespace SME.CDEP.TesteIntegracao
             }
         }
         
+        [Fact(DisplayName = "Importação Arquivo Acervo Fotografico - ValidarPreenchimentoValorFormatoQtdeCaracteres - Com erros: Deve apresentar crédito como inexistente")]
+        public async Task Validar_preenchimento_valor_formato_qtde_caracteres_credito_inexistente()
+        {
+            await InserirDadosBasicos();
+            
+            var servicoImportacaoArquivo = GetServicoImportacaoArquivoAcervoFotografico();
+
+            var acervoFotograficoLinhas = AcervoFotograficoLinhaMock.GerarAcervoFotograficoLinhaDTO().Generate(10);
+            var creditos = acervoFotograficoLinhas
+                .SelectMany(acervoArteGraficaLinhaDto => acervoArteGraficaLinhaDto.Credito.Conteudo.FormatarTextoEmArray().UnificarPipe().SplitPipe())
+                .Distinct()
+                .ToList();
+
+            await InserirCreditosAutorias(creditos);
+
+            acervoFotograficoLinhas[2].Titulo.Conteudo = string.Empty;
+            acervoFotograficoLinhas[4].Suporte.Conteudo = string.Empty;
+            acervoFotograficoLinhas[5].Resolucao.Conteudo = faker.Lorem.Paragraph();
+            acervoFotograficoLinhas[7].Quantidade.Conteudo = faker.Lorem.Paragraph();
+            acervoFotograficoLinhas[8].Codigo.Conteudo = string.Empty;
+            acervoFotograficoLinhas[8].Credito.Conteudo = "Desconhecido 1 | Desconhecido 2";
+            var linhasComErros = new[] { 3, 5, 6, 8, 9 };
+            
+            await servicoImportacaoArquivo.CarregarDominios();
+            servicoImportacaoArquivo.ValidarPreenchimentoValorFormatoQtdeCaracteres(acervoFotograficoLinhas);
+
+            foreach (var linha in acervoFotograficoLinhas)
+            {
+                linha.PossuiErros.ShouldBe(linhasComErros.Any(a=> a.SaoIguais(linha.NumeroLinha)));
+
+                if (linha.NumeroLinha.SaoIguais(3))
+                {
+                    linha.Titulo.PossuiErro.ShouldBeTrue();
+                    linha.Titulo.Mensagem.ShouldNotBeEmpty();
+                }
+                else
+                {
+                    linha.Titulo.PossuiErro.ShouldBeFalse();
+                    linha.Titulo.Mensagem.ShouldBeEmpty();
+                }
+                
+                if (linha.NumeroLinha.SaoIguais(5))
+                {
+                    linha.Suporte.PossuiErro.ShouldBeTrue();
+                    linha.Suporte.Mensagem.ShouldNotBeEmpty();
+                }
+                else
+                {
+                    linha.Suporte.PossuiErro.ShouldBeFalse();
+                    linha.Suporte.Mensagem.ShouldBeEmpty();
+                }
+                
+                if (linha.NumeroLinha.SaoIguais(6))
+                {
+                    linha.Resolucao.PossuiErro.ShouldBeTrue();
+                    linha.Resolucao.Mensagem.ShouldNotBeEmpty();
+                }
+                else
+                {
+                    linha.Resolucao.PossuiErro.ShouldBeFalse();
+                    linha.Resolucao.Mensagem.ShouldBeEmpty();
+                }
+                
+                if (linha.NumeroLinha.SaoIguais(8))
+                {
+                    linha.Quantidade.PossuiErro.ShouldBeTrue();
+                    linha.Quantidade.Mensagem.ShouldNotBeEmpty();
+                }
+                else
+                {
+                    linha.Quantidade.PossuiErro.ShouldBeFalse();
+                    linha.Quantidade.Mensagem.ShouldBeEmpty();
+                }
+                
+                if (linha.NumeroLinha.SaoIguais(9))
+                {
+                    linha.Codigo.PossuiErro.ShouldBeTrue();
+                    linha.Codigo.Mensagem.ShouldNotBeEmpty();
+                    linha.Credito.PossuiErro.ShouldBeTrue();
+                    linha.Credito.Mensagem.ShouldNotBeEmpty();
+                }
+                else
+                {
+                    linha.Codigo.PossuiErro.ShouldBeFalse();
+                    linha.Codigo.Mensagem.ShouldBeEmpty();
+                    linha.Credito.PossuiErro.ShouldBeFalse();
+                    linha.Credito.Mensagem.ShouldBeEmpty();
+                }
+                   
+                linha.Localizacao.PossuiErro.ShouldBeFalse();
+                linha.Ano.PossuiErro.ShouldBeFalse();
+                linha.Data.PossuiErro.ShouldBeFalse();
+                linha.CopiaDigital.PossuiErro.ShouldBeFalse();
+                linha.PermiteUsoImagem.PossuiErro.ShouldBeFalse();
+                linha.EstadoConservacao.PossuiErro.ShouldBeFalse();
+                linha.Descricao.PossuiErro.ShouldBeFalse();
+                linha.Largura.PossuiErro.ShouldBeFalse();
+                linha.Altura.PossuiErro.ShouldBeFalse();
+                linha.FormatoImagem.PossuiErro.ShouldBeFalse();
+                linha.TamanhoArquivo.PossuiErro.ShouldBeFalse();
+                linha.Cromia.PossuiErro.ShouldBeFalse();
+                linha.Procedencia.PossuiErro.ShouldBeFalse();
+            }
+        }
+        
         [Fact(DisplayName = "Importação Arquivo Acervo Fotografico - PersistenciaAcervo")]
         public async Task Persistencia_acervo()
         {
@@ -133,6 +247,7 @@ namespace SME.CDEP.TesteIntegracao
                 CriadoEm = DateTimeExtension.HorarioBrasilia().Date, CriadoPor = ConstantesTestes.SISTEMA, CriadoLogin = ConstantesTestes.LOGIN_123456789
             });
             
+            await servicoImportacaoArquivo.CarregarDominios();
             await servicoImportacaoArquivo.PersistenciaAcervo(acervoFotograficoLinhas);
         
             var acervos = ObterTodos<Acervo>();
@@ -222,6 +337,7 @@ namespace SME.CDEP.TesteIntegracao
                 CriadoEm = DateTimeExtension.HorarioBrasilia().Date, CriadoPor = ConstantesTestes.SISTEMA, CriadoLogin = ConstantesTestes.LOGIN_123456789
             });
             
+            await servicoImportacaoArquivo.CarregarDominios();
             servicoImportacaoArquivo.ValidarPreenchimentoValorFormatoQtdeCaracteres(acervoFotograficoLinhas);
             await servicoImportacaoArquivo.PersistenciaAcervo(acervoFotograficoLinhas);
             await servicoImportacaoArquivo.AtualizarImportacao(1, JsonConvert.SerializeObject(acervoFotograficoLinhas), acervoFotograficoLinhas.Any(a=> a.PossuiErros) ? ImportacaoStatus.Erros : ImportacaoStatus.Sucesso);

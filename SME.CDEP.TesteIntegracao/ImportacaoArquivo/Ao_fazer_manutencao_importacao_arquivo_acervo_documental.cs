@@ -19,10 +19,18 @@ namespace SME.CDEP.TesteIntegracao
         [Fact(DisplayName = "Importação Arquivo Acervo Documental - ValidarPreenchimentoValorFormatoQtdeCaracteres - Com erros: Ano, Idioma, Largura, Número de Páginas e Volume")]
         public async Task Validar_preenchimento_valor_formato_qtde_caracteres()
         {
+            await InserirDadosBasicos();
+                
             var servicoImportacaoArquivo = GetServicoImportacaoArquivoAcervoDocumental();
 
             var acervoDocumentalLinhas = AcervoDocumentalLinhaMock.GerarAcervoDocumentalLinhaDTO().Generate(10);
-
+            
+            var autores = acervoDocumentalLinhas
+                .SelectMany(acervoArteGraficaLinhaDto => acervoArteGraficaLinhaDto.Autor.Conteudo.FormatarTextoEmArray().UnificarPipe().SplitPipe())
+                .Distinct()
+                .ToList();
+            await InserirCreditosAutorias(autores);
+            
             acervoDocumentalLinhas[2].Ano.Conteudo = faker.Lorem.Paragraph();
             acervoDocumentalLinhas[4].Idioma.Conteudo = string.Empty;
             acervoDocumentalLinhas[5].Largura.Conteudo = faker.Lorem.Paragraph();
@@ -30,6 +38,7 @@ namespace SME.CDEP.TesteIntegracao
             acervoDocumentalLinhas[8].Volume.Conteudo = faker.Lorem.Paragraph();
             var linhasComErros = new[] { 3, 5, 6, 8, 9 };
             
+            await servicoImportacaoArquivo.CarregarDominios();
             servicoImportacaoArquivo.ValidarPreenchimentoValorFormatoQtdeCaracteres(acervoDocumentalLinhas);
 
             foreach (var linha in acervoDocumentalLinhas)
@@ -107,6 +116,127 @@ namespace SME.CDEP.TesteIntegracao
             }
         }
         
+        [Fact(DisplayName = "Importação Arquivo Acervo Documental - ValidarPreenchimentoValorFormatoQtdeCaracteres - Com erros: Material, Idioma, Autor, Acesso Documento e Conservações")]
+        public async Task Validar_preenchimento_dominio()
+        {
+            await InserirDadosBasicos();
+                
+            var servicoImportacaoArquivo = GetServicoImportacaoArquivoAcervoDocumental();
+
+            var acervoDocumentalLinhas = AcervoDocumentalLinhaMock.GerarAcervoDocumentalLinhaDTO().Generate(10);
+            
+            var autores = acervoDocumentalLinhas
+                .SelectMany(acervoArteGraficaLinhaDto => acervoArteGraficaLinhaDto.Autor.Conteudo.FormatarTextoEmArray().UnificarPipe().SplitPipe())
+                .Distinct()
+                .ToList();
+            await InserirCreditosAutorias(autores);
+            
+            acervoDocumentalLinhas[2].Ano.Conteudo = faker.Lorem.Paragraph();
+            acervoDocumentalLinhas[2].Material.Conteudo = ConstantesTestes.Desconhecido;
+            
+            acervoDocumentalLinhas[4].Idioma.Conteudo = ConstantesTestes.Desconhecido;
+            
+            acervoDocumentalLinhas[5].Largura.Conteudo = faker.Lorem.Paragraph();
+            acervoDocumentalLinhas[5].Autor.Conteudo = ConstantesTestes.Desconhecido;
+            
+            acervoDocumentalLinhas[7].NumeroPaginas.Conteudo = faker.Lorem.Paragraph();
+            acervoDocumentalLinhas[7].AcessoDocumento.Conteudo = ConstantesTestes.Desconhecido;
+            
+            acervoDocumentalLinhas[8].Volume.Conteudo = faker.Lorem.Paragraph();
+            acervoDocumentalLinhas[8].EstadoConservacao.Conteudo = ConstantesTestes.Desconhecido;
+            
+            var linhasComErros = new[] { 3, 5, 6, 8, 9 };
+            
+            await servicoImportacaoArquivo.CarregarDominios();
+            servicoImportacaoArquivo.ValidarPreenchimentoValorFormatoQtdeCaracteres(acervoDocumentalLinhas);
+
+            foreach (var linha in acervoDocumentalLinhas)
+            {
+                linha.PossuiErros.ShouldBe(linhasComErros.Any(a=> a.SaoIguais(linha.NumeroLinha)));
+
+                if (linha.NumeroLinha.SaoIguais(3))
+                {
+                    linha.Ano.PossuiErro.ShouldBeTrue();
+                    linha.Ano.Mensagem.ShouldNotBeEmpty();
+                    linha.Material.PossuiErro.ShouldBeTrue();
+                    linha.Material.Mensagem.ShouldNotBeEmpty();
+                }
+                else
+                {
+                    linha.Ano.PossuiErro.ShouldBeFalse();
+                    linha.Ano.Mensagem.ShouldBeEmpty();
+                    linha.Material.PossuiErro.ShouldBeFalse();
+                    linha.Material.Mensagem.ShouldBeEmpty();
+                }
+                
+                if (linha.NumeroLinha.SaoIguais(5))
+                {
+                    linha.Idioma.PossuiErro.ShouldBeTrue();
+                    linha.Idioma.Mensagem.ShouldNotBeEmpty();
+                }
+                else
+                {
+                    linha.Idioma.PossuiErro.ShouldBeFalse();
+                    linha.Idioma.Mensagem.ShouldBeEmpty();
+                }
+                
+                if (linha.NumeroLinha.SaoIguais(6))
+                {
+                    linha.Largura.PossuiErro.ShouldBeTrue();
+                    linha.Largura.Mensagem.ShouldNotBeEmpty();
+                    linha.Autor.PossuiErro.ShouldBeTrue();
+                    linha.Autor.Mensagem.ShouldNotBeEmpty();
+                }
+                else
+                {
+                    linha.Largura.PossuiErro.ShouldBeFalse();
+                    linha.Largura.Mensagem.ShouldBeEmpty();
+                    linha.Autor.PossuiErro.ShouldBeFalse();
+                    linha.Autor.Mensagem.ShouldBeEmpty();
+                }
+                
+                if (linha.NumeroLinha.SaoIguais(8))
+                {
+                    linha.NumeroPaginas.PossuiErro.ShouldBeTrue();
+                    linha.NumeroPaginas.Mensagem.ShouldNotBeEmpty();
+                    linha.AcessoDocumento.PossuiErro.ShouldBeTrue();
+                    linha.AcessoDocumento.Mensagem.ShouldNotBeEmpty();
+                }
+                else
+                {
+                    linha.NumeroPaginas.PossuiErro.ShouldBeFalse();
+                    linha.NumeroPaginas.Mensagem.ShouldBeEmpty();
+                    linha.AcessoDocumento.PossuiErro.ShouldBeFalse();
+                    linha.AcessoDocumento.Mensagem.ShouldBeEmpty();
+                }
+                
+                if (linha.NumeroLinha.SaoIguais(9))
+                {
+                    linha.Volume.PossuiErro.ShouldBeTrue();
+                    linha.Volume.Mensagem.ShouldNotBeEmpty();
+                    linha.EstadoConservacao.PossuiErro.ShouldBeTrue();
+                    linha.EstadoConservacao.Mensagem.ShouldNotBeEmpty();
+                }
+                else
+                {
+                    linha.Volume.PossuiErro.ShouldBeFalse();
+                    linha.Volume.Mensagem.ShouldBeEmpty();
+                    linha.EstadoConservacao.PossuiErro.ShouldBeFalse();
+                    linha.EstadoConservacao.Mensagem.ShouldBeEmpty();
+                }
+                
+                linha.Titulo.PossuiErro.ShouldBeFalse();
+                linha.Codigo.PossuiErro.ShouldBeFalse();
+                linha.CodigoNovo.PossuiErro.ShouldBeFalse();
+                linha.Descricao.PossuiErro.ShouldBeFalse();
+                linha.TipoAnexo.PossuiErro.ShouldBeFalse();
+                linha.Altura.PossuiErro.ShouldBeFalse();
+                linha.TamanhoArquivo.PossuiErro.ShouldBeFalse();
+                linha.Localizacao.PossuiErro.ShouldBeFalse();
+                linha.CopiaDigital.PossuiErro.ShouldBeFalse();
+            }
+        }
+        
         [Fact(DisplayName = "Importação Arquivo Acervo Documental - PersistenciaAcervo")]
         public async Task Persistencia_acervo()
         {
@@ -132,6 +262,7 @@ namespace SME.CDEP.TesteIntegracao
                 CriadoEm = DateTimeExtension.HorarioBrasilia().Date, CriadoPor = ConstantesTestes.SISTEMA, CriadoLogin = ConstantesTestes.LOGIN_123456789
             });
             
+            await servicoImportacaoArquivo.CarregarDominios();
             await servicoImportacaoArquivo.PersistenciaAcervo(acervoDocumentalLinhas);
         
             var acervos = ObterTodos<Acervo>();
@@ -234,6 +365,7 @@ namespace SME.CDEP.TesteIntegracao
                 CriadoEm = DateTimeExtension.HorarioBrasilia().Date, CriadoPor = ConstantesTestes.SISTEMA, CriadoLogin = ConstantesTestes.LOGIN_123456789
             });
             
+            await servicoImportacaoArquivo.CarregarDominios();
             servicoImportacaoArquivo.ValidarPreenchimentoValorFormatoQtdeCaracteres(acervoDocumentalLinhas);
             await servicoImportacaoArquivo.PersistenciaAcervo(acervoDocumentalLinhas);
             await servicoImportacaoArquivo.AtualizarImportacao(1, JsonConvert.SerializeObject(acervoDocumentalLinhas), acervoDocumentalLinhas.Any(a=> a.PossuiErros) ? ImportacaoStatus.Erros : ImportacaoStatus.Sucesso);

@@ -71,6 +71,11 @@ namespace SME.CDEP.Aplicacao.Servicos
             return await ObterRetornoImportacaoAcervo(arquivoImportado, JsonConvert.DeserializeObject<IEnumerable<AcervoTridimensionalLinhaDTO>>(arquivoImportado.Conteudo), false);
         }
 
+        public async Task CarregarDominios()
+        {
+            await base.ObterDominios();
+        }
+
         public async Task<ImportacaoArquivoRetornoDTO<AcervoLinhaErroDTO<AcervoTridimensionalDTO,AcervoTridimensionalLinhaRetornoDTO>,AcervoLinhaRetornoSucessoDTO>> ImportarArquivo(IFormFile file)
         {
             ValidarArquivo(file);
@@ -80,6 +85,8 @@ namespace SME.CDEP.Aplicacao.Servicos
             var importacaoArquivo = ObterImportacaoArquivoParaSalvar(file.FileName, TipoAcervo.Tridimensional, JsonConvert.SerializeObject(acervosTridimensionalLinhas));
             
             var importacaoArquivoId = await PersistirImportacao(importacaoArquivo);
+            
+            await base.ObterDominios();
            
             ValidarPreenchimentoValorFormatoQtdeCaracteres(acervosTridimensionalLinhas);
             
@@ -95,7 +102,7 @@ namespace SME.CDEP.Aplicacao.Servicos
         
         private async Task<ImportacaoArquivoRetornoDTO<AcervoLinhaErroDTO<AcervoTridimensionalDTO,AcervoTridimensionalLinhaRetornoDTO>,AcervoLinhaRetornoSucessoDTO>> ObterRetornoImportacaoAcervo(ImportacaoArquivo arquivoImportado, IEnumerable<AcervoTridimensionalLinhaDTO> acervosTridimensionalLinhas, bool estaImportandoArquivo = true)
         {
-            await ObterDominios();
+            await base.ObterDominios();
             
             var acervoTridimensionalRetorno = new ImportacaoArquivoRetornoDTO<AcervoLinhaErroDTO<AcervoTridimensionalDTO,AcervoTridimensionalLinhaRetornoDTO>,AcervoLinhaRetornoSucessoDTO>()
             {
@@ -214,8 +221,6 @@ namespace SME.CDEP.Aplicacao.Servicos
         
         public async Task PersistenciaAcervo(IEnumerable<AcervoTridimensionalLinhaDTO> acervosTridimensionalsLinhas)
         {
-            await ObterDominios();
-            
             foreach (var acervoTridimensionalLinha in acervosTridimensionalsLinhas.Where(w=> !w.PossuiErros))
             {
                 try
@@ -254,16 +259,24 @@ namespace SME.CDEP.Aplicacao.Servicos
                 {
                     ValidarPreenchimentoLimiteCaracteres(linha.Titulo, Constantes.TITULO);
                     ValidarPreenchimentoLimiteCaracteres(linha.Codigo, Constantes.TOMBO);
+                    
                     ValidarPreenchimentoLimiteCaracteres(linha.Procedencia,Constantes.PROCEDENCIA);
                     ValidarPreenchimentoLimiteCaracteres(linha.Ano,Constantes.ANO);
+                    
                     ValidarPreenchimentoLimiteCaracteres(linha.Data,Constantes.DATA);
+                    
                     ValidarPreenchimentoLimiteCaracteres(linha.EstadoConservacao,Constantes.ESTADO_CONSERVACAO);
+                    ValidarConteudoCampoComDominio(linha.EstadoConservacao, Conservacoes, Constantes.ESTADO_CONSERVACAO);
+                    
                     ValidarPreenchimentoLimiteCaracteres(linha.Quantidade,Constantes.QUANTIDADE);
                     ValidarPreenchimentoLimiteCaracteres(linha.Descricao,Constantes.DESCRICAO);
+                    
                     ValidarPreenchimentoLimiteCaracteres(linha.Largura,Constantes.LARGURA);
                     ValidarPreenchimentoLimiteCaracteres(linha.Altura,Constantes.ALTURA);
+                    
                     ValidarPreenchimentoLimiteCaracteres(linha.Profundidade,Constantes.PROFUNDIDADE);
                     ValidarPreenchimentoLimiteCaracteres(linha.Diametro,Constantes.DIAMETRO);
+                    
                     linha.PossuiErros = PossuiErro(linha);
                 }
                 catch (Exception e)
@@ -272,7 +285,7 @@ namespace SME.CDEP.Aplicacao.Servicos
                 }
             }
         }
-        
+
         private bool PossuiErro(AcervoTridimensionalLinhaDTO linha)
         {
             return linha.Titulo.PossuiErro 
