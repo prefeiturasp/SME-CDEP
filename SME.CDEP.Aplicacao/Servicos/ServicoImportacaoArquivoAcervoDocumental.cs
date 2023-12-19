@@ -16,6 +16,7 @@ namespace SME.CDEP.Aplicacao.Servicos
     public class ServicoImportacaoArquivoAcervoDocumental : ServicoImportacaoArquivoBase, IServicoImportacaoArquivoAcervoDocumental 
     {
         private readonly IServicoAcervoDocumental servicoAcervoDocumental;
+        private readonly IMapper mapper;
         
         public ServicoImportacaoArquivoAcervoDocumental(IRepositorioImportacaoArquivo repositorioImportacaoArquivo, IServicoMaterial servicoMaterial,
             IServicoEditora servicoEditora,IServicoSerieColecao servicoSerieColecao,IServicoIdioma servicoIdioma, IServicoAssunto servicoAssunto,
@@ -25,6 +26,7 @@ namespace SME.CDEP.Aplicacao.Servicos
                 servicoConservacao,servicoAcessoDocumento,servicoCromia,servicoSuporte,servicoFormato, mapper)
         {
             this.servicoAcervoDocumental = servicoAcervoDocumental ?? throw new ArgumentNullException(nameof(servicoAcervoDocumental));
+            this.mapper = mapper ?? throw new ArgumentNullException(nameof(mapper));
         }
 
         public void DefinirCreditosAutores(List<IdNomeTipoDTO> creditosAutores)
@@ -71,6 +73,15 @@ namespace SME.CDEP.Aplicacao.Servicos
             return await ObterRetornoImportacaoAcervo(arquivoImportado, JsonConvert.DeserializeObject<IEnumerable<AcervoDocumentalLinhaDTO>>(arquivoImportado.Conteudo), false);
         }
 
+        public async Task CarregarDominios()
+        {
+            await ObterDominios();
+            
+            await ObterCreditosAutoresPorTipo(TipoCreditoAutoria.Autoria);
+                
+            await ObterMateriaisPorTipo(TipoMaterial.DOCUMENTAL);
+        }
+
         public async Task<ImportacaoArquivoRetornoDTO<AcervoLinhaErroDTO<AcervoDocumentalDTO,AcervoDocumentalLinhaRetornoDTO>,AcervoLinhaRetornoSucessoDTO>> ImportarArquivo(IFormFile file)
         {
             ValidarArquivo(file);
@@ -79,14 +90,13 @@ namespace SME.CDEP.Aplicacao.Servicos
 
             var importacaoArquivo = ObterImportacaoArquivoParaSalvar(file.FileName, TipoAcervo.DocumentacaoHistorica, JsonConvert.SerializeObject(acervosDocumentalLinhas));
             
-            var importacaoArquivoId = await PersistirImportacao(importacaoArquivo);
+            await CarregarDominios();
             
+            var importacaoArquivoId = await PersistirImportacao(importacaoArquivo);
+
             ValidarPreenchimentoValorFormatoQtdeCaracteres(acervosDocumentalLinhas);
             
             await AtualizarImportacao(importacaoArquivoId, JsonConvert.SerializeObject(acervosDocumentalLinhas),ImportacaoStatus.ValidadoPreenchimentoValorFormatoQtdeCaracteres);
-            
-            await ValidacaoObterOuInserirDominios(acervosDocumentalLinhas);
-            await AtualizarImportacao(importacaoArquivoId, JsonConvert.SerializeObject(acervosDocumentalLinhas),ImportacaoStatus.ValidacaoDominios);
             
             await PersistenciaAcervo(acervosDocumentalLinhas);
             await AtualizarImportacao(importacaoArquivoId, JsonConvert.SerializeObject(acervosDocumentalLinhas), acervosDocumentalLinhas.Any(a=> a.PossuiErros) ? ImportacaoStatus.Erros : ImportacaoStatus.Sucesso);
@@ -99,12 +109,11 @@ namespace SME.CDEP.Aplicacao.Servicos
         private async Task<ImportacaoArquivoRetornoDTO<AcervoLinhaErroDTO<AcervoDocumentalDTO,AcervoDocumentalLinhaRetornoDTO>,AcervoLinhaRetornoSucessoDTO>> ObterRetornoImportacaoAcervo(ImportacaoArquivo arquivoImportado, IEnumerable<AcervoDocumentalLinhaDTO> acervosDocumentalLinhas, bool estaImportandoArquivo = true)
         {
             if (!estaImportandoArquivo)
-            {
-                await ObterMateriais(acervosDocumentalLinhas.Where(w=> !w.Material.PossuiErro).Select(s => s.Material.Conteudo).Distinct().Where(w=> w.EstaPreenchido()), TipoMaterial.DOCUMENTAL);
-                await ObterIdiomas(acervosDocumentalLinhas.Where(w=> !w.Idioma.PossuiErro).Select(s => s.Idioma.Conteudo).Distinct().Where(w=> w.EstaPreenchido()));
-                await ObterCreditosAutoresTipoAutoria(acervosDocumentalLinhas.Where(w=> !w.Autor.PossuiErro).Select(s => s.Autor.Conteudo).ToArray().UnificarPipe().SplitPipe().Distinct().Where(w=> w.EstaPreenchido()), TipoCreditoAutoria.Autoria);
-                await ObterDominiosImutaveis();
-            }
+                await ObterDominios();
+            
+            await ObterCreditosAutoresPorTipo(TipoCreditoAutoria.Autoria);
+                
+            await ObterMateriaisPorTipo(TipoMaterial.DOCUMENTAL);
             
             var acervoDocumentalRetorno = new ImportacaoArquivoRetornoDTO<AcervoLinhaErroDTO<AcervoDocumentalDTO,AcervoDocumentalLinhaRetornoDTO>,AcervoLinhaRetornoSucessoDTO>()
             {
@@ -302,6 +311,9 @@ namespace SME.CDEP.Aplicacao.Servicos
 
         public void ValidarPreenchimentoValorFormatoQtdeCaracteres(IEnumerable<AcervoDocumentalLinhaDTO> linhas)
         {
+            var autores = CreditosAutores.Where(w => w.Tipo == (int)TipoCreditoAutoria.Autoria).Select(s=> mapper.Map<IdNomeDTO>(s));
+            var materiaisDocumentais = Materiais.Where(w => w.Tipo == (int)TipoMaterial.DOCUMENTAL).Select(s=> mapper.Map<IdNomeDTO>(s));
+            
             foreach (var linha in linhas)
             {
                 try
@@ -309,22 +321,37 @@ namespace SME.CDEP.Aplicacao.Servicos
                     ValidarPreenchimentoLimiteCaracteres(linha.Titulo, Constantes.TITULO);
                     ValidarPreenchimentoLimiteCaracteres(linha.Codigo, Constantes.CODIGO_ANTIGO);
                     ValidarPreenchimentoLimiteCaracteres(linha.CodigoNovo, Constantes.CODIGO_NOVO);
+                    
                     ValidarPreenchimentoLimiteCaracteres(linha.Material,Constantes.MATERIAL);
+                    ValidarConteudoCampoComDominio(linha.Material, materiaisDocumentais, Constantes.MATERIAL);
+                    
                     ValidarPreenchimentoLimiteCaracteres(linha.Idioma,Constantes.IDIOMA);
+                    ValidarConteudoCampoComDominio(linha.Idioma, Idiomas, Constantes.IDIOMA);
+                    
                     ValidarPreenchimentoLimiteCaracteres(linha.Autor,Constantes.AUTOR);
+                    ValidarConteudoCampoListaComDominio(linha.Autor, autores, Constantes.AUTOR);
+
                     ValidarPreenchimentoLimiteCaracteres(linha.Ano,Constantes.ANO);
                     ValidarPreenchimentoLimiteCaracteres(linha.NumeroPaginas,Constantes.NUMERO_PAGINAS);
+                    
                     ValidarPreenchimentoLimiteCaracteres(linha.Volume,Constantes.VOLUME);
                     ValidarPreenchimentoLimiteCaracteres(linha.Descricao,Constantes.DESCRICAO);
+                    
                     ValidarPreenchimentoLimiteCaracteres(linha.TipoAnexo,Constantes.TIPO_ANEXO);
                     ValidarPreenchimentoLimiteCaracteres(linha.Largura,Constantes.LARGURA);
+                    
                     ValidarPreenchimentoLimiteCaracteres(linha.Altura,Constantes.ALTURA);
                     ValidarPreenchimentoLimiteCaracteres(linha.TamanhoArquivo,Constantes.TAMANHO_ARQUIVO);
+                    
                     ValidarPreenchimentoLimiteCaracteres(linha.AcessoDocumento,Constantes.ACESSO_DOCUMENTO);
+                    ValidarConteudoCampoListaComDominio(linha.AcessoDocumento, AcessoDocumentos, Constantes.ACESSO_DOCUMENTO);
+
                     ValidarPreenchimentoLimiteCaracteres(linha.Localizacao,Constantes.LOCALIZACAO);
                     ValidarPreenchimentoLimiteCaracteres(linha.CopiaDigital,Constantes.COPIA_DIGITAL);
+                    
                     ValidarPreenchimentoLimiteCaracteres(linha.EstadoConservacao,Constantes.ESTADO_CONSERVACAO);
-
+                    ValidarConteudoCampoComDominio(linha.EstadoConservacao, Conservacoes, Constantes.ESTADO_CONSERVACAO);
+                    
                     if (linha.Codigo.Conteudo.NaoEstaPreenchido() && linha.CodigoNovo.Conteudo.NaoEstaPreenchido())
                     {
                         DefinirMensagemErro(linha.Codigo, string.Format(Constantes.CAMPO_X_NAO_PREENCHIDO,Constantes.CODIGO_ANTIGO));
@@ -359,26 +386,6 @@ namespace SME.CDEP.Aplicacao.Servicos
                    || linha.Localizacao.PossuiErro 
                    || linha.CopiaDigital.PossuiErro 
                    || linha.EstadoConservacao.PossuiErro;
-        }
-
-        public async Task ValidacaoObterOuInserirDominios(IEnumerable<AcervoDocumentalLinhaDTO> linhasComsucesso)
-        {
-            try
-            {
-                await ValidarOuInserirMateriais(linhasComsucesso.Where(w=> !w.Material.PossuiErro).Select(s => s.Material.Conteudo).Distinct().Where(w=> w.EstaPreenchido()), TipoMaterial.DOCUMENTAL);
-
-                await ValidarOuInserirIdiomas(linhasComsucesso.Where(w=> !w.Idioma.PossuiErro).Select(s => s.Idioma.Conteudo).Distinct().Where(w=> w.EstaPreenchido()));
-                
-                await ValidarOuInserirCreditoAutoresCoAutoresTipoAutoria(linhasComsucesso.Where(w=> !w.Autor.PossuiErro).Select(s => s.Autor.Conteudo).ToArray().UnificarPipe().SplitPipe().Distinct().Where(w=> w.EstaPreenchido()), TipoCreditoAutoria.Autoria);
-                
-                await ObterDominiosImutaveis();
-                
-            }
-            catch (Exception e)
-            {
-                foreach (var linha in linhasComsucesso)
-                    linha.DefinirLinhaComoErro(e.Message);
-            }
         }
 
         private async Task<IEnumerable<AcervoDocumentalLinhaDTO>> LerPlanilha(IFormFile file)

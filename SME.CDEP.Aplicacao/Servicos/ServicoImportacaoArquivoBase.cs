@@ -72,12 +72,19 @@ namespace SME.CDEP.Aplicacao.Servicos
             Conservacoes = new List<IdNomeDTO>();
         }
 
-        protected async Task ObterDominiosImutaveis()
+        protected async Task ObterDominios()
         {
             Suportes = (await servicoSuporte.ObterTodos()).Select(s=> mapper.Map<IdNomeTipoDTO>(s)).ToList();
             Cromias = (await servicoCromia.ObterTodos()).Select(s => mapper.Map<IdNomeDTO>(s)).ToList();
             Conservacoes = (await servicoConservacao.ObterTodos()).Select(s=> mapper.Map<IdNomeDTO>(s)).ToList();
             AcessoDocumentos = (await servicoAcessoDocumento.ObterTodos()).Select(s=> mapper.Map<IdNomeDTO>(s)).ToList();
+            CreditosAutores = (await servicoCreditoAutor.ObterTodos()).Select(s=> mapper.Map<IdNomeTipoDTO>(s)).ToList();
+            Materiais = (await servicoMaterial.ObterTodos()).Select(s=> mapper.Map<IdNomeTipoDTO>(s)).ToList();
+            Editoras = (await servicoEditora.ObterTodos()).Select(s=> mapper.Map<IdNomeDTO>(s)).ToList();
+            SeriesColecoes = (await servicoSerieColecao.ObterTodos()).Select(s=> mapper.Map<IdNomeDTO>(s)).ToList();
+            Idiomas = (await servicoIdioma.ObterTodos()).Select(s=> mapper.Map<IdNomeDTO>(s)).ToList();
+            Assuntos = (await servicoAssunto.ObterTodos()).Select(s=> mapper.Map<IdNomeDTO>(s)).ToList();
+            Formatos = (await servicoFormato.ObterTodos()).Select(s=> mapper.Map<IdNomeTipoDTO>(s)).ToList();
         }
 
         public void ValidarArquivo(IFormFile file)
@@ -353,40 +360,11 @@ namespace SME.CDEP.Aplicacao.Servicos
             campo.PossuiErro = true;
             campo.Mensagem = mensagemErro;
         }
-
+        
         private void DefinirCampoValidado(LinhaConteudoAjustarDTO campo)
         {
             campo.PossuiErro = false;
             campo.Mensagem = string.Empty;
-        }
-        
-        public async Task ValidarOuInserirAcessoDocumento(IEnumerable<string> acessoDocumentos)
-        {
-            foreach (var nome in acessoDocumentos)
-            {
-                if (!await ExisteAcessoDocumentoPorNome(nome))
-                {
-                    var id  = await servicoAcessoDocumento.Inserir(new IdNomeExcluidoDTO() { Nome = nome});
-                    CachearAcessoDocumento(nome, id);
-                }
-            }
-        }
-
-        private async Task<bool> ExisteAcessoDocumentoPorNome(string nome)
-        {
-            var id = await servicoAcessoDocumento.ObterPorNome(nome);
-
-            var existeRegistro = id.EhMaiorQueZero();
-            
-            if (existeRegistro)
-                CachearAcessoDocumento(nome, id);
-
-            return existeRegistro;
-        }
-
-        private void CachearAcessoDocumento(string nome, long id)
-        {
-            AcessoDocumentos.Add(new IdNomeDTO() { Id = id, Nome = nome});
         }
         
         protected static LinhaConteudoAjustarRetornoDTO ObterConteudoMensagemStatus(LinhaConteudoAjustarDTO linha)
@@ -395,7 +373,7 @@ namespace SME.CDEP.Aplicacao.Servicos
             {
                 Conteudo = linha.Conteudo, 
                 PossuiErro = linha.PossuiErro, 
-                Mensagem = linha.Mensagem
+                Mensagem = linha.Mensagem,
             };
         }
         
@@ -549,7 +527,7 @@ namespace SME.CDEP.Aplicacao.Servicos
             {
                 if (item.EstaPreenchido())
                 {
-                    var possuiNome = AcessoDocumentos.Any(f => f.Nome.Equals(item));
+                    var possuiNome = AcessoDocumentos.Any(f => f.Nome.SaoIguais(item));
                     if (!possuiNome)
                     {
                         if (gerarExcecao)
@@ -757,7 +735,7 @@ namespace SME.CDEP.Aplicacao.Servicos
                 throw new NegocioException(string.Format(Constantes.A_PLANLHA_DE_ACERVO_X_NAO_TEM_O_NOME_DA_COLUNA_Y_NA_COLUNA_Z, nomeDoAcervo,nomeDaColuna,numeroDaColuna));
         }
         
-        protected static AcervoLinhaRetornoSucessoDTO ObterLinhasComSucesso(string titulo, string tombo, int numeroLinha)
+        protected AcervoLinhaRetornoSucessoDTO ObterLinhasComSucesso(string titulo, string tombo, int numeroLinha)
         {
             return new AcervoLinhaRetornoSucessoDTO()
             {
@@ -765,12 +743,37 @@ namespace SME.CDEP.Aplicacao.Servicos
                 Tombo = tombo,
                 NumeroLinha = numeroLinha,
             };
-        }     
+        }
+        
+        protected AcervoLinhaRetornoSucessoDTO ObterLinhasComSucessoSufixo(string titulo, string tombo, int numeroLinha, string sufixo)
+        {
+            return new AcervoLinhaRetornoSucessoDTO()
+            {
+                Titulo = titulo,
+                Tombo = ObterSufixo(tombo,sufixo),
+                NumeroLinha = numeroLinha,
+            };
+        }
         
 
         protected async Task ObterSuportesPorTipo(TipoSuporte tipoSuporte)
         {
             Suportes = Suportes.Where(w=> w.Tipo == (int)tipoSuporte).ToList();
+        }
+        
+        protected async Task ObterMateriaisPorTipo(TipoMaterial tipoMaterial)
+        {
+            Materiais = Materiais.Where(w=> w.Tipo == (int)tipoMaterial).ToList();
+        }
+        
+        protected async Task ObterCreditosAutoresPorTipo(TipoCreditoAutoria tipoCreditoAutoria)
+        {
+            CreditosAutores = CreditosAutores.Where(w=> w.Tipo == (int)tipoCreditoAutoria).ToList();
+        }
+        
+        protected async Task ObterFormatosPorTipo(TipoFormato tipoFormato)
+        {
+            Formatos = Formatos.Where(w=> w.Tipo == (int)tipoFormato).ToList();
         }
 
         protected async Task ObterCreditosAutoresTipoAutoria(IEnumerable<string> creditosAutores, TipoCreditoAutoria tipoAutoria)
@@ -816,7 +819,27 @@ namespace SME.CDEP.Aplicacao.Servicos
         }
         protected string ObterSufixo(string codigo, string sufixo)
         {
+            if (codigo.NaoEstaPreenchido())
+                return default;
+            
             return codigo.Contains(sufixo) ? codigo : $"{codigo}{sufixo}";
+        }
+        
+        protected void ValidarConteudoCampoListaComDominio(LinhaConteudoAjustarDTO conteudoCampo, IEnumerable<IdNomeDTO> dominio, string nomeCampo)
+        {
+            var itensAAvaliar = conteudoCampo.Conteudo.FormatarTextoEmArray().UnificarPipe().SplitPipe().Distinct().ToList();
+            var itensInexistentes = string.Empty;
+            foreach (var itemAvaliar in itensAAvaliar.Where(linha => !dominio.Any(a=> a.Nome.SaoIguais(linha))))
+                itensInexistentes += itensInexistentes.NaoEstaPreenchido() ? itemAvaliar : $" | {itemAvaliar}";
+                    
+            if (itensInexistentes.EstaPreenchido())
+                DefinirMensagemErro(conteudoCampo, string.Format(MensagemNegocio.O_ITEM_X_DO_DOMINIO_X_NAO_ENCONTRADO, itensInexistentes, nomeCampo));
+        }
+
+        protected void ValidarConteudoCampoComDominio(LinhaConteudoAjustarDTO campo, IEnumerable<IdNomeDTO> dominio,string nomeCampo)
+        {
+            if (!dominio.Any(a=> a.Nome.SaoIguais(campo.Conteudo)))
+                DefinirMensagemErro(campo, string.Format(MensagemNegocio.O_ITEM_X_DO_DOMINIO_X_NAO_ENCONTRADO, campo.Conteudo, nomeCampo));
         }
     }
 }
