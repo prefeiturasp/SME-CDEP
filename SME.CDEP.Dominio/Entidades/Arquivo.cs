@@ -8,5 +8,13 @@ namespace SME.CDEP.Dominio.Entidades
         public Guid Codigo { get; set; }
         public string TipoConteudo { get; set; }
         public TipoArquivo Tipo { get; set; }
+        public string NomeArquivoFisico
+        {
+            get
+            {
+                var extensao = Path.GetExtension(Nome);
+                return $"{Codigo.ToString()}{extensao}";
+            }
+        }
     }
 }

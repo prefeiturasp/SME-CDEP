@@ -83,7 +83,7 @@ namespace SME.CDEP.Infra.Dados.Repositorios
                                     join arquivo a on a.id = afa.arquivo_id and a.tipo_conteudo <> @tipoConteudo
                             where permite_uso_imagem and af.acervo_id = any(@acervosIds) ";
 
-            return await conexao.Obter().QueryAsync<AcervoCodigoNomeResumido>(query, new { acervosIds, tipoConteudo = Constantes.FORMATO_TIFF });
+            return await conexao.Obter().QueryAsync<AcervoCodigoNomeResumido>(query, new { acervosIds, tipoConteudo = Constantes.CONTENT_TYPE_TIFF });
         }
 
         public async Task<Arquivo> ObterArquivoPorNomeTipoArquivo(string nome, TipoArquivo tipoArquivo)

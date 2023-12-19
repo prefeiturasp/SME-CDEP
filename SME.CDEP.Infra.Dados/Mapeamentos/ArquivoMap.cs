@@ -11,6 +11,7 @@ namespace SME.CDEP.Infra.Dados.Mapeamentos
             Map(c => c.Codigo).ToColumn("codigo");
             Map(c => c.TipoConteudo).ToColumn("tipo_conteudo");
             Map(c => c.Tipo).ToColumn("tipo");
+            Map(c => c.NomeArquivoFisico).Ignore();
         }
     }
 }

@@ -7,6 +7,5 @@ namespace SME.CDEP.Aplicacao.Servicos.Interface
     {
         Task<(byte[], string, string)> Download(Guid codigoArquivo);
         Task<(byte[], string, string)> DownloadPorTipoAcervo(TipoAcervo tipoAcervo);
-        Task<bool> Converter(Guid codigoArquivo);
     }
 }

@@ -65,7 +65,7 @@ namespace SME.CDEP.Dominio.Extensions
 
         public static bool EhArquivoXlsx(this string texto)
         {
-            return texto.Equals(Constantes.Constantes.ContentTypeExcel);
+            return texto.Equals(Constantes.Constantes.CONTENT_TYPE_EXCEL);
         }
         
         public static bool NaoEhArquivoXlsx(this string texto)
@@ -139,6 +139,11 @@ namespace SME.CDEP.Dominio.Extensions
         public static int ConverterParaInteiro(this string valor)
         {
             return int.Parse(valor); 
+        }
+        
+        public static bool EhImagemTiff(this string nomeArquivo)
+        {
+            return nomeArquivo.ToLower().Contains(Constantes.Constantes.CONTENT_TYPE_TIFF);
         }
     }
 }
