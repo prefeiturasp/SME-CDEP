@@ -375,22 +375,6 @@ namespace SME.CDEP.Aplicacao.Servicos
                    || linha.Descricao.PossuiErro;
         }
 
-        public async Task ValidacaoObterOuInserirDominios(IEnumerable<AcervoArteGraficaLinhaDTO> linhasComsucesso)
-        {
-            try
-            {
-                await ValidarOuInserirCreditoAutoresCoAutoresTipoAutoria(linhasComsucesso.Where(w=> !w.Credito.PossuiErro).Select(s => s.Credito.Conteudo).ToArray().UnificarPipe().SplitPipe().Distinct().Where(w=> w.EstaPreenchido()), TipoCreditoAutoria.Credito);
-
-                await base.ObterDominios();
-                
-            }
-            catch (Exception e)
-            {
-                foreach (var linha in linhasComsucesso)
-                    linha.DefinirLinhaComoErro(e.Message);
-            }
-        }
-
         private async Task<IEnumerable<AcervoArteGraficaLinhaDTO>> LerPlanilha(IFormFile file)
         {
             var linhas = new List<AcervoArteGraficaLinhaDTO>();
