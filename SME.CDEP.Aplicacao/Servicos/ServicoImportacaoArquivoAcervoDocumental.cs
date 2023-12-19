@@ -76,6 +76,10 @@ namespace SME.CDEP.Aplicacao.Servicos
         public async Task CarregarDominios()
         {
             await ObterDominios();
+            
+            await ObterCreditosAutoresPorTipo(TipoCreditoAutoria.Autoria);
+                
+            await ObterMateriaisPorTipo(TipoMaterial.DOCUMENTAL);
         }
 
         public async Task<ImportacaoArquivoRetornoDTO<AcervoLinhaErroDTO<AcervoDocumentalDTO,AcervoDocumentalLinhaRetornoDTO>,AcervoLinhaRetornoSucessoDTO>> ImportarArquivo(IFormFile file)
@@ -86,13 +90,9 @@ namespace SME.CDEP.Aplicacao.Servicos
 
             var importacaoArquivo = ObterImportacaoArquivoParaSalvar(file.FileName, TipoAcervo.DocumentacaoHistorica, JsonConvert.SerializeObject(acervosDocumentalLinhas));
             
-            var importacaoArquivoId = await PersistirImportacao(importacaoArquivo);
-           
-            await ObterDominios();
+            await CarregarDominios();
             
-            await ObterCreditosAutoresPorTipo(TipoCreditoAutoria.Autoria);
-                
-            await ObterMateriaisPorTipo(TipoMaterial.DOCUMENTAL);
+            var importacaoArquivoId = await PersistirImportacao(importacaoArquivo);
 
             ValidarPreenchimentoValorFormatoQtdeCaracteres(acervosDocumentalLinhas);
             

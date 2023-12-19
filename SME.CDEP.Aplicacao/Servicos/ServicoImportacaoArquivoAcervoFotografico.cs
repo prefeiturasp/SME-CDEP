@@ -75,7 +75,13 @@ namespace SME.CDEP.Aplicacao.Servicos
 
         public async Task CarregarDominios()
         {
-            await base.ObterDominios();
+            await ObterDominios();
+            
+            await ObterCreditosAutoresPorTipo(TipoCreditoAutoria.Credito);
+                
+            await ObterFormatosPorTipo(TipoFormato.ACERVO_FOTOS);
+            
+            await ObterSuportesPorTipo(TipoSuporte.IMAGEM);
         }
 
         public async Task<ImportacaoArquivoRetornoDTO<AcervoLinhaErroDTO<AcervoFotograficoDTO,AcervoFotograficoLinhaRetornoDTO>,AcervoLinhaRetornoSucessoDTO>> ImportarArquivo(IFormFile file)
@@ -86,15 +92,9 @@ namespace SME.CDEP.Aplicacao.Servicos
         
             var importacaoArquivo = ObterImportacaoArquivoParaSalvar(file.FileName, TipoAcervo.Fotografico, JsonConvert.SerializeObject(acervosFotograficoLinhas));
             
+            await CarregarDominios();
+            
             var importacaoArquivoId = await PersistirImportacao(importacaoArquivo);
-
-            await base.ObterDominios();
-            
-            await ObterCreditosAutoresPorTipo(TipoCreditoAutoria.Credito);
-                
-            await ObterFormatosPorTipo(TipoFormato.ACERVO_FOTOS);
-            
-            await ObterSuportesPorTipo(TipoSuporte.IMAGEM);
            
             ValidarPreenchimentoValorFormatoQtdeCaracteres(acervosFotograficoLinhas);
             

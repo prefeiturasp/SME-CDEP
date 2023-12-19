@@ -57,6 +57,10 @@ namespace SME.CDEP.Aplicacao.Servicos
         public async Task CarregarDominios()
         {
             await ObterDominios();
+            
+            await ObterCreditosAutoresPorTipo(TipoCreditoAutoria.Credito);
+            
+            await ObterSuportesPorTipo(TipoSuporte.IMAGEM);
         }
 
         public async Task<bool> RemoverLinhaDoArquivo(long id, LinhaDTO linhaDoArquivo)
@@ -88,13 +92,9 @@ namespace SME.CDEP.Aplicacao.Servicos
 
             var importacaoArquivo = ObterImportacaoArquivoParaSalvar(file.FileName, TipoAcervo.ArtesGraficas, JsonConvert.SerializeObject(acervosArtesGraficasLinhas));
             
+            await CarregarDominios();
+            
             var importacaoArquivoId = await PersistirImportacao(importacaoArquivo);
-            
-            await ObterDominios();
-            
-            await ObterCreditosAutoresPorTipo(TipoCreditoAutoria.Credito);
-            
-            await ObterSuportesPorTipo(TipoSuporte.IMAGEM);
            
             ValidarPreenchimentoValorFormatoQtdeCaracteres(acervosArtesGraficasLinhas);
             
@@ -111,7 +111,7 @@ namespace SME.CDEP.Aplicacao.Servicos
         private async Task<ImportacaoArquivoRetornoDTO<AcervoLinhaErroDTO<AcervoArteGraficaDTO,AcervoArteGraficaLinhaRetornoDTO>,AcervoLinhaRetornoSucessoDTO>> ObterRetornoImportacaoAcervo(ImportacaoArquivo arquivoImportado, IEnumerable<AcervoArteGraficaLinhaDTO> acervosArtesGraficasLinhas, bool estaImportandoArquivo = true)
         {
             if (!estaImportandoArquivo)
-                await base.ObterDominios();
+                await ObterDominios();
             
             await ObterCreditosAutoresPorTipo(TipoCreditoAutoria.Credito);
             
