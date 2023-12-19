@@ -73,7 +73,7 @@ namespace SME.CDEP.Aplicacao.Servicos
 
         public async Task CarregarDominios()
         {
-            await base.ObterDominios();
+            await ObterDominios();
         }
 
         public async Task<ImportacaoArquivoRetornoDTO<AcervoLinhaErroDTO<AcervoTridimensionalDTO,AcervoTridimensionalLinhaRetornoDTO>,AcervoLinhaRetornoSucessoDTO>> ImportarArquivo(IFormFile file)
@@ -84,9 +84,9 @@ namespace SME.CDEP.Aplicacao.Servicos
         
             var importacaoArquivo = ObterImportacaoArquivoParaSalvar(file.FileName, TipoAcervo.Tridimensional, JsonConvert.SerializeObject(acervosTridimensionalLinhas));
             
-            var importacaoArquivoId = await PersistirImportacao(importacaoArquivo);
+            await CarregarDominios();
             
-            await base.ObterDominios();
+            var importacaoArquivoId = await PersistirImportacao(importacaoArquivo);
            
             ValidarPreenchimentoValorFormatoQtdeCaracteres(acervosTridimensionalLinhas);
             
