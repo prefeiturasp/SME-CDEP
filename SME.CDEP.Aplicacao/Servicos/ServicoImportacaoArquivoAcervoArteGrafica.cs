@@ -16,6 +16,7 @@ namespace SME.CDEP.Aplicacao.Servicos
     public class ServicoImportacaoArquivoAcervoArteGrafica : ServicoImportacaoArquivoBase, IServicoImportacaoArquivoAcervoArteGrafica 
     {
         private readonly IServicoAcervoArteGrafica servicoAcervoArteGrafica;
+        private readonly IMapper mapper;
         
         public ServicoImportacaoArquivoAcervoArteGrafica(IRepositorioImportacaoArquivo repositorioImportacaoArquivo, IServicoMaterial servicoMaterial,
             IServicoEditora servicoEditora,IServicoSerieColecao servicoSerieColecao,IServicoIdioma servicoIdioma, IServicoAssunto servicoAssunto,
@@ -25,6 +26,7 @@ namespace SME.CDEP.Aplicacao.Servicos
                 servicoConservacao,servicoAcessoDocumento,servicoCromia,servicoSuporte,servicoFormato, mapper)
         {
             this.servicoAcervoArteGrafica = servicoAcervoArteGrafica ?? throw new ArgumentNullException(nameof(servicoAcervoArteGrafica));
+            this.mapper = mapper ?? throw new ArgumentNullException(nameof(mapper));
         }
 
         public void DefinirCreditosAutores(List<IdNomeTipoDTO> creditosAutores)
@@ -302,42 +304,46 @@ namespace SME.CDEP.Aplicacao.Servicos
 
         public void ValidarPreenchimentoValorFormatoQtdeCaracteres(IEnumerable<AcervoArteGraficaLinhaDTO> linhas)
         {
+            var creditos = CreditosAutores.Where(w => w.Tipo == (int)TipoCreditoAutoria.Credito).Select(s=> mapper.Map<IdNomeDTO>(s));
+            var suportesDeImagem = Suportes.Where(w => w.Tipo == (int)TipoSuporte.IMAGEM).Select(s=> mapper.Map<IdNomeDTO>(s));
+            
             foreach (var linha in linhas)
             {
                 try
                 {
                     ValidarPreenchimentoLimiteCaracteres(linha.Titulo, Constantes.TITULO);
                     ValidarPreenchimentoLimiteCaracteres(linha.Codigo, Constantes.TOMBO);
-                    
+
                     ValidarPreenchimentoLimiteCaracteres(linha.Credito, Constantes.CREDITO);
-                    ValidarCreditosComDominio(linha);
+                    ValidarConteudoCampoListaComDominio(linha.Credito, creditos, Constantes.CREDITO);	
 
                     ValidarPreenchimentoLimiteCaracteres(linha.Localizacao,Constantes.LOCALIZACAO);
                     ValidarPreenchimentoLimiteCaracteres(linha.Procedencia,Constantes.PROCEDENCIA);
+                    
                     ValidarPreenchimentoLimiteCaracteres(linha.Ano,Constantes.ANO);
                     ValidarPreenchimentoLimiteCaracteres(linha.Data,Constantes.DATA);
+                    
                     ValidarPreenchimentoLimiteCaracteres(linha.CopiaDigital,Constantes.COPIA_DIGITAL);
                     ValidarPreenchimentoLimiteCaracteres(linha.PermiteUsoImagem,Constantes.AUTORIZACAO_USO_DE_IMAGEM);
                     
                     ValidarPreenchimentoLimiteCaracteres(linha.EstadoConservacao,Constantes.ESTADO_CONSERVACAO);
-                    if (!Conservacoes.Any(a=> a.Nome.SaoIguais(linha.EstadoConservacao.Conteudo)))
-                        DefinirMensagemErro(linha.EstadoConservacao, string.Format(MensagemNegocio.O_ITEM_X_DO_DOMINIO_X_NAO_ENCONTRADO, linha.EstadoConservacao.Conteudo, Constantes.ESTADO_CONSERVACAO));
+                    ValidarConteudoCampoComDominio(linha.EstadoConservacao, Conservacoes, Constantes.ESTADO_CONSERVACAO);
                     
                     ValidarPreenchimentoLimiteCaracteres(linha.Cromia,Constantes.CROMIA);
-                    if (!Cromias.Any(a=> a.Nome.SaoIguais(linha.Cromia.Conteudo)))
-                        DefinirMensagemErro(linha.Cromia, string.Format(MensagemNegocio.O_ITEM_X_DO_DOMINIO_X_NAO_ENCONTRADO, linha.Cromia.Conteudo, Constantes.CROMIA));
+                    ValidarConteudoCampoComDominio(linha.Cromia, Cromias, Constantes.CROMIA);
                     
                     ValidarPreenchimentoLimiteCaracteres(linha.Largura,Constantes.LARGURA);
                     ValidarPreenchimentoLimiteCaracteres(linha.Altura,Constantes.ALTURA);
+                    
                     ValidarPreenchimentoLimiteCaracteres(linha.Diametro,Constantes.DIAMETRO);
                     ValidarPreenchimentoLimiteCaracteres(linha.Tecnica,Constantes.TECNICA);
                     
                     ValidarPreenchimentoLimiteCaracteres(linha.Suporte,Constantes.SUPORTE);
-                    if (!Suportes.Any(a=> a.Nome.SaoIguais(linha.Suporte.Conteudo)))
-                        DefinirMensagemErro(linha.Suporte, string.Format(MensagemNegocio.O_ITEM_X_DO_DOMINIO_X_NAO_ENCONTRADO, linha.Suporte.Conteudo, Constantes.SUPORTE));
+                    ValidarConteudoCampoComDominio(linha.Suporte, suportesDeImagem, Constantes.SUPORTE);
                     
                     ValidarPreenchimentoLimiteCaracteres(linha.Quantidade,Constantes.QUANTIDADE);
                     ValidarPreenchimentoLimiteCaracteres(linha.Descricao,Constantes.DESCRICAO);
+                    
                     linha.PossuiErros = PossuiErro(linha);
                 }
                 catch (Exception e)
@@ -345,18 +351,6 @@ namespace SME.CDEP.Aplicacao.Servicos
                     linha.DefinirLinhaComoErro(string.Format(Constantes.OCORREU_UMA_FALHA_INESPERADA_NA_LINHA_X_MOTIVO_Y, linha.NumeroLinha, e.Message));
                 }
             }
-        }
-
-        private void ValidarCreditosComDominio(AcervoArteGraficaLinhaDTO linha)
-        {
-            var creditos = linha.Credito.Conteudo.FormatarTextoEmArray().UnificarPipe().SplitPipe().Distinct().ToList();
-
-            var creditosNaoEncontrados = string.Empty;
-            foreach (var credito in creditos.Where(credito => !CreditosAutores.Any(a=> a.Nome.SaoIguais(credito))))
-                creditosNaoEncontrados += creditosNaoEncontrados.NaoEstaPreenchido() ? credito : $" | {credito}";
-                    
-            if (creditosNaoEncontrados.EstaPreenchido())
-                DefinirMensagemErro(linha.Credito, string.Format(MensagemNegocio.O_ITEM_X_DO_DOMINIO_X_NAO_ENCONTRADO, creditosNaoEncontrados, Constantes.CREDITO));
         }
 
         private bool PossuiErro(AcervoArteGraficaLinhaDTO linha)

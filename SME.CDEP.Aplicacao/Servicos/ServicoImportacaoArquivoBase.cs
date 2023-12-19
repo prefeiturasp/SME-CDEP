@@ -824,5 +824,22 @@ namespace SME.CDEP.Aplicacao.Servicos
             
             return codigo.Contains(sufixo) ? codigo : $"{codigo}{sufixo}";
         }
+        
+        protected void ValidarConteudoCampoListaComDominio(LinhaConteudoAjustarDTO conteudoCampo, IEnumerable<IdNomeDTO> dominio, string nomeCampo)
+        {
+            var itensAAvaliar = conteudoCampo.Conteudo.FormatarTextoEmArray().UnificarPipe().SplitPipe().Distinct().ToList();
+            var itensInexistentes = string.Empty;
+            foreach (var itemAvaliar in itensAAvaliar.Where(linha => !dominio.Any(a=> a.Nome.SaoIguais(linha))))
+                itensInexistentes += itensInexistentes.NaoEstaPreenchido() ? itemAvaliar : $" | {itemAvaliar}";
+                    
+            if (itensInexistentes.EstaPreenchido())
+                DefinirMensagemErro(conteudoCampo, string.Format(MensagemNegocio.O_ITEM_X_DO_DOMINIO_X_NAO_ENCONTRADO, itensInexistentes, nomeCampo));
+        }
+
+        protected void ValidarConteudoCampoComDominio(LinhaConteudoAjustarDTO campo, IEnumerable<IdNomeDTO> dominio,string nomeCampo)
+        {
+            if (!dominio.Any(a=> a.Nome.SaoIguais(campo.Conteudo)))
+                DefinirMensagemErro(campo, string.Format(MensagemNegocio.O_ITEM_X_DO_DOMINIO_X_NAO_ENCONTRADO, campo.Conteudo, nomeCampo));
+        }
     }
 }

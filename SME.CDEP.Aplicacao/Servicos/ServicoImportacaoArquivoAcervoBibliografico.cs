@@ -1,5 +1,4 @@
-﻿using System.Text;
-using AutoMapper;
+﻿using AutoMapper;
 using ClosedXML.Excel;
 using Microsoft.AspNetCore.Http;
 using Newtonsoft.Json;
@@ -17,6 +16,7 @@ namespace SME.CDEP.Aplicacao.Servicos
     public class ServicoImportacaoArquivoAcervoBibliografico : ServicoImportacaoArquivoBase, IServicoImportacaoArquivoAcervoBibliografico 
     {
         private readonly IServicoAcervoBibliografico servicoAcervoBibliografico;
+        private readonly IMapper mapper;
         
         public ServicoImportacaoArquivoAcervoBibliografico(IRepositorioImportacaoArquivo repositorioImportacaoArquivo, IServicoMaterial servicoMaterial,
             IServicoEditora servicoEditora,IServicoSerieColecao servicoSerieColecao,IServicoIdioma servicoIdioma, IServicoAssunto servicoAssunto,
@@ -26,6 +26,7 @@ namespace SME.CDEP.Aplicacao.Servicos
                 servicoConservacao,servicoAcessoDocumento,servicoCromia,servicoSuporte, servicoFormato, mapper)
         {
             this.servicoAcervoBibliografico = servicoAcervoBibliografico ?? throw new ArgumentNullException(nameof(servicoAcervoBibliografico));
+            this.mapper = mapper ?? throw new ArgumentNullException(nameof(mapper));
         }
 
         public void DefinirCreditosAutores(List<IdNomeTipoDTO> creditosAutores)
@@ -354,6 +355,9 @@ namespace SME.CDEP.Aplicacao.Servicos
 
         public void ValidarPreenchimentoValorFormatoQtdeCaracteres(IEnumerable<AcervoBibliograficoLinhaDTO> linhas)
         {
+            var autores = CreditosAutores.Where(w => w.Tipo == (int)TipoCreditoAutoria.Autoria).Select(s=> mapper.Map<IdNomeDTO>(s));
+            var materiaisBibliograficos = Materiais.Where(w => w.Tipo == (int)TipoMaterial.BIBLIOGRAFICO).Select(s=> mapper.Map<IdNomeDTO>(s));
+            
             foreach (var linha in linhas)
             {
                 try
@@ -362,14 +366,13 @@ namespace SME.CDEP.Aplicacao.Servicos
                     ValidarPreenchimentoLimiteCaracteres(linha.SubTitulo, Constantes.SUB_TITULO);
                     
                     ValidarPreenchimentoLimiteCaracteres(linha.Material,Constantes.MATERIAL);
-                    if (!Materiais.Any(a=> a.Nome.SaoIguais(linha.Material.Conteudo)))
-                        DefinirMensagemErro(linha.Material, string.Format(MensagemNegocio.O_ITEM_X_DO_DOMINIO_X_NAO_ENCONTRADO, linha.Material.Conteudo, Constantes.MATERIAL));
+                    ValidarConteudoCampoComDominio(linha.Material, materiaisBibliograficos, Constantes.MATERIAL);
                     
                     ValidarPreenchimentoLimiteCaracteres(linha.Autor,Constantes.AUTOR);
-                    ValidarAutoresComDominio(linha);
+                    ValidarConteudoCampoListaComDominio(linha.Autor, autores, Constantes.AUTOR);
 
                     ValidarPreenchimentoLimiteCaracteres(linha.CoAutor,Constantes.CO_AUTOR);
-                    ValidarCoAutoresComDominio(linha);
+                    ValidarConteudoCampoListaComDominio(linha.CoAutor, autores, Constantes.CO_AUTOR);
 
                     ValidarPreenchimentoLimiteCaracteres(linha.TipoAutoria,Constantes.TIPO_AUTORIA);
                     
@@ -380,32 +383,32 @@ namespace SME.CDEP.Aplicacao.Servicos
                         DefinirMensagemErro(linha.TipoAutoria, Constantes.TEMOS_MAIS_TIPO_AUTORIA_QUE_COAUTORES);
                     
                     ValidarPreenchimentoLimiteCaracteres(linha.Editora,Constantes.EDITORA);
-                    if (!Editoras.Any(a=> a.Nome.SaoIguais(linha.Editora.Conteudo)))
-                        DefinirMensagemErro(linha.Editora, string.Format(MensagemNegocio.O_ITEM_X_DO_DOMINIO_X_NAO_ENCONTRADO, linha.Editora.Conteudo, Constantes.EDITORA));
+                    ValidarConteudoCampoComDominio(linha.Editora, Editoras, Constantes.EDITORA);
                     
                     ValidarPreenchimentoLimiteCaracteres(linha.Assunto,Constantes.ASSUNTO);
-                    ValidarAssuntosComDominio(linha);
+                    ValidarConteudoCampoListaComDominio(linha.Assunto, Assuntos, Constantes.ASSUNTO);
 
                     ValidarPreenchimentoLimiteCaracteres(linha.Ano,Constantes.ANO);
                     ValidarPreenchimentoLimiteCaracteres(linha.Edicao,Constantes.EDICAO);
+                    
                     ValidarPreenchimentoLimiteCaracteres(linha.NumeroPaginas,Constantes.NUMERO_PAGINAS);
                     ValidarPreenchimentoLimiteCaracteres(linha.Largura,Constantes.LARGURA);
                     ValidarPreenchimentoLimiteCaracteres(linha.Altura,Constantes.ALTURA);
                     
                     ValidarPreenchimentoLimiteCaracteres(linha.SerieColecao,Constantes.SERIE_COLECAO);
-                    if (!SeriesColecoes.Any(a=> a.Nome.SaoIguais(linha.SerieColecao.Conteudo)))
-                        DefinirMensagemErro(linha.SerieColecao, string.Format(MensagemNegocio.O_ITEM_X_DO_DOMINIO_X_NAO_ENCONTRADO, linha.SerieColecao.Conteudo, Constantes.SERIE_COLECAO));
+                    ValidarConteudoCampoListaComDominio(linha.SerieColecao, SeriesColecoes, Constantes.SERIE_COLECAO);
                     
                     ValidarPreenchimentoLimiteCaracteres(linha.Volume,Constantes.VOLUME);
                     
                     ValidarPreenchimentoLimiteCaracteres(linha.Idioma,Constantes.IDIOMA);
-                    if (!Idiomas.Any(a=> a.Nome.SaoIguais(linha.Idioma.Conteudo)))
-                        DefinirMensagemErro(linha.Idioma, string.Format(MensagemNegocio.O_ITEM_X_DO_DOMINIO_X_NAO_ENCONTRADO, linha.Idioma.Conteudo, Constantes.IDIOMA));
+                    ValidarConteudoCampoComDominio(linha.Idioma, Idiomas, Constantes.IDIOMA);
                     
                     ValidarPreenchimentoLimiteCaracteres(linha.LocalizacaoCDD,Constantes.LOCALIZACAO_CDD);
                     ValidarPreenchimentoLimiteCaracteres(linha.LocalizacaoPHA,Constantes.LOCALIZACAO_PHA);
+                    
                     ValidarPreenchimentoLimiteCaracteres(linha.NotasGerais,Constantes.NOTAS_GERAIS);
                     ValidarPreenchimentoLimiteCaracteres(linha.Isbn,Constantes.ISBN);
+                    
                     ValidarPreenchimentoLimiteCaracteres(linha.Codigo,Constantes.TOMBO);
                     linha.PossuiErros = PossuiErro(linha);
                 }
@@ -414,41 +417,6 @@ namespace SME.CDEP.Aplicacao.Servicos
                     linha.DefinirLinhaComoErro(string.Format(Constantes.OCORREU_UMA_FALHA_INESPERADA_NA_LINHA_X_MOTIVO_Y, e.Message));
                 }
             }
-        }
-
-        private void ValidarAssuntosComDominio(AcervoBibliograficoLinhaDTO linha)
-        {
-            var assuntos = linha.Assunto.Conteudo.FormatarTextoEmArray().UnificarPipe().SplitPipe().Distinct().ToList();
-            var assuntosNaoEncontrados = string.Empty;
-            foreach (var assunto in assuntos.Where(assunto => !Assuntos.Any(a=> a.Nome.SaoIguais(assunto))))
-                assuntosNaoEncontrados += assuntosNaoEncontrados.NaoEstaPreenchido() ? assunto : $" | {assunto}";
-                    
-            if (assuntosNaoEncontrados.EstaPreenchido())
-                DefinirMensagemErro(linha.Assunto, string.Format(MensagemNegocio.O_ITEM_X_DO_DOMINIO_X_NAO_ENCONTRADO, assuntosNaoEncontrados, Constantes.ASSUNTO));
-        }
-
-        private void ValidarCoAutoresComDominio(AcervoBibliograficoLinhaDTO linha)
-        {
-            var coAutores = linha.CoAutor.Conteudo.FormatarTextoEmArray().UnificarPipe().SplitPipe().Distinct().ToList();
-            var coAutoresNaoEncontrados = string.Empty;
-                    
-            foreach (var coAutor in coAutores.Where(coAutor => !CreditosAutores.Any(a=> a.Nome.SaoIguais(coAutor))))
-                coAutoresNaoEncontrados += coAutoresNaoEncontrados.NaoEstaPreenchido() ? coAutor : $" | {coAutor}";
-                    
-            if (coAutoresNaoEncontrados.EstaPreenchido())
-                DefinirMensagemErro(linha.CoAutor, string.Format(MensagemNegocio.O_ITEM_X_DO_DOMINIO_X_NAO_ENCONTRADO, coAutoresNaoEncontrados, Constantes.CO_AUTOR));
-        }
-
-        private void ValidarAutoresComDominio(AcervoBibliograficoLinhaDTO linha)
-        {
-            var autores = linha.Autor.Conteudo.FormatarTextoEmArray().UnificarPipe().SplitPipe().Distinct().ToList();
-            var autoresNaoEncontrados = string.Empty;
-                    
-            foreach (var autor in autores.Where(autor => !CreditosAutores.Any(a=> a.Nome.SaoIguais(autor))))
-                autoresNaoEncontrados += autoresNaoEncontrados.NaoEstaPreenchido() ? autor : $" | {autor}";
-                    
-            if (autoresNaoEncontrados.EstaPreenchido())
-                DefinirMensagemErro(linha.Autor, string.Format(MensagemNegocio.O_ITEM_X_DO_DOMINIO_X_NAO_ENCONTRADO, autoresNaoEncontrados, Constantes.AUTOR));
         }
 
         private bool PossuiErro(AcervoBibliograficoLinhaDTO linha)

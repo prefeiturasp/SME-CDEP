@@ -16,6 +16,7 @@ namespace SME.CDEP.Aplicacao.Servicos
     public class ServicoImportacaoArquivoAcervoAudiovisual : ServicoImportacaoArquivoBase, IServicoImportacaoArquivoAcervoAudiovisual 
     {
         private readonly IServicoAcervoAudiovisual servicoAcervoAudiovisual;
+        private readonly IMapper mapper;
         
         public ServicoImportacaoArquivoAcervoAudiovisual(IRepositorioImportacaoArquivo repositorioImportacaoArquivo, IServicoMaterial servicoMaterial,
             IServicoEditora servicoEditora,IServicoSerieColecao servicoSerieColecao,IServicoIdioma servicoIdioma, IServicoAssunto servicoAssunto,
@@ -25,6 +26,7 @@ namespace SME.CDEP.Aplicacao.Servicos
                 servicoConservacao,servicoAcessoDocumento,servicoCromia,servicoSuporte, servicoFormato, mapper)
         {
             this.servicoAcervoAudiovisual = servicoAcervoAudiovisual ?? throw new ArgumentNullException(nameof(servicoAcervoAudiovisual));
+            this.mapper = mapper ?? throw new ArgumentNullException(nameof(mapper));
         }
 
         public void DefinirCreditosAutores(List<IdNomeTipoDTO> creditosAutores)
@@ -294,6 +296,9 @@ namespace SME.CDEP.Aplicacao.Servicos
         
         public void ValidarPreenchimentoValorFormatoQtdeCaracteres(IEnumerable<AcervoAudiovisualLinhaDTO> linhas)
         {
+            var creditos = CreditosAutores.Where(w => w.Tipo == (int)TipoCreditoAutoria.Credito).Select(s=> mapper.Map<IdNomeDTO>(s));
+            var suportesDeVideo = Suportes.Where(w => w.Tipo == (int)TipoSuporte.VIDEO).Select(s=> mapper.Map<IdNomeDTO>(s));
+            
             foreach (var linha in linhas)
             {
                 try
@@ -302,33 +307,33 @@ namespace SME.CDEP.Aplicacao.Servicos
                     ValidarPreenchimentoLimiteCaracteres(linha.Codigo, Constantes.TOMBO);
                     
                     ValidarPreenchimentoLimiteCaracteres(linha.Credito, Constantes.CREDITO);
-                    ValidarCreditosComDominio(linha);
+                    ValidarConteudoCampoListaComDominio(linha.Credito, creditos, Constantes.CREDITO);	
 
                     ValidarPreenchimentoLimiteCaracteres(linha.Localizacao,Constantes.LOCALIZACAO);
                     ValidarPreenchimentoLimiteCaracteres(linha.Procedencia,Constantes.PROCEDENCIA);
+                    
                     ValidarPreenchimentoLimiteCaracteres(linha.Ano,Constantes.ANO);
                     ValidarPreenchimentoLimiteCaracteres(linha.Data,Constantes.DATA);
+                    
                     ValidarPreenchimentoLimiteCaracteres(linha.Copia,Constantes.COPIA);
                     ValidarPreenchimentoLimiteCaracteres(linha.PermiteUsoImagem,Constantes.AUTORIZACAO_USO_DE_IMAGEM);
                     
                     ValidarPreenchimentoLimiteCaracteres(linha.EstadoConservacao,Constantes.ESTADO_CONSERVACAO);
-                    if (!Conservacoes.Any(a=> a.Nome.SaoIguais(linha.EstadoConservacao.Conteudo)))
-                        DefinirMensagemErro(linha.EstadoConservacao, string.Format(MensagemNegocio.O_ITEM_X_DO_DOMINIO_X_NAO_ENCONTRADO, linha.EstadoConservacao.Conteudo, Constantes.ESTADO_CONSERVACAO));
+                    ValidarConteudoCampoComDominio(linha.EstadoConservacao, Conservacoes, Constantes.ESTADO_CONSERVACAO);
                     
                     ValidarPreenchimentoLimiteCaracteres(linha.Descricao,Constantes.DESCRICAO);
                     
                     ValidarPreenchimentoLimiteCaracteres(linha.Suporte,Constantes.SUPORTE);
-                    if (!Suportes.Any(a=> a.Nome.SaoIguais(linha.Suporte.Conteudo)))
-                        DefinirMensagemErro(linha.Suporte, string.Format(MensagemNegocio.O_ITEM_X_DO_DOMINIO_X_NAO_ENCONTRADO, linha.Suporte.Conteudo, Constantes.SUPORTE));
+                    ValidarConteudoCampoComDominio(linha.Suporte, suportesDeVideo, Constantes.SUPORTE);
                     
                     ValidarPreenchimentoLimiteCaracteres(linha.Duracao,Constantes.DURACAO);
                     
                     ValidarPreenchimentoLimiteCaracteres(linha.Cromia,Constantes.CROMIA);
-                    if (!Cromias.Any(a=> a.Nome.SaoIguais(linha.Cromia.Conteudo)))
-                        DefinirMensagemErro(linha.Cromia, string.Format(MensagemNegocio.O_ITEM_X_DO_DOMINIO_X_NAO_ENCONTRADO, linha.Cromia.Conteudo, Constantes.CROMIA));
+                    ValidarConteudoCampoComDominio(linha.Cromia, Cromias, Constantes.CROMIA);
                     
                     ValidarPreenchimentoLimiteCaracteres(linha.TamanhoArquivo,Constantes.TAMANHO_ARQUIVO);
                     ValidarPreenchimentoLimiteCaracteres(linha.Acessibilidade,Constantes.ACESSIBILIDADE);
+                    
                     ValidarPreenchimentoLimiteCaracteres(linha.Disponibilizacao,Constantes.DISPONIBILIDADE);
                     linha.PossuiErros = PossuiErro(linha);
                 }
@@ -337,18 +342,6 @@ namespace SME.CDEP.Aplicacao.Servicos
                     linha.DefinirLinhaComoErro(string.Format(Constantes.OCORREU_UMA_FALHA_INESPERADA_NA_LINHA_X_MOTIVO_Y, linha.NumeroLinha, e.Message));
                 }
             }
-        }
-
-        private void ValidarCreditosComDominio(AcervoAudiovisualLinhaDTO linha)
-        {
-            var creditos = linha.Credito.Conteudo.FormatarTextoEmArray().UnificarPipe().SplitPipe().Distinct().ToList();
-
-            var creditosNaoEncontrados = string.Empty;
-            foreach (var credito in creditos.Where(credito => !CreditosAutores.Any(a=> a.Nome.SaoIguais(credito))))
-                creditosNaoEncontrados += creditosNaoEncontrados.NaoEstaPreenchido() ? credito : $" | {credito}";
-                    
-            if (creditosNaoEncontrados.EstaPreenchido())
-                DefinirMensagemErro(linha.Credito, string.Format(MensagemNegocio.O_ITEM_X_DO_DOMINIO_X_NAO_ENCONTRADO, creditosNaoEncontrados, Constantes.CREDITO));
         }
 
         private bool PossuiErro(AcervoAudiovisualLinhaDTO linha)
