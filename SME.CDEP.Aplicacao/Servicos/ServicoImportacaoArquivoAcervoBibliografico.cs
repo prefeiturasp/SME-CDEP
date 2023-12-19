@@ -444,23 +444,6 @@ namespace SME.CDEP.Aplicacao.Servicos
                    || linha.Codigo.PossuiErro;
         }
 
-        public async Task ValidacaoObterOuInserirDominios(IEnumerable<AcervoBibliograficoLinhaDTO> linhasComsucesso)
-        {
-            try
-            {
-                await ObterDominios();
-                
-                await ObterMateriaisPorTipo(TipoMaterial.BIBLIOGRAFICO);
-                
-                await ObterCreditosAutoresPorTipo(TipoCreditoAutoria.Autoria);
-            }
-            catch (Exception e)
-            {
-                foreach (var linha in linhasComsucesso)
-                    linha.DefinirLinhaComoErro(e.Message);
-            }
-        }
-
         private async Task<IEnumerable<AcervoBibliograficoLinhaDTO>> LerPlanilha(IFormFile file)
         {
             var linhas = new List<AcervoBibliograficoLinhaDTO>();
