@@ -9,12 +9,12 @@ namespace SME.CDEP.Aplicacao.Servicos.Interface
         Task<ImportacaoArquivoRetornoDTO<AcervoLinhaErroDTO<AcervoDocumentalDTO,AcervoDocumentalLinhaRetornoDTO>,AcervoLinhaRetornoSucessoDTO>> ImportarArquivo(IFormFile file);
         Task PersistenciaAcervo(IEnumerable<AcervoDocumentalLinhaDTO> acervosDocumentalLinhas);
         void ValidarPreenchimentoValorFormatoQtdeCaracteres(IEnumerable<AcervoDocumentalLinhaDTO> linhas);
-        Task ValidacaoObterOuInserirDominios(IEnumerable<AcervoDocumentalLinhaDTO> linhasComsucesso);
         void DefinirCreditosAutores(List<IdNomeTipoDTO> creditosAutores);
         Task<ImportacaoArquivoRetornoDTO<AcervoLinhaErroDTO<AcervoDocumentalDTO,AcervoDocumentalLinhaRetornoDTO>,AcervoLinhaRetornoSucessoDTO>> ObterImportacaoPendente();
         Task<bool> RemoverLinhaDoArquivo(long id, LinhaDTO linhaDoArquivo);
         Task<bool> AtualizarLinhaParaSucesso(long id, LinhaDTO linhaDoArquivo);
         Task<long> AtualizarImportacao(long id, string conteudo, ImportacaoStatus? status = null);
         Task<ImportacaoArquivoRetornoDTO<AcervoLinhaErroDTO<AcervoDocumentalDTO, AcervoDocumentalLinhaRetornoDTO>, AcervoLinhaRetornoSucessoDTO>> ObterImportacaoPorId(long id);
+        Task CarregarDominios();
     }
 }

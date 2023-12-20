@@ -118,7 +118,7 @@ public static class AcervoFotograficoLinhaMock
             
             faker.RuleFor(x => x.FormatoImagem, f => new LinhaConteudoAjustarDTO()
             {
-                Conteudo = f.Lorem.Text().Limite(500),
+                Conteudo = ConstantesTestes.JPEG,
                 LimiteCaracteres = ConstantesTestes.CARACTERES_PERMITIDOS_500,
                 EhCampoObrigatorio = true
             });

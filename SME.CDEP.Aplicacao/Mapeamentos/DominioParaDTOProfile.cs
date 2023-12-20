@@ -104,10 +104,11 @@ namespace SME.CDEP.Aplicacao.Mapeamentos
                 .ReverseMap();
             
             CreateMap<ImportacaoArquivoDTO, ImportacaoArquivo>().ReverseMap();
-
             CreateMap<IdNomeTipoExcluidoDTO, IdNomeTipoDTO>().ReverseMap();
-            
             CreateMap<IdNomeExcluidoDTO, IdNomeDTO>().ReverseMap();
+            CreateMap<IdNomeTipoExcluidoAuditavelDTO, IdNomeTipoDTO>().ReverseMap();
+            CreateMap<IdNomeExcluidoAuditavelDTO, IdNomeDTO>().ReverseMap();
+            CreateMap<IdNomeTipoDTO, IdNomeDTO>().ReverseMap();
         }
     }
 }

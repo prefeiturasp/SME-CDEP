@@ -1,5 +1,4 @@
-﻿using System.Text;
-using AutoMapper;
+﻿using AutoMapper;
 using ClosedXML.Excel;
 using Microsoft.AspNetCore.Http;
 using Newtonsoft.Json;
@@ -17,6 +16,7 @@ namespace SME.CDEP.Aplicacao.Servicos
     public class ServicoImportacaoArquivoAcervoBibliografico : ServicoImportacaoArquivoBase, IServicoImportacaoArquivoAcervoBibliografico 
     {
         private readonly IServicoAcervoBibliografico servicoAcervoBibliografico;
+        private readonly IMapper mapper;
         
         public ServicoImportacaoArquivoAcervoBibliografico(IRepositorioImportacaoArquivo repositorioImportacaoArquivo, IServicoMaterial servicoMaterial,
             IServicoEditora servicoEditora,IServicoSerieColecao servicoSerieColecao,IServicoIdioma servicoIdioma, IServicoAssunto servicoAssunto,
@@ -26,6 +26,7 @@ namespace SME.CDEP.Aplicacao.Servicos
                 servicoConservacao,servicoAcessoDocumento,servicoCromia,servicoSuporte, servicoFormato, mapper)
         {
             this.servicoAcervoBibliografico = servicoAcervoBibliografico ?? throw new ArgumentNullException(nameof(servicoAcervoBibliografico));
+            this.mapper = mapper ?? throw new ArgumentNullException(nameof(mapper));
         }
 
         public void DefinirCreditosAutores(List<IdNomeTipoDTO> creditosAutores)
@@ -72,6 +73,15 @@ namespace SME.CDEP.Aplicacao.Servicos
             return await ObterRetornoImportacaoAcervo(arquivoImportado, JsonConvert.DeserializeObject<IEnumerable<AcervoBibliograficoLinhaDTO>>(arquivoImportado.Conteudo), false);
         }
 
+        public async Task CarregarDominios()
+        {
+            await ObterDominios();
+            
+            await ObterMateriaisPorTipo(TipoMaterial.BIBLIOGRAFICO);
+                
+            await ObterCreditosAutoresPorTipo(TipoCreditoAutoria.Autoria);
+        }
+
         public async Task<ImportacaoArquivoRetornoDTO<AcervoLinhaErroDTO<AcervoBibliograficoDTO,AcervoBibliograficoLinhaRetornoDTO>,AcervoLinhaRetornoSucessoDTO>> ImportarArquivo(IFormFile file)
         {
             ValidarArquivo(file);
@@ -80,14 +90,13 @@ namespace SME.CDEP.Aplicacao.Servicos
 
             var importacaoArquivo = ObterImportacaoArquivoParaSalvar(file.FileName, TipoAcervo.Bibliografico, JsonConvert.SerializeObject(acervosBibliograficosLinhas));
             
+            await CarregarDominios();
+            
             var importacaoArquivoId = await PersistirImportacao(importacaoArquivo);
-           
+
             ValidarPreenchimentoValorFormatoQtdeCaracteres(acervosBibliograficosLinhas);
             
             await AtualizarImportacao(importacaoArquivoId, JsonConvert.SerializeObject(acervosBibliograficosLinhas),ImportacaoStatus.ValidadoPreenchimentoValorFormatoQtdeCaracteres);
-            
-            await ValidacaoObterOuInserirDominios(acervosBibliograficosLinhas);
-            await AtualizarImportacao(importacaoArquivoId, JsonConvert.SerializeObject(acervosBibliograficosLinhas),ImportacaoStatus.ValidacaoDominios);
             
             await PersistenciaAcervo(acervosBibliograficosLinhas);
             await AtualizarImportacao(importacaoArquivoId, JsonConvert.SerializeObject(acervosBibliograficosLinhas), acervosBibliograficosLinhas.Any(a=> a.PossuiErros) ? ImportacaoStatus.Erros : ImportacaoStatus.Sucesso);
@@ -100,16 +109,11 @@ namespace SME.CDEP.Aplicacao.Servicos
         private async Task<ImportacaoArquivoRetornoDTO<AcervoLinhaErroDTO<AcervoBibliograficoDTO,AcervoBibliograficoLinhaRetornoDTO>,AcervoLinhaRetornoSucessoDTO>> ObterRetornoImportacaoAcervo(ImportacaoArquivo arquivoImportado, IEnumerable<AcervoBibliograficoLinhaDTO> acervosBibliograficosLinhas, bool estaImportandoArquivo = true)
         {
             if (!estaImportandoArquivo)
-            {
-                await ObterMateriais(acervosBibliograficosLinhas.Where(w=> !w.Material.PossuiErro).Select(s => s.Material.Conteudo).Distinct().Where(w=> w.EstaPreenchido()), TipoMaterial.BIBLIOGRAFICO);
-                await ObterEditoras(acervosBibliograficosLinhas.Where(w=> !w.Editora.PossuiErro).Select(s => s.Editora.Conteudo).Distinct().Where(w=> w.EstaPreenchido()));
-                await ObterAssuntos(acervosBibliograficosLinhas.Where(w=> !w.Assunto.PossuiErro).Select(s => s.Assunto.Conteudo).ToArray().UnificarPipe().SplitPipe().Distinct().Where(w=> w.EstaPreenchido()));
-                await ObterSeriesColecoes(acervosBibliograficosLinhas.Where(w=> !w.SerieColecao.PossuiErro).Select(s => s.SerieColecao.Conteudo).Distinct().Where(w=> w.EstaPreenchido()));
-                await ObterIdiomas(acervosBibliograficosLinhas.Where(w=> !w.Idioma.PossuiErro).Select(s => s.Idioma.Conteudo).Distinct().Where(w=> w.EstaPreenchido()));
-                await ObterCreditosAutoresTipoAutoria(acervosBibliograficosLinhas.Where(w=> !w.Autor.PossuiErro).Select(s => s.Autor.Conteudo).ToArray().UnificarPipe().SplitPipe().Distinct().Where(w=> w.EstaPreenchido()), TipoCreditoAutoria.Autoria);
-                await ObterCreditosAutoresTipoAutoria(acervosBibliograficosLinhas.Where(w=> !w.CoAutor.PossuiErro).Select(s => s.CoAutor.Conteudo).ToArray().UnificarPipe().SplitPipe().Distinct().Where(w=> w.EstaPreenchido()), TipoCreditoAutoria.Autoria);
-                await ObterDominiosImutaveis();
-            }
+                await ObterDominios();
+                
+            await ObterMateriaisPorTipo(TipoMaterial.BIBLIOGRAFICO);
+                
+            await ObterCreditosAutoresPorTipo(TipoCreditoAutoria.Autoria);
             
             var acervoBibliograficoRetorno = new ImportacaoArquivoRetornoDTO<AcervoLinhaErroDTO<AcervoBibliograficoDTO,AcervoBibliograficoLinhaRetornoDTO>,AcervoLinhaRetornoSucessoDTO>()
             {
@@ -351,15 +355,25 @@ namespace SME.CDEP.Aplicacao.Servicos
 
         public void ValidarPreenchimentoValorFormatoQtdeCaracteres(IEnumerable<AcervoBibliograficoLinhaDTO> linhas)
         {
+            var autores = CreditosAutores.Where(w => w.Tipo == (int)TipoCreditoAutoria.Autoria).Select(s=> mapper.Map<IdNomeDTO>(s));
+            var materiaisBibliograficos = Materiais.Where(w => w.Tipo == (int)TipoMaterial.BIBLIOGRAFICO).Select(s=> mapper.Map<IdNomeDTO>(s));
+            
             foreach (var linha in linhas)
             {
                 try
                 {
                     ValidarPreenchimentoLimiteCaracteres(linha.Titulo, Constantes.TITULO);
                     ValidarPreenchimentoLimiteCaracteres(linha.SubTitulo, Constantes.SUB_TITULO);
+                    
                     ValidarPreenchimentoLimiteCaracteres(linha.Material,Constantes.MATERIAL);
+                    ValidarConteudoCampoComDominio(linha.Material, materiaisBibliograficos, Constantes.MATERIAL);
+                    
                     ValidarPreenchimentoLimiteCaracteres(linha.Autor,Constantes.AUTOR);
+                    ValidarConteudoCampoListaComDominio(linha.Autor, autores, Constantes.AUTOR);
+
                     ValidarPreenchimentoLimiteCaracteres(linha.CoAutor,Constantes.CO_AUTOR);
+                    ValidarConteudoCampoListaComDominio(linha.CoAutor, autores, Constantes.CO_AUTOR);
+
                     ValidarPreenchimentoLimiteCaracteres(linha.TipoAutoria,Constantes.TIPO_AUTORIA);
                     
                     if (linha.TipoAutoria.Conteudo.EstaPreenchido() && linha.CoAutor.Conteudo.NaoEstaPreenchido())
@@ -369,19 +383,32 @@ namespace SME.CDEP.Aplicacao.Servicos
                         DefinirMensagemErro(linha.TipoAutoria, Constantes.TEMOS_MAIS_TIPO_AUTORIA_QUE_COAUTORES);
                     
                     ValidarPreenchimentoLimiteCaracteres(linha.Editora,Constantes.EDITORA);
+                    ValidarConteudoCampoComDominio(linha.Editora, Editoras, Constantes.EDITORA);
+                    
                     ValidarPreenchimentoLimiteCaracteres(linha.Assunto,Constantes.ASSUNTO);
+                    ValidarConteudoCampoListaComDominio(linha.Assunto, Assuntos, Constantes.ASSUNTO);
+
                     ValidarPreenchimentoLimiteCaracteres(linha.Ano,Constantes.ANO);
                     ValidarPreenchimentoLimiteCaracteres(linha.Edicao,Constantes.EDICAO);
+                    
                     ValidarPreenchimentoLimiteCaracteres(linha.NumeroPaginas,Constantes.NUMERO_PAGINAS);
                     ValidarPreenchimentoLimiteCaracteres(linha.Largura,Constantes.LARGURA);
                     ValidarPreenchimentoLimiteCaracteres(linha.Altura,Constantes.ALTURA);
+                    
                     ValidarPreenchimentoLimiteCaracteres(linha.SerieColecao,Constantes.SERIE_COLECAO);
+                    ValidarConteudoCampoListaComDominio(linha.SerieColecao, SeriesColecoes, Constantes.SERIE_COLECAO);
+                    
                     ValidarPreenchimentoLimiteCaracteres(linha.Volume,Constantes.VOLUME);
+                    
                     ValidarPreenchimentoLimiteCaracteres(linha.Idioma,Constantes.IDIOMA);
+                    ValidarConteudoCampoComDominio(linha.Idioma, Idiomas, Constantes.IDIOMA);
+                    
                     ValidarPreenchimentoLimiteCaracteres(linha.LocalizacaoCDD,Constantes.LOCALIZACAO_CDD);
                     ValidarPreenchimentoLimiteCaracteres(linha.LocalizacaoPHA,Constantes.LOCALIZACAO_PHA);
+                    
                     ValidarPreenchimentoLimiteCaracteres(linha.NotasGerais,Constantes.NOTAS_GERAIS);
                     ValidarPreenchimentoLimiteCaracteres(linha.Isbn,Constantes.ISBN);
+                    
                     ValidarPreenchimentoLimiteCaracteres(linha.Codigo,Constantes.TOMBO);
                     linha.PossuiErros = PossuiErro(linha);
                 }
@@ -415,31 +442,6 @@ namespace SME.CDEP.Aplicacao.Servicos
                    || linha.NotasGerais.PossuiErro
                    || linha.Isbn.PossuiErro
                    || linha.Codigo.PossuiErro;
-        }
-
-        public async Task ValidacaoObterOuInserirDominios(IEnumerable<AcervoBibliograficoLinhaDTO> linhasComsucesso)
-        {
-            try
-            {
-                await ValidarOuInserirMateriais(linhasComsucesso.Where(w=> !w.Material.PossuiErro).Select(s => s.Material.Conteudo).Distinct().Where(w=> w.EstaPreenchido()), TipoMaterial.BIBLIOGRAFICO);
-
-                await ValidarOuInserirEditoras(linhasComsucesso.Where(w=> !w.Editora.PossuiErro).Select(s => s.Editora.Conteudo).Distinct().Where(w=> w.EstaPreenchido()));
-
-                await ValidarOuInserirSeriesColecoes(linhasComsucesso.Where(w=> !w.SerieColecao.PossuiErro).Select(s => s.SerieColecao.Conteudo).Distinct().Where(w=> w.EstaPreenchido()));
-
-                await ValidarOuInserirIdiomas(linhasComsucesso.Where(w=> !w.Idioma.PossuiErro).Select(s => s.Idioma.Conteudo).Distinct().Where(w=> w.EstaPreenchido()));
-
-                await ValidarOuInserirAssuntos(linhasComsucesso.Where(w=> !w.Assunto.PossuiErro).Select(s => s.Assunto.Conteudo).ToArray().UnificarPipe().SplitPipe().Distinct().Where(w=> w.EstaPreenchido()));
-
-                await ValidarOuInserirCreditoAutoresCoAutoresTipoAutoria(linhasComsucesso.Where(w=> !w.Autor.PossuiErro).Select(s => s.Autor.Conteudo).ToArray().UnificarPipe().SplitPipe().Distinct().Where(w=> w.EstaPreenchido()), TipoCreditoAutoria.Autoria);
-
-                await ValidarOuInserirCreditoAutoresCoAutoresTipoAutoria(linhasComsucesso.Where(w=> !w.CoAutor.PossuiErro).Select(s => s.CoAutor.Conteudo).ToArray().UnificarPipe().SplitPipe().Distinct().Where(w=> w.EstaPreenchido()), TipoCreditoAutoria.Autoria);
-            }
-            catch (Exception e)
-            {
-                foreach (var linha in linhasComsucesso)
-                    linha.DefinirLinhaComoErro(e.Message);
-            }
         }
 
         private async Task<IEnumerable<AcervoBibliograficoLinhaDTO>> LerPlanilha(IFormFile file)

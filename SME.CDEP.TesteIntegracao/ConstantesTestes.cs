@@ -7,9 +7,19 @@ public class ConstantesTestes
     public const string OPCAO_SIM = "sim";
     public const string OPCAO_NAO = "não";
     
-    public static string FORMATO_DOUBLE = "double";
-    public static string FORMATO_INTEIRO = "int";
+    public const string FORMATO_DOUBLE = "double";
+    public const string FORMATO_INTEIRO = "int";
     
+    public const string EDITORA_A = "Editora A";
+    public const string EDITORA_B = "Editora B";
+    public const string EDITORA_C = "Editora C";
+    public const string EDITORA_D = "Editora D";
+    
+    public const string SERIE_COLECAO_A = "Série coleção A";
+    public const string SERIE_COLECAO_B = "Série coleção B";
+    public const string SERIE_COLECAO_C = "Série coleção C";
+    public const string SERIE_COLECAO_D = "Série coleção D";
+
     public const int CARACTERES_PERMITIDOS_3 = 3;
     public const int CARACTERES_PERMITIDOS_4 = 4;
     public const int CARACTERES_PERMITIDOS_12 = 12;
@@ -86,4 +96,5 @@ public class ConstantesTestes
     public const string PERFIL_EXTERNO_GUID = "3092428D-CA98-4788-9717-E706DF1945A0";
     public const string EMAIL_INTERNO = "email.interno@interno.com.br";
     public const string MIME_TYPE_JPG = "image/jpg";
+    public const string Desconhecido = "Desconhecido";
 }
