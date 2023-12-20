@@ -23,6 +23,8 @@ namespace SME.CDEP.Aplicacao.Servicos
         private readonly ITransacao transacao;
         private readonly IServicoMoverArquivoTemporario servicoMoverArquivoTemporario;
         private readonly IServicoArmazenamento servicoArmazenamento;
+        private readonly IServicoGerarMiniatura servicoGerarMiniatura;
+        private List<AcervoTridimensionalArquivo> AcervoTridimensionalArquivoInseridos;
         
         public ServicoAcervoTridimensional(
             IRepositorioAcervo repositorioAcervo,
@@ -33,7 +35,8 @@ namespace SME.CDEP.Aplicacao.Servicos
             IRepositorioArquivo repositorioArquivo,
             IRepositorioAcervoTridimensionalArquivo repositorioAcervoTridimensionalArquivo,
             IServicoMoverArquivoTemporario servicoMoverArquivoTemporario,
-            IServicoArmazenamento servicoArmazenamento) : 
+            IServicoArmazenamento servicoArmazenamento,
+            IServicoGerarMiniatura servicoGerarMiniatura) : 
             base(repositorioAcervo,
                 repositorioArquivo,
                 servicoMoverArquivoTemporario,
@@ -44,6 +47,8 @@ namespace SME.CDEP.Aplicacao.Servicos
             this.transacao = transacao ?? throw new ArgumentNullException(nameof(transacao));
             this.repositorioAcervoTridimensionalArquivo = repositorioAcervoTridimensionalArquivo ?? throw new ArgumentNullException(nameof(repositorioAcervoTridimensionalArquivo));
             this.servicoAcervo = servicoAcervo ?? throw new ArgumentNullException(nameof(servicoAcervo));
+            this.servicoGerarMiniatura = servicoGerarMiniatura ?? throw new ArgumentNullException(nameof(servicoGerarMiniatura));
+            AcervoTridimensionalArquivoInseridos = new List<AcervoTridimensionalArquivo>();
         }
 
         public async Task<long> Inserir(AcervoTridimensionalCadastroDTO acervoTridimensionalCadastroDto)
@@ -71,11 +76,13 @@ namespace SME.CDEP.Aplicacao.Servicos
                 
                 foreach (var arquivo in arquivosCompletos)
                 {
-                    await repositorioAcervoTridimensionalArquivo.Inserir(new AcervoTridimensionalArquivo()
+                    var acervoTridimensionalArquivo = new AcervoTridimensionalArquivo()
                     {
                         ArquivoId = arquivo.Id, 
                         AcervoTridimensionalId= acervoTridimensional.Id
-                    });
+                    };
+                    acervoTridimensionalArquivo.Id = await repositorioAcervoTridimensionalArquivo.Inserir(acervoTridimensionalArquivo);
+                    AcervoTridimensionalArquivoInseridos.Add(acervoTridimensionalArquivo);
                 }
                 
                 tran.Commit();
@@ -91,10 +98,26 @@ namespace SME.CDEP.Aplicacao.Servicos
             }
 
             await MoverArquivosTemporarios(TipoArquivo.AcervoTridimensional,arquivosCompletos);
+            
+            if (arquivosCompletos.Any())
+                await GerarMiniaturaEVinculoArquivo(arquivosCompletos);
           
             return acervoTridimensional.AcervoId;
         }
 
+        private async Task GerarMiniaturaEVinculoArquivo(IEnumerable<Arquivo> arquivosAInserir)
+        {
+            foreach (var arquivo in arquivosAInserir)
+            {
+                if (arquivo.Nome.EhExtensaoImagemGerarMiniatura())
+                {
+                    var acervoTridimensionalArquivo = AcervoTridimensionalArquivoInseridos.FirstOrDefault(f => f.ArquivoId == arquivo.Id);
+                    acervoTridimensionalArquivo.ArquivoMiniaturaId = await servicoGerarMiniatura.GerarMiniatura(arquivo.TipoConteudo, arquivo.NomeArquivoFisico, arquivo.NomeArquivoFisicoMiniatura, arquivo.Tipo);
+                    await repositorioAcervoTridimensionalArquivo.Atualizar(acervoTridimensionalArquivo);
+                }
+            }
+        }
+        
         private string ObterCodigoAcervo(string codigo)
         {
             return codigo.ContemSigla(Constantes.SIGLA_ACERVO_TRIDIMENSIONAL) 
@@ -132,11 +155,13 @@ namespace SME.CDEP.Aplicacao.Servicos
                 
                 foreach (var arquivo in arquivosIdsInserir)
                 {
-                    await repositorioAcervoTridimensionalArquivo.Inserir(new AcervoTridimensionalArquivo()
+                    var acervoTridimensionalArquivo = new AcervoTridimensionalArquivo()
                     {
-                        ArquivoId = arquivo, 
-                        AcervoTridimensionalId = acervoTridimensional.Id 
-                    });
+                        ArquivoId = arquivo,
+                        AcervoTridimensionalId = acervoTridimensional.Id
+                    };
+                    acervoTridimensionalArquivo.Id = await repositorioAcervoTridimensionalArquivo.Inserir(acervoTridimensionalArquivo);
+                    AcervoTridimensionalArquivoInseridos.Add(acervoTridimensionalArquivo);
                 }
 
                 await repositorioAcervoTridimensionalArquivo.Excluir(arquivosIdsExcluir.ToArray(), acervoTridimensional.Id);
@@ -153,7 +178,10 @@ namespace SME.CDEP.Aplicacao.Servicos
                 tran.Dispose();
             }
 
-            await MoverArquivosTemporarios(TipoArquivo.AcervoArteGrafica);
+            await MoverArquivosTemporarios(TipoArquivo.AcervoTridimensional);
+            
+            if (arquivosIdsInserir.Any())
+                await GerarMiniaturaEVinculoArquivo(await ObterArquivosPorIds(arquivosIdsInserir.ToArray()));
 
             await ExcluirArquivosArmazenamento();
 

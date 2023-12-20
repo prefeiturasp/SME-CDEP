@@ -1,13 +1,7 @@
-﻿using AutoMapper;
-using SME.CDEP.Aplicacao.DTOS;
-using SME.CDEP.Aplicacao.Servicos.Interface;
-using SME.CDEP.Dominio.Constantes;
+﻿using SME.CDEP.Aplicacao.Servicos.Interface;
 using SME.CDEP.Dominio.Entidades;
-using SME.CDEP.Dominio.Excecoes;
-using SME.CDEP.Infra.Dados;
 using SME.CDEP.Infra.Dados.Repositorios.Interfaces;
 using SME.CDEP.Infra.Dominio.Enumerados;
-using SME.CDEP.Infra.Servicos.ServicoArmazenamento;
 using SME.CDEP.Infra.Servicos.ServicoArmazenamento.Interface;
 
 namespace SME.CDEP.Aplicacao.Servicos
@@ -60,9 +54,8 @@ namespace SME.CDEP.Aplicacao.Servicos
         {
             foreach (var arquivoAExcluir in ArquivosExcluirArmazenamento)
             {
-                var extensao = Path.GetExtension(arquivoAExcluir.Nome);
-                var nomeArquivoBucket= $"{arquivoAExcluir.Codigo.ToString()}{extensao}";
-                await servicoArmazenamento.Excluir(nomeArquivoBucket);
+                await servicoArmazenamento.Excluir(arquivoAExcluir.NomeArquivoFisico);
+                await servicoArmazenamento.Excluir(arquivoAExcluir.NomeArquivoFisicoMiniatura);
             }
         }
         

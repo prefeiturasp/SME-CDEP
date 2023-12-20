@@ -50,7 +50,7 @@ namespace SME.CDEP.Aplicacao.Servicos
             }
 
             path = await Armazenar(tipoArquivo, nomeArquivo, stream,formFile.ContentType);
-            return new ArquivoArmazenadoDTO(path,codigo, nomeArquivo, formFile.ContentType, tipoArquivo);
+            return new ArquivoArmazenadoDTO(path,codigo, formFile.FileName, formFile.ContentType, tipoArquivo);
         }
 
         private async Task<string> Armazenar(TipoArquivo tipoArquivo, string nomeArquivo, Stream stream, string contentType)

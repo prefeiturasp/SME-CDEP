@@ -16,7 +16,7 @@ public class ArmazenamentoController: BaseController
     [ProducesResponseType(200)]
     [ProducesResponseType(401)]
     [ProducesResponseType(typeof(RetornoBaseDTO), 500)]
-    [Authorize("Bearer")]
+    // [Authorize("Bearer")]
     public async Task<IActionResult> UploadTemp(IFormFile file, [FromServices] IServicoUploadArquivo servicoUploadArquivo)
     {
         return Ok(await servicoUploadArquivo.Upload(file));
@@ -57,4 +57,14 @@ public class ArmazenamentoController: BaseController
 
         return File(arquivo, contentType, nomeArquivo);
     }
+    
+    [HttpPost("gerar-miniatura")]
+    [ProducesResponseType(200)]
+    [ProducesResponseType(401)]
+    [ProducesResponseType(typeof(RetornoBaseDTO), 500)]
+    public async Task<IActionResult> GerarMiniatura(Guid codigoArquivo, [FromServices] IServicoDownloadArquivo servicoDownloadArquivo)
+    {
+        return Ok(await servicoDownloadArquivo.GerarMiniatura(codigoArquivo));
+    }
+
 }

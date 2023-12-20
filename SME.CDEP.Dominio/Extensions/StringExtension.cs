@@ -1,5 +1,7 @@
 ﻿
+using System.Drawing.Imaging;
 using System.Text.RegularExpressions;
+using SME.CDEP.Dominio.Excecoes;
 
 namespace SME.CDEP.Dominio.Extensions
 {
@@ -11,14 +13,14 @@ namespace SME.CDEP.Dominio.Extensions
         public static readonly Regex RegexTagsHTMLQualquer = new(Constantes.Constantes.EXPRESSAO_TAG_HTML_QUALQUER, RegexOptions.Compiled);
         public static readonly Regex RegexEspacosEmBranco = new(Constantes.Constantes.EXPRESSAO_ESPACO_BRANCO, RegexOptions.Compiled);
         
-        public static bool EhExtensaoImagemParaOtimizar(this string extensao)
+        public static bool EhExtensaoImagemGerarMiniatura(this string extensao)
         {
-            return (extensao.ToLower().Equals(".jpg") || extensao.ToLower().Equals(".jpeg") || extensao.ToLower().Equals(".png") || extensao.ToLower().Equals(".tiff") || extensao.ToLower().Equals(".tif"));
+            return (extensao.ToLower().Contains(".jpg") || extensao.ToLower().Contains(".jpeg") || extensao.ToLower().Contains(".png") || extensao.ToLower().Contains(".tiff") || extensao.ToLower().Contains(".tif"));
         }
         
         public static bool EhArquivoImagemParaOtimizar(this string nomeArquivo)
         {
-            return EhExtensaoImagemParaOtimizar(Path.GetExtension(nomeArquivo));
+            return EhExtensaoImagemGerarMiniatura(Path.GetExtension(nomeArquivo));
         }
         
         public static bool ContemSigla(this string valor, string sigla)

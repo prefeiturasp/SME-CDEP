@@ -3,6 +3,7 @@ using Dommel;
 using SME.CDEP.Dominio.Constantes;
 using SME.CDEP.Dominio.Contexto;
 using SME.CDEP.Dominio.Entidades;
+using SME.CDEP.Dominio.Extensions;
 using SME.CDEP.Infra.Dados.Repositorios.Interfaces;
 using SME.CDEP.Infra.Dominio.Enumerados;
 
@@ -10,8 +11,12 @@ namespace SME.CDEP.Infra.Dados.Repositorios
 {
     public class RepositorioArquivo : RepositorioBaseAuditavel<Arquivo>, IRepositorioArquivo
     {
-        public RepositorioArquivo(IContextoAplicacao contexto, ICdepConexao conexao) : base(contexto,conexao)
-        { }
+        private readonly IContextoAplicacao contextoAplicacao;
+
+        public RepositorioArquivo(IContextoAplicacao contexto, ICdepConexao conexao, IContextoAplicacao contextoAplicacao) : base(contexto, conexao)
+        {
+            this.contextoAplicacao = contextoAplicacao ?? throw new ArgumentNullException(nameof(contextoAplicacao));
+        }
         
         public async Task<Arquivo> ObterPorCodigo(Guid codigo)
         {
@@ -62,10 +67,19 @@ namespace SME.CDEP.Infra.Dados.Repositorios
         public async Task<long> SalvarAsync(Arquivo arquivo)
         {
             if (arquivo.Id > 0)
+            {
+                arquivo.AlteradoEm = DateTimeExtension.HorarioBrasilia();
+                arquivo.AlteradoLogin = contextoAplicacao.UsuarioLogado;
+                arquivo.AlteradoPor = contextoAplicacao.NomeUsuario;
                 await conexao.Obter().UpdateAsync(arquivo);
+            }
             else
+            {
+                arquivo.CriadoEm = DateTimeExtension.HorarioBrasilia();
+                arquivo.CriadoLogin = contextoAplicacao.UsuarioLogado;
+                arquivo.CriadoPor = contextoAplicacao.NomeUsuario;
                 arquivo.Id = (long)await conexao.Obter().InsertAsync(arquivo);
-
+            }
             return arquivo.Id;
         }
 
@@ -82,6 +96,7 @@ namespace SME.CDEP.Infra.Dados.Repositorios
                                     join acervo_fotografico_arquivo afa on afa.acervo_fotografico_id = af.id 
                                     join arquivo a on a.id = afa.arquivo_id
                             where permite_uso_imagem and af.acervo_id = any(@acervosIds) ";
+            //Aqui deve buscar somente as imagens em miniatura
 
             return await conexao.Obter().QueryAsync<AcervoCodigoNomeResumido>(query, new { acervosIds });
         }

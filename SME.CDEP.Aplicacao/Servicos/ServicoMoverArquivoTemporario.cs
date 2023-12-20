@@ -19,13 +19,9 @@ namespace SME.CDEP.Aplicacao.Servicos
         
         public async Task Mover(TipoArquivo tipoArquivo, Arquivo arquivo)
         {
-            var extensao = Path.GetExtension(arquivo.Nome);
-            var nomeArquivoBucket= $"{arquivo.Codigo.ToString()}{extensao}";
-             
-            await servicoArmazenamento.Mover(nomeArquivoBucket);
-                
+            await servicoArmazenamento.Mover(arquivo.NomeArquivoFisico);
             arquivo.Tipo = tipoArquivo;
-            await repositorioArquivo.SalvarAsync(arquivo);
+            arquivo.Id = await repositorioArquivo.SalvarAsync(arquivo);
         }
     }
 }

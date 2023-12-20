@@ -92,7 +92,7 @@ namespace SME.CDEP.Infra.Servicos.ServicoArmazenamento
 
         public async Task<bool> Excluir(string nomeArquivo, string nomeBucket = "")
         {
-            nomeBucket = nomeBucket.EhNulo()
+            nomeBucket = nomeBucket.NaoEstaPreenchido()
                 ? configuracaoArmazenamentoOptions.BucketArquivos
                 : nomeBucket;
 
@@ -127,7 +127,7 @@ namespace SME.CDEP.Infra.Servicos.ServicoArmazenamento
 
         private async Task<string> ObterUrl(string nomeArquivo, string bucketName)
         {
-            var hostAplicacao = configuration["UrlFrontEnd"];
+            var hostAplicacao = "https://dev-arquivos.sme.prefeitura.sp.gov.br/";//configuration["UrlFrontEnd"];
             return $"{hostAplicacao}{bucketName}/{nomeArquivo}";
         }
     }

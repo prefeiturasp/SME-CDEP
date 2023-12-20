@@ -109,7 +109,8 @@ namespace SME.CDEP.TesteIntegracao
             
             var acervoFotograficoArquivos = ObterTodos<AcervoFotograficoArquivo>();
             var acervoFotograficoArquivosInseridos = acervoFotograficoArquivos.Where(w => w.AcervoFotograficoId == acervoFotografico.Id);
-            acervoFotograficoArquivosInseridos.Count().ShouldBe(arquivosSelecionados.Count());
+            acervoFotograficoArquivosInseridos.Count(w=> w.ArquivoMiniaturaId.NaoEhNulo()).ShouldBe(arquivosSelecionados.Count());
+            acervoFotograficoArquivosInseridos.Count(w=> w.ArquivoMiniaturaId.EhNulo()).ShouldBe(0);
             
             var acervoCreditoAutor = ObterTodos<AcervoCreditoAutor>().Where(w=> w.AcervoId == 3);
             acervoCreditoAutor.Count().ShouldBe(5);
@@ -187,7 +188,8 @@ namespace SME.CDEP.TesteIntegracao
             
             var acervoFotograficoArquivos = ObterTodos<AcervoFotograficoArquivo>();
             var acervoFotograficoArquivosInseridos = acervoFotograficoArquivos.Where(w => w.AcervoFotograficoId == acervoFotografico.Id);
-            acervoFotograficoArquivosInseridos.Count().ShouldBe(arquivosSelecionados.Count());
+            acervoFotograficoArquivosInseridos.Count(w=> w.ArquivoMiniaturaId.NaoEhNulo()).ShouldBe(arquivosSelecionados.Count());
+            acervoFotograficoArquivosInseridos.Count(w=> w.ArquivoMiniaturaId.EhNulo()).ShouldBe(0);
             
             var acervoCreditoAutor = ObterTodos<AcervoCreditoAutor>().Where(w=> w.AcervoId == 3);
             acervoCreditoAutor.Count().ShouldBe(3);
@@ -263,7 +265,8 @@ namespace SME.CDEP.TesteIntegracao
             
             var acervoFotograficoArquivos = ObterTodos<AcervoFotograficoArquivo>();
             var acervoFotograficoArquivosInseridos = acervoFotograficoArquivos.Where(w => w.AcervoFotograficoId == acervoFotografico.Id);
-            acervoFotograficoArquivosInseridos.Count().ShouldBe(arquivosSelecionados.Count());
+            acervoFotograficoArquivosInseridos.Count(w=> w.ArquivoMiniaturaId.NaoEhNulo()).ShouldBe(arquivosSelecionados.Count());
+            acervoFotograficoArquivosInseridos.Count(w=> w.ArquivoMiniaturaId.EhNulo()).ShouldBe(0);
             
             var acervoCreditoAutor = ObterTodos<AcervoCreditoAutor>().Where(w=> w.AcervoId == 3);
             acervoCreditoAutor.Count().ShouldBe(2);
@@ -344,7 +347,8 @@ namespace SME.CDEP.TesteIntegracao
             
             var acervoFotograficoArquivos = ObterTodos<AcervoFotograficoArquivo>();
             var acervoFotograficoArquivosInseridos = acervoFotograficoArquivos.Where(w => w.AcervoFotograficoId == acervoFotografico.Id);
-            acervoFotograficoArquivosInseridos.Count().ShouldBe(arquivosSelecionados.Count());
+            acervoFotograficoArquivosInseridos.Count(w=> w.ArquivoMiniaturaId.NaoEhNulo()).ShouldBe(arquivosSelecionados.Count());
+            acervoFotograficoArquivosInseridos.Count(w=> w.ArquivoMiniaturaId.EhNulo()).ShouldBe(0);
         }
         
         [Fact(DisplayName = "Acervo fotográfico - Não deve inserir Tombo duplicado")]
@@ -477,6 +481,8 @@ namespace SME.CDEP.TesteIntegracao
         {
             var random = new Random();
 
+            var arquivoId = 1;
+            
             for (int j = 1; j <= 35; j++)
             {
                 await InserirNaBase(new Acervo()
@@ -533,7 +539,7 @@ namespace SME.CDEP.TesteIntegracao
                 
                 await InserirNaBase(new Arquivo()
                 {
-                    Nome = faker.Lorem.Text(),
+                    Nome = $"{faker.Lorem.Text()}_{j}.jpeg",
                     Codigo = Guid.NewGuid(),
                     Tipo = TipoArquivo.AcervoFotografico,
                     TipoConteudo = ConstantesTestes.MIME_TYPE_JPG,
@@ -545,11 +551,27 @@ namespace SME.CDEP.TesteIntegracao
                     AlteradoLogin = ConstantesTestes.LOGIN_123456789
                 });
                 
+                arquivoId++;
+                
+                await InserirNaBase(new Arquivo()
+                {
+                    Nome = $"{faker.Lorem.Text()}_{arquivoId}.jpeg",
+                    Codigo = Guid.NewGuid(),
+                    Tipo = TipoArquivo.AcervoArteGrafica,
+                    TipoConteudo = ConstantesTestes.MIME_TYPE_JPG,
+                    CriadoPor = ConstantesTestes.SISTEMA,
+                    CriadoEm = DateTimeExtension.HorarioBrasilia().AddMinutes(-15),
+                    CriadoLogin = ConstantesTestes.LOGIN_123456789,
+                });
+                
                 await InserirNaBase(new AcervoFotograficoArquivo()
                 {
-                    ArquivoId = j,
-                    AcervoFotograficoId = j
+                    ArquivoId = arquivoId-1,
+                    AcervoFotograficoId = j,
+                    ArquivoMiniaturaId = arquivoId
                 });
+                
+                arquivoId++;
             }
         }
     }
