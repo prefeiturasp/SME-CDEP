@@ -4,6 +4,8 @@ public class AcervoBibliograficoDetalheDTO : AcervoDetalheDTO
 {
     public AcervoBibliograficoDetalheDTO()
     {}
+    
+    public string SubTitulo { get; set; }
     public string Material { get; set; }
     public string Editora { get; set; }
     public string Assuntos { get; set; }
