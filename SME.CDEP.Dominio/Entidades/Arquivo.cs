@@ -16,5 +16,13 @@ namespace SME.CDEP.Dominio.Entidades
                 return $"{Codigo.ToString()}{extensao}";
             }
         }
+        public string NomeArquivoFisicoMiniatura
+        {
+            get
+            {
+                var extensao = Path.GetExtension(Nome);
+                return $"{Codigo.ToString()}_miniatura{extensao}";
+            }
+        }
     }
 }
