@@ -55,9 +55,29 @@ namespace SME.CDEP.Infra.Dados.Repositorios
         
         public async Task<AcervoBibliograficoCompleto> ObterPorId(long id)
         {
-            var query = @"select  ab.id,
+            var query = QueryCompletaAcervoFotografico();
+
+            query += " and a.id = @id";
+
+            var retorno = (await conexao.Obter().QueryAsync<AcervoBibliograficoCompleto>(query, new { id }));
+            if (retorno.Any())
+            {
+                var acervoBi = retorno.FirstOrDefault();
+                acervoBi.CreditosAutoresIds = acervoBi.CreditoAutorId.EhMaiorQueZero() ? retorno.Where(w=> !w.ehcoautor).Select(s => s.CreditoAutorId).Distinct().ToArray() : Array.Empty<long>();
+                acervoBi.CoAutores = acervoBi.CreditoAutorId.EhMaiorQueZero() ? retorno.Where(w=> w.ehcoautor).Select(s => new CoAutor() { CreditoAutorId = s.CreditoAutorId, TipoAutoria = s.TipoAutoria, CreditoAutorNome = s.CreditoAutorNome}).Distinct().ToArray() : Array.Empty<CoAutor>();
+                acervoBi.AssuntosIds = acervoBi.AssuntoId.EhMaiorQueZero() ? retorno.Select(s => s.AssuntoId).Distinct().ToArray() : Array.Empty<long>();
+                return acervoBi;    
+            }
+
+            return default;
+        }
+
+        private static string QueryCompletaAcervoFotografico()
+        {
+            return @"select  ab.id,
                                   a.ano,
                                   ab.edicao,
+                                  a.descricao,
                                   ab.numero_pagina numeroPagina,
                                   ab.largura,
                                   ab.altura,                                  
@@ -69,7 +89,8 @@ namespace SME.CDEP.Infra.Dados.Repositorios
                                   a.id as AcervoId,
                                   a.titulo,
                                   a.subTitulo,
-                                  a.codigo,                                                                    
+                                  a.codigo,      
+                                  a.data_acervo as DataAcervo,
                                   a.tipo as TipoAcervoId,                                  
                                   a.criado_em as CriadoEm,
                                   a.criado_por as CriadoPor,
@@ -88,32 +109,44 @@ namespace SME.CDEP.Infra.Dados.Repositorios
                                   e.id as editoraId,
                                   e.nome as editoraNome,
                                   aba.assunto_id as assuntoId,
+                                  ast.nome as assuntoNome,
                                   sc.id as serieColecaoId,
                                   sc.nome as serieColecaoNome
                         from acervo_bibliografico ab
                         join acervo a on a.id = ab.acervo_id 
                         join idioma i on i.id = ab.idioma_id 
-                        join acervo_bibliografico_assunto aba on aba.acervo_bibliografico_id = ab.id                              
+                        join acervo_bibliografico_assunto aba on aba.acervo_bibliografico_id = ab.id 
+                        join assunto ast on ast.id = aba.assunto_id
                         join acervo_credito_autor aca on aca.acervo_id = a.id
                         join credito_autor ca on aca.credito_autor_id = ca.id                        
                         join material m on m.id = ab.material_id
                         left join editora e on e.id = ab.editora_id
                         left join serie_colecao sc on sc.id = ab.serie_colecao_id
-                        where not a.excluido 
-                        and a.id = @id";
-
-            var retorno = (await conexao.Obter().QueryAsync<AcervoBibliograficoCompleto>(query, new { id }));
-            if (retorno.Any())
-            {
-                var acervoBi = retorno.FirstOrDefault();
-                acervoBi.CreditosAutoresIds = acervoBi.CreditoAutorId.EhMaiorQueZero() ? retorno.Where(w=> !w.ehcoautor).Select(s => s.CreditoAutorId).Distinct().ToArray() : Array.Empty<long>();
-                acervoBi.CoAutores = acervoBi.CreditoAutorId.EhMaiorQueZero() ? retorno.Where(w=> w.ehcoautor).Select(s => new CoAutor() { CreditoAutorId = s.CreditoAutorId, TipoAutoria = s.TipoAutoria, CreditoAutorNome = s.CreditoAutorNome}).Distinct().ToArray() : Array.Empty<CoAutor>();
-                acervoBi.AssuntosIds = acervoBi.AssuntoId.EhMaiorQueZero() ? retorno.Select(s => s.AssuntoId).Distinct().ToArray() : Array.Empty<long>();
-                return acervoBi;    
-            }
-
-            return default;
+                        where not a.excluido ";
         }
-        
+
+        public async Task<AcervoBibliograficoCompleto> ObterDetalhamentoPorCodigo(string filtroCodigo)
+        {
+            var query = QueryCompletaAcervoFotografico();
+
+            query += " and a.codigo = @filtroCodigo";
+
+            var  acervosCompletos = await conexao.Obter().QueryAsync<AcervoBibliograficoCompleto>(query, new { filtroCodigo });
+            
+            if (acervosCompletos.NaoPossuiElementos())
+                return default;
+            
+            var acervoDetalhado = acervosCompletos.FirstOrDefault();
+            
+            acervoDetalhado.Assuntos = acervosCompletos.Any(s => s.AssuntoNome.EstaPreenchido())
+                ? string.Join(" | ", acervosCompletos.Select(s => s.AssuntoNome).Distinct())
+                : string.Empty;
+            
+            acervoDetalhado.CreditosAutores = acervosCompletos.Any(a=> a.CreditoAutorNome.EstaPreenchido())
+                ? string.Join(" | ", acervosCompletos.Select(s => s.CreditoAutorNome).Distinct())
+                : string.Empty;
+            
+            return acervoDetalhado;
+        }
     }
 }
