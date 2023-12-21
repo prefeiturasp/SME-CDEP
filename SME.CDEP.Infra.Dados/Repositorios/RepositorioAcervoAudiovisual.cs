@@ -1,6 +1,7 @@
 ﻿using Dapper;
 using SME.CDEP.Dominio.Contexto;
 using SME.CDEP.Dominio.Entidades;
+using SME.CDEP.Dominio.Extensions;
 using SME.CDEP.Infra.Dados.Repositorios.Interfaces;
 using SME.CDEP.Infra.Dominio.Enumerados;
 
@@ -96,6 +97,59 @@ namespace SME.CDEP.Infra.Dados.Repositorios
             }
 
             return default;
+        }
+
+        public async Task<AcervoAudiovisualDetalhe> ObterDetalhamentoPorCodigo(string filtroCodigo)
+        {
+            var acervoAudioVisual = await ObterPorCodigo(filtroCodigo);
+
+            if (acervoAudioVisual.EhNulo())
+                return default;
+            
+            acervoAudioVisual.Creditos = await ObterCreditos(acervoAudioVisual.AcervoId);
+            
+            return acervoAudioVisual;
+        }
+
+        private async Task<string> ObterCreditos(long acervoId)
+        {
+            var query = @" select ca.nome 
+                           from acervo_credito_autor aca
+                              join credito_autor ca on aca.credito_autor_id = ca.id 
+                           where aca.acervo_id = @acervoId";
+
+            var creditos = await conexao.Obter().QueryAsync<string>(query, new { acervoId });
+            return string.Join(" | ", creditos.Select(s=> s));
+        }
+
+        private async Task<AcervoAudiovisualDetalhe> ObterPorCodigo(string codigo)
+        {
+            var query = @"select    av.id,
+                                    av.acervo_id acervoId,
+                                    a.titulo,
+                                    a.codigo,
+                                    av.localizacao,
+                                    av.procedencia,
+                                    a.ano,
+                                    a.data_acervo dataAcervo,
+                                    av.copia,
+                                    av.permite_uso_imagem as permiteUsoImagem,
+                                    c.nome as conservacao,
+                                    a.descricao,  
+                                    s.nome as suporte,
+                                    av.duracao,                                  
+                                    cr.nome as cromia,
+                                    av.tamanho_arquivo as tamanhoArquivo,
+                                    av.acessibilidade,
+                                    av.disponibilizacao                                  
+                          from acervo_audiovisual av
+                            join acervo a on a.id = av.acervo_id      
+                            join suporte s on s.id = av.suporte_id
+                            left join conservacao c on c.id = av.conservacao_id
+                            left join cromia cr on cr.id = av.cromia_id
+                          where not a.excluido 
+                                and a.codigo = @codigo";
+            return conexao.Obter().QueryFirstOrDefault<AcervoAudiovisualDetalhe>(query, new { codigo });
         }
     }
 }
