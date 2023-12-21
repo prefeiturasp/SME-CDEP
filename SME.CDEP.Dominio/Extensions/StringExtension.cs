@@ -147,5 +147,10 @@ namespace SME.CDEP.Dominio.Extensions
         {
             return nomeArquivo.ToLower().Contains(Constantes.Constantes.CONTENT_TYPE_TIFF);
         }
+        
+        public static string ObterValorOuZero(this string valor)
+        {
+            return valor.EstaPreenchido() ? valor : "0";
+        }
     }
 }

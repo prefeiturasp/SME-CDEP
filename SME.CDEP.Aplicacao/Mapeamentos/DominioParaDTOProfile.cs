@@ -118,9 +118,8 @@ namespace SME.CDEP.Aplicacao.Mapeamentos
                 .ForMember(dest => dest.SerieColecao, opt => opt.MapFrom(o => o.SerieColecaoNome))
                 .ForMember(dest => dest.Idioma, opt => opt.MapFrom(o => o.IdiomaNome))
                 .ForMember(dest => dest.Assuntos, opt => opt.MapFrom(o => o.Assuntos))
-                .ForMember(dest => dest.Dimensoes, opt => opt.MapFrom(o => o.Largura.HasValue && o.Altura.HasValue 
-                    ? $"{o.Largura.ToString()} x {o.Altura.ToString()}" 
-                    : o.Largura.HasValue ? o.Largura.ToString() : o.Altura.ToString()))
+                .ForMember(dest => dest.Dimensoes, opt => opt.MapFrom(o => 
+                    $"{o.Largura.ToString().ObterValorOuZero()} x {o.Altura.ToString().ObterValorOuZero()}"))
                 .ReverseMap();
             
             CreateMap<AcervoDocumentalCompleto, AcervoDocumentalDetalheDTO>()
@@ -129,12 +128,21 @@ namespace SME.CDEP.Aplicacao.Mapeamentos
                 .ForMember(dest => dest.Idioma, opt => opt.MapFrom(o => o.IdiomaNome))
                 .ForMember(dest => dest.Conservacao, opt => opt.MapFrom(o => o.ConservacaoNome))
                 .ForMember(dest => dest.CopiaDigital, opt => opt.MapFrom(o => o.CopiaDigital.ObterSimNaoVazio()))
-                .ForMember(dest => dest.Dimensoes, opt => opt.MapFrom(o => o.Largura.HasValue && o.Altura.HasValue 
-                    ? $"{o.Largura.ToString()} x {o.Altura.ToString()}" 
-                    : o.Largura.HasValue ? o.Largura.ToString() : o.Altura.ToString()))
+                .ForMember(dest => dest.Dimensoes, opt => opt.MapFrom(o => 
+                        $"{o.Largura.ToString().ObterValorOuZero()} x {o.Altura.ToString().ObterValorOuZero()}"))
                 .ReverseMap();
 
             CreateMap<ImagemDetalhe, ImagemDTO>().ReverseMap();
+            
+            CreateMap<AcervoArteGraficaCompleto, AcervoArteGraficaDetalheDTO>()
+                .ForMember(dest => dest.Cromia, opt => opt.MapFrom(o => o.CromiaNome))
+                .ForMember(dest => dest.Conservacao, opt => opt.MapFrom(o => o.ConservacaoNome))
+                .ForMember(dest => dest.CopiaDigital, opt => opt.MapFrom(o => o.CopiaDigital.ObterSimNao()))
+                .ForMember(dest => dest.PermiteUsoImagem, opt => opt.MapFrom(o => o.PermiteUsoImagem.ObterSimNao()))
+                .ForMember(dest => dest.Suporte, opt => opt.MapFrom(o => o.SuporteNome))
+                .ForMember(dest => dest.Dimensoes, opt => opt.MapFrom(o => 
+                    $"{o.Largura.ToString().ObterValorOuZero()} x {o.Altura.ToString().ObterValorOuZero()} x {o.Diametro.ToString().ObterValorOuZero()}")
+                ).ReverseMap();
         }
     }
 }
