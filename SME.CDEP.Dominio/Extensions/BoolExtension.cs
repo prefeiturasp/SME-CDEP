@@ -7,5 +7,13 @@ namespace SME.CDEP.Dominio.Extensions
         {
             return valor == valorAComparar; 
         }
+        
+        public static string ObterSimNaoVazio(this bool? valor)
+        {
+            if (!valor.HasValue)
+                return string.Empty;
+            
+            return valor.Value ? "Sim" : "Não"; 
+        }
     }
 }

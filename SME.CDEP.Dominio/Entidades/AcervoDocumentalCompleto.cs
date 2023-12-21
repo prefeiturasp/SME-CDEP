@@ -25,11 +25,17 @@ public class AcervoDocumentalCompleto : EntidadeBaseAuditavel
     public long? ConservacaoId { get; set; }
     public string ConservacaoNome { get; set; }
     public string Descricao { get; set; }
-    public ArquivoResumido[] Arquivos  { get; set; }
+    public ArquivoResumido[]? Arquivos  { get; set; }
     public long? ArquivoId { get; set; }
     public string ArquivoNome { get; set; }
     public Guid ArquivoCodigo { get; set; }
+    public string ArquivoNomeMiniatura { get; set; }
+    public Guid ArquivoCodigoMiniatura { get; set; }
     public long[] CreditosAutoresIds { get; set; }
     public long[] AcessoDocumentosIds  { get; set; }
     public long AcessoDocumentoId { get; set; }
+    public string CreditosAutores { get; set; }
+    public string AcessoDocumentos { get; set; }
+    public string AcessoDocumentoNome { get; set; }
+    public IEnumerable<ImagemDetalhe>? Imagens { get; set; }
 }

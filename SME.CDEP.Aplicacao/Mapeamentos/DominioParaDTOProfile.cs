@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using SME.CDEP.Aplicacao.DTOS;
 using SME.CDEP.Dominio.Entidades;
+using SME.CDEP.Dominio.Extensions;
 
 namespace SME.CDEP.Aplicacao.Mapeamentos
 {
@@ -121,6 +122,19 @@ namespace SME.CDEP.Aplicacao.Mapeamentos
                     ? $"{o.Largura.ToString()} x {o.Altura.ToString()}" 
                     : o.Largura.HasValue ? o.Largura.ToString() : o.Altura.ToString()))
                 .ReverseMap();
+            
+            CreateMap<AcervoDocumentalCompleto, AcervoDocumentalDetalheDTO>()
+                .ForMember(dest => dest.Material, opt => opt.MapFrom(o => o.MaterialNome))
+                .ForMember(dest => dest.AcessosDocumentos, opt => opt.MapFrom(o => o.AcessoDocumentoNome))
+                .ForMember(dest => dest.Idioma, opt => opt.MapFrom(o => o.IdiomaNome))
+                .ForMember(dest => dest.Conservacao, opt => opt.MapFrom(o => o.ConservacaoNome))
+                .ForMember(dest => dest.CopiaDigital, opt => opt.MapFrom(o => o.CopiaDigital.ObterSimNaoVazio()))
+                .ForMember(dest => dest.Dimensoes, opt => opt.MapFrom(o => o.Largura.HasValue && o.Altura.HasValue 
+                    ? $"{o.Largura.ToString()} x {o.Altura.ToString()}" 
+                    : o.Largura.HasValue ? o.Largura.ToString() : o.Altura.ToString()))
+                .ReverseMap();
+
+            CreateMap<ImagemDetalhe, ImagemDTO>().ReverseMap();
         }
     }
 }
