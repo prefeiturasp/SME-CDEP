@@ -23,6 +23,8 @@ namespace SME.CDEP.Aplicacao.Servicos
         private readonly ITransacao transacao;
         private readonly IServicoMoverArquivoTemporario servicoMoverArquivoTemporario;
         private readonly IServicoArmazenamento servicoArmazenamento;
+        private readonly IServicoGerarMiniatura servicoGerarMiniatura;
+        private List<AcervoFotograficoArquivo> AcervoFotograficoArquivoInseridos;
         
         public ServicoAcervoFotografico(
             IRepositorioAcervo repositorioAcervo,
@@ -33,7 +35,8 @@ namespace SME.CDEP.Aplicacao.Servicos
             IRepositorioArquivo repositorioArquivo,
             IRepositorioAcervoFotograficoArquivo repositorioAcervoFotograficoArquivo,
             IServicoMoverArquivoTemporario servicoMoverArquivoTemporario,
-            IServicoArmazenamento servicoArmazenamento) : 
+            IServicoArmazenamento servicoArmazenamento,
+            IServicoGerarMiniatura servicoGerarMiniatura) : 
             base(repositorioAcervo,
                 repositorioArquivo,
                 servicoMoverArquivoTemporario,
@@ -44,6 +47,8 @@ namespace SME.CDEP.Aplicacao.Servicos
             this.transacao = transacao ?? throw new ArgumentNullException(nameof(transacao));
             this.repositorioAcervoFotograficoArquivo = repositorioAcervoFotograficoArquivo ?? throw new ArgumentNullException(nameof(repositorioAcervoFotograficoArquivo));
             this.servicoAcervo = servicoAcervo ?? throw new ArgumentNullException(nameof(servicoAcervo));
+            this.servicoGerarMiniatura = servicoGerarMiniatura ?? throw new ArgumentNullException(nameof(servicoGerarMiniatura));
+            this.AcervoFotograficoArquivoInseridos = new List<AcervoFotograficoArquivo>();
         }
 
         public async Task<long> Inserir(AcervoFotograficoCadastroDTO acervoFotograficoCadastroDto)
@@ -71,11 +76,13 @@ namespace SME.CDEP.Aplicacao.Servicos
                 
                 foreach (var arquivo in arquivosCompletos)
                 {
-                    await repositorioAcervoFotograficoArquivo.Inserir(new AcervoFotograficoArquivo()
+                    var acervoFotograficoArquivo = new AcervoFotograficoArquivo()
                     {
                         ArquivoId = arquivo.Id, 
                         AcervoFotograficoId = acervoFotografico.Id
-                    });
+                    };
+                    acervoFotograficoArquivo.Id = await repositorioAcervoFotograficoArquivo.Inserir(acervoFotograficoArquivo);
+                    AcervoFotograficoArquivoInseridos.Add(acervoFotograficoArquivo);
                 }
                 
                 tran.Commit();
@@ -89,10 +96,26 @@ namespace SME.CDEP.Aplicacao.Servicos
             {
                 tran.Dispose();
             }
-
+            
             await MoverArquivosTemporarios(TipoArquivo.AcervoFotografico,arquivosCompletos);
+            
+            if (arquivosCompletos.Any())
+                await GerarMiniaturaEVinculoArquivo(arquivosCompletos);
           
             return acervoFotografico.AcervoId;
+        }
+        
+        private async Task GerarMiniaturaEVinculoArquivo(IEnumerable<Arquivo> arquivosAInserir)
+        {
+            foreach (var arquivo in arquivosAInserir)
+            {
+                if (arquivo.Nome.EhExtensaoImagemGerarMiniatura())
+                {
+                    var acervoFotograficoArquivo = AcervoFotograficoArquivoInseridos.FirstOrDefault(f => f.ArquivoId == arquivo.Id);
+                    acervoFotograficoArquivo.ArquivoMiniaturaId = await servicoGerarMiniatura.GerarMiniatura(arquivo.TipoConteudo, arquivo.NomeArquivoFisico, arquivo.NomeArquivoFisicoMiniatura, arquivo.Tipo);
+                    await repositorioAcervoFotograficoArquivo.Atualizar(acervoFotograficoArquivo);
+                }
+            }
         }
 
         private string ObterCodigoAcervo(string codigo)
@@ -132,11 +155,13 @@ namespace SME.CDEP.Aplicacao.Servicos
                 
                 foreach (var arquivo in arquivosIdsInserir)
                 {
-                    await repositorioAcervoFotograficoArquivo.Inserir(new AcervoFotograficoArquivo()
+                    var acervoFotograficoArquivo = new AcervoFotograficoArquivo()
                     {
-                        ArquivoId = arquivo, 
+                        ArquivoId = arquivo,
                         AcervoFotograficoId = acervoFotografico.Id 
-                    });
+                    };
+                    acervoFotograficoArquivo.Id = await repositorioAcervoFotograficoArquivo.Inserir(acervoFotograficoArquivo);
+                    AcervoFotograficoArquivoInseridos.Add(acervoFotograficoArquivo);
                 }
 
                 await repositorioAcervoFotograficoArquivo.Excluir(arquivosIdsExcluir.ToArray(), acervoFotografico.Id);
@@ -152,8 +177,11 @@ namespace SME.CDEP.Aplicacao.Servicos
             {
                 tran.Dispose();
             }
-
+            
             await MoverArquivosTemporarios(TipoArquivo.AcervoFotografico);
+            
+            if (arquivosIdsInserir.Any())
+                await GerarMiniaturaEVinculoArquivo(await ObterArquivosPorIds(arquivosIdsInserir.ToArray()));
 
             await ExcluirArquivosArmazenamento();
 

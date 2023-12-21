@@ -1,8 +1,7 @@
 ﻿using System.Drawing;
 using System.Drawing.Imaging;
 using System.Net;
-using System.Net.Http.Headers;
-using System.Text;
+using SME.CDEP.Aplicacao.Extensions;
 using SME.CDEP.Aplicacao.Servicos.Interface;
 using SME.CDEP.Dominio.Constantes;
 using SME.CDEP.Dominio.Entidades;
@@ -35,40 +34,32 @@ namespace SME.CDEP.Aplicacao.Servicos
             return await ObterArquivo(await repositorioArquivo.ObterArquivoPorNomeTipoArquivo(tipoAcervo.ObterPlanilhaModelo(), TipoArquivo.Sistema));
         }
 
-        public async Task<bool> Converter(Guid codigoArquivo)
+        public async Task<string> GerarMiniatura(Guid codigoArquivo)
         {
             var arquivo = await repositorioArquivo.ObterPorCodigo(codigoArquivo);
-            
-            var url = await servicoArmazenamento.Obter(arquivo.Nome, false);
-            
-            try
+
+            var url = await servicoArmazenamento.Obter(arquivo.NomeArquivoFisico, false);
+          
+            WebClient webClient = new WebClient();
+            using (Stream stream = webClient.OpenRead(url))
             {
-                WebClient webClient = new WebClient();
-                using (Stream stream = webClient.OpenRead(url))
+                Bitmap imagem = new Bitmap(stream);
+
+                var miniatura = imagem.GetThumbnailImage(320, 200, () => false, IntPtr.Zero);
+
+                var nomeMiniatura = arquivo.NomeArquivoFisicoMiniatura;
+
+                using (var msImagem = new MemoryStream())
                 {
-                    Bitmap imagem = new Bitmap(stream);
-                    
-                    // Define os parâmetros de codificação para JPEG
-                    ImageCodecInfo jpegCodec = GetEncoderInfo(ImageFormat.Jpeg);
-                    EncoderParameters encoderParameters = new EncoderParameters(1);
-                    encoderParameters.Param[0] = new EncoderParameter(System.Drawing.Imaging.Encoder.Quality, 100L); // Ajuste a qualidade conforme necessário
-                    // imagemTiff.Save(caminhoArquivoJpeg, jpegCodec, encoderParameters);
+                    miniatura.Save(msImagem, arquivo.TipoConteudo.ObterFormato());
+
+                    msImagem.Seek(0, SeekOrigin.Begin);
                 
-                    using(MemoryStream ms = new MemoryStream())
-                    {
-                        imagem.Save(ms, jpegCodec, encoderParameters);
-                        ms.Position = 0;
-                        var conteudoDoArquivo = await servicoArmazenamento.Armazenar($"{Guid.NewGuid().ToString()}.jpeg", ms, "");
-                    }
+                    return await servicoArmazenamento.Armazenar(nomeMiniatura, msImagem, arquivo.TipoConteudo);    
                 }
             }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"Erro ao carregar a imagem: {ex.Message}");
-            }
-            return true;
         }
-
+        
         private ImageCodecInfo GetEncoderInfo(ImageFormat format)
         {
             var codecs = ImageCodecInfo.GetImageDecoders();

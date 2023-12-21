@@ -92,7 +92,7 @@ namespace SME.CDEP.Infra.Servicos.ServicoArmazenamento
 
         public async Task<bool> Excluir(string nomeArquivo, string nomeBucket = "")
         {
-            nomeBucket = nomeBucket.EhNulo()
+            nomeBucket = nomeBucket.NaoEstaPreenchido()
                 ? configuracaoArmazenamentoOptions.BucketArquivos
                 : nomeBucket;
 

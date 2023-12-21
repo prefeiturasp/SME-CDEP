@@ -54,7 +54,7 @@ namespace SME.CDEP.TesteIntegracao
             
             var servicoUploadArquivo = GetServicoUploadArquivo();
 
-            var nomeArquivo = new Faker("pt_BR").Lorem.Slug();
+            var nomeArquivo = $"{faker.Lorem.Slug()}.jpeg";
             var fileMock = new Mock<IFormFile>();
             fileMock.Setup(_ => _.FileName).Returns(nomeArquivo);
             fileMock.Setup(_ => _.ContentType).Returns("image/jpeg");

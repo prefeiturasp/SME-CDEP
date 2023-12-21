@@ -1,8 +1,10 @@
 ﻿using Microsoft.AspNetCore.Http;
 using SME.CDEP.Aplicacao.DTOS;
 using SME.CDEP.Aplicacao.Servicos.Interface;
+using SME.CDEP.Dominio.Constantes;
 using SME.CDEP.Dominio.Contexto;
 using SME.CDEP.Dominio.Entidades;
+using SME.CDEP.Dominio.Extensions;
 using SME.CDEP.Infra.Dados.Repositorios.Interfaces;
 using SME.CDEP.Infra.Dominio.Enumerados;
 
@@ -23,22 +25,22 @@ namespace SME.CDEP.Aplicacao.Servicos
 
         public async Task<ArquivoArmazenadoDTO> Upload(IFormFile formFile, TipoArquivo tipoArquivo = TipoArquivo.Temp)
         {
+            var arquivoArmazenado = await servicoArmazenamentoArquivoFisico.Armazenar(formFile, tipoArquivo);
+            
             var arquivo = new Arquivo()
             {
-                Nome = formFile.FileName,
-                Codigo = Guid.NewGuid(),
-                Tipo = tipoArquivo,
-                TipoConteudo = formFile.ContentType,
+                Nome = arquivoArmazenado.Nome,
+                Codigo = arquivoArmazenado.Codigo,
+                Tipo = arquivoArmazenado.TipoArquivo,
+                TipoConteudo = arquivoArmazenado.ContentType,
                 CriadoEm = DateTimeExtension.HorarioBrasilia(),
                 CriadoLogin = contextoAplicacao.UsuarioLogado,
                 CriadoPor = contextoAplicacao.NomeUsuario,
             };
-
+            
             arquivo.Id = await repositorioArquivo.SalvarAsync(arquivo);
             
-            var path = await servicoArmazenamentoArquivoFisico.Armazenar(formFile, arquivo.Codigo.ToString(), tipoArquivo);
-
-            return new ArquivoArmazenadoDTO(arquivo.Id, arquivo.Codigo,path);
+            return new ArquivoArmazenadoDTO(arquivo.Id, arquivo.Codigo,arquivoArmazenado.Path);
         }
     }
 }  
