@@ -11,6 +11,7 @@ public class AcervoBibliograficoCompleto : EntidadeBaseAuditavel
     public string CreditoAutorNome { get; set; }
     public bool ehcoautor { get; set; }
     public long AssuntoId { get; set; }
+    public string AssuntoNome { get; set; }
     public string TipoAutoria { get; set; }
     public long? MaterialId { get; set; }
     public string MaterialNome { get; set; }
@@ -33,4 +34,8 @@ public class AcervoBibliograficoCompleto : EntidadeBaseAuditavel
     public long[] CreditosAutoresIds { get; set; }
     public CoAutor[]? CoAutores { get; set; }
     public long[] AssuntosIds { get; set; }
+    public string CreditosAutores { get; set; }
+    public string Assuntos { get; set; }
+    public string Descricao { get; set; }
+    public string DataAcervo { get; set; }
 }

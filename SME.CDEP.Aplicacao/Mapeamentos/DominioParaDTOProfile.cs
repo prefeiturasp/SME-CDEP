@@ -109,6 +109,18 @@ namespace SME.CDEP.Aplicacao.Mapeamentos
             CreateMap<IdNomeTipoExcluidoAuditavelDTO, IdNomeTipoDTO>().ReverseMap();
             CreateMap<IdNomeExcluidoAuditavelDTO, IdNomeDTO>().ReverseMap();
             CreateMap<IdNomeTipoDTO, IdNomeDTO>().ReverseMap();
+            
+            CreateMap<AcervoBibliograficoCompleto, AcervoBibliograficoDetalheDTO>()
+                .ForMember(dest => dest.CreditosAutores, opt => opt.MapFrom(o => o.CreditosAutores))
+                .ForMember(dest => dest.Material, opt => opt.MapFrom(o => o.MaterialNome))
+                .ForMember(dest => dest.Editora, opt => opt.MapFrom(o => o.EditoraNome))
+                .ForMember(dest => dest.SerieColecao, opt => opt.MapFrom(o => o.SerieColecaoNome))
+                .ForMember(dest => dest.Idioma, opt => opt.MapFrom(o => o.IdiomaNome))
+                .ForMember(dest => dest.Assuntos, opt => opt.MapFrom(o => o.Assuntos))
+                .ForMember(dest => dest.Dimensoes, opt => opt.MapFrom(o => o.Largura.HasValue && o.Altura.HasValue 
+                    ? $"{o.Largura.ToString()} x {o.Altura.ToString()}" 
+                    : o.Largura.HasValue ? o.Largura.ToString() : o.Altura.ToString()))
+                .ReverseMap();
         }
     }
 }

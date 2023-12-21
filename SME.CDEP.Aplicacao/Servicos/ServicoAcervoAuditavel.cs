@@ -22,9 +22,12 @@ namespace SME.CDEP.Aplicacao.Servicos
         private readonly IContextoAplicacao contextoAplicacao;
         private readonly IRepositorioArquivo repositorioArquivo;
         private readonly IConfiguration configuration;
+        private readonly IRepositorioAcervoBibliografico repositorioAcervoBibliografico;
         
-        public ServicoAcervoAuditavel(IRepositorioAcervo repositorioAcervo, IMapper mapper, IContextoAplicacao contextoAplicacao,
-            IRepositorioAcervoCreditoAutor repositorioAcervoCreditoAutor,IRepositorioArquivo repositorioArquivo, IConfiguration configuration)
+        public ServicoAcervoAuditavel(IRepositorioAcervo repositorioAcervo, IMapper mapper, 
+            IContextoAplicacao contextoAplicacao, IRepositorioAcervoCreditoAutor repositorioAcervoCreditoAutor,
+            IRepositorioArquivo repositorioArquivo, IConfiguration configuration,
+            IRepositorioAcervoBibliografico repositorioAcervoBibliografico)
         {
             this.repositorioAcervo = repositorioAcervo ?? throw new ArgumentNullException(nameof(repositorioAcervo));
             this.mapper = mapper ?? throw new ArgumentNullException(nameof(mapper));
@@ -32,6 +35,7 @@ namespace SME.CDEP.Aplicacao.Servicos
             this.repositorioAcervoCreditoAutor = repositorioAcervoCreditoAutor ?? throw new ArgumentNullException(nameof(repositorioAcervoCreditoAutor));
             this.repositorioArquivo = repositorioArquivo ?? throw new ArgumentNullException(nameof(repositorioArquivo));
             this.configuration = configuration ?? throw new ArgumentNullException(nameof(configuration));
+            this.repositorioAcervoBibliografico = repositorioAcervoBibliografico ?? throw new ArgumentNullException(nameof(repositorioAcervoBibliografico));
         }
         
         public async Task<long> Inserir(Acervo acervo)
@@ -291,6 +295,27 @@ namespace SME.CDEP.Aplicacao.Servicos
                 TipoOrdenacao.AZ => registros.OrderBy(o => o.Titulo),
                 TipoOrdenacao.ZA => registros.OrderByDescending(o => o.Titulo),
             };
+        }
+
+        public async Task<AcervoDetalheDTO> ObterDetalhamentoPorTipoAcervoECodigo(FiltroDetalharAcervoDTO filtro)
+        {
+            switch (filtro.Tipo)
+            {
+                case TipoAcervo.Bibliografico:
+                    return mapper.Map<AcervoBibliograficoDetalheDTO>(await repositorioAcervoBibliografico.ObterDetalhamentoPorCodigo(filtro.Codigo));
+                case TipoAcervo.DocumentacaoHistorica:
+                    return new AcervoDocumentalDetalheDTO();
+                case TipoAcervo.ArtesGraficas:
+                    return new AcervoArteGraficaDetalheDTO();
+                case TipoAcervo.Audiovisual:
+                    return new AcervoAudiovisualDetalheDTO();
+                case TipoAcervo.Fotografico:
+                    return new AcervoFotograficoDetalheDTO();
+                case TipoAcervo.Tridimensional:
+                    return new AcervoTridimensionalDetalheDTO();
+                default:
+                    throw new ArgumentOutOfRangeException();
+            }
         }
         
         public Paginacao Paginacao
