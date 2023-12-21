@@ -23,11 +23,13 @@ namespace SME.CDEP.Aplicacao.Servicos
         private readonly IRepositorioArquivo repositorioArquivo;
         private readonly IConfiguration configuration;
         private readonly IRepositorioAcervoBibliografico repositorioAcervoBibliografico;
+        private readonly IRepositorioAcervoDocumental repositorioAcervoDocumental;
         
         public ServicoAcervoAuditavel(IRepositorioAcervo repositorioAcervo, IMapper mapper, 
             IContextoAplicacao contextoAplicacao, IRepositorioAcervoCreditoAutor repositorioAcervoCreditoAutor,
             IRepositorioArquivo repositorioArquivo, IConfiguration configuration,
-            IRepositorioAcervoBibliografico repositorioAcervoBibliografico)
+            IRepositorioAcervoBibliografico repositorioAcervoBibliografico,
+            IRepositorioAcervoDocumental repositorioAcervoDocumental)
         {
             this.repositorioAcervo = repositorioAcervo ?? throw new ArgumentNullException(nameof(repositorioAcervo));
             this.mapper = mapper ?? throw new ArgumentNullException(nameof(mapper));
@@ -36,6 +38,7 @@ namespace SME.CDEP.Aplicacao.Servicos
             this.repositorioArquivo = repositorioArquivo ?? throw new ArgumentNullException(nameof(repositorioArquivo));
             this.configuration = configuration ?? throw new ArgumentNullException(nameof(configuration));
             this.repositorioAcervoBibliografico = repositorioAcervoBibliografico ?? throw new ArgumentNullException(nameof(repositorioAcervoBibliografico));
+            this.repositorioAcervoDocumental = repositorioAcervoDocumental ?? throw new ArgumentNullException(nameof(repositorioAcervoDocumental));
         }
         
         public async Task<long> Inserir(Acervo acervo)
@@ -304,7 +307,7 @@ namespace SME.CDEP.Aplicacao.Servicos
                 case TipoAcervo.Bibliografico:
                     return mapper.Map<AcervoBibliograficoDetalheDTO>(await repositorioAcervoBibliografico.ObterDetalhamentoPorCodigo(filtro.Codigo));
                 case TipoAcervo.DocumentacaoHistorica:
-                    return new AcervoDocumentalDetalheDTO();
+                    return mapper.Map<AcervoDocumentalDetalheDTO>(await repositorioAcervoDocumental.ObterDetalhamentoPorCodigo(filtro.Codigo));
                 case TipoAcervo.ArtesGraficas:
                     return new AcervoArteGraficaDetalheDTO();
                 case TipoAcervo.Audiovisual:

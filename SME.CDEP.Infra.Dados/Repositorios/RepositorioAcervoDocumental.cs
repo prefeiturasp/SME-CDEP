@@ -1,6 +1,7 @@
 ﻿using Dapper;
 using SME.CDEP.Dominio.Contexto;
 using SME.CDEP.Dominio.Entidades;
+using SME.CDEP.Dominio.Extensions;
 using SME.CDEP.Infra.Dados.Repositorios.Interfaces;
 
 namespace SME.CDEP.Infra.Dados.Repositorios
@@ -51,6 +52,25 @@ namespace SME.CDEP.Infra.Dados.Repositorios
         
         public async Task<AcervoDocumentalCompleto> ObterPorId(long id)
         {
+            var query = QueryCompletaAcervoDocumental();
+            
+            query += " and a.id = @id";
+
+            var retorno = (await conexao.Obter().QueryAsync<AcervoDocumentalCompleto>(query, new { id }));
+            if (retorno.Any())
+            {
+                var acervoDocumental = retorno.FirstOrDefault();
+                acervoDocumental.Arquivos = retorno.Where(w=> w.ArquivoId > 0).Select(s => new ArquivoResumido() { Id = s.ArquivoId.Value, Codigo = s.ArquivoCodigo, Nome = s.ArquivoNome }).DistinctBy(d=> d.Id).ToArray();
+                acervoDocumental.AcessoDocumentosIds = retorno.Select(s => s.AcessoDocumentoId).Distinct().ToArray();
+                acervoDocumental.CreditosAutoresIds = acervoDocumental.CreditoAutorId > 0 ? retorno.Select(s => s.CreditoAutorId).Distinct().ToArray() : Array.Empty<long>();
+                return acervoDocumental;    
+            }
+
+            return default;
+        }
+
+        private static string QueryCompletaAcervoDocumental()
+        {
             var query = @"select  ad.id,
                                   a.ano,
                                   ad.numero_pagina numeroPagina,
@@ -78,6 +98,8 @@ namespace SME.CDEP.Infra.Dados.Repositorios
                                   arq.id as arquivoId,
                                   arq.nome as ArquivoNome,
                                   arq.codigo as ArquivoCodigo,
+                                  arqMin.nome as ArquivoNomeMiniatura,
+                                  arqMin.codigo as ArquivoCodigoMiniatura,
                                   i.id as IdiomaId,
                                   i.nome as IdiomaNome,
                                   m.id as materialId,
@@ -95,23 +117,43 @@ namespace SME.CDEP.Infra.Dados.Repositorios
                         left join credito_autor ca on aca.credito_autor_id = ca.id
                         left join acervo_documental_arquivo ada on ada.acervo_documental_id = ad.id
                         left join arquivo arq on arq.id = ada.arquivo_id 
+                        left join arquivo arqMin on arqMin.id = ada.arquivo_miniatura_id 
                         left join material m on m.id = ad.material_id
                         left join conservacao c on c.id = ad.conservacao_id                         
-                        where not a.excluido 
-                        and a.id = @id";
-
-            var retorno = (await conexao.Obter().QueryAsync<AcervoDocumentalCompleto>(query, new { id }));
-            if (retorno.Any())
-            {
-                var acervoDocumental = retorno.FirstOrDefault();
-                acervoDocumental.Arquivos = retorno.Where(w=> w.ArquivoId > 0).Select(s => new ArquivoResumido() { Id = s.ArquivoId.Value, Codigo = s.ArquivoCodigo, Nome = s.ArquivoNome }).DistinctBy(d=> d.Id).ToArray();
-                acervoDocumental.AcessoDocumentosIds = retorno.Select(s => s.AcessoDocumentoId).Distinct().ToArray();
-                acervoDocumental.CreditosAutoresIds = acervoDocumental.CreditoAutorId > 0 ? retorno.Select(s => s.CreditoAutorId).Distinct().ToArray() : Array.Empty<long>();
-                return acervoDocumental;    
-            }
-
-            return default;
+                        where not a.excluido ";
+            return query;
         }
-        
+
+        public async Task<AcervoDocumentalCompleto> ObterDetalhamentoPorCodigo(string filtroCodigo)
+        {
+            var query = QueryCompletaAcervoDocumental();
+
+            query += " and a.codigo = @filtroCodigo";
+
+            var  acervosCompletos = await conexao.Obter().QueryAsync<AcervoDocumentalCompleto>(query, new { filtroCodigo });
+            
+            if (acervosCompletos.NaoPossuiElementos())
+                return default;
+            
+            var acervoDetalhado = acervosCompletos.FirstOrDefault();
+            
+            acervoDetalhado.Imagens = acervosCompletos.Any(s => s.ArquivoNome.EstaPreenchido())
+                ? acervosCompletos.Select(s => new ImagemDetalhe()
+                {
+                    Original = s.ArquivoNome,
+                    Thumbnail = s.ArquivoNomeMiniatura
+                }).Distinct()
+                : default;
+            
+            acervoDetalhado.AcessoDocumentos = acervosCompletos.Any(a=> a.AcessoDocumentoNome.EstaPreenchido())
+                ? string.Join(" | ", acervosCompletos.Select(s => s.AcessoDocumentoNome).Distinct())
+                : string.Empty;
+            
+            acervoDetalhado.CreditosAutores = acervosCompletos.Any(a=> a.CreditoAutorNome.EstaPreenchido())
+                ? string.Join(" | ", acervosCompletos.Select(s => s.CreditoAutorNome).Distinct())
+                : string.Empty;
+            
+            return acervoDetalhado;
+        }
     }
 }

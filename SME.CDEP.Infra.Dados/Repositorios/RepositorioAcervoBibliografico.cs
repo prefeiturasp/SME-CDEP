@@ -90,7 +90,6 @@ namespace SME.CDEP.Infra.Dados.Repositorios
                                   a.titulo,
                                   a.subTitulo,
                                   a.codigo,      
-                                  a.data_acervo as DataAcervo,
                                   a.tipo as TipoAcervoId,                                  
                                   a.criado_em as CriadoEm,
                                   a.criado_por as CriadoPor,

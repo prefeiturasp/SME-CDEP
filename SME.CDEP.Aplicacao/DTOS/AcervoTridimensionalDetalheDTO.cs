@@ -2,6 +2,7 @@
 
 public class AcervoTridimensionalDetalheDTO : AcervoDetalheDTO
 {
+    public string DataAcervo { get; set; }
     public string Procedencia { get; set; }
     public string Conservacao { get; set; }
     public long Quantidade { get; set; }
