@@ -15,5 +15,10 @@ namespace SME.CDEP.Dominio.Extensions
             
             return valor.Value ? "Sim" : "Não"; 
         }
+        
+        public static string ObterSimNao(this bool valor)
+        {
+            return valor ? "Sim" : "Não"; 
+        }
     }
 }
