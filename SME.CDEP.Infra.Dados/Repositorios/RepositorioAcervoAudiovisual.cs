@@ -137,7 +137,7 @@ namespace SME.CDEP.Infra.Dados.Repositorios
                             left join conservacao c on c.id = av.conservacao_id
                             left join cromia cr on cr.id = av.cromia_id
                           where not a.excluido 
-                            and not su.excluido 
+                            and not s.excluido 
 	                            and not s.excluido
 	                            and not c.excluido
 	                            and not cr.excluido
