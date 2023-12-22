@@ -120,32 +120,66 @@ namespace SME.CDEP.Infra.Dados.Repositorios
             return query;
         }
 
-        public async Task<AcervoArteGraficaCompleto> ObterDetalhamentoPorCodigo(string filtroCodigo)
+        public async Task<AcervoArteGraficaDetalhe> ObterDetalhamentoPorCodigo(string filtroCodigo)
         {
-            var query = QueryCompletaAcervoArteGrafica();
+            var acervoArteGrafica = await ObterPorCodigo(filtroCodigo);
 
-            query += " and a.codigo = @filtroCodigo";
-
-            var  acervosCompletos = await conexao.Obter().QueryAsync<AcervoArteGraficaCompleto>(query, new { filtroCodigo });
-            
-            if (acervosCompletos.NaoPossuiElementos())
+            if (acervoArteGrafica.EhNulo())
                 return default;
             
-            var acervoDetalhado = acervosCompletos.FirstOrDefault();
+            acervoArteGrafica.Imagens = await ObterArquivos(acervoArteGrafica.Id);
             
-            acervoDetalhado.Imagens = acervosCompletos.Any(s => s.ArquivoNome.EstaPreenchido())
-                ? acervosCompletos.Select(s => new ImagemDetalhe()
-                {
-                    Original = s.ArquivoNome,
-                    Thumbnail = s.ArquivoNomeMiniatura
-                }).Distinct()
-                : default;
-            
-            acervoDetalhado.CreditosAutores = acervosCompletos.Any(a=> a.CreditoAutorNome.EstaPreenchido())
-                ? string.Join(" | ", acervosCompletos.Select(s => s.CreditoAutorNome).Distinct())
-                : string.Empty;
-            
-            return acervoDetalhado;
+            acervoArteGrafica.Creditos = await ObterCreditosAutores(acervoArteGrafica.AcervoId);
+
+            return acervoArteGrafica;
+        }
+        
+        private async Task<AcervoArteGraficaDetalhe> ObterPorCodigo(string codigo)
+        {
+            var query = @"select ag.id,
+		                          a.id as AcervoId,
+		                          a.titulo,
+                                  a.codigo,          
+                                  ag.localizacao,
+                                  ag.procedencia,
+                                  a.ano,
+                                  a.data_acervo dataacervo,        
+                                  ag.copia_digital as CopiaDigital,
+                                  ag.permite_uso_imagem as PermiteUsoImagem,          
+                                  co.nome as conservacao,          
+                                  c.nome as cromia,
+                                  ag.largura,
+                                  ag.altura,
+                                  ag.diametro,
+                                  ag.tecnica,          
+                                  su.nome as suporte,
+                                  ag.quantidade,
+                                  a.descricao
+                        from acervo_arte_grafica ag
+                        join acervo a on a.id = ag.acervo_id 
+                        join cromia c on c.id = ag.cromia_id
+                        join conservacao co on co.id = ag.conservacao_id
+                        join suporte su on su.id = ag.suporte_id
+                        where not a.excluido 
+                        and not c.excluido 
+                        and not co.excluido 
+                        and not su.excluido 
+                        and a.codigo = @codigo ";
+            return conexao.Obter().QueryFirstOrDefault<AcervoArteGraficaDetalhe>(query, new { codigo });
+        }
+        
+        protected async Task<IEnumerable<ImagemDetalhe>> ObterArquivos(long acervoArteGraficaId)
+        {
+            var query = @" select a.nome original, 
+                                 am.nome thumbnail
+                            from acervo_arte_grafica_arquivo ag 
+                                join arquivo a on a.id = ag.arquivo_id 
+                            join arquivo am on am.id = ag.arquivo_miniatura_id  
+                            where not a.excluido 
+                                and not am.excluido 
+                                and ag.acervo_arte_grafica_id  = @acervoArteGraficaId";
+
+            return await conexao.Obter().QueryAsync<ImagemDetalhe>(query, new { acervoArteGraficaId });
         }
     }
 }

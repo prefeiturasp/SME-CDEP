@@ -112,12 +112,10 @@ namespace SME.CDEP.Aplicacao.Mapeamentos
             CreateMap<IdNomeTipoDTO, IdNomeDTO>().ReverseMap();
             CreateMap<ImagemDetalhe, ImagemDTO>().ReverseMap();
             
-            CreateMap<AcervoArteGraficaCompleto, AcervoArteGraficaDetalheDTO>()
-                .ForMember(dest => dest.Cromia, opt => opt.MapFrom(o => o.CromiaNome))
-                .ForMember(dest => dest.Conservacao, opt => opt.MapFrom(o => o.ConservacaoNome))
+            CreateMap<AcervoArteGraficaDetalhe, AcervoArteGraficaDetalheDTO>()
                 .ForMember(dest => dest.CopiaDigital, opt => opt.MapFrom(o => o.CopiaDigital.ObterSimNao()))
                 .ForMember(dest => dest.PermiteUsoImagem, opt => opt.MapFrom(o => o.PermiteUsoImagem.ObterSimNao()))
-                .ForMember(dest => dest.Suporte, opt => opt.MapFrom(o => o.SuporteNome))
+                .ForMember(dest => dest.CreditosAutores, opt => opt.MapFrom(o => o.Creditos))
                 .ForMember(dest => dest.Dimensoes, opt => opt.MapFrom(o => 
                     $"{o.Largura.ToString().ObterValorOuZero()} x {o.Altura.ToString().ObterValorOuZero()} x {o.Diametro.ToString().ObterValorOuZero()}")
                 ).ReverseMap();
