@@ -111,17 +111,6 @@ namespace SME.CDEP.Infra.Dados.Repositorios
             return acervoAudioVisual;
         }
 
-        private async Task<string> ObterCreditos(long acervoId)
-        {
-            var query = @" select ca.nome 
-                           from acervo_credito_autor aca
-                              join credito_autor ca on aca.credito_autor_id = ca.id 
-                           where aca.acervo_id = @acervoId";
-
-            var creditos = await conexao.Obter().QueryAsync<string>(query, new { acervoId });
-            return string.Join(" | ", creditos.Select(s=> s));
-        }
-
         private async Task<AcervoAudiovisualDetalhe> ObterPorCodigo(string codigo)
         {
             var query = @"select    av.id,
@@ -148,6 +137,10 @@ namespace SME.CDEP.Infra.Dados.Repositorios
                             left join conservacao c on c.id = av.conservacao_id
                             left join cromia cr on cr.id = av.cromia_id
                           where not a.excluido 
+                            and not su.excluido 
+	                            and not s.excluido
+	                            and not c.excluido
+	                            and not cr.excluido
                                 and a.codigo = @codigo";
             return conexao.Obter().QueryFirstOrDefault<AcervoAudiovisualDetalhe>(query, new { codigo });
         }
