@@ -124,28 +124,65 @@ namespace SME.CDEP.Infra.Dados.Repositorios
                         where not a.excluido ";
         }
 
-        public async Task<AcervoBibliograficoCompleto> ObterDetalhamentoPorCodigo(string filtroCodigo)
+        public async Task<AcervoBibliograficoDetalhe> ObterDetalhamentoPorCodigo(string filtroCodigo)
         {
-            var query = QueryCompletaAcervoFotografico();
+            var acervoBibliografico = await ObterPorCodigo(filtroCodigo);
 
-            query += " and a.codigo = @filtroCodigo";
-
-            var  acervosCompletos = await conexao.Obter().QueryAsync<AcervoBibliograficoCompleto>(query, new { filtroCodigo });
-            
-            if (acervosCompletos.NaoPossuiElementos())
+            if (acervoBibliografico.EhNulo())
                 return default;
             
-            var acervoDetalhado = acervosCompletos.FirstOrDefault();
+            acervoBibliografico.Autores = await ObterCreditosAutores(acervoBibliografico.AcervoId);
             
-            acervoDetalhado.Assuntos = acervosCompletos.Any(s => s.AssuntoNome.EstaPreenchido())
-                ? string.Join(" | ", acervosCompletos.Select(s => s.AssuntoNome).Distinct())
+            acervoBibliografico.Assuntos = await ObterAssuntos(acervoBibliografico.Id);
+            
+            return acervoBibliografico;
+        }
+
+        protected async Task<string> ObterAssuntos(long acervoBibliograficoId)
+        {
+            var query = @" select a.nome
+                                from acervo_bibliografico_assunto aba 
+                            join assunto a on a.id = aba.assunto_id
+                            where aba.acervo_bibliografico_id = @acervoDocumentalId
+                            and not a.excluido";
+
+            var assuntos = await conexao.Obter().QueryAsync<string>(query, new { acervoDocumentalId = acervoBibliograficoId });
+            
+            return  assuntos.Any(a=> a.EstaPreenchido())
+                ? string.Join(" | ", assuntos.Select(s => s).Distinct())
                 : string.Empty;
-            
-            acervoDetalhado.CreditosAutores = acervosCompletos.Any(a=> a.CreditoAutorNome.EstaPreenchido())
-                ? string.Join(" | ", acervosCompletos.Select(s => s.CreditoAutorNome).Distinct())
-                : string.Empty;
-            
-            return acervoDetalhado;
+        } 
+
+        private async Task<AcervoBibliograficoDetalhe> ObterPorCodigo(string codigo)
+        {
+            var query = @"select  ab.id,
+                                  a.id as AcervoId,
+                                  a.titulo,
+                                  a.subTitulo,
+                                  m.nome as material,
+                                  e.nome as editora,          
+                                  a.ano,          
+                                  ab.edicao,
+                                  ab.numero_pagina numeroPagina,
+                                  ab.largura,
+                                  ab.altura,
+                                  ab.volume,
+                                  i.nome as Idioma,
+                                  ab.localizacao_cdd as localizacaoCDD,
+                                  ab.localizacao_pha as localizacaoPHA,                                  
+		                          ab.notas_gerais as notasGerais,
+                                  ab.isbn,           
+                                  a.codigo,
+                                  sc.nome serieColecao
+                        from acervo_bibliografico ab
+                        join acervo a on a.id = ab.acervo_id 
+                        join idioma i on i.id = ab.idioma_id 
+                        join material m on m.id = ab.material_id
+                        left join editora e on e.id = ab.editora_id and not i.excluido 
+                        left join serie_colecao sc on sc.id = ab.serie_colecao_id and not sc.excluido
+                        where not a.excluido  
+                        and a.codigo = @codigo ";
+            return conexao.Obter().QueryFirstOrDefault<AcervoBibliograficoDetalhe>(query, new { codigo });
         }
     }
 }

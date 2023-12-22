@@ -75,7 +75,7 @@ public abstract class RepositorioBase<TEntidade> : IRepositorioBase<TEntidade>
         entidade.Excluido = excluir;
     }
     
-    protected async Task<string> ObterCreditos(long acervoId)
+    protected async Task<string> ObterCreditosAutores(long acervoId)
     {
         var query = @" select ca.nome 
                            from acervo_credito_autor aca

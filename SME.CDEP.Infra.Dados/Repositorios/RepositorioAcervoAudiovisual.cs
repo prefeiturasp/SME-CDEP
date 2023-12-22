@@ -106,7 +106,7 @@ namespace SME.CDEP.Infra.Dados.Repositorios
             if (acervoAudioVisual.EhNulo())
                 return default;
             
-            acervoAudioVisual.Creditos = await ObterCreditos(acervoAudioVisual.AcervoId);
+            acervoAudioVisual.Creditos = await ObterCreditosAutores(acervoAudioVisual.AcervoId);
             
             return acervoAudioVisual;
         }
@@ -134,13 +134,11 @@ namespace SME.CDEP.Infra.Dados.Repositorios
                           from acervo_audiovisual av
                             join acervo a on a.id = av.acervo_id      
                             join suporte s on s.id = av.suporte_id
-                            left join conservacao c on c.id = av.conservacao_id
-                            left join cromia cr on cr.id = av.cromia_id
+                            left join conservacao c on c.id = av.conservacao_id and not c.excluido
+                            left join cromia cr on cr.id = av.cromia_id and not cr.excluido
                           where not a.excluido 
-                            and not su.excluido 
+                            and not s.excluido 
 	                            and not s.excluido
-	                            and not c.excluido
-	                            and not cr.excluido
                                 and a.codigo = @codigo";
             return conexao.Obter().QueryFirstOrDefault<AcervoAudiovisualDetalhe>(query, new { codigo });
         }

@@ -124,36 +124,79 @@ namespace SME.CDEP.Infra.Dados.Repositorios
             return query;
         }
 
-        public async Task<AcervoDocumentalCompleto> ObterDetalhamentoPorCodigo(string filtroCodigo)
+        public async Task<AcervoDocumentalDetalhe> ObterDetalhamentoPorCodigo(string filtroCodigo)
         {
-            var query = QueryCompletaAcervoDocumental();
+            var acervoDocumental = await ObterPorCodigo(filtroCodigo);
 
-            query += " and a.codigo = @filtroCodigo";
-
-            var  acervosCompletos = await conexao.Obter().QueryAsync<AcervoDocumentalCompleto>(query, new { filtroCodigo });
-            
-            if (acervosCompletos.NaoPossuiElementos())
+            if (acervoDocumental.EhNulo())
                 return default;
             
-            var acervoDetalhado = acervosCompletos.FirstOrDefault();
+            acervoDocumental.Autores = await ObterCreditosAutores(acervoDocumental.AcervoId);
             
-            acervoDetalhado.Imagens = acervosCompletos.Any(s => s.ArquivoNome.EstaPreenchido())
-                ? acervosCompletos.Select(s => new ImagemDetalhe()
-                {
-                    Original = s.ArquivoNome,
-                    Thumbnail = s.ArquivoNomeMiniatura
-                }).Distinct()
-                : default;
+            acervoDocumental.Imagens = await ObterArquivos(acervoDocumental.Id);
             
-            acervoDetalhado.AcessoDocumentos = acervosCompletos.Any(a=> a.AcessoDocumentoNome.EstaPreenchido())
-                ? string.Join(" | ", acervosCompletos.Select(s => s.AcessoDocumentoNome).Distinct())
+            acervoDocumental.AcessosDocumentos = await ObterAcessoDocumentos(acervoDocumental.Id);
+            
+            return acervoDocumental;
+        }
+        
+        protected async Task<string> ObterAcessoDocumentos(long acervoDocumentalId)
+        {
+            var query = @" select adoc.nome
+                            from acervo_documental_acesso_documento ada 
+                                join acesso_documento adoc on adoc.id = ada.acesso_documento_id
+                                where not adoc.excluido 
+                            and ada.acervo_documental_id  = @acervoDocumentalId";
+
+            var acessoDocumentos = await conexao.Obter().QueryAsync<string>(query, new { acervoDocumentalId });
+            
+            return  acessoDocumentos.Any(a=> a.EstaPreenchido())
+                ? string.Join(" | ", acessoDocumentos.Select(s => s).Distinct())
                 : string.Empty;
-            
-            acervoDetalhado.CreditosAutores = acervosCompletos.Any(a=> a.CreditoAutorNome.EstaPreenchido())
-                ? string.Join(" | ", acervosCompletos.Select(s => s.CreditoAutorNome).Distinct())
-                : string.Empty;
-            
-            return acervoDetalhado;
+        } 
+
+        protected async Task<IEnumerable<ImagemDetalhe>> ObterArquivos(long acervoDocumentalId)
+        {
+            var query = @" select a.nome original, 
+                                am.nome thumbnail
+                            from acervo_documental_arquivo ada 
+                                join arquivo a on a.id = ada.arquivo_id 
+                                join arquivo am on am.id = ada.arquivo_miniatura_id  
+                            where not a.excluido and not am.excluido 
+                                and ada.acervo_documental_id = @acervoDocumentalId";
+
+            return await conexao.Obter().QueryAsync<ImagemDetalhe>(query, new { acervoDocumentalId });
+        }
+
+        private async Task<AcervoDocumentalDetalhe> ObterPorCodigo(string codigo)
+        {
+            var query = @"select  ad.id,
+			                        a.id as AcervoId,
+ 			                        a.titulo,
+                                    a.codigo,
+                                    a.codigo_novo CodigoNovo, 
+                                    m.nome as material,
+                                    i.nome as Idioma,
+                                    a.ano,
+                                    ad.numero_pagina numeroPagina,
+                                    ad.volume,
+                                    a.descricao,  
+                                    ad.tipo_anexo as tipoAnexo,                                  
+                                    ad.largura,
+                                    ad.altura,
+                                    ad.tamanho_arquivo as tamanhoArquivo,
+                                    ad.localizacao,
+                                    ad.copia_digital as copiaDigital,          
+                                    c.nome as conservacao
+                        from acervo_documental ad
+                        join acervo a on a.id = ad.acervo_id 
+                        join idioma i on i.id = ad.idioma_id 
+                        left join material m on m.id = ad.material_id and not m.excluido 
+                        left join conservacao c on c.id = ad.conservacao_id and not c.excluido                          
+                        where not a.excluido                         
+                        and not i.excluido                         
+                        and (a.codigo = @codigo or a.codigo_novo = @codigo) ";
+            return conexao.Obter().QueryFirstOrDefault<AcervoDocumentalDetalhe>(query, new { codigo });
         }
     }
 }
