@@ -11,7 +11,7 @@ public class AcervoAudiovisualDetalhe
     public int Ano { get; set; }
     public string DataAcervo { get; set; }
     public string Copia { get; set; }
-    public string PermiteUsoImagem { get; set; }
+    public bool PermiteUsoImagem { get; set; }
     public string Conservacao { get; set; }
     public string Descricao { get; set; }
     public string Suporte { get; set; }

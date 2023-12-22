@@ -10,8 +10,8 @@ public class AcervoFotograficoDetalhe
     public string Procedencia { get; set; }
     public int Ano { get; set; }
     public string DataAcervo { get; set; }
-    public string CopiaDigital { get; set; }
-    public string PermiteUsoImagem { get; set; }
+    public bool? CopiaDigital { get; set; }
+    public bool? PermiteUsoImagem { get; set; }
     public string Conservacao { get; set; }
     public string Descricao { get; set; }
     public long Quantidade { get; set; }
