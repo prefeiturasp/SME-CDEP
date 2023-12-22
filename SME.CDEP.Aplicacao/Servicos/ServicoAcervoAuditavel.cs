@@ -26,6 +26,7 @@ namespace SME.CDEP.Aplicacao.Servicos
         private readonly IRepositorioAcervoDocumental repositorioAcervoDocumental;
         private readonly IRepositorioAcervoArteGrafica repositorioAcervoArteGrafica;
         private readonly IRepositorioAcervoAudiovisual repositorioAcervoAudiovisual;
+        private readonly IRepositorioAcervoFotografico repositorioAcervoFotografico;
         
         public ServicoAcervoAuditavel(IRepositorioAcervo repositorioAcervo, IMapper mapper, 
             IContextoAplicacao contextoAplicacao, IRepositorioAcervoCreditoAutor repositorioAcervoCreditoAutor,
@@ -33,7 +34,8 @@ namespace SME.CDEP.Aplicacao.Servicos
             IRepositorioAcervoBibliografico repositorioAcervoBibliografico,
             IRepositorioAcervoDocumental repositorioAcervoDocumental,
             IRepositorioAcervoArteGrafica repositorioAcervoArteGrafica,
-            IRepositorioAcervoAudiovisual repositorioAcervoAudiovisual)
+            IRepositorioAcervoAudiovisual repositorioAcervoAudiovisual,
+            IRepositorioAcervoFotografico repositorioAcervoFotografico)
         {
             this.repositorioAcervo = repositorioAcervo ?? throw new ArgumentNullException(nameof(repositorioAcervo));
             this.mapper = mapper ?? throw new ArgumentNullException(nameof(mapper));
@@ -45,6 +47,7 @@ namespace SME.CDEP.Aplicacao.Servicos
             this.repositorioAcervoDocumental = repositorioAcervoDocumental ?? throw new ArgumentNullException(nameof(repositorioAcervoDocumental));
             this.repositorioAcervoArteGrafica = repositorioAcervoArteGrafica ?? throw new ArgumentNullException(nameof(repositorioAcervoArteGrafica));
             this.repositorioAcervoAudiovisual = repositorioAcervoAudiovisual ?? throw new ArgumentNullException(nameof(repositorioAcervoAudiovisual));
+            this.repositorioAcervoFotografico = repositorioAcervoFotografico ?? throw new ArgumentNullException(nameof(repositorioAcervoFotografico));
         }
         
         public async Task<long> Inserir(Acervo acervo)
@@ -319,7 +322,7 @@ namespace SME.CDEP.Aplicacao.Servicos
                 case TipoAcervo.Audiovisual:
                     return mapper.Map<AcervoAudiovisualDetalheDTO>(await repositorioAcervoAudiovisual.ObterDetalhamentoPorCodigo(filtro.Codigo));
                 case TipoAcervo.Fotografico:
-                    return new AcervoFotograficoDetalheDTO();
+                    return mapper.Map<AcervoFotograficoDetalheDTO>(await repositorioAcervoFotografico.ObterDetalhamentoPorCodigo(filtro.Codigo));
                 case TipoAcervo.Tridimensional:
                     return new AcervoTridimensionalDetalheDTO();
                 default:

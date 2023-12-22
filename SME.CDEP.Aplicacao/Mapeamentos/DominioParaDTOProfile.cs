@@ -147,6 +147,12 @@ namespace SME.CDEP.Aplicacao.Mapeamentos
             CreateMap<AcervoAudiovisualDetalhe, AcervoAudiovisualDetalheDTO>()
                 .ForMember(dest => dest.CreditosAutores, opt => opt.MapFrom(o => o.Creditos))
                 .ReverseMap();
+            
+            CreateMap<AcervoFotograficoDetalhe, AcervoFotograficoDetalheDTO>()
+                .ForMember(dest => dest.CreditosAutores, opt => opt.MapFrom(o => o.Creditos))
+                .ForMember(dest => dest.Dimensoes, opt => opt.MapFrom(o => 
+                    $"{o.Largura.ToString().ObterValorOuZero()} x {o.Altura.ToString().ObterValorOuZero()}")
+                ).ReverseMap();
         }
     }
 }

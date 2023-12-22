@@ -74,4 +74,15 @@ public abstract class RepositorioBase<TEntidade> : IRepositorioBase<TEntidade>
     {
         entidade.Excluido = excluir;
     }
+    
+    protected async Task<string> ObterCreditos(long acervoId)
+    {
+        var query = @" select ca.nome 
+                           from acervo_credito_autor aca
+                              join credito_autor ca on aca.credito_autor_id = ca.id 
+                           where aca.acervo_id = @acervoId";
+
+        var creditos = await conexao.Obter().QueryAsync<string>(query, new { acervoId });
+        return string.Join(" | ", creditos.Select(s=> s));
+    }
 }
