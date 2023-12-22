@@ -6,5 +6,15 @@
         {
             return string.Join(Constantes.Constantes.PIPE,textos);
         }
+       
+        public static bool PossuiElementos<T>(this IEnumerable<T> items)
+        {
+            return items.NaoEhNulo() && items.Any();
+        }
+        
+        public static bool NaoPossuiElementos<T>(this IEnumerable<T> items)
+        {
+            return items.EhNulo() || !items.Any();
+        }
     }
 }

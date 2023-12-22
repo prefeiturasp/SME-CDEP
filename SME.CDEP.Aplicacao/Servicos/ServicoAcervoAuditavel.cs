@@ -22,9 +22,22 @@ namespace SME.CDEP.Aplicacao.Servicos
         private readonly IContextoAplicacao contextoAplicacao;
         private readonly IRepositorioArquivo repositorioArquivo;
         private readonly IConfiguration configuration;
+        private readonly IRepositorioAcervoBibliografico repositorioAcervoBibliografico;
+        private readonly IRepositorioAcervoDocumental repositorioAcervoDocumental;
+        private readonly IRepositorioAcervoArteGrafica repositorioAcervoArteGrafica;
+        private readonly IRepositorioAcervoAudiovisual repositorioAcervoAudiovisual;
+        private readonly IRepositorioAcervoFotografico repositorioAcervoFotografico;
+        private readonly IRepositorioAcervoTridimensional repositorioAcervoTridimensional;
         
-        public ServicoAcervoAuditavel(IRepositorioAcervo repositorioAcervo, IMapper mapper, IContextoAplicacao contextoAplicacao,
-            IRepositorioAcervoCreditoAutor repositorioAcervoCreditoAutor,IRepositorioArquivo repositorioArquivo, IConfiguration configuration)
+        public ServicoAcervoAuditavel(IRepositorioAcervo repositorioAcervo, IMapper mapper, 
+            IContextoAplicacao contextoAplicacao, IRepositorioAcervoCreditoAutor repositorioAcervoCreditoAutor,
+            IRepositorioArquivo repositorioArquivo, IConfiguration configuration,
+            IRepositorioAcervoBibliografico repositorioAcervoBibliografico,
+            IRepositorioAcervoDocumental repositorioAcervoDocumental,
+            IRepositorioAcervoArteGrafica repositorioAcervoArteGrafica,
+            IRepositorioAcervoAudiovisual repositorioAcervoAudiovisual,
+            IRepositorioAcervoFotografico repositorioAcervoFotografico,
+            IRepositorioAcervoTridimensional repositorioAcervoTridimensional)
         {
             this.repositorioAcervo = repositorioAcervo ?? throw new ArgumentNullException(nameof(repositorioAcervo));
             this.mapper = mapper ?? throw new ArgumentNullException(nameof(mapper));
@@ -32,6 +45,12 @@ namespace SME.CDEP.Aplicacao.Servicos
             this.repositorioAcervoCreditoAutor = repositorioAcervoCreditoAutor ?? throw new ArgumentNullException(nameof(repositorioAcervoCreditoAutor));
             this.repositorioArquivo = repositorioArquivo ?? throw new ArgumentNullException(nameof(repositorioArquivo));
             this.configuration = configuration ?? throw new ArgumentNullException(nameof(configuration));
+            this.repositorioAcervoBibliografico = repositorioAcervoBibliografico ?? throw new ArgumentNullException(nameof(repositorioAcervoBibliografico));
+            this.repositorioAcervoDocumental = repositorioAcervoDocumental ?? throw new ArgumentNullException(nameof(repositorioAcervoDocumental));
+            this.repositorioAcervoArteGrafica = repositorioAcervoArteGrafica ?? throw new ArgumentNullException(nameof(repositorioAcervoArteGrafica));
+            this.repositorioAcervoAudiovisual = repositorioAcervoAudiovisual ?? throw new ArgumentNullException(nameof(repositorioAcervoAudiovisual));
+            this.repositorioAcervoFotografico = repositorioAcervoFotografico ?? throw new ArgumentNullException(nameof(repositorioAcervoFotografico));
+            this.repositorioAcervoTridimensional = repositorioAcervoTridimensional ?? throw new ArgumentNullException(nameof(repositorioAcervoTridimensional));
         }
         
         public async Task<long> Inserir(Acervo acervo)
@@ -291,6 +310,27 @@ namespace SME.CDEP.Aplicacao.Servicos
                 TipoOrdenacao.AZ => registros.OrderBy(o => o.Titulo),
                 TipoOrdenacao.ZA => registros.OrderByDescending(o => o.Titulo),
             };
+        }
+
+        public async Task<AcervoDetalheDTO> ObterDetalhamentoPorTipoAcervoECodigo(FiltroDetalharAcervoDTO filtro)
+        {
+            switch (filtro.Tipo)
+            {
+                case TipoAcervo.Bibliografico:
+                    return mapper.Map<AcervoBibliograficoDetalheDTO>(await repositorioAcervoBibliografico.ObterDetalhamentoPorCodigo(filtro.Codigo));
+                case TipoAcervo.DocumentacaoHistorica:
+                    return mapper.Map<AcervoDocumentalDetalheDTO>(await repositorioAcervoDocumental.ObterDetalhamentoPorCodigo(filtro.Codigo));
+                case TipoAcervo.ArtesGraficas:
+                    return mapper.Map<AcervoArteGraficaDetalheDTO>(await repositorioAcervoArteGrafica.ObterDetalhamentoPorCodigo(filtro.Codigo));
+                case TipoAcervo.Audiovisual:
+                    return mapper.Map<AcervoAudiovisualDetalheDTO>(await repositorioAcervoAudiovisual.ObterDetalhamentoPorCodigo(filtro.Codigo));
+                case TipoAcervo.Fotografico:
+                    return mapper.Map<AcervoFotograficoDetalheDTO>(await repositorioAcervoFotografico.ObterDetalhamentoPorCodigo(filtro.Codigo));
+                case TipoAcervo.Tridimensional:
+                    return mapper.Map<AcervoTridimensionalDetalheDTO>(await repositorioAcervoTridimensional.ObterDetalhamentoPorCodigo(filtro.Codigo));
+                default:
+                    throw new ArgumentOutOfRangeException();
+            }
         }
         
         public Paginacao Paginacao

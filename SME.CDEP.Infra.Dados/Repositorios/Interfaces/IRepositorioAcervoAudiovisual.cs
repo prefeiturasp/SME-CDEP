@@ -6,5 +6,6 @@ namespace SME.CDEP.Infra.Dados.Repositorios.Interfaces
     public interface IRepositorioAcervoAudiovisual : IRepositorioBase<AcervoAudiovisual>
     {
         Task<AcervoAudiovisualCompleto> ObterPorId(long id);
+        Task<AcervoAudiovisualDetalhe> ObterDetalhamentoPorCodigo(string filtroCodigo);
     }
 }

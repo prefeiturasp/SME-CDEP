@@ -1,6 +1,7 @@
 ﻿using Dapper;
 using SME.CDEP.Dominio.Contexto;
 using SME.CDEP.Dominio.Entidades;
+using SME.CDEP.Dominio.Extensions;
 using SME.CDEP.Infra.Dados.Repositorios.Interfaces;
 
 namespace SME.CDEP.Infra.Dados.Repositorios
@@ -104,6 +105,69 @@ namespace SME.CDEP.Infra.Dados.Repositorios
 
             return default;
         }
-        
+
+        public async Task<AcervoFotograficoDetalhe> ObterDetalhamentoPorCodigo(string filtroCodigo)
+        {
+            var acervoFotografico = await ObterPorCodigo(filtroCodigo);
+
+            if (acervoFotografico.EhNulo())
+                return default;
+            
+            acervoFotografico.Creditos = await ObterCreditosAutores(acervoFotografico.AcervoId);
+            
+            acervoFotografico.Imagens = await ObterArquivos(acervoFotografico.Id);
+            
+            return acervoFotografico;
+        }
+
+        protected async Task<IEnumerable<ImagemDetalhe>> ObterArquivos(long acervoFotograficoId)
+        {
+            var query = @" select a.nome original, 
+                                am.nome thumbnail
+                            from acervo_fotografico_arquivo afa 
+                                join arquivo a on a.id = afa.arquivo_id 
+                            join arquivo am on am.id = afa.arquivo_miniatura_id  
+                            where not a.excluido and not am.excluido 
+                                and afa.acervo_fotografico_id  = @acervoFotograficoId";
+
+            return await conexao.Obter().QueryAsync<ImagemDetalhe>(query, new { acervoFotograficoId });
+        }
+
+        private async Task<AcervoFotograficoDetalhe> ObterPorCodigo(string codigo)
+        {
+            var query = @"select  af.id,
+                                  af.acervo_id acervoId,
+                                   a.titulo,
+                                   a.codigo,           
+                                   af.localizacao,
+                                   af.procedencia,
+                                   a.ano,
+                                   a.data_acervo dataacervo,           
+                                  af.copia_digital as CopiaDigital,
+                                  af.permite_uso_imagem as PermiteUsoImagem,
+                                  c.nome as Conservacao,          
+                                  a.descricao,
+                                  af.quantidade,
+                                  af.largura,
+                                  af.altura,
+                                  su.nome as suporte,
+                                  fo.nome as formato,
+                                  af.tamanho_arquivo as TamanhoArquivo,
+                                  cro.nome as cromia,
+                                  af.resolucao
+                        from acervo_fotografico af
+                        join acervo a on a.id = af.acervo_id 
+                        join conservacao c on c.id = af.conservacao_id
+                        join suporte su on su.id = af.suporte_id
+                        join formato fo on fo.id = af.formato_id
+                        join cromia cro on cro.id = af.cromia_id
+                        where not a.excluido
+                          and not su.excluido 
+	                      and not c.excluido
+	                      and not fo.excluido
+	                      and not c.excluido
+                          and a.codigo = @codigo ";
+            return conexao.Obter().QueryFirstOrDefault<AcervoFotograficoDetalhe>(query, new { codigo });
+        }
     }
 }
