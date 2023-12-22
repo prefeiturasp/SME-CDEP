@@ -98,8 +98,6 @@ namespace SME.CDEP.Infra.Dados.Repositorios
                                   arq.id as arquivoId,
                                   arq.nome as ArquivoNome,
                                   arq.codigo as ArquivoCodigo,
-                                  arqMin.nome as ArquivoNomeMiniatura,
-                                  arqMin.codigo as ArquivoCodigoMiniatura,
                                   i.id as IdiomaId,
                                   i.nome as IdiomaNome,
                                   m.id as materialId,
@@ -117,7 +115,6 @@ namespace SME.CDEP.Infra.Dados.Repositorios
                         left join credito_autor ca on aca.credito_autor_id = ca.id
                         left join acervo_documental_arquivo ada on ada.acervo_documental_id = ad.id
                         left join arquivo arq on arq.id = ada.arquivo_id 
-                        left join arquivo arqMin on arqMin.id = ada.arquivo_miniatura_id 
                         left join material m on m.id = ad.material_id
                         left join conservacao c on c.id = ad.conservacao_id                         
                         where not a.excluido ";
