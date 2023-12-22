@@ -27,6 +27,7 @@ namespace SME.CDEP.Aplicacao.Servicos
         private readonly IRepositorioAcervoArteGrafica repositorioAcervoArteGrafica;
         private readonly IRepositorioAcervoAudiovisual repositorioAcervoAudiovisual;
         private readonly IRepositorioAcervoFotografico repositorioAcervoFotografico;
+        private readonly IRepositorioAcervoTridimensional repositorioAcervoTridimensional;
         
         public ServicoAcervoAuditavel(IRepositorioAcervo repositorioAcervo, IMapper mapper, 
             IContextoAplicacao contextoAplicacao, IRepositorioAcervoCreditoAutor repositorioAcervoCreditoAutor,
@@ -35,7 +36,8 @@ namespace SME.CDEP.Aplicacao.Servicos
             IRepositorioAcervoDocumental repositorioAcervoDocumental,
             IRepositorioAcervoArteGrafica repositorioAcervoArteGrafica,
             IRepositorioAcervoAudiovisual repositorioAcervoAudiovisual,
-            IRepositorioAcervoFotografico repositorioAcervoFotografico)
+            IRepositorioAcervoFotografico repositorioAcervoFotografico,
+            IRepositorioAcervoTridimensional repositorioAcervoTridimensional)
         {
             this.repositorioAcervo = repositorioAcervo ?? throw new ArgumentNullException(nameof(repositorioAcervo));
             this.mapper = mapper ?? throw new ArgumentNullException(nameof(mapper));
@@ -48,6 +50,7 @@ namespace SME.CDEP.Aplicacao.Servicos
             this.repositorioAcervoArteGrafica = repositorioAcervoArteGrafica ?? throw new ArgumentNullException(nameof(repositorioAcervoArteGrafica));
             this.repositorioAcervoAudiovisual = repositorioAcervoAudiovisual ?? throw new ArgumentNullException(nameof(repositorioAcervoAudiovisual));
             this.repositorioAcervoFotografico = repositorioAcervoFotografico ?? throw new ArgumentNullException(nameof(repositorioAcervoFotografico));
+            this.repositorioAcervoTridimensional = repositorioAcervoTridimensional ?? throw new ArgumentNullException(nameof(repositorioAcervoTridimensional));
         }
         
         public async Task<long> Inserir(Acervo acervo)
@@ -324,7 +327,7 @@ namespace SME.CDEP.Aplicacao.Servicos
                 case TipoAcervo.Fotografico:
                     return mapper.Map<AcervoFotograficoDetalheDTO>(await repositorioAcervoFotografico.ObterDetalhamentoPorCodigo(filtro.Codigo));
                 case TipoAcervo.Tridimensional:
-                    return new AcervoTridimensionalDetalheDTO();
+                    return mapper.Map<AcervoTridimensionalDetalheDTO>(await repositorioAcervoTridimensional.ObterDetalhamentoPorCodigo(filtro.Codigo));
                 default:
                     throw new ArgumentOutOfRangeException();
             }

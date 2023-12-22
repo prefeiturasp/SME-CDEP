@@ -3,6 +3,7 @@ namespace SME.CDEP.Aplicacao.DTOS;
 
 public class AcervoArteGraficaDetalheDTO : AcervoDetalheDTO
 {
+    public string CreditosAutores { get; set; }
     public string DataAcervo { get; set; }
     public string Localizacao { get; set; }
     public string Procedencia { get; set; }

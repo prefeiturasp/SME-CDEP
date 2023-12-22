@@ -2,9 +2,7 @@
 
 public class AcervoBibliograficoDetalheDTO : AcervoDetalheDTO
 {
-    public AcervoBibliograficoDetalheDTO()
-    {}
-    
+    public string CreditosAutores { get; set; }
     public string SubTitulo { get; set; }
     public string Material { get; set; }
     public string Editora { get; set; }
