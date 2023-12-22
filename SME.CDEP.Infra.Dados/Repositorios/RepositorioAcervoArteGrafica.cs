@@ -76,15 +76,12 @@ namespace SME.CDEP.Infra.Dados.Repositorios
                                   ag.copia_digital as CopiaDigital,
                                   ag.permite_uso_imagem as PermiteUsoImagem,
                                   ag.conservacao_id as ConservacaoId,
-                                  co.nome as conservacaoNome,
                                   ag.cromia_id as cromiaId,
-                                  c.nome as cromiaNome,
                                   ag.largura,
                                   ag.altura,
                                   ag.diametro,
                                   ag.tecnica,
                                   ag.suporte_id as suporteId,
-                                  su.nome as suporteNome,
                                   ag.quantidade,
                                   a.descricao,
                                   a.id as AcervoId,
@@ -103,16 +100,13 @@ namespace SME.CDEP.Infra.Dados.Repositorios
                                   ca.nome as CreditoAutorNome,
                                   arq.id as arquivoId,
                                   arq.nome as ArquivoNome,
-                                  arq.codigo as ArquivoCodigo,
-                                  arqMin.nome as ArquivoNomeMiniatura,
-                                  arqMin.codigo as ArquivoCodigoMiniatura
+                                  arq.codigo as ArquivoCodigo
                         from acervo_arte_grafica ag
                         join acervo a on a.id = ag.acervo_id 
                         left join acervo_credito_autor aca on aca.acervo_id = a.id
                         left join credito_autor ca on aca.credito_autor_id = ca.id
                         left join acervo_arte_grafica_arquivo aga on aga.acervo_arte_grafica_id = ag.id
                         left join arquivo arq on arq.id = aga.arquivo_id
-                        left join arquivo arqMin on arqMin.id = aga.arquivo_miniatura_id
                         join cromia c on c.id = ag.cromia_id
                         join conservacao co on co.id = ag.conservacao_id
                         join suporte su on su.id = ag.suporte_id

@@ -108,7 +108,6 @@ namespace SME.CDEP.Infra.Dados.Repositorios
                                   e.id as editoraId,
                                   e.nome as editoraNome,
                                   aba.assunto_id as assuntoId,
-                                  ast.nome as assuntoNome,
                                   sc.id as serieColecaoId,
                                   sc.nome as serieColecaoNome
                         from acervo_bibliografico ab
