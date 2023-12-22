@@ -2,6 +2,7 @@
 
 public class AcervoDocumentalDetalheDTO : AcervoDetalheDTO
 {
+    public string CreditosAutores { get; set; }
     public string CodigoNovo { get; set; }
     public string Material { get; set; }
     public string Idioma { get; set; }

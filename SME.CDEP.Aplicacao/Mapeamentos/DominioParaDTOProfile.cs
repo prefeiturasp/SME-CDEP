@@ -153,6 +153,11 @@ namespace SME.CDEP.Aplicacao.Mapeamentos
                 .ForMember(dest => dest.Dimensoes, opt => opt.MapFrom(o => 
                     $"{o.Largura.ToString().ObterValorOuZero()} x {o.Altura.ToString().ObterValorOuZero()}")
                 ).ReverseMap();
+            
+            CreateMap<AcervoTridimensionalDetalhe, AcervoTridimensionalDetalheDTO>()
+                .ForMember(dest => dest.Dimensoes, opt => opt.MapFrom(o => 
+                    $"{o.Largura.ToString().ObterValorOuZero()} x {o.Altura.ToString().ObterValorOuZero()} x {o.Profundidade.ToString().ObterValorOuZero()} x {o.Diametro.ToString().ObterValorOuZero()}")
+                    ).ReverseMap(); 
         }
     }
 }
