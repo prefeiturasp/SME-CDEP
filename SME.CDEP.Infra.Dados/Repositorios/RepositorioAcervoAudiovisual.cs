@@ -106,7 +106,7 @@ namespace SME.CDEP.Infra.Dados.Repositorios
             if (acervoAudioVisual.EhNulo())
                 return default;
             
-            acervoAudioVisual.Creditos = await ObterCreditos(acervoAudioVisual.AcervoId);
+            acervoAudioVisual.Creditos = await ObterCreditosAutores(acervoAudioVisual.AcervoId);
             
             return acervoAudioVisual;
         }

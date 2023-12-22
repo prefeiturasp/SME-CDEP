@@ -113,7 +113,7 @@ namespace SME.CDEP.Infra.Dados.Repositorios
             if (acervoFotografico.EhNulo())
                 return default;
             
-            acervoFotografico.Creditos = await ObterCreditos(acervoFotografico.AcervoId);
+            acervoFotografico.Creditos = await ObterCreditosAutores(acervoFotografico.AcervoId);
             
             acervoFotografico.Imagens = await ObterArquivos(acervoFotografico.Id);
             
