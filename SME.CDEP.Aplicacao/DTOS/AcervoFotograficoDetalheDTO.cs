@@ -2,6 +2,7 @@
 
 public class AcervoFotograficoDetalheDTO : AcervoDetalheDTO
 {
+    public string Descricao { get; set; }
     public string CreditosAutores { get; set; }
     public string DataAcervo { get; set; }
     public string Localizacao { get; set; }

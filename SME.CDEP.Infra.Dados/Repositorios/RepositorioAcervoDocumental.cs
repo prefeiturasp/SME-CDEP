@@ -191,12 +191,10 @@ namespace SME.CDEP.Infra.Dados.Repositorios
                         from acervo_documental ad
                         join acervo a on a.id = ad.acervo_id 
                         join idioma i on i.id = ad.idioma_id 
-                        left join material m on m.id = ad.material_id
-                        left join conservacao c on c.id = ad.conservacao_id                         
-                        where not a.excluido 
-                        and not m.excluido 
-                        and not i.excluido 
-                        and not c.excluido 
+                        left join material m on m.id = ad.material_id and not m.excluido 
+                        left join conservacao c on c.id = ad.conservacao_id and not c.excluido                          
+                        where not a.excluido                         
+                        and not i.excluido                         
                         and (a.codigo = @codigo or a.codigo_novo = @codigo) ";
             return conexao.Obter().QueryFirstOrDefault<AcervoDocumentalDetalhe>(query, new { codigo });
         }

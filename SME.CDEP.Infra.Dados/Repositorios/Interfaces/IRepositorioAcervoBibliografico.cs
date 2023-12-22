@@ -6,6 +6,6 @@ namespace SME.CDEP.Infra.Dados.Repositorios.Interfaces
     public interface IRepositorioAcervoBibliografico : IRepositorioBase<AcervoBibliografico>
     {
         Task<AcervoBibliograficoCompleto> ObterPorId(long id);
-        Task<AcervoBibliograficoCompleto> ObterDetalhamentoPorCodigo(string filtroCodigo);
+        Task<AcervoBibliograficoDetalhe> ObterDetalhamentoPorCodigo(string filtroCodigo);
     }
 }
