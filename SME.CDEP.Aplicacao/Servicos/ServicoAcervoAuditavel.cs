@@ -245,8 +245,8 @@ namespace SME.CDEP.Aplicacao.Servicos
                         Codigo = s.Key.Codigo,
                         Tipo = s.Key.Tipo,
                         Titulo = s.Key.Titulo,
-                        Descricao = s.Key.Descricao.RemoverTagsHtml(),
-                        DataAcervo = s.Key.DataAcervo.RemoverTagsHtml(),
+                        Descricao = s.Key.Descricao,
+                        DataAcervo = s.Key.DataAcervo,
                         Ano = s.Key.Ano,
                         TipoAcervoTag = s.Key.TipoAcervoTag,
                         CreditoAutoria = s.Any(w=> w.CreditoAutoria.NaoEhNulo() ) ? string.Join(", ", s.Select(ca=> ca.CreditoAutoria).Distinct()) : string.Empty,
@@ -319,20 +319,62 @@ namespace SME.CDEP.Aplicacao.Servicos
                 case TipoAcervo.Bibliografico:
                     return mapper.Map<AcervoBibliograficoDetalheDTO>(await repositorioAcervoBibliografico.ObterDetalhamentoPorCodigo(filtro.Codigo));
                 case TipoAcervo.DocumentacaoHistorica:
-                    return mapper.Map<AcervoDocumentalDetalheDTO>(await repositorioAcervoDocumental.ObterDetalhamentoPorCodigo(filtro.Codigo));
+                {
+                    var retorno =  mapper.Map<AcervoDocumentalDetalheDTO>(await repositorioAcervoDocumental.ObterDetalhamentoPorCodigo(filtro.Codigo));
+                    retorno.Imagens = AplicarEndereco(retorno.Imagens);
+                    return retorno;
+                }
                 case TipoAcervo.ArtesGraficas:
-                    return mapper.Map<AcervoArteGraficaDetalheDTO>(await repositorioAcervoArteGrafica.ObterDetalhamentoPorCodigo(filtro.Codigo));
+                {
+                    var retorno =  mapper.Map<AcervoArteGraficaDetalheDTO>(await repositorioAcervoArteGrafica.ObterDetalhamentoPorCodigo(filtro.Codigo));
+                    retorno.Imagens = AplicarEndereco(retorno.Imagens);
+                    return retorno;
+                }
                 case TipoAcervo.Audiovisual:
                     return mapper.Map<AcervoAudiovisualDetalheDTO>(await repositorioAcervoAudiovisual.ObterDetalhamentoPorCodigo(filtro.Codigo));
                 case TipoAcervo.Fotografico:
-                    return mapper.Map<AcervoFotograficoDetalheDTO>(await repositorioAcervoFotografico.ObterDetalhamentoPorCodigo(filtro.Codigo));
+                {
+                    var retorno =  mapper.Map<AcervoFotograficoDetalheDTO>(await repositorioAcervoFotografico.ObterDetalhamentoPorCodigo(filtro.Codigo));
+                    retorno.Imagens = AplicarEndereco(retorno.Imagens);
+                    return retorno;
+                }
                 case TipoAcervo.Tridimensional:
-                    return mapper.Map<AcervoTridimensionalDetalheDTO>(await repositorioAcervoTridimensional.ObterDetalhamentoPorCodigo(filtro.Codigo));
+                {
+                    var retorno =  mapper.Map<AcervoTridimensionalDetalheDTO>(await repositorioAcervoTridimensional.ObterDetalhamentoPorCodigo(filtro.Codigo));
+                    retorno.Imagens = AplicarEndereco(retorno.Imagens);
+                    return retorno;
+                }
                 default:
                     throw new ArgumentOutOfRangeException();
             }
         }
+
+        private ImagemDTO[] AplicarEndereco(ImagemDTO[] imagens)
+        {
+            var hostAplicacao = configuration["UrlFrontEnd"];
+            
+            foreach (var imagem in imagens)
+            {
+                imagem.Original = $"{hostAplicacao}{Constantes.BUCKET_CDEP}/{imagem.Original}";
+                imagem.Thumbnail = $"{hostAplicacao}{Constantes.BUCKET_CDEP}/{imagem.Thumbnail}";
+            }
+
+            return imagens;
+        }
         
+        private AcervoDetalheDTO AplicarEndereco(AcervoArteGraficaDetalheDTO acervo)
+        {
+            var hostAplicacao = configuration["UrlFrontEnd"];
+            
+            foreach (var acervoImagem in acervo.Imagens)
+            {
+                acervoImagem.Original = $"{hostAplicacao}{Constantes.BUCKET_CDEP}/{acervoImagem.Original}";
+                acervoImagem.Thumbnail = $"{hostAplicacao}{Constantes.BUCKET_CDEP}/{acervoImagem.Thumbnail}";
+            }
+
+            return acervo;
+        }
+
         public Paginacao Paginacao
         {
             get
