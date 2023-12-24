@@ -10,7 +10,6 @@ public class AcervoFotograficoCompleto: EntidadeBaseAuditavel
     public string Titulo { get; set; }
     public long TipoAcervoId { get; set; }
     public string Codigo { get; set; }
-    public long CreditoAutorId { get; set; }
     public string Localizacao { get; set; }
     public string Procedencia { get; set; }
     public int Ano { get; set; }
