@@ -53,57 +53,60 @@ namespace SME.CDEP.Infra.Dados.Repositorios
         
         public async Task<AcervoFotograficoCompleto> ObterPorId(long id)
         {
-            var query = @"select  af.id,
-                                  af.localizacao,
-                                  af.procedencia,
-                                  af.copia_digital as CopiaDigital,
-                                  af.permite_uso_imagem as PermiteUsoImagem,
-                                  af.conservacao_id as ConservacaoId,
-                                  a.descricao,
-                                  af.quantidade,
-                                  af.largura,
-                                  af.altura,
-                                  af.suporte_id as suporteId,
-                                  af.formato_id as formatoId,
-                                  af.cromia_id as cromiaId,
-                                  af.resolucao,
-                                  af.tamanho_arquivo as TamanhoArquivo,
-                                  a.id as AcervoId,
-                                  a.titulo,
-                                  a.codigo,
-                                  a.ano,
-                                  a.data_acervo dataacervo,
-                                  a.tipo as TipoAcervoId,
-                                  a.criado_em as CriadoEm,
-                                  a.criado_por as CriadoPor,
-                                  a.criado_login as CriadoLogin,
-                                  a.alterado_em as AlteradoEm,
-                                  a.alterado_por as AlteradoPor,
-                                  a.alterado_login as AlteradoLogin,
-                                  ca.id as CreditoAutorId,
-                                  ca.nome as CreditoAutorNome,
-                                  arq.id as arquivoId,
-                                  arq.nome as ArquivoNome,
-                                  arq.codigo as ArquivoCodigo
-                        from acervo_fotografico af
-                        join acervo a on a.id = af.acervo_id 
-                        join acervo_credito_autor aca on aca.acervo_id = a.id
-                        join credito_autor ca on aca.credito_autor_id = ca.id
-                        left join acervo_fotografico_arquivo afa on afa.acervo_fotografico_id = af.id
-                        left join arquivo arq on arq.id = afa.arquivo_id 
-                        where not a.excluido 
-                        and a.id = @id";
+            var query = @"select  a.id as AcervoId,
+                               a.titulo,
+                               a.descricao,
+                               a.codigo,
+                               a.ano,
+                               a.data_acervo dataacervo,
+                               a.tipo as TipoAcervoId,
+                               a.criado_em as CriadoEm,
+                               a.criado_por as CriadoPor,
+                               a.criado_login as CriadoLogin,
+                               a.alterado_em as AlteradoEm,
+                               a.alterado_por as AlteradoPor,
+                               a.alterado_login as AlteradoLogin,
 
-            var retorno = (await conexao.Obter().QueryAsync<AcervoFotograficoCompleto>(query, new { id }));
-            if (retorno.Any())
-            {
-                var acervoFotografico = retorno.FirstOrDefault();
-                acervoFotografico.Arquivos = retorno.Where(w=> w.ArquivoId > 0).Select(s => new ArquivoResumido() { Id = s.ArquivoId, Codigo = s.ArquivoCodigo, Nome = s.ArquivoNome }).DistinctBy(d=> d.Id).ToArray();
-                acervoFotografico.CreditosAutoresIds = retorno.Select(s => s.CreditoAutorId).Distinct().ToArray();
-                return acervoFotografico;    
-            }
+                               af.id,
+                               af.localizacao,
+                               af.procedencia,
+                               af.copia_digital as CopiaDigital,
+                               af.permite_uso_imagem as PermiteUsoImagem,
+                               af.conservacao_id as ConservacaoId,
+                               af.quantidade,
+                               af.largura,
+                               af.altura,
+                               af.suporte_id as suporteId,
+                               af.formato_id as formatoId,
+                               af.cromia_id as cromiaId,
+                               af.resolucao,
+                               af.tamanho_arquivo as TamanhoArquivo
+                    from acervo_fotografico af
+                    join acervo a on a.id = af.acervo_id  
+                    where not a.excluido 
+                    and a.id = @id;
+                                            
+                    select ca.id as CreditoAutorId
+                    from acervo_credito_autor aca
+                    join credito_autor ca on aca.credito_autor_id = ca.id
+                    where not ca.excluido
+                          and aca.acervo_id = @id;
+                         
+                    select arq.id,
+                              arq.nome,
+                              arq.codigo
+                    from acervo_fotografico af
+                    join acervo_fotografico_arquivo afa on afa.acervo_fotografico_id = af.id
+                    join arquivo arq on arq.id = afa.arquivo_id
+                    where not  arq.excluido
+                    and af.acervo_id = @id; ";
 
-            return default;
+            var queryMultiple = await conexao.Obter().QueryMultipleAsync(query, new { id });
+            var acervoFotograficoCompleto = queryMultiple.ReadFirst<AcervoFotograficoCompleto>();
+            acervoFotograficoCompleto.CreditosAutoresIds = queryMultiple.Read<long>().ToArray();
+            acervoFotograficoCompleto.Arquivos = queryMultiple.Read<ArquivoResumido>().ToArray();
+            
+            return acervoFotograficoCompleto;
         }
 
         public async Task<AcervoFotograficoDetalhe> ObterDetalhamentoPorCodigo(string filtroCodigo)

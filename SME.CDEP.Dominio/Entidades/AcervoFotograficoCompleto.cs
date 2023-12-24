@@ -11,7 +11,6 @@ public class AcervoFotograficoCompleto: EntidadeBaseAuditavel
     public long TipoAcervoId { get; set; }
     public string Codigo { get; set; }
     public long CreditoAutorId { get; set; }
-    public string CreditoAutorNome { get; set; }
     public string Localizacao { get; set; }
     public string Procedencia { get; set; }
     public int Ano { get; set; }
@@ -29,8 +28,5 @@ public class AcervoFotograficoCompleto: EntidadeBaseAuditavel
     public string Resolucao { get; set; }
     public string TamanhoArquivo { get; set; }
     public ArquivoResumido[] Arquivos  { get; set; }
-    public long ArquivoId { get; set; }
-    public string ArquivoNome { get; set; }
-    public Guid ArquivoCodigo { get; set; }
     public long[] CreditosAutoresIds { get; set; }
 }

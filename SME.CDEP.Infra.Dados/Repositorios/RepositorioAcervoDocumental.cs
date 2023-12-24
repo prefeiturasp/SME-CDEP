@@ -52,35 +52,7 @@ namespace SME.CDEP.Infra.Dados.Repositorios
         
         public async Task<AcervoDocumentalCompleto> ObterPorId(long id)
         {
-            var query = QueryCompletaAcervoDocumental();
-            
-            query += " and a.id = @id";
-
-            var retorno = (await conexao.Obter().QueryAsync<AcervoDocumentalCompleto>(query, new { id }));
-            if (retorno.Any())
-            {
-                var acervoDocumental = retorno.FirstOrDefault();
-                acervoDocumental.Arquivos = retorno.Where(w=> w.ArquivoId > 0).Select(s => new ArquivoResumido() { Id = s.ArquivoId.Value, Codigo = s.ArquivoCodigo, Nome = s.ArquivoNome }).DistinctBy(d=> d.Id).ToArray();
-                acervoDocumental.AcessoDocumentosIds = retorno.Select(s => s.AcessoDocumentoId).Distinct().ToArray();
-                acervoDocumental.CreditosAutoresIds = acervoDocumental.CreditoAutorId > 0 ? retorno.Select(s => s.CreditoAutorId).Distinct().ToArray() : Array.Empty<long>();
-                return acervoDocumental;    
-            }
-
-            return default;
-        }
-
-        private static string QueryCompletaAcervoDocumental()
-        {
-            var query = @"select  ad.id,
-                                  a.ano,
-                                  ad.numero_pagina numeroPagina,
-                                  ad.volume,
-                                  ad.tipo_anexo as tipoAnexo,                                  
-                                  ad.largura,
-                                  ad.altura,
-                                  ad.tamanho_arquivo as tamanhoArquivo,
-                                  ad.localizacao,
-                                  ad.copia_digital as copiaDigital,
+            var query = @"select  a.ano,
                                   a.descricao,
                                   a.id as AcervoId,
                                   a.titulo,
@@ -92,33 +64,58 @@ namespace SME.CDEP.Infra.Dados.Repositorios
                                   a.criado_login as CriadoLogin,
                                   a.alterado_em as AlteradoEm,
                                   a.alterado_por as AlteradoPor,
-                                  a.alterado_login as AlteradoLogin,  
-                                  ca.id as CreditoAutorId,
-                                  ca.nome as CreditoAutorNome,
-                                  arq.id as arquivoId,
-                                  arq.nome as ArquivoNome,
-                                  arq.codigo as ArquivoCodigo,
-                                  i.id as IdiomaId,
-                                  i.nome as IdiomaNome,
-                                  m.id as materialId,
-                                  m.nome as materialNome,
-                                  c.id as conservacaoId,
-                                  c.nome as conservacaoNome,
-                                  adoc.id as acessoDocumentoId,
-                                  adoc.nome as acessoDocumentoNome
+                                  a.alterado_login as AlteradoLogin,
+                                  
+                                  ad.id,
+                                  ad.numero_pagina numeroPagina,
+                                  ad.volume,
+                                  ad.tipo_anexo as tipoAnexo,                                  
+                                  ad.largura,
+                                  ad.altura,
+                                  ad.tamanho_arquivo as tamanhoArquivo,
+                                  ad.localizacao,
+                                  ad.copia_digital as copiaDigital,
+                                  ad.idioma_id as IdiomaId,
+                                  ad.material_id as MaterialId,
+                                  ad.conservacao_id as ConservacaoId
                         from acervo_documental ad
-                        join acervo a on a.id = ad.acervo_id 
-                        join idioma i on i.id = ad.idioma_id 
-                        join acervo_documental_acesso_documento adad on adad.acervo_documental_id = ad.id
-                        join acesso_documento adoc on adoc.id = adad.acesso_documento_id
-                        left join acervo_credito_autor aca on aca.acervo_id = a.id
-                        left join credito_autor ca on aca.credito_autor_id = ca.id
-                        left join acervo_documental_arquivo ada on ada.acervo_documental_id = ad.id
-                        left join arquivo arq on arq.id = ada.arquivo_id 
-                        left join material m on m.id = ad.material_id
-                        left join conservacao c on c.id = ad.conservacao_id                         
-                        where not a.excluido ";
-            return query;
+                            join acervo a on a.id = ad.acervo_id 
+                            join idioma i on i.id = ad.idioma_id  
+                            left join material m on m.id = ad.material_id and not m.excluido
+                            left join conservacao c on c.id = ad.conservacao_id and not c.excluido                         
+                        where not a.excluido
+                            and not i.excluido
+                            and a.id = @id;
+
+                        select ca.id as CreditoAutorId
+                        from acervo_credito_autor aca
+                            join credito_autor ca on aca.credito_autor_id = ca.id
+                        where not ca.excluido
+                              and aca.acervo_id = @id;                             
+
+                        select arq.id,
+                                  arq.nome,
+                                  arq.codigo
+                        from acervo_documental ad
+                            join acervo_documental_arquivo ada on ada.acervo_documental_id = ad.id
+                            join arquivo arq on arq.id = ada.arquivo_id
+                        where not  arq.excluido
+                        and ad.acervo_id = @id;
+
+                        select adoc.id as acessoDocumentoId
+                        from acervo_documental ad
+                            join acervo_documental_acesso_documento adad on adad.acervo_documental_id = ad.id
+	                        join acesso_documento adoc on adoc.id = adad.acesso_documento_id
+                        where not  adoc.excluido
+                        and ad.acervo_id = @id;	";
+            
+            var queryMultiple = await conexao.Obter().QueryMultipleAsync(query, new { id });
+            var acervoDocumentalCompleto = queryMultiple.ReadFirst<AcervoDocumentalCompleto>();
+            acervoDocumentalCompleto.CreditosAutoresIds = queryMultiple.Read<long>().ToArray();
+            acervoDocumentalCompleto.Arquivos = queryMultiple.Read<ArquivoResumido>().ToArray();
+            acervoDocumentalCompleto.AcessoDocumentosIds = queryMultiple.Read<long>().ToArray();
+            
+            return acervoDocumentalCompleto;
         }
 
         public async Task<AcervoDocumentalDetalhe> ObterDetalhamentoPorCodigo(string filtroCodigo)
