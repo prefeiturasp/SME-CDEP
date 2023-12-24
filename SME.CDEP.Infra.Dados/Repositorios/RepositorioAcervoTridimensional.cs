@@ -86,7 +86,6 @@ namespace SME.CDEP.Infra.Dados.Repositorios
 
             var queryMultiple = await conexao.Obter().QueryMultipleAsync(query, new { id });
             var acervoTridimensionalCompleto = queryMultiple.ReadFirst<AcervoTridimensionalCompleto>();
-            acervoTridimensionalCompleto.CreditosAutoresIds = queryMultiple.Read<long>().ToArray();
             acervoTridimensionalCompleto.Arquivos = queryMultiple.Read<ArquivoResumido>().ToArray();
             
             return acervoTridimensionalCompleto;
