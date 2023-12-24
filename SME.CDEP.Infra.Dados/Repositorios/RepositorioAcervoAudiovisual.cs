@@ -52,24 +52,12 @@ namespace SME.CDEP.Infra.Dados.Repositorios
         
         public async Task<AcervoAudiovisualCompleto> ObterPorId(long id)
         {
-            var query = @"select  av.id,
-                                  av.localizacao,
-                                  av.procedencia,
-                                  av.copia,
-                                  av.permite_uso_imagem as permiteUsoImagem,
-                                  av.conservacao_id as conservacaoId,
-                                  a.descricao,  
-                                  av.suporte_id as suporteId,
-                                  av.duracao,                                  
-                                  av.cromia_id as cromiaId,                                  
-                                  av.tamanho_arquivo as tamanhoArquivo,
-                                  av.acessibilidade,
-                                  av.disponibilizacao,
-                                  a.id as AcervoId,
+            var query = @"select  a.id as AcervoId,
                                   a.titulo,
                                   a.codigo,
                                   a.tipo as TipoAcervoId,
                                   a.ano,
+                                  a.descricao,
                                   a.data_acervo dataacervo,
                                   a.criado_em as CriadoEm,
                                   a.criado_por as CriadoPor,
@@ -77,26 +65,35 @@ namespace SME.CDEP.Infra.Dados.Repositorios
                                   a.alterado_em as AlteradoEm,
                                   a.alterado_por as AlteradoPor,
                                   a.alterado_login as AlteradoLogin,
-                                  ca.id as CreditoAutorId,
-                                  ca.nome as CreditoAutorNome                                  
+		                          
+                                  av.id,
+                                  av.localizacao,
+                                  av.procedencia,
+                                  av.copia,
+                                  av.permite_uso_imagem as permiteUsoImagem,
+                                  av.conservacao_id as conservacaoId,                                    
+                                  av.suporte_id as suporteId,
+                                  av.duracao,                                  
+                                  av.cromia_id as cromiaId,                                  
+                                  av.tamanho_arquivo as tamanhoArquivo,
+                                  av.acessibilidade,
+                                  av.disponibilizacao                                             
                         from acervo_audiovisual av
-                        join acervo a on a.id = av.acervo_id 
-                        left join acervo_credito_autor aca on aca.acervo_id = a.id
-                        left join credito_autor ca on aca.credito_autor_id = ca.id                         
+                            join acervo a on a.id = av.acervo_id                          
                         where not a.excluido 
-                        and a.id = @id";
+                            and a.id = @id;
+                                                
+                        select ca.id as CreditoAutorId
+                        from acervo_credito_autor aca
+                            join credito_autor ca on aca.credito_autor_id = ca.id
+                        where not ca.excluido
+                              and aca.acervo_id = @id;";
 
-            var retorno = (await conexao.Obter().QueryAsync<AcervoAudiovisualCompleto>(query, new { id }));
-            if (retorno.Any())
-            {
-                var audiovisualCompleto = retorno.FirstOrDefault();
-                audiovisualCompleto.CreditosAutoresIds = audiovisualCompleto.CreditoAutorId.HasValue 
-                    ? retorno.Select(s => s.CreditoAutorId.Value).Distinct().ToArray() 
-                    : Array.Empty<long>();
-                return audiovisualCompleto;    
-            }
-
-            return default;
+            var queryMultiple = await conexao.Obter().QueryMultipleAsync(query, new { id });
+            var acervoArteAudiovisualCompleto = queryMultiple.ReadFirst<AcervoAudiovisualCompleto>();
+            acervoArteAudiovisualCompleto.CreditosAutoresIds = queryMultiple.Read<long>().ToArray();
+            
+            return acervoArteAudiovisualCompleto;
         }
 
         public async Task<AcervoAudiovisualDetalhe> ObterDetalhamentoPorCodigo(string filtroCodigo)

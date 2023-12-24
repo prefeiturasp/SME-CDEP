@@ -47,18 +47,10 @@ namespace SME.CDEP.Infra.Dados.Repositorios
         
         public async Task<AcervoTridimensionalCompleto> ObterPorId(long id)
         {
-            var query = @"select  at.id,
-                                  at.procedencia,
-                                  at.conservacao_id as conservacaoId,
-                                  at.quantidade,
-                                  a.descricao,                                  
-                                  at.largura,
-                                  at.altura,
-                                  at.profundidade,
-                                  at.diametro,
-                                  a.id as AcervoId,
+            var query = @"select a.id as AcervoId,
                                   a.titulo,
                                   a.codigo,
+                                  a.descricao,
                                   a.ano,
                                   a.data_acervo dataacervo,
                                   a.tipo as TipoAcervoId,
@@ -68,25 +60,36 @@ namespace SME.CDEP.Infra.Dados.Repositorios
                                   a.alterado_em as AlteradoEm,
                                   a.alterado_por as AlteradoPor,
                                   a.alterado_login as AlteradoLogin,                                  
-                                  arq.id as arquivoId,
-                                  arq.nome as ArquivoNome,
-                                  arq.codigo as ArquivoCodigo
+
+		                          at.id,
+                                  at.procedencia,
+                                  at.conservacao_id as conservacaoId,
+                                  at.quantidade,                                            
+                                  at.largura,
+                                  at.altura,
+                                  at.profundidade,
+                                  at.diametro
                         from acervo_tridimensional at
-                        join acervo a on a.id = at.acervo_id 
-                        left join acervo_tridimensional_arquivo ata on ata.acervo_tridimensional_id = at.id
-                        left join arquivo arq on arq.id = ata.arquivo_id 
+                        join acervo a on a.id = at.acervo_id  
                         where not a.excluido 
-                        and a.id = @id";
+                        and a.id = @id;
+                            
+                             
+                        select arq.id,
+                                  arq.nome,
+                                  arq.codigo
+                        from acervo_tridimensional at
+                        join acervo_tridimensional_arquivo ata on ata.acervo_tridimensional_id = at.id
+                        join arquivo arq on arq.id = ata.arquivo_id
+                        where not  arq.excluido
+                        and at.acervo_id = @id;";
 
-            var retorno = (await conexao.Obter().QueryAsync<AcervoTridimensionalCompleto>(query, new { id }));
-            if (retorno.Any())
-            {
-                var acervoTridimensionalCompleto = retorno.FirstOrDefault();
-                acervoTridimensionalCompleto.Arquivos = retorno.Where(w=> w.ArquivoId > 0).Select(s => new ArquivoResumido() { Id = s.ArquivoId, Codigo = s.ArquivoCodigo, Nome = s.ArquivoNome }).DistinctBy(d=> d.Id).ToArray();
-                return acervoTridimensionalCompleto;    
-            }
-
-            return default;
+            var queryMultiple = await conexao.Obter().QueryMultipleAsync(query, new { id });
+            var acervoTridimensionalCompleto = queryMultiple.ReadFirst<AcervoTridimensionalCompleto>();
+            acervoTridimensionalCompleto.CreditosAutoresIds = queryMultiple.Read<long>().ToArray();
+            acervoTridimensionalCompleto.Arquivos = queryMultiple.Read<ArquivoResumido>().ToArray();
+            
+            return acervoTridimensionalCompleto;
         }
 
         public async Task<AcervoTridimensionalDetalhe> ObterDetalhamentoPorCodigo(string filtroCodigo)
