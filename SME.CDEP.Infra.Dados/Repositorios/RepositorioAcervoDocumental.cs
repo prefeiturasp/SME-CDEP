@@ -155,7 +155,7 @@ namespace SME.CDEP.Infra.Dados.Repositorios
                                 am.nome thumbnail
                             from acervo_documental_arquivo ada 
                                 join arquivo a on a.id = ada.arquivo_id 
-                                join arquivo am on am.id = ada.arquivo_miniatura_id  
+                                join arquivo am on am.id = ada.arquivo_id  
                             where not a.excluido and not am.excluido 
                                 and ada.acervo_documental_id = @acervoDocumentalId";
 
