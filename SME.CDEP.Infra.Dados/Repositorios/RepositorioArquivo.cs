@@ -85,16 +85,16 @@ namespace SME.CDEP.Infra.Dados.Repositorios
 
         public async Task<IEnumerable<AcervoCodigoNomeResumido>> ObterAcervoCodigoNomeArquivoPorAcervoId(long[] acervosIds)
         {
-            var query = @"select ag.acervo_id as acervoId, a.codigo, a.nome 
+            var query = @"select ag.acervo_id as acervoId, a.nome 
                             from acervo_arte_grafica ag 
                                 join acervo_arte_grafica_arquivo aga on aga.acervo_arte_grafica_id = ag.id 
                                 join arquivo a on a.id = aga.arquivo_miniatura_id 
                             where permite_uso_imagem and ag.acervo_id = any(@acervosIds)
                             union all
-                            select af.acervo_id as acervoId, a.codigo, a.nome 
+                            select af.acervo_id as acervoId, a.nome 
                                 from acervo_fotografico af 
                                     join acervo_fotografico_arquivo afa on afa.acervo_fotografico_id = af.id 
-                                    join arquivo a on a.id = afa.arquivo_id
+                                    join arquivo a on a.id = afa.arquivo_miniatura_id
                             where permite_uso_imagem and af.acervo_id = any(@acervosIds) ";
 
             return await conexao.Obter().QueryAsync<AcervoCodigoNomeResumido>(query, new { acervosIds });
