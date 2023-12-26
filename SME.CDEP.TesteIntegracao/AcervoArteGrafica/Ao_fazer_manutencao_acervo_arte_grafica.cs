@@ -1,6 +1,4 @@
-﻿using AutoMapper;
-using Bogus;
-using Shouldly;
+﻿using Shouldly;
 using SME.CDEP.Aplicacao.DTOS;
 using SME.CDEP.Dominio.Entidades;
 using SME.CDEP.Dominio.Excecoes;
@@ -9,7 +7,6 @@ using SME.CDEP.Infra.Dominio.Enumerados;
 using SME.CDEP.TesteIntegracao.Setup;
 using SME.CDEP.TesteIntegracao.Constantes;
 using Xunit;
-using Xunit.Sdk;
 
 namespace SME.CDEP.TesteIntegracao
 {
@@ -125,7 +122,8 @@ namespace SME.CDEP.TesteIntegracao
             
             var acervoArteGraficaArquivos = ObterTodos<AcervoArteGraficaArquivo>();
             var acervoArteGraficaArquivosInseridos = acervoArteGraficaArquivos.Where(w => w.AcervoArteGraficaId == acervoArteGrafica.Id);
-            acervoArteGraficaArquivosInseridos.Count().ShouldBe(arquivosSelecionados.Count());
+            acervoArteGraficaArquivosInseridos.Count(w=> w.ArquivoMiniaturaId.NaoEhNulo()).ShouldBe(arquivosSelecionados.Count());
+            acervoArteGraficaArquivosInseridos.Count(w=> w.ArquivoMiniaturaId.EhNulo()).ShouldBe(0);
             
             var acervoCreditoAutor = ObterTodos<AcervoCreditoAutor>().Where(w=> w.AcervoId == 3);
             acervoCreditoAutor.Count().ShouldBe(2);
@@ -205,7 +203,8 @@ namespace SME.CDEP.TesteIntegracao
             
             var acervoArteGraficaArquivos = ObterTodos<AcervoArteGraficaArquivo>();
             var acervoArteGraficaArquivosInseridos = acervoArteGraficaArquivos.Where(w => w.AcervoArteGraficaId == acervoArteGrafica.Id);
-            acervoArteGraficaArquivosInseridos.Count().ShouldBe(arquivosSelecionados.Count());
+            acervoArteGraficaArquivosInseridos.Count(w=> w.ArquivoMiniaturaId.NaoEhNulo()).ShouldBe(arquivosSelecionados.Count());
+            acervoArteGraficaArquivosInseridos.Count(w=> w.ArquivoMiniaturaId.EhNulo()).ShouldBe(0);
             
             var acervoCreditoAutor = ObterTodos<AcervoCreditoAutor>().Where(w=> w.AcervoId == 3);
             acervoCreditoAutor.Count().ShouldBe(2);
@@ -283,7 +282,8 @@ namespace SME.CDEP.TesteIntegracao
             
             var acervoArteGraficaArquivos = ObterTodos<AcervoArteGraficaArquivo>();
             var acervoArteGraficaArquivosInseridos = acervoArteGraficaArquivos.Where(w => w.AcervoArteGraficaId == acervoArteGrafica.Id);
-            acervoArteGraficaArquivosInseridos.Count().ShouldBe(arquivosSelecionados.Count());
+            acervoArteGraficaArquivosInseridos.Count(w=> w.ArquivoMiniaturaId.NaoEhNulo()).ShouldBe(arquivosSelecionados.Count());
+            acervoArteGraficaArquivosInseridos.Count(w=> w.ArquivoMiniaturaId.EhNulo()).ShouldBe(0);
             
             var acervoCreditoAutor = ObterTodos<AcervoCreditoAutor>().Where(w=> w.AcervoId == 3);
             acervoCreditoAutor.Count().ShouldBe(2);
@@ -403,7 +403,8 @@ namespace SME.CDEP.TesteIntegracao
             
             var acervoArteGraficaArquivos = ObterTodos<AcervoArteGraficaArquivo>();
             var acervoArteGraficaArquivosInseridos = acervoArteGraficaArquivos.Where(w => w.AcervoArteGraficaId == acervoArteGrafica.Id);
-            acervoArteGraficaArquivosInseridos.Count().ShouldBe(arquivosSelecionados.Count());
+            acervoArteGraficaArquivosInseridos.Count(w=> w.ArquivoMiniaturaId.NaoEhNulo()).ShouldBe(arquivosSelecionados.Count());
+            acervoArteGraficaArquivosInseridos.Count(w=> w.ArquivoMiniaturaId.EhNulo()).ShouldBe(0);
             
             var acervoCreditoAutor = ObterTodos<AcervoCreditoAutor>().Where(w=> w.AcervoId == acervoArteGrafica.AcervoId);
             acervoCreditoAutor.Count().ShouldBe(2);
@@ -499,6 +500,8 @@ namespace SME.CDEP.TesteIntegracao
         {
             var random = new Random();
 
+            var arquivoId = 1;
+
             for (int j = 1; j <= 35; j++)
             {
                 await InserirNaBase(new Acervo()
@@ -554,7 +557,20 @@ namespace SME.CDEP.TesteIntegracao
                 
                 await InserirNaBase(new Arquivo()
                 {
-                    Nome = faker.Lorem.Text(),
+                    Nome = $"{faker.Lorem.Text()}_{arquivoId}.jpeg",
+                    Codigo = Guid.NewGuid(),
+                    Tipo = TipoArquivo.AcervoArteGrafica,
+                    TipoConteudo = ConstantesTestes.MIME_TYPE_JPG,
+                    CriadoPor = ConstantesTestes.SISTEMA,
+                    CriadoEm = DateTimeExtension.HorarioBrasilia().AddMinutes(-15),
+                    CriadoLogin = ConstantesTestes.LOGIN_123456789,
+                });
+
+                arquivoId++;
+                
+                await InserirNaBase(new Arquivo()
+                {
+                    Nome = $"{faker.Lorem.Text()}_{arquivoId}.jpeg",
                     Codigo = Guid.NewGuid(),
                     Tipo = TipoArquivo.AcervoArteGrafica,
                     TipoConteudo = ConstantesTestes.MIME_TYPE_JPG,
@@ -565,9 +581,12 @@ namespace SME.CDEP.TesteIntegracao
                 
                 await InserirNaBase(new AcervoArteGraficaArquivo()
                 {
-                    ArquivoId = j,
-                    AcervoArteGraficaId = j
+                    ArquivoId = arquivoId-1,
+                    AcervoArteGraficaId = j,
+                    ArquivoMiniaturaId = arquivoId
                 });
+                
+                arquivoId++;
             }
         }
     }

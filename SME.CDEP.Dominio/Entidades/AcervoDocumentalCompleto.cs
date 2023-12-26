@@ -7,12 +7,8 @@ public class AcervoDocumentalCompleto : EntidadeBaseAuditavel
     public long TipoAcervoId { get; set; }
     public string Codigo { get; set; }
     public string CodigoNovo { get; set; }
-    public long CreditoAutorId { get; set; }
-    public string CreditoAutorNome { get; set; }
     public long? MaterialId { get; set; }
-    public string MaterialNome { get; set; }
     public long IdiomaId { get; set; }
-    public string IdiomaNome { get; set; }
     public string Ano { get; set; }
     public string NumeroPagina { get; set; }
     public string Volume { get; set; }
@@ -23,13 +19,8 @@ public class AcervoDocumentalCompleto : EntidadeBaseAuditavel
     public string Localizacao { get; set; }
     public bool? CopiaDigital { get; set; }
     public long? ConservacaoId { get; set; }
-    public string ConservacaoNome { get; set; }
     public string Descricao { get; set; }
     public ArquivoResumido[] Arquivos  { get; set; }
-    public long? ArquivoId { get; set; }
-    public string ArquivoNome { get; set; }
-    public Guid ArquivoCodigo { get; set; }
     public long[] CreditosAutoresIds { get; set; }
     public long[] AcessoDocumentosIds  { get; set; }
-    public long AcessoDocumentoId { get; set; }
 }

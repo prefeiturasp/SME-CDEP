@@ -22,9 +22,22 @@ namespace SME.CDEP.Aplicacao.Servicos
         private readonly IContextoAplicacao contextoAplicacao;
         private readonly IRepositorioArquivo repositorioArquivo;
         private readonly IConfiguration configuration;
+        private readonly IRepositorioAcervoBibliografico repositorioAcervoBibliografico;
+        private readonly IRepositorioAcervoDocumental repositorioAcervoDocumental;
+        private readonly IRepositorioAcervoArteGrafica repositorioAcervoArteGrafica;
+        private readonly IRepositorioAcervoAudiovisual repositorioAcervoAudiovisual;
+        private readonly IRepositorioAcervoFotografico repositorioAcervoFotografico;
+        private readonly IRepositorioAcervoTridimensional repositorioAcervoTridimensional;
         
-        public ServicoAcervoAuditavel(IRepositorioAcervo repositorioAcervo, IMapper mapper, IContextoAplicacao contextoAplicacao,
-            IRepositorioAcervoCreditoAutor repositorioAcervoCreditoAutor,IRepositorioArquivo repositorioArquivo, IConfiguration configuration)
+        public ServicoAcervoAuditavel(IRepositorioAcervo repositorioAcervo, IMapper mapper, 
+            IContextoAplicacao contextoAplicacao, IRepositorioAcervoCreditoAutor repositorioAcervoCreditoAutor,
+            IRepositorioArquivo repositorioArquivo, IConfiguration configuration,
+            IRepositorioAcervoBibliografico repositorioAcervoBibliografico,
+            IRepositorioAcervoDocumental repositorioAcervoDocumental,
+            IRepositorioAcervoArteGrafica repositorioAcervoArteGrafica,
+            IRepositorioAcervoAudiovisual repositorioAcervoAudiovisual,
+            IRepositorioAcervoFotografico repositorioAcervoFotografico,
+            IRepositorioAcervoTridimensional repositorioAcervoTridimensional)
         {
             this.repositorioAcervo = repositorioAcervo ?? throw new ArgumentNullException(nameof(repositorioAcervo));
             this.mapper = mapper ?? throw new ArgumentNullException(nameof(mapper));
@@ -32,6 +45,12 @@ namespace SME.CDEP.Aplicacao.Servicos
             this.repositorioAcervoCreditoAutor = repositorioAcervoCreditoAutor ?? throw new ArgumentNullException(nameof(repositorioAcervoCreditoAutor));
             this.repositorioArquivo = repositorioArquivo ?? throw new ArgumentNullException(nameof(repositorioArquivo));
             this.configuration = configuration ?? throw new ArgumentNullException(nameof(configuration));
+            this.repositorioAcervoBibliografico = repositorioAcervoBibliografico ?? throw new ArgumentNullException(nameof(repositorioAcervoBibliografico));
+            this.repositorioAcervoDocumental = repositorioAcervoDocumental ?? throw new ArgumentNullException(nameof(repositorioAcervoDocumental));
+            this.repositorioAcervoArteGrafica = repositorioAcervoArteGrafica ?? throw new ArgumentNullException(nameof(repositorioAcervoArteGrafica));
+            this.repositorioAcervoAudiovisual = repositorioAcervoAudiovisual ?? throw new ArgumentNullException(nameof(repositorioAcervoAudiovisual));
+            this.repositorioAcervoFotografico = repositorioAcervoFotografico ?? throw new ArgumentNullException(nameof(repositorioAcervoFotografico));
+            this.repositorioAcervoTridimensional = repositorioAcervoTridimensional ?? throw new ArgumentNullException(nameof(repositorioAcervoTridimensional));
         }
         
         public async Task<long> Inserir(Acervo acervo)
@@ -226,14 +245,14 @@ namespace SME.CDEP.Aplicacao.Servicos
                         Codigo = s.Key.Codigo,
                         Tipo = s.Key.Tipo,
                         Titulo = s.Key.Titulo,
-                        Descricao = s.Key.Descricao.RemoverTagsHtml(),
-                        DataAcervo = s.Key.DataAcervo.RemoverTagsHtml(),
+                        Descricao = s.Key.Descricao,
+                        DataAcervo = s.Key.DataAcervo,
                         Ano = s.Key.Ano,
                         TipoAcervoTag = s.Key.TipoAcervoTag,
                         CreditoAutoria = s.Any(w=> w.CreditoAutoria.NaoEhNulo() ) ? string.Join(", ", s.Select(ca=> ca.CreditoAutoria).Distinct()) : string.Empty,
                         Assunto = s.Any(w=> w.Assunto.NaoEhNulo() ) ? string.Join(", ", s.Select(ca=> ca.Assunto).Distinct()) : string.Empty,
                         EnderecoImagem = acervosCodigoNomeResumidos.Any(f=> f.AcervoId == s.Key.AcervoId) 
-                            ? $"{hostAplicacao}{Constantes.BUCKET_CDEP}/{acervosCodigoNomeResumidos.FirstOrDefault(f=> f.AcervoId == s.Key.AcervoId).NomeArquivo}"
+                            ? $"{hostAplicacao}{Constantes.BUCKET_CDEP}/{acervosCodigoNomeResumidos.FirstOrDefault(f=> f.AcervoId == s.Key.AcervoId).Nome}"
                             : string.Empty
                     });
             
@@ -292,7 +311,70 @@ namespace SME.CDEP.Aplicacao.Servicos
                 TipoOrdenacao.ZA => registros.OrderByDescending(o => o.Titulo),
             };
         }
+
+        public async Task<AcervoDetalheDTO> ObterDetalhamentoPorTipoAcervoECodigo(FiltroDetalharAcervoDTO filtro)
+        {
+            switch (filtro.Tipo)
+            {
+                case TipoAcervo.Bibliografico:
+                    return mapper.Map<AcervoBibliograficoDetalheDTO>(await repositorioAcervoBibliografico.ObterDetalhamentoPorCodigo(filtro.Codigo));
+                case TipoAcervo.DocumentacaoHistorica:
+                {
+                    var retorno =  mapper.Map<AcervoDocumentalDetalheDTO>(await repositorioAcervoDocumental.ObterDetalhamentoPorCodigo(filtro.Codigo));
+                    retorno.Imagens = AplicarEndereco(retorno.Imagens);
+                    return retorno;
+                }
+                case TipoAcervo.ArtesGraficas:
+                {
+                    var retorno =  mapper.Map<AcervoArteGraficaDetalheDTO>(await repositorioAcervoArteGrafica.ObterDetalhamentoPorCodigo(filtro.Codigo));
+                    retorno.Imagens = AplicarEndereco(retorno.Imagens);
+                    return retorno;
+                }
+                case TipoAcervo.Audiovisual:
+                    return mapper.Map<AcervoAudiovisualDetalheDTO>(await repositorioAcervoAudiovisual.ObterDetalhamentoPorCodigo(filtro.Codigo));
+                case TipoAcervo.Fotografico:
+                {
+                    var retorno =  mapper.Map<AcervoFotograficoDetalheDTO>(await repositorioAcervoFotografico.ObterDetalhamentoPorCodigo(filtro.Codigo));
+                    retorno.Imagens = AplicarEndereco(retorno.Imagens);
+                    return retorno;
+                }
+                case TipoAcervo.Tridimensional:
+                {
+                    var retorno =  mapper.Map<AcervoTridimensionalDetalheDTO>(await repositorioAcervoTridimensional.ObterDetalhamentoPorCodigo(filtro.Codigo));
+                    retorno.Imagens = AplicarEndereco(retorno.Imagens);
+                    return retorno;
+                }
+                default:
+                    throw new ArgumentOutOfRangeException();
+            }
+        }
+
+        private ImagemDTO[] AplicarEndereco(ImagemDTO[] imagens)
+        {
+            var hostAplicacao = configuration["UrlFrontEnd"];
+            
+            foreach (var imagem in imagens)
+            {
+                imagem.Original = $"{hostAplicacao}{Constantes.BUCKET_CDEP}/{imagem.Original}";
+                imagem.Thumbnail = $"{hostAplicacao}{Constantes.BUCKET_CDEP}/{imagem.Thumbnail}";
+            }
+
+            return imagens;
+        }
         
+        private AcervoDetalheDTO AplicarEndereco(AcervoArteGraficaDetalheDTO acervo)
+        {
+            var hostAplicacao = configuration["UrlFrontEnd"];
+            
+            foreach (var acervoImagem in acervo.Imagens)
+            {
+                acervoImagem.Original = $"{hostAplicacao}{Constantes.BUCKET_CDEP}/{acervoImagem.Original}";
+                acervoImagem.Thumbnail = $"{hostAplicacao}{Constantes.BUCKET_CDEP}/{acervoImagem.Thumbnail}";
+            }
+
+            return acervo;
+        }
+
         public Paginacao Paginacao
         {
             get

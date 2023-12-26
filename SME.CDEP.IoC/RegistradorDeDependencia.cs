@@ -186,6 +186,7 @@ public class RegistradorDeDependencia
         _serviceCollection.TryAddScoped<IServicoArmazenamento, ServicoArmazenamento>();
         _serviceCollection.TryAddScoped<IServicoDownloadArquivo, ServicoDownloadArquivo>();
         _serviceCollection.TryAddScoped<IServicoMoverArquivoTemporario, ServicoMoverArquivoTemporario>();
+        _serviceCollection.TryAddScoped<IServicoGerarMiniatura, ServicoGerarMiniatura>();
         _serviceCollection.TryAddScoped<IServicoMensageria, ServicoMensageria>();
         _serviceCollection.TryAddScoped<IServicoAcervoArteGrafica, ServicoAcervoArteGrafica>();
         _serviceCollection.TryAddScoped<IServicoAcervoTridimensional, ServicoAcervoTridimensional>();

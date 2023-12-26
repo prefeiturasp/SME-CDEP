@@ -1,6 +1,7 @@
 ﻿using Dapper;
 using SME.CDEP.Dominio.Contexto;
 using SME.CDEP.Dominio.Entidades;
+using SME.CDEP.Dominio.Extensions;
 using SME.CDEP.Infra.Dados.Repositorios.Interfaces;
 
 namespace SME.CDEP.Infra.Dados.Repositorios
@@ -46,18 +47,10 @@ namespace SME.CDEP.Infra.Dados.Repositorios
         
         public async Task<AcervoTridimensionalCompleto> ObterPorId(long id)
         {
-            var query = @"select  at.id,
-                                  at.procedencia,
-                                  at.conservacao_id as conservacaoId,
-                                  at.quantidade,
-                                  a.descricao,                                  
-                                  at.largura,
-                                  at.altura,
-                                  at.profundidade,
-                                  at.diametro,
-                                  a.id as AcervoId,
+            var query = @"select a.id as AcervoId,
                                   a.titulo,
                                   a.codigo,
+                                  a.descricao,
                                   a.ano,
                                   a.data_acervo dataacervo,
                                   a.tipo as TipoAcervoId,
@@ -67,26 +60,85 @@ namespace SME.CDEP.Infra.Dados.Repositorios
                                   a.alterado_em as AlteradoEm,
                                   a.alterado_por as AlteradoPor,
                                   a.alterado_login as AlteradoLogin,                                  
-                                  arq.id as arquivoId,
-                                  arq.nome as ArquivoNome,
-                                  arq.codigo as ArquivoCodigo
+
+		                          at.id,
+                                  at.procedencia,
+                                  at.conservacao_id as conservacaoId,
+                                  at.quantidade,                                            
+                                  at.largura,
+                                  at.altura,
+                                  at.profundidade,
+                                  at.diametro
+                        from acervo_tridimensional at
+                        join acervo a on a.id = at.acervo_id  
+                        where not a.excluido 
+                        and a.id = @id;
+                            
+                             
+                        select arq.id,
+                                  arq.nome,
+                                  arq.codigo
+                        from acervo_tridimensional at
+                        join acervo_tridimensional_arquivo ata on ata.acervo_tridimensional_id = at.id
+                        join arquivo arq on arq.id = ata.arquivo_id
+                        where not  arq.excluido
+                        and at.acervo_id = @id;";
+
+            var queryMultiple = await conexao.Obter().QueryMultipleAsync(query, new { id });
+            var acervoTridimensionalCompleto = queryMultiple.ReadFirst<AcervoTridimensionalCompleto>();
+            acervoTridimensionalCompleto.Arquivos = queryMultiple.Read<ArquivoResumido>().ToArray();
+            
+            return acervoTridimensionalCompleto;
+        }
+
+        public async Task<AcervoTridimensionalDetalhe> ObterDetalhamentoPorCodigo(string filtroCodigo)
+        {
+            var acervoTridimensional = await ObterPorCodigo(filtroCodigo);
+
+            if (acervoTridimensional.EhNulo())
+                return default;
+            
+            acervoTridimensional.Imagens = await ObterArquivos(acervoTridimensional.Id);
+            
+            return acervoTridimensional;
+        }
+
+        private async Task<AcervoTridimensionalDetalhe> ObterPorCodigo(string codigo)
+        {
+            var query = @"select  at.id,
+                                  at.acervo_id acervoId,
+                                  a.titulo, 
+                                  a.codigo,           
+                                  at.procedencia,
+                                  a.ano,
+                                  a.data_acervo dataacervo,          
+                                  c.nome as conservacao,
+                                  at.quantidade,
+                                  a.descricao,                                  
+                                  at.largura,
+                                  at.altura,
+                                  at.profundidade,
+                                  at.diametro
                         from acervo_tridimensional at
                         join acervo a on a.id = at.acervo_id 
-                        left join acervo_tridimensional_arquivo ata on ata.acervo_tridimensional_id = at.id
-                        left join arquivo arq on arq.id = ata.arquivo_id 
+                        join conservacao c on c.id = at.conservacao_id 
                         where not a.excluido 
-                        and a.id = @id";
-
-            var retorno = (await conexao.Obter().QueryAsync<AcervoTridimensionalCompleto>(query, new { id }));
-            if (retorno.Any())
-            {
-                var acervoTridimensionalCompleto = retorno.FirstOrDefault();
-                acervoTridimensionalCompleto.Arquivos = retorno.Where(w=> w.ArquivoId > 0).Select(s => new ArquivoResumido() { Id = s.ArquivoId, Codigo = s.ArquivoCodigo, Nome = s.ArquivoNome }).DistinctBy(d=> d.Id).ToArray();
-                return acervoTridimensionalCompleto;    
-            }
-
-            return default;
+	                      and not c.excluido
+                          and a.codigo = @codigo ";
+            return conexao.Obter().QueryFirstOrDefault<AcervoTridimensionalDetalhe>(query, new { codigo });
         }
         
+        protected async Task<IEnumerable<ImagemDetalhe>> ObterArquivos(long acervoTridimensionalId)
+        {
+            var query = @" select a.nome original, 
+                                 am.nome thumbnail
+                            from acervo_tridimensional_arquivo at 
+                                join arquivo a on a.id = at.arquivo_id 
+                            join arquivo am on am.id = at.arquivo_miniatura_id  
+                            where not a.excluido and not am.excluido 
+                                and at.acervo_tridimensional_id  = @acervoTridimensionalId";
+
+            return await conexao.Obter().QueryAsync<ImagemDetalhe>(query, new { acervoTridimensionalId });
+        }
     }
 }

@@ -12,6 +12,6 @@ namespace SME.CDEP.Aplicacao.Servicos.Interface
         Task<AcervoDTO> ObterPorId(long acervoId);
         Task<bool> Excluir(long entidaId);
         Task<PaginacaoResultadoDTO<IdTipoTituloCreditoAutoriaCodigoAcervoDTO>> ObterPorFiltro(int? tipoAcervo, string titulo, long? creditoAutorId, string codigo);
-        
+        Task<AcervoDetalheDTO> ObterDetalhamentoPorTipoAcervoECodigo(FiltroDetalharAcervoDTO filtro);
     }
 }

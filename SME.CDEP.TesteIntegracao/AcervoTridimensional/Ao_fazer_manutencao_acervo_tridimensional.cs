@@ -400,6 +400,8 @@ namespace SME.CDEP.TesteIntegracao
         private async Task InserirAcervoTridimensional()
         {
             var random = new Random();
+            
+            var arquivoId = 1;
 
             for (int j = 1; j <= 35; j++)
             {
@@ -439,11 +441,27 @@ namespace SME.CDEP.TesteIntegracao
                     CriadoLogin = ConstantesTestes.LOGIN_123456789,
                 });
                 
+                arquivoId++;
+                
+                await InserirNaBase(new Arquivo()
+                {
+                    Nome = $"{faker.Lorem.Text()}_{arquivoId}.jpeg",
+                    Codigo = Guid.NewGuid(),
+                    Tipo = TipoArquivo.AcervoArteGrafica,
+                    TipoConteudo = ConstantesTestes.MIME_TYPE_JPG,
+                    CriadoPor = ConstantesTestes.SISTEMA,
+                    CriadoEm = DateTimeExtension.HorarioBrasilia().AddMinutes(-15),
+                    CriadoLogin = ConstantesTestes.LOGIN_123456789,
+                });
+                
                 await InserirNaBase(new AcervoTridimensionalArquivo()
                 {
-                    ArquivoId = j,
-                    AcervoTridimensionalId = j
+                    ArquivoId = arquivoId-1,
+                    AcervoTridimensionalId = j,
+                    ArquivoMiniaturaId = arquivoId
                 });
+                
+                arquivoId++;
             }
         }
     }

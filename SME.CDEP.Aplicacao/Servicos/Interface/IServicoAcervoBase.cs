@@ -1,5 +1,4 @@
-﻿using SME.CDEP.Aplicacao.DTOS;
-using SME.CDEP.Dominio.Entidades;
+﻿using SME.CDEP.Dominio.Entidades;
 using SME.CDEP.Infra.Dominio.Enumerados;
 
 namespace SME.CDEP.Aplicacao.Servicos.Interface
