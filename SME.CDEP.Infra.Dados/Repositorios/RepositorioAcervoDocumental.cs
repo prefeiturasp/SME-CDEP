@@ -127,7 +127,8 @@ namespace SME.CDEP.Infra.Dados.Repositorios
             
             acervoDocumental.Autores = await ObterCreditosAutores(acervoDocumental.AcervoId);
             
-            acervoDocumental.Imagens = await ObterArquivos(acervoDocumental.Id);
+            // Acervo documental será tratado de outra forma em futura estória
+            // acervoDocumental.Imagens = await ObterArquivos(acervoDocumental.Id);
             
             acervoDocumental.AcessosDocumentos = await ObterAcessoDocumentos(acervoDocumental.Id);
             
