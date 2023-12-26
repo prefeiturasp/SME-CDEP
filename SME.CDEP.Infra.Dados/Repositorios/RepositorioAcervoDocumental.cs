@@ -151,8 +151,7 @@ namespace SME.CDEP.Infra.Dados.Repositorios
 
         protected async Task<IEnumerable<ImagemDetalhe>> ObterArquivos(long acervoDocumentalId)
         {
-            var query = @" select a.nome original, 
-                                a.nome thumbnail
+            var query = @" select a.nome original
                             from acervo_documental_arquivo ada 
                                 join arquivo a on a.id = ada.arquivo_id   
                             where not a.excluido 
