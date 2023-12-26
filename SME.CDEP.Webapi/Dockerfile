@@ -20,7 +20,7 @@ WORKDIR /app
 ENV TZ=America/Sao_Paulo
 RUN apt-get update \
     && apt-get install -yq tzdata locales -y \ 
-         libgdiplus \
+    && apt-get install -y --allow-unauthenticated libgdiplus \
     && dpkg-reconfigure --frontend noninteractive tzdata \
 	  && locale-gen en_US.UTF-8
 COPY --from=publish /app/publish .
