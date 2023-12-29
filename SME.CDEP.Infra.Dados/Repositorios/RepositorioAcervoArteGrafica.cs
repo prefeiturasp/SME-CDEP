@@ -164,8 +164,9 @@ namespace SME.CDEP.Infra.Dados.Repositorios
         
         protected async Task<IEnumerable<ImagemDetalhe>> ObterArquivos(long acervoArteGraficaId)
         {
-            var query = @" select a.nome original, 
-                                 am.nome thumbnail
+            var query = @" select a.nome NomeOriginal,
+                                  a.codigo CodigoOriginal,      
+                                  am.codigo CodigoThumbnail
                             from acervo_arte_grafica_arquivo ag 
                                 join arquivo a on a.id = ag.arquivo_id 
                             join arquivo am on am.id = ag.arquivo_miniatura_id  

@@ -130,8 +130,9 @@ namespace SME.CDEP.Infra.Dados.Repositorios
         
         protected async Task<IEnumerable<ImagemDetalhe>> ObterArquivos(long acervoTridimensionalId)
         {
-            var query = @" select a.nome original, 
-                                 am.nome thumbnail
+            var query = @" select a.nome NomeOriginal,
+                                  a.codigo CodigoOriginal,      
+                                  am.codigo CodigoThumbnail
                             from acervo_tridimensional_arquivo at 
                                 join arquivo a on a.id = at.arquivo_id 
                             join arquivo am on am.id = at.arquivo_miniatura_id  

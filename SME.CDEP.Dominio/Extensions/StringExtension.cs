@@ -154,12 +154,33 @@ namespace SME.CDEP.Dominio.Extensions
         {
             return valor.EstaPreenchido() ? valor : "0";
         }
-        public static string RemoverAcentuacao(this string text)
+        public static string RemoverAcentuacao(this string valor)
         {
-            return new string(text
+            if (valor.NaoEstaPreenchido())
+                return valor;
+            
+            return new string(valor
                 .Normalize(NormalizationForm.FormD)
                 .Where(ch => char.GetUnicodeCategory(ch) != UnicodeCategory.NonSpacingMark)
                 .ToArray());
+        }
+        public static string RemoverAcentuacaoFormatarMinusculo(this string valor)
+        {
+            if (valor.NaoEstaPreenchido())
+                return valor;
+            
+            return new string(valor
+                .Normalize(NormalizationForm.FormD)
+                .Where(ch => char.GetUnicodeCategory(ch) != UnicodeCategory.NonSpacingMark)
+                .ToArray()).ToLower();
+        }
+        
+        public static string ObterExtensao(this string valor)
+        {
+            if (valor.NaoEstaPreenchido())
+                return valor;
+                
+            return Path.GetExtension(valor);
         }
     }
 }
