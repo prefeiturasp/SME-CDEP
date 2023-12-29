@@ -36,25 +36,32 @@ namespace SME.CDEP.Aplicacao.Servicos
 
         protected async Task ArmazenarMiniatura(string tipoConteudo, string nomeArquivoFisico, string codigoArquivoMiniaturaComExtensao)
         {
-            var url = await servicoArmazenamento.Obter(nomeArquivoFisico, false);
-
-            using (WebClient webClient = new WebClient())
+            try
             {
-                using (Stream stream = webClient.OpenRead(url))
+                var url = await servicoArmazenamento.Obter(nomeArquivoFisico, false);
+
+                using (WebClient webClient = new WebClient())
                 {
-                    Image imagem = Image.FromStream(stream);
-
-                    var miniatura = imagem.GetThumbnailImage(320, 200, () => false, IntPtr.Zero);
-
-                    using (var msImagem = new MemoryStream())
+                    using (Stream stream = webClient.OpenRead(url))
                     {
-                        miniatura.Save(msImagem, tipoConteudo.ObterFormato());
+                        Image imagem = Image.FromStream(stream);
 
-                        msImagem.Seek(0, SeekOrigin.Begin);
+                        var miniatura = imagem.GetThumbnailImage(320, 200, () => false, IntPtr.Zero);
 
-                        await servicoArmazenamento.Armazenar(codigoArquivoMiniaturaComExtensao, msImagem, tipoConteudo);
+                        using (var msImagem = new MemoryStream())
+                        {
+                            miniatura.Save(msImagem, tipoConteudo.ObterFormato());
+
+                            msImagem.Seek(0, SeekOrigin.Begin);
+
+                            await servicoArmazenamento.Armazenar(codigoArquivoMiniaturaComExtensao, msImagem, tipoConteudo);
+                        }
                     }
                 }
+            }
+            catch (Exception e)
+            {
+                throw e;
             }
         }
 
