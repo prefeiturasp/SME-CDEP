@@ -266,7 +266,7 @@ namespace SME.CDEP.Aplicacao.Servicos
                         Titulo = acervoAudiovisualLinha.Titulo.Conteudo,
                         Codigo = acervoAudiovisualLinha.Codigo.Conteudo,
                         CreditosAutoresIds = CreditosAutores
-                            .Where(f => acervoAudiovisualLinha.Credito.Conteudo.FormatarTextoEmArray().Contains(f.Nome))
+                            .Where(f => acervoAudiovisualLinha.Credito.Conteudo.RemoverAcentuacaoFormatarMinusculo().FormatarTextoEmArray().Contains(f.Nome.RemoverAcentuacaoFormatarMinusculo()))
                             .Select(s => s.Id).ToArray(),
                         Localizacao = acervoAudiovisualLinha.Localizacao.Conteudo,
                         Procedencia = acervoAudiovisualLinha.Procedencia.Conteudo,

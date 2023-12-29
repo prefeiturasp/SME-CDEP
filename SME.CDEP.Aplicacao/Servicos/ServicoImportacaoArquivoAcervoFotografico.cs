@@ -280,7 +280,7 @@ namespace SME.CDEP.Aplicacao.Servicos
                         Titulo = acervoFotograficoLinha.Titulo.Conteudo,
                         Codigo = acervoFotograficoLinha.Codigo.Conteudo,
                         CreditosAutoresIds = CreditosAutores
-                            .Where(f => acervoFotograficoLinha.Credito.Conteudo.FormatarTextoEmArray().Contains(f.Nome))
+                            .Where(f => acervoFotograficoLinha.Credito.Conteudo.RemoverAcentuacaoFormatarMinusculo().FormatarTextoEmArray().Contains(f.Nome.RemoverAcentuacaoFormatarMinusculo()))
                             .Select(s => s.Id).ToArray(),
                         Localizacao = acervoFotograficoLinha.Localizacao.Conteudo,
                         Procedencia = acervoFotograficoLinha.Procedencia.Conteudo,
