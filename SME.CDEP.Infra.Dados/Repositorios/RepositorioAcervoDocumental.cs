@@ -127,7 +127,8 @@ namespace SME.CDEP.Infra.Dados.Repositorios
             
             acervoDocumental.Autores = await ObterCreditosAutores(acervoDocumental.AcervoId);
             
-            acervoDocumental.Imagens = await ObterArquivos(acervoDocumental.Id);
+            // Acervo documental será tratado de outra forma em futura estória
+            // acervoDocumental.Imagens = await ObterArquivos(acervoDocumental.Id);
             
             acervoDocumental.AcessosDocumentos = await ObterAcessoDocumentos(acervoDocumental.Id);
             
@@ -151,12 +152,10 @@ namespace SME.CDEP.Infra.Dados.Repositorios
 
         protected async Task<IEnumerable<ImagemDetalhe>> ObterArquivos(long acervoDocumentalId)
         {
-            var query = @" select a.nome original, 
-                                am.nome thumbnail
+            var query = @" select a.nome original
                             from acervo_documental_arquivo ada 
-                                join arquivo a on a.id = ada.arquivo_id 
-                                join arquivo am on am.id = ada.arquivo_miniatura_id  
-                            where not a.excluido and not am.excluido 
+                                join arquivo a on a.id = ada.arquivo_id   
+                            where not a.excluido 
                                 and ada.acervo_documental_id = @acervoDocumentalId";
 
             return await conexao.Obter().QueryAsync<ImagemDetalhe>(query, new { acervoDocumentalId });

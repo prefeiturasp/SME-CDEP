@@ -5,6 +5,7 @@ using SME.CDEP.Aplicacao.DTOS;
 using SME.CDEP.Aplicacao.Extensions;
 using SME.CDEP.Aplicacao.Servicos.Interface;
 using SME.CDEP.Dominio.Entidades;
+using SME.CDEP.Dominio.Extensions;
 using SME.CDEP.Infra.Dados.Repositorios.Interfaces;
 using SME.CDEP.Infra.Dominio.Enumerados;
 using SME.CDEP.Infra.Servicos.ServicoArmazenamento.Interface;
@@ -24,12 +25,16 @@ namespace SME.CDEP.Aplicacao.Servicos
         
         public async Task<long> GerarMiniatura(string tipoConteudo, string nomeArquivoFisico, string nomeArquivoMiniatura, TipoArquivo tipoArquivo)
         {
-            await ArmazenarMiniatura(tipoConteudo, nomeArquivoFisico,nomeArquivoMiniatura);
+            var codigoArquivoMiniatura = Guid.NewGuid();
             
-            return await SalvarArquivoMiniaturaAsync(nomeArquivoMiniatura,tipoConteudo,tipoArquivo);
+            var codigoArquivoMiniaturaComExtensao = $"{codigoArquivoMiniatura}{nomeArquivoFisico.ObterExtensao()}";
+            
+            await ArmazenarMiniatura(tipoConteudo, nomeArquivoFisico,codigoArquivoMiniaturaComExtensao);
+            
+            return await SalvarArquivoMiniaturaAsync(nomeArquivoMiniatura,tipoConteudo,tipoArquivo,codigoArquivoMiniatura);
         }
 
-        protected async Task ArmazenarMiniatura(string tipoConteudo, string nomeArquivoFisico, string nomeArquivoMiniatura)
+        protected async Task ArmazenarMiniatura(string tipoConteudo, string nomeArquivoFisico, string codigoArquivoMiniaturaComExtensao)
         {
             var url = await servicoArmazenamento.Obter(nomeArquivoFisico, false);
 
@@ -37,7 +42,7 @@ namespace SME.CDEP.Aplicacao.Servicos
             {
                 using (Stream stream = webClient.OpenRead(url))
                 {
-                    Bitmap imagem = new Bitmap(stream);
+                    Image imagem = Image.FromStream(stream);
 
                     var miniatura = imagem.GetThumbnailImage(320, 200, () => false, IntPtr.Zero);
 
@@ -47,21 +52,19 @@ namespace SME.CDEP.Aplicacao.Servicos
 
                         msImagem.Seek(0, SeekOrigin.Begin);
 
-                        var nomeArquivoFisicoMiniatura = nomeArquivoMiniatura;
-
-                        await servicoArmazenamento.Armazenar(nomeArquivoFisicoMiniatura, msImagem, tipoConteudo);
+                        await servicoArmazenamento.Armazenar(codigoArquivoMiniaturaComExtensao, msImagem, tipoConteudo);
                     }
                 }
             }
         }
 
-        protected async Task<long> SalvarArquivoMiniaturaAsync(string nomeArquivoMiniatura,string tipoConteudo, TipoArquivo tipoArquivo)
+        protected async Task<long> SalvarArquivoMiniaturaAsync(string nomeArquivoMiniatura,string tipoConteudo, TipoArquivo tipoArquivo, Guid codigoArquivoMiniatura)
         {
             return await repositorioArquivo.SalvarAsync(new Arquivo()
             {
                 Nome = nomeArquivoMiniatura,
                 TipoConteudo = tipoConteudo,
-                Codigo = Guid.NewGuid(),
+                Codigo = codigoArquivoMiniatura,
                 Tipo = tipoArquivo
             });
         }
