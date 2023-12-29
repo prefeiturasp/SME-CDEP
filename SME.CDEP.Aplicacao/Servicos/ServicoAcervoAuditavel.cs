@@ -232,9 +232,9 @@ namespace SME.CDEP.Aplicacao.Servicos
 
             if (acervos.Any())
             {
-                var acervosIds = acervos.Where(w=> w.Tipo.EhAcervoArteGraficaOuFotografico()).Select(s => s.AcervoId).Distinct().ToArray();
+                var acervosIds = acervos.Where(w=> w.Tipo.EhAcervoArteGraficaOuFotograficoOuTridimensional()).Select(s => s.AcervoId).Distinct().ToArray();
 
-                var acervosCodigoNomeResumidos = await repositorioArquivo.ObterAcervoCodigoNomeArquivoPorAcervoId(acervosIds);
+                var miniaturasDosAcervos = await repositorioArquivo.ObterAcervoCodigoNomeArquivoPorAcervoId(acervosIds);
 
                 var hostAplicacao = configuration["UrlFrontEnd"];
             
@@ -251,8 +251,8 @@ namespace SME.CDEP.Aplicacao.Servicos
                         TipoAcervoTag = s.Key.TipoAcervoTag,
                         CreditoAutoria = s.Any(w=> w.CreditoAutoria.NaoEhNulo() ) ? string.Join(", ", s.Select(ca=> ca.CreditoAutoria).Distinct()) : string.Empty,
                         Assunto = s.Any(w=> w.Assunto.NaoEhNulo() ) ? string.Join(", ", s.Select(ca=> ca.Assunto).Distinct()) : string.Empty,
-                        EnderecoImagem = acervosCodigoNomeResumidos.Any(f=> f.AcervoId == s.Key.AcervoId) 
-                            ? $"{hostAplicacao}{Constantes.BUCKET_CDEP}/{acervosCodigoNomeResumidos.FirstOrDefault(f=> f.AcervoId == s.Key.AcervoId).Nome}"
+                        EnderecoImagem = miniaturasDosAcervos.Any(f=> f.AcervoId == s.Key.AcervoId) 
+                            ? $"{hostAplicacao}{Constantes.BUCKET_CDEP}/{miniaturasDosAcervos.FirstOrDefault(f=> f.AcervoId == s.Key.AcervoId).Thumbnail}"
                             : string.Empty
                     });
             

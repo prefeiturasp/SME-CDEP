@@ -268,35 +268,6 @@ namespace SME.CDEP.Aplicacao.Servicos
             Assuntos.Add(new IdNomeDTO() { Id = id, Nome = nome });
         }
 
-        public async Task ValidarOuInserirCreditoAutoresCoAutoresTipoAutoria(IEnumerable<string> creditosAutoresCoautores, TipoCreditoAutoria tipoCreditoAutoria)
-        {
-            foreach (var nome in creditosAutoresCoautores)
-            {
-                if (!await ExisteCreditoAutorCoAutorPorNomeETipoAutoria(nome, tipoCreditoAutoria))
-                {
-                    var id  = await servicoCreditoAutor.Inserir(new IdNomeTipoExcluidoAuditavelDTO() { Nome = nome, Tipo = (int)tipoCreditoAutoria});
-                    CachearCreditoAutor(nome, id, tipoCreditoAutoria);
-                }
-            }
-        }
-
-        private async Task<bool> ExisteCreditoAutorCoAutorPorNomeETipoAutoria(string nome, TipoCreditoAutoria tipoCreditoAutoria)
-        {
-            var id = await servicoCreditoAutor.ObterPorNomeETipo(nome, tipoCreditoAutoria);
-
-            var existeRegistro = id.EhMaiorQueZero();
-            
-            if (existeRegistro)
-                CachearCreditoAutor(nome, id, tipoCreditoAutoria);
-
-            return existeRegistro;
-        }
-
-        private void CachearCreditoAutor(string nome, long id, TipoCreditoAutoria tipoCreditoAutoria)
-        {
-            CreditosAutores.Add(new IdNomeTipoDTO() { Id = id, Nome = nome, Tipo = (int)tipoCreditoAutoria});
-        }
-
         public void ValidarPreenchimentoLimiteCaracteres(LinhaConteudoAjustarDTO campo, string nomeCampo)
         {
             var conteudoCampo = campo.Conteudo.Trim();
@@ -384,12 +355,12 @@ namespace SME.CDEP.Aplicacao.Servicos
         
         protected static bool? ObterConteudoSimNao(LinhaConteudoAjustarDTO linha)
         {
-            var valoresPermitidos = new List<string>() { Constantes.OPCAO_SIM, Constantes.OPCAO_NAO };
+            var valoresPermitidos = new List<string>() { Constantes.OPCAO_SIM.RemoverAcentuacao(), Constantes.OPCAO_NAO.RemoverAcentuacao() };
 
             if (linha.Conteudo.EhNulo())
                 return default;
             
-            if (valoresPermitidos.Contains(linha.Conteudo.ToLower()))
+            if (valoresPermitidos.Contains(linha.Conteudo.RemoverAcentuacaoFormatarMinusculo()))
                 return linha.Conteudo.EhOpcaoSim();
             
             return default;
@@ -408,35 +379,6 @@ namespace SME.CDEP.Aplicacao.Servicos
         protected static double? ObterConteudoDoubleOuNulo(LinhaConteudoAjustarDTO linha)
         {
             return linha.PossuiErro ? null : linha.Conteudo.EstaPreenchido() ? double.Parse(linha.Conteudo) : null;
-        }
-        
-        public async Task ValidarOuInserirFormato(IEnumerable<string> formatos, TipoFormato tipoFormato)
-        {
-            foreach (var nome in formatos)
-            {
-                if (!await ExisteFormatoPorNomeETipo(nome, tipoFormato))
-                {
-                    var id = await servicoFormato.Inserir(new IdNomeTipoExcluidoDTO() { Nome = nome, Tipo = (int)tipoFormato});
-                    CachearFormatos(nome, id, tipoFormato);
-                }
-            }
-        }
-        
-        private async Task<bool> ExisteFormatoPorNomeETipo(string nome, TipoFormato tipoFormato)
-        {
-            var id = await servicoFormato.ObterPorNomeETipo(nome, (int)tipoFormato);
-            
-            var existeRegistro = id.EhMaiorQueZero();
-            
-            if (existeRegistro)
-                CachearFormatos(nome, id, tipoFormato);
-            
-            return existeRegistro;
-        }
-        
-        private void CachearFormatos(string nome, long id, TipoFormato tipoFormato)
-        {
-            Formatos.Add(new IdNomeTipoDTO() { Id = id, Nome = nome, Tipo = (int)tipoFormato });
         }
         
         protected long? ObterEditoraIdOuNuloPorValorDoCampo(string valorDoCampo)
@@ -466,14 +408,16 @@ namespace SME.CDEP.Aplicacao.Servicos
             {
                 if (item.EstaPreenchido())
                 {
-                    var possuiNome = CreditosAutores.Any(f => f.Nome.Equals(item));
-                    if (!possuiNome)
+                    var itemSemAcentuacao = item.RemoverAcentuacao();
+                    
+                    var creditoAutor = CreditosAutores.FirstOrDefault(f => f.Nome.RemoverAcentuacao().SaoIguais(itemSemAcentuacao));
+                    if (creditoAutor.EhNulo())
                     {
                         if (gerarExcecao)
                             throw new NegocioException(string.Format(MensagemNegocio.O_ITEM_X_DO_DOMINIO_X_NAO_ENCONTRADO, item, Constantes.CREDITOS_AUTORES));
                     }
-                    else
-                        retorno.Add(CreditosAutores.FirstOrDefault(f => f.Nome.SaoIguais(item) && f.Tipo.SaoIguais((int)tipoCreditoAutoria)).Id);    
+                    else 
+                        retorno.Add(creditoAutor.Id);    
                 }
             }
             return retorno.Any() ? retorno.ToArray() : null;
@@ -496,14 +440,16 @@ namespace SME.CDEP.Aplicacao.Servicos
             {
                 if (item.EstaPreenchido())
                 {
-                    var possuiNome = Assuntos.Any(f => f.Nome.Equals(item));
-                    if (!possuiNome)
+                    var itemSemAcentuacao = item.RemoverAcentuacao();
+                    
+                    var assunto = Assuntos.FirstOrDefault(f => f.Nome.RemoverAcentuacao().SaoIguais(itemSemAcentuacao));
+                    if (assunto.EhNulo())
                     {
                         if (gerarExcecao)
                             throw new NegocioException(string.Format(MensagemNegocio.O_ITEM_X_DO_DOMINIO_X_NAO_ENCONTRADO, item, Constantes.ASSUNTOS));
                     }
                     else
-                        retorno.Add(Assuntos.FirstOrDefault(f => f.Nome.SaoIguais(item)).Id);
+                        retorno.Add(assunto.Id);
                 }
             }
             
@@ -527,14 +473,16 @@ namespace SME.CDEP.Aplicacao.Servicos
             {
                 if (item.EstaPreenchido())
                 {
-                    var possuiNome = AcessoDocumentos.Any(f => f.Nome.SaoIguais(item));
-                    if (!possuiNome)
+                    var itemSemAcentuacao = item.RemoverAcentuacao();
+                    
+                    var acessoDocumento = AcessoDocumentos.FirstOrDefault(f => f.Nome.RemoverAcentuacao().SaoIguais(itemSemAcentuacao));
+                    if (acessoDocumento.EhNulo())
                     {
                         if (gerarExcecao)
                             throw new NegocioException(string.Format(Constantes.O_VALOR_X_DO_CAMPO_X_NAO_FOI_LOCALIZADO, item, Constantes.ACESSO_DOCUMENTO));
                     }
                     else
-                        retorno.Add(AcessoDocumentos.FirstOrDefault(f => f.Nome.SaoIguais(item)).Id);
+                        retorno.Add(acessoDocumento.Id);
                 }
             }
             return retorno.Any() ? retorno.ToArray() : null;
@@ -617,40 +565,48 @@ namespace SME.CDEP.Aplicacao.Servicos
         
         private long ObterIdentificadorIdPorValorDoCampo(string valorDoCampo, List<IdNomeTipoDTO> dominios, string nomeDoCampo, int tipoFormato)
         {
-            var possuiNome = dominios.Any(f => f.Nome.SaoIguais(valorDoCampo) && f.Tipo == tipoFormato);
+            var valorDoCampoSemAcentuacao = valorDoCampo.RemoverAcentuacao();
+                
+            var dominioEncontrado = dominios.FirstOrDefault(f => f.Nome.RemoverAcentuacao().SaoIguais(valorDoCampoSemAcentuacao) && f.Tipo == tipoFormato);
 
-            if (!possuiNome)
+            if (dominioEncontrado.EhNulo())
                 throw new NegocioException(string.Format(Constantes.O_VALOR_X_DO_CAMPO_X_NAO_FOI_LOCALIZADO, valorDoCampo, nomeDoCampo));
             
-            return dominios.FirstOrDefault(f => f.Nome.SaoIguais(valorDoCampo) && f.Tipo == tipoFormato).Id;
+            return dominioEncontrado.Id;
         }
         
         private long? ObterIdentificadorIdOuNuloPorValorDoCampo(string valorDoCampo, List<IdNomeTipoDTO> dominios, int tipoFormato)
         {
-            var possuiNome = dominios.Any(f => f.Nome.SaoIguais(valorDoCampo) && f.Tipo == tipoFormato);
+            var valorDoCampoSemAcentuacao = valorDoCampo.RemoverAcentuacao();
+            
+            var dominioEncontrado = dominios.FirstOrDefault(f => f.Nome.RemoverAcentuacao().SaoIguais(valorDoCampoSemAcentuacao) && f.Tipo == tipoFormato);
 
-            if (possuiNome)
-                return dominios.FirstOrDefault(f => f.Nome.SaoIguais(valorDoCampo) && f.Tipo == tipoFormato).Id;    
+            if (dominioEncontrado.NaoEhNulo())
+                return dominioEncontrado.Id;    
                 
             return null;
         }
         
         private long ObterIdentificadorIdPorValorDoCampo(string valorDoCampo, List<IdNomeDTO> dominios, string nomeDoCampo)
         {
-            var possuiNome = dominios.Any(f => f.Nome.SaoIguais(valorDoCampo));
+            var valorDoCampoSemAcentuacao = valorDoCampo.RemoverAcentuacao();
+            
+            var dominioEncontrado = dominios.FirstOrDefault(f => f.Nome.RemoverAcentuacao().SaoIguais(valorDoCampoSemAcentuacao));
 
-            if (!possuiNome)
+            if (dominioEncontrado.EhNulo())
                 throw new NegocioException(string.Format(Constantes.O_VALOR_X_DO_CAMPO_X_NAO_FOI_LOCALIZADO, valorDoCampo, nomeDoCampo));
             
-            return dominios.FirstOrDefault(f => f.Nome.SaoIguais(valorDoCampo)).Id;
+            return dominioEncontrado.Id;
         }
         
         private long? ObterIdentificadorIdOuNuloPorValorDoCampo(string valorDoCampo, List<IdNomeDTO> dominios)
         {
-            var possuiNome = dominios.Any(f => f.Nome.SaoIguais(valorDoCampo));
+            var valorDoCampoSemAcento = valorDoCampo.RemoverAcentuacao();
+            
+            var dominioEncontrado = dominios.FirstOrDefault(f => f.Nome.RemoverAcentuacao().SaoIguais(valorDoCampoSemAcento));
 
-            if (possuiNome)
-                return dominios.FirstOrDefault(f => f.Nome.SaoIguais(valorDoCampo)).Id;    
+            if (dominioEncontrado.NaoEhNulo())
+                return dominioEncontrado.Id;    
                 
             return null;
         }
@@ -669,12 +625,12 @@ namespace SME.CDEP.Aplicacao.Servicos
         {
             if (valorDoCampo.EstaPreenchido())
             {
-                var valoresPermitidos = new List<string>() { Constantes.OPCAO_SIM, Constantes.OPCAO_NAO };
+                var valoresPermitidos = new List<string>() { Constantes.OPCAO_SIM.RemoverAcentuacaoFormatarMinusculo(), Constantes.OPCAO_NAO.RemoverAcentuacaoFormatarMinusculo() };
                 
-                if (!valoresPermitidos.Contains(valorDoCampo.ToLower()))
+                if (!valoresPermitidos.Contains(valorDoCampo.RemoverAcentuacaoFormatarMinusculo()))
                     throw new NegocioException(string.Format(Constantes.VALOR_X_DO_CAMPO_X_NAO_PERMITIDO_ESPERADO_X,valorDoCampo, nomeDoCampo));
 
-                return valorDoCampo.SaoIguais(Constantes.OPCAO_SIM);
+                return valorDoCampo.RemoverAcentuacao().SaoIguais(Constantes.OPCAO_SIM.RemoverAcentuacao());
             }
             return false;
         }
@@ -731,7 +687,7 @@ namespace SME.CDEP.Aplicacao.Servicos
         
         protected static void ValidarTituloDaColuna(IXLWorksheet planilha, int numeroLinha, string nomeDaColuna, int numeroDaColuna, string nomeDoAcervo)
         {
-            if (planilha.ObterValorDaCelula(numeroLinha, numeroDaColuna).ToLower().SaoDiferentes(nomeDaColuna.ToLower()))
+            if (planilha.ObterValorDaCelula(numeroLinha, numeroDaColuna).RemoverAcentuacao().SaoDiferentes(nomeDaColuna.RemoverAcentuacao()))
                 throw new NegocioException(string.Format(Constantes.A_PLANLHA_DE_ACERVO_X_NAO_TEM_O_NOME_DA_COLUNA_Y_NA_COLUNA_Z, nomeDoAcervo,nomeDaColuna,numeroDaColuna));
         }
         
@@ -775,48 +731,6 @@ namespace SME.CDEP.Aplicacao.Servicos
         {
             Formatos = Formatos.Where(w=> w.Tipo == (int)tipoFormato).ToList();
         }
-
-        protected async Task ObterCreditosAutoresTipoAutoria(IEnumerable<string> creditosAutores, TipoCreditoAutoria tipoAutoria)
-        {
-            foreach (var nome in creditosAutores)
-                await ExisteCreditoAutorCoAutorPorNomeETipoAutoria(nome, tipoAutoria);
-        }
-
-        protected async Task ObterMateriais(IEnumerable<string> materiais, TipoMaterial tipoMaterial)
-        {
-            foreach (var nome in materiais)
-                await ExisteMaterialPorNomeETipo(tipoMaterial, nome);
-        }
-        
-        protected async Task ObterEditoras(IEnumerable<string> editoras)
-        {
-            foreach (var nome in editoras)
-                await ExisteEditoraPorNome(nome);
-        }
-        
-        protected async Task ObterAssuntos(IEnumerable<string> assuntos)
-        {
-            foreach (var nome in assuntos)
-                await ExisteAssuntoPorNome(nome);
-        }
-        
-        protected async Task ObterSeriesColecoes(IEnumerable<string> seriesColecoes)
-        {
-            foreach (var nome in seriesColecoes)
-                await ExisteSerieColecaoPorNome(nome);
-        }
-        
-        protected async Task ObterIdiomas(IEnumerable<string> idiomas)
-        {
-            foreach (var nome in idiomas)
-                await ExisteIdiomaPorNome(nome);
-        }
-        
-        protected async Task ObterFormatos(IEnumerable<string> formatos, TipoFormato tipoFormato)
-        {
-            foreach (var nome in formatos)
-                await ExisteFormatoPorNomeETipo(nome,tipoFormato);
-        }
         protected string ObterSufixo(string codigo, string sufixo)
         {
             if (codigo.NaoEstaPreenchido())
@@ -828,8 +742,10 @@ namespace SME.CDEP.Aplicacao.Servicos
         protected void ValidarConteudoCampoListaComDominio(LinhaConteudoAjustarDTO conteudoCampo, IEnumerable<IdNomeDTO> dominio, string nomeCampo)
         {
             var itensAAvaliar = conteudoCampo.Conteudo.FormatarTextoEmArray().UnificarPipe().SplitPipe().Distinct().ToList();
+            
             var itensInexistentes = string.Empty;
-            foreach (var itemAvaliar in itensAAvaliar.Where(linha => !dominio.Any(a=> a.Nome.SaoIguais(linha))))
+            
+            foreach (var itemAvaliar in itensAAvaliar.Where(linha => !dominio.Any(a=> a.Nome.RemoverAcentuacao().SaoIguais(linha.RemoverAcentuacao()))))
                 itensInexistentes += itensInexistentes.NaoEstaPreenchido() ? itemAvaliar : $" | {itemAvaliar}";
                     
             if (itensInexistentes.EstaPreenchido())
@@ -838,7 +754,7 @@ namespace SME.CDEP.Aplicacao.Servicos
 
         protected void ValidarConteudoCampoComDominio(LinhaConteudoAjustarDTO campo, IEnumerable<IdNomeDTO> dominio,string nomeCampo)
         {
-            if (!dominio.Any(a=> a.Nome.SaoIguais(campo.Conteudo)))
+            if (!dominio.Any(a=> a.Nome.RemoverAcentuacao().SaoIguais(campo.Conteudo.RemoverAcentuacao())))
                 DefinirMensagemErro(campo, string.Format(MensagemNegocio.O_ITEM_X_DO_DOMINIO_X_NAO_ENCONTRADO, campo.Conteudo, nomeCampo));
         }
     }
