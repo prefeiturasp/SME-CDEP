@@ -273,7 +273,7 @@ namespace SME.CDEP.Aplicacao.Servicos
                         Titulo = acervoArteGraficaLinha.Titulo.Conteudo,
                         Codigo = acervoArteGraficaLinha.Codigo.Conteudo,
                         CreditosAutoresIds = CreditosAutores
-                            .Where(f => acervoArteGraficaLinha.Credito.Conteudo.FormatarTextoEmArray().Contains(f.Nome))
+                            .Where(f => acervoArteGraficaLinha.Credito.Conteudo.ToLower().FormatarTextoEmArray().Contains(f.Nome.ToLower()))
                             .Select(s => s.Id).ToArray(),
                         Localizacao = acervoArteGraficaLinha.Localizacao.Conteudo,
                         Procedencia = acervoArteGraficaLinha.Procedencia.Conteudo,

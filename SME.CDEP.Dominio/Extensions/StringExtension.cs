@@ -1,5 +1,7 @@
 ﻿
 using System.Drawing.Imaging;
+using System.Globalization;
+using System.Text;
 using System.Text.RegularExpressions;
 using SME.CDEP.Dominio.Excecoes;
 
@@ -151,6 +153,13 @@ namespace SME.CDEP.Dominio.Extensions
         public static string ObterValorOuZero(this string valor)
         {
             return valor.EstaPreenchido() ? valor : "0";
+        }
+        public static string RemoverAcentuacao(this string text)
+        {
+            return new string(text
+                .Normalize(NormalizationForm.FormD)
+                .Where(ch => char.GetUnicodeCategory(ch) != UnicodeCategory.NonSpacingMark)
+                .ToArray());
         }
     }
 }

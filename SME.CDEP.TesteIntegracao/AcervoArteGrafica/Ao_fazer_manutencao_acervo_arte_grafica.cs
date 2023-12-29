@@ -1,4 +1,6 @@
-﻿using Shouldly;
+﻿using System.Globalization;
+using System.Text;
+using Shouldly;
 using SME.CDEP.Aplicacao.DTOS;
 using SME.CDEP.Dominio.Entidades;
 using SME.CDEP.Dominio.Excecoes;
@@ -494,6 +496,30 @@ namespace SME.CDEP.TesteIntegracao
             
             await servicoAcervoArteGrafica.Inserir(acervoArteGraficaCadastroDto).ShouldThrowAsync<NegocioException>();
            
+        }
+        
+        [Fact(DisplayName = "Acervo Arte Gráfica - Removendo acentos")]
+        public async Task Remover_acentos()
+        {
+            var palavrasAcentuadas = new List<string>
+            {
+                "Lamentável", "Caráter","Crédito", "Sétimo","Piauí","Raízes", "Herói","Estória","Esdrúxulo", "Teiús",
+                "Câmara","Âmago","Pêsames","Mês","Pôr","Pôde",
+                 "Não", "Anões", "Informação","Mamãe","Eleições", "Sótão", "À propaganda"
+            };
+            
+            var palavrasNaoAcentuadas = new List<string>
+            {
+                "Credito", "Setimo", "Mes", "Nao", "Lamentavel", "Teius", "Piaui", "Heroi","Anoes", 
+                "Camara","Raizes","Por","Pode","Carater","Amago","Pesames","Estoria","Esdruxulo", "Informacao","Mamae"
+                ,"Eleicoes","Sotao", "A propaganda"
+            };
+
+            foreach (var palavrasAcentuada in palavrasAcentuadas)
+            {
+                var removidoAcentuacao = palavrasAcentuada.RemoverAcentuacao();
+                palavrasNaoAcentuadas.Any(a=> a.SaoIguais(removidoAcentuacao)).ShouldBeTrue();
+            }
         }
         
         private async Task InserirAcervoArteGrafica(bool inserirCredor = true)
