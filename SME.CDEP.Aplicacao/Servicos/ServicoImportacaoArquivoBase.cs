@@ -355,7 +355,7 @@ namespace SME.CDEP.Aplicacao.Servicos
         
         protected static bool? ObterConteudoSimNao(LinhaConteudoAjustarDTO linha)
         {
-            var valoresPermitidos = new List<string>() { Constantes.OPCAO_SIM, Constantes.OPCAO_NAO };
+            var valoresPermitidos = new List<string>() { Constantes.OPCAO_SIM.RemoverAcentuacao(), Constantes.OPCAO_NAO.RemoverAcentuacao() };
 
             if (linha.Conteudo.EhNulo())
                 return default;
@@ -625,12 +625,12 @@ namespace SME.CDEP.Aplicacao.Servicos
         {
             if (valorDoCampo.EstaPreenchido())
             {
-                var valoresPermitidos = new List<string>() { Constantes.OPCAO_SIM, Constantes.OPCAO_NAO };
+                var valoresPermitidos = new List<string>() { Constantes.OPCAO_SIM.RemoverAcentuacaoFormatarMinusculo(), Constantes.OPCAO_NAO.RemoverAcentuacaoFormatarMinusculo() };
                 
                 if (!valoresPermitidos.Contains(valorDoCampo.RemoverAcentuacaoFormatarMinusculo()))
                     throw new NegocioException(string.Format(Constantes.VALOR_X_DO_CAMPO_X_NAO_PERMITIDO_ESPERADO_X,valorDoCampo, nomeDoCampo));
 
-                return valorDoCampo.SaoIguais(Constantes.OPCAO_SIM);
+                return valorDoCampo.RemoverAcentuacao().SaoIguais(Constantes.OPCAO_SIM.RemoverAcentuacao());
             }
             return false;
         }
