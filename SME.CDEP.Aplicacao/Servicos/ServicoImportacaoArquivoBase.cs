@@ -416,8 +416,8 @@ namespace SME.CDEP.Aplicacao.Servicos
                         if (gerarExcecao)
                             throw new NegocioException(string.Format(MensagemNegocio.O_ITEM_X_DO_DOMINIO_X_NAO_ENCONTRADO, item, Constantes.CREDITOS_AUTORES));
                     }
-                    
-                    retorno.Add(creditoAutor.Id);    
+                    else 
+                        retorno.Add(creditoAutor.Id);    
                 }
             }
             return retorno.Any() ? retorno.ToArray() : null;
@@ -448,7 +448,8 @@ namespace SME.CDEP.Aplicacao.Servicos
                         if (gerarExcecao)
                             throw new NegocioException(string.Format(MensagemNegocio.O_ITEM_X_DO_DOMINIO_X_NAO_ENCONTRADO, item, Constantes.ASSUNTOS));
                     }
-                    retorno.Add(assunto.Id);
+                    else
+                        retorno.Add(assunto.Id);
                 }
             }
             
@@ -480,7 +481,8 @@ namespace SME.CDEP.Aplicacao.Servicos
                         if (gerarExcecao)
                             throw new NegocioException(string.Format(Constantes.O_VALOR_X_DO_CAMPO_X_NAO_FOI_LOCALIZADO, item, Constantes.ACESSO_DOCUMENTO));
                     }
-                    retorno.Add(acessoDocumento.Id);
+                    else
+                        retorno.Add(acessoDocumento.Id);
                 }
             }
             return retorno.Any() ? retorno.ToArray() : null;
