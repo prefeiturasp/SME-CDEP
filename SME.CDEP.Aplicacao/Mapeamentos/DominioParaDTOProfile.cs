@@ -27,22 +27,53 @@ namespace SME.CDEP.Aplicacao.Mapeamentos
             CreateMap<AcervoFotograficoDTO, Acervo>().ReverseMap();
             CreateMap<AcervoFotograficoDTO, AcervoFotografico>().ReverseMap();
             CreateMap<CreditoAutorDTO, CreditoAutor>().ReverseMap();
-            CreateMap<AcervoFotograficoDTO, AcervoFotograficoCompleto>().ReverseMap();
+            
+            CreateMap<AcervoFotograficoCompleto,AcervoFotograficoDTO>()
+                .ForMember(dest => dest.Largura, opt => opt.MapFrom(o => o.Largura.HasValue ? o.Largura.Value.ToString("F2") : string.Empty))
+                .ForMember(dest => dest.Altura, opt => opt.MapFrom(o => o.Altura.HasValue ? o.Altura.Value.ToString("F2") : string.Empty))
+                .ReverseMap();
+            
             CreateMap<AuditoriaDTO, AcervoFotograficoCompleto>().ReverseMap();
             CreateMap<ArquivoResumidoDTO, ArquivoResumido>().ReverseMap();
-            CreateMap<AcervoFotograficoCadastroDTO, AcervoFotografico>().ReverseMap();
-            CreateMap<AcervoFotograficoAlteracaoDTO, AcervoFotografico>().ReverseMap();
-            CreateMap<AcervoFotograficoAlteracaoDTO, AcervoFotograficoDTO>().ReverseMap();
+            
+            CreateMap<AcervoFotograficoCadastroDTO, AcervoFotografico>()
+                .ForMember(dest => dest.Largura, opt => opt.MapFrom(o => o.Largura.HasValue ? o.Largura.Value/100 : o.Largura))
+                .ForMember(dest => dest.Altura, opt => opt.MapFrom(o => o.Altura.HasValue ? o.Altura.Value/100 : o.Altura))
+                .ReverseMap();
+            
+            CreateMap<AcervoFotograficoAlteracaoDTO, AcervoFotografico>()
+                .ForMember(dest => dest.Largura, opt => opt.MapFrom(o => o.Largura.HasValue ? o.Largura.Value/100 : o.Largura))
+                .ForMember(dest => dest.Altura, opt => opt.MapFrom(o => o.Altura.HasValue ? o.Altura.Value/100 : o.Altura))
+                .ReverseMap();
+            
+            CreateMap<AcervoFotograficoAlteracaoDTO,AcervoFotograficoDTO>().ReverseMap();
+            
             CreateMap<AcervoFotograficoCadastroDTO, Acervo>().ReverseMap();
             CreateMap<AcervoFotograficoAlteracaoDTO, AcervoDTO>()
                 .ForMember(dest => dest.Id, opt => opt.MapFrom(o => o.AcervoId))
                 .ReverseMap();
             
-            CreateMap<AcervoArteGraficaCadastroDTO, AcervoArteGrafica>().ReverseMap();
-            CreateMap<AcervoArteGraficaAlteracaoDTO, AcervoArteGrafica>().ReverseMap();
+            CreateMap<AcervoArteGraficaCadastroDTO, AcervoArteGrafica>()
+                .ForMember(dest => dest.Largura, opt => opt.MapFrom(o => o.Largura.HasValue ? o.Largura.Value/100 : o.Largura))
+                .ForMember(dest => dest.Altura, opt => opt.MapFrom(o => o.Altura.HasValue ? o.Altura.Value/100 : o.Altura))
+                .ForMember(dest => dest.Diametro, opt => opt.MapFrom(o => o.Diametro.HasValue ? o.Diametro.Value/100 : o.Diametro))
+                .ReverseMap();
+            
+            CreateMap<AcervoArteGraficaAlteracaoDTO, AcervoArteGrafica>()
+                .ForMember(dest => dest.Largura, opt => opt.MapFrom(o => o.Largura.HasValue ? o.Largura.Value/100 : o.Largura))
+                .ForMember(dest => dest.Altura, opt => opt.MapFrom(o => o.Altura.HasValue ? o.Altura.Value/100 : o.Altura))
+                .ForMember(dest => dest.Diametro, opt => opt.MapFrom(o => o.Diametro.HasValue ? o.Diametro.Value/100 : o.Diametro))
+                .ReverseMap();
+            
             CreateMap<AcervoArteGraficaAlteracaoDTO, AcervoArteGraficaDTO>().ReverseMap();
             CreateMap<AcervoArteGraficaCadastroDTO, Acervo>().ReverseMap();
-            CreateMap<AcervoArteGraficaDTO, AcervoArteGraficaCompleto>().ReverseMap();
+            
+            CreateMap<AcervoArteGraficaCompleto,AcervoArteGraficaDTO>()
+                .ForMember(dest => dest.Largura, opt => opt.MapFrom(o => o.Largura.HasValue ? o.Largura.Value.ToString("F2") : string.Empty))
+                .ForMember(dest => dest.Altura, opt => opt.MapFrom(o => o.Altura.HasValue ? o.Altura.Value.ToString("F2") : string.Empty))
+                .ForMember(dest => dest.Diametro, opt => opt.MapFrom(o => o.Diametro.HasValue ? o.Diametro.Value.ToString("F2") : string.Empty))
+                .ReverseMap();
+                
             CreateMap<AuditoriaDTO, AcervoArteGraficaCompleto>().ReverseMap();
             CreateMap<AcervoArteGraficaDTO, Acervo>().ReverseMap();
             CreateMap<AcervoArteGraficaDTO, AcervoArteGrafica>().ReverseMap();
@@ -50,11 +81,31 @@ namespace SME.CDEP.Aplicacao.Mapeamentos
                 .ForMember(dest => dest.Id, opt => opt.MapFrom(o => o.AcervoId))
                 .ReverseMap();
             
-            CreateMap<AcervoTridimensionalCadastroDTO, AcervoTridimensional>().ReverseMap();
-            CreateMap<AcervoTridimensionalAlteracaoDTO, AcervoTridimensional>().ReverseMap();
+            CreateMap<AcervoTridimensionalCadastroDTO, AcervoTridimensional>()
+                .ForMember(dest => dest.Largura, opt => opt.MapFrom(o => o.Largura.HasValue ? o.Largura.Value/100 : o.Largura))
+                .ForMember(dest => dest.Altura, opt => opt.MapFrom(o => o.Altura.HasValue ? o.Altura.Value/100 : o.Altura))
+                .ForMember(dest => dest.Diametro, opt => opt.MapFrom(o => o.Diametro.HasValue ? o.Diametro.Value/100 : o.Diametro))
+                .ForMember(dest => dest.Profundidade, opt => opt.MapFrom(o => o.Profundidade.HasValue ? o.Profundidade.Value/100 : o.Profundidade))
+                .ReverseMap();
+
+            CreateMap<AcervoTridimensionalAlteracaoDTO, AcervoTridimensional>()
+                .ForMember(dest => dest.Largura, opt => opt.MapFrom(o => o.Largura.HasValue ? o.Largura.Value/100 : o.Largura))
+                .ForMember(dest => dest.Altura, opt => opt.MapFrom(o => o.Altura.HasValue ? o.Altura.Value/100 : o.Altura))
+                .ForMember(dest => dest.Diametro, opt => opt.MapFrom(o => o.Diametro.HasValue ? o.Diametro.Value/100 : o.Diametro))
+                .ForMember(dest => dest.Profundidade, opt => opt.MapFrom(o => o.Profundidade.HasValue ? o.Profundidade.Value/100 : o.Profundidade))
+                .ReverseMap();
+
             CreateMap<AcervoTridimensionalAlteracaoDTO, AcervoTridimensionalDTO>().ReverseMap();
+            
             CreateMap<AcervoTridimensionalCadastroDTO, Acervo>().ReverseMap();
-            CreateMap<AcervoTridimensionalDTO, AcervoTridimensionalCompleto>().ReverseMap();
+            
+            CreateMap<AcervoTridimensionalCompleto,AcervoTridimensionalDTO>()
+                .ForMember(dest => dest.Largura, opt => opt.MapFrom(o => o.Largura.HasValue ? o.Largura.Value.ToString("F2") : string.Empty))
+                .ForMember(dest => dest.Altura, opt => opt.MapFrom(o => o.Altura.HasValue ? o.Altura.Value.ToString("F2") : string.Empty))
+                .ForMember(dest => dest.Diametro, opt => opt.MapFrom(o => o.Diametro.HasValue ? o.Diametro.Value.ToString("F2") : string.Empty))
+                .ForMember(dest => dest.Profundidade, opt => opt.MapFrom(o => o.Profundidade.HasValue ? o.Profundidade.Value.ToString("F2") : string.Empty))
+                .ReverseMap();
+            
             CreateMap<AcervoTridimensionalCompleto,AuditoriaDTO>().ReverseMap();
             CreateMap<AcervoTridimensionalDTO, Acervo>().ReverseMap();
             CreateMap<AcervoTridimensionalDTO, AcervoTridimensional>().ReverseMap();
@@ -74,11 +125,24 @@ namespace SME.CDEP.Aplicacao.Mapeamentos
                 .ForMember(dest => dest.Id, opt => opt.MapFrom(o => o.AcervoId))
                 .ReverseMap();
             
-            CreateMap<AcervoDocumentalCadastroDTO, AcervoDocumental>().ReverseMap();
-            CreateMap<AcervoDocumentalAlteracaoDTO, AcervoDocumental>().ReverseMap();
+            CreateMap<AcervoDocumentalCadastroDTO, AcervoDocumental>()
+                .ForMember(dest => dest.Largura, opt => opt.MapFrom(o => o.Largura.HasValue ? o.Largura.Value/100 : o.Largura))
+                .ForMember(dest => dest.Altura, opt => opt.MapFrom(o => o.Altura.HasValue ? o.Altura.Value/100 : o.Altura))
+                .ReverseMap();
+            
+            CreateMap<AcervoDocumentalAlteracaoDTO, AcervoDocumental>()
+                .ForMember(dest => dest.Largura, opt => opt.MapFrom(o => o.Largura.HasValue ? o.Largura.Value/100 : o.Largura))
+                .ForMember(dest => dest.Altura, opt => opt.MapFrom(o => o.Altura.HasValue ? o.Altura.Value/100 : o.Altura))
+                .ReverseMap();
+            
             CreateMap<AcervoDocumentalAlteracaoDTO, AcervoDocumentalDTO>().ReverseMap();
             CreateMap<AcervoDocumentalCadastroDTO, Acervo>().ReverseMap();
-            CreateMap<AcervoDocumentalDTO, AcervoDocumentalCompleto>().ReverseMap();
+            
+            CreateMap<AcervoDocumentalCompleto,AcervoDocumentalDTO>()
+                .ForMember(dest => dest.Largura, opt => opt.MapFrom(o => o.Largura.HasValue ? o.Largura.Value.ToString("F2") : string.Empty))
+                .ForMember(dest => dest.Altura, opt => opt.MapFrom(o => o.Altura.HasValue ? o.Altura.Value.ToString("F2") : string.Empty))
+                .ReverseMap();
+                
             CreateMap<AuditoriaDTO, AcervoDocumentalCompleto>().ReverseMap();
             CreateMap<AcervoDocumentalDTO, Acervo>().ReverseMap();
             CreateMap<AcervoDocumentalDTO, AcervoDocumental>().ReverseMap();
@@ -88,11 +152,24 @@ namespace SME.CDEP.Aplicacao.Mapeamentos
             
             CreateMap<CoAutorDTO, CoAutor>().ReverseMap();
             
-            CreateMap<AcervoBibliograficoCadastroDTO, AcervoBibliografico>().ReverseMap();
-            CreateMap<AcervoBibliograficoAlteracaoDTO, AcervoBibliografico>().ReverseMap();
+            CreateMap<AcervoBibliograficoCadastroDTO, AcervoBibliografico>()
+                .ForMember(dest => dest.Largura, opt => opt.MapFrom(o => o.Largura.HasValue ? o.Largura.Value/100 : o.Largura))
+                .ForMember(dest => dest.Altura, opt => opt.MapFrom(o => o.Altura.HasValue ? o.Altura.Value/100 : o.Altura))
+                .ReverseMap();
+            
+            CreateMap<AcervoBibliograficoAlteracaoDTO, AcervoBibliografico>()
+                .ForMember(dest => dest.Largura, opt => opt.MapFrom(o => o.Largura.HasValue ? o.Largura.Value/100 : o.Largura))
+                .ForMember(dest => dest.Altura, opt => opt.MapFrom(o => o.Altura.HasValue ? o.Altura.Value/100 : o.Altura))
+                .ReverseMap();
+            
             CreateMap<AcervoBibliograficoAlteracaoDTO, AcervoBibliograficoDTO>().ReverseMap();
             CreateMap<AcervoBibliograficoCadastroDTO, Acervo>().ReverseMap();
-            CreateMap<AcervoBibliograficoDTO, AcervoBibliograficoCompleto>().ReverseMap();
+            
+            CreateMap<AcervoBibliograficoCompleto,AcervoBibliograficoDTO>()
+                .ForMember(dest => dest.Largura, opt => opt.MapFrom(o => o.Largura.HasValue ? o.Largura.Value.ToString("F2") : string.Empty))
+                .ForMember(dest => dest.Altura, opt => opt.MapFrom(o => o.Altura.HasValue ? o.Altura.Value.ToString("F2") : string.Empty))
+                .ReverseMap();
+            
             CreateMap<AuditoriaDTO, AcervoBibliograficoCompleto>().ReverseMap();
             CreateMap<AcervoBibliograficoDTO, Acervo>().ReverseMap();
             CreateMap<AcervoBibliograficoDTO, AcervoBibliografico>().ReverseMap();

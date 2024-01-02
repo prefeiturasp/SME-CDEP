@@ -1,6 +1,4 @@
-﻿using System.Globalization;
-using System.Text;
-using Shouldly;
+﻿using Shouldly;
 using SME.CDEP.Aplicacao.DTOS;
 using SME.CDEP.Dominio.Entidades;
 using SME.CDEP.Dominio.Excecoes;
@@ -82,9 +80,9 @@ namespace SME.CDEP.TesteIntegracao
                 PermiteUsoImagem = true,
                 ConservacaoId = random.Next(1, 5),
                 CromiaId = random.Next(1, 5),
-                Largura = random.Next(15, 55),
-                Altura = random.Next(15, 55),
-                Diametro = random.Next(15, 55),
+                Largura = 1020,
+                Altura = 1021,
+                Diametro = 1023,
                 Tecnica = faker.Lorem.Text().Limite(100),
                 SuporteId = random.Next(1, 5),
                 Quantidade = random.Next(15, 55),
@@ -115,9 +113,9 @@ namespace SME.CDEP.TesteIntegracao
             acervoArteGrafica.PermiteUsoImagem.ShouldBe(acervoArteGraficaAlteracaoDto.PermiteUsoImagem);
             acervoArteGrafica.ConservacaoId.ShouldBe(acervoArteGraficaAlteracaoDto.ConservacaoId);
             acervoArteGrafica.CromiaId.ShouldBe(acervoArteGraficaAlteracaoDto.CromiaId);
-            acervoArteGrafica.Largura.ShouldBe(acervoArteGraficaAlteracaoDto.Largura.Value);
-            acervoArteGrafica.Altura.ShouldBe(acervoArteGraficaAlteracaoDto.Altura.Value);
-            acervoArteGrafica.Diametro.ShouldBe(acervoArteGraficaAlteracaoDto.Diametro.Value);
+            acervoArteGrafica.Largura.ShouldBe(acervoArteGraficaAlteracaoDto.Largura.Value/100);
+            acervoArteGrafica.Altura.ShouldBe(acervoArteGraficaAlteracaoDto.Altura.Value/100);
+            acervoArteGrafica.Diametro.ShouldBe(acervoArteGraficaAlteracaoDto.Diametro.Value/100);
             acervoArteGrafica.Tecnica.ShouldBe(acervoArteGraficaAlteracaoDto.Tecnica);
             acervoArteGrafica.SuporteId.ShouldBe(acervoArteGraficaAlteracaoDto.SuporteId);
             acervoArteGrafica.Quantidade.ShouldBe(acervoArteGraficaAlteracaoDto.Quantidade);
@@ -196,9 +194,9 @@ namespace SME.CDEP.TesteIntegracao
             acervoArteGrafica.PermiteUsoImagem.ShouldBe(acervoArteGraficaAlteracaoDto.PermiteUsoImagem);
             acervoArteGrafica.ConservacaoId.ShouldBe(acervoArteGraficaAlteracaoDto.ConservacaoId);
             acervoArteGrafica.CromiaId.ShouldBe(acervoArteGraficaAlteracaoDto.CromiaId);
-            acervoArteGrafica.Largura.ShouldBe(acervoArteGraficaAlteracaoDto.Largura.Value);
-            acervoArteGrafica.Altura.ShouldBe(acervoArteGraficaAlteracaoDto.Altura.Value);
-            acervoArteGrafica.Diametro.ShouldBe(acervoArteGraficaAlteracaoDto.Diametro.Value);
+            acervoArteGrafica.Largura.ShouldBe(acervoArteGraficaAlteracaoDto.Largura.Value/100);
+            acervoArteGrafica.Altura.ShouldBe(acervoArteGraficaAlteracaoDto.Altura.Value/100);
+            acervoArteGrafica.Diametro.ShouldBe(acervoArteGraficaAlteracaoDto.Diametro.Value/100);
             acervoArteGrafica.Tecnica.ShouldBe(acervoArteGraficaAlteracaoDto.Tecnica);
             acervoArteGrafica.SuporteId.ShouldBe(acervoArteGraficaAlteracaoDto.SuporteId);
             acervoArteGrafica.Quantidade.ShouldBe(acervoArteGraficaAlteracaoDto.Quantidade);
@@ -275,9 +273,9 @@ namespace SME.CDEP.TesteIntegracao
             acervoArteGrafica.PermiteUsoImagem.ShouldBe(acervoArteGraficaAlteracaoDto.PermiteUsoImagem);
             acervoArteGrafica.ConservacaoId.ShouldBe(acervoArteGraficaAlteracaoDto.ConservacaoId);
             acervoArteGrafica.CromiaId.ShouldBe(acervoArteGraficaAlteracaoDto.CromiaId);
-            acervoArteGrafica.Largura.ShouldBe(acervoArteGraficaAlteracaoDto.Largura.Value);
-            acervoArteGrafica.Altura.ShouldBe(acervoArteGraficaAlteracaoDto.Altura.Value);
-            acervoArteGrafica.Diametro.ShouldBe(acervoArteGraficaAlteracaoDto.Diametro.Value);
+            acervoArteGrafica.Largura.ShouldBe(acervoArteGraficaAlteracaoDto.Largura.Value/100);
+            acervoArteGrafica.Altura.ShouldBe(acervoArteGraficaAlteracaoDto.Altura.Value/100);
+            acervoArteGrafica.Diametro.ShouldBe(acervoArteGraficaAlteracaoDto.Diametro.Value/100);
             acervoArteGrafica.Tecnica.ShouldBe(acervoArteGraficaAlteracaoDto.Tecnica);
             acervoArteGrafica.SuporteId.ShouldBe(acervoArteGraficaAlteracaoDto.SuporteId);
             acervoArteGrafica.Quantidade.ShouldBe(acervoArteGraficaAlteracaoDto.Quantidade);
@@ -362,9 +360,9 @@ namespace SME.CDEP.TesteIntegracao
                 PermiteUsoImagem = true,
                 ConservacaoId = random.Next(1, 5),
                 CromiaId = random.Next(1, 5),
-                Largura = random.Next(15, 55),
-                Altura = random.Next(15, 55),
-                Diametro = random.Next(15, 55),
+                Largura = 1001,
+                Altura = 3015,
+                Diametro = 4532,
                 Tecnica = faker.Lorem.Text().Limite(100),
                 SuporteId = random.Next(1, 5),
                 Quantidade = random.Next(15, 55),
@@ -396,9 +394,9 @@ namespace SME.CDEP.TesteIntegracao
             acervoArteGrafica.PermiteUsoImagem.ShouldBe(acervoArteGraficaCadastroDto.PermiteUsoImagem);
             acervoArteGrafica.ConservacaoId.ShouldBe(acervoArteGraficaCadastroDto.ConservacaoId);
             acervoArteGrafica.CromiaId.ShouldBe(acervoArteGraficaCadastroDto.CromiaId);
-            acervoArteGrafica.Largura.ShouldBe(acervoArteGraficaCadastroDto.Largura.Value);
-            acervoArteGrafica.Altura.ShouldBe(acervoArteGraficaCadastroDto.Altura.Value);
-            acervoArteGrafica.Diametro.ShouldBe(acervoArteGraficaCadastroDto.Diametro.Value);
+            acervoArteGrafica.Largura.ShouldBe(acervoArteGraficaCadastroDto.Largura.Value/100);
+            acervoArteGrafica.Altura.ShouldBe(acervoArteGraficaCadastroDto.Altura.Value/100);
+            acervoArteGrafica.Diametro.ShouldBe(acervoArteGraficaCadastroDto.Diametro.Value/100);
             acervoArteGrafica.Tecnica.ShouldBe(acervoArteGraficaCadastroDto.Tecnica);
             acervoArteGrafica.SuporteId.ShouldBe(acervoArteGraficaCadastroDto.SuporteId);
             acervoArteGrafica.Quantidade.ShouldBe(acervoArteGraficaCadastroDto.Quantidade);

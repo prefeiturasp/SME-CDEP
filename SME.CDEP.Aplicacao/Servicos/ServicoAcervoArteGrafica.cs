@@ -123,6 +123,7 @@ namespace SME.CDEP.Aplicacao.Servicos
             var acervoDTO = mapper.Map<AcervoDTO>(acervoArteGraficaAlteracaoDto);
             acervoDTO.Codigo = ObterCodigoAcervo(acervoArteGraficaAlteracaoDto.Codigo);
             
+            
             var arquivosExistentes = (await repositorioAcervoArteGraficaArquivo.ObterPorAcervoArteGraficaId(acervoArteGraficaAlteracaoDto.Id)).Select(s => s.ArquivoId).ToArray();
             (arquivosIdsInserir, arquivosIdsExcluir) = await ObterArquivosInseridosExcluidosMovidos(acervoArteGraficaAlteracaoDto.Arquivos, arquivosExistentes);
             
