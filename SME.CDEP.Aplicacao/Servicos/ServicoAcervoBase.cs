@@ -55,7 +55,7 @@ namespace SME.CDEP.Aplicacao.Servicos
             foreach (var arquivoAExcluir in ArquivosExcluirArmazenamento)
             {
                 await servicoArmazenamento.Excluir(arquivoAExcluir.NomeArquivoFisico);
-                await servicoArmazenamento.Excluir(arquivoAExcluir.NomeArquivoFisicoMiniatura);
+                // await servicoArmazenamento.Excluir(arquivoAExcluir.NomeArquivoFisicoMiniatura);
             }
         }
         
