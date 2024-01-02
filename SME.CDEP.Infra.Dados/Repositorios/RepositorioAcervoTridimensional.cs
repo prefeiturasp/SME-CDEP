@@ -132,11 +132,11 @@ namespace SME.CDEP.Infra.Dados.Repositorios
         {
             var query = @" select a.nome NomeOriginal,
                                   a.codigo CodigoOriginal,      
-                                  am.codigo CodigoThumbnail
+                                  a.codigo CodigoThumbnail
                             from acervo_tridimensional_arquivo at 
                                 join arquivo a on a.id = at.arquivo_id 
-                            join arquivo am on am.id = at.arquivo_miniatura_id  
-                            where not a.excluido and not am.excluido 
+                            --join arquivo am on am.id = at.arquivo_miniatura_id  
+                            where not a.excluido --and not am.excluido 
                                 and at.acervo_tridimensional_id  = @acervoTridimensionalId";
 
             return await conexao.Obter().QueryAsync<ImagemDetalhe>(query, new { acervoTridimensionalId });

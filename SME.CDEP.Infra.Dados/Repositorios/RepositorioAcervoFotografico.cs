@@ -127,11 +127,11 @@ namespace SME.CDEP.Infra.Dados.Repositorios
         {
             var query = @" select a.nome NomeOriginal,
                                   a.codigo CodigoOriginal,      
-                                  am.codigo CodigoThumbnail
+                                  a.codigo CodigoThumbnail
                             from acervo_fotografico_arquivo afa 
                                 join arquivo a on a.id = afa.arquivo_id 
-                            join arquivo am on am.id = afa.arquivo_miniatura_id  
-                            where not a.excluido and not am.excluido 
+                            --join arquivo am on am.id = afa.arquivo_miniatura_id  
+                            where not a.excluido --and not am.excluido 
                                 and afa.acervo_fotografico_id  = @acervoFotograficoId";
 
             return await conexao.Obter().QueryAsync<ImagemDetalhe>(query, new { acervoFotograficoId });

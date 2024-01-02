@@ -99,8 +99,8 @@ namespace SME.CDEP.Aplicacao.Servicos
             
             await MoverArquivosTemporarios(TipoArquivo.AcervoFotografico,arquivosCompletos);
             
-            if (arquivosCompletos.Any())
-                await GerarMiniaturaEVinculoArquivo(arquivosCompletos);
+            // if (arquivosCompletos.Any())
+            //     await GerarMiniaturaEVinculoArquivo(arquivosCompletos);
           
             return acervoFotografico.AcervoId;
         }
@@ -180,8 +180,8 @@ namespace SME.CDEP.Aplicacao.Servicos
             
             await MoverArquivosTemporarios(TipoArquivo.AcervoFotografico);
             
-            if (arquivosIdsInserir.Any())
-                await GerarMiniaturaEVinculoArquivo(await ObterArquivosPorIds(arquivosIdsInserir.ToArray()));
+            // if (arquivosIdsInserir.Any())
+            //     await GerarMiniaturaEVinculoArquivo(await ObterArquivosPorIds(arquivosIdsInserir.ToArray()));
 
             await ExcluirArquivosArmazenamento();
 
