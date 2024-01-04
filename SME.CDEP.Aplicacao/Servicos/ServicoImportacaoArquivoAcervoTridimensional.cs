@@ -146,10 +146,10 @@ namespace SME.CDEP.Aplicacao.Servicos
                 ConservacaoId = ObterConservacaoIdOuNuloPorValorDoCampo(linha.EstadoConservacao.Conteudo),
                 Quantidade = ObterConteudoLongoOuNulo(linha.Quantidade),
                 Descricao = ObterConteudoTexto(linha.Descricao),
-                Largura = ObterConteudoDoubleOuNulo(linha.Largura),
-                Altura = ObterConteudoDoubleOuNulo(linha.Altura),
-                Profundidade = ObterConteudoDoubleOuNulo(linha.Profundidade),
-                Diametro = ObterConteudoDoubleOuNulo(linha.Diametro),
+                Largura = linha.Largura.Conteudo,
+                Altura = linha.Altura.Conteudo,
+                Profundidade = linha.Profundidade.Conteudo,
+                Diametro = linha.Diametro.Conteudo,
             };
         }
 

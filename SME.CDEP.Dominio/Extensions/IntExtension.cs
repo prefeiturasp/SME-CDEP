@@ -1,4 +1,6 @@
 ﻿
+using SME.CDEP.Infra.Dominio.Enumerados;
+
 namespace SME.CDEP.Dominio.Extensions
 {
     public static class IntExtension
@@ -36,6 +38,11 @@ namespace SME.CDEP.Dominio.Extensions
         public static bool SaoDiferentes(this int valor, int valorAComparar)
         {
             return valor != valorAComparar; 
+        }
+        
+        public static bool EhAnoFuturo(this int year)
+        {
+            return year > DateTimeExtension.HorarioBrasilia().Year; 
         }
     }
 }

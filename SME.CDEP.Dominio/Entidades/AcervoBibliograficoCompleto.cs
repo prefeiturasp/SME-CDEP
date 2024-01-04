@@ -11,9 +11,9 @@ public class AcervoBibliograficoCompleto : EntidadeBaseAuditavel
     public long? EditoraId { get; set; }
     public string Ano { get; set; }
     public string Edicao { get; set; }
-    public float? NumeroPagina { get; set; }
-    public float? Largura { get; set; }
-    public float? Altura { get; set; }
+    public double? NumeroPagina { get; set; }
+    public double? Largura { get; set; }
+    public double? Altura { get; set; }
     public long? SerieColecaoId { get; set; }
     public string Volume { get; set; }
     public long IdiomaId { get; set; }

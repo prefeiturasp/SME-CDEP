@@ -18,8 +18,8 @@ public class AcervoBibliograficoDTO
     public int? Ano { get; set; }
     public string? Edicao { get; set; }
     public string? NumeroPagina { get; set; }
-    public double? Largura { get; set; }
-    public double? Altura { get; set; }
+    public string? Largura { get; set; }
+    public string? Altura { get; set; }
     public long? SerieColecaoId { get; set; }
     public string? Volume { get; set; }
     public long? IdiomaId { get; set; }
