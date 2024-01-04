@@ -299,9 +299,9 @@ namespace SME.CDEP.TesteIntegracao
                 acervosArtesGraficas.Any(a=> a.Procedencia.SaoIguais(linhasComSucesso.Procedencia.Conteudo)).ShouldBeTrue();
                 acervosArtesGraficas.Any(a=> a.CopiaDigital.SaoIguais(linhasComSucesso.CopiaDigital.Conteudo.EhOpcaoSim())).ShouldBeTrue();
                 acervosArtesGraficas.Any(a=> a.PermiteUsoImagem.SaoIguais(linhasComSucesso.PermiteUsoImagem.Conteudo.EhOpcaoSim())).ShouldBeTrue();
-                acervosArtesGraficas.Any(a=> a.Altura.SaoIguais(double.Parse(linhasComSucesso.Altura.Conteudo).FormatarDoubleComCasasDecimais())).ShouldBeTrue();
-                acervosArtesGraficas.Any(a=> a.Largura.SaoIguais(linhasComSucesso.Largura.Conteudo.ObterDoubleOuNuloPorValorDoCampo())).ShouldBeTrue();
-                acervosArtesGraficas.Any(a=> a.Diametro.SaoIguais(double.Parse(linhasComSucesso.Diametro.Conteudo).FormatarDoubleComCasasDecimais())).ShouldBeTrue();
+                acervosArtesGraficas.Any(a=> a.Altura.SaoIguais(linhasComSucesso.Altura.Conteudo.ConverterParaDouble().FormatarDoubleComCasasDecimais())).ShouldBeTrue();
+                acervosArtesGraficas.Any(a=> a.Largura.SaoIguais(linhasComSucesso.Largura.Conteudo.ConverterParaDouble().FormatarDoubleComCasasDecimais())).ShouldBeTrue();
+                acervosArtesGraficas.Any(a=> a.Diametro.SaoIguais(linhasComSucesso.Diametro.Conteudo.ConverterParaDouble().FormatarDoubleComCasasDecimais())).ShouldBeTrue();
                 acervosArtesGraficas.Any(a=> a.Quantidade.SaoIguais(linhasComSucesso.Quantidade.Conteudo.ObterLongoPorValorDoCampo())).ShouldBeTrue();
                 
                 //Crédito
@@ -437,9 +437,9 @@ namespace SME.CDEP.TesteIntegracao
                 acervosArtesGraficas.Any(a=> a.Procedencia.SaoIguais(linhasComSucesso.Procedencia.Conteudo)).ShouldBeTrue();
                 acervosArtesGraficas.Any(a=> a.CopiaDigital.SaoIguais(linhasComSucesso.CopiaDigital.Conteudo.EhOpcaoSim())).ShouldBeTrue();
                 acervosArtesGraficas.Any(a=> a.PermiteUsoImagem.SaoIguais(linhasComSucesso.PermiteUsoImagem.Conteudo.EhOpcaoSim())).ShouldBeTrue();
-                acervosArtesGraficas.Any(a=> a.Altura.SaoIguais(double.Parse(linhasComSucesso.Altura.Conteudo).FormatarDoubleComCasasDecimais())).ShouldBeTrue();
-                acervosArtesGraficas.Any(a=> a.Largura.SaoIguais(linhasComSucesso.Largura.Conteudo.ObterDoubleOuNuloPorValorDoCampo())).ShouldBeTrue();
-                acervosArtesGraficas.Any(a=> a.Diametro.SaoIguais(double.Parse(linhasComSucesso.Diametro.Conteudo).FormatarDoubleComCasasDecimais())).ShouldBeTrue();
+                acervosArtesGraficas.Any(a=> a.Altura.SaoIguais(linhasComSucesso.Altura.Conteudo.ConverterParaDouble().FormatarDoubleComCasasDecimais())).ShouldBeTrue();
+                acervosArtesGraficas.Any(a=> a.Largura.SaoIguais(linhasComSucesso.Largura.Conteudo.ConverterParaDouble().FormatarDoubleComCasasDecimais())).ShouldBeTrue();
+                acervosArtesGraficas.Any(a=> a.Diametro.SaoIguais(linhasComSucesso.Diametro.Conteudo.ConverterParaDouble().FormatarDoubleComCasasDecimais())).ShouldBeTrue();
                 acervosArtesGraficas.Any(a=> a.Quantidade.SaoIguais(linhasComSucesso.Quantidade.Conteudo.ObterLongoPorValorDoCampo())).ShouldBeTrue();
                 
                 //Crédito

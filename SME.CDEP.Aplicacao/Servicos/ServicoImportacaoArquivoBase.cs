@@ -376,11 +376,6 @@ namespace SME.CDEP.Aplicacao.Servicos
             return linha.PossuiErro ? null : linha.Conteudo.EstaPreenchido() ? linha.Conteudo.ConverterParaInteiro() : null;
         }
         
-        protected static string ObterConteudoDoubleOuNulo(LinhaConteudoAjustarDTO linha)
-        {
-            return linha.PossuiErro ? null : linha.Conteudo.EstaPreenchido() ? double.Parse(linha.Conteudo).ToString("F2") : string.Empty;
-        }
-        
         protected long? ObterEditoraIdOuNuloPorValorDoCampo(string valorDoCampo)
         {
             return ObterIdentificadorIdOuNuloPorValorDoCampo(valorDoCampo, Editoras);
