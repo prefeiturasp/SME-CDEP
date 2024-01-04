@@ -306,8 +306,8 @@ namespace SME.CDEP.TesteIntegracao
                 acervosDocumentais.Any(a=> a.NumeroPagina.SaoIguais(linhasComSucesso.NumeroPaginas.Conteudo)).ShouldBeTrue();
                 acervosDocumentais.Any(a=> a.Volume.SaoIguais(linhasComSucesso.Volume.Conteudo)).ShouldBeTrue();
                 acervosDocumentais.Any(a=> a.TipoAnexo.SaoIguais(linhasComSucesso.TipoAnexo.Conteudo)).ShouldBeTrue();
-                acervosDocumentais.Any(a=> a.Altura.SaoIguais(linhasComSucesso.Altura.Conteudo.ObterDoubleOuNuloPorValorDoCampo())).ShouldBeTrue();
-                acervosDocumentais.Any(a=> a.Largura.SaoIguais(linhasComSucesso.Largura.Conteudo.ObterDoubleOuNuloPorValorDoCampo())).ShouldBeTrue();
+                acervosDocumentais.Any(a=> a.Altura.SaoIguais(linhasComSucesso.Altura.Conteudo.ConverterParaDouble().FormatarDoubleComCasasDecimais())).ShouldBeTrue();
+                acervosDocumentais.Any(a=> a.Largura.SaoIguais(linhasComSucesso.Largura.Conteudo.ConverterParaDouble().FormatarDoubleComCasasDecimais())).ShouldBeTrue();
                 acervosDocumentais.Any(a=> a.TamanhoArquivo.SaoIguais(linhasComSucesso.TamanhoArquivo.Conteudo)).ShouldBeTrue();
                 acervosDocumentais.Any(a=> a.Localizacao.SaoIguais(linhasComSucesso.Localizacao.Conteudo)).ShouldBeTrue();
                 acervosDocumentais.Any(a=> a.CopiaDigital.HasValue).ShouldBeTrue();
@@ -424,15 +424,8 @@ namespace SME.CDEP.TesteIntegracao
                 retorno.Erros.Any(a=> a.RetornoObjeto.Descricao.SaoIguais(linhaInserida.Descricao.Conteudo)).ShouldBeTrue();
                 retorno.Erros.Any(a=> a.RetornoObjeto.TipoAnexo.SaoIguais(linhaInserida.TipoAnexo.Conteudo)).ShouldBeTrue();
                
-                if (linhaInserida.Altura.PossuiErro)
-                    retorno.Erros.Any(a=> a.RetornoObjeto.Altura.EhNulo()).ShouldBeTrue();
-                // else
-                //     retorno.Erros.Any(a=> a.RetornoObjeto.Altura.SaoIguais(linhaInserida.Altura.Conteudo.ObterDoubleOuNuloPorValorDoCampo())).ShouldBeTrue();
-
-                if (linhaInserida.Largura.PossuiErro)
-                    retorno.Erros.Any(a=> a.RetornoObjeto.Largura.EhNulo()).ShouldBeTrue();
-                // else
-                //     retorno.Erros.Any(a=> a.RetornoObjeto.Largura.SaoIguais(linhaInserida.Largura.Conteudo.ObterDoubleOuNuloPorValorDoCampo())).ShouldBeTrue();
+                retorno.Erros.Any(a=> a.RetornoObjeto.Altura.SaoIguais(linhaInserida.Altura.Conteudo)).ShouldBeTrue();
+                retorno.Erros.Any(a=> a.RetornoObjeto.Largura.SaoIguais(linhaInserida.Largura.Conteudo)).ShouldBeTrue();
                 
                 retorno.Erros.Any(a=> a.RetornoObjeto.TamanhoArquivo.SaoIguais(linhaInserida.TamanhoArquivo.Conteudo)).ShouldBeTrue();
                 retorno.Erros.Any(a=> a.RetornoObjeto.AcessoDocumentosIds.NaoEhNulo()).ShouldBeTrue();
@@ -481,8 +474,8 @@ namespace SME.CDEP.TesteIntegracao
                 acervosDocumentais.Any(a=> a.NumeroPagina.SaoIguais(linhasComSucesso.NumeroPaginas.Conteudo)).ShouldBeTrue();
                 acervosDocumentais.Any(a=> a.Volume.SaoIguais(linhasComSucesso.Volume.Conteudo)).ShouldBeTrue();
                 acervosDocumentais.Any(a=> a.TipoAnexo.SaoIguais(linhasComSucesso.TipoAnexo.Conteudo)).ShouldBeTrue();
-                acervosDocumentais.Any(a=> a.Altura.SaoIguais(linhasComSucesso.Altura.Conteudo.ObterDoubleOuNuloPorValorDoCampo())).ShouldBeTrue();
-                acervosDocumentais.Any(a=> a.Largura.SaoIguais(linhasComSucesso.Largura.Conteudo.ObterDoubleOuNuloPorValorDoCampo())).ShouldBeTrue();
+                acervosDocumentais.Any(a=> a.Altura.SaoIguais(linhasComSucesso.Altura.Conteudo.ConverterParaDouble().FormatarDoubleComCasasDecimais())).ShouldBeTrue();
+                acervosDocumentais.Any(a=> a.Largura.SaoIguais(linhasComSucesso.Largura.Conteudo.ConverterParaDouble().FormatarDoubleComCasasDecimais())).ShouldBeTrue();
                 acervosDocumentais.Any(a=> a.TamanhoArquivo.SaoIguais(linhasComSucesso.TamanhoArquivo.Conteudo)).ShouldBeTrue();
                 acervosDocumentais.Any(a=> a.Localizacao.SaoIguais(linhasComSucesso.Localizacao.Conteudo)).ShouldBeTrue();
                 acervosDocumentais.Any(a=> a.CopiaDigital.HasValue).ShouldBeTrue();
@@ -565,15 +558,8 @@ namespace SME.CDEP.TesteIntegracao
                 retorno.Erros.Any(a=> a.RetornoObjeto.Descricao.SaoIguais(linhaInserida.Descricao.Conteudo)).ShouldBeTrue();
                 retorno.Erros.Any(a=> a.RetornoObjeto.TipoAnexo.SaoIguais(linhaInserida.TipoAnexo.Conteudo)).ShouldBeTrue();
                
-                if (linhaInserida.Altura.PossuiErro)
-                    retorno.Erros.Any(a=> a.RetornoObjeto.Altura.EhNulo()).ShouldBeTrue();
-                // else
-                //     retorno.Erros.Any(a=> a.RetornoObjeto.Altura.SaoIguais(linhaInserida.Altura.Conteudo.ObterDoubleOuNuloPorValorDoCampo())).ShouldBeTrue();
-
-                if (linhaInserida.Largura.PossuiErro)
-                    retorno.Erros.Any(a=> a.RetornoObjeto.Largura.EhNulo()).ShouldBeTrue();
-                // else
-                //     retorno.Erros.Any(a=> a.RetornoObjeto.Largura.SaoIguais(linhaInserida.Largura.Conteudo.ObterDoubleOuNuloPorValorDoCampo())).ShouldBeTrue();
+                retorno.Erros.Any(a=> a.RetornoObjeto.Altura.SaoIguais(linhaInserida.Altura.Conteudo)).ShouldBeTrue();
+                retorno.Erros.Any(a=> a.RetornoObjeto.Largura.SaoIguais(linhaInserida.Largura.Conteudo)).ShouldBeTrue();
                 
                 retorno.Erros.Any(a=> a.RetornoObjeto.TamanhoArquivo.SaoIguais(linhaInserida.TamanhoArquivo.Conteudo)).ShouldBeTrue();
                 retorno.Erros.Any(a=> a.RetornoObjeto.AcessoDocumentosIds.NaoEhNulo()).ShouldBeTrue();

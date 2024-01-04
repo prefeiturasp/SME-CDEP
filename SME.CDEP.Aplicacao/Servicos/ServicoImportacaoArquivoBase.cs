@@ -754,7 +754,7 @@ namespace SME.CDEP.Aplicacao.Servicos
 
         protected void ValidarConteudoCampoComDominio(LinhaConteudoAjustarDTO campo, IEnumerable<IdNomeDTO> dominio,string nomeCampo)
         {
-            if (campo.EhCampoObrigatorio)
+            if (campo.Conteudo.EstaPreenchido())
             {
                 if (!dominio.Any(a=> a.Nome.RemoverAcentuacao().SaoIguais(campo.Conteudo.RemoverAcentuacao())))
                     DefinirMensagemErro(campo, string.Format(MensagemNegocio.O_ITEM_X_DO_DOMINIO_X_NAO_ENCONTRADO, campo.Conteudo, nomeCampo));    

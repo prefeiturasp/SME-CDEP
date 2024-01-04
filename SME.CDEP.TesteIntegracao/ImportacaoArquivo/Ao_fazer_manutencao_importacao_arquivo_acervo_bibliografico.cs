@@ -520,8 +520,8 @@ namespace SME.CDEP.TesteIntegracao
                 //Campos livres
                 acervosBibliograficos.Any(a=> a.Edicao.SaoIguais(linhasComSucesso.Edicao.Conteudo)).ShouldBeTrue();
                 acervosBibliograficos.Any(a=> a.NumeroPagina.SaoIguais(linhasComSucesso.NumeroPaginas.Conteudo.ObterDoubleOuNuloPorValorDoCampo())).ShouldBeTrue();
-                acervosBibliograficos.Any(a=> a.Altura.SaoIguais(linhasComSucesso.Altura.Conteudo.ObterDoubleOuNuloPorValorDoCampo())).ShouldBeTrue();
-                acervosBibliograficos.Any(a=> a.Largura.SaoIguais(linhasComSucesso.Largura.Conteudo.ObterDoubleOuNuloPorValorDoCampo())).ShouldBeTrue();
+                acervosBibliograficos.Any(a=> a.Altura.SaoIguais(linhasComSucesso.Altura.Conteudo.ConverterParaDouble().FormatarDoubleComCasasDecimais())).ShouldBeTrue();
+                acervosBibliograficos.Any(a=> a.Largura.SaoIguais(linhasComSucesso.Largura.Conteudo.ConverterParaDouble().FormatarDoubleComCasasDecimais())).ShouldBeTrue();
                 acervosBibliograficos.Any(a=> a.Volume.SaoIguais(linhasComSucesso.Volume.Conteudo)).ShouldBeTrue();
                 acervosBibliograficos.Any(a=> a.LocalizacaoCDD.SaoIguais(linhasComSucesso.LocalizacaoCDD.Conteudo)).ShouldBeTrue();
                 acervosBibliograficos.Any(a=> a.LocalizacaoPHA.SaoIguais(linhasComSucesso.LocalizacaoPHA.Conteudo)).ShouldBeTrue();
@@ -660,15 +660,8 @@ namespace SME.CDEP.TesteIntegracao
                 retorno.Erros.Any(a=> a.RetornoObjeto.Edicao.SaoIguais(linhaInserida.Edicao.Conteudo)).ShouldBeTrue();
                 retorno.Erros.Any(a=> a.RetornoObjeto.NumeroPagina.SaoIguais(linhaInserida.NumeroPaginas.Conteudo)).ShouldBeTrue();
                
-                if (linhaInserida.Altura.PossuiErro)
-                    retorno.Erros.Any(a=> a.RetornoObjeto.Altura.EhNulo()).ShouldBeTrue();
-                // else
-                //     retorno.Erros.Any(a=> a.RetornoObjeto.Altura.SaoIguais(linhaInserida.Altura.Conteudo.ObterDoubleOuNuloPorValorDoCampo())).ShouldBeTrue();
-
-                if (linhaInserida.Largura.PossuiErro)
-                    retorno.Erros.Any(a=> a.RetornoObjeto.Largura.EhNulo()).ShouldBeTrue();
-                // else
-                //     retorno.Erros.Any(a=> a.RetornoObjeto.Largura.SaoIguais(linhaInserida.Largura.Conteudo.ObterDoubleOuNuloPorValorDoCampo())).ShouldBeTrue();
+                retorno.Erros.Any(a=> a.RetornoObjeto.Altura.SaoIguais(linhaInserida.Altura.Conteudo)).ShouldBeTrue();
+                retorno.Erros.Any(a=> a.RetornoObjeto.Largura.SaoIguais(linhaInserida.Largura.Conteudo)).ShouldBeTrue();
                 
                 retorno.Erros.Any(a=> a.RetornoObjeto.SerieColecaoId.NaoEhNulo()).ShouldBeTrue();
                 retorno.Erros.Any(a=> a.RetornoObjeto.Volume.SaoIguais(linhaInserida.Volume.Conteudo)).ShouldBeTrue();
@@ -718,8 +711,8 @@ namespace SME.CDEP.TesteIntegracao
                 //Campos livres
                 acervosBibliograficos.Any(a=> a.Edicao.SaoIguais(linhasComSucesso.Edicao.Conteudo)).ShouldBeTrue();
                 acervosBibliograficos.Any(a=> a.NumeroPagina.SaoIguais(linhasComSucesso.NumeroPaginas.Conteudo.ObterDoubleOuNuloPorValorDoCampo())).ShouldBeTrue();
-                acervosBibliograficos.Any(a=> a.Altura.SaoIguais(linhasComSucesso.Altura.Conteudo.ObterDoubleOuNuloPorValorDoCampo())).ShouldBeTrue();
-                acervosBibliograficos.Any(a=> a.Largura.SaoIguais(linhasComSucesso.Largura.Conteudo.ObterDoubleOuNuloPorValorDoCampo())).ShouldBeTrue();
+                acervosBibliograficos.Any(a=> a.Altura.SaoIguais(linhasComSucesso.Altura.Conteudo.ConverterParaDouble().FormatarDoubleComCasasDecimais())).ShouldBeTrue();
+                acervosBibliograficos.Any(a=> a.Largura.SaoIguais(linhasComSucesso.Largura.Conteudo.ConverterParaDouble().FormatarDoubleComCasasDecimais())).ShouldBeTrue();
                 acervosBibliograficos.Any(a=> a.Volume.SaoIguais(linhasComSucesso.Volume.Conteudo)).ShouldBeTrue();
                 acervosBibliograficos.Any(a=> a.LocalizacaoCDD.SaoIguais(linhasComSucesso.LocalizacaoCDD.Conteudo)).ShouldBeTrue();
                 acervosBibliograficos.Any(a=> a.LocalizacaoPHA.SaoIguais(linhasComSucesso.LocalizacaoPHA.Conteudo)).ShouldBeTrue();
@@ -815,12 +808,9 @@ namespace SME.CDEP.TesteIntegracao
                 retorno.Erros.Any(a=> a.RetornoObjeto.Ano.SaoIguais(linhaInserida.Ano.Conteudo.ConverterParaInteiro())).ShouldBeTrue();
                 retorno.Erros.Any(a=> a.RetornoObjeto.Edicao.SaoIguais(linhaInserida.Edicao.Conteudo)).ShouldBeTrue();
                 retorno.Erros.Any(a=> a.RetornoObjeto.NumeroPagina.SaoIguais(linhaInserida.NumeroPaginas.Conteudo)).ShouldBeTrue();
-                // retorno.Erros.Any(a=> a.RetornoObjeto.Largura.SaoIguais(linhaInserida.Largura.Conteudo.ObterDoubleOuNuloPorValorDoCampo())).ShouldBeTrue();
+                retorno.Erros.Any(a=> a.RetornoObjeto.Largura.SaoIguais(linhaInserida.Largura.Conteudo)).ShouldBeTrue();
 
-                if (linhaInserida.Altura.PossuiErro)
-                    retorno.Erros.Any(a=> a.RetornoObjeto.Altura.EhNulo()).ShouldBeTrue();
-                // else
-                //     retorno.Erros.Any(a=> a.RetornoObjeto.Altura.SaoIguais(linhaInserida.Altura.Conteudo.ObterDoubleOuNuloPorValorDoCampo())).ShouldBeTrue();
+                retorno.Erros.Any(a=> a.RetornoObjeto.Altura.SaoIguais(linhaInserida.Altura.Conteudo)).ShouldBeTrue();
                 
                 retorno.Erros.Any(a=> a.RetornoObjeto.Volume.SaoIguais(linhaInserida.Volume.Conteudo)).ShouldBeTrue();
                 retorno.Erros.Any(a=> a.RetornoObjeto.LocalizacaoCDD.SaoIguais(linhaInserida.LocalizacaoCDD.Conteudo)).ShouldBeTrue();

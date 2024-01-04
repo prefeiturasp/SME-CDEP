@@ -168,6 +168,7 @@ namespace SME.CDEP.Aplicacao.Mapeamentos
             CreateMap<AcervoBibliograficoCompleto,AcervoBibliograficoDTO>()
                 .ForMember(dest => dest.Largura, opt => opt.MapFrom(o => o.Largura.FormatarDoubleComCasasDecimais()))
                 .ForMember(dest => dest.Altura, opt => opt.MapFrom(o => o.Altura.FormatarDoubleComCasasDecimais()))
+                .ForMember(dest => dest.CoAutores, opt => opt.MapFrom(o => o.CoAutores))
                 .ReverseMap();
             
             CreateMap<AuditoriaDTO, AcervoBibliograficoCompleto>().ReverseMap();
@@ -175,10 +176,6 @@ namespace SME.CDEP.Aplicacao.Mapeamentos
             CreateMap<AcervoBibliograficoDTO, AcervoBibliografico>().ReverseMap();
             CreateMap<AcervoBibliograficoAlteracaoDTO, AcervoDTO>()
                 .ForMember(dest => dest.Id, opt => opt.MapFrom(o => o.AcervoId))
-                .ReverseMap();
-            
-            CreateMap<AcervoBibliograficoCompleto, AcervoBibliograficoDTO>()
-                .ForMember(dest => dest.CoAutores, opt => opt.MapFrom(o => o.CoAutores))
                 .ReverseMap();
             
             CreateMap<ImportacaoArquivoDTO, ImportacaoArquivo>().ReverseMap();
