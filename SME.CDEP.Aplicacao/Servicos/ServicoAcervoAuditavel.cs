@@ -102,7 +102,7 @@ namespace SME.CDEP.Aplicacao.Servicos
             if ((!codigoNaoPreenchido && !codigoNovoNaoPreenchido) && acervo.Codigo.Equals(acervo.CodigoNovo))
                 throw new NegocioException(string.Format(MensagemNegocio.REGISTRO_X_DUPLICADO, ObterCodigoOuTomboPorTipoAcervo((TipoAcervo)acervo.TipoAcervoId)));
             
-            if (acervo.Ano > DateTimeExtension.HorarioBrasilia().Year)
+            if (acervo.Ano.EhAnoFuturo())
                 throw new NegocioException(MensagemNegocio.NAO_PERMITIDO_ANO_FUTURO);
         }
 
