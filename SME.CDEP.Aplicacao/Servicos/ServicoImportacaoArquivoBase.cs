@@ -376,11 +376,6 @@ namespace SME.CDEP.Aplicacao.Servicos
             return linha.PossuiErro ? null : linha.Conteudo.EstaPreenchido() ? linha.Conteudo.ConverterParaInteiro() : null;
         }
         
-        protected static double? ObterConteudoDoubleOuNulo(LinhaConteudoAjustarDTO linha)
-        {
-            return linha.PossuiErro ? null : linha.Conteudo.EstaPreenchido() ? double.Parse(linha.Conteudo) : null;
-        }
-        
         protected long? ObterEditoraIdOuNuloPorValorDoCampo(string valorDoCampo)
         {
             return ObterIdentificadorIdOuNuloPorValorDoCampo(valorDoCampo, Editoras);
@@ -754,8 +749,11 @@ namespace SME.CDEP.Aplicacao.Servicos
 
         protected void ValidarConteudoCampoComDominio(LinhaConteudoAjustarDTO campo, IEnumerable<IdNomeDTO> dominio,string nomeCampo)
         {
-            if (!dominio.Any(a=> a.Nome.RemoverAcentuacao().SaoIguais(campo.Conteudo.RemoverAcentuacao())))
-                DefinirMensagemErro(campo, string.Format(MensagemNegocio.O_ITEM_X_DO_DOMINIO_X_NAO_ENCONTRADO, campo.Conteudo, nomeCampo));
+            if (campo.Conteudo.EstaPreenchido())
+            {
+                if (!dominio.Any(a=> a.Nome.RemoverAcentuacao().SaoIguais(campo.Conteudo.RemoverAcentuacao())))
+                    DefinirMensagemErro(campo, string.Format(MensagemNegocio.O_ITEM_X_DO_DOMINIO_X_NAO_ENCONTRADO, campo.Conteudo, nomeCampo));    
+            }
         }
     }
 }

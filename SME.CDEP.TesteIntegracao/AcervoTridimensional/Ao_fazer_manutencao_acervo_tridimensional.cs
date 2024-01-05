@@ -64,10 +64,10 @@ namespace SME.CDEP.TesteIntegracao
                 ConservacaoId = random.Next(1, 5),
                 Quantidade = random.Next(15, 55),
                 Descricao = faker.Lorem.Text(),
-                Largura = random.Next(15, 55),
-                Altura = random.Next(15, 55),
-                Diametro = random.Next(15, 55),
-                Profundidade = random.Next(15, 55),
+                Largura = double.Parse("50,45"),
+                Altura = double.Parse("10.20"),
+                Diametro = double.Parse("1540"),	
+                Profundidade = double.Parse("1801"),	
                 Arquivos = arquivosSelecionados
             };
             
@@ -92,9 +92,9 @@ namespace SME.CDEP.TesteIntegracao
             acervoTridimensional.ConservacaoId.ShouldBe(acervoTridimensionalAlteracaoDto.ConservacaoId);
             acervoTridimensional.Quantidade.ShouldBe(acervoTridimensionalAlteracaoDto.Quantidade);
             acervoTridimensional.Largura.ShouldBe(acervoTridimensionalAlteracaoDto.Largura.Value);
-            acervoTridimensional.Altura.ShouldBe(acervoTridimensionalAlteracaoDto.Altura.Value);
-            acervoTridimensional.Profundidade.ShouldBe(acervoTridimensionalAlteracaoDto.Profundidade.Value);
-            acervoTridimensional.Diametro.ShouldBe(acervoTridimensionalAlteracaoDto.Diametro.Value);
+            acervoTridimensional.Altura.ShouldBe(acervoTridimensionalAlteracaoDto.Altura.FormatarParaDoubleComCasasDecimais());
+            acervoTridimensional.Profundidade.ShouldBe(acervoTridimensionalAlteracaoDto.Profundidade.FormatarParaDoubleComCasasDecimais());
+            acervoTridimensional.Diametro.ShouldBe(acervoTridimensionalAlteracaoDto.Diametro.FormatarParaDoubleComCasasDecimais());
             
             var acervoTridimensionalArquivos = ObterTodos<AcervoTridimensionalArquivo>();
             var acervoTridimensionalArquivosInseridos = acervoTridimensionalArquivos.Where(w => w.AcervoTridimensionalId == acervoTridimensional.Id);
@@ -128,10 +128,10 @@ namespace SME.CDEP.TesteIntegracao
                 ConservacaoId = random.Next(1, 5),
                 Quantidade = random.Next(15, 55),
                 Descricao = faker.Lorem.Text(),
-                Largura = random.Next(15, 55),
-                Altura = random.Next(15, 55),
-                Profundidade = random.Next(15, 55),
-                Diametro = random.Next(15, 55),
+                Largura = double.Parse("50,45"),
+                Altura = double.Parse("10.20"),
+                Diametro = double.Parse("1540"),	
+                Profundidade = double.Parse("1801"),
                 Arquivos = arquivosSelecionados
             };
                 
@@ -156,9 +156,9 @@ namespace SME.CDEP.TesteIntegracao
             acervoTridimensional.ConservacaoId.ShouldBe(acervoTridimensionalAlteracaoDto.ConservacaoId);
             acervoTridimensional.Quantidade.ShouldBe(acervoTridimensionalAlteracaoDto.Quantidade);
             acervoTridimensional.Largura.ShouldBe(acervoTridimensionalAlteracaoDto.Largura.Value);
-            acervoTridimensional.Altura.ShouldBe(acervoTridimensionalAlteracaoDto.Altura.Value);
-            acervoTridimensional.Profundidade.ShouldBe(acervoTridimensionalAlteracaoDto.Profundidade.Value);
-            acervoTridimensional.Diametro.ShouldBe(acervoTridimensionalAlteracaoDto.Diametro.Value);
+            acervoTridimensional.Altura.ShouldBe(acervoTridimensionalAlteracaoDto.Altura.FormatarParaDoubleComCasasDecimais());
+            acervoTridimensional.Profundidade.ShouldBe(acervoTridimensionalAlteracaoDto.Profundidade.FormatarParaDoubleComCasasDecimais());
+            acervoTridimensional.Diametro.ShouldBe(acervoTridimensionalAlteracaoDto.Diametro.FormatarParaDoubleComCasasDecimais());
             
             var acervoTridimensionalArquivos = ObterTodos<AcervoTridimensionalArquivo>();
             var acervoTridimensionalArquivosInseridos = acervoTridimensionalArquivos.Where(w => w.AcervoTridimensionalId == acervoTridimensional.Id);
@@ -190,10 +190,10 @@ namespace SME.CDEP.TesteIntegracao
                 ConservacaoId = random.Next(1, 5),
                 Quantidade = random.Next(15, 55),
                 Descricao = faker.Lorem.Text(),
-                Largura = random.Next(15, 55),
-                Altura = random.Next(15, 55),
-                Profundidade = random.Next(15, 55),
-                Diametro = random.Next(15, 55),
+                Largura = double.Parse("50,45"),
+                Altura = double.Parse("10.20"),
+                Diametro = double.Parse("1540"),	
+                Profundidade = double.Parse("1801"),	
                 Arquivos = arquivosSelecionados
             };
                 
@@ -218,9 +218,9 @@ namespace SME.CDEP.TesteIntegracao
             acervoTridimensional.ConservacaoId.ShouldBe(acervoTridimensionalAlteracaoDto.ConservacaoId);
             acervoTridimensional.Quantidade.ShouldBe(acervoTridimensionalAlteracaoDto.Quantidade);
             acervoTridimensional.Largura.ShouldBe(acervoTridimensionalAlteracaoDto.Largura.Value);
-            acervoTridimensional.Altura.ShouldBe(acervoTridimensionalAlteracaoDto.Altura.Value);
-            acervoTridimensional.Profundidade.ShouldBe(acervoTridimensionalAlteracaoDto.Profundidade.Value);
-            acervoTridimensional.Diametro.ShouldBe(acervoTridimensionalAlteracaoDto.Diametro.Value);
+            acervoTridimensional.Altura.ShouldBe(acervoTridimensionalAlteracaoDto.Altura.FormatarParaDoubleComCasasDecimais());
+            acervoTridimensional.Profundidade.ShouldBe(acervoTridimensionalAlteracaoDto.Profundidade.FormatarParaDoubleComCasasDecimais());
+            acervoTridimensional.Diametro.ShouldBe(acervoTridimensionalAlteracaoDto.Diametro.FormatarParaDoubleComCasasDecimais());
             
             var acervoTridimensionalArquivos = ObterTodos<AcervoTridimensionalArquivo>();
             var acervoTridimensionalArquivosInseridos = acervoTridimensionalArquivos.Where(w => w.AcervoTridimensionalId == acervoTridimensional.Id);
@@ -247,15 +247,15 @@ namespace SME.CDEP.TesteIntegracao
                 Codigo = "100.TD",
                 Titulo = faker.Lorem.Text().Limite(500),
                 Procedencia = faker.Lorem.Text().Limite(200),
-                Ano = faker.Date.Future().Year,
+                Ano = DateTimeExtension.HorarioBrasilia().AddYears(1).Year,
                 DataAcervo = DateTimeExtension.HorarioBrasilia().Date.ToString("dd/MM/yyyy"),
                 ConservacaoId = random.Next(1, 5),
                 Quantidade = random.Next(15, 55),
                 Descricao = faker.Lorem.Text(),
-                Largura = random.Next(15, 55),
-                Altura = random.Next(15, 55),
-                Profundidade = random.Next(15, 55),
-                Diametro = random.Next(15, 55),
+                Largura = double.Parse("50,45"),
+                Altura = double.Parse("10.20"),
+                Diametro = double.Parse("1540"),	
+                Profundidade = double.Parse("1801"),	
                 Arquivos = arquivosSelecionados
             };
                 
@@ -287,10 +287,10 @@ namespace SME.CDEP.TesteIntegracao
                 ConservacaoId = random.Next(1, 5),
                 Quantidade = random.Next(15, 55),
                 Descricao = faker.Lorem.Text(),
-                Largura = random.Next(15, 55),
-                Altura = random.Next(15, 55),
-                Profundidade = random.Next(15, 55),
-                Diametro = random.Next(15, 55),
+                Largura = double.Parse("50,45"),
+                Altura = double.Parse("10.20"),
+                Diametro = double.Parse("1540"),	
+                Profundidade = double.Parse("1801"),	
                 Arquivos = arquivosSelecionados
             };
             
@@ -316,9 +316,9 @@ namespace SME.CDEP.TesteIntegracao
             acervoTridimensional.ConservacaoId.ShouldBe(acervoTridimensionalCadastroDto.ConservacaoId);
             acervoTridimensional.Quantidade.ShouldBe(acervoTridimensionalCadastroDto.Quantidade);
             acervoTridimensional.Largura.ShouldBe(acervoTridimensionalCadastroDto.Largura.Value);
-            acervoTridimensional.Altura.ShouldBe(acervoTridimensionalCadastroDto.Altura.Value);
-            acervoTridimensional.Profundidade.ShouldBe(acervoTridimensionalCadastroDto.Profundidade.Value);
-            acervoTridimensional.Diametro.ShouldBe(acervoTridimensionalCadastroDto.Diametro.Value);
+            acervoTridimensional.Altura.ShouldBe(acervoTridimensionalCadastroDto.Altura.FormatarParaDoubleComCasasDecimais());
+            acervoTridimensional.Profundidade.ShouldBe(acervoTridimensionalCadastroDto.Profundidade.FormatarParaDoubleComCasasDecimais());
+            acervoTridimensional.Diametro.ShouldBe(acervoTridimensionalCadastroDto.Diametro.FormatarParaDoubleComCasasDecimais());
             
             var acervoTridimensionalArquivos = ObterTodos<AcervoTridimensionalArquivo>();
             var acervoTridimensionalArquivosInseridos = acervoTridimensionalArquivos.Where(w => w.AcervoTridimensionalId == acervoTridimensional.Id);
@@ -350,10 +350,10 @@ namespace SME.CDEP.TesteIntegracao
                 ConservacaoId = random.Next(1, 5),
                 Quantidade = random.Next(15, 55),
                 Descricao = faker.Lorem.Text(),
-                Largura = random.Next(15, 55),
-                Altura = random.Next(15, 55),
-                Profundidade = random.Next(15, 55),
-                Diametro = random.Next(15, 55),
+                Largura = double.Parse("50,45"),
+                Altura = double.Parse("10.20"),
+                Diametro = double.Parse("1540"),	
+                Profundidade = double.Parse("1801"),	
                 Arquivos = arquivosSelecionados
             };
             
@@ -386,10 +386,10 @@ namespace SME.CDEP.TesteIntegracao
                 ConservacaoId = random.Next(1, 5),
                 Quantidade = random.Next(15, 55),
                 Descricao = faker.Lorem.Text(),
-                Largura = random.Next(15, 55),
-                Altura = random.Next(15, 55),
-                Profundidade = random.Next(15, 55),
-                Diametro = random.Next(15, 55),
+                Largura = double.Parse("50,45"),
+                Altura = double.Parse("10.20"),
+                Diametro = double.Parse("1540"),	
+                Profundidade = double.Parse("1801"),	
                 Arquivos = arquivosSelecionados
             };
             
@@ -424,10 +424,10 @@ namespace SME.CDEP.TesteIntegracao
                     Procedencia = faker.Lorem.Text().Limite(200),
                     ConservacaoId = random.Next(1,5),
                     Quantidade = random.Next(15,55),
-                    Largura = random.Next(15,55),
-                    Altura = random.Next(15,55),
-                    Profundidade = random.Next(15,55),
-                    Diametro = random.Next(15,55),
+                    Largura = double.Parse("50,45"),
+                    Altura = double.Parse("10.20"),
+                    Diametro = double.Parse("1540"),	
+                    Profundidade = double.Parse("1801"),	
                 });
                 
                 await InserirNaBase(new Arquivo()

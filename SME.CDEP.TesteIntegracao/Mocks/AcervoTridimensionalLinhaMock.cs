@@ -72,25 +72,25 @@ public static class AcervoTridimensionalLinhaMock
             
             faker.RuleFor(x => x.Largura, f => new LinhaConteudoAjustarDTO()
             {
-                Conteudo = random.Next(15,55).ToString(),
+                Conteudo = "50,45",
                 FormatoTipoDeCampo = ConstantesTestes.FORMATO_DOUBLE
             });
             
             faker.RuleFor(x => x.Altura, f => new LinhaConteudoAjustarDTO()
             {
-                Conteudo = random.Next(15,55).ToString(),
+                Conteudo = "10.20",
                 FormatoTipoDeCampo = ConstantesTestes.FORMATO_DOUBLE
             });
             
             faker.RuleFor(x => x.Profundidade, f => new LinhaConteudoAjustarDTO()
             {
-                Conteudo = random.Next(15,55).ToString(),
+                Conteudo = "1540",
                 FormatoTipoDeCampo = ConstantesTestes.FORMATO_DOUBLE
             });
             
             faker.RuleFor(x => x.Diametro, f => new LinhaConteudoAjustarDTO()
             {
-                Conteudo = random.Next(15,55).ToString(),
+                Conteudo = "1801",
                 FormatoTipoDeCampo = ConstantesTestes.FORMATO_DOUBLE
             });
             

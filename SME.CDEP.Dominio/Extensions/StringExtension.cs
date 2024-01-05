@@ -145,6 +145,11 @@ namespace SME.CDEP.Dominio.Extensions
             return int.Parse(valor); 
         }
         
+        public static double ConverterParaDouble(this string valor)
+        {
+            return double.Parse(valor); 
+        }
+        
         public static bool EhImagemTiff(this string nomeArquivo)
         {
             return nomeArquivo.ToLower().Contains(Constantes.Constantes.CONTENT_TYPE_TIFF);
