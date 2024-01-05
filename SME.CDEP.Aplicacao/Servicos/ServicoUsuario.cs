@@ -260,7 +260,70 @@ namespace SME.CDEP.Aplicacao.Servicos
             
             return retorno;
         }
-        
+
+        public async Task<RetornoPerfilUsuarioDTO> RevalidarToken(string token)
+        {
+            return await servicoAcessos.RevalidarToken(token);
+        }
+
+        public async Task<RetornoPerfilUsuarioDTO> AtualizarPerfil(Guid perfilUsuarioId)
+        {
+            var usuarioLogado = await ObterUsuarioLogado()
+                                ?? throw new NegocioException(MensagemNegocio.LOGIN_NAO_ENCONTRADO);
+
+            return await ObterTokenAcesso(usuarioLogado.Login, perfilUsuarioId);
+        }
+
+        private async Task<RetornoPerfilUsuarioDTO> ObterTokenAcesso(string login, Guid perfilUsuarioId)
+        {
+            var usuarioPerfisRetornoDto = await ObterPerfisUsuarioServicoAcessosPorLogin(login, perfilUsuarioId)
+                                          ?? throw new NegocioException(MensagemNegocio.USUARIO_OU_SENHA_INVALIDOS);
+
+            await ValidarPerfisAutomaticos(login, perfilUsuarioId, usuarioPerfisRetornoDto);
+
+            var usuario = await ObterUsuarioPorLogin(usuarioPerfisRetornoDto.UsuarioLogin) ??
+                          new Usuario() {Login = usuarioPerfisRetornoDto.UsuarioLogin, Nome = usuarioPerfisRetornoDto.UsuarioNome};
+
+            usuario.AtualizarUltimoLogin();
+            await repositorioUsuario.Atualizar(usuario);
+
+            return usuarioPerfisRetornoDto;
+        }
+
+        private async Task<Usuario> ObterUsuarioPorLogin(string usuarioLogin)
+        {
+            return await repositorioUsuario.ObterPorLogin(usuarioLogin);
+        }
+
+        private async Task ValidarPerfisAutomaticos(string login, Guid perfilUsuarioId, RetornoPerfilUsuarioDTO retornoPerfilUsuarioDTO)
+        {
+            var perfilExterno = new Guid(Constantes.PERFIL_EXTERNO_GUID);
+            
+            if (retornoPerfilUsuarioDTO.PerfilUsuario == null || !retornoPerfilUsuarioDTO.PerfilUsuario.Any(t => t.Perfil == perfilExterno))
+            {
+                await VincularPerfilExternoCoreSSOServicoAcessos(login, perfilExterno);
+
+                retornoPerfilUsuarioDTO = await ObterPerfisUsuarioServicoAcessosPorLogin(login, perfilUsuarioId);
+            }
+        }
+
+        private async Task VincularPerfilExternoCoreSSOServicoAcessos(string login, Guid perfilId)
+        {
+            await servicoAcessos.VincularPerfilExternoCoreSSO(login, perfilId);
+        }
+
+        private async Task<RetornoPerfilUsuarioDTO> ObterPerfisUsuarioServicoAcessosPorLogin(string login, Guid? perfilUsuarioId)
+        {
+            return perfilUsuarioId.HasValue ?
+                await servicoAcessos.ObterPerfisUsuario(login, perfilUsuarioId.Value) :
+                await servicoAcessos.ObterPerfisUsuario(login);
+        }
+
+        private async Task<Usuario> ObterUsuarioLogado()
+        {
+            return await ObterUsuarioPorLogin(contextoAplicacao.UsuarioLogado);
+        }
+
         public async Task<bool> AlterarTipoUsuario(string login, TipoUsuarioExternoDTO tipoUsuario)
         {
             var usuario = await repositorioUsuario.ObterPorLogin(login);
