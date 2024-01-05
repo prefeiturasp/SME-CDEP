@@ -5,6 +5,7 @@ namespace SME.CDEP.Aplicacao.Integracoes.Interfaces;
 public interface IServicoAcessos
 {
     Task<UsuarioAutenticacaoRetornoDTO> Autenticar(string login, string senha);
+    Task<RetornoPerfilUsuarioDTO> ObterPerfisUsuario(string login, Guid? perfilUsuarioId);
     Task<RetornoPerfilUsuarioDTO> ObterPerfisUsuario(string login);
     Task<bool> UsuarioCadastradoCoreSSO(string login);
     Task<bool> CadastrarUsuarioCoreSSO(string login, string nome, string email, string senha);
@@ -15,4 +16,5 @@ public interface IServicoAcessos
     Task<string> SolicitarRecuperacaoSenha(string login);
     Task<bool> TokenRecuperacaoSenhaEstaValido(Guid token);
     Task<string> AlterarSenhaComTokenRecuperacao(RecuperacaoSenhaDto recuperacaoSenhaDto);
+    Task<RetornoPerfilUsuarioDTO> RevalidarToken(string token);
 }

@@ -21,4 +21,24 @@ public class AutenticacaoController: BaseController
     {
         return Ok(await servicoUsuario.Autenticar(autenticacaoDto.Login, autenticacaoDto.Senha));
     }
+    
+    [HttpPost("revalidar")]
+    [ProducesResponseType(typeof(RetornoBaseDTO), 400)]
+    [ProducesResponseType(typeof(RetornoBaseDTO), 500)]
+    [ProducesResponseType(typeof(RetornoPerfilUsuarioDTO), 200)]
+    [AllowAnonymous]
+    public async Task<IActionResult> Revalidar([FromBody] AutenticacaoRevalidarDTO autenticacaoRevalidarDTO, [FromServices] IServicoUsuario servicoUsuario)
+    {
+        return Ok(await servicoUsuario.RevalidarToken(autenticacaoRevalidarDTO.Token));
+    }
+
+    [HttpPut("perfis/{perfilUsuarioId}")]
+    [ProducesResponseType(typeof(RetornoBaseDTO), 400)]
+    [ProducesResponseType(typeof(RetornoBaseDTO), 500)]
+    [ProducesResponseType(typeof(RetornoPerfilUsuarioDTO), 200)]
+    [Authorize("Bearer")]
+    public async Task<IActionResult> AtualizarPerfil(Guid perfilUsuarioId,[FromServices] IServicoUsuario servicoUsuario)
+    {
+        return Ok(await servicoUsuario.AtualizarPerfil(perfilUsuarioId));
+    }
 }

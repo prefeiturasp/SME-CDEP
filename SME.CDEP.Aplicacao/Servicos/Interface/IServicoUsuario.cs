@@ -23,5 +23,7 @@ namespace SME.CDEP.Aplicacao.Servicos.Interface
         Task<bool> ValidarCpfExistente(string cpf);
         Task<bool> AlterarTipoUsuario(string login, TipoUsuarioExternoDTO tipoUsuario);
         IEnumerable<Permissao> ObterPermissoes();
+        Task<RetornoPerfilUsuarioDTO> RevalidarToken(string token);
+        Task<RetornoPerfilUsuarioDTO> AtualizarPerfil(Guid perfilUsuarioId);
     }
 }

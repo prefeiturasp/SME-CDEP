@@ -23,5 +23,10 @@ namespace SME.CDEP.Dominio.Entidades
         {
             return TipoUsuario is TipoUsuario.SERVIDOR_PUBLICO or TipoUsuario.ESTUDANTE or TipoUsuario.PROFESSOR or TipoUsuario.POPULACAO_GERAL;
         }
+
+        public void AtualizarUltimoLogin()
+        {
+            UltimoLogin = DateTimeExtension.HorarioBrasilia();
+        }
     }
 }
