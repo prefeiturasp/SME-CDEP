@@ -318,6 +318,7 @@ namespace SME.CDEP.Aplicacao.Servicos
             {
                 case TipoAcervo.Bibliografico:
                     return mapper.Map<AcervoBibliograficoDetalheDTO>(await repositorioAcervoBibliografico.ObterDetalhamentoPorCodigo(filtro.Codigo));
+                
                 case TipoAcervo.DocumentacaoHistorica:
                 {
                     var retorno =  mapper.Map<AcervoDocumentalDetalheDTO>(await repositorioAcervoDocumental.ObterDetalhamentoPorCodigo(filtro.Codigo));
@@ -332,6 +333,7 @@ namespace SME.CDEP.Aplicacao.Servicos
                 }
                 case TipoAcervo.Audiovisual:
                     return mapper.Map<AcervoAudiovisualDetalheDTO>(await repositorioAcervoAudiovisual.ObterDetalhamentoPorCodigo(filtro.Codigo));
+                
                 case TipoAcervo.Fotografico:
                 {
                     var retorno =  mapper.Map<AcervoFotograficoDetalheDTO>(await repositorioAcervoFotografico.ObterDetalhamentoPorCodigo(filtro.Codigo));
