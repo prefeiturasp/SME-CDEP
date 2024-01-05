@@ -2,8 +2,6 @@
 using Microsoft.AspNetCore.Mvc;
 using SME.CDEP.Aplicacao.DTOS;
 using SME.CDEP.Aplicacao.Servicos.Interface;
-using SME.CDEP.Dominio.Constantes;
-using SME.CDEP.Dominio.Excecoes;
 using SME.CDEP.Webapi.Filtros;
 
 namespace SME.CDEP.Webapi.Controllers;

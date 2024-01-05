@@ -16,7 +16,7 @@ public class ImportacaoArquivoAcervoController: BaseController
     [ProducesResponseType(typeof(RetornoBaseDTO), 400)]
     [ProducesResponseType(typeof(RetornoBaseDTO), 403)]
     [ProducesResponseType(typeof(RetornoBaseDTO), 601)]
-    [Permissao(Permissao.ACR_E, Policy = "Bearer")]
+    [Permissao(Permissao.CadastroAcervo_E, Policy = "Bearer")]
     public async Task<IActionResult> ExclusaoLogica([FromRoute] long id, [FromServices] IServicoImportacaoArquivoAcervo servicoAssunto)
     {
         return Ok(await servicoAssunto.Excluir(id));

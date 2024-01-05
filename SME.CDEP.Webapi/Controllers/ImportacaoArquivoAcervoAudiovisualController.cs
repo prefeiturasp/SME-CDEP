@@ -17,7 +17,7 @@ public class ImportacaoArquivoAcervoAudiovisualController: BaseController
     [ProducesResponseType(typeof(ImportacaoArquivoRetornoDTO<AcervoLinhaErroDTO<AcervoAudiovisualDTO,AcervoAudiovisualLinhaRetornoDTO>,AcervoLinhaRetornoSucessoDTO>),200)]
     [ProducesResponseType(401)]
     [ProducesResponseType(typeof(RetornoBaseDTO), 500)]
-    [Permissao(Permissao.ACR_I, Policy = "Bearer")]
+    [Permissao(Permissao.CadastroAcervo_I, Policy = "Bearer")]
     public async Task<IActionResult> ImportarArquivo(IFormFile file,[FromServices] IServicoImportacaoArquivoAcervoAudiovisual servicoImportacaoArquivoAcervoAudiovisual)
     {
         return Ok(await servicoImportacaoArquivoAcervoAudiovisual.ImportarArquivo(file));
@@ -27,7 +27,7 @@ public class ImportacaoArquivoAcervoAudiovisualController: BaseController
     [ProducesResponseType(typeof(ImportacaoArquivoRetornoDTO<AcervoLinhaErroDTO<AcervoAudiovisualDTO,AcervoAudiovisualLinhaRetornoDTO>,AcervoLinhaRetornoSucessoDTO>),200)]
     [ProducesResponseType(401)]
     [ProducesResponseType(typeof(RetornoBaseDTO), 500)]
-    [Permissao(Permissao.ACR_C, Policy = "Bearer")]
+    [Permissao(Permissao.CadastroAcervo_C, Policy = "Bearer")]
     public async Task<IActionResult> ObterImportacaoPendente([FromServices] IServicoImportacaoArquivoAcervoAudiovisual servicoImportacaoArquivoAcervoAudiovisual)
     {
         return Ok(await servicoImportacaoArquivoAcervoAudiovisual.ObterImportacaoPendente());
@@ -37,7 +37,7 @@ public class ImportacaoArquivoAcervoAudiovisualController: BaseController
     [ProducesResponseType(typeof(ImportacaoArquivoRetornoDTO<AcervoLinhaErroDTO<AcervoAudiovisualDTO,AcervoAudiovisualLinhaRetornoDTO>,AcervoLinhaRetornoSucessoDTO>),200)]
     [ProducesResponseType(401)]
     [ProducesResponseType(typeof(RetornoBaseDTO), 500)]
-    [Permissao(Permissao.ACR_C, Policy = "Bearer")]
+    [Permissao(Permissao.CadastroAcervo_C, Policy = "Bearer")]
     public async Task<IActionResult> ObterImportacaoPorId([FromRoute] long id,[FromServices] IServicoImportacaoArquivoAcervoAudiovisual servicoImportacaoArquivoAcervoAudiovisual)
     {
         return Ok(await servicoImportacaoArquivoAcervoAudiovisual.ObterImportacaoPorId(id));
@@ -48,7 +48,7 @@ public class ImportacaoArquivoAcervoAudiovisualController: BaseController
     [ProducesResponseType(typeof(RetornoBaseDTO), 400)]
     [ProducesResponseType(typeof(RetornoBaseDTO), 403)]
     [ProducesResponseType(typeof(RetornoBaseDTO), 601)]
-    [Permissao(Permissao.ACR_E, Policy = "Bearer")]
+    [Permissao(Permissao.CadastroAcervo_E, Policy = "Bearer")]
     public async Task<IActionResult> RemoverLinhaDoArquivo([FromRoute] long id, [FromBody] LinhaDTO linha, [FromServices] IServicoImportacaoArquivoAcervoAudiovisual servicoImportacaoArquivoAcervoAudiovisual)
     {
         return Ok(await servicoImportacaoArquivoAcervoAudiovisual.RemoverLinhaDoArquivo(id, linha));
@@ -59,7 +59,7 @@ public class ImportacaoArquivoAcervoAudiovisualController: BaseController
     [ProducesResponseType(typeof(RetornoBaseDTO), 400)]
     [ProducesResponseType(typeof(RetornoBaseDTO), 403)]
     [ProducesResponseType(typeof(RetornoBaseDTO), 601)]
-    [Permissao(Permissao.ACR_A, Policy = "Bearer")]
+    [Permissao(Permissao.CadastroAcervo_A, Policy = "Bearer")]
     public async Task<IActionResult> AtualizarLinhaParaSucesso([FromRoute] long id, [FromBody] LinhaDTO linha, [FromServices] IServicoImportacaoArquivoAcervoAudiovisual servicoImportacaoArquivoAcervoAudiovisual)
     {
         return Ok(await servicoImportacaoArquivoAcervoAudiovisual.AtualizarLinhaParaSucesso(id,linha));

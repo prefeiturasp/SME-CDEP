@@ -18,7 +18,7 @@ public class CreditoAutorController: BaseController
     [ProducesResponseType(typeof(RetornoBaseDTO), 403)]
     [ProducesResponseType(typeof(RetornoBaseDTO), 500)]
     [ProducesResponseType(typeof(RetornoBaseDTO), 601)]
-    [Permissao(Permissao.CRD_I, Policy = "Bearer")]
+    [Permissao(Permissao.CadastroAutor_I, Policy = "Bearer")]
     public async Task<IActionResult> Inserir([FromBody] NomeTipoDTO creditoAutor, [FromServices] IServicoCreditoAutor servicoCreditoAutor)
     {
         return Ok(await servicoCreditoAutor.Inserir(new IdNomeTipoExcluidoAuditavelDTO() { Nome = creditoAutor.Nome, Tipo = creditoAutor.Tipo}));
@@ -30,7 +30,7 @@ public class CreditoAutorController: BaseController
     [ProducesResponseType(typeof(RetornoBaseDTO), 403)]
     [ProducesResponseType(typeof(RetornoBaseDTO), 500)]
     [ProducesResponseType(typeof(RetornoBaseDTO), 601)]
-    [Permissao(Permissao.CRD_A, Policy = "Bearer")]
+    [Permissao(Permissao.CadastroAutor_A, Policy = "Bearer")]
     public async Task<IActionResult> Alterar([FromBody] IdNomeTipoDTO creditoAutor, [FromServices] IServicoCreditoAutor servicoCreditoAutor)
     {
         return Ok(await servicoCreditoAutor.Alterar(new IdNomeTipoExcluidoAuditavelDTO() {Id = creditoAutor.Id, Nome = creditoAutor.Nome, Tipo = creditoAutor.Tipo}));
@@ -42,7 +42,7 @@ public class CreditoAutorController: BaseController
     [ProducesResponseType(typeof(RetornoBaseDTO), 403)]
     [ProducesResponseType(typeof(RetornoBaseDTO), 500)]
     [ProducesResponseType(typeof(RetornoBaseDTO), 601)]
-    [Permissao(Permissao.CRD_C, Policy = "Bearer")]
+    [Permissao(Permissao.CadastroAutor_C, Policy = "Bearer")]
     public async Task<IActionResult> ObterTodosOuPorNome([FromQuery] NomeTipoCreditoAutoriaDTO nomeTipoDto,[FromServices]IServicoCreditoAutor servicoCreditoAutor)
     {
         return Ok(await servicoCreditoAutor.ObterPaginado(nomeTipoDto));
@@ -54,7 +54,7 @@ public class CreditoAutorController: BaseController
     [ProducesResponseType(typeof(RetornoBaseDTO), 403)]
     [ProducesResponseType(typeof(RetornoBaseDTO), 500)]
     [ProducesResponseType(typeof(RetornoBaseDTO), 601)]
-    [Permissao(Permissao.CRD_C, Policy = "Bearer")]
+    [Permissao(Permissao.CadastroAutor_C, Policy = "Bearer")]
     public async Task<IActionResult> ObterTodos([FromQuery] TipoCreditoAutoria? tipo, [FromServices]IServicoCreditoAutor servicoCreditoAutor)
     {
         return Ok((await servicoCreditoAutor.ObterTodos(tipo)).Where(w=> !w.Excluido).Select(s=> new IdNomeDTO(){Id = s.Id, Nome = s.Nome}));
@@ -66,7 +66,7 @@ public class CreditoAutorController: BaseController
     [ProducesResponseType(typeof(RetornoBaseDTO), 403)]
     [ProducesResponseType(typeof(RetornoBaseDTO), 500)]
     [ProducesResponseType(typeof(RetornoBaseDTO), 601)]
-    [Permissao(Permissao.CRD_C, Policy = "Bearer")]
+    [Permissao(Permissao.CadastroAutor_C, Policy = "Bearer")]
     public async Task<IActionResult> ObterPorId([FromRoute] long id,[FromServices]IServicoCreditoAutor servicoCreditoAutor)
     {
         return Ok(await servicoCreditoAutor.ObterPorId(id));
@@ -78,7 +78,7 @@ public class CreditoAutorController: BaseController
     [ProducesResponseType(typeof(RetornoBaseDTO), 403)]
     [ProducesResponseType(typeof(RetornoBaseDTO), 500)]
     [ProducesResponseType(typeof(RetornoBaseDTO), 601)]
-    [Permissao(Permissao.CRD_E, Policy = "Bearer")]
+    [Permissao(Permissao.CadastroAutor_E, Policy = "Bearer")]
     public async Task<IActionResult> ExclusaoLogica([FromRoute] long id, [FromServices] IServicoCreditoAutor servicoCreditoAutor)
     {
         return Ok(await servicoCreditoAutor.Excluir(id));

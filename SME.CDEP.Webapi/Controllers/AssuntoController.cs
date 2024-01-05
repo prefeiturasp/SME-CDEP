@@ -18,7 +18,7 @@ public class AssuntoController: BaseController
     [ProducesResponseType(typeof(RetornoBaseDTO), 403)]
     [ProducesResponseType(typeof(RetornoBaseDTO), 500)]
     [ProducesResponseType(typeof(RetornoBaseDTO), 601)]
-    [Permissao(Permissao.ASS_I, Policy = "Bearer")]
+    [Permissao(Permissao.CadastroAssunto_I, Policy = "Bearer")]
     public async Task<IActionResult> Inserir([FromBody] NomeDTO assunto, [FromServices] IServicoAssunto servicoAssunto)
     {
         return Ok(await servicoAssunto.Inserir(new IdNomeExcluidoAuditavelDTO() { Nome = assunto.Nome}));
@@ -30,7 +30,7 @@ public class AssuntoController: BaseController
     [ProducesResponseType(typeof(RetornoBaseDTO), 403)]
     [ProducesResponseType(typeof(RetornoBaseDTO), 500)]
     [ProducesResponseType(typeof(RetornoBaseDTO), 601)]
-    [Permissao(Permissao.ASS_A, Policy = "Bearer")]
+    [Permissao(Permissao.CadastroAssunto_A, Policy = "Bearer")]
     public async Task<IActionResult> Alterar([FromBody] IdNomeDTO assunto, [FromServices] IServicoAssunto servicoAssunto)
     {
         return Ok(await servicoAssunto.Alterar(new IdNomeExcluidoAuditavelDTO() {Id = assunto.Id, Nome = assunto.Nome}));
@@ -41,7 +41,7 @@ public class AssuntoController: BaseController
     [ProducesResponseType(typeof(RetornoBaseDTO), 400)]
     [ProducesResponseType(typeof(RetornoBaseDTO), 403)]
     [ProducesResponseType(typeof(RetornoBaseDTO), 601)]
-    [Permissao(Permissao.ASS_C, Policy = "Bearer")]
+    [Permissao(Permissao.CadastroAssunto_C, Policy = "Bearer")]
     public async Task<IActionResult> ObterTodosOuPorNome([FromQuery] string? nome,[FromServices]IServicoAssunto servicoAssunto)
     {
         return Ok(await servicoAssunto.ObterPaginado(nome));
@@ -51,7 +51,7 @@ public class AssuntoController: BaseController
     [ProducesResponseType(typeof(RetornoBaseDTO), 400)]
     [ProducesResponseType(typeof(RetornoBaseDTO), 601)]
     [ProducesResponseType(typeof(IdNomeDTO), 200)]  
-    [Authorize("Bearer")]
+    [Permissao(Permissao.CadastroAssunto_C, Policy = "Bearer")]
     public async Task<IActionResult> ObterTodos([FromServices]IServicoAssunto servicoAssunto)
     {
         return Ok((await servicoAssunto.ObterTodos()).Select(s=> new IdNomeDTO() { Id = s.Id, Nome = s.Nome}));
@@ -62,7 +62,7 @@ public class AssuntoController: BaseController
     [ProducesResponseType(typeof(RetornoBaseDTO), 400)]
     [ProducesResponseType(typeof(RetornoBaseDTO), 403)]
     [ProducesResponseType(typeof(RetornoBaseDTO), 601)]
-    [Permissao(Permissao.ASS_C, Policy = "Bearer")]
+    [Permissao(Permissao.CadastroAssunto_C, Policy = "Bearer")]
     public async Task<IActionResult> ObterPorId([FromRoute] long id,[FromServices]IServicoAssunto servicoAssunto)
     {
         return Ok(await servicoAssunto.ObterPorId(id));
@@ -73,7 +73,7 @@ public class AssuntoController: BaseController
     [ProducesResponseType(typeof(RetornoBaseDTO), 400)]
     [ProducesResponseType(typeof(RetornoBaseDTO), 403)]
     [ProducesResponseType(typeof(RetornoBaseDTO), 601)]
-    [Permissao(Permissao.ASS_E, Policy = "Bearer")]
+    [Permissao(Permissao.CadastroAssunto_E, Policy = "Bearer")]
     public async Task<IActionResult> ExclusaoLogica([FromRoute] long id, [FromServices] IServicoAssunto servicoAssunto)
     {
         return Ok(await servicoAssunto.Excluir(id));
