@@ -25,6 +25,20 @@ public class ServicoAcessosFake : BaseMock, IServicoAcessos
         });
     }
 
+    public async Task<RetornoPerfilUsuarioDTO> ObterPerfisUsuario(string login, Guid? perfilUsuarioId)
+    {
+        var perfis = await ObterPerfisUsuario(login);
+        perfis.PerfilUsuario = new List<PerfilUsuarioDTO>()
+        {
+            new PerfilUsuarioDTO()
+            {
+                Perfil = perfilUsuarioId ??= new Guid(),
+                PerfilNome = ConstantesTestes.PERFIL_EXTERNO_DESCRICAO
+            }
+        };
+        return perfis;
+    }
+
     public Task<RetornoPerfilUsuarioDTO> ObterPerfisUsuario(string login)
     {
         return Task.FromResult(new RetornoPerfilUsuarioDTO()
@@ -112,6 +126,11 @@ public class ServicoAcessosFake : BaseMock, IServicoAcessos
     public Task<string> AlterarSenhaComTokenRecuperacao(RecuperacaoSenhaDto recuperacaoSenhaDto)
     {
         return Task.FromResult(string.Empty);
+    }
+
+    public Task<RetornoPerfilUsuarioDTO> RevalidarToken(string token)
+    {
+        throw new NotImplementedException();
     }
 }
     
