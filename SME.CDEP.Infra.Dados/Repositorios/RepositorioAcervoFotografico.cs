@@ -134,7 +134,7 @@ namespace SME.CDEP.Infra.Dados.Repositorios
                             --join arquivo am on am.id = afa.arquivo_miniatura_id  
                             where not a.excluido --and not am.excluido 
                                 and af.permite_uso_imagem
-                                and afa.acervo_fotografico_id  = @acervoFotograficoId";
+                                and af.id  = @acervoFotograficoId";
 
             return await conexao.Obter().QueryAsync<ImagemDetalhe>(query, new { acervoFotograficoId });
         }

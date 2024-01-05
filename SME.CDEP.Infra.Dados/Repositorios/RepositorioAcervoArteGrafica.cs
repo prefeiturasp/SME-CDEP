@@ -174,7 +174,7 @@ namespace SME.CDEP.Infra.Dados.Repositorios
                             where not a.excluido 
                                 --and not am.excluido 
                                 and ag.permite_uso_imagem
-                                and ag.acervo_arte_grafica_id  = @acervoArteGraficaId";
+                                and ag.id  = @acervoArteGraficaId";
 
             return await conexao.Obter().QueryAsync<ImagemDetalhe>(query, new { acervoArteGraficaId });
         }

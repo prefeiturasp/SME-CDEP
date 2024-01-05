@@ -121,7 +121,7 @@ namespace SME.CDEP.TesteIntegracao
             detalhamentoDoAcervoArteGrafica.Suporte.EstaPreenchido().ShouldBeTrue();
             detalhamentoDoAcervoArteGrafica.Dimensoes.EstaPreenchido().ShouldBeTrue();
             detalhamentoDoAcervoArteGrafica.Quantidade.ShouldBeGreaterThan(0);
-            detalhamentoDoAcervoArteGrafica.Imagens.EhNulo().ShouldBeTrue();
+            detalhamentoDoAcervoArteGrafica.Imagens.Any().ShouldBeFalse();
         }
     }
 }
