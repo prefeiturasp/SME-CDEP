@@ -167,11 +167,13 @@ namespace SME.CDEP.Infra.Dados.Repositorios
             var query = @" select a.nome NomeOriginal,
                                   a.codigo CodigoOriginal,      
                                   a.codigo CodigoThumbnail
-                            from acervo_arte_grafica_arquivo ag 
-                                join arquivo a on a.id = ag.arquivo_id 
-                            --join arquivo am on am.id = ag.arquivo_miniatura_id  
+                            from acervo_arte_grafica ag 
+                            join acervo_arte_grafica_arquivo aga on aga.acervo_arte_grafica_id = ag.id  
+                            join arquivo a on a.id = aga.arquivo_id 
+                            --join arquivo am on am.id = aga.arquivo_miniatura_id  
                             where not a.excluido 
                                 --and not am.excluido 
+                                and ag.permite_uso_imagem
                                 and ag.acervo_arte_grafica_id  = @acervoArteGraficaId";
 
             return await conexao.Obter().QueryAsync<ImagemDetalhe>(query, new { acervoArteGraficaId });
