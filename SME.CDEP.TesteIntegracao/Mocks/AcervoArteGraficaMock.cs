@@ -19,8 +19,8 @@ public class AcervoArteGraficaMock : AcervoMock
         faker.RuleFor(x => x.Procedencia, f => f.Lorem.Text().Limite(200));
         faker.RuleFor(x => x.CopiaDigital, f => true);
         faker.RuleFor(x => x.PermiteUsoImagem, f => true);
-        faker.RuleFor(x => x.Largura, f => random.Next(15,55));
-        faker.RuleFor(x => x.Altura, f => random.Next(15,55));
+        faker.RuleFor(x => x.Largura, f => double.Parse("10.20"));
+        faker.RuleFor(x => x.Altura, f => double.Parse("50,45"));
         faker.RuleFor(x => x.ConservacaoId, f => random.Next(1,5));
         faker.RuleFor(x => x.CromiaId, f => random.Next(1,5));
         faker.RuleFor(x => x.Diametro, f => random.Next(15,55));
