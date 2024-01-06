@@ -34,16 +34,6 @@ namespace SME.CDEP.Aplicacao.Servicos
                 nomeArquivo = $"{codigo.ToString()}.jpeg";
                 
                 Bitmap imagem = new Bitmap(stream);
-                var miniatura = imagem.GetThumbnailImage(320, 200, () => false, IntPtr.Zero);
-                    
-                using (var msImagem = new MemoryStream())
-                {
-                    miniatura.Save(msImagem, ImageFormat.Jpeg);
-
-                    msImagem.Seek(0, SeekOrigin.Begin);
-
-                    await servicoArmazenamento.Armazenar($"{Guid.NewGuid()}_miniatura.jpeg", msImagem, Constantes.CONTENT_TYPE_JPEG);
-                }
                 
                 ImageCodecInfo jpegCodec = GetEncoderInfo(ImageFormat.Jpeg);
                 EncoderParameters encoderParameters = new EncoderParameters(1);
@@ -60,6 +50,20 @@ namespace SME.CDEP.Aplicacao.Servicos
             }
 
             path = await Armazenar(tipoArquivo, nomeArquivo, stream,formFile.ContentType);
+            
+            Image imagem2 = Image.FromStream(stream);
+            
+            var miniatura = imagem2.GetThumbnailImage(320, 200, () => false, IntPtr.Zero);
+                    
+            using (var msImagem = new MemoryStream())
+            {
+                miniatura.Save(msImagem, ImageFormat.Jpeg);
+
+                msImagem.Seek(0, SeekOrigin.Begin);
+
+                await servicoArmazenamento.ArmazenarTemporaria($"{Guid.NewGuid()}_miniatura.jpeg", msImagem, Constantes.CONTENT_TYPE_JPEG);
+            }
+            
             return new ArquivoArmazenadoDTO(path,codigo, formFile.FileName, formFile.ContentType, tipoArquivo);
         }
 
