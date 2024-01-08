@@ -130,7 +130,7 @@ public class ServicoAcessosFake : BaseMock, IServicoAcessos
 
     public Task<RetornoPerfilUsuarioDTO> RevalidarToken(string token)
     {
-        throw new NotImplementedException();
+        return ObterPerfisUsuario(string.Empty);
     }
 }
     
