@@ -1,6 +1,7 @@
 ﻿using Shouldly;
 using SME.CDEP.Aplicacao.DTOS;
 using SME.CDEP.Dominio.Entidades;
+using SME.CDEP.Dominio.Extensions;
 using SME.CDEP.Infra.Dominio.Enumerados;
 using SME.CDEP.TesteIntegracao.Setup;
 using Xunit;
@@ -24,6 +25,8 @@ namespace SME.CDEP.TesteIntegracao
 
             foreach (var arquivo in arquivos)
                 await InserirNaBase(arquivo);
+            
+            var arquivosInseridos = ObterTodos<Arquivo>();
 
             var acervoArteGraficas = AcervoArteGraficaDTOMock.GerarAcervoArteGraficaCadastroDTO().Generate(25);
 
@@ -32,6 +35,7 @@ namespace SME.CDEP.TesteIntegracao
             foreach (var arteGrafica in acervoArteGraficas)
             {
                 arteGrafica.Codigo = $"{arteGrafica.Codigo}{contador}";
+                arteGrafica.Arquivos = arquivosInseridos.Select(s => s.Id).ToArray();
                 await servicoAcervoArteGrafica.Inserir(arteGrafica);
                 contador++;
             }
@@ -52,7 +56,7 @@ namespace SME.CDEP.TesteIntegracao
                 pesquisaAcervoDto.Tipo.ShouldBe(TipoAcervo.ArtesGraficas);   
                 pesquisaAcervoDto.Titulo.ShouldNotBeEmpty();   
                 pesquisaAcervoDto.CreditoAutoria.ShouldNotBeNull();   
-                pesquisaAcervoDto.EnderecoImagem.ShouldNotBeNull();   
+                pesquisaAcervoDto.EnderecoImagem.EstaPreenchido().ShouldBeTrue();   
                 pesquisaAcervoDto.TipoAcervoTag.ShouldBe(TipoAcervoTag.MemoriaEducacaoMunicipal);   
             }
         }
@@ -69,6 +73,8 @@ namespace SME.CDEP.TesteIntegracao
 
             foreach (var arquivo in arquivos)
                 await InserirNaBase(arquivo);
+            
+            var arquivosInseridos = ObterTodos<Arquivo>();
 
             var acervoArteGraficas = AcervoArteGraficaDTOMock.GerarAcervoArteGraficaCadastroDTO().Generate(25);
 
@@ -77,6 +83,7 @@ namespace SME.CDEP.TesteIntegracao
             foreach (var arteGrafica in acervoArteGraficas)
             {
                 arteGrafica.Codigo = $"{arteGrafica.Codigo}{contador}";
+                arteGrafica.Arquivos = arquivosInseridos.Select(s => s.Id).ToArray();
                 await servicoAcervoArteGrafica.Inserir(arteGrafica);
                 contador++;
             }
@@ -98,7 +105,7 @@ namespace SME.CDEP.TesteIntegracao
                 pesquisaAcervoDto.Tipo.ShouldBe(TipoAcervo.ArtesGraficas);   
                 pesquisaAcervoDto.Titulo.ShouldNotBeEmpty();   
                 pesquisaAcervoDto.CreditoAutoria.ShouldNotBeNull();   
-                pesquisaAcervoDto.EnderecoImagem.ShouldNotBeNull();   
+                pesquisaAcervoDto.EnderecoImagem.EstaPreenchido().ShouldBeTrue();   
                 pesquisaAcervoDto.TipoAcervoTag.ShouldBe(TipoAcervoTag.MemoriaEducacaoMunicipal);   
             }
         }
@@ -115,6 +122,8 @@ namespace SME.CDEP.TesteIntegracao
 
             foreach (var arquivo in arquivos)
                 await InserirNaBase(arquivo);
+            
+            var arquivosInseridos = ObterTodos<Arquivo>();
 
             var acervoArteGraficas = AcervoArteGraficaDTOMock.GerarAcervoArteGraficaCadastroDTO().Generate(25);
 
@@ -125,6 +134,7 @@ namespace SME.CDEP.TesteIntegracao
                 arteGrafica.Codigo = $"{arteGrafica.Codigo}{contador}";
                 arteGrafica.DataAcervo = DateTimeExtension.HorarioBrasilia().Date.ToString("dd/MM/yyyy");
                 arteGrafica.Ano = DateTimeExtension.HorarioBrasilia().Year;
+                arteGrafica.Arquivos = arquivosInseridos.Select(s => s.Id).ToArray();
                 await servicoAcervoArteGrafica.Inserir(arteGrafica);
                 contador++;
             }
@@ -147,7 +157,7 @@ namespace SME.CDEP.TesteIntegracao
                 pesquisaAcervoDto.Tipo.ShouldBe(TipoAcervo.ArtesGraficas);   
                 pesquisaAcervoDto.Titulo.ShouldNotBeEmpty();   
                 pesquisaAcervoDto.CreditoAutoria.ShouldNotBeNull();   
-                pesquisaAcervoDto.EnderecoImagem.ShouldNotBeNull();   
+                pesquisaAcervoDto.EnderecoImagem.EstaPreenchido().ShouldBeTrue();   
                 pesquisaAcervoDto.TipoAcervoTag.ShouldBe(TipoAcervoTag.MemoriaEducacaoMunicipal);   
                 pesquisaAcervoDto.DataAcervo.ShouldNotBeNull();
                 pesquisaAcervoDto.DataAcervo.ShouldBe(DateTimeExtension.HorarioBrasilia().Date.ToString("dd/MM/yyyy"));
@@ -166,6 +176,8 @@ namespace SME.CDEP.TesteIntegracao
 
             foreach (var arquivo in arquivos)
                 await InserirNaBase(arquivo);
+            
+            var arquivosInseridos = ObterTodos<Arquivo>();
 
             var acervoArteGraficas = AcervoArteGraficaDTOMock.GerarAcervoArteGraficaCadastroDTO().Generate(25);
 
@@ -176,6 +188,7 @@ namespace SME.CDEP.TesteIntegracao
                 arteGrafica.Codigo = $"{arteGrafica.Codigo}{contador}";
                 arteGrafica.DataAcervo = DateTimeExtension.HorarioBrasilia().Date.ToString("dd/MM/yyyy");
                 arteGrafica.Ano = DateTimeExtension.HorarioBrasilia().Year;
+                arteGrafica.Arquivos = arquivosInseridos.Select(s => s.Id).ToArray();
                 await servicoAcervoArteGrafica.Inserir(arteGrafica);
                 contador++;
             }
@@ -198,7 +211,7 @@ namespace SME.CDEP.TesteIntegracao
                 pesquisaAcervoDto.Tipo.ShouldBe(TipoAcervo.ArtesGraficas);   
                 pesquisaAcervoDto.Titulo.ShouldNotBeEmpty();   
                 pesquisaAcervoDto.CreditoAutoria.ShouldNotBeNull();   
-                pesquisaAcervoDto.EnderecoImagem.ShouldNotBeNull();   
+                pesquisaAcervoDto.EnderecoImagem.EstaPreenchido().ShouldBeTrue();   
                 pesquisaAcervoDto.TipoAcervoTag.ShouldBe(TipoAcervoTag.MemoriaEducacaoMunicipal);   
                 pesquisaAcervoDto.DataAcervo.ShouldNotBeNull();
                 pesquisaAcervoDto.DataAcervo.ShouldBe(DateTimeExtension.HorarioBrasilia().Date.ToString("dd/MM/yyyy"));
@@ -218,6 +231,8 @@ namespace SME.CDEP.TesteIntegracao
             foreach (var arquivo in arquivos)
                 await InserirNaBase(arquivo);
 
+            var arquivosInseridos = ObterTodos<Arquivo>();
+
             var acervoArteGraficas = AcervoArteGraficaDTOMock.GerarAcervoArteGraficaCadastroDTO().Generate(25);
 
             var contador = 1;
@@ -226,6 +241,8 @@ namespace SME.CDEP.TesteIntegracao
             {
                 arteGrafica.Codigo = $"{arteGrafica.Codigo}{contador}";
                 arteGrafica.DataAcervo = DateTimeExtension.HorarioBrasilia().Date.ToString("dd/MM/yyyy");
+                arteGrafica.PermiteUsoImagem = true;
+                arteGrafica.Arquivos = arquivosInseridos.Select(s => s.Id).ToArray();
                 arteGrafica.Ano = DateTimeExtension.HorarioBrasilia().AddYears(-3).Year;
                 await servicoAcervoArteGrafica.Inserir(arteGrafica);
                 contador++;
@@ -250,7 +267,7 @@ namespace SME.CDEP.TesteIntegracao
                 pesquisaAcervoDto.Tipo.ShouldBe(TipoAcervo.ArtesGraficas);   
                 pesquisaAcervoDto.Titulo.ShouldNotBeEmpty();   
                 pesquisaAcervoDto.CreditoAutoria.ShouldNotBeNull();   
-                pesquisaAcervoDto.EnderecoImagem.ShouldNotBeNull();   
+                pesquisaAcervoDto.EnderecoImagem.EstaPreenchido().ShouldBeTrue();     
                 pesquisaAcervoDto.TipoAcervoTag.ShouldBe(TipoAcervoTag.MemoriaEducacaoMunicipal);   
                 pesquisaAcervoDto.DataAcervo.ShouldNotBeNull();
                 pesquisaAcervoDto.DataAcervo.ShouldBe(DateTimeExtension.HorarioBrasilia().Date.ToString("dd/MM/yyyy"));
@@ -288,6 +305,62 @@ namespace SME.CDEP.TesteIntegracao
             
             var pesquisa = await servicoAcervo.ObterPorTextoLivreETipoAcervo(filtro);
             pesquisa.ShouldBeNull();
+        }
+        
+        [Fact(DisplayName = "Acervo - Pesquisar acervos e não deve trazer imagens pois não permite uso de imagens")]
+        public async Task Pesquisar_acervo_sem_imagens_pois_nao_permite_uso_de_imagem()
+        {
+            await InserirDadosBasicosAleatorios();
+
+            var servicoAcervoArteGrafica = GetServicoAcervoArteGrafica();
+            var servicoAcervo = GetServicoAcervo();
+
+            var arquivos = ArquivoMock.Instance.GerarArquivo(TipoArquivo.AcervoArteGrafica).Generate(10);
+
+            foreach (var arquivo in arquivos)
+                await InserirNaBase(arquivo);
+            
+            var arquivosInseridos = ObterTodos<Arquivo>();
+
+            var acervoArteGraficas = AcervoArteGraficaDTOMock.GerarAcervoArteGraficaCadastroDTO().Generate(25);
+
+            var contador = 1;
+
+            foreach (var arteGrafica in acervoArteGraficas)
+            {
+                arteGrafica.Codigo = $"{arteGrafica.Codigo}{contador}";
+                arteGrafica.DataAcervo = DateTimeExtension.HorarioBrasilia().Date.ToString("dd/MM/yyyy");
+                arteGrafica.Ano = DateTimeExtension.HorarioBrasilia().AddYears(-3).Year;
+                arteGrafica.PermiteUsoImagem = false;
+                arteGrafica.Arquivos = arquivosInseridos.Select(s => s.Id).ToArray();
+                await servicoAcervoArteGrafica.Inserir(arteGrafica);
+                contador++;
+            }
+
+            var filtro = new FiltroTextoLivreTipoAcervoDTO()
+            {
+                TextoLivre = "a",
+                TipoAcervo = TipoAcervo.ArtesGraficas,
+                AnoInicial = DateTimeExtension.HorarioBrasilia().AddYears(-5).Year,
+                AnoFinal = DateTimeExtension.HorarioBrasilia().Year,
+            };
+            
+            var pesquisa = await servicoAcervo.ObterPorTextoLivreETipoAcervo(filtro);
+            pesquisa.ShouldNotBeNull();
+
+            foreach (var pesquisaAcervoDto in pesquisa.Items)
+            {
+                pesquisaAcervoDto.Descricao.ShouldNotBeEmpty();   
+                pesquisaAcervoDto.Codigo.ShouldNotBeEmpty();   
+                pesquisaAcervoDto.Assunto.ShouldBeEmpty();   
+                pesquisaAcervoDto.Tipo.ShouldBe(TipoAcervo.ArtesGraficas);   
+                pesquisaAcervoDto.Titulo.ShouldNotBeEmpty();   
+                pesquisaAcervoDto.CreditoAutoria.ShouldNotBeNull();   
+                pesquisaAcervoDto.EnderecoImagem.NaoEstaPreenchido().ShouldBeTrue();   
+                pesquisaAcervoDto.TipoAcervoTag.ShouldBe(TipoAcervoTag.MemoriaEducacaoMunicipal);   
+                pesquisaAcervoDto.DataAcervo.ShouldNotBeNull();
+                pesquisaAcervoDto.DataAcervo.ShouldBe(DateTimeExtension.HorarioBrasilia().Date.ToString("dd/MM/yyyy"));
+            }
         }
     }
 }
