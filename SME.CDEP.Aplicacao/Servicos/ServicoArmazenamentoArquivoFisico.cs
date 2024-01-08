@@ -34,7 +34,7 @@ namespace SME.CDEP.Aplicacao.Servicos
                 nomeArquivo = $"{codigo.ToString()}.jpeg";
                 
                 Bitmap imagem = new Bitmap(stream);
-                    
+                
                 ImageCodecInfo jpegCodec = GetEncoderInfo(ImageFormat.Jpeg);
                 EncoderParameters encoderParameters = new EncoderParameters(1);
                 encoderParameters.Param[0] = new EncoderParameter(Encoder.Quality, 100L); 
@@ -50,6 +50,7 @@ namespace SME.CDEP.Aplicacao.Servicos
             }
 
             path = await Armazenar(tipoArquivo, nomeArquivo, stream,formFile.ContentType);
+            
             return new ArquivoArmazenadoDTO(path,codigo, formFile.FileName, formFile.ContentType, tipoArquivo);
         }
 
