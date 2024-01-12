@@ -21,7 +21,9 @@ ENV TZ=America/Sao_Paulo
 RUN apt-get update \
     && apt-get install -yq tzdata locales -y \ 
     && apt-get install -y --allow-unauthenticated \        
-        libgdiplus \        
+    && apt-get install -y libc6-dev \
+    && apt-get install -y libgdiplus \
+    && apt-get install -y libx11-dev \	
     && dpkg-reconfigure --frontend noninteractive tzdata \
 	  && locale-gen en_US.UTF-8
 COPY --from=publish /app/publish .

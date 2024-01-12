@@ -1,6 +1,4 @@
 ﻿using Microsoft.AspNetCore.Authorization;
-using SME.SGP.Infra;
-using System.Linq;
 using SME.CDEP.Infra.Dominio.Enumerados;
 
 namespace SME.CDEP.Webapi.Filtros

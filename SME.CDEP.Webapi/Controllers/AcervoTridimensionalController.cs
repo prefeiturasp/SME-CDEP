@@ -18,7 +18,7 @@ public class AcervoTridimensionalController: BaseController
     [ProducesResponseType(typeof(RetornoBaseDTO), 422)]
     [ProducesResponseType(typeof(RetornoBaseDTO), 500)]
     [ProducesResponseType(typeof(RetornoBaseDTO), 601)]
-    // [Permissao(Permissao.ACR_I, Policy = "Bearer")]
+    [Permissao(Permissao.CadastroAcervo_I, Policy = "Bearer")]
     public async Task<IActionResult> Inserir([FromBody] AcervoTridimensionalCadastroDTO acervoTridimensional, [FromServices] IServicoAcervoTridimensional servicoAcervoTridimensional)
     {
         return Ok(await servicoAcervoTridimensional.Inserir(acervoTridimensional));
@@ -31,7 +31,7 @@ public class AcervoTridimensionalController: BaseController
     [ProducesResponseType(typeof(RetornoBaseDTO), 422)]
     [ProducesResponseType(typeof(RetornoBaseDTO), 500)]
     [ProducesResponseType(typeof(RetornoBaseDTO), 601)]
-    [Permissao(Permissao.ACR_A, Policy = "Bearer")]
+    [Permissao(Permissao.CadastroAcervo_A, Policy = "Bearer")]
     public async Task<IActionResult> Alterar([FromBody] AcervoTridimensionalAlteracaoDTO acervoTridimensional, [FromServices] IServicoAcervoTridimensional servicoAcervoTridimensional)
     {
         return Ok(await servicoAcervoTridimensional.Alterar(acervoTridimensional));
@@ -42,7 +42,7 @@ public class AcervoTridimensionalController: BaseController
     [ProducesResponseType(typeof(RetornoBaseDTO), 400)]
     [ProducesResponseType(typeof(RetornoBaseDTO), 403)]
     [ProducesResponseType(typeof(RetornoBaseDTO), 601)]
-    [Permissao(Permissao.ACR_C, Policy = "Bearer")]
+    [Permissao(Permissao.CadastroAcervo_C, Policy = "Bearer")]
     public async Task<IActionResult> ObterPorId([FromRoute] long acervoId,[FromServices] IServicoAcervoTridimensional servicoAcervoTridimensional)
     {
         return Ok(await servicoAcervoTridimensional.ObterPorId(acervoId));
@@ -53,7 +53,7 @@ public class AcervoTridimensionalController: BaseController
     [ProducesResponseType(typeof(RetornoBaseDTO), 400)]
     [ProducesResponseType(typeof(RetornoBaseDTO), 403)]
     [ProducesResponseType(typeof(RetornoBaseDTO), 601)]
-    [Permissao(Permissao.ACR_E, Policy = "Bearer")]
+    [Permissao(Permissao.CadastroAcervo_E, Policy = "Bearer")]
     public async Task<IActionResult> ExclusaoLogica([FromRoute] long acervoId, [FromServices] IServicoAcervoTridimensional servicoAcervoTridimensional)
     {
         return Ok(await servicoAcervoTridimensional.Excluir(acervoId));

@@ -18,7 +18,7 @@ public class SerieColecaoController: BaseController
     [ProducesResponseType(typeof(RetornoBaseDTO), 403)]
     [ProducesResponseType(typeof(RetornoBaseDTO), 500)]
     [ProducesResponseType(typeof(RetornoBaseDTO), 601)]
-    [Permissao(Permissao.SRC_I, Policy = "Bearer")]
+    [Permissao(Permissao.CadastroSerieColecao_I, Policy = "Bearer")]
     public async Task<IActionResult> Inserir([FromBody] NomeDTO serieColecao, [FromServices] IServicoSerieColecao servicoSerieColecao)
     {
         return Ok(await servicoSerieColecao.Inserir(new IdNomeExcluidoAuditavelDTO() { Nome = serieColecao.Nome}));
@@ -30,7 +30,7 @@ public class SerieColecaoController: BaseController
     [ProducesResponseType(typeof(RetornoBaseDTO), 403)]
     [ProducesResponseType(typeof(RetornoBaseDTO), 500)]
     [ProducesResponseType(typeof(RetornoBaseDTO), 601)]
-    [Permissao(Permissao.SRC_A, Policy = "Bearer")]
+    [Permissao(Permissao.CadastroSerieColecao_A, Policy = "Bearer")]
     public async Task<IActionResult> Alterar([FromBody] IdNomeDTO serieColecao, [FromServices] IServicoSerieColecao servicoSerieColecao)
     {
         return Ok(await servicoSerieColecao.Alterar(new IdNomeExcluidoAuditavelDTO() {Id = serieColecao.Id, Nome = serieColecao.Nome}));
@@ -42,7 +42,7 @@ public class SerieColecaoController: BaseController
     [ProducesResponseType(typeof(RetornoBaseDTO), 403)]
     [ProducesResponseType(typeof(RetornoBaseDTO), 500)]
     [ProducesResponseType(typeof(RetornoBaseDTO), 601)] 
-    [Permissao(Permissao.SRC_C, Policy = "Bearer")]
+    [Permissao(Permissao.CadastroSerieColecao_C, Policy = "Bearer")]
     public async Task<IActionResult> ObterTodosOuPorNome([FromQuery] string? nome,[FromServices]IServicoSerieColecao servicoSerieColecao)
     {
         return Ok(await servicoSerieColecao.ObterPaginado(nome));
@@ -52,7 +52,7 @@ public class SerieColecaoController: BaseController
     [ProducesResponseType(typeof(RetornoBaseDTO), 400)]
     [ProducesResponseType(typeof(RetornoBaseDTO), 601)]
     [ProducesResponseType(typeof(IdNomeDTO), 200)]  
-    [Authorize("Bearer")]
+    [Permissao(Permissao.CadastroSerieColecao_C, Policy = "Bearer")]
     public async Task<IActionResult> ObterTodos([FromServices]IServicoSerieColecao servicoSerieColecao)
     {
         return Ok((await servicoSerieColecao.ObterTodos()).Select(s=> new IdNomeDTO() { Id = s.Id, Nome = s.Nome}));
@@ -64,7 +64,7 @@ public class SerieColecaoController: BaseController
     [ProducesResponseType(typeof(RetornoBaseDTO), 403)]
     [ProducesResponseType(typeof(RetornoBaseDTO), 500)]
     [ProducesResponseType(typeof(RetornoBaseDTO), 601)]  
-    [Permissao(Permissao.SRC_C, Policy = "Bearer")]
+    [Permissao(Permissao.CadastroSerieColecao_C, Policy = "Bearer")]
     public async Task<IActionResult> ObterPorId([FromRoute] long id,[FromServices]IServicoSerieColecao servicoSerieColecao)
     {
         return Ok(await servicoSerieColecao.ObterPorId(id));
@@ -76,7 +76,7 @@ public class SerieColecaoController: BaseController
     [ProducesResponseType(typeof(RetornoBaseDTO), 403)]
     [ProducesResponseType(typeof(RetornoBaseDTO), 500)]
     [ProducesResponseType(typeof(RetornoBaseDTO), 601)]
-    [Permissao(Permissao.SRC_E, Policy = "Bearer")]
+    [Permissao(Permissao.CadastroSerieColecao_E, Policy = "Bearer")]
     public async Task<IActionResult> ExclusaoLogica([FromRoute] long id, [FromServices] IServicoSerieColecao servicoSerieColecao)
     {
         return Ok(await servicoSerieColecao.Excluir(id));

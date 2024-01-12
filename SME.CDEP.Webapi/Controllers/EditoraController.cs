@@ -18,7 +18,7 @@ public class EditoraController: BaseController
     [ProducesResponseType(typeof(RetornoBaseDTO), 403)]
     [ProducesResponseType(typeof(RetornoBaseDTO), 500)]
     [ProducesResponseType(typeof(RetornoBaseDTO), 601)]
-    [Permissao(Permissao.EDT_I, Policy = "Bearer")]
+    [Permissao(Permissao.CadastroEditora_I, Policy = "Bearer")]
     public async Task<IActionResult> Inserir([FromBody] NomeDTO editora, [FromServices] IServicoEditora servicoEditora)
     {
         return Ok(await servicoEditora.Inserir(new IdNomeExcluidoAuditavelDTO() { Nome = editora.Nome}));
@@ -30,7 +30,7 @@ public class EditoraController: BaseController
     [ProducesResponseType(typeof(RetornoBaseDTO), 403)]
     [ProducesResponseType(typeof(RetornoBaseDTO), 500)]
     [ProducesResponseType(typeof(RetornoBaseDTO), 601)]
-    [Permissao(Permissao.EDT_A, Policy = "Bearer")]
+    [Permissao(Permissao.CadastroEditora_A, Policy = "Bearer")]
     public async Task<IActionResult> Alterar([FromBody] IdNomeDTO editora, [FromServices] IServicoEditora servicoEditora)
     {
         return Ok(await servicoEditora.Alterar(new IdNomeExcluidoAuditavelDTO() {Id = editora.Id, Nome = editora.Nome}));
@@ -42,7 +42,7 @@ public class EditoraController: BaseController
     [ProducesResponseType(typeof(RetornoBaseDTO), 403)]
     [ProducesResponseType(typeof(RetornoBaseDTO), 500)]
     [ProducesResponseType(typeof(RetornoBaseDTO), 601)] 
-    [Permissao(Permissao.EDT_C, Policy = "Bearer")]
+    [Permissao(Permissao.CadastroEditora_C, Policy = "Bearer")]
     public async Task<IActionResult> ObterTodosOuPorNome([FromQuery] string? nome,[FromServices]IServicoEditora servicoEditora)
     {
         return Ok(await servicoEditora.ObterPaginado(nome));
@@ -52,7 +52,7 @@ public class EditoraController: BaseController
     [ProducesResponseType(typeof(RetornoBaseDTO), 400)]
     [ProducesResponseType(typeof(RetornoBaseDTO), 601)]
     [ProducesResponseType(typeof(IdNomeDTO), 200)]  
-    [Authorize("Bearer")]
+    [Permissao(Permissao.CadastroEditora_C, Policy = "Bearer")]
     public async Task<IActionResult> ObterTodos([FromServices]IServicoEditora servicoEditora)
     {
         return Ok((await servicoEditora.ObterTodos()).Select(s=> new IdNomeDTO() { Id = s.Id, Nome = s.Nome}));
@@ -64,7 +64,7 @@ public class EditoraController: BaseController
     [ProducesResponseType(typeof(RetornoBaseDTO), 403)]
     [ProducesResponseType(typeof(RetornoBaseDTO), 500)]
     [ProducesResponseType(typeof(RetornoBaseDTO), 601)] 
-    [Permissao(Permissao.EDT_C, Policy = "Bearer")]
+    [Permissao(Permissao.CadastroEditora_C, Policy = "Bearer")]
     public async Task<IActionResult> ObterPorId([FromRoute] long id,[FromServices]IServicoEditora servicoEditora)
     {
         return Ok(await servicoEditora.ObterPorId(id));
@@ -76,7 +76,7 @@ public class EditoraController: BaseController
     [ProducesResponseType(typeof(RetornoBaseDTO), 403)]
     [ProducesResponseType(typeof(RetornoBaseDTO), 500)]
     [ProducesResponseType(typeof(RetornoBaseDTO), 601)]
-    [Permissao(Permissao.EDT_E, Policy = "Bearer")]
+    [Permissao(Permissao.CadastroEditora_E, Policy = "Bearer")]
     public async Task<IActionResult> ExclusaoLogica([FromRoute] long id, [FromServices] IServicoEditora servicoEditora)
     {
         return Ok(await servicoEditora.Excluir(id));
