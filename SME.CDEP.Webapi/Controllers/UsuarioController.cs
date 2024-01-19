@@ -132,4 +132,14 @@ public class UsuarioController: BaseController
     {
         return Ok(await servicoUsuario.ValidarCpfExistente(cpf));
     }
+    
+    [HttpGet("dados-solicitante")] 
+    [ProducesResponseType(typeof(DadosSolicitanteDTO), 200)]
+    [ProducesResponseType(typeof(RetornoBaseDTO), 400)]
+    [ProducesResponseType(typeof(RetornoBaseDTO), 500)]
+    [Authorize("Bearer")]
+    public async Task<IActionResult> ObterDadosSolicitante([FromServices] IServicoUsuario servicoUsuario)
+    {
+        return Ok(await servicoUsuario.ObterDadosSolicitante());
+    }
 }
