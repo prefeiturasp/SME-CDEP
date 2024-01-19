@@ -157,6 +157,7 @@ public class RegistradorDeDependencia
         _serviceCollection.TryAddScoped<IRepositorioAcervoBibliografico, RepositorioAcervoBibliografico>();
         _serviceCollection.TryAddScoped<IRepositorioAcervoBibliograficoAssunto, RepositorioAcervoBibliograficoAssunto>();
         _serviceCollection.TryAddScoped<IRepositorioImportacaoArquivo, RepositorioImportacaoArquivo>();
+        _serviceCollection.TryAddScoped<IRepositorioParametroSistema, RepositorioParametroSistema>();
     }
 
     protected virtual void RegistrarServicos()
