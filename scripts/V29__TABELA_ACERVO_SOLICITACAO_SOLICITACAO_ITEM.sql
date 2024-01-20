@@ -24,6 +24,7 @@ CREATE TABLE if not exists public.acervo_solicitacao_item (
 	acervo_solicitacao_id int8 not null,		
 	acervo_id int8 not null,
 	situacao int2 NOT NULL,		
+	dt_visita timestamp NULL,
 	criado_em timestamp NOT NULL,
 	criado_por varchar(200) NOT NULL,
 	criado_login varchar(200) NOT NULL,	

@@ -6,6 +6,7 @@ namespace SME.CDEP.Dominio.Entidades
     {
         public long AcervoSolicitacaoId { get; set; }
         public long AcervoId { get; set; }
+        public DateTime? DataVisita { get; set; }
         public SituacaoSolicitacaoItem Situacao { get; set; }
     }
 }
