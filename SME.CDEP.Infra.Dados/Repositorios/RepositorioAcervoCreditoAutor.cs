@@ -19,6 +19,15 @@ namespace SME.CDEP.Infra.Dados.Repositorios
                                                     from acervo_credito_autor 
                                                     where acervo_id = @id {IncluirTipoAutoria(incluirTipoAutoria)}",
                     new { id });
+        
+        public async Task<IEnumerable<string>> ObterNomesPorAcervoId(long id)
+            => await conexao.Obter()
+                .QueryAsync<string>($@"
+                select 
+                  ca.nome
+                from acervo_credito_autor aca 
+                  join credito_autor ca on ca.id = aca.credito_autor_id
+                where aca.acervo_id  = @id and not ca.excluido", new { id });
 
         private string IncluirTipoAutoria(bool incluirTipoAutoria)
         {

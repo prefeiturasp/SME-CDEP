@@ -14,7 +14,10 @@ create table if not exists public.parametro_sistema (
 	alterado_rf varchar(200) NULL,
 	CONSTRAINT parametro_sistema_pk PRIMARY KEY (id)
 );
+drop index if exists parametro_sistema_ano_idx;
 CREATE INDEX parametro_sistema_ano_idx ON public.parametro_sistema USING btree (ano);
+
+drop index if exists parametro_sistema_tipo_idx;
 CREATE INDEX parametro_sistema_tipo_idx ON public.parametro_sistema USING btree (tipo);
 
 INSERT INTO public.parametro_sistema (nome, tipo, descricao, valor, ano, ativo, criado_em, criado_por, criado_login)

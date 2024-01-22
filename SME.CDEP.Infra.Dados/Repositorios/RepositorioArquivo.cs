@@ -83,7 +83,7 @@ namespace SME.CDEP.Infra.Dados.Repositorios
             return arquivo.Id;
         }
 
-        public async Task<IEnumerable<AcervoCodigoNomeResumido>> ObterAcervoCodigoNomeArquivoPorAcervoId(long[] acervosIds)
+        public async Task<IEnumerable<AcervoArquivoCodigoNomeResumido>> ObterAcervoCodigoNomeArquivoPorAcervoId(long[] acervosIds)
         {
             var query = @"select ag.acervo_id as acervoId, a.nome, a.codigo 
                             from acervo_arte_grafica ag 
@@ -103,7 +103,7 @@ namespace SME.CDEP.Infra.Dados.Repositorios
                                     join arquivo a on a.id = ata.arquivo_id
                             where at.acervo_id = any(@acervosIds) ";
 
-            return await conexao.Obter().QueryAsync<AcervoCodigoNomeResumido>(query, new { acervosIds });
+            return await conexao.Obter().QueryAsync<AcervoArquivoCodigoNomeResumido>(query, new { acervosIds });
         }
 
         public async Task<Arquivo> ObterArquivoPorNomeTipoArquivo(string nome, TipoArquivo tipoArquivo)
