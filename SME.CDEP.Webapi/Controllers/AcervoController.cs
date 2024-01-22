@@ -60,7 +60,7 @@ public class AcervoController: BaseController
     [ProducesResponseType(typeof(RetornoBaseDTO), 400)]
     [ProducesResponseType(typeof(RetornoBaseDTO), 403)]
     [ProducesResponseType(typeof(RetornoBaseDTO), 601)]
-    [Permissao(Policy = "Bearer")]
+    [Permissao(Permissao.OperacoesSolicitacoes_C, Policy = "Bearer")]
     public async Task<IActionResult> ObterTermoDeCompromisso([FromServices]IServicoAcervo servicoAcervo)
     {
         return Ok(await servicoAcervo.ObterTermoDeCompromisso());
