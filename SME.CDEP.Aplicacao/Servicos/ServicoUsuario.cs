@@ -215,6 +215,7 @@ namespace SME.CDEP.Aplicacao.Servicos
             {
                 usuario.UltimoLogin = DateTimeExtension.HorarioBrasilia();
                 usuario.Nome = retorno.Nome;
+                usuario.Email = retorno.Email;
                 await repositorioUsuario.Atualizar(usuario);
             }
             else
@@ -339,6 +340,20 @@ namespace SME.CDEP.Aplicacao.Servicos
         public async Task<bool> ValidarCpfExistente(string cpf)
         {
             return await ValidarCpfEmUsuarioAcervoECoreSSO(cpf);
+        }
+
+        public async Task<DadosSolicitanteDTO> ObterDadosSolicitante()
+        {
+            var usuarioLogado = await ObterUsuarioLogado();
+
+            var usuario = await repositorioUsuario.ObterPorLogin(usuarioLogado.Login);
+
+            var dadosSolicitante = mapper.Map<DadosSolicitanteDTO>(usuario);
+            
+            dadosSolicitante.ObterEnderecoCompleto(usuario.Numero, usuario.Complemento, 
+                usuario.Cidade, usuario.Estado, usuario.Cep);
+
+            return dadosSolicitante;
         }
     }
 }

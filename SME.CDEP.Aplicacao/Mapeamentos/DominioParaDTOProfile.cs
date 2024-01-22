@@ -2,6 +2,7 @@
 using SME.CDEP.Aplicacao.DTOS;
 using SME.CDEP.Dominio.Entidades;
 using SME.CDEP.Dominio.Extensions;
+using SME.CDEP.Infra.Dominio.Enumerados;
 
 namespace SME.CDEP.Aplicacao.Mapeamentos
 {
@@ -224,6 +225,14 @@ namespace SME.CDEP.Aplicacao.Mapeamentos
                 .ForMember(dest => dest.Dimensoes, opt => opt.MapFrom(o => 
                     $"{o.Largura.ToString().ObterValorOuZero()} x {o.Altura.ToString().ObterValorOuZero()}")
                 ).ReverseMap(); 
+
+            CreateMap<Usuario,DadosSolicitanteDTO>()
+                .ForMember(dest => dest.Cpf, opt => opt.MapFrom(o => o.TipoUsuario.EhCoreSSO() ? null : o.Login))
+                .ForMember(dest => dest.Tipo, opt => opt.MapFrom(o => o.TipoUsuario))
+                .ReverseMap();
+            
+            CreateMap<AcervoSolicitacaoDTO,AcervoSolicitacao>().ReverseMap();
+            CreateMap<AcervoSolicitacaoItemDTO,AcervoSolicitacaoItem>().ReverseMap();
         }
     }
 }

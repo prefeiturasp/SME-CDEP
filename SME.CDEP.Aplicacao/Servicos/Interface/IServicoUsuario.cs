@@ -25,5 +25,6 @@ namespace SME.CDEP.Aplicacao.Servicos.Interface
         IEnumerable<Permissao> ObterPermissoes();
         Task<RetornoPerfilUsuarioDTO> RevalidarToken(string token);
         Task<RetornoPerfilUsuarioDTO> AtualizarPerfil(Guid perfilUsuarioId);
+        Task<DadosSolicitanteDTO> ObterDadosSolicitante();
     }
 }

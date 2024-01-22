@@ -28,6 +28,7 @@ namespace SME.CDEP.Aplicacao.Servicos
         private readonly IRepositorioAcervoAudiovisual repositorioAcervoAudiovisual;
         private readonly IRepositorioAcervoFotografico repositorioAcervoFotografico;
         private readonly IRepositorioAcervoTridimensional repositorioAcervoTridimensional;
+        private readonly IRepositorioParametroSistema repositorioParametroSistema;
         
         public ServicoAcervoAuditavel(IRepositorioAcervo repositorioAcervo, IMapper mapper, 
             IContextoAplicacao contextoAplicacao, IRepositorioAcervoCreditoAutor repositorioAcervoCreditoAutor,
@@ -37,7 +38,8 @@ namespace SME.CDEP.Aplicacao.Servicos
             IRepositorioAcervoArteGrafica repositorioAcervoArteGrafica,
             IRepositorioAcervoAudiovisual repositorioAcervoAudiovisual,
             IRepositorioAcervoFotografico repositorioAcervoFotografico,
-            IRepositorioAcervoTridimensional repositorioAcervoTridimensional)
+            IRepositorioAcervoTridimensional repositorioAcervoTridimensional,
+            IRepositorioParametroSistema repositorioParametroSistema)
         {
             this.repositorioAcervo = repositorioAcervo ?? throw new ArgumentNullException(nameof(repositorioAcervo));
             this.mapper = mapper ?? throw new ArgumentNullException(nameof(mapper));
@@ -51,6 +53,7 @@ namespace SME.CDEP.Aplicacao.Servicos
             this.repositorioAcervoAudiovisual = repositorioAcervoAudiovisual ?? throw new ArgumentNullException(nameof(repositorioAcervoAudiovisual));
             this.repositorioAcervoFotografico = repositorioAcervoFotografico ?? throw new ArgumentNullException(nameof(repositorioAcervoFotografico));
             this.repositorioAcervoTridimensional = repositorioAcervoTridimensional ?? throw new ArgumentNullException(nameof(repositorioAcervoTridimensional));
+            this.repositorioParametroSistema = repositorioParametroSistema ?? throw new ArgumentNullException(nameof(repositorioParametroSistema));
         }
         
         public async Task<long> Inserir(Acervo acervo)
@@ -375,6 +378,16 @@ namespace SME.CDEP.Aplicacao.Servicos
             }
 
             return acervo;
+        }
+
+        public async Task<string> ObterTermoDeCompromisso()
+        {
+            var retorno = await repositorioParametroSistema.ObterParametroPorTipoEAno(TipoParametroSistema.TermoCompromissoPesquisador, DateTimeExtension.HorarioBrasilia().Year);
+
+            if (retorno.EhNulo() || !retorno.Ativo)
+                return default;
+
+            return retorno.Valor;
         }
 
         public Paginacao Paginacao

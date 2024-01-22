@@ -1,6 +1,4 @@
-﻿using SME.CDEP.Dominio.Entidades;
-
-namespace SME.CDEP.Infra.Dados.Mapeamentos
+﻿namespace SME.CDEP.Infra.Dados.Mapeamentos
 {
     public class UsuarioMap : BaseMapAuditavel<CDEP.Dominio.Entidades.Usuario>
     {
@@ -21,6 +19,7 @@ namespace SME.CDEP.Infra.Dados.Mapeamentos
             Map(c => c.Cep).ToColumn("cep");
             Map(c => c.TipoUsuario).ToColumn("tipo");
             Map(c => c.Bairro).ToColumn("bairro");
+            Map(c => c.Email).ToColumn("email");
         }
     }
 }

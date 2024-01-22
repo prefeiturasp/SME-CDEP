@@ -107,6 +107,9 @@ public class RegistradorDeDependencia
             config.AddMap(new AcervoBibliograficoMap());
             config.AddMap(new AcervoBibliograficoAssuntoMap());
             config.AddMap(new ImportacaoArquivoMap());
+            config.AddMap(new AcervoSolicitacaoMap());
+            config.AddMap(new AcervoSolicitacaoItemMap());
+            config.AddMap(new ParametroSistemaMap());
             config.ForDommel();
         });
     }
@@ -157,6 +160,9 @@ public class RegistradorDeDependencia
         _serviceCollection.TryAddScoped<IRepositorioAcervoBibliografico, RepositorioAcervoBibliografico>();
         _serviceCollection.TryAddScoped<IRepositorioAcervoBibliograficoAssunto, RepositorioAcervoBibliograficoAssunto>();
         _serviceCollection.TryAddScoped<IRepositorioImportacaoArquivo, RepositorioImportacaoArquivo>();
+        _serviceCollection.TryAddScoped<IRepositorioParametroSistema, RepositorioParametroSistema>();
+        _serviceCollection.TryAddScoped<IRepositorioAcervoSolicitacao, RepositorioAcervoSolicitacao>();
+        _serviceCollection.TryAddScoped<IRepositorioAcervoSolicitacaoItem, RepositorioAcervoSolicitacaoItem>();
     }
 
     protected virtual void RegistrarServicos()
@@ -201,6 +207,7 @@ public class RegistradorDeDependencia
         _serviceCollection.TryAddScoped<IServicoImportacaoArquivoAcervoFotografico, ServicoImportacaoArquivoAcervoFotografico>();
         _serviceCollection.TryAddScoped<IServicoImportacaoArquivoAcervoTridimensional, ServicoImportacaoArquivoAcervoTridimensional>();
         _serviceCollection.TryAddScoped<IServicoImportacaoArquivoAcervo, ServicoImportacaoArquivoAcervo>();
+        _serviceCollection.TryAddScoped<IServicoAcervoSolicitacao, ServicoAcervoSolicitacao>();
     }
     protected virtual void RegistrarHttpClients()
     {

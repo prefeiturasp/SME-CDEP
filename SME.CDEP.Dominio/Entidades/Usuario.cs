@@ -18,6 +18,7 @@ namespace SME.CDEP.Dominio.Entidades
         public string Cep { get; set; }
         public TipoUsuario TipoUsuario { get; set; }
         public string Bairro { get; set; }
+        public string Email { get; set; }
 
         public bool EhCadastroExterno()
         {
