@@ -54,4 +54,15 @@ public class AcervoController: BaseController
     {
         return Ok(await servicoAcervo.ObterDetalhamentoPorTipoAcervoECodigo(filtroDetalharAcervoDto));
     }
+    
+    [HttpGet("termo-compromisso")]
+    [ProducesResponseType(typeof(string), 200)]
+    [ProducesResponseType(typeof(RetornoBaseDTO), 400)]
+    [ProducesResponseType(typeof(RetornoBaseDTO), 403)]
+    [ProducesResponseType(typeof(RetornoBaseDTO), 601)]
+    [Permissao(Policy = "Bearer")]
+    public async Task<IActionResult> ObterTermoDeCompromisso([FromServices]IServicoAcervo servicoAcervo)
+    {
+        return Ok(await servicoAcervo.ObterTermoDeCompromisso());
+    }
 }
