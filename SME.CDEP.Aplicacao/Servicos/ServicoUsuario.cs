@@ -349,22 +349,10 @@ namespace SME.CDEP.Aplicacao.Servicos
             var usuario = await repositorioUsuario.ObterPorLogin(usuarioLogado.Login);
 
             var dadosSolicitante = mapper.Map<DadosSolicitanteDTO>(usuario);
+            
+            dadosSolicitante.ObterEnderecoCompleto(usuario.Numero, usuario.Complemento, 
+                usuario.Cidade, usuario.Estado, usuario.Cep);
 
-            if (usuario.Numero.EhMaiorQueZero())
-                dadosSolicitante.Endereco += $", {usuario.Numero}";
-            
-            if (usuario.Complemento.EstaPreenchido())
-                dadosSolicitante.Endereco += $" - , {usuario.Complemento}";
-            
-            if (usuario.Cidade.EstaPreenchido())
-                dadosSolicitante.Endereco += $" - {usuario.Cidade}";
-            
-            if (usuario.Estado.EstaPreenchido())
-                dadosSolicitante.Endereco += $"/{usuario.Estado}";
-            
-            if (usuario.Cep.EstaPreenchido())
-                dadosSolicitante.Endereco += $" - {usuario.Cep}";
-            
             return dadosSolicitante;
         }
     }

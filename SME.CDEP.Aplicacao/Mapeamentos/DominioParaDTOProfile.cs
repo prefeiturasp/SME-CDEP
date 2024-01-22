@@ -230,6 +230,9 @@ namespace SME.CDEP.Aplicacao.Mapeamentos
                 .ForMember(dest => dest.Cpf, opt => opt.MapFrom(o => o.TipoUsuario.EhCoreSSO() ? null : o.Login))
                 .ForMember(dest => dest.Tipo, opt => opt.MapFrom(o => o.TipoUsuario))
                 .ReverseMap();
+            
+            CreateMap<AcervoSolicitacaoDTO,AcervoSolicitacao>().ReverseMap();
+            CreateMap<AcervoSolicitacaoItemDTO,AcervoSolicitacaoItem>().ReverseMap();
         }
     }
 }

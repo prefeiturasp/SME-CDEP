@@ -1,6 +1,4 @@
-﻿using SME.CDEP.Dominio.Entidades;
-
-namespace SME.CDEP.Infra.Dados.Mapeamentos
+﻿namespace SME.CDEP.Infra.Dados.Mapeamentos
 {
     public class UsuarioMap : BaseMapAuditavel<CDEP.Dominio.Entidades.Usuario>
     {
