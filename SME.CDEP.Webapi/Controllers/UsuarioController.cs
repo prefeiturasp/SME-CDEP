@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Mvc;
 using SME.CDEP.Aplicacao.DTOS;
 using SME.CDEP.Aplicacao.Servicos.Interface;
+using SME.CDEP.Infra.Dominio.Enumerados;
 using SME.CDEP.Webapi.Filtros;
 
 namespace SME.CDEP.Webapi.Controllers;
@@ -137,7 +138,7 @@ public class UsuarioController: BaseController
     [ProducesResponseType(typeof(DadosSolicitanteDTO), 200)]
     [ProducesResponseType(typeof(RetornoBaseDTO), 400)]
     [ProducesResponseType(typeof(RetornoBaseDTO), 500)]
-    [Authorize("Bearer")]
+    [Permissao(Permissao.OperacoesSolicitacoes_C, Policy = "Bearer")]
     public async Task<IActionResult> ObterDadosSolicitante([FromServices] IServicoUsuario servicoUsuario)
     {
         return Ok(await servicoUsuario.ObterDadosSolicitante());
