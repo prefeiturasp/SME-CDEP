@@ -16,7 +16,6 @@ namespace SME.CDEP.Infra.Dados.Repositorios
                             from parametro_sistema ps
                            where ano = @ano
                              and tipo = @tipo
-                             and not excluido
                              and ativo";
 
             return await conexao.Obter().QueryFirstOrDefaultAsync<ParametroSistema>(query, new { tipo, ano });
