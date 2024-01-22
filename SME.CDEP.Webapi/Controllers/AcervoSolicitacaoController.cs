@@ -13,7 +13,7 @@ public class AcervoSolicitacaoController: BaseController
 {
 
 
-    [HttpGet]
+    [HttpPost("obter-itens")]
     [ProducesResponseType(typeof(IEnumerable<AcervoSolicitacaoItemRetornoDTO>), 200)]
     [ProducesResponseType(typeof(RetornoBaseDTO), 400)]
     [ProducesResponseType(typeof(RetornoBaseDTO), 403)]
