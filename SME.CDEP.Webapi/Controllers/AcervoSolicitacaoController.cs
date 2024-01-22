@@ -24,18 +24,18 @@ public class AcervoSolicitacaoController: BaseController
         return Ok(await servicoAcervoSolicitacao.ObterItensDoAcervoPorFiltros(acervosSolicitacaoItensConsultaDTO));
     }
 
-    // [HttpPost]
-    // [ProducesResponseType(typeof(AcervoArteGraficaCadastroDTO), 200)]
-    // [ProducesResponseType(typeof(RetornoBaseDTO), 400)]
-    // [ProducesResponseType(typeof(RetornoBaseDTO), 403)]
-    // [ProducesResponseType(typeof(RetornoBaseDTO), 422)]
-    // [ProducesResponseType(typeof(RetornoBaseDTO), 500)]
-    // [ProducesResponseType(typeof(RetornoBaseDTO), 601)]
+    [HttpPost]
+    [ProducesResponseType(typeof(IEnumerable<AcervoSolicitacaoItemRetornoCadastroDTO>), 200)]
+    [ProducesResponseType(typeof(RetornoBaseDTO), 400)]
+    [ProducesResponseType(typeof(RetornoBaseDTO), 403)]
+    [ProducesResponseType(typeof(RetornoBaseDTO), 422)]
+    [ProducesResponseType(typeof(RetornoBaseDTO), 500)]
+    [ProducesResponseType(typeof(RetornoBaseDTO), 601)]
     // [Permissao(Permissao.OperacoesSolicitacoes_I, Policy = "Bearer")]
-    // public async Task<IActionResult> Inserir([FromBody] AcervoArteGraficaCadastroDTO acervoArteGrafica, [FromServices] IServicoAcervoArteGrafica servicoAcervoArteGrafica)
-    // {
-    //     return Ok(await servicoAcervoArteGrafica.Inserir(acervoArteGrafica));
-    // }
+    public async Task<IActionResult> Inserir([FromBody] AcervoSolicitacaoCadastroDTO acervoSolicitacaoCadastroDTO, [FromServices] IServicoAcervoSolicitacao servicoAcervoSolicitacao)
+    {
+        return Ok(await servicoAcervoSolicitacao.Inserir(acervoSolicitacaoCadastroDTO));
+    }
     //
     // [HttpPut]
     // [ProducesResponseType(typeof(AcervoArteGraficaDTO), 200)]

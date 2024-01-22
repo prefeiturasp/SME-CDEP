@@ -18,35 +18,58 @@ namespace SME.CDEP.Aplicacao.Servicos
         private readonly IMapper mapper;
         private readonly ITransacao transacao;
         private readonly IRepositorioAcervoCreditoAutor repositorioAcervoCreditoAutor;
+        private readonly IRepositorioUsuario repositorioUsuario;
+        private readonly IRepositorioAcervo repositorioAcervo;
         
         public ServicoAcervoSolicitacao(IRepositorioAcervoSolicitacao repositorioAcervoSolicitacao, 
             IMapper mapper,ITransacao transacao,IRepositorioAcervoSolicitacaoItem repositorioAcervoSolicitacaoItem,
-            IRepositorioAcervoCreditoAutor repositorioAcervoCreditoAutor) 
+            IRepositorioAcervoCreditoAutor repositorioAcervoCreditoAutor,IRepositorioUsuario repositorioUsuario,IRepositorioAcervo repositorioAcervo) 
         {
             this.repositorioAcervoSolicitacao = repositorioAcervoSolicitacao ?? throw new ArgumentNullException(nameof(repositorioAcervoSolicitacao));
             this.repositorioAcervoSolicitacaoItem = repositorioAcervoSolicitacaoItem ?? throw new ArgumentNullException(nameof(repositorioAcervoSolicitacaoItem));
             this.mapper = mapper ?? throw new ArgumentNullException(nameof(mapper));
             this.transacao = transacao ?? throw new ArgumentNullException(nameof(transacao));
             this.repositorioAcervoCreditoAutor = repositorioAcervoCreditoAutor ?? throw new ArgumentNullException(nameof(repositorioAcervoCreditoAutor));
+            this.repositorioUsuario = repositorioUsuario ?? throw new ArgumentNullException(nameof(repositorioUsuario));
+            this.repositorioAcervo = repositorioAcervo ?? throw new ArgumentNullException(nameof(repositorioAcervo));
         }
 
-        public async Task<long> Inserir(AcervoSolicitacaoDTO acervoSolicitacaoDto)
+        public async Task<IEnumerable<AcervoSolicitacaoItemRetornoCadastroDTO>> Inserir(AcervoSolicitacaoCadastroDTO acervoSolicitacaoCadastroDTO)
         {
+            var usuarioSolicitante = await repositorioUsuario.ObterPorId(acervoSolicitacaoCadastroDTO.UsuarioId);
+            if (usuarioSolicitante.EhNulo())
+                throw new NegocioException(MensagemNegocio.USUARIO_NAO_ENCONTRADO);
+
+            var arquivosEncontrados = await repositorioAcervo.ObterArquivosPorAcervoId(acervoSolicitacaoCadastroDTO.Itens.Select(s=> s.AcervoId).ToArray());
+            
+            var acervoSolicitacao = mapper.Map<AcervoSolicitacao>(acervoSolicitacaoCadastroDTO);
+            
             var tran = transacao.Iniciar();
             try
             {
-                var acervoSolicitacao = mapper.Map<AcervoSolicitacao>(acervoSolicitacaoDto);
+                acervoSolicitacao.Situacao = acervoSolicitacao.Itens
+                    .Select(s => s.AcervoId)
+                    .Except(arquivosEncontrados.Select(s => s.AcervoId))
+                    .Any() ? SituacaoSolicitacao.AGUARDANDO_ATENDIMENTO : SituacaoSolicitacao.FINALIZADO_ATENDIMENTO;
+                
                 acervoSolicitacao.Id =  await repositorioAcervoSolicitacao.Inserir(acervoSolicitacao);
 
-                foreach (var item in acervoSolicitacao.Itens)
+                foreach (var item in acervoSolicitacaoCadastroDTO.Itens)
                 {
                     var acervoSolicitacaoItem = mapper.Map<AcervoSolicitacaoItem>(item);
+                    
                     acervoSolicitacaoItem.AcervoSolicitacaoId = acervoSolicitacao.Id;
+                    
+                    acervoSolicitacaoItem.Situacao = arquivosEncontrados.Any(a => a.AcervoId == item.AcervoId)
+                        ? SituacaoSolicitacaoItem.FINALIZADO
+                        : SituacaoSolicitacaoItem.EM_ANALISE;
+                    
                     await repositorioAcervoSolicitacaoItem.Inserir(acervoSolicitacaoItem);
                 }
                 tran.Commit();
-                
-                return acervoSolicitacao.Id;
+
+                var retorno = await MapearRetornoDosItens(acervoSolicitacaoCadastroDTO,arquivosEncontrados);
+                return retorno;
             }
             catch
             {
@@ -96,7 +119,7 @@ namespace SME.CDEP.Aplicacao.Servicos
                 
                 itensSolicitacaoItemRetornoDTO.Add(new AcervoSolicitacaoItemRetornoDTO()
                 {
-                    TipoAcervo = acervoItem.Tipo.Nome(),
+                    TipoAcervo = acervoItem.TipoAcervo.Nome(),
                     AcervoId = acervoItem.AcervoId,
                     Titulo = acervoItem.Titulo,
                     AutoresCreditos = acervoCreditoAutor.PossuiElementos() ? acervoCreditoAutor.Select(s=> s).ToArray() : default
@@ -104,6 +127,20 @@ namespace SME.CDEP.Aplicacao.Servicos
             }
 
             return itensSolicitacaoItemRetornoDTO;
+        }
+        
+        private async Task<IEnumerable<AcervoSolicitacaoItemRetornoCadastroDTO>> MapearRetornoDosItens(AcervoSolicitacaoCadastroDTO acervoSolicitacaoCadastroDTO, IEnumerable<ArquivoCodigoNomeAcervoId> arquivos)
+        {
+            var acervosItensCompletos = await repositorioAcervo
+                .ObterAcervosSolicitacoesItensCompletoPorAcervosIds(acervoSolicitacaoCadastroDTO.Itens.Select(s=> s.AcervoId).ToArray());
+
+            var retornos = mapper.Map<IEnumerable<AcervoSolicitacaoItemRetornoCadastroDTO>>(acervosItensCompletos);
+
+            foreach (var retorno in retornos)
+                retorno.Arquivos = mapper.Map<IEnumerable<ArquivoCodigoNomeDTO>>(arquivos.Where(w => w.AcervoId == retorno.AcervoId).Select(s=> s));
+                
+
+            return retornos;
         }
     }
 }
