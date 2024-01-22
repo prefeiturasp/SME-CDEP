@@ -18,35 +18,45 @@ namespace SME.CDEP.Aplicacao.Servicos
         private readonly IMapper mapper;
         private readonly ITransacao transacao;
         private readonly IRepositorioAcervoCreditoAutor repositorioAcervoCreditoAutor;
+        private readonly IRepositorioUsuario repositorioUsuario;
+        private readonly IRepositorioAcervo repositorioAcervo;
         
         public ServicoAcervoSolicitacao(IRepositorioAcervoSolicitacao repositorioAcervoSolicitacao, 
             IMapper mapper,ITransacao transacao,IRepositorioAcervoSolicitacaoItem repositorioAcervoSolicitacaoItem,
-            IRepositorioAcervoCreditoAutor repositorioAcervoCreditoAutor) 
+            IRepositorioAcervoCreditoAutor repositorioAcervoCreditoAutor,IRepositorioUsuario repositorioUsuario,IRepositorioAcervo repositorioAcervo) 
         {
             this.repositorioAcervoSolicitacao = repositorioAcervoSolicitacao ?? throw new ArgumentNullException(nameof(repositorioAcervoSolicitacao));
             this.repositorioAcervoSolicitacaoItem = repositorioAcervoSolicitacaoItem ?? throw new ArgumentNullException(nameof(repositorioAcervoSolicitacaoItem));
             this.mapper = mapper ?? throw new ArgumentNullException(nameof(mapper));
             this.transacao = transacao ?? throw new ArgumentNullException(nameof(transacao));
             this.repositorioAcervoCreditoAutor = repositorioAcervoCreditoAutor ?? throw new ArgumentNullException(nameof(repositorioAcervoCreditoAutor));
+            this.repositorioUsuario = repositorioUsuario ?? throw new ArgumentNullException(nameof(repositorioUsuario));
+            this.repositorioAcervo = repositorioAcervo ?? throw new ArgumentNullException(nameof(repositorioAcervo));
         }
 
-        public async Task<long> Inserir(AcervoSolicitacaoDTO acervoSolicitacaoDto)
+        public async Task<IEnumerable<AcervoSolicitacaoItemRetornoCadastroDTO>> Inserir(AcervoSolicitacaoCadastroDTO acervoSolicitacaoCadastroDTO)
         {
+            var usuarioSolicitante = await repositorioUsuario.ObterPorId(acervoSolicitacaoCadastroDTO.UsuarioId);
+            if (usuarioSolicitante.EhNulo())
+                throw new NegocioException(MensagemNegocio.USUARIO_NAO_ENCONTRADO);
+
+            var acervoSolicitacao = mapper.Map<AcervoSolicitacao>(acervoSolicitacaoCadastroDTO);
+            
             var tran = transacao.Iniciar();
             try
             {
-                var acervoSolicitacao = mapper.Map<AcervoSolicitacao>(acervoSolicitacaoDto);
                 acervoSolicitacao.Id =  await repositorioAcervoSolicitacao.Inserir(acervoSolicitacao);
 
-                foreach (var item in acervoSolicitacao.Itens)
+                foreach (var item in acervoSolicitacaoCadastroDTO.Itens)
                 {
                     var acervoSolicitacaoItem = mapper.Map<AcervoSolicitacaoItem>(item);
                     acervoSolicitacaoItem.AcervoSolicitacaoId = acervoSolicitacao.Id;
                     await repositorioAcervoSolicitacaoItem.Inserir(acervoSolicitacaoItem);
                 }
                 tran.Commit();
-                
-                return acervoSolicitacao.Id;
+
+                var retorno = ObterItensDoAcervoPorAcervoId(acervoSolicitacaoCadastroDTO.Itens.Select(s=> s.AcervoId));
+                return default;
             }
             catch
             {
@@ -102,6 +112,31 @@ namespace SME.CDEP.Aplicacao.Servicos
                     AutoresCreditos = acervoCreditoAutor.PossuiElementos() ? acervoCreditoAutor.Select(s=> s).ToArray() : default
                 });
             }
+
+            return itensSolicitacaoItemRetornoDTO;
+        }
+        
+        private async Task<IEnumerable<AcervoSolicitacaoItemRetornoDTO>> ObterItensDoAcervoPorAcervoId(IEnumerable<long> acervosIds)
+        {
+            var itensSolicitacaoItemRetornoDTO = new List<AcervoSolicitacaoItemRetornoCadastroDTO>();
+
+            // foreach (var item in acervosSolicitacaoItensConsultaDTO)
+            // {
+            //     var acervoItem = await repositorioAcervoSolicitacao.ObterItensDoAcervoPorFiltros(item.Codigo, item.Tipo);
+            //
+            //     if (acervoItem.EhNulo())
+            //         throw new NegocioException(string.Format(MensagemNegocio.ACERVO_DE_CODIGO_X_E_TIPO_Y_NAO_FOI_ENCONTRADO,item.Codigo, item.Tipo.Nome()));
+            //     
+            //     var acervoCreditoAutor = await repositorioAcervoCreditoAutor.ObterNomesPorAcervoId(acervoItem.AcervoId);
+            //     
+            //     itensSolicitacaoItemRetornoDTO.Add(new AcervoSolicitacaoItemRetornoCadastroDTO()
+            //     {
+            //         TipoAcervo = acervoItem.Tipo.Nome(),
+            //         AcervoId = acervoItem.AcervoId,
+            //         Titulo = acervoItem.Titulo,
+            //         AutoresCreditos = acervoCreditoAutor.PossuiElementos() ? acervoCreditoAutor.Select(s=> s).ToArray() : default
+            //     });
+            // }
 
             return itensSolicitacaoItemRetornoDTO;
         }

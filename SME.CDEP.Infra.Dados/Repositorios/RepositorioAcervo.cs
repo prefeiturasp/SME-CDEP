@@ -63,6 +63,48 @@ namespace SME.CDEP.Infra.Dados.Repositorios
             return conexao.Obter().QueryFirstOrDefaultAsync<bool>("select 1 from acervo where (lower(codigo) = @codigo or lower(codigo_novo) = @codigo) and not excluido and id != @id and tipo = @tipo",new { id, codigo = codigo.ToLower(), tipo });
         }
         
+        public Task<IEnumerable<Arquivo>> ObterArquivosPorAcervoId(long acervoId)
+        {
+            var query = @"
+            select a.nome, a.codigo 
+            from acervo_arte_grafica_arquivo aaga 
+            join acervo_arte_grafica aag on aag.id = aaga.acervo_arte_grafica_id 
+            join arquivo a on a.id = aaga.arquivo_id 
+            where aag.acervo_id = @acervoId
+            and not a.excluido 
+            and aag.permite_uso_imagem
+            
+            union all
+            
+            select a.nome, a.codigo
+            from acervo_documental_arquivo ada
+            join acervo_documental ad on ad.id = ada.acervo_documental_id  
+            join arquivo a on a.id = ada.arquivo_id 
+            where ad.acervo_id = @acervoId
+            and not a.excluido
+            
+            union all
+            
+            select a.nome, a.codigo 
+            from acervo_fotografico_arquivo afa
+            join acervo_fotografico af on af.id = afa.acervo_fotografico_id  
+            join arquivo a on a.id = afa.arquivo_id 
+            where af.acervo_id = @acervoId
+            and af.permite_uso_imagem 
+            and not a.excluido
+            
+            union all
+            
+            select a.nome, a.codigo
+            from acervo_tridimensional_arquivo ata 
+            join acervo_tridimensional at  on at.id = ata.acervo_tridimensional_id  
+            join arquivo a on a.id = ata.arquivo_id 
+            where at.acervo_id = @acervoId
+            and not a.excluido";
+            
+            return conexao.Obter().QueryAsync<Arquivo>(query,new { acervoId });
+        }
+        
         public async Task<IEnumerable<PesquisaAcervo>> ObterPorTextoLivreETipoAcervo(string? textoLivre, TipoAcervo? tipoAcervo, int? anoInicial, int? anoFinal)
         {
             var query = $@";with acervosIds as
