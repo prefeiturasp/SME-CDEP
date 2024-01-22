@@ -1,7 +1,10 @@
 ﻿using AutoMapper;
 using SME.CDEP.Aplicacao.DTOS;
 using SME.CDEP.Aplicacao.Servicos.Interface;
+using SME.CDEP.Dominio.Constantes;
 using SME.CDEP.Dominio.Entidades;
+using SME.CDEP.Dominio.Excecoes;
+using SME.CDEP.Dominio.Extensions;
 using SME.CDEP.Infra.Dados.Repositorios.Interfaces;
 using SME.CDEP.Infra.Dados;
 using SME.CDEP.Infra.Dominio.Enumerados;
@@ -85,14 +88,18 @@ namespace SME.CDEP.Aplicacao.Servicos
             foreach (var item in acervosSolicitacaoItensConsultaDTO)
             {
                 var acervoItem = await repositorioAcervoSolicitacao.ObterItensDoAcervoPorFiltros(item.Codigo, item.Tipo);
+
+                if (acervoItem.EhNulo())
+                    throw new NegocioException(string.Format(MensagemNegocio.ACERVO_DE_CODIGO_X_E_TIPO_Y_NAO_FOI_ENCONTRADO,item.Codigo, item.Tipo.Nome()));
+                
                 var acervoCreditoAutor = await repositorioAcervoCreditoAutor.ObterNomesPorAcervoId(acervoItem.AcervoId);
                 
                 itensSolicitacaoItemRetornoDTO.Add(new AcervoSolicitacaoItemRetornoDTO()
                 {
-                    TipoAcervo = acervoItem.Tipo.Descricao(),
+                    TipoAcervo = acervoItem.Tipo.Nome(),
                     AcervoId = acervoItem.AcervoId,
                     Titulo = acervoItem.Titulo,
-                    AutoresCreditos = acervoCreditoAutor.Select(s=> s).ToArray()
+                    AutoresCreditos = acervoCreditoAutor.PossuiElementos() ? acervoCreditoAutor.Select(s=> s).ToArray() : default
                 });
             }
 

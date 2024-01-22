@@ -18,7 +18,7 @@ public class AcervoSolicitacaoController: BaseController
     [ProducesResponseType(typeof(RetornoBaseDTO), 400)]
     [ProducesResponseType(typeof(RetornoBaseDTO), 403)]
     [ProducesResponseType(typeof(RetornoBaseDTO), 601)]
-    // [Permissao(Permissao.OperacoesSolicitacoes_C, Policy = "Bearer")]
+    [Permissao(Permissao.OperacoesSolicitacoes_C, Policy = "Bearer")]
     public async Task<IActionResult> ObterItensDoAcervoPorFiltros([FromBody] AcervoSolicitacaoItemConsultaDTO[] acervosSolicitacaoItensConsultaDTO, [FromServices] IServicoAcervoSolicitacao servicoAcervoSolicitacao)
     {
         return Ok(await servicoAcervoSolicitacao.ObterItensDoAcervoPorFiltros(acervosSolicitacaoItensConsultaDTO));

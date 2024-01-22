@@ -113,15 +113,15 @@ namespace SME.CDEP.Infra.Dados.Repositorios
         {
             var query = @"
             select 
-              a.tipo as TipoAcervo,
+              a.tipo,
               a.titulo,
               a.id as acervoId
             from acervo a 
-            where (lower(a.codigo) = @codigo or lower(codigo_novo) = @codigo) 
+            where (lower(a.codigo) = lower(@codigo) or lower(codigo_novo) = lower(@codigo)) 
                 and not excluido 
                 and tipo = @tipo;";
             
-            return await conexao.Obter().QueryFirstOrDefaultAsync<AcervoSolicitacaoItemResumido>(query, new { codigo, tipo });
+            return await conexao.Obter().QueryFirstOrDefaultAsync<AcervoSolicitacaoItemResumido>(query, new { codigo = codigo, tipo });
         }
     }
 }
