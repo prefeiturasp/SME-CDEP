@@ -137,7 +137,7 @@ public class UsuarioController: BaseController
     [ProducesResponseType(typeof(DadosSolicitanteDTO), 200)]
     [ProducesResponseType(typeof(RetornoBaseDTO), 400)]
     [ProducesResponseType(typeof(RetornoBaseDTO), 500)]
-    [Authorize("Bearer")]
+    [Permissao(Permissao.OperacoesSolicitacoes_C, Policy = "Bearer")]
     public async Task<IActionResult> ObterDadosSolicitante([FromServices] IServicoUsuario servicoUsuario)
     {
         return Ok(await servicoUsuario.ObterDadosSolicitante());
