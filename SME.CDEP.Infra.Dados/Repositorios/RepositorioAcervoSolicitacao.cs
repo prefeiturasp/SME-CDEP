@@ -3,6 +3,7 @@ using SME.CDEP.Dominio.Contexto;
 using SME.CDEP.Dominio.Entidades;
 using SME.CDEP.Dominio.Extensions;
 using SME.CDEP.Infra.Dados.Repositorios.Interfaces;
+using SME.CDEP.Infra.Dominio.Enumerados;
 
 namespace SME.CDEP.Infra.Dados.Repositorios
 {
@@ -106,6 +107,21 @@ namespace SME.CDEP.Infra.Dados.Repositorios
                     acervoSolicitacao.Itens = acervosSolicitacoesItens.Where(w => w.AcervoSolicitacaoId == acervoSolicitacao.Id);
                     return acervoSolicitacao;
                 });
+        }
+
+        public async Task<AcervoSolicitacaoItemResumido> ObterItensDoAcervoPorFiltros(string codigo, TipoAcervo tipo)
+        {
+            var query = @"
+            select 
+              a.tipo,
+              a.titulo,
+              a.id as acervoId
+            from acervo a 
+            where (lower(a.codigo) = lower(@codigo) or lower(codigo_novo) = lower(@codigo)) 
+                and not excluido 
+                and tipo = @tipo;";
+            
+            return await conexao.Obter().QueryFirstOrDefaultAsync<AcervoSolicitacaoItemResumido>(query, new { codigo = codigo, tipo });
         }
     }
 }

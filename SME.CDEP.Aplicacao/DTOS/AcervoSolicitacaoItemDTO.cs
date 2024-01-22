@@ -8,6 +8,7 @@ namespace SME.CDEP.Aplicacao.DTOS
         public long AcervoSolicitacaoId { get; set; }
         public long AcervoId { get; set; }
         public SituacaoSolicitacaoItem Situacao { get; set; }
+        public DateTime? DataVisita { get; set; }
         public DateTime? AlteradoEm { get; set; }
         public string AlteradoPor { get; set; }
         public string AlteradoLogin { get; set; }
