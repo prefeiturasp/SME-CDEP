@@ -2,8 +2,12 @@
 
 namespace SME.CDEP.Aplicacao.DTOS;
 
-public class AcervoSolicitacaoItemRetornoCadastroDTO : AcervoSolicitacaoItemRetornoDTO 
+public class AcervoSolicitacaoItemRetornoCadastroDTO  
 {
-    public SituacaoSolicitacaoItem Situacao { get; set; }
-    public IEnumerable<ArquivoCodigoNomeAcervoIdDTO> Arquivos { get; set; }
+    public string TipoAcervo { get; set; }
+    public long AcervoId { get; set; }
+    public string Titulo { get; set; }
+    public string[] AutoresCreditos { get; set; }
+    public string Situacao { get; set; }
+    public IEnumerable<ArquivoCodigoNomeDTO> Arquivos { get; set; }
 }

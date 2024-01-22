@@ -40,23 +40,36 @@ namespace SME.CDEP.Aplicacao.Servicos
             if (usuarioSolicitante.EhNulo())
                 throw new NegocioException(MensagemNegocio.USUARIO_NAO_ENCONTRADO);
 
+            var arquivosEncontrados = await repositorioAcervo.ObterArquivosPorAcervoId(acervoSolicitacaoCadastroDTO.Itens.Select(s=> s.AcervoId).ToArray());
+            
             var acervoSolicitacao = mapper.Map<AcervoSolicitacao>(acervoSolicitacaoCadastroDTO);
             
             var tran = transacao.Iniciar();
             try
             {
+                acervoSolicitacao.Situacao = acervoSolicitacao.Itens
+                    .Select(s => s.AcervoId)
+                    .Except(arquivosEncontrados.Select(s => s.AcervoId))
+                    .Any() ? SituacaoSolicitacao.AGUARDANDO_ATENDIMENTO : SituacaoSolicitacao.FINALIZADO_ATENDIMENTO;
+                
                 acervoSolicitacao.Id =  await repositorioAcervoSolicitacao.Inserir(acervoSolicitacao);
 
                 foreach (var item in acervoSolicitacaoCadastroDTO.Itens)
                 {
                     var acervoSolicitacaoItem = mapper.Map<AcervoSolicitacaoItem>(item);
+                    
                     acervoSolicitacaoItem.AcervoSolicitacaoId = acervoSolicitacao.Id;
+                    
+                    acervoSolicitacaoItem.Situacao = arquivosEncontrados.Any(a => a.AcervoId == item.AcervoId)
+                        ? SituacaoSolicitacaoItem.FINALIZADO
+                        : SituacaoSolicitacaoItem.EM_ANALISE;
+                    
                     await repositorioAcervoSolicitacaoItem.Inserir(acervoSolicitacaoItem);
                 }
                 tran.Commit();
 
-                var retorno = ObterItensDoAcervoPorAcervoId(acervoSolicitacaoCadastroDTO.Itens.Select(s=> s.AcervoId));
-                return default;
+                var retorno = await MapearRetornoDosItens(acervoSolicitacaoCadastroDTO,arquivosEncontrados);
+                return retorno;
             }
             catch
             {
@@ -106,7 +119,7 @@ namespace SME.CDEP.Aplicacao.Servicos
                 
                 itensSolicitacaoItemRetornoDTO.Add(new AcervoSolicitacaoItemRetornoDTO()
                 {
-                    TipoAcervo = acervoItem.Tipo.Nome(),
+                    TipoAcervo = acervoItem.TipoAcervo.Nome(),
                     AcervoId = acervoItem.AcervoId,
                     Titulo = acervoItem.Titulo,
                     AutoresCreditos = acervoCreditoAutor.PossuiElementos() ? acervoCreditoAutor.Select(s=> s).ToArray() : default
@@ -116,29 +129,18 @@ namespace SME.CDEP.Aplicacao.Servicos
             return itensSolicitacaoItemRetornoDTO;
         }
         
-        private async Task<IEnumerable<AcervoSolicitacaoItemRetornoDTO>> ObterItensDoAcervoPorAcervoId(IEnumerable<long> acervosIds)
+        private async Task<IEnumerable<AcervoSolicitacaoItemRetornoCadastroDTO>> MapearRetornoDosItens(AcervoSolicitacaoCadastroDTO acervoSolicitacaoCadastroDTO, IEnumerable<ArquivoCodigoNomeAcervoId> arquivos)
         {
-            var itensSolicitacaoItemRetornoDTO = new List<AcervoSolicitacaoItemRetornoCadastroDTO>();
+            var acervosItensCompletos = await repositorioAcervo
+                .ObterAcervosSolicitacoesItensCompletoPorAcervosIds(acervoSolicitacaoCadastroDTO.Itens.Select(s=> s.AcervoId).ToArray());
 
-            // foreach (var item in acervosSolicitacaoItensConsultaDTO)
-            // {
-            //     var acervoItem = await repositorioAcervoSolicitacao.ObterItensDoAcervoPorFiltros(item.Codigo, item.Tipo);
-            //
-            //     if (acervoItem.EhNulo())
-            //         throw new NegocioException(string.Format(MensagemNegocio.ACERVO_DE_CODIGO_X_E_TIPO_Y_NAO_FOI_ENCONTRADO,item.Codigo, item.Tipo.Nome()));
-            //     
-            //     var acervoCreditoAutor = await repositorioAcervoCreditoAutor.ObterNomesPorAcervoId(acervoItem.AcervoId);
-            //     
-            //     itensSolicitacaoItemRetornoDTO.Add(new AcervoSolicitacaoItemRetornoCadastroDTO()
-            //     {
-            //         TipoAcervo = acervoItem.Tipo.Nome(),
-            //         AcervoId = acervoItem.AcervoId,
-            //         Titulo = acervoItem.Titulo,
-            //         AutoresCreditos = acervoCreditoAutor.PossuiElementos() ? acervoCreditoAutor.Select(s=> s).ToArray() : default
-            //     });
-            // }
+            var retornos = mapper.Map<IEnumerable<AcervoSolicitacaoItemRetornoCadastroDTO>>(acervosItensCompletos);
 
-            return itensSolicitacaoItemRetornoDTO;
+            foreach (var retorno in retornos)
+                retorno.Arquivos = mapper.Map<IEnumerable<ArquivoCodigoNomeDTO>>(arquivos.Where(w => w.AcervoId == retorno.AcervoId).Select(s=> s));
+                
+
+            return retornos;
         }
     }
 }

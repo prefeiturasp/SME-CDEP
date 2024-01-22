@@ -31,7 +31,7 @@ public class AcervoSolicitacaoController: BaseController
     [ProducesResponseType(typeof(RetornoBaseDTO), 422)]
     [ProducesResponseType(typeof(RetornoBaseDTO), 500)]
     [ProducesResponseType(typeof(RetornoBaseDTO), 601)]
-    [Permissao(Permissao.OperacoesSolicitacoes_I, Policy = "Bearer")]
+    // [Permissao(Permissao.OperacoesSolicitacoes_I, Policy = "Bearer")]
     public async Task<IActionResult> Inserir([FromBody] AcervoSolicitacaoCadastroDTO acervoSolicitacaoCadastroDTO, [FromServices] IServicoAcervoSolicitacao servicoAcervoSolicitacao)
     {
         return Ok(await servicoAcervoSolicitacao.Inserir(acervoSolicitacaoCadastroDTO));
