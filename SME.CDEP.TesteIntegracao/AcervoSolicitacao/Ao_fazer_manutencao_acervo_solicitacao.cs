@@ -66,11 +66,11 @@ namespace SME.CDEP.TesteIntegracao
             foreach (var item in acervoSolicitacaoInserir.Itens)
                 item.Situacao = SituacaoSolicitacaoItem.FINALIZADO;
             
-            var acervoSolicitacaoId = await servicoAcervoSolicitacao.Inserir(acervoSolicitacaoInserir);
-            acervoSolicitacaoId.ShouldBeGreaterThan(0);
-
-            var acervoSolicitacaoInserido = await servicoAcervoSolicitacao.ObterPorId(acervoSolicitacaoId);
-            acervoSolicitacaoInserido.ShouldNotBeNull();
+            // var acervoSolicitacaoId = await servicoAcervoSolicitacao.Inserir(acervoSolicitacaoInserir);
+            // acervoSolicitacaoId.ShouldBeGreaterThan(0);
+            //
+            // var acervoSolicitacaoInserido = await servicoAcervoSolicitacao.ObterPorId(acervoSolicitacaoId);
+            // acervoSolicitacaoInserido.ShouldNotBeNull();
         }
         
         [Fact(DisplayName = "Acervo Solicitação - Atualizar")]

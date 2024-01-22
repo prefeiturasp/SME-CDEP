@@ -62,7 +62,97 @@ namespace SME.CDEP.Infra.Dados.Repositorios
         {
             return conexao.Obter().QueryFirstOrDefaultAsync<bool>("select 1 from acervo where (lower(codigo) = @codigo or lower(codigo_novo) = @codigo) and not excluido and id != @id and tipo = @tipo",new { id, codigo = codigo.ToLower(), tipo });
         }
+
+        public async Task<IEnumerable<ArquivoCodigoNomeAcervoId>> ObterArquivosPorAcervoId(long[] acervosIds)
+        {
+             var query = @"
+             select a.nome, a.codigo, aag.acervo_id as acervoId 
+             from acervo_arte_grafica_arquivo aaga 
+             join acervo_arte_grafica aag on aag.id = aaga.acervo_arte_grafica_id 
+             join arquivo a on a.id = aaga.arquivo_id 
+             where aag.acervo_id = any(@acervosIds)
+             and not a.excluido 
+             and aag.permite_uso_imagem
+             
+             union all
+             
+             select a.nome, a.codigo, ad.acervo_id as acervoId
+             from acervo_documental_arquivo ada
+             join acervo_documental ad on ad.id = ada.acervo_documental_id  
+             join arquivo a on a.id = ada.arquivo_id 
+             where ad.acervo_id = any(@acervosIds)
+             and not a.excluido
+             
+             union all
+             
+             select a.nome, a.codigo, af.acervo_id as acervoId 
+             from acervo_fotografico_arquivo afa
+             join acervo_fotografico af on af.id = afa.acervo_fotografico_id  
+             join arquivo a on a.id = afa.arquivo_id 
+             where af.acervo_id = any(@acervosIds)
+             and af.permite_uso_imagem 
+             and not a.excluido
+             
+             union all
+             
+             select a.nome, a.codigo, at.acervo_id as acervoId
+             from acervo_tridimensional_arquivo ata 
+             join acervo_tridimensional at  on at.id = ata.acervo_tridimensional_id  
+             join arquivo a on a.id = ata.arquivo_id 
+             where at.acervo_id = any(@acervosIds)
+             and not a.excluido; ";
+            
+            return await conexao.Obter().QueryAsync<ArquivoCodigoNomeAcervoId>(query, new { acervosIds });
+        }
         
+        public async Task<IEnumerable<AcervoSolicitacaoItemCompleto>> ObterAcervosSolicitacoesItensCompletoPorAcervosIds(long[] acervosIds)
+        {
+            var query = @"
+            select 
+              a.tipo as tipoAcervo,
+              a.titulo,
+              a.id as acervoId,
+              asi.situacao
+            from acervo a 
+            join acervo_solicitacao_item asi on asi.acervo_id = a.id
+            join acervo_solicitacao aso on aso.id = asi.acervo_solicitacao_id
+            where a.id = any(@acervosIds) 
+                and not a.excluido
+                and not aso.excluido
+                and not asi.excluido;
+               
+            select 
+              ca.nome,
+              aca.acervo_id as AcervoId
+            from acervo_credito_autor aca 
+              join credito_autor ca on ca.id = aca.credito_autor_id
+            where aca.acervo_id = any(@acervosIds) 
+            and not ca.excluido; ";
+            
+            var retorno = await conexao.Obter().QueryMultipleAsync(query, new { acervosIds });
+
+            if (retorno.EhNulo())
+                return default;
+            
+            var acervosSolicitacoes = retorno.Read<AcervoSolicitacaoItemCompleto>();
+            var creditosAutoresNomes = retorno.Read<CreditoAutorNomeAcervoId>();
+
+            foreach (var acervoSolicitacao in acervosSolicitacoes)
+                acervoSolicitacao.AutoresCreditos = ObterCreditosAutores(creditosAutoresNomes, acervoSolicitacao);
+            
+            return acervosSolicitacoes;
+        }
+
+        private IEnumerable<ArquivoCodigoNomeAcervoId> ObterArquivos(IEnumerable<ArquivoCodigoNomeAcervoId> arquivosCodigoNome, AcervoSolicitacaoItemCompleto acervoSolicitacao)
+        {
+            return arquivosCodigoNome.PossuiElementos() ? arquivosCodigoNome.Where(w => w.AcervoId == acervoSolicitacao.AcervoId) : Enumerable.Empty<ArquivoCodigoNomeAcervoId>();
+        }
+
+        private IEnumerable<CreditoAutorNomeAcervoId> ObterCreditosAutores(IEnumerable<CreditoAutorNomeAcervoId> creditosAutoresNomes, AcervoSolicitacaoItemCompleto acervoSolicitacao)
+        {
+            return creditosAutoresNomes.PossuiElementos() ? creditosAutoresNomes.Where(w => w.AcervoId == acervoSolicitacao.AcervoId).Select(s=> s) : Enumerable.Empty<CreditoAutorNomeAcervoId>();
+        }
+
         public async Task<IEnumerable<PesquisaAcervo>> ObterPorTextoLivreETipoAcervo(string? textoLivre, TipoAcervo? tipoAcervo, int? anoInicial, int? anoFinal)
         {
             var query = $@";with acervosIds as
