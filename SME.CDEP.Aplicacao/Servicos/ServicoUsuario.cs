@@ -320,9 +320,14 @@ namespace SME.CDEP.Aplicacao.Servicos
                 await servicoAcessos.ObterPerfisUsuario(login);
         }
 
-        private async Task<Usuario> ObterUsuarioLogado()
+        private async Task<Usuario> ObterUsuarioLogadoContexto()
         {
             return await ObterUsuarioPorLogin(contextoAplicacao.UsuarioLogado);
+        }
+        
+        public async Task<UsuarioDTO> ObterUsuarioLogado()
+        {
+            return mapper.Map<UsuarioDTO>(await ObterUsuarioLogadoContexto());
         }
 
         public async Task<bool> AlterarTipoUsuario(string login, TipoUsuarioExternoDTO tipoUsuario)

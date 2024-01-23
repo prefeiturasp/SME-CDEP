@@ -6,5 +6,6 @@ namespace SME.CDEP.Infra.Dados.Repositorios.Interfaces
 {
     public interface IRepositorioAcervoSolicitacaoItem : IRepositorioBaseAuditavel<AcervoSolicitacaoItem>
     {
+        Task<IEnumerable<AcervoSolicitacaoItem>> ObterMinhasSolicitacoes(long usuarioId);
     }
 }
