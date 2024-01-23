@@ -9,6 +9,6 @@ namespace SME.CDEP.Aplicacao.Servicos.Interface
         Task<bool> Remover(long acervoSolicitacaoId);
         Task<IEnumerable<AcervoTipoTituloAcervoIdCreditosAutoresDTO>> ObterItensDoAcervoPorFiltros(long[] acervosIds);
         Task<bool> Excluir(long acervoSolicitacaoId);
-        Task<IEnumerable<MinhaSolicitacaoDTO>> ObterMinhasSolicitacoes();
+        Task<PaginacaoResultadoDTO<MinhaSolicitacaoDTO>> ObterMinhasSolicitacoes();
     }
 }

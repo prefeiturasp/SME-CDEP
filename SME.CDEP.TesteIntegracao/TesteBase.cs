@@ -342,6 +342,15 @@ namespace SME.CDEP.TesteIntegracao
                     CriadoLogin = ConstantesTestes.LOGIN_123456789 
                 });
             }
+            await InserirNaBase(new Dominio.Entidades.Usuario()
+            { 
+                Login = "Sistema", 
+                Nome = faker.Lorem.Sentence().Limite(200), 
+                CriadoPor = ConstantesTestes.SISTEMA, 
+                CriadoEm = DateTimeExtension.HorarioBrasilia().Date, 
+                CriadoLogin = ConstantesTestes.LOGIN_123456789 
+            });
+            
         }
         
         protected async Task InserirDadosBasicos()

@@ -58,7 +58,7 @@ public class AcervoSolicitacaoController: BaseController
     }
     
     [HttpGet("minhas-solicitacoes")]
-    [ProducesResponseType(typeof(IEnumerable<MinhaSolicitacaoDTO>), 200)]
+    [ProducesResponseType(typeof(PaginacaoResultadoDTO<MinhaSolicitacaoDTO>), 200)]
     [ProducesResponseType(typeof(RetornoBaseDTO), 400)]
     [ProducesResponseType(typeof(RetornoBaseDTO), 403)]
     [ProducesResponseType(typeof(RetornoBaseDTO), 601)]

@@ -44,9 +44,8 @@ namespace SME.CDEP.TesteIntegracao
 
             var servicoAcervoSolicitacao = GetServicoAcervoSolicitacao();
 
-            //Será implementado em outra tarefa de listagem
-            // var retorno = await servicoAcervoSolicitacao.ObterTodosPorUsuario(1);
-            // retorno.ShouldNotBeNull();
+            var retorno = await servicoAcervoSolicitacao.ObterMinhasSolicitacoes();
+            retorno.ShouldNotBeNull();
         }
         
         [Fact(DisplayName = "Acervo Solicitação - Ao enviar a solicitação para análise - offline - sem arquivos")]
@@ -63,7 +62,7 @@ namespace SME.CDEP.TesteIntegracao
             var retorno = await servicoAcervoSolicitacao.Inserir(acervoSolicitacaoInserir);
             retorno.ShouldNotBeNull();
             retorno.Any(a=> a.Arquivos.NaoPossuiElementos()).ShouldBeTrue();
-            retorno.All(a=> a.Situacao.ToString().Equals("EM_ANALISE")).ShouldBeTrue();
+            retorno.All(a=> a.Situacao.ToString().Equals("AGUARDANDO_ATENDIMENTO")).ShouldBeTrue();
         }
         
         [Fact(DisplayName = "Acervo Solicitação - Ao enviar a solicitação para finalizado - online - com arquivos")]
@@ -80,7 +79,7 @@ namespace SME.CDEP.TesteIntegracao
             var retorno = await servicoAcervoSolicitacao.Inserir(acervoSolicitacaoInserir);
             retorno.ShouldNotBeNull();
             retorno.Any(a=> a.Arquivos.PossuiElementos()).ShouldBeTrue();
-            retorno.All(a=> a.Situacao.ToString().Equals("FINALIZADO")).ShouldBeTrue();
+            retorno.All(a=> a.Situacao.ToString().Equals("FINALIZADO_AUTOMATICAMENTE")).ShouldBeTrue();
         }
         
         [Fact(DisplayName = "Acervo Solicitação - Remover")]
@@ -130,19 +129,19 @@ namespace SME.CDEP.TesteIntegracao
                 {
                     new ()
                     {
-                        Situacao = SituacaoSolicitacaoItem.EM_ANALISE,
+                        Situacao = SituacaoSolicitacaoItem.AGUARDANDO_ATENDIMENTO,
                         AcervoId = 1,
                         CriadoEm = DateTimeExtension.HorarioBrasilia(), CriadoLogin = "Sistema", CriadoPor = "Sistema",
                     },
                     new ()
                     {
-                        Situacao = SituacaoSolicitacaoItem.FINALIZADO,
+                        Situacao = SituacaoSolicitacaoItem.FINALIZADO_AUTOMATICAMENTE,
                         AcervoId = 2,
                         CriadoEm = DateTimeExtension.HorarioBrasilia(), CriadoLogin = "Sistema", CriadoPor = "Sistema",
                     },
                     new ()
                     {
-                        Situacao = SituacaoSolicitacaoItem.FINALIZADO,
+                        Situacao = SituacaoSolicitacaoItem.FINALIZADO_AUTOMATICAMENTE,
                         AcervoId = 3,
                         CriadoEm = DateTimeExtension.HorarioBrasilia(), CriadoLogin = "Sistema", CriadoPor = "Sistema",
                     }
