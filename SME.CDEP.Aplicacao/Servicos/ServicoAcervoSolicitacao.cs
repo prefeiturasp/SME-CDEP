@@ -2,6 +2,7 @@
 using SME.CDEP.Aplicacao.DTOS;
 using SME.CDEP.Aplicacao.Servicos.Interface;
 using SME.CDEP.Dominio.Constantes;
+using SME.CDEP.Dominio.Contexto;
 using SME.CDEP.Dominio.Entidades;
 using SME.CDEP.Dominio.Excecoes;
 using SME.CDEP.Dominio.Extensions;
@@ -21,11 +22,12 @@ namespace SME.CDEP.Aplicacao.Servicos
         private readonly IRepositorioUsuario repositorioUsuario;
         private readonly IRepositorioAcervo repositorioAcervo;
         private readonly IServicoUsuario servicoUsuario;
+        private readonly IContextoAplicacao contextoAplicacao;
         
         public ServicoAcervoSolicitacao(IRepositorioAcervoSolicitacao repositorioAcervoSolicitacao, 
             IMapper mapper,ITransacao transacao,IRepositorioAcervoSolicitacaoItem repositorioAcervoSolicitacaoItem,
             IRepositorioAcervoCreditoAutor repositorioAcervoCreditoAutor,IRepositorioUsuario repositorioUsuario,IRepositorioAcervo repositorioAcervo,
-            IServicoUsuario servicoUsuario) 
+            IServicoUsuario servicoUsuario,IContextoAplicacao contextoAplicacao) 
         {
             this.repositorioAcervoSolicitacao = repositorioAcervoSolicitacao ?? throw new ArgumentNullException(nameof(repositorioAcervoSolicitacao));
             this.repositorioAcervoSolicitacaoItem = repositorioAcervoSolicitacaoItem ?? throw new ArgumentNullException(nameof(repositorioAcervoSolicitacaoItem));
@@ -35,6 +37,7 @@ namespace SME.CDEP.Aplicacao.Servicos
             this.repositorioUsuario = repositorioUsuario ?? throw new ArgumentNullException(nameof(repositorioUsuario));
             this.repositorioAcervo = repositorioAcervo ?? throw new ArgumentNullException(nameof(repositorioAcervo));
             this.servicoUsuario = servicoUsuario ?? throw new ArgumentNullException(nameof(servicoUsuario));
+            this.contextoAplicacao = contextoAplicacao ?? throw new ArgumentNullException(nameof(contextoAplicacao));
         }
 
         public async Task<IEnumerable<AcervoSolicitacaoItemRetornoCadastroDTO>> Inserir(AcervoSolicitacaoCadastroDTO acervoSolicitacaoCadastroDTO)
@@ -64,8 +67,8 @@ namespace SME.CDEP.Aplicacao.Servicos
                     acervoSolicitacaoItem.AcervoSolicitacaoId = acervoSolicitacao.Id;
                     
                     acervoSolicitacaoItem.Situacao = arquivosEncontrados.Any(a => a.AcervoId == item.AcervoId)
-                        ? SituacaoSolicitacaoItem.FINALIZADO
-                        : SituacaoSolicitacaoItem.EM_ANALISE;
+                        ? SituacaoSolicitacaoItem.FINALIZADO_AUTOMATICAMENTE
+                        : SituacaoSolicitacaoItem.AGUARDANDO_ATENDIMENTO;
                     
                     await repositorioAcervoSolicitacaoItem.Inserir(acervoSolicitacaoItem);
                 }
@@ -127,11 +130,40 @@ namespace SME.CDEP.Aplicacao.Servicos
             return true;
         }
 
-        public async Task<IEnumerable<MinhaSolicitacaoDTO>> ObterMinhasSolicitacoes()
+        public async Task<PaginacaoResultadoDTO<MinhaSolicitacaoDTO>> ObterMinhasSolicitacoes()
         {
             var usuario = await servicoUsuario.ObterUsuarioLogado();
 
-            return mapper.Map<IEnumerable<MinhaSolicitacaoDTO>>(await repositorioAcervoSolicitacaoItem.ObterMinhasSolicitacoes(usuario.Id));
+            var acervoSolicitacaoItemsDTOs = mapper.Map<IEnumerable<MinhaSolicitacaoDTO>>(await repositorioAcervoSolicitacaoItem.ObterMinhasSolicitacoes(usuario.Id));
+            
+            var totalRegistros = acervoSolicitacaoItemsDTOs.Count();
+            var paginacao = Paginacao;
+            
+            return new PaginacaoResultadoDTO<MinhaSolicitacaoDTO>()
+            {
+                Items = acervoSolicitacaoItemsDTOs.Skip(paginacao.QuantidadeRegistrosIgnorados).Take(paginacao.QuantidadeRegistros),
+                TotalRegistros = totalRegistros,
+                TotalPaginas = (int)Math.Ceiling((double)totalRegistros / paginacao.QuantidadeRegistros)
+            };
+        }
+        
+        public Paginacao Paginacao
+        {
+            get
+            {
+                var numeroPaginaQueryString = contextoAplicacao.ObterVariavel<string>("NumeroPagina");
+                var numeroRegistrosQueryString = contextoAplicacao.ObterVariavel<string>("NumeroRegistros");
+                var ordenacaoQueryString = contextoAplicacao.ObterVariavel<string>("Ordenacao");
+
+                if (numeroPaginaQueryString.NaoEstaPreenchido() || numeroRegistrosQueryString.NaoEstaPreenchido()|| ordenacaoQueryString.NaoEstaPreenchido())
+                    return new Paginacao(0, 0,0);
+
+                var numeroPagina = numeroPaginaQueryString.ConverterParaInteiro();
+                var numeroRegistros = numeroRegistrosQueryString.ConverterParaInteiro();
+                var ordenacao = ordenacaoQueryString.ConverterParaInteiro();
+
+                return new Paginacao(numeroPagina, numeroRegistros == 0 ? 10 : numeroRegistros,ordenacao);
+            }
         }
     }
 }
