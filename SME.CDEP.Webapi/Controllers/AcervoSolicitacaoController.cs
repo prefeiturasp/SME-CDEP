@@ -11,8 +11,6 @@ namespace SME.CDEP.Webapi.Controllers;
 [ValidaDto]
 public class AcervoSolicitacaoController: BaseController
 {
-
-
     [HttpGet]
     [ProducesResponseType(typeof(IEnumerable<AcervoTipoTituloAcervoIdCreditosAutoresDTO>), 200)]
     [ProducesResponseType(typeof(RetornoBaseDTO), 400)]
@@ -37,25 +35,25 @@ public class AcervoSolicitacaoController: BaseController
         return Ok(await servicoAcervoSolicitacao.Inserir(acervoSolicitacaoCadastroDTO));
     }
     
-    [HttpGet("{acervoId}")]
-    [ProducesResponseType(typeof(AcervoArteGraficaDTO), 200)]
+    [HttpGet("{acervoSolicitacaoId}")]
+    [ProducesResponseType(typeof(IEnumerable<AcervoSolicitacaoItemRetornoCadastroDTO>), 200)]
     [ProducesResponseType(typeof(RetornoBaseDTO), 400)]
     [ProducesResponseType(typeof(RetornoBaseDTO), 403)]
     [ProducesResponseType(typeof(RetornoBaseDTO), 601)]
     [Permissao(Permissao.OperacoesSolicitacoes_C, Policy = "Bearer")]
-    public async Task<IActionResult> ObterPorId([FromRoute] long acervoId,[FromServices] IServicoAcervoArteGrafica servicoAcervoArteGrafica)
+    public async Task<IActionResult> ObterPorId([FromRoute] long acervoSolicitacaoId,[FromServices] IServicoAcervoSolicitacao servicoAcervoSolicitacao)
     {
-        return Ok(await servicoAcervoArteGrafica.ObterPorId(acervoId));
+        return Ok(await servicoAcervoSolicitacao.ObterPorId(acervoSolicitacaoId));
     }
     
-    [HttpDelete("{acervoId}")]
+    [HttpDelete("{acervoSolicitacaoId}")]
     [ProducesResponseType(typeof(bool), 200)]
     [ProducesResponseType(typeof(RetornoBaseDTO), 400)]
     [ProducesResponseType(typeof(RetornoBaseDTO), 403)]
     [ProducesResponseType(typeof(RetornoBaseDTO), 601)]
     [Permissao(Permissao.OperacoesSolicitacoes_E, Policy = "Bearer")]
-    public async Task<IActionResult> ExclusaoLogica([FromRoute] long acervoId, [FromServices] IServicoAcervoArteGrafica servicoAcervoArteGrafica)
+    public async Task<IActionResult> ExclusaoLogica([FromRoute] long acervoSolicitacaoId, [FromServices] IServicoAcervoSolicitacao servicoAcervoSolicitac)
     {
-        return Ok(await servicoAcervoArteGrafica.Excluir(acervoId));
+        return Ok(await servicoAcervoSolicitac.Excluir(acervoSolicitacaoId));
     }
 }

@@ -231,9 +231,6 @@ namespace SME.CDEP.Aplicacao.Mapeamentos
                 .ForMember(dest => dest.Tipo, opt => opt.MapFrom(o => o.TipoUsuario))
                 .ReverseMap();
             
-            CreateMap<AcervoSolicitacaoDTO,AcervoSolicitacao>().ReverseMap();
-            CreateMap<AcervoSolicitacaoItemDTO,AcervoSolicitacaoItem>().ReverseMap();
-            
             CreateMap<AcervoSolicitacaoCadastroDTO,AcervoSolicitacao>().ReverseMap();
             
             CreateMap<AcervoSolicitacaoItemCompleto,AcervoSolicitacaoItemRetornoCadastroDTO>()

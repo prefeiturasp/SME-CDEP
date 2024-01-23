@@ -144,5 +144,36 @@ namespace SME.CDEP.Infra.Dados.Repositorios
 
             return acervos;
         }
+
+        public Task Excluir(long acervoSolicitacaoId)
+        {
+            var parametros = new
+            {
+                AlteradoEm = DateTimeExtension.HorarioBrasilia(),
+                AlteradoPor = contexto.NomeUsuario,
+                AlteradoLogin = contexto.UsuarioLogado,
+                acervoSolicitacaoId
+            };
+
+            var query = @"update
+	                        acervo_solicitacao_item
+                        set
+	                        excluido = true,	                        
+	                        alterado_em = @AlteradoEm,
+	                        alterado_por = @AlteradoPor,
+	                        alterado_login = @AlteradoLogin
+                        where acervo_solicitacao_id = @acervoSolicitacaoId;
+
+                        update
+	                        acervo_solicitacao
+                        set
+	                        excluido = true,                        
+	                        alterado_em = @AlteradoEm,
+	                        alterado_por = @AlteradoPor,
+	                        alterado_login = @AlteradoLogin
+                        where id = @acervoSolicitacaoId; ";
+
+            return conexao.Obter().ExecuteAsync(query, parametros);
+        }
     }
 }
