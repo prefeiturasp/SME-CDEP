@@ -109,6 +109,7 @@ namespace SME.CDEP.Infra.Dados.Repositorios
         {
             var query = @"
             select 
+              asi.id,  
               a.tipo as tipoAcervo,
               a.titulo,
               a.id as acervoId,

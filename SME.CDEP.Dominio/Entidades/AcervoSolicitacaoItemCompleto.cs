@@ -4,6 +4,7 @@ namespace SME.CDEP.Dominio.Entidades
 {
     public class AcervoSolicitacaoItemCompleto
     {
+        public long Id { get; set; }
         public TipoAcervo TipoAcervo { get; set; }
         public long AcervoId { get; set; }
         public string Titulo  { get; set; }
