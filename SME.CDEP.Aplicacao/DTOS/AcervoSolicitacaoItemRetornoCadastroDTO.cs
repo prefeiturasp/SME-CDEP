@@ -1,9 +1,9 @@
-﻿using SME.CDEP.Infra.Dominio.Enumerados;
-
+﻿
 namespace SME.CDEP.Aplicacao.DTOS;
 
 public class AcervoSolicitacaoItemRetornoCadastroDTO  
 {
+    public long Id { get; set; }
     public string TipoAcervo { get; set; }
     public long AcervoId { get; set; }
     public string Titulo { get; set; }
