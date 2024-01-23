@@ -2,8 +2,8 @@
 
 public class MensagemNegocio
 {
+    public const string ACERVO_NAO_ENCONTRADO = "Acervo não encontrado";
     public const string USUARIO_NAO_ENCONTRADO = "Usuário não encontrado";
-    public const string ACERVO_DE_CODIGO_X_E_TIPO_Y_NAO_FOI_ENCONTRADO = "O acervo de código/tombo: '{0}' de tipo: '{1}' não foi encontrado";
     public const string O_ITEM_X_DO_DOMINIO_X_NAO_ENCONTRADO = "O item '{0}' do domínio '{1}' não foi encontrado";
     public const string SOMENTE_ARQUIVO_XLSX_SUPORTADO = "Esse arquivo não é um XLSX. Somente arquivos do tipo XLSX são permitidos";
     public const string ARQUIVO_VAZIO = "O arquivo está vazio";

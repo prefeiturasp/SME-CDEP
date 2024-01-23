@@ -8,6 +8,6 @@ namespace SME.CDEP.Infra.Dados.Repositorios.Interfaces
     {
         Task<AcervoSolicitacao> ObterAcervoSolicitacaoCompletoPorId(long acervoSolicitacaoId);
         Task<IEnumerable<AcervoSolicitacao>> ObterTodosCompletosPorUsuario(long usuarioId);
-        Task<AcervoSolicitacaoItemResumido> ObterItensDoAcervoPorFiltros(string codigo, TipoAcervo tipo);
+        Task<IEnumerable<AcervoTipoTituloAcervoIdCreditosAutores>> ObterItensDoAcervoPorAcervosIds(long[] acervosIds);
     }
 }

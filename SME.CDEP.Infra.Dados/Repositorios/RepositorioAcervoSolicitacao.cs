@@ -109,19 +109,40 @@ namespace SME.CDEP.Infra.Dados.Repositorios
                 });
         }
 
-        public async Task<AcervoSolicitacaoItemResumido> ObterItensDoAcervoPorFiltros(string codigo, TipoAcervo tipo)
+        public async Task<IEnumerable<AcervoTipoTituloAcervoIdCreditosAutores>> ObterItensDoAcervoPorAcervosIds(long[] acervosIds)
         {
             var query = @"
             select 
-              a.tipo,
+              a.tipo as tipoAcervo,
               a.titulo,
               a.id as acervoId
             from acervo a 
-            where (lower(a.codigo) = lower(@codigo) or lower(codigo_novo) = lower(@codigo)) 
-                and not excluido 
-                and tipo = @tipo;";
+            where a.id = any(@acervosIds)
+                  and not a.excluido;
+
+            select 
+            	  ca.nome,
+            	  aca.acervo_id as acervoId
+            	from acervo_credito_autor aca 
+            	  join credito_autor ca on ca.id = aca.credito_autor_id
+            	where aca.acervo_id = any(@acervosIds) 
+            	      and not ca.excluido ";
             
-            return await conexao.Obter().QueryFirstOrDefaultAsync<AcervoSolicitacaoItemResumido>(query, new { codigo = codigo, tipo });
+            var queryMultiple = await conexao.Obter().QueryMultipleAsync(query, new { acervosIds });
+
+            var acervos = queryMultiple.Read<AcervoTipoTituloAcervoIdCreditosAutores>();
+
+            if (acervos.NaoPossuiElementos())
+                return default;
+
+            var creditosAutores = queryMultiple.Read<CreditoAutorNomeAcervoId>();
+
+            foreach (var acervo in acervos)
+                acervo.AutoresCreditos = creditosAutores.PossuiElementos()
+                    ? creditosAutores.Where(w => w.AcervoId == acervo.AcervoId).Select(s => s)
+                    : Enumerable.Empty<CreditoAutorNomeAcervoId>();
+
+            return acervos;
         }
     }
 }
