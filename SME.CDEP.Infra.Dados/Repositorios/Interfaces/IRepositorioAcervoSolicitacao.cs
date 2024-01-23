@@ -9,5 +9,6 @@ namespace SME.CDEP.Infra.Dados.Repositorios.Interfaces
         Task<AcervoSolicitacao> ObterAcervoSolicitacaoCompletoPorId(long acervoSolicitacaoId);
         Task<IEnumerable<AcervoSolicitacao>> ObterTodosCompletosPorUsuario(long usuarioId);
         Task<IEnumerable<AcervoTipoTituloAcervoIdCreditosAutores>> ObterItensDoAcervoPorAcervosIds(long[] acervosIds);
+        Task Excluir(long acervoSolicitacaoId);
     }
 }

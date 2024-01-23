@@ -105,7 +105,7 @@ namespace SME.CDEP.Infra.Dados.Repositorios
             return await conexao.Obter().QueryAsync<ArquivoCodigoNomeAcervoId>(query, new { acervosIds });
         }
         
-        public async Task<IEnumerable<AcervoSolicitacaoItemCompleto>> ObterAcervosSolicitacoesItensCompletoPorAcervosIds(long[] acervosIds)
+        public async Task<IEnumerable<AcervoSolicitacaoItemCompleto>> ObterAcervosSolicitacoesItensCompletoPorId(long acervoSolicitacaoId)
         {
             var query = @"
             select 
@@ -116,7 +116,7 @@ namespace SME.CDEP.Infra.Dados.Repositorios
             from acervo a 
             join acervo_solicitacao_item asi on asi.acervo_id = a.id
             join acervo_solicitacao aso on aso.id = asi.acervo_solicitacao_id
-            where a.id = any(@acervosIds) 
+            where aso.id = @acervoSolicitacaoId 
                 and not a.excluido
                 and not aso.excluido
                 and not asi.excluido;
@@ -126,10 +126,10 @@ namespace SME.CDEP.Infra.Dados.Repositorios
               aca.acervo_id as AcervoId
             from acervo_credito_autor aca 
               join credito_autor ca on ca.id = aca.credito_autor_id
-            where aca.acervo_id = any(@acervosIds) 
+            where aca.acervo_id in (select acervo_id from acervo_solicitacao_item where acervo_solicitacao_id = @acervoSolicitacaoId)
             and not ca.excluido; ";
             
-            var retorno = await conexao.Obter().QueryMultipleAsync(query, new { acervosIds });
+            var retorno = await conexao.Obter().QueryMultipleAsync(query, new { acervoSolicitacaoId });
 
             if (retorno.EhNulo())
                 return default;

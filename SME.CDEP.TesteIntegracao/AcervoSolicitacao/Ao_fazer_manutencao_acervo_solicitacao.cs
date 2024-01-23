@@ -31,8 +31,8 @@ namespace SME.CDEP.TesteIntegracao
             retorno.ShouldNotBeNull();
         }
         
-        [Fact(DisplayName = "Acervo Solicitação - Obter todos")]
-        public async Task Obter_todos()
+        [Fact(DisplayName = "Acervo Solicitação - Obter todos por usuário logado")]
+        public async Task Obter_todos_por_usuario_logado()
         {
             await InserirDadosBasicosAleatorios();
 
@@ -44,8 +44,9 @@ namespace SME.CDEP.TesteIntegracao
 
             var servicoAcervoSolicitacao = GetServicoAcervoSolicitacao();
 
-            var retorno = await servicoAcervoSolicitacao.ObterTodosPorUsuario(1);
-            retorno.ShouldNotBeNull();
+            //Será implementado em outra tarefa de listagem
+            // var retorno = await servicoAcervoSolicitacao.ObterTodosPorUsuario(1);
+            // retorno.ShouldNotBeNull();
         }
         
         [Fact(DisplayName = "Acervo Solicitação - Ao enviar a solicitação para análise - offline - sem arquivos")]
@@ -82,30 +83,6 @@ namespace SME.CDEP.TesteIntegracao
             retorno.All(a=> a.Situacao.ToString().Equals("FINALIZADO")).ShouldBeTrue();
         }
         
-        [Fact(DisplayName = "Acervo Solicitação - Atualizar")]
-        public async Task Ao_atualizar()
-        {
-            await InserirDadosBasicosAleatorios();
-
-            await InserirAcervoTridimensional();
-
-            var acervoSolicitacao = ObterAcervoSolicitacao();
-            
-            await InserirAcervoSolicitacao(acervoSolicitacao,10);
-
-            var servicoAcervoSolicitacao = GetServicoAcervoSolicitacao();
-            
-            var acervoSolicitacaoAlterar = await servicoAcervoSolicitacao.ObterPorId(10);
-            acervoSolicitacaoAlterar.Situacao = SituacaoSolicitacao.FINALIZADO_ATENDIMENTO;
-            foreach (var item in acervoSolicitacaoAlterar.Itens)
-                item.Situacao = SituacaoSolicitacaoItem.FINALIZADO;
-            
-            var acervoSolicitacaoAlterado = await servicoAcervoSolicitacao.Alterar(acervoSolicitacaoAlterar);
-            acervoSolicitacaoAlterado.ShouldNotBeNull();
-            acervoSolicitacaoAlterado.Situacao.ShouldBe(SituacaoSolicitacao.FINALIZADO_ATENDIMENTO);
-            acervoSolicitacaoAlterado.Id.ShouldBe(10);
-        }
-        
         [Fact(DisplayName = "Acervo Solicitação - Remover")]
         public async Task Ao_remover()
         {
@@ -123,7 +100,7 @@ namespace SME.CDEP.TesteIntegracao
             retornoAcervoSolicitacaoAlterado.ShouldBeTrue();
             
             var acervoSolicitacaoAlterado = await servicoAcervoSolicitacao.ObterPorId(1);
-            acervoSolicitacaoAlterado.ShouldBeNull();
+            acervoSolicitacaoAlterado.PossuiElementos().ShouldBeFalse();
         }
 
         private AcervoSolicitacaoCadastroDTO ObterAcervoSolicitacaoDTO()

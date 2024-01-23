@@ -68,7 +68,7 @@ namespace SME.CDEP.Aplicacao.Servicos
                 }
                 tran.Commit();
 
-                return await MapearRetornoDosItens(acervoSolicitacaoCadastroDTO,arquivosEncontrados);
+                return await MapearRetornoDosItens(acervoSolicitacao.Id,arquivosEncontrados);
             }
             catch
             {
@@ -79,22 +79,6 @@ namespace SME.CDEP.Aplicacao.Servicos
             {
                 tran.Dispose();
             }
-        }
-
-        public async Task<AcervoSolicitacaoDTO> ObterPorId(long acervoSolicitacaoId)
-        {
-            return mapper.Map<AcervoSolicitacaoDTO>(await repositorioAcervoSolicitacao.ObterAcervoSolicitacaoCompletoPorId(acervoSolicitacaoId));
-        }
-
-        public async Task<IEnumerable<AcervoSolicitacaoDTO>> ObterTodosPorUsuario(int usuarioId)
-        {
-            return mapper.Map<IEnumerable<AcervoSolicitacaoDTO>>(await repositorioAcervoSolicitacao.ObterTodosCompletosPorUsuario(usuarioId));
-        }
-
-        public async Task<AcervoSolicitacaoDTO> Alterar(AcervoSolicitacaoDTO acervoSolicitacaoDto)
-        {
-            var usuario = mapper.Map<AcervoSolicitacao>(acervoSolicitacaoDto);
-            return mapper.Map<AcervoSolicitacaoDTO>(await repositorioAcervoSolicitacao.Atualizar(usuario));
         }
 
         public async Task<bool> Remover(long acervoSolicitacaoId)
@@ -112,18 +96,32 @@ namespace SME.CDEP.Aplicacao.Servicos
             
             return mapper.Map<IEnumerable<AcervoTipoTituloAcervoIdCreditosAutoresDTO>>(acervos);
         }
-        
-        private async Task<IEnumerable<AcervoSolicitacaoItemRetornoCadastroDTO>> MapearRetornoDosItens(AcervoSolicitacaoCadastroDTO acervoSolicitacaoCadastroDTO, IEnumerable<ArquivoCodigoNomeAcervoId> arquivos)
+
+        private async Task<IEnumerable<AcervoSolicitacaoItemRetornoCadastroDTO>> MapearRetornoDosItens(long acervoSolicitacaoId, IEnumerable<ArquivoCodigoNomeAcervoId>? arquivos = null)
         {
-            var acervosItensCompletos = await repositorioAcervo
-                .ObterAcervosSolicitacoesItensCompletoPorAcervosIds(acervoSolicitacaoCadastroDTO.Itens.Select(s=> s.AcervoId).ToArray());
+            var acervosItensCompletos = await repositorioAcervo.ObterAcervosSolicitacoesItensCompletoPorId(acervoSolicitacaoId);
 
-            var retornos = mapper.Map<IEnumerable<AcervoSolicitacaoItemRetornoCadastroDTO>>(acervosItensCompletos);
+            var acervoItensRetorno = mapper.Map<IEnumerable<AcervoSolicitacaoItemRetornoCadastroDTO>>(acervosItensCompletos);
 
-            foreach (var retorno in retornos)
-                retorno.Arquivos = mapper.Map<IEnumerable<ArquivoCodigoNomeDTO>>(arquivos.Where(w => w.AcervoId == retorno.AcervoId).Select(s=> s));
+            var arquivosDoAcervo = arquivos.EhNulo()
+                ? await repositorioAcervo.ObterArquivosPorAcervoId(acervosItensCompletos.Select(s => s.AcervoId).ToArray())
+                : arquivos;
 
-            return retornos;
+            foreach (var retorno in acervoItensRetorno)
+                retorno.Arquivos = mapper.Map<IEnumerable<ArquivoCodigoNomeDTO>>(arquivosDoAcervo.Where(w => w.AcervoId == retorno.AcervoId).Select(s=> s));
+
+            return acervoItensRetorno;
+        }
+        
+        public async Task<IEnumerable<AcervoSolicitacaoItemRetornoCadastroDTO>> ObterPorId(long acervoSolicitacaoId)
+        {
+            return await MapearRetornoDosItens(acervoSolicitacaoId);
+        }
+        
+        public async Task<bool> Excluir(long acervoSolicitacaoId)
+        {
+            await repositorioAcervoSolicitacao.Excluir(acervoSolicitacaoId);
+            return true;
         }
     }
 }
