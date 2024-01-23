@@ -245,6 +245,7 @@ namespace SME.CDEP.Aplicacao.Servicos
                     .GroupBy(g => new { g.AcervoId,g.Codigo, g.Titulo, g.Tipo, g.Descricao, g.TipoAcervoTag, g.DataAcervo, g.Ano })
                     .Select(s => new PesquisaAcervoDTO
                     {
+                        AcervoId = s.Key.AcervoId,
                         Codigo = s.Key.Codigo,
                         Tipo = s.Key.Tipo,
                         Titulo = s.Key.Titulo,

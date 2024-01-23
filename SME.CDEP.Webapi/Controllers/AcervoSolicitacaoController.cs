@@ -13,15 +13,15 @@ public class AcervoSolicitacaoController: BaseController
 {
 
 
-    [HttpPost("obter-itens")]
-    [ProducesResponseType(typeof(IEnumerable<AcervoSolicitacaoItemRetornoDTO>), 200)]
+    [HttpGet]
+    [ProducesResponseType(typeof(IEnumerable<AcervoTipoTituloAcervoIdCreditosAutoresDTO>), 200)]
     [ProducesResponseType(typeof(RetornoBaseDTO), 400)]
     [ProducesResponseType(typeof(RetornoBaseDTO), 403)]
     [ProducesResponseType(typeof(RetornoBaseDTO), 601)]
     [Permissao(Permissao.OperacoesSolicitacoes_C, Policy = "Bearer")]
-    public async Task<IActionResult> ObterItensDoAcervoPorFiltros([FromBody] AcervoSolicitacaoItemConsultaDTO[] acervosSolicitacaoItensConsultaDTO, [FromServices] IServicoAcervoSolicitacao servicoAcervoSolicitacao)
+    public async Task<IActionResult> ObterItensDoAcervoPorFiltros([FromQuery] long[] acervosIds, [FromServices] IServicoAcervoSolicitacao servicoAcervoSolicitacao)
     {
-        return Ok(await servicoAcervoSolicitacao.ObterItensDoAcervoPorFiltros(acervosSolicitacaoItensConsultaDTO));
+        return Ok(await servicoAcervoSolicitacao.ObterItensDoAcervoPorFiltros(acervosIds));
     }
 
     [HttpPost]
@@ -31,44 +31,31 @@ public class AcervoSolicitacaoController: BaseController
     [ProducesResponseType(typeof(RetornoBaseDTO), 422)]
     [ProducesResponseType(typeof(RetornoBaseDTO), 500)]
     [ProducesResponseType(typeof(RetornoBaseDTO), 601)]
-    // [Permissao(Permissao.OperacoesSolicitacoes_I, Policy = "Bearer")]
+    [Permissao(Permissao.OperacoesSolicitacoes_I, Policy = "Bearer")]
     public async Task<IActionResult> Inserir([FromBody] AcervoSolicitacaoCadastroDTO acervoSolicitacaoCadastroDTO, [FromServices] IServicoAcervoSolicitacao servicoAcervoSolicitacao)
     {
         return Ok(await servicoAcervoSolicitacao.Inserir(acervoSolicitacaoCadastroDTO));
     }
-    //
-    // [HttpPut]
-    // [ProducesResponseType(typeof(AcervoArteGraficaDTO), 200)]
-    // [ProducesResponseType(typeof(RetornoBaseDTO), 400)]
-    // [ProducesResponseType(typeof(RetornoBaseDTO), 403)]
-    // [ProducesResponseType(typeof(RetornoBaseDTO), 422)]
-    // [ProducesResponseType(typeof(RetornoBaseDTO), 500)]
-    // [ProducesResponseType(typeof(RetornoBaseDTO), 601)]
-    // [Permissao(Permissao.OperacoesSolicitacoes_A, Policy = "Bearer")]
-    // public async Task<IActionResult> Alterar([FromBody] AcervoArteGraficaAlteracaoDTO acervoArteGrafica, [FromServices] IServicoAcervoArteGrafica servicoAcervoArteGrafica)
-    // {
-    //     return Ok(await servicoAcervoArteGrafica.Alterar(acervoArteGrafica));
-    // }
-    //
-    // [HttpGet("{acervoId}")]
-    // [ProducesResponseType(typeof(AcervoArteGraficaDTO), 200)]
-    // [ProducesResponseType(typeof(RetornoBaseDTO), 400)]
-    // [ProducesResponseType(typeof(RetornoBaseDTO), 403)]
-    // [ProducesResponseType(typeof(RetornoBaseDTO), 601)]
-    // [Permissao(Permissao.OperacoesSolicitacoes_C, Policy = "Bearer")]
-    // public async Task<IActionResult> ObterPorId([FromRoute] long acervoId,[FromServices] IServicoAcervoArteGrafica servicoAcervoArteGrafica)
-    // {
-    //     return Ok(await servicoAcervoArteGrafica.ObterPorId(acervoId));
-    // }
-    //
-    // [HttpDelete("{acervoId}")]
-    // [ProducesResponseType(typeof(bool), 200)]
-    // [ProducesResponseType(typeof(RetornoBaseDTO), 400)]
-    // [ProducesResponseType(typeof(RetornoBaseDTO), 403)]
-    // [ProducesResponseType(typeof(RetornoBaseDTO), 601)]
-    // [Permissao(Permissao.OperacoesSolicitacoes_E, Policy = "Bearer")]
-    // public async Task<IActionResult> ExclusaoLogica([FromRoute] long acervoId, [FromServices] IServicoAcervoArteGrafica servicoAcervoArteGrafica)
-    // {
-    //     return Ok(await servicoAcervoArteGrafica.Excluir(acervoId));
-    // }
+    
+    [HttpGet("{acervoId}")]
+    [ProducesResponseType(typeof(AcervoArteGraficaDTO), 200)]
+    [ProducesResponseType(typeof(RetornoBaseDTO), 400)]
+    [ProducesResponseType(typeof(RetornoBaseDTO), 403)]
+    [ProducesResponseType(typeof(RetornoBaseDTO), 601)]
+    [Permissao(Permissao.OperacoesSolicitacoes_C, Policy = "Bearer")]
+    public async Task<IActionResult> ObterPorId([FromRoute] long acervoId,[FromServices] IServicoAcervoArteGrafica servicoAcervoArteGrafica)
+    {
+        return Ok(await servicoAcervoArteGrafica.ObterPorId(acervoId));
+    }
+    
+    [HttpDelete("{acervoId}")]
+    [ProducesResponseType(typeof(bool), 200)]
+    [ProducesResponseType(typeof(RetornoBaseDTO), 400)]
+    [ProducesResponseType(typeof(RetornoBaseDTO), 403)]
+    [ProducesResponseType(typeof(RetornoBaseDTO), 601)]
+    [Permissao(Permissao.OperacoesSolicitacoes_E, Policy = "Bearer")]
+    public async Task<IActionResult> ExclusaoLogica([FromRoute] long acervoId, [FromServices] IServicoAcervoArteGrafica servicoAcervoArteGrafica)
+    {
+        return Ok(await servicoAcervoArteGrafica.Excluir(acervoId));
+    }
 }
