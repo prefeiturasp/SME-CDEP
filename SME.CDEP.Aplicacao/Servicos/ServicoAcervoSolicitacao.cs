@@ -68,8 +68,7 @@ namespace SME.CDEP.Aplicacao.Servicos
                 }
                 tran.Commit();
 
-                var retorno = await MapearRetornoDosItens(acervoSolicitacaoCadastroDTO,arquivosEncontrados);
-                return retorno;
+                return await MapearRetornoDosItens(acervoSolicitacaoCadastroDTO,arquivosEncontrados);
             }
             catch
             {
@@ -111,9 +110,7 @@ namespace SME.CDEP.Aplicacao.Servicos
             if (acervos.EhNulo())
                 throw new NegocioException(MensagemNegocio.ACERVO_NAO_ENCONTRADO);
             
-            var itensSolicitacaoItemRetornoDTO = mapper.Map<IEnumerable<AcervoTipoTituloAcervoIdCreditosAutoresDTO>>(acervos);
-
-            return itensSolicitacaoItemRetornoDTO;
+            return mapper.Map<IEnumerable<AcervoTipoTituloAcervoIdCreditosAutoresDTO>>(acervos);
         }
         
         private async Task<IEnumerable<AcervoSolicitacaoItemRetornoCadastroDTO>> MapearRetornoDosItens(AcervoSolicitacaoCadastroDTO acervoSolicitacaoCadastroDTO, IEnumerable<ArquivoCodigoNomeAcervoId> arquivos)

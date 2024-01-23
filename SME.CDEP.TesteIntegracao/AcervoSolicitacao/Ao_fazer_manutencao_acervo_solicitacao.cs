@@ -48,29 +48,38 @@ namespace SME.CDEP.TesteIntegracao
             retorno.ShouldNotBeNull();
         }
         
-        [Fact(DisplayName = "Acervo Solicitação - Inserir")]
-        public async Task Ao_inserir()
+        [Fact(DisplayName = "Acervo Solicitação - Ao enviar a solicitação para análise - offline - sem arquivos")]
+        public async Task Ao_enviar_solicitacao_para_analise_sem_arquivos()
+        {
+            await InserirDadosBasicosAleatorios();
+
+            await InserirAcervoTridimensional(false);
+
+            var servicoAcervoSolicitacao = GetServicoAcervoSolicitacao();
+            
+            var acervoSolicitacaoInserir = ObterAcervoSolicitacaoDTO();
+            
+            var retorno = await servicoAcervoSolicitacao.Inserir(acervoSolicitacaoInserir);
+            retorno.ShouldNotBeNull();
+            retorno.Any(a=> a.Arquivos.NaoPossuiElementos()).ShouldBeTrue();
+            retorno.All(a=> a.Situacao.ToString().Equals("EM_ANALISE")).ShouldBeTrue();
+        }
+        
+        [Fact(DisplayName = "Acervo Solicitação - Ao enviar a solicitação para finalizado - online - com arquivos")]
+        public async Task Ao_enviar_solicitacao_para_finalizado_com_arquivos()
         {
             await InserirDadosBasicosAleatorios();
 
             await InserirAcervoTridimensional();
 
-            var acervoSolicitacao = ObterAcervoSolicitacao();
-            
-            await InserirAcervoSolicitacao(acervoSolicitacao,10);
-
             var servicoAcervoSolicitacao = GetServicoAcervoSolicitacao();
             
             var acervoSolicitacaoInserir = ObterAcervoSolicitacaoDTO();
-            acervoSolicitacaoInserir.Situacao = SituacaoSolicitacao.FINALIZADO_ATENDIMENTO;
-            foreach (var item in acervoSolicitacaoInserir.Itens)
-                item.Situacao = SituacaoSolicitacaoItem.FINALIZADO;
             
-            // var acervoSolicitacaoId = await servicoAcervoSolicitacao.Inserir(acervoSolicitacaoInserir);
-            // acervoSolicitacaoId.ShouldBeGreaterThan(0);
-            //
-            // var acervoSolicitacaoInserido = await servicoAcervoSolicitacao.ObterPorId(acervoSolicitacaoId);
-            // acervoSolicitacaoInserido.ShouldNotBeNull();
+            var retorno = await servicoAcervoSolicitacao.Inserir(acervoSolicitacaoInserir);
+            retorno.ShouldNotBeNull();
+            retorno.Any(a=> a.Arquivos.PossuiElementos()).ShouldBeTrue();
+            retorno.All(a=> a.Situacao.ToString().Equals("FINALIZADO")).ShouldBeTrue();
         }
         
         [Fact(DisplayName = "Acervo Solicitação - Atualizar")]
@@ -117,36 +126,20 @@ namespace SME.CDEP.TesteIntegracao
             acervoSolicitacaoAlterado.ShouldBeNull();
         }
 
-        private AcervoSolicitacaoDTO ObterAcervoSolicitacaoDTO()
+        private AcervoSolicitacaoCadastroDTO ObterAcervoSolicitacaoDTO()
         {
-            var acervoSolicitacao = new AcervoSolicitacaoDTO()
+            var itens = new List<AcervoSolicitacaoItemCadastroDTO>()
+            {
+                new() { AcervoId = 1 },
+                new() { AcervoId = 2 },
+                new() { AcervoId = 3 },
+            };
+
+            return new AcervoSolicitacaoCadastroDTO()
             {
                 UsuarioId = 1,
-                Situacao = SituacaoSolicitacao.AGUARDANDO_ATENDIMENTO,
-                CriadoEm = DateTimeExtension.HorarioBrasilia(), CriadoLogin = "Sistema", CriadoPor = "Sistema",
-                Itens = new List<AcervoSolicitacaoItemDTO>()
-                {
-                    new ()
-                    {
-                        Situacao = SituacaoSolicitacaoItem.EM_ANALISE,
-                        AcervoId = 1,
-                        CriadoEm = DateTimeExtension.HorarioBrasilia(), CriadoLogin = "Sistema", CriadoPor = "Sistema",
-                    },
-                    new ()
-                    {
-                        Situacao = SituacaoSolicitacaoItem.FINALIZADO,
-                        AcervoId = 2,
-                        CriadoEm = DateTimeExtension.HorarioBrasilia(), CriadoLogin = "Sistema", CriadoPor = "Sistema",
-                    },
-                    new ()
-                    {
-                        Situacao = SituacaoSolicitacaoItem.FINALIZADO,
-                        AcervoId = 3,
-                        CriadoEm = DateTimeExtension.HorarioBrasilia(), CriadoLogin = "Sistema", CriadoPor = "Sistema",
-                    }
-                }
+                Itens = itens.ToArray()
             };
-            return acervoSolicitacao;
         }
         
         private AcervoSolicitacao ObterAcervoSolicitacao()
@@ -196,7 +189,7 @@ namespace SME.CDEP.TesteIntegracao
             }
         }
         
-       private async Task InserirAcervoTridimensional()
+       private async Task InserirAcervoTridimensional(bool incluirArquivos = true)
         {
             var random = new Random();
             
@@ -228,39 +221,42 @@ namespace SME.CDEP.TesteIntegracao
                     Diametro = double.Parse("1540"),	
                     Profundidade = double.Parse("1801"),	
                 });
-                
-                await InserirNaBase(new Arquivo()
+
+                if (incluirArquivos)
                 {
-                    Nome = faker.Lorem.Text(),
-                    Codigo = Guid.NewGuid(),
-                    Tipo = TipoArquivo.AcervoTridimensional,
-                    TipoConteudo = ConstantesTestes.MIME_TYPE_JPG,
-                    CriadoPor = ConstantesTestes.SISTEMA,
-                    CriadoEm = DateTimeExtension.HorarioBrasilia().AddMinutes(-15),
-                    CriadoLogin = ConstantesTestes.LOGIN_123456789,
-                });
-                
-                arquivoId++;
-                
-                await InserirNaBase(new Arquivo()
-                {
-                    Nome = $"{faker.Lorem.Text()}_{arquivoId}.jpeg",
-                    Codigo = Guid.NewGuid(),
-                    Tipo = TipoArquivo.AcervoArteGrafica,
-                    TipoConteudo = ConstantesTestes.MIME_TYPE_JPG,
-                    CriadoPor = ConstantesTestes.SISTEMA,
-                    CriadoEm = DateTimeExtension.HorarioBrasilia().AddMinutes(-15),
-                    CriadoLogin = ConstantesTestes.LOGIN_123456789,
-                });
-                
-                await InserirNaBase(new AcervoTridimensionalArquivo()
-                {
-                    ArquivoId = arquivoId-1,
-                    AcervoTridimensionalId = j,
-                    ArquivoMiniaturaId = arquivoId
-                });
-                
-                arquivoId++;
+                    await InserirNaBase(new Arquivo()
+                    {
+                        Nome = faker.Lorem.Text(),
+                        Codigo = Guid.NewGuid(),
+                        Tipo = TipoArquivo.AcervoTridimensional,
+                        TipoConteudo = ConstantesTestes.MIME_TYPE_JPG,
+                        CriadoPor = ConstantesTestes.SISTEMA,
+                        CriadoEm = DateTimeExtension.HorarioBrasilia().AddMinutes(-15),
+                        CriadoLogin = ConstantesTestes.LOGIN_123456789,
+                    });
+                    
+                    arquivoId++;
+                    
+                    await InserirNaBase(new Arquivo()
+                    {
+                        Nome = $"{faker.Lorem.Text()}_{arquivoId}.jpeg",
+                        Codigo = Guid.NewGuid(),
+                        Tipo = TipoArquivo.AcervoArteGrafica,
+                        TipoConteudo = ConstantesTestes.MIME_TYPE_JPG,
+                        CriadoPor = ConstantesTestes.SISTEMA,
+                        CriadoEm = DateTimeExtension.HorarioBrasilia().AddMinutes(-15),
+                        CriadoLogin = ConstantesTestes.LOGIN_123456789,
+                    });
+                    
+                    await InserirNaBase(new AcervoTridimensionalArquivo()
+                    {
+                        ArquivoId = arquivoId-1,
+                        AcervoTridimensionalId = j,
+                        ArquivoMiniaturaId = arquivoId
+                    });
+                    
+                    arquivoId++;
+                }
             }
         }
     }
