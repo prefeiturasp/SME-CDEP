@@ -27,7 +27,8 @@ namespace SME.CDEP.Infra.Dados.Repositorios
               excluido
             from acervo_solicitacao_item 
             where acervo_solicitacao_id in (select id from acervo_solicitacao where usuario_id = @usuario_id)
-            and not excluido;";
+            and not excluido
+            order by criado_em desc";
             
             return await conexao.Obter().QueryAsync<AcervoSolicitacaoItem>(query, new { usuarioId });
         }
