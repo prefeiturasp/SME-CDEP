@@ -290,7 +290,7 @@ namespace SME.CDEP.Aplicacao.Servicos
                     Codigo = s.Key.Codigo,
                     Data = s.Key.Data,
                     CreditoAutoria = s.Any(w=> w.CreditoAutor.NaoEhNulo() ) ? string.Join(", ", s.Select(ca=> ca.CreditoAutor.Nome)) : string.Empty,
-                    TipoAcervo = ((TipoAcervo)s.Key.TipoAcervoId).Nome(),
+                    TipoAcervo = ((TipoAcervo)s.Key.TipoAcervoId).Descricao(),
                     TipoAcervoId = (TipoAcervo)s.Key.TipoAcervoId,
                 });
             

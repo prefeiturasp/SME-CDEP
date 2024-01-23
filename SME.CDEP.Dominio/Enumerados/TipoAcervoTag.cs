@@ -4,12 +4,12 @@ namespace SME.CDEP.Infra.Dominio.Enumerados;
 
 public enum TipoAcervoTag
 {
-    [Display(Name = "Biblioteca")]
+    [Display(Description = "Biblioteca")]
     Biblioteca = 1,
     
-    [Display(Name = "Memória Documental")]
+    [Display(Description = "Memória Documental")]
     MemoriaDocumental = 2,
     
-    [Display(Name = "Memória da Educação Municipal")]
+    [Display(Description = "Memória da Educação Municipal")]
     MemoriaEducacaoMunicipal = 3
 }

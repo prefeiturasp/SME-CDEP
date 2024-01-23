@@ -4,12 +4,12 @@ namespace SME.CDEP.Infra.Dominio.Enumerados;
 
 public enum TipoCreditoAutoria
 {
-    [Display(Name = "Crédito")]
+    [Display(Description = "Crédito")]
     Credito = 1,
     
-    [Display(Name = "Autoria")]
+    [Display(Description = "Autoria")]
     Autoria = 2,
     
-    [Display(Name = "CoAutor")]
+    [Display(Description = "CoAutor")]
     Coautor = 3,
 }
