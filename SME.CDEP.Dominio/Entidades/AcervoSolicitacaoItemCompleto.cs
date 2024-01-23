@@ -2,8 +2,11 @@
 
 namespace SME.CDEP.Dominio.Entidades
 {
-    public class AcervoSolicitacaoItemCompleto : AcervoSolicitacaoItemResumido
+    public class AcervoSolicitacaoItemCompleto
     {
+        public TipoAcervo TipoAcervo { get; set; }
+        public long AcervoId { get; set; }
+        public string Titulo  { get; set; }
         public IEnumerable<CreditoAutorNomeAcervoId> AutoresCreditos { get; set; }
         public SituacaoSolicitacaoItem Situacao { get; set; }
         public IEnumerable<ArquivoCodigoNomeAcervoId> Arquivos  { get; set; }

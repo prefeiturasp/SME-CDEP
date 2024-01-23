@@ -104,27 +104,14 @@ namespace SME.CDEP.Aplicacao.Servicos
             return true;
         }
 
-        public async Task<IEnumerable<AcervoSolicitacaoItemRetornoDTO>> ObterItensDoAcervoPorFiltros(AcervoSolicitacaoItemConsultaDTO[] acervosSolicitacaoItensConsultaDTO)
+        public async Task<IEnumerable<AcervoTipoTituloAcervoIdCreditosAutoresDTO>> ObterItensDoAcervoPorFiltros(long[] acervosIds)
         {
-            var itensSolicitacaoItemRetornoDTO = new List<AcervoSolicitacaoItemRetornoDTO>();
+            var acervos = await repositorioAcervoSolicitacao.ObterItensDoAcervoPorAcervosIds(acervosIds);
 
-            foreach (var item in acervosSolicitacaoItensConsultaDTO)
-            {
-                var acervoItem = await repositorioAcervoSolicitacao.ObterItensDoAcervoPorFiltros(item.Codigo, item.Tipo);
-
-                if (acervoItem.EhNulo())
-                    throw new NegocioException(string.Format(MensagemNegocio.ACERVO_DE_CODIGO_X_E_TIPO_Y_NAO_FOI_ENCONTRADO,item.Codigo, item.Tipo.Nome()));
-                
-                var acervoCreditoAutor = await repositorioAcervoCreditoAutor.ObterNomesPorAcervoId(acervoItem.AcervoId);
-                
-                itensSolicitacaoItemRetornoDTO.Add(new AcervoSolicitacaoItemRetornoDTO()
-                {
-                    TipoAcervo = acervoItem.TipoAcervo.Nome(),
-                    AcervoId = acervoItem.AcervoId,
-                    Titulo = acervoItem.Titulo,
-                    AutoresCreditos = acervoCreditoAutor.PossuiElementos() ? acervoCreditoAutor.Select(s=> s).ToArray() : default
-                });
-            }
+            if (acervos.EhNulo())
+                throw new NegocioException(MensagemNegocio.ACERVO_NAO_ENCONTRADO);
+            
+            var itensSolicitacaoItemRetornoDTO = mapper.Map<IEnumerable<AcervoTipoTituloAcervoIdCreditosAutoresDTO>>(acervos);
 
             return itensSolicitacaoItemRetornoDTO;
         }
@@ -138,7 +125,6 @@ namespace SME.CDEP.Aplicacao.Servicos
 
             foreach (var retorno in retornos)
                 retorno.Arquivos = mapper.Map<IEnumerable<ArquivoCodigoNomeDTO>>(arquivos.Where(w => w.AcervoId == retorno.AcervoId).Select(s=> s));
-                
 
             return retornos;
         }
