@@ -130,7 +130,7 @@ namespace SME.CDEP.Aplicacao.Servicos
         public async Task<IEnumerable<MinhaSolicitacaoDTO>> ObterMinhasSolicitacoes()
         {
             var usuario = await servicoUsuario.ObterUsuarioLogado();
-            
+
             return mapper.Map<IEnumerable<MinhaSolicitacaoDTO>>(await repositorioAcervoSolicitacaoItem.ObterMinhasSolicitacoes(usuario.Id));
         }
     }

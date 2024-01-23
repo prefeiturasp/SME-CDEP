@@ -24,7 +24,8 @@ namespace SME.CDEP.Infra.Dados.Repositorios
               alterado_em,
               alterado_por,
               alterado_login,
-              excluido
+              excluido,
+              situacao
             from acervo_solicitacao_item 
             where acervo_solicitacao_id in (select id from acervo_solicitacao where usuario_id = @usuario_id)
             and not excluido

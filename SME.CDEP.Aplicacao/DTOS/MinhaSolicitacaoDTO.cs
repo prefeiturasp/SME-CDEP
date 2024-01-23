@@ -8,5 +8,5 @@ public class MinhaSolicitacaoDTO
     public long AcervoSolicitacaoId { get; set; }
     public DateTime DataCriacao { get; set; }
     public DateTime? DataVisita { get; set; }
-    public SituacaoSolicitacao Situacao { get; set; }
+    public string Situacao { get; set; }
 }
