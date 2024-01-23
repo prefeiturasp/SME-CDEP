@@ -641,7 +641,7 @@ namespace SME.CDEP.Aplicacao.Servicos
                 throw new NegocioException(Constantes.CONTEUDO_DO_ARQUIVO_INVALIDO);
 
             if (arquivo.TipoAcervo.NaoSaoIguais(tipoAcervoEsperado))
-                throw new NegocioException(string.Format(Constantes.ESSE_ARQUIVO_NAO_EH_ACERVO_X, tipoAcervoEsperado.Nome()));
+                throw new NegocioException(string.Format(Constantes.ESSE_ARQUIVO_NAO_EH_ACERVO_X, tipoAcervoEsperado.Descricao()));
 
             return arquivo;
         }

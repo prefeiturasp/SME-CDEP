@@ -4,21 +4,21 @@ namespace SME.CDEP.Infra.Dominio.Enumerados;
 
 public enum TipoAcervo
 {
-    [Display(Name = "Bibliográfico")]
+    [Display(Description = "Bibliográfico")]
     Bibliografico = 1,
     
-    [Display(Name = "Documentação histórica")]
+    [Display(Description = "Documentação histórica")]
     DocumentacaoHistorica = 2,
     
-    [Display(Name = "Artes gráficas")]
+    [Display(Description = "Artes gráficas")]
     ArtesGraficas = 3,
     
-    [Display(Name = "Audiovisual")]
+    [Display(Description = "Audiovisual")]
     Audiovisual = 4,
     
-    [Display(Name = "Fotográfico")]
+    [Display(Description = "Fotográfico")]
     Fotografico = 5,
     
-    [Display(Name = "Tridimensional")]
+    [Display(Description = "Tridimensional")]
     Tridimensional = 6
 }
