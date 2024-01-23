@@ -40,7 +40,7 @@ namespace SME.CDEP.Aplicacao.Servicos
             this.contextoAplicacao = contextoAplicacao ?? throw new ArgumentNullException(nameof(contextoAplicacao));
         }
 
-        public async Task<IEnumerable<AcervoSolicitacaoItemRetornoCadastroDTO>> Inserir(AcervoSolicitacaoItemCadastroDTO[] acervosSolicitacaoItensCadastroDTO)
+        public async Task<long> Inserir(AcervoSolicitacaoItemCadastroDTO[] acervosSolicitacaoItensCadastroDTO)
         {
             var usuarioLogado = await servicoUsuario.ObterUsuarioLogado();
             
@@ -78,7 +78,7 @@ namespace SME.CDEP.Aplicacao.Servicos
                 }
                 tran.Commit();
 
-                return await MapearRetornoDosItens(acervoSolicitacao.Id,arquivosEncontrados);
+                return acervoSolicitacao.Id;
             }
             catch
             {
@@ -106,26 +106,19 @@ namespace SME.CDEP.Aplicacao.Servicos
             
             return mapper.Map<IEnumerable<AcervoTipoTituloAcervoIdCreditosAutoresDTO>>(acervos);
         }
-
-        private async Task<IEnumerable<AcervoSolicitacaoItemRetornoCadastroDTO>> MapearRetornoDosItens(long acervoSolicitacaoId, IEnumerable<ArquivoCodigoNomeAcervoId>? arquivos = null)
+        
+        public async Task<IEnumerable<AcervoSolicitacaoItemRetornoCadastroDTO>> ObterPorId(long acervoSolicitacaoId)
         {
             var acervosItensCompletos = await repositorioAcervo.ObterAcervosSolicitacoesItensCompletoPorId(acervoSolicitacaoId);
 
             var acervoItensRetorno = mapper.Map<IEnumerable<AcervoSolicitacaoItemRetornoCadastroDTO>>(acervosItensCompletos);
 
-            var arquivosDoAcervo = arquivos.EhNulo()
-                ? await repositorioAcervo.ObterArquivosPorAcervoId(acervosItensCompletos.Select(s => s.AcervoId).ToArray())
-                : arquivos;
+            var arquivosDoAcervo = await repositorioAcervo.ObterArquivosPorAcervoId(acervosItensCompletos.Select(s => s.AcervoId).ToArray());
 
             foreach (var retorno in acervoItensRetorno)
                 retorno.Arquivos = mapper.Map<IEnumerable<ArquivoCodigoNomeDTO>>(arquivosDoAcervo.Where(w => w.AcervoId == retorno.AcervoId).Select(s=> s));
 
             return acervoItensRetorno;
-        }
-        
-        public async Task<IEnumerable<AcervoSolicitacaoItemRetornoCadastroDTO>> ObterPorId(long acervoSolicitacaoId)
-        {
-            return await MapearRetornoDosItens(acervoSolicitacaoId);
         }
         
         public async Task<bool> Excluir(long acervoSolicitacaoId)

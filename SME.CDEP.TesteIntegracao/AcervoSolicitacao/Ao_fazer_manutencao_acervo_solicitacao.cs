@@ -60,9 +60,7 @@ namespace SME.CDEP.TesteIntegracao
             var acervoSolicitacaoInserir = ObterItens();
             
             var retorno = await servicoAcervoSolicitacao.Inserir(acervoSolicitacaoInserir.ToArray());
-            retorno.ShouldNotBeNull();
-            retorno.Any(a=> a.Arquivos.NaoPossuiElementos()).ShouldBeTrue();
-            retorno.All(a=> a.Situacao.ToString().Equals("AGUARDANDO_ATENDIMENTO")).ShouldBeTrue();
+            retorno.ShouldBeGreaterThan(0);
         }
         
         [Fact(DisplayName = "Acervo Solicitação - Ao enviar a solicitação para finalizado - online - com arquivos")]
@@ -77,9 +75,7 @@ namespace SME.CDEP.TesteIntegracao
             var acervoSolicitacaoInserir = ObterItens();
             
             var retorno = await servicoAcervoSolicitacao.Inserir(acervoSolicitacaoInserir.ToArray());
-            retorno.ShouldNotBeNull();
-            retorno.Any(a=> a.Arquivos.PossuiElementos()).ShouldBeTrue();
-            retorno.All(a=> a.Situacao.ToString().Equals("FINALIZADO_AUTOMATICAMENTE")).ShouldBeTrue();
+            retorno.ShouldBeGreaterThan(0);
         }
         
         [Fact(DisplayName = "Acervo Solicitação - Remover")]
