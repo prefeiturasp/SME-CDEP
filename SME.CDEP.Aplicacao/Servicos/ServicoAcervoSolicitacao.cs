@@ -40,27 +40,31 @@ namespace SME.CDEP.Aplicacao.Servicos
             this.contextoAplicacao = contextoAplicacao ?? throw new ArgumentNullException(nameof(contextoAplicacao));
         }
 
-        public async Task<IEnumerable<AcervoSolicitacaoItemRetornoCadastroDTO>> Inserir(AcervoSolicitacaoCadastroDTO acervoSolicitacaoCadastroDTO)
+        public async Task<IEnumerable<AcervoSolicitacaoItemRetornoCadastroDTO>> Inserir(AcervoSolicitacaoItemCadastroDTO[] acervosSolicitacaoItensCadastroDTO)
         {
-            var usuarioSolicitante = await repositorioUsuario.ObterPorId(acervoSolicitacaoCadastroDTO.UsuarioId);
+            var usuarioLogado = await servicoUsuario.ObterUsuarioLogado();
+            
+            var usuarioSolicitante = await repositorioUsuario.ObterPorId(usuarioLogado.Id);
             if (usuarioSolicitante.EhNulo())
                 throw new NegocioException(MensagemNegocio.USUARIO_NAO_ENCONTRADO);
 
-            var arquivosEncontrados = await repositorioAcervo.ObterArquivosPorAcervoId(acervoSolicitacaoCadastroDTO.Itens.Select(s=> s.AcervoId).ToArray());
-            
-            var acervoSolicitacao = mapper.Map<AcervoSolicitacao>(acervoSolicitacaoCadastroDTO);
+            var arquivosEncontrados = await repositorioAcervo.ObterArquivosPorAcervoId(acervosSolicitacaoItensCadastroDTO.Select(s=> s.AcervoId).ToArray());
             
             var tran = transacao.Iniciar();
             try
             {
-                acervoSolicitacao.Situacao = acervoSolicitacao.Itens
-                    .Select(s => s.AcervoId)
-                    .Except(arquivosEncontrados.Select(s => s.AcervoId))
-                    .Any() ? SituacaoSolicitacao.AGUARDANDO_ATENDIMENTO : SituacaoSolicitacao.FINALIZADO_ATENDIMENTO;
+                var acervoSolicitacao = new AcervoSolicitacao()
+                {
+                    UsuarioId = usuarioLogado.Id,
+                    Situacao = acervosSolicitacaoItensCadastroDTO
+                        .Select(s => s.AcervoId)
+                        .Except(arquivosEncontrados.Select(s => s.AcervoId))
+                        .Any() ? SituacaoSolicitacao.AGUARDANDO_ATENDIMENTO : SituacaoSolicitacao.FINALIZADO_ATENDIMENTO
+                };
                 
                 acervoSolicitacao.Id =  await repositorioAcervoSolicitacao.Inserir(acervoSolicitacao);
 
-                foreach (var item in acervoSolicitacaoCadastroDTO.Itens)
+                foreach (var item in acervosSolicitacaoItensCadastroDTO)
                 {
                     var acervoSolicitacaoItem = mapper.Map<AcervoSolicitacaoItem>(item);
                     

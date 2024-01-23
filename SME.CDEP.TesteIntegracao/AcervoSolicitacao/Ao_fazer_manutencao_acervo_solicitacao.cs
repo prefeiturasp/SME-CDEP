@@ -57,9 +57,9 @@ namespace SME.CDEP.TesteIntegracao
 
             var servicoAcervoSolicitacao = GetServicoAcervoSolicitacao();
             
-            var acervoSolicitacaoInserir = ObterAcervoSolicitacaoDTO();
+            var acervoSolicitacaoInserir = ObterItens();
             
-            var retorno = await servicoAcervoSolicitacao.Inserir(acervoSolicitacaoInserir);
+            var retorno = await servicoAcervoSolicitacao.Inserir(acervoSolicitacaoInserir.ToArray());
             retorno.ShouldNotBeNull();
             retorno.Any(a=> a.Arquivos.NaoPossuiElementos()).ShouldBeTrue();
             retorno.All(a=> a.Situacao.ToString().Equals("AGUARDANDO_ATENDIMENTO")).ShouldBeTrue();
@@ -74,9 +74,9 @@ namespace SME.CDEP.TesteIntegracao
 
             var servicoAcervoSolicitacao = GetServicoAcervoSolicitacao();
             
-            var acervoSolicitacaoInserir = ObterAcervoSolicitacaoDTO();
+            var acervoSolicitacaoInserir = ObterItens();
             
-            var retorno = await servicoAcervoSolicitacao.Inserir(acervoSolicitacaoInserir);
+            var retorno = await servicoAcervoSolicitacao.Inserir(acervoSolicitacaoInserir.ToArray());
             retorno.ShouldNotBeNull();
             retorno.Any(a=> a.Arquivos.PossuiElementos()).ShouldBeTrue();
             retorno.All(a=> a.Situacao.ToString().Equals("FINALIZADO_AUTOMATICAMENTE")).ShouldBeTrue();
@@ -102,19 +102,13 @@ namespace SME.CDEP.TesteIntegracao
             acervoSolicitacaoAlterado.PossuiElementos().ShouldBeFalse();
         }
 
-        private AcervoSolicitacaoCadastroDTO ObterAcervoSolicitacaoDTO()
+        private List<AcervoSolicitacaoItemCadastroDTO> ObterItens()
         {
-            var itens = new List<AcervoSolicitacaoItemCadastroDTO>()
+            return new List<AcervoSolicitacaoItemCadastroDTO>()
             {
                 new() { AcervoId = 1 },
                 new() { AcervoId = 2 },
                 new() { AcervoId = 3 },
-            };
-
-            return new AcervoSolicitacaoCadastroDTO()
-            {
-                UsuarioId = 1,
-                Itens = itens.ToArray()
             };
         }
         
