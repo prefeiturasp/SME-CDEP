@@ -6,8 +6,6 @@ namespace SME.CDEP.Infra.Dados.Repositorios.Interfaces
 {
     public interface IRepositorioAcervoSolicitacao : IRepositorioBaseAuditavel<AcervoSolicitacao>
     {
-        Task<AcervoSolicitacao> ObterAcervoSolicitacaoCompletoPorId(long acervoSolicitacaoId);
-        Task<IEnumerable<AcervoSolicitacao>> ObterTodosCompletosPorUsuario(long usuarioId);
         Task<IEnumerable<AcervoTipoTituloAcervoIdCreditosAutores>> ObterItensDoAcervoPorAcervosIds(long[] acervosIds);
         Task Excluir(long acervoSolicitacaoId);
     }

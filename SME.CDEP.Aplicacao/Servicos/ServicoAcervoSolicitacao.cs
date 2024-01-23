@@ -20,10 +20,12 @@ namespace SME.CDEP.Aplicacao.Servicos
         private readonly IRepositorioAcervoCreditoAutor repositorioAcervoCreditoAutor;
         private readonly IRepositorioUsuario repositorioUsuario;
         private readonly IRepositorioAcervo repositorioAcervo;
+        private readonly IServicoUsuario servicoUsuario;
         
         public ServicoAcervoSolicitacao(IRepositorioAcervoSolicitacao repositorioAcervoSolicitacao, 
             IMapper mapper,ITransacao transacao,IRepositorioAcervoSolicitacaoItem repositorioAcervoSolicitacaoItem,
-            IRepositorioAcervoCreditoAutor repositorioAcervoCreditoAutor,IRepositorioUsuario repositorioUsuario,IRepositorioAcervo repositorioAcervo) 
+            IRepositorioAcervoCreditoAutor repositorioAcervoCreditoAutor,IRepositorioUsuario repositorioUsuario,IRepositorioAcervo repositorioAcervo,
+            IServicoUsuario servicoUsuario) 
         {
             this.repositorioAcervoSolicitacao = repositorioAcervoSolicitacao ?? throw new ArgumentNullException(nameof(repositorioAcervoSolicitacao));
             this.repositorioAcervoSolicitacaoItem = repositorioAcervoSolicitacaoItem ?? throw new ArgumentNullException(nameof(repositorioAcervoSolicitacaoItem));
@@ -32,6 +34,7 @@ namespace SME.CDEP.Aplicacao.Servicos
             this.repositorioAcervoCreditoAutor = repositorioAcervoCreditoAutor ?? throw new ArgumentNullException(nameof(repositorioAcervoCreditoAutor));
             this.repositorioUsuario = repositorioUsuario ?? throw new ArgumentNullException(nameof(repositorioUsuario));
             this.repositorioAcervo = repositorioAcervo ?? throw new ArgumentNullException(nameof(repositorioAcervo));
+            this.servicoUsuario = servicoUsuario ?? throw new ArgumentNullException(nameof(servicoUsuario));
         }
 
         public async Task<IEnumerable<AcervoSolicitacaoItemRetornoCadastroDTO>> Inserir(AcervoSolicitacaoCadastroDTO acervoSolicitacaoCadastroDTO)
@@ -122,6 +125,13 @@ namespace SME.CDEP.Aplicacao.Servicos
         {
             await repositorioAcervoSolicitacao.Excluir(acervoSolicitacaoId);
             return true;
+        }
+
+        public async Task<IEnumerable<MinhaSolicitacaoDTO>> ObterMinhasSolicitacoes()
+        {
+            var usuario = await servicoUsuario.ObterUsuarioLogado();
+            
+            return mapper.Map<IEnumerable<MinhaSolicitacaoDTO>>(await repositorioAcervoSolicitacaoItem.ObterMinhasSolicitacoes(usuario.Id));
         }
     }
 }

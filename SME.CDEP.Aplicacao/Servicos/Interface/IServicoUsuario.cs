@@ -26,5 +26,6 @@ namespace SME.CDEP.Aplicacao.Servicos.Interface
         Task<RetornoPerfilUsuarioDTO> RevalidarToken(string token);
         Task<RetornoPerfilUsuarioDTO> AtualizarPerfil(Guid perfilUsuarioId);
         Task<DadosSolicitanteDTO> ObterDadosSolicitante();
+        Task<UsuarioDTO> ObterUsuarioLogado();
     }
 }

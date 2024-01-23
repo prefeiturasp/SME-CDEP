@@ -243,6 +243,11 @@ namespace SME.CDEP.Aplicacao.Mapeamentos
             CreateMap<AcervoTipoTituloAcervoIdCreditosAutores,AcervoTipoTituloAcervoIdCreditosAutoresDTO>()
                 .ForMember(dest => dest.AutoresCreditos, opt => opt.MapFrom(o => o.AutoresCreditos.Select(s=> s.Nome).ToArray()))
                 .ReverseMap();
+            
+            CreateMap<AcervoSolicitacaoItem,MinhaSolicitacaoDTO>()
+                .ForMember(dest => dest.Situacao, opt => opt.MapFrom(o => o.Situacao.Nome()))
+                .ForMember(dest => dest.DataCriacao, opt => opt.MapFrom(o => o.CriadoEm))
+                .ReverseMap();
         }
     }
 }
