@@ -159,5 +159,19 @@ namespace SME.CDEP.Aplicacao.Integracoes
             var json = await resposta.Content.ReadAsStringAsync();
             return json.JsonParaObjeto<RetornoPerfilUsuarioDTO>();
         }
+
+        public async Task<IEnumerable<ResponsavelDTO>> ObterUsuariosComPerfisResponsavel(Guid[] perfis)
+        {
+            var parametros = perfis.ToList().Aggregate("?", (current, perfil) => current + $"&perfis={perfil}");
+
+            parametros += $"&sistemaid={Sistema_Cdep}";
+
+            var resposta = await httpClient.GetAsync($"{ConstantesServicoAcessos.URL_USUARIOS_PERFIS_RESPONSAVEIS}{parametros}");
+
+            if (!resposta.IsSuccessStatusCode) return default;
+
+            var json = await resposta.Content.ReadAsStringAsync();
+            return JsonConvert.DeserializeObject<IEnumerable<ResponsavelDTO>>(json);
+        }
     }
 }

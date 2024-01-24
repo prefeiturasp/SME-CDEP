@@ -360,5 +360,10 @@ namespace SME.CDEP.Aplicacao.Servicos
 
             return dadosSolicitante;
         }
+
+        public async Task<IEnumerable<ResponsavelDTO>> ObterUsuariosComPerfisResponsavel(Guid[] perfis)
+        {
+            return await servicoAcessos.ObterUsuariosComPerfisResponsavel(perfis);
+        }
     }
 }

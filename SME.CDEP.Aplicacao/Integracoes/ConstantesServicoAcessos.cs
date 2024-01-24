@@ -15,4 +15,5 @@ public class ConstantesServicoAcessos
     public const string URL_AUTENTICACAO_USUARIOS_X_SISTEMAS_Y_PERFIS = "v1/autenticacao/usuarios/{0}/sistemas/{1}/perfis";
     public const string URL_AUTENTICACAO_AUTENTICAR = "v1/autenticacao/autenticar";
     public const string URL_AUTENTICACAO_USUARIOS_X_SISTEMAS_Y_PERFIS_Z = "v1/autenticacao/usuarios/{0}/sistemas/{1}/perfis/{2}";
+    public const string URL_USUARIOS_PERFIS_RESPONSAVEIS = "v1/Usuarios/perfis/responsaveis";
 }
