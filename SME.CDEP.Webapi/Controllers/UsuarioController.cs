@@ -149,8 +149,8 @@ public class UsuarioController: BaseController
     [ProducesResponseType(typeof(RetornoBaseDTO), 400)]
     [ProducesResponseType(typeof(RetornoBaseDTO), 500)]
     [Permissao(Permissao.OperacoesSolicitacoes_C, Policy = "Bearer")]
-    public async Task<IActionResult> ObterUsuariosComPerfisResponsavel([FromQuery] Guid[] perfis,[FromServices] IServicoUsuario servicoUsuario)
+    public async Task<IActionResult> ObterUsuariosComPerfisResponsavel([FromServices] IServicoUsuario servicoUsuario)
     {
-        return Ok(await servicoUsuario.ObterUsuariosComPerfisResponsavel(perfis));
+        return Ok(await servicoUsuario.ObterUsuariosComPerfisResponsavel());
     }
 }

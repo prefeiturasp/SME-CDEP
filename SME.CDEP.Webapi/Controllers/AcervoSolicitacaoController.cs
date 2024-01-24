@@ -67,4 +67,26 @@ public class AcervoSolicitacaoController: BaseController
     {
         return Ok(await servicoAcervoSolicitacao.ObterMinhasSolicitacoes());
     }
+    
+    [HttpGet("situacoes")]
+    [ProducesResponseType(typeof(IEnumerable<SituacaoItemDTO>), 200)]
+    [ProducesResponseType(typeof(RetornoBaseDTO), 400)]
+    [ProducesResponseType(typeof(RetornoBaseDTO), 403)]
+    [ProducesResponseType(typeof(RetornoBaseDTO), 601)]
+    [Permissao(Permissao.OperacoesSolicitacoes_C, Policy = "Bearer")]
+    public async Task<IActionResult> ObterSituacoesAtendimentos([FromServices] IServicoAcervoSolicitacao servicoAcervoSolicitacao)
+    {
+        return Ok(await servicoAcervoSolicitacao.ObterSituacoesAtendimentosItem());
+    }
+    
+    [HttpGet("atendimento-solicitacoes")]
+    [ProducesResponseType(typeof(PaginacaoResultadoDTO<SolicitacaoDTO>), 200)]
+    [ProducesResponseType(typeof(RetornoBaseDTO), 400)]
+    [ProducesResponseType(typeof(RetornoBaseDTO), 403)]
+    [ProducesResponseType(typeof(RetornoBaseDTO), 601)]
+    [Permissao(Permissao.OperacoesSolicitacoes_C, Policy = "Bearer")]
+    public async Task<IActionResult> ObterSolicitacoesPorFiltro([FromQuery] FiltroSolicitacaoDTO filtroSolicitacaoDto, [FromServices] IServicoAcervoSolicitacao servicoAcervoSolicitacao)
+    {
+        return Ok(await servicoAcervoSolicitacao.ObterSolicitacoesPorFiltro(filtroSolicitacaoDto));
+    }
 }
