@@ -2,22 +2,6 @@
 
 public class Constantes
 {
-    public const string PAPEL = "Papel";
-    public const string DIGITAL = "Digital";
-    public const string VHS = "VHS";
-    public const string DVD = "DVD";
-
-    public const string OTIMO = "Ótimo";
-    public const string BOM = "Bom";
-    public const string REGULAR = "Regular";
-    public const string RUIM = "Ruim";
-
-    public const string COLOR = "Color";
-    public const string PB = "PB";
-
-    public const string FISICO = "Físico";
-    public const string ONLINE = "Online";
-
     public const string TRIDIMENSIONAL = "Tridimensional";
     public const string FOTOGRAFICO = "Fotográfico";
     public const string DOCUMENTAL = "Documental";
@@ -77,7 +61,6 @@ public class Constantes
     public const string ACESSIBILIDADE = "Acessibilidade";
     public const string DISPONIBILIDADE = "Disponibilidade";
     public const string FORMATO_IMAGEM = "Formato da imagem";
-    public const string FORMATO = "Formato";
     public const string RESOLUCAO = "Resolução";
     public const string PROFUNDIDADE = "Profundidade";
     
@@ -87,7 +70,6 @@ public class Constantes
     public const string CAMPO_COAUTOR_SEM_PREENCHIMENTO_E_TIPO_AUTORIA_PREENCHIDO = "O preenchimento do campo coautor é obrigatório quando o tipo de autoria está especificado";
     public const string TEMOS_MAIS_TIPO_AUTORIA_QUE_COAUTORES = "A quantidade de tipos de autoria excede a de coautores. É aceitável ter coautores desprovidos de tipo de autoria, mas o contrário não é permitido";
     public const string OCORREU_UMA_FALHA_INESPERADA_NA_LINHA_X_MOTIVO_Y = "Ocorreu uma falha inesperada na linha '{0}' -  Motivo: '{1}'";
-    public const string CAMPO_CODIGO_ANTIGO_OU_CODIGO_NOVO_DEVE_SER_PREENCHIDO = "O campo código antigo ou código novo deve ser preenchido";
     public const string O_VALOR_X_DO_CAMPO_X_NAO_FOI_LOCALIZADO = "O valor '{0}' do campo '{1}' não foi localizado";
     public const string NAO_FOI_POSSIVEL_LER_A_PLANILHA = "Não foi possível ler a planilha";
     public const string VALOR_X_DO_CAMPO_X_NAO_PERMITIDO_ESPERADO_X = "O valor '{0}' do campo '{1}' não permitido, esperado: '{2}'";
@@ -282,6 +264,12 @@ public class Constantes
     public const string VIOLACAO_CONSTRAINT_DUPLICACAO_REGISTROS_MENSAGEM = "Registro duplicado";
     
     public const string PERFIL_EXTERNO_GUID = "3092428D-CA98-4788-9717-E706DF1945A0";
+    public const string PERFIL_ADMIN_BIBLIOTECA_GUID = "B82673B9-52B9-4E01-9157-E19339B7211A";
+    public const string PERFIL_ADMIN_GERAL_GUID = "D3766FB4-D753-4398-BFB0-C357724BB0A2";
+    public const string PERFIL_BASICO_GUID = "064B3481-439B-4C67-8C88-5D1F1E9B91CE";
+    public const string PERFIL_ADMIN_MEMORIA_GUID = "35F9D620-49A8-446A-8A75-0A0D26EBD79D";
+    public const string PERFIL_ADMIN_MEMORIAL_GUID = "89C9D50D-B73B-4DDE-B870-7685FCD88B0C";
+        
     public const string CLAIM_PERMISSAO = "http://schemas.microsoft.com/ws/2008/06/identity/claims/role";
     public const string CLAIMS = "Claims";
     public const string EXPRESSAO_TAG_BR = @"<br[^>]*>";
