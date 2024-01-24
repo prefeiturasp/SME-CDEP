@@ -8,8 +8,14 @@ public enum SituacaoSolicitacaoItem
     [Display(Description = "Aguardando atendimento")]
     AGUARDANDO_ATENDIMENTO = 1,
     
+    [Display(Description = "Confirmado")]
+    CONFIRMADO = 2,
+        
+    [Display(Description = "Finalizado")]
+    FINALIZADO = 3,
+    
     [Display(Description = "Finalizado automaticamente")]
-    FINALIZADO_AUTOMATICAMENTE = 2
+    FINALIZADO_AUTOMATICAMENTE = 4
 }
 public static class SituacaoSolicitacaoItemExtension
 {
