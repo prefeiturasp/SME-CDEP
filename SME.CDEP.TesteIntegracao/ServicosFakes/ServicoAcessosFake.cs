@@ -132,5 +132,16 @@ public class ServicoAcessosFake : BaseMock, IServicoAcessos
     {
         return ObterPerfisUsuario(string.Empty);
     }
+
+    public Task<IEnumerable<ResponsavelDTO>> ObterUsuariosComPerfisResponsavel(Guid[] perfis)
+    {
+        return Task.FromResult<IEnumerable<ResponsavelDTO>>(new List<ResponsavelDTO>
+        {
+            new () { Login = "1"},
+            new () { Login = "2"},
+            new () { Login = "3"},
+            new () { Login = "4"},
+        });
+    }
 }
     

@@ -27,5 +27,6 @@ namespace SME.CDEP.Aplicacao.Servicos.Interface
         Task<RetornoPerfilUsuarioDTO> AtualizarPerfil(Guid perfilUsuarioId);
         Task<DadosSolicitanteDTO> ObterDadosSolicitante();
         Task<UsuarioDTO> ObterUsuarioLogado();
+        Task<IEnumerable<ResponsavelDTO>> ObterUsuariosComPerfisResponsavel(Guid[] perfis);
     }
 }

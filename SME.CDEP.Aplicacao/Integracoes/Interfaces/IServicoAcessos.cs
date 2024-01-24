@@ -17,4 +17,5 @@ public interface IServicoAcessos
     Task<bool> TokenRecuperacaoSenhaEstaValido(Guid token);
     Task<string> AlterarSenhaComTokenRecuperacao(RecuperacaoSenhaDto recuperacaoSenhaDto);
     Task<RetornoPerfilUsuarioDTO> RevalidarToken(string token);
+    Task<IEnumerable<ResponsavelDTO>> ObterUsuariosComPerfisResponsavel(Guid[] perfis);
 }
