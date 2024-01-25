@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Mvc;
 using SME.CDEP.Aplicacao.DTOS;
 using SME.CDEP.Aplicacao.Servicos.Interface;
+using SME.CDEP.Infra.Dominio.Enumerados;
 using SME.CDEP.Webapi.Filtros;
 
 namespace SME.CDEP.Webapi.Controllers;
@@ -131,5 +132,15 @@ public class UsuarioController: BaseController
     public async Task<IActionResult> ValidarCpfExistente([FromRoute] string cpf, [FromServices] IServicoUsuario servicoUsuario)
     {
         return Ok(await servicoUsuario.ValidarCpfExistente(cpf));
+    }
+    
+    [HttpGet("dados-solicitante")] 
+    [ProducesResponseType(typeof(DadosSolicitanteDTO), 200)]
+    [ProducesResponseType(typeof(RetornoBaseDTO), 400)]
+    [ProducesResponseType(typeof(RetornoBaseDTO), 500)]
+    [Permissao(Permissao.OperacoesSolicitacoes_C, Policy = "Bearer")]
+    public async Task<IActionResult> ObterDadosSolicitante([FromServices] IServicoUsuario servicoUsuario)
+    {
+        return Ok(await servicoUsuario.ObterDadosSolicitante());
     }
 }

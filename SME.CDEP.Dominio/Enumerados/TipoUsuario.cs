@@ -1,4 +1,5 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using SME.CDEP.Dominio.Extensions;
 
 namespace SME.CDEP.Infra.Dominio.Enumerados;
 
@@ -18,4 +19,12 @@ public enum TipoUsuario
     
     [Display(Description = "Usuário Externo - População Geral")]
     POPULACAO_GERAL = 4
+    
+}
+public static class TipoUsuarioExtension
+{
+    public static bool EhCoreSSO(this TipoUsuario tipoUsuario)
+    {
+       return tipoUsuario == TipoUsuario.CORESSO;
+    }
 }

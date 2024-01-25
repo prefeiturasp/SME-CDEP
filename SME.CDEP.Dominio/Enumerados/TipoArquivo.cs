@@ -5,25 +5,25 @@ namespace SME.CDEP.Infra.Dominio.Enumerados
 {
     public enum TipoArquivo
     {
-        [Display(Name ="temp")] 
+        [Display(Description ="temp")] 
         Temp = 1,
         
-        [Display(Name ="temp")] 
+        [Display(Description ="temp")] 
         Editor = 2,
 
-        [Display(Name ="acervo-fotografico")] 
+        [Display(Description ="Acervo fotografico")] 
         AcervoFotografico = 3,
         
-        [Display(Name ="acervo-arte-grafica")] 
+        [Display(Description ="Acervo arte grafica")] 
         AcervoArteGrafica = 4,
         
-        [Display(Name ="acervo-tridimensional")] 
+        [Display(Description ="Acervo tridimensional")] 
         AcervoTridimensional = 5,
         
-        [Display(Name ="acervo-documental")] 
+        [Display(Description ="Acervo documental")] 
         AcervoDocumental = 6,
         
-        [Display(Name ="sistema")] 
+        [Display(Description ="Sistema")] 
         Sistema = 7,
     }
 }

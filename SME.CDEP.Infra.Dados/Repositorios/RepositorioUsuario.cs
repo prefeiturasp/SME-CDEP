@@ -16,7 +16,7 @@ namespace SME.CDEP.Infra.Dados.Repositorios
                                                       "criado_login, alterado_login, login, ultimo_login, nome, " +
                                                       "expiracao_recuperacao_senha, token_recuperacao_senha, cep, " +
                                                       "telefone, endereco, numero, complemento, cidade, estado, " +
-                                                      "bairro, tipo " +
+                                                      "bairro, tipo, email " +
                                                       "from usuario " +
                                                       "where login = @login", new { login });
     }

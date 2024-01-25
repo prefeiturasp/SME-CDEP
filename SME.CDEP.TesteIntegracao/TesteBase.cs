@@ -175,6 +175,11 @@ namespace SME.CDEP.TesteIntegracao
             return ObterServicoAplicacao<IServicoAcervoTridimensional>();
         }
         
+        protected IServicoAcervoSolicitacao GetServicoAcervoSolicitacao()
+        {
+            return ObterServicoAplicacao<IServicoAcervoSolicitacao>();
+        }
+        
         protected IServicoAcervoAudiovisual GetServicoAcervoAudiovisual()
         {
             return ObterServicoAplicacao<IServicoAcervoAudiovisual>();
@@ -327,7 +332,25 @@ namespace SME.CDEP.TesteIntegracao
                     CriadoEm = DateTimeExtension.HorarioBrasilia().Date, 
                     CriadoLogin = ConstantesTestes.LOGIN_123456789 
                 });
+                
+                await InserirNaBase(new Dominio.Entidades.Usuario()
+                { 
+                    Login = $"login_{i}", 
+                    Nome = faker.Lorem.Sentence().Limite(200), 
+                    CriadoPor = ConstantesTestes.SISTEMA, 
+                    CriadoEm = DateTimeExtension.HorarioBrasilia().Date, 
+                    CriadoLogin = ConstantesTestes.LOGIN_123456789 
+                });
             }
+            await InserirNaBase(new Dominio.Entidades.Usuario()
+            { 
+                Login = "Sistema", 
+                Nome = faker.Lorem.Sentence().Limite(200), 
+                CriadoPor = ConstantesTestes.SISTEMA, 
+                CriadoEm = DateTimeExtension.HorarioBrasilia().Date, 
+                CriadoLogin = ConstantesTestes.LOGIN_123456789 
+            });
+            
         }
         
         protected async Task InserirDadosBasicos()
@@ -602,6 +625,74 @@ namespace SME.CDEP.TesteIntegracao
         {
             foreach (var material in materiais)
                 await InserirNaBase(new Material() { Nome = material, Tipo = tipoMaterial });
+        }
+        
+        protected async Task InserirAcervoTridimensional()
+        {
+            var random = new Random();
+            
+            var arquivoId = 1;
+
+            for (int j = 1; j <= 35; j++)
+            {
+                await InserirNaBase(new Acervo()
+                {
+                    Codigo = $"{j.ToString()}.TD",
+                    Titulo = faker.Lorem.Text().Limite(500),
+                    Descricao = faker.Lorem.Text(),
+                    TipoAcervoId = (int)TipoAcervo.Tridimensional,
+                    CriadoPor = ConstantesTestes.SISTEMA,
+                    CriadoEm = DateTimeExtension.HorarioBrasilia().AddMinutes(-15),
+                    CriadoLogin = ConstantesTestes.LOGIN_123456789,
+                    Ano = faker.Date.Past().Year,
+                    DataAcervo = DateTimeExtension.HorarioBrasilia().Date.ToString("dd/MM/yyyy"),
+                });
+
+                await InserirNaBase(new AcervoTridimensional()
+                {
+                    AcervoId = j,
+                    Procedencia = faker.Lorem.Text().Limite(200),
+                    ConservacaoId = random.Next(1,5),
+                    Quantidade = random.Next(15,55),
+                    Largura = double.Parse("50,45"),
+                    Altura = double.Parse("10.20"),
+                    Diametro = double.Parse("1540"),	
+                    Profundidade = double.Parse("1801"),	
+                });
+                
+                await InserirNaBase(new Arquivo()
+                {
+                    Nome = faker.Lorem.Text(),
+                    Codigo = Guid.NewGuid(),
+                    Tipo = TipoArquivo.AcervoTridimensional,
+                    TipoConteudo = ConstantesTestes.MIME_TYPE_JPG,
+                    CriadoPor = ConstantesTestes.SISTEMA,
+                    CriadoEm = DateTimeExtension.HorarioBrasilia().AddMinutes(-15),
+                    CriadoLogin = ConstantesTestes.LOGIN_123456789,
+                });
+                
+                arquivoId++;
+                
+                await InserirNaBase(new Arquivo()
+                {
+                    Nome = $"{faker.Lorem.Text()}_{arquivoId}.jpeg",
+                    Codigo = Guid.NewGuid(),
+                    Tipo = TipoArquivo.AcervoArteGrafica,
+                    TipoConteudo = ConstantesTestes.MIME_TYPE_JPG,
+                    CriadoPor = ConstantesTestes.SISTEMA,
+                    CriadoEm = DateTimeExtension.HorarioBrasilia().AddMinutes(-15),
+                    CriadoLogin = ConstantesTestes.LOGIN_123456789,
+                });
+                
+                await InserirNaBase(new AcervoTridimensionalArquivo()
+                {
+                    ArquivoId = arquivoId-1,
+                    AcervoTridimensionalId = j,
+                    ArquivoMiniaturaId = arquivoId
+                });
+                
+                arquivoId++;
+            }
         }
     }
 }

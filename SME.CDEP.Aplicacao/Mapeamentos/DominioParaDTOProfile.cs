@@ -2,6 +2,7 @@
 using SME.CDEP.Aplicacao.DTOS;
 using SME.CDEP.Dominio.Entidades;
 using SME.CDEP.Dominio.Extensions;
+using SME.CDEP.Infra.Dominio.Enumerados;
 
 namespace SME.CDEP.Aplicacao.Mapeamentos
 {
@@ -224,6 +225,29 @@ namespace SME.CDEP.Aplicacao.Mapeamentos
                 .ForMember(dest => dest.Dimensoes, opt => opt.MapFrom(o => 
                     $"{o.Largura.ToString().ObterValorOuZero()} x {o.Altura.ToString().ObterValorOuZero()}")
                 ).ReverseMap(); 
+
+            CreateMap<Usuario,DadosSolicitanteDTO>()
+                .ForMember(dest => dest.Cpf, opt => opt.MapFrom(o => o.TipoUsuario.EhCoreSSO() ? null : o.Login))
+                .ForMember(dest => dest.Tipo, opt => opt.MapFrom(o => o.TipoUsuario))
+                .ReverseMap();
+            
+            CreateMap<AcervoSolicitacaoItemCompleto,AcervoSolicitacaoItemRetornoCadastroDTO>()
+                .ForMember(dest => dest.AutoresCreditos, opt => opt.MapFrom(o => o.AutoresCreditos.Select(s=> s.Nome).ToArray()))
+                .ForMember(dest => dest.Situacao, opt => opt.MapFrom(o => o.Situacao.Descricao()))
+                .ForMember(dest => dest.TipoAcervo, opt => opt.MapFrom(o => o.TipoAcervo.Descricao()))
+                .ReverseMap();
+            
+            CreateMap<ArquivoCodigoNomeDTO,ArquivoCodigoNomeAcervoId>().ReverseMap();
+            CreateMap<AcervoSolicitacaoItemCadastroDTO,AcervoSolicitacaoItem>().ReverseMap();
+            
+            CreateMap<AcervoTipoTituloAcervoIdCreditosAutores,AcervoTipoTituloAcervoIdCreditosAutoresDTO>()
+                .ForMember(dest => dest.AutoresCreditos, opt => opt.MapFrom(o => o.AutoresCreditos.Select(s=> s.Nome).ToArray()))
+                .ReverseMap();
+            
+            CreateMap<AcervoSolicitacaoItem,MinhaSolicitacaoDTO>()
+                .ForMember(dest => dest.Situacao, opt => opt.MapFrom(o => o.Situacao.Descricao()))
+                .ForMember(dest => dest.DataCriacao, opt => opt.MapFrom(o => o.CriadoEm))
+                .ReverseMap();
         }
     }
 }
