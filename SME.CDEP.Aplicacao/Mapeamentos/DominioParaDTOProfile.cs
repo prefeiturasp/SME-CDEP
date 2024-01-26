@@ -244,9 +244,9 @@ namespace SME.CDEP.Aplicacao.Mapeamentos
                 .ForMember(dest => dest.AutoresCreditos, opt => opt.MapFrom(o => o.AutoresCreditos.Select(s=> s.Nome).ToArray()))
                 .ReverseMap();
             
-            CreateMap<AcervoSolicitacaoItem,MinhaSolicitacaoDTO>()
+            CreateMap<AcervoSolicitacaoItemResumido,MinhaSolicitacaoDTO>()
                 .ForMember(dest => dest.Situacao, opt => opt.MapFrom(o => o.Situacao.Descricao()))
-                .ForMember(dest => dest.DataCriacao, opt => opt.MapFrom(o => o.CriadoEm))
+                .ForMember(dest => dest.TipoAcervo, opt => opt.MapFrom(o => o.TipoAcervo.Descricao()))
                 .ReverseMap();
         }
     }
