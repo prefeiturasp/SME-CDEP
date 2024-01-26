@@ -2,6 +2,12 @@
 
 namespace SME.CDEP.Aplicacao.Servicos.Interface
 {
-    public interface IServicoAcervoAudiovisual : IServicoAcervoAuditavel,IServicoAcervoAudiovisualManutencao
-    {}
+    public interface IServicoAcervoAudiovisual : IServicoAcervoAuditavel
+    {
+        Task<long> Inserir(AcervoAudiovisualCadastroDTO acervoAudiovisualCadastroDto);
+        Task<IEnumerable<AcervoAudiovisualDTO>> ObterTodos();
+        Task<AcervoAudiovisualDTO> Alterar(AcervoAudiovisualAlteracaoDTO acervoAudiovisualAlteracaoDto);
+        Task<AcervoAudiovisualDTO> ObterPorId(long id);
+        Task<bool> Excluir(long id);
+    }
 }

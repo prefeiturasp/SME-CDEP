@@ -1,8 +1,6 @@
-﻿using SME.CDEP.Aplicacao.DTOS;
-
-namespace SME.CDEP.Aplicacao.Servicos.Interface
+﻿namespace SME.CDEP.Aplicacao.Servicos.Interface
 {
-    public interface IServicoAcessoDocumento : IServicoAplicacao, IServicoIdNomeExcluido
+    public interface IServicoAcessoDocumento : IServicoIdNomeExcluido
     {
         Task<long> ObterPorNome(string nome);
     }
