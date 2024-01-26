@@ -2,7 +2,7 @@
 
 namespace SME.CDEP.Aplicacao.Servicos.Interface
 {
-    public interface IServicoCromia : IServicoAplicacao, IServicoIdNomeExcluido
+    public interface IServicoCromia : IServicoIdNomeExcluido
     {
         Task<long> ObterPorNome(string nome);
     }

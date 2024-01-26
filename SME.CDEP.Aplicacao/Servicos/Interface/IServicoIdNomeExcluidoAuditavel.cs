@@ -2,7 +2,7 @@
 
 namespace SME.CDEP.Aplicacao.Servicos.Interface
 {
-    public interface IServicoIdNomeExcluidoAuditavel
+    public interface IServicoIdNomeExcluidoAuditavel : IServicoAplicacao
     {
         Task<long> Inserir(IdNomeExcluidoAuditavelDTO idNomeExcluidoAuditavelDTO);
         Task<IEnumerable<IdNomeExcluidoAuditavelDTO>> ObterTodos();
