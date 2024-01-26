@@ -217,7 +217,7 @@ namespace SME.CDEP.Aplicacao.Servicos
                 .Select(v => new IdNomeDTO
                 {
                     Id = (int)v,
-                    Nome = v.ObterAtributo<DisplayAttribute>().Name,
+                    Nome = v.ObterAtributo<DisplayAttribute>().Description,
                 });
         }
         
