@@ -94,16 +94,17 @@ namespace SME.CDEP.Aplicacao.Servicos
             
             var importacaoArquivoId = await PersistirImportacao(importacaoArquivo);
 
-            ValidarPreenchimentoValorFormatoQtdeCaracteres(acervosDocumentalLinhas);
-            
-            await AtualizarImportacao(importacaoArquivoId, JsonConvert.SerializeObject(acervosDocumentalLinhas),ImportacaoStatus.ValidadoPreenchimentoValorFormatoQtdeCaracteres);
-            
-            await PersistenciaAcervo(acervosDocumentalLinhas);
-            await AtualizarImportacao(importacaoArquivoId, JsonConvert.SerializeObject(acervosDocumentalLinhas), acervosDocumentalLinhas.Any(a=> a.PossuiErros) ? ImportacaoStatus.Erros : ImportacaoStatus.Sucesso);
-
-            var arquivoImportado = await repositorioImportacaoArquivo.ObterPorId(importacaoArquivoId);
-
-            return await ObterRetornoImportacaoAcervo(arquivoImportado, acervosDocumentalLinhas);
+            // ValidarPreenchimentoValorFormatoQtdeCaracteres(acervosDocumentalLinhas);
+            //
+            // await AtualizarImportacao(importacaoArquivoId, JsonConvert.SerializeObject(acervosDocumentalLinhas),ImportacaoStatus.ValidadoPreenchimentoValorFormatoQtdeCaracteres);
+            //
+            // await PersistenciaAcervo(acervosDocumentalLinhas);
+            // await AtualizarImportacao(importacaoArquivoId, JsonConvert.SerializeObject(acervosDocumentalLinhas), acervosDocumentalLinhas.Any(a=> a.PossuiErros) ? ImportacaoStatus.Erros : ImportacaoStatus.Sucesso);
+            //
+            // var arquivoImportado = await repositorioImportacaoArquivo.ObterPorId(importacaoArquivoId);
+            //
+            // return await ObterRetornoImportacaoAcervo(arquivoImportado, acervosDocumentalLinhas);
+            return default;
         }
 
         private async Task<ImportacaoArquivoRetornoDTO<AcervoLinhaErroDTO<AcervoDocumentalDTO,AcervoDocumentalLinhaRetornoDTO>,AcervoLinhaRetornoSucessoDTO>> ObterRetornoImportacaoAcervo(ImportacaoArquivo arquivoImportado, IEnumerable<AcervoDocumentalLinhaDTO> acervosDocumentalLinhas, bool estaImportandoArquivo = true)
