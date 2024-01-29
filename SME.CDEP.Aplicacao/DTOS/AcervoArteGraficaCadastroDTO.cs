@@ -22,9 +22,9 @@ public class AcervoArteGraficaCadastroDTO : AcervoCadastroDTO
     [Range(1, long.MaxValue, ErrorMessage = "O identificador da cromia do acervo arte gráfica deve ser maior que zero")]
     public long CromiaId { get; set; }
     
-    public double? Largura { get; set; }
-    public double? Altura { get; set; }
-    public double? Diametro { get; set; }
+    public string? Largura { get; set; }
+    public string? Altura { get; set; }
+    public string? Diametro { get; set; }
     
     [MaxLength(100, ErrorMessage = "A técnica do acervo arte gráfica não pode conter mais que 100 caracteres")]
     public string? Tecnica { get; set; }

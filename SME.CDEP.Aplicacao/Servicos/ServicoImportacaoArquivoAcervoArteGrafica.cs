@@ -283,9 +283,9 @@ namespace SME.CDEP.Aplicacao.Servicos
                         PermiteUsoImagem = ObterAutorizaUsoDeImagemPorValorDoCampo(acervoArteGraficaLinha.PermiteUsoImagem.Conteudo),
                         ConservacaoId = ObterConservacaoIdPorValorDoCampo(acervoArteGraficaLinha.EstadoConservacao.Conteudo),
                         CromiaId = ObterCromiaIdPorValorDoCampo(acervoArteGraficaLinha.Cromia.Conteudo),
-                        Largura = acervoArteGraficaLinha.Largura.Conteudo.ObterDoubleOuNuloPorValorDoCampo(),
-                        Altura = acervoArteGraficaLinha.Altura.Conteudo.ObterDoubleOuNuloPorValorDoCampo(),
-                        Diametro = acervoArteGraficaLinha.Diametro.Conteudo.ObterDoubleOuNuloPorValorDoCampo(),
+                        Largura = acervoArteGraficaLinha.Largura.Conteudo,
+                        Altura = acervoArteGraficaLinha.Altura.Conteudo,
+                        Diametro = acervoArteGraficaLinha.Diametro.Conteudo,
                         Tecnica = acervoArteGraficaLinha.Tecnica.Conteudo,
                         SuporteId = ObterSuporteImagemIdPorValorDoCampo(acervoArteGraficaLinha.Suporte.Conteudo),
                         Quantidade = acervoArteGraficaLinha.Quantidade.Conteudo.ObterLongoPorValorDoCampo(),
@@ -466,18 +466,21 @@ namespace SME.CDEP.Aplicacao.Servicos
                         },
                         Largura = new LinhaConteudoAjustarDTO()
                         {
-                            Conteudo = planilha.ObterValorDaCelula(numeroLinha, Constantes.ACERVO_ARTE_GRAFICA_CAMPO_DIMENSAO_LARGURA),
-                            FormatoTipoDeCampo = Constantes.FORMATO_DOUBLE
+                            Conteudo = planilha.ObterValorDaCelula(numeroLinha, Constantes.ACERVO_ARTE_GRAFICA_CAMPO_DIMENSAO_LARGURA).TratarLiteralComoDecimalComCasasDecimais(),
+                            ValidarComExpressaoRegular = Constantes.PERMITIR_SOMENTE_NUMERAL_SEPARADO_POR_VIRGULA_DUAS_CASAS_DECIMAIS,
+                            MensagemValidacao = string.Format(MensagemNegocio.CAMPO_X_ESPERADO_NUMERICO_E_COM_CASAS_DECIMAIS, Constantes.LARGURA)
                         },
                         Altura = new LinhaConteudoAjustarDTO()
                         {
-                            Conteudo = planilha.ObterValorDaCelula(numeroLinha, Constantes.ACERVO_ARTE_GRAFICA_CAMPO_DIMENSAO_ALTURA),
-                            FormatoTipoDeCampo = Constantes.FORMATO_DOUBLE
+                            Conteudo = planilha.ObterValorDaCelula(numeroLinha, Constantes.ACERVO_ARTE_GRAFICA_CAMPO_DIMENSAO_ALTURA).TratarLiteralComoDecimalComCasasDecimais(),
+                            ValidarComExpressaoRegular = Constantes.PERMITIR_SOMENTE_NUMERAL_SEPARADO_POR_VIRGULA_DUAS_CASAS_DECIMAIS,
+                            MensagemValidacao = string.Format(MensagemNegocio.CAMPO_X_ESPERADO_NUMERICO_E_COM_CASAS_DECIMAIS, Constantes.ALTURA)
                         },
                         Diametro = new LinhaConteudoAjustarDTO()
                         {
-                            Conteudo = planilha.ObterValorDaCelula(numeroLinha, Constantes.ACERVO_ARTE_GRAFICA_CAMPO_DIMENSAO_DIAMETRO),
-                            FormatoTipoDeCampo = Constantes.FORMATO_DOUBLE
+                            Conteudo = planilha.ObterValorDaCelula(numeroLinha, Constantes.ACERVO_ARTE_GRAFICA_CAMPO_DIMENSAO_DIAMETRO).TratarLiteralComoDecimalComCasasDecimais(),
+                            ValidarComExpressaoRegular = Constantes.PERMITIR_SOMENTE_NUMERAL_SEPARADO_POR_VIRGULA_DUAS_CASAS_DECIMAIS,
+                            MensagemValidacao = string.Format(MensagemNegocio.CAMPO_X_ESPERADO_NUMERICO_E_COM_CASAS_DECIMAIS, Constantes.ALTURA)
                         },
                         Tecnica = new LinhaConteudoAjustarDTO()
                         {

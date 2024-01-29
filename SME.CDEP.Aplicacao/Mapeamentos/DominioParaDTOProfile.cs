@@ -47,26 +47,14 @@ namespace SME.CDEP.Aplicacao.Mapeamentos
                 .ForMember(dest => dest.Id, opt => opt.MapFrom(o => o.AcervoId))
                 .ReverseMap();
             
-            CreateMap<AcervoArteGraficaCadastroDTO, AcervoArteGrafica>()
-                .ForMember(dest => dest.Largura, opt => opt.MapFrom(o => o.Largura.FormatarParaDoubleComCasasDecimais()))
-                .ForMember(dest => dest.Altura, opt => opt.MapFrom(o => o.Altura.FormatarParaDoubleComCasasDecimais()))
-                .ForMember(dest => dest.Diametro, opt => opt.MapFrom(o => o.Diametro.FormatarParaDoubleComCasasDecimais()))
-                .ReverseMap();
+            CreateMap<AcervoArteGraficaCadastroDTO, AcervoArteGrafica>().ReverseMap();
             
-            CreateMap<AcervoArteGraficaAlteracaoDTO, AcervoArteGrafica>()
-                .ForMember(dest => dest.Largura, opt => opt.MapFrom(o => o.Largura.FormatarParaDoubleComCasasDecimais()))
-                .ForMember(dest => dest.Altura, opt => opt.MapFrom(o => o.Altura.FormatarParaDoubleComCasasDecimais()))
-                .ForMember(dest => dest.Diametro, opt => opt.MapFrom(o => o.Diametro.FormatarParaDoubleComCasasDecimais()))
-                .ReverseMap();
+            CreateMap<AcervoArteGraficaAlteracaoDTO, AcervoArteGrafica>().ReverseMap();
             
             CreateMap<AcervoArteGraficaAlteracaoDTO, AcervoArteGraficaDTO>().ReverseMap();
             CreateMap<AcervoArteGraficaCadastroDTO, Acervo>().ReverseMap();
             
-            CreateMap<AcervoArteGraficaCompleto,AcervoArteGraficaDTO>()
-                .ForMember(dest => dest.Largura, opt => opt.MapFrom(o => o.Largura.FormatarDoubleComCasasDecimais()))
-                .ForMember(dest => dest.Altura, opt => opt.MapFrom(o => o.Altura.FormatarDoubleComCasasDecimais()))
-                .ForMember(dest => dest.Diametro, opt => opt.MapFrom(o => o.Diametro.FormatarDoubleComCasasDecimais()))
-                .ReverseMap();
+            CreateMap<AcervoArteGraficaCompleto,AcervoArteGraficaDTO>().ReverseMap();
                 
             CreateMap<AuditoriaDTO, AcervoArteGraficaCompleto>().ReverseMap();
             CreateMap<AcervoArteGraficaDTO, Acervo>().ReverseMap();
@@ -75,30 +63,15 @@ namespace SME.CDEP.Aplicacao.Mapeamentos
                 .ForMember(dest => dest.Id, opt => opt.MapFrom(o => o.AcervoId))
                 .ReverseMap();
             
-            CreateMap<AcervoTridimensionalCadastroDTO, AcervoTridimensional>()
-                .ForMember(dest => dest.Largura, opt => opt.MapFrom(o => o.Largura))
-                .ForMember(dest => dest.Altura, opt => opt.MapFrom(o => o.Altura))
-                .ForMember(dest => dest.Diametro, opt => opt.MapFrom(o => o.Diametro))
-                .ForMember(dest => dest.Profundidade, opt => opt.MapFrom(o => o.Profundidade))
-                .ReverseMap();
+            CreateMap<AcervoTridimensionalCadastroDTO, AcervoTridimensional>().ReverseMap();
 
-            CreateMap<AcervoTridimensionalAlteracaoDTO, AcervoTridimensional>()
-                .ForMember(dest => dest.Largura, opt => opt.MapFrom(o => o.Largura))
-                .ForMember(dest => dest.Altura, opt => opt.MapFrom(o => o.Altura))
-                .ForMember(dest => dest.Diametro, opt => opt.MapFrom(o => o.Diametro))
-                .ForMember(dest => dest.Profundidade, opt => opt.MapFrom(o => o.Profundidade))
-                .ReverseMap();
+            CreateMap<AcervoTridimensionalAlteracaoDTO, AcervoTridimensional>().ReverseMap();
 
             CreateMap<AcervoTridimensionalAlteracaoDTO, AcervoTridimensionalDTO>().ReverseMap();
             
             CreateMap<AcervoTridimensionalCadastroDTO, Acervo>().ReverseMap();
             
-            CreateMap<AcervoTridimensionalCompleto,AcervoTridimensionalDTO>()
-                .ForMember(dest => dest.Largura, opt => opt.MapFrom(o => o.Largura.FormatarDoubleComCasasDecimais()))
-                .ForMember(dest => dest.Altura, opt => opt.MapFrom(o => o.Altura.FormatarDoubleComCasasDecimais()))
-                .ForMember(dest => dest.Diametro, opt => opt.MapFrom(o => o.Diametro.FormatarDoubleComCasasDecimais()))
-                .ForMember(dest => dest.Profundidade, opt => opt.MapFrom(o => o.Profundidade.FormatarDoubleComCasasDecimais()))
-                .ReverseMap();
+            CreateMap<AcervoTridimensionalCompleto,AcervoTridimensionalDTO>().ReverseMap();
             
             CreateMap<AcervoTridimensionalCompleto,AuditoriaDTO>().ReverseMap();
             CreateMap<AcervoTridimensionalDTO, Acervo>().ReverseMap();

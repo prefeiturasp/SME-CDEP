@@ -20,11 +20,11 @@ public static class AcervoArteGraficaDTOMock
         faker.RuleFor(x => x.DataAcervo, f => f.Date.Recent().Year.ToString());
         faker.RuleFor(x => x.CopiaDigital, f => true);
         faker.RuleFor(x => x.PermiteUsoImagem, f => true);
-        faker.RuleFor(x => x.Largura, f => "50,45".ConverterParaDouble());
-        faker.RuleFor(x => x.Altura, f => "10.20".ConverterParaDouble());
+        faker.RuleFor(x => x.Largura, f => "50,45");
+        faker.RuleFor(x => x.Altura, f => "10.20");
         faker.RuleFor(x => x.ConservacaoId, f => random.Next(1,5));
         faker.RuleFor(x => x.CromiaId, f => random.Next(1,5));
-        faker.RuleFor(x => x.Diametro, f => random.Next(15,55));
+        faker.RuleFor(x => x.Diametro, f => "15,55");
         faker.RuleFor(x => x.Tecnica, f => f.Lorem.Sentence().Limite(100));
         faker.RuleFor(x => x.SuporteId, f => random.Next(1,5));
         faker.RuleFor(x => x.Quantidade, f => random.Next(15,55));
