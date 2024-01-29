@@ -12,10 +12,10 @@ public class AcervoTridimensionalCompleto: EntidadeBaseAuditavel
     public long ConservacaoId { get; set; }
     public long Quantidade { get; set; }
     public string Descricao { get; set; }
-    public double? Largura { get; set; }
-    public double? Altura { get; set; }
-    public double? Profundidade { get; set; }
-    public double? Diametro { get; set; }
+    public string? Largura { get; set; }
+    public string? Altura { get; set; }
+    public string? Profundidade { get; set; }
+    public string? Diametro { get; set; }
     public ArquivoResumido[] Arquivos  { get; set; }
     public long[] CreditosAutoresIds { get; set; }
 }
