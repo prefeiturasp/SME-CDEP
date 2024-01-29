@@ -80,9 +80,9 @@ namespace SME.CDEP.TesteIntegracao
                 PermiteUsoImagem = true,
                 ConservacaoId = random.Next(1, 5),
                 CromiaId = random.Next(1, 5),
-                Largura = double.Parse("50,45"),
-                Altura = double.Parse("10.20"),
-                Diametro = double.Parse("1540"),
+                Largura = "50,45",
+                Altura = "10,20",
+                Diametro = "15,40",
                 Tecnica = faker.Lorem.Text().Limite(100),
                 SuporteId = random.Next(1, 5),
                 Quantidade = random.Next(15, 55),
@@ -114,8 +114,8 @@ namespace SME.CDEP.TesteIntegracao
             acervoArteGrafica.ConservacaoId.ShouldBe(acervoArteGraficaAlteracaoDto.ConservacaoId);
             acervoArteGrafica.CromiaId.ShouldBe(acervoArteGraficaAlteracaoDto.CromiaId);
             acervoArteGrafica.Largura.ShouldBe(acervoArteGraficaAlteracaoDto.Largura);
-            acervoArteGrafica.Altura.ShouldBe(acervoArteGraficaAlteracaoDto.Altura.FormatarParaDoubleComCasasDecimais());
-            acervoArteGrafica.Diametro.ShouldBe(acervoArteGraficaAlteracaoDto.Diametro.FormatarParaDoubleComCasasDecimais());
+            acervoArteGrafica.Altura.ShouldBe(acervoArteGraficaAlteracaoDto.Altura);
+            acervoArteGrafica.Diametro.ShouldBe(acervoArteGraficaAlteracaoDto.Diametro);
             acervoArteGrafica.Tecnica.ShouldBe(acervoArteGraficaAlteracaoDto.Tecnica);
             acervoArteGrafica.SuporteId.ShouldBe(acervoArteGraficaAlteracaoDto.SuporteId);
             acervoArteGrafica.Quantidade.ShouldBe(acervoArteGraficaAlteracaoDto.Quantidade);
@@ -161,9 +161,9 @@ namespace SME.CDEP.TesteIntegracao
                 PermiteUsoImagem = true,
                 ConservacaoId = random.Next(1, 5),
                 CromiaId = random.Next(1, 5),
-                Largura = double.Parse("5045"),
-                Altura = double.Parse("10,20"),
-                Diametro = double.Parse("15.40"),
+                Largura = "50,45",
+                Altura = "10,20",
+                Diametro = "15,40",
                 Tecnica = faker.Lorem.Text().Limite(100),
                 SuporteId = random.Next(1, 5),
                 Quantidade = random.Next(15, 55),
@@ -194,9 +194,9 @@ namespace SME.CDEP.TesteIntegracao
             acervoArteGrafica.PermiteUsoImagem.ShouldBe(acervoArteGraficaAlteracaoDto.PermiteUsoImagem);
             acervoArteGrafica.ConservacaoId.ShouldBe(acervoArteGraficaAlteracaoDto.ConservacaoId);
             acervoArteGrafica.CromiaId.ShouldBe(acervoArteGraficaAlteracaoDto.CromiaId);
-            acervoArteGrafica.Largura.ShouldBe(acervoArteGraficaAlteracaoDto.Largura.FormatarParaDoubleComCasasDecimais());
+            acervoArteGrafica.Largura.ShouldBe(acervoArteGraficaAlteracaoDto.Largura);
             acervoArteGrafica.Altura.ShouldBe(acervoArteGraficaAlteracaoDto.Altura);
-            acervoArteGrafica.Diametro.ShouldBe(acervoArteGraficaAlteracaoDto.Diametro.FormatarParaDoubleComCasasDecimais());
+            acervoArteGrafica.Diametro.ShouldBe(acervoArteGraficaAlteracaoDto.Diametro);
             acervoArteGrafica.Tecnica.ShouldBe(acervoArteGraficaAlteracaoDto.Tecnica);
             acervoArteGrafica.SuporteId.ShouldBe(acervoArteGraficaAlteracaoDto.SuporteId);
             acervoArteGrafica.Quantidade.ShouldBe(acervoArteGraficaAlteracaoDto.Quantidade);
@@ -240,9 +240,9 @@ namespace SME.CDEP.TesteIntegracao
                 PermiteUsoImagem = true,
                 ConservacaoId = random.Next(1, 5),
                 CromiaId = random.Next(1, 5),
-                Largura = double.Parse("50.45"),
-                Altura = double.Parse("10,20"),
-                Diametro = double.Parse("1540"),
+                Largura = "50,45",
+                Altura = "10,20",
+                Diametro = "15,40",
                 Tecnica = faker.Lorem.Text().Limite(100),
                 SuporteId = random.Next(1, 5),
                 Quantidade = random.Next(15, 55),
@@ -273,9 +273,9 @@ namespace SME.CDEP.TesteIntegracao
             acervoArteGrafica.PermiteUsoImagem.ShouldBe(acervoArteGraficaAlteracaoDto.PermiteUsoImagem);
             acervoArteGrafica.ConservacaoId.ShouldBe(acervoArteGraficaAlteracaoDto.ConservacaoId);
             acervoArteGrafica.CromiaId.ShouldBe(acervoArteGraficaAlteracaoDto.CromiaId);
-            acervoArteGrafica.Largura.ShouldBe(acervoArteGraficaAlteracaoDto.Largura.FormatarParaDoubleComCasasDecimais());
+            acervoArteGrafica.Largura.ShouldBe(acervoArteGraficaAlteracaoDto.Largura);
             acervoArteGrafica.Altura.ShouldBe(acervoArteGraficaAlteracaoDto.Altura);
-            acervoArteGrafica.Diametro.ShouldBe(acervoArteGraficaAlteracaoDto.Diametro.FormatarParaDoubleComCasasDecimais());
+            acervoArteGrafica.Diametro.ShouldBe(acervoArteGraficaAlteracaoDto.Diametro);
             acervoArteGrafica.Tecnica.ShouldBe(acervoArteGraficaAlteracaoDto.Tecnica);
             acervoArteGrafica.SuporteId.ShouldBe(acervoArteGraficaAlteracaoDto.SuporteId);
             acervoArteGrafica.Quantidade.ShouldBe(acervoArteGraficaAlteracaoDto.Quantidade);
@@ -319,9 +319,9 @@ namespace SME.CDEP.TesteIntegracao
                 PermiteUsoImagem = true,
                 ConservacaoId = random.Next(1, 5),
                 CromiaId = random.Next(1, 5),
-                Largura = double.Parse("5045"),
-                Altura = double.Parse("10.20"),
-                Diametro = double.Parse("15,40"),
+                Largura = "50,45",
+                Altura = "10,20",
+                Diametro ="15,40",
                 Tecnica = faker.Lorem.Text().Limite(100),
                 SuporteId = random.Next(1, 5),
                 Quantidade = random.Next(15, 55),
@@ -352,8 +352,8 @@ namespace SME.CDEP.TesteIntegracao
             acervoArteGrafica.PermiteUsoImagem.ShouldBe(acervoArteGraficaAlteracaoDto.PermiteUsoImagem);
             acervoArteGrafica.ConservacaoId.ShouldBe(acervoArteGraficaAlteracaoDto.ConservacaoId);
             acervoArteGrafica.CromiaId.ShouldBe(acervoArteGraficaAlteracaoDto.CromiaId);
-            acervoArteGrafica.Largura.ShouldBe(acervoArteGraficaAlteracaoDto.Largura.FormatarParaDoubleComCasasDecimais());
-            acervoArteGrafica.Altura.ShouldBe(acervoArteGraficaAlteracaoDto.Altura.FormatarParaDoubleComCasasDecimais());
+            acervoArteGrafica.Largura.ShouldBe(acervoArteGraficaAlteracaoDto.Largura);
+            acervoArteGrafica.Altura.ShouldBe(acervoArteGraficaAlteracaoDto.Altura);
             acervoArteGrafica.Diametro.ShouldBe(acervoArteGraficaAlteracaoDto.Diametro);
             acervoArteGrafica.Tecnica.ShouldBe(acervoArteGraficaAlteracaoDto.Tecnica);
             acervoArteGrafica.SuporteId.ShouldBe(acervoArteGraficaAlteracaoDto.SuporteId);
@@ -398,9 +398,9 @@ namespace SME.CDEP.TesteIntegracao
                 PermiteUsoImagem = true,
                 ConservacaoId = random.Next(1, 5),
                 CromiaId = random.Next(1, 5),
-                Largura = random.Next(15, 55),
-                Altura = random.Next(15, 55),
-                Diametro = random.Next(15, 55),
+                Largura = "15,55",
+                Altura = "12,30",
+                Diametro = "16,45",
                 Tecnica = faker.Lorem.Text().Limite(100),
                 SuporteId = random.Next(1, 5),
                 Quantidade = random.Next(15, 55),
@@ -439,9 +439,9 @@ namespace SME.CDEP.TesteIntegracao
                 PermiteUsoImagem = true,
                 ConservacaoId = random.Next(1, 5),
                 CromiaId = random.Next(1, 5),
-                Largura = double.Parse("5045"),
-                Altura = double.Parse("10,20"),
-                Diametro = double.Parse("15.40"),
+                Largura = "50,45",
+                Altura = "10,20",
+                Diametro = "15,40",
                 Tecnica = faker.Lorem.Text().Limite(100),
                 SuporteId = random.Next(1, 5),
                 Quantidade = random.Next(15, 55),
@@ -473,9 +473,9 @@ namespace SME.CDEP.TesteIntegracao
             acervoArteGrafica.PermiteUsoImagem.ShouldBe(acervoArteGraficaCadastroDto.PermiteUsoImagem);
             acervoArteGrafica.ConservacaoId.ShouldBe(acervoArteGraficaCadastroDto.ConservacaoId);
             acervoArteGrafica.CromiaId.ShouldBe(acervoArteGraficaCadastroDto.CromiaId);
-            acervoArteGrafica.Largura.ShouldBe(acervoArteGraficaCadastroDto.Largura.FormatarParaDoubleComCasasDecimais());
+            acervoArteGrafica.Largura.ShouldBe(acervoArteGraficaCadastroDto.Largura);
             acervoArteGrafica.Altura.ShouldBe(acervoArteGraficaCadastroDto.Altura);
-            acervoArteGrafica.Diametro.ShouldBe(acervoArteGraficaCadastroDto.Diametro.FormatarParaDoubleComCasasDecimais());
+            acervoArteGrafica.Diametro.ShouldBe(acervoArteGraficaCadastroDto.Diametro);
             acervoArteGrafica.Tecnica.ShouldBe(acervoArteGraficaCadastroDto.Tecnica);
             acervoArteGrafica.SuporteId.ShouldBe(acervoArteGraficaCadastroDto.SuporteId);
             acervoArteGrafica.Quantidade.ShouldBe(acervoArteGraficaCadastroDto.Quantidade);
@@ -519,9 +519,9 @@ namespace SME.CDEP.TesteIntegracao
                 PermiteUsoImagem = true,
                 ConservacaoId = random.Next(1, 5),
                 CromiaId = random.Next(1, 5),
-                Largura = double.Parse("10.20"),
-                Altura = double.Parse("3015"),
-                Diametro = double.Parse("45,32"),
+                Largura = "10,20",
+                Altura = "30,15",
+                Diametro = "45,32",
                 Tecnica = faker.Lorem.Text().Limite(100),
                 SuporteId = random.Next(1, 5),
                 Quantidade = random.Next(15, 55),
@@ -553,8 +553,8 @@ namespace SME.CDEP.TesteIntegracao
             acervoArteGrafica.PermiteUsoImagem.ShouldBe(acervoArteGraficaCadastroDto.PermiteUsoImagem);
             acervoArteGrafica.ConservacaoId.ShouldBe(acervoArteGraficaCadastroDto.ConservacaoId);
             acervoArteGrafica.CromiaId.ShouldBe(acervoArteGraficaCadastroDto.CromiaId);
-            acervoArteGrafica.Largura.ShouldBe(acervoArteGraficaCadastroDto.Largura.FormatarParaDoubleComCasasDecimais());
-            acervoArteGrafica.Altura.ShouldBe(acervoArteGraficaCadastroDto.Altura.FormatarParaDoubleComCasasDecimais());
+            acervoArteGrafica.Largura.ShouldBe(acervoArteGraficaCadastroDto.Largura);
+            acervoArteGrafica.Altura.ShouldBe(acervoArteGraficaCadastroDto.Altura);
             acervoArteGrafica.Diametro.ShouldBe(acervoArteGraficaCadastroDto.Diametro);
             acervoArteGrafica.Tecnica.ShouldBe(acervoArteGraficaCadastroDto.Tecnica);
             acervoArteGrafica.SuporteId.ShouldBe(acervoArteGraficaCadastroDto.SuporteId);
@@ -599,9 +599,9 @@ namespace SME.CDEP.TesteIntegracao
                 PermiteUsoImagem = true,
                 ConservacaoId = random.Next(1, 5),
                 CromiaId = random.Next(1, 5),
-                Largura = random.Next(15, 55),
-                Altura = random.Next(15, 55),
-                Diametro = random.Next(15, 55),
+                Largura = "10,20",
+                Altura = "30,15",
+                Diametro = "45,32",
                 Tecnica = faker.Lorem.Text().Limite(100),
                 SuporteId = random.Next(1, 5),
                 Quantidade = random.Next(15, 55),
@@ -641,9 +641,9 @@ namespace SME.CDEP.TesteIntegracao
                 PermiteUsoImagem = true,
                 ConservacaoId = random.Next(1, 5),
                 CromiaId = random.Next(1, 5),
-                Largura = random.Next(15, 55),
-                Altura = random.Next(15, 55),
-                Diametro = random.Next(15, 55),
+                Largura = "10,20",
+                Altura = "30,15",
+                Diametro = "45,32",
                 Tecnica = faker.Lorem.Text().Limite(100),
                 SuporteId = random.Next(1, 5),
                 Quantidade = random.Next(15, 55),
@@ -730,9 +730,9 @@ namespace SME.CDEP.TesteIntegracao
                     PermiteUsoImagem = true,
                     ConservacaoId = random.Next(1,5),
                     CromiaId = random.Next(1,5),
-                    Largura = random.Next(15,55),
-                    Altura = random.Next(15,55),
-                    Diametro = random.Next(15,55),
+                    Largura = "10,20",
+                    Altura = "30,15",
+                    Diametro = "45,32",
                     Tecnica = faker.Lorem.Text().Limite(100),
                     SuporteId = random.Next(1,5),
                     Quantidade = random.Next(15,55),

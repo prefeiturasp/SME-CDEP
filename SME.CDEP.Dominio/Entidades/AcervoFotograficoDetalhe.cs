@@ -14,9 +14,9 @@ public class AcervoFotograficoDetalhe
     public bool? PermiteUsoImagem { get; set; }
     public string Conservacao { get; set; }
     public string Descricao { get; set; }
-    public long Quantidade { get; set; }
-    public double? Largura { get; set; }
-    public double? Altura { get; set; }
+    public int Quantidade { get; set; }
+    public string? Largura { get; set; }
+    public string? Altura { get; set; }
     public string Suporte { get; set; }
     public string Formato { get; set; }
     public string TamanhoArquivo { get; set; }

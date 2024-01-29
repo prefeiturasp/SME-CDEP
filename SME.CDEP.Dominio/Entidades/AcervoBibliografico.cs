@@ -7,9 +7,9 @@
         public long MaterialId { get; set; }
         public long? EditoraId { get; set; }
         public string? Edicao { get; set; }
-        public double? NumeroPagina { get; set; }
-        public double? Largura { get; set; }
-        public double? Altura { get; set; }
+        public int? NumeroPagina { get; set; }
+        public string? Largura { get; set; }
+        public string? Altura { get; set; }
         public long? SerieColecaoId { get; set; }
         public string? Volume { get; set; }
         public long IdiomaId { get; set; }

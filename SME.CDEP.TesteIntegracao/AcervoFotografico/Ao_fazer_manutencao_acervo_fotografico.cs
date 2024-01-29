@@ -66,8 +66,8 @@ namespace SME.CDEP.TesteIntegracao
                 PermiteUsoImagem = true,
                 ConservacaoId = 1,
                 Quantidade = 25,
-                Largura = double.Parse("50,45"),
-                Altura = double.Parse("10.20"),
+                Largura = "50,45",
+                Altura = "10,20",
                 SuporteId = 2,
                 FormatoId = 3,
                 CromiaId = 4,
@@ -99,8 +99,8 @@ namespace SME.CDEP.TesteIntegracao
             acervoFotografico.PermiteUsoImagem.ShouldBe(acervoFotograficoAlteracaoDto.PermiteUsoImagem);
             acervoFotografico.ConservacaoId.ShouldBe(acervoFotograficoAlteracaoDto.ConservacaoId);
             acervoFotografico.Quantidade.ShouldBe(acervoFotograficoAlteracaoDto.Quantidade);
-            acervoFotografico.Largura.ShouldBe(acervoFotograficoAlteracaoDto.Largura.Value);
-            acervoFotografico.Altura.ShouldBe(acervoFotograficoAlteracaoDto.Altura.FormatarParaDoubleComCasasDecimais());
+            acervoFotografico.Largura.ShouldBe(acervoFotograficoAlteracaoDto.Largura);
+            acervoFotografico.Altura.ShouldBe(acervoFotograficoAlteracaoDto.Altura);
             acervoFotografico.SuporteId.ShouldBe(acervoFotograficoAlteracaoDto.SuporteId);
             acervoFotografico.FormatoId.ShouldBe(acervoFotograficoAlteracaoDto.FormatoId);
             acervoFotografico.CromiaId.ShouldBe(acervoFotograficoAlteracaoDto.CromiaId);
@@ -145,8 +145,8 @@ namespace SME.CDEP.TesteIntegracao
                 PermiteUsoImagem = true,
                 ConservacaoId = 1,
                 Quantidade = 25,
-                Largura = double.Parse("50,45"),
-                Altura = double.Parse("10.20"),
+                Largura = "50,45",
+                Altura = "10,20",
                 SuporteId = 2,
                 FormatoId = 3,
                 CromiaId = 4,
@@ -178,8 +178,8 @@ namespace SME.CDEP.TesteIntegracao
             acervoFotografico.PermiteUsoImagem.ShouldBe(acervoFotograficoAlteracaoDto.PermiteUsoImagem);
             acervoFotografico.ConservacaoId.ShouldBe(acervoFotograficoAlteracaoDto.ConservacaoId);
             acervoFotografico.Quantidade.ShouldBe(acervoFotograficoAlteracaoDto.Quantidade);
-            acervoFotografico.Largura.ShouldBe(acervoFotograficoAlteracaoDto.Largura.Value);
-            acervoFotografico.Altura.ShouldBe(acervoFotograficoAlteracaoDto.Altura.FormatarParaDoubleComCasasDecimais());
+            acervoFotografico.Largura.ShouldBe(acervoFotograficoAlteracaoDto.Largura);
+            acervoFotografico.Altura.ShouldBe(acervoFotograficoAlteracaoDto.Altura);
             acervoFotografico.SuporteId.ShouldBe(acervoFotograficoAlteracaoDto.SuporteId);
             acervoFotografico.FormatoId.ShouldBe(acervoFotograficoAlteracaoDto.FormatoId);
             acervoFotografico.CromiaId.ShouldBe(acervoFotograficoAlteracaoDto.CromiaId);
@@ -222,8 +222,8 @@ namespace SME.CDEP.TesteIntegracao
                 PermiteUsoImagem = true,
                 ConservacaoId = 1,
                 Quantidade = 25,
-                Largura = double.Parse("50,45"),
-                Altura = double.Parse("10.20"),
+                Largura = "50,45",
+                Altura = "10,20",
                 SuporteId = 2,
                 FormatoId = 3,
                 CromiaId = 4,
@@ -255,8 +255,8 @@ namespace SME.CDEP.TesteIntegracao
             acervoFotografico.PermiteUsoImagem.ShouldBe(acervoFotograficoAlteracaoDto.PermiteUsoImagem);
             acervoFotografico.ConservacaoId.ShouldBe(acervoFotograficoAlteracaoDto.ConservacaoId);
             acervoFotografico.Quantidade.ShouldBe(acervoFotograficoAlteracaoDto.Quantidade);
-            acervoFotografico.Largura.ShouldBe(acervoFotograficoAlteracaoDto.Largura.Value);
-            acervoFotografico.Altura.ShouldBe(acervoFotograficoAlteracaoDto.Altura.FormatarParaDoubleComCasasDecimais());
+            acervoFotografico.Largura.ShouldBe(acervoFotograficoAlteracaoDto.Largura);
+            acervoFotografico.Altura.ShouldBe(acervoFotograficoAlteracaoDto.Altura);
             acervoFotografico.SuporteId.ShouldBe(acervoFotograficoAlteracaoDto.SuporteId);
             acervoFotografico.FormatoId.ShouldBe(acervoFotograficoAlteracaoDto.FormatoId);
             acervoFotografico.CromiaId.ShouldBe(acervoFotograficoAlteracaoDto.CromiaId);
@@ -303,8 +303,8 @@ namespace SME.CDEP.TesteIntegracao
                 PermiteUsoImagem = true,
                 ConservacaoId = random.Next(1, 5),
                 Quantidade = random.Next(15, 55),
-                Largura = double.Parse("50,45"),
-                Altura = double.Parse("10.20"),
+                Largura = "50,45",
+                Altura = "10,20",
                 SuporteId = random.Next(1, 5),
                 FormatoId = random.Next(1, 5),
                 CromiaId = random.Next(1, 5),
@@ -337,8 +337,8 @@ namespace SME.CDEP.TesteIntegracao
             acervoFotografico.PermiteUsoImagem.ShouldBe(acervoFotograficoDto.PermiteUsoImagem);
             acervoFotografico.ConservacaoId.ShouldBe(acervoFotograficoDto.ConservacaoId);
             acervoFotografico.Quantidade.ShouldBe(acervoFotograficoDto.Quantidade);
-            acervoFotografico.Largura.ShouldBe(acervoFotograficoDto.Largura.Value);
-            acervoFotografico.Altura.ShouldBe(acervoFotograficoDto.Altura.FormatarParaDoubleComCasasDecimais());
+            acervoFotografico.Largura.ShouldBe(acervoFotograficoDto.Largura);
+            acervoFotografico.Altura.ShouldBe(acervoFotograficoDto.Altura);
             acervoFotografico.SuporteId.ShouldBe(acervoFotograficoDto.SuporteId);
             acervoFotografico.FormatoId.ShouldBe(acervoFotograficoDto.FormatoId);
             acervoFotografico.CromiaId.ShouldBe(acervoFotograficoDto.CromiaId);
@@ -380,8 +380,8 @@ namespace SME.CDEP.TesteIntegracao
                 PermiteUsoImagem = true,
                 ConservacaoId = random.Next(1, 5),
                 Quantidade = random.Next(15, 55),
-                Largura = double.Parse("50,45"),
-                Altura = double.Parse("10.20"),
+                Largura = "50,45",
+                Altura = "10,20",
                 SuporteId = random.Next(1, 5),
                 FormatoId = random.Next(1, 5),
                 CromiaId = random.Next(1, 5),
@@ -423,8 +423,8 @@ namespace SME.CDEP.TesteIntegracao
                 PermiteUsoImagem = true,
                 ConservacaoId = random.Next(1, 5),
                 Quantidade = random.Next(15, 55),
-                Largura = double.Parse("50,45"),
-                Altura = double.Parse("10.20"),
+                Largura = "50,45",
+                Altura = "10,20",
                 SuporteId = random.Next(1, 5),
                 FormatoId = random.Next(1, 5),
                 CromiaId = random.Next(1, 5),
@@ -464,8 +464,8 @@ namespace SME.CDEP.TesteIntegracao
                 PermiteUsoImagem = true,
                 ConservacaoId = 1,
                 Quantidade = 25,
-                Largura = double.Parse("50,45"),
-                Altura = double.Parse("10.20"),
+                Largura = "50,45",
+                Altura = "10,20",
                 SuporteId = 2,
                 FormatoId = 3,
                 CromiaId = 4,
@@ -528,8 +528,8 @@ namespace SME.CDEP.TesteIntegracao
                     PermiteUsoImagem = true,
                     ConservacaoId = random.Next(1,5),
                     Quantidade = random.Next(15,55),
-                    Largura = double.Parse("50,45"),
-                    Altura = double.Parse("10.20"),
+                    Largura = "50,45",
+                    Altura = "10,20",
                     SuporteId = random.Next(1,5),
                     FormatoId = random.Next(1,5),
                     CromiaId = random.Next(1,5),
