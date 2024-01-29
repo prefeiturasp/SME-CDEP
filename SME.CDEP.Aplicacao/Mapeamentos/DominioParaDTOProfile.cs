@@ -83,17 +83,17 @@ namespace SME.CDEP.Aplicacao.Mapeamentos
                 .ReverseMap();
             
             CreateMap<AcervoTridimensionalCadastroDTO, AcervoTridimensional>()
-                .ForMember(dest => dest.Largura, opt => opt.MapFrom(o => o.Largura.FormatarParaDoubleComCasasDecimais()))
-                .ForMember(dest => dest.Altura, opt => opt.MapFrom(o => o.Altura.FormatarParaDoubleComCasasDecimais()))
-                .ForMember(dest => dest.Diametro, opt => opt.MapFrom(o => o.Diametro.FormatarParaDoubleComCasasDecimais()))
-                .ForMember(dest => dest.Profundidade, opt => opt.MapFrom(o => o.Profundidade.FormatarParaDoubleComCasasDecimais()))
+                .ForMember(dest => dest.Largura, opt => opt.MapFrom(o => o.Largura))
+                .ForMember(dest => dest.Altura, opt => opt.MapFrom(o => o.Altura))
+                .ForMember(dest => dest.Diametro, opt => opt.MapFrom(o => o.Diametro))
+                .ForMember(dest => dest.Profundidade, opt => opt.MapFrom(o => o.Profundidade))
                 .ReverseMap();
 
             CreateMap<AcervoTridimensionalAlteracaoDTO, AcervoTridimensional>()
-                .ForMember(dest => dest.Largura, opt => opt.MapFrom(o => o.Largura.FormatarParaDoubleComCasasDecimais()))
-                .ForMember(dest => dest.Altura, opt => opt.MapFrom(o => o.Altura.FormatarParaDoubleComCasasDecimais()))
-                .ForMember(dest => dest.Diametro, opt => opt.MapFrom(o => o.Diametro.FormatarParaDoubleComCasasDecimais()))
-                .ForMember(dest => dest.Profundidade, opt => opt.MapFrom(o => o.Profundidade.FormatarParaDoubleComCasasDecimais()))
+                .ForMember(dest => dest.Largura, opt => opt.MapFrom(o => o.Largura))
+                .ForMember(dest => dest.Altura, opt => opt.MapFrom(o => o.Altura))
+                .ForMember(dest => dest.Diametro, opt => opt.MapFrom(o => o.Diametro))
+                .ForMember(dest => dest.Profundidade, opt => opt.MapFrom(o => o.Profundidade))
                 .ReverseMap();
 
             CreateMap<AcervoTridimensionalAlteracaoDTO, AcervoTridimensionalDTO>().ReverseMap();

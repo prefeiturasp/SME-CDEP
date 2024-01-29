@@ -53,8 +53,9 @@ namespace SME.CDEP.Aplicacao.Servicos
 
         public async Task<long> Inserir(AcervoTridimensionalCadastroDTO acervoTridimensionalCadastroDto)
         {
-            if (acervoTridimensionalCadastroDto.CreditosAutoresIds.NaoEhNulo())
-                throw new NegocioException(MensagemNegocio.ESSE_ACERVO_NAO_POSSUI_CREDITO_OU_AUTOR);
+            ValidarPreenchimentoAcervoTridimensional(acervoTridimensionalCadastroDto.CreditosAutoresIds, 
+                acervoTridimensionalCadastroDto.Altura, acervoTridimensionalCadastroDto.Largura, acervoTridimensionalCadastroDto.Diametro, 
+                acervoTridimensionalCadastroDto.Profundidade);
             
             var arquivosCompletos =  acervoTridimensionalCadastroDto.Arquivos.NaoEhNulo()
                 ? await ObterArquivosPorIds(acervoTridimensionalCadastroDto.Arquivos) 
@@ -132,9 +133,10 @@ namespace SME.CDEP.Aplicacao.Servicos
 
         public async Task<AcervoTridimensionalDTO> Alterar(AcervoTridimensionalAlteracaoDTO acervoTridimensionalAlteracaoDto)
         {
-            if (acervoTridimensionalAlteracaoDto.CreditosAutoresIds.NaoEhNulo())
-                throw new NegocioException(MensagemNegocio.ESSE_ACERVO_NAO_POSSUI_CREDITO_OU_AUTOR);
-            
+            ValidarPreenchimentoAcervoTridimensional(acervoTridimensionalAlteracaoDto.CreditosAutoresIds, 
+                acervoTridimensionalAlteracaoDto.Altura, acervoTridimensionalAlteracaoDto.Largura, acervoTridimensionalAlteracaoDto.Diametro, 
+                acervoTridimensionalAlteracaoDto.Profundidade);
+
             var arquivosIdsInserir =  Enumerable.Empty<long>();
             var arquivosIdsExcluir =  Enumerable.Empty<long>();
             
@@ -186,6 +188,24 @@ namespace SME.CDEP.Aplicacao.Servicos
             await ExcluirArquivosArmazenamento();
 
             return await ObterPorId(acervoTridimensionalAlteracaoDto.AcervoId);
+        }
+
+        private void ValidarPreenchimentoAcervoTridimensional(long[]? creditosAutoresIds, string? altura, string? largura, string? diametro, string? profundidade)
+        {
+            if (creditosAutoresIds.NaoEhNulo())
+                throw new NegocioException(MensagemNegocio.ESSE_ACERVO_NAO_POSSUI_CREDITO_OU_AUTOR);
+
+            if (largura.NaoEhNumericoComCasasDecimais())
+                throw new NegocioException(string.Format(MensagemNegocio.CAMPO_X_ESPERADO_NUMERICO_E_COM_CASAS_DECIMAIS, Constantes.LARGURA));
+            
+            if (altura.NaoEhNumericoComCasasDecimais())
+                throw new NegocioException(string.Format(MensagemNegocio.CAMPO_X_ESPERADO_NUMERICO_E_COM_CASAS_DECIMAIS, Constantes.ALTURA));
+            
+            if (profundidade.NaoEhNumericoComCasasDecimais())
+                throw new NegocioException(string.Format(MensagemNegocio.CAMPO_X_ESPERADO_NUMERICO_E_COM_CASAS_DECIMAIS, Constantes.PROFUNDIDADE));
+            
+            if (diametro.NaoEhNumericoComCasasDecimais())
+                throw new NegocioException(string.Format(MensagemNegocio.CAMPO_X_ESPERADO_NUMERICO_E_COM_CASAS_DECIMAIS, Constantes.DIAMETRO));
         }
 
         public async Task<AcervoTridimensionalDTO> ObterPorId(long id)

@@ -300,4 +300,6 @@ public class Constantes
     
     public const string CREDITOS_AUTORES = "Créditos/Autores";
     public const string ASSUNTOS = "Assuntos";
+
+    public const string PERMITIR_SOMENTE_NUMERAL_SEPARADO_POR_VIRGULA_DUAS_CASAS_DECIMAIS = @"^(\d+,\d{2})$";
 }

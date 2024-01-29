@@ -235,10 +235,10 @@ namespace SME.CDEP.Aplicacao.Servicos
                         ConservacaoId = ObterConservacaoIdPorValorDoCampo(acervoTridimensionalLinha.EstadoConservacao.Conteudo),
                         Quantidade = acervoTridimensionalLinha.Quantidade.Conteudo.ObterLongoPorValorDoCampo(),
                         Descricao = acervoTridimensionalLinha.Descricao.Conteudo,
-                        Largura = acervoTridimensionalLinha.Largura.Conteudo.ObterDoubleOuNuloPorValorDoCampo(),
-                        Altura = acervoTridimensionalLinha.Altura.Conteudo.ObterDoubleOuNuloPorValorDoCampo(),
-                        Profundidade = acervoTridimensionalLinha.Profundidade.Conteudo.ObterDoubleOuNuloPorValorDoCampo(),
-                        Diametro = acervoTridimensionalLinha.Diametro.Conteudo.ObterDoubleOuNuloPorValorDoCampo(),
+                        Largura = acervoTridimensionalLinha.Largura.Conteudo,
+                        Altura = acervoTridimensionalLinha.Altura.Conteudo,
+                        Profundidade = acervoTridimensionalLinha.Profundidade.Conteudo,
+                        Diametro = acervoTridimensionalLinha.Diametro.Conteudo,
                     };
                     await servicoAcervoTridimensional.Inserir(acervoTridimensional);
         
@@ -377,23 +377,27 @@ namespace SME.CDEP.Aplicacao.Servicos
                         },
                         Largura = new LinhaConteudoAjustarDTO()
                         {
-                            Conteudo = planilha.ObterValorDaCelula(numeroLinha, Constantes.ACERVO_TRIDIMENSIONAL_CAMPO_LARGURA),
-                            FormatoTipoDeCampo = Constantes.FORMATO_DOUBLE
+                            Conteudo = planilha.ObterValorDaCelula(numeroLinha, Constantes.ACERVO_TRIDIMENSIONAL_CAMPO_LARGURA).TratarLiteralComoDecimalComCasasDecimais(),
+                            ValidarComExpressaoRegular = Constantes.PERMITIR_SOMENTE_NUMERAL_SEPARADO_POR_VIRGULA_DUAS_CASAS_DECIMAIS,
+                            MensagemValidacao = string.Format(MensagemNegocio.CAMPO_X_ESPERADO_NUMERICO_E_COM_CASAS_DECIMAIS, Constantes.LARGURA)
                         },
                         Altura = new LinhaConteudoAjustarDTO()
                         {
-                            Conteudo = planilha.ObterValorDaCelula(numeroLinha, Constantes.ACERVO_TRIDIMENSIONAL_CAMPO_ALTURA),
-                            FormatoTipoDeCampo = Constantes.FORMATO_DOUBLE
+                            Conteudo = planilha.ObterValorDaCelula(numeroLinha, Constantes.ACERVO_TRIDIMENSIONAL_CAMPO_ALTURA).TratarLiteralComoDecimalComCasasDecimais(),
+                            ValidarComExpressaoRegular = Constantes.PERMITIR_SOMENTE_NUMERAL_SEPARADO_POR_VIRGULA_DUAS_CASAS_DECIMAIS,
+                            MensagemValidacao = string.Format(MensagemNegocio.CAMPO_X_ESPERADO_NUMERICO_E_COM_CASAS_DECIMAIS, Constantes.ALTURA)
                         },
                         Profundidade = new LinhaConteudoAjustarDTO()
                         {
-                            Conteudo = planilha.ObterValorDaCelula(numeroLinha, Constantes.ACERVO_TRIDIMENSIONAL_CAMPO_PROFUNDIDADE),
-                            FormatoTipoDeCampo = Constantes.FORMATO_DOUBLE
+                            Conteudo = planilha.ObterValorDaCelula(numeroLinha, Constantes.ACERVO_TRIDIMENSIONAL_CAMPO_PROFUNDIDADE).TratarLiteralComoDecimalComCasasDecimais(),
+                            ValidarComExpressaoRegular = Constantes.PERMITIR_SOMENTE_NUMERAL_SEPARADO_POR_VIRGULA_DUAS_CASAS_DECIMAIS,
+                            MensagemValidacao = string.Format(MensagemNegocio.CAMPO_X_ESPERADO_NUMERICO_E_COM_CASAS_DECIMAIS, Constantes.PROFUNDIDADE)
                         },
                         Diametro = new LinhaConteudoAjustarDTO()
                         {
-                            Conteudo = planilha.ObterValorDaCelula(numeroLinha, Constantes.ACERVO_TRIDIMENSIONAL_CAMPO_DIAMETRO),
-                            FormatoTipoDeCampo = Constantes.FORMATO_DOUBLE
+                            Conteudo = planilha.ObterValorDaCelula(numeroLinha, Constantes.ACERVO_TRIDIMENSIONAL_CAMPO_DIAMETRO).TratarLiteralComoDecimalComCasasDecimais(),
+                            ValidarComExpressaoRegular = Constantes.PERMITIR_SOMENTE_NUMERAL_SEPARADO_POR_VIRGULA_DUAS_CASAS_DECIMAIS,
+                            MensagemValidacao = string.Format(MensagemNegocio.CAMPO_X_ESPERADO_NUMERICO_E_COM_CASAS_DECIMAIS, Constantes.DIAMETRO)
                         }
                     });
                 }

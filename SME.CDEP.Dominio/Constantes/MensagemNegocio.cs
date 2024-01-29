@@ -33,4 +33,5 @@ public class MensagemNegocio
     public const string PLANILHA_VAZIA = "A planilha importada está vazia";
     public const string NAO_PERMITIDO_ANO_FUTURO = "O campo ano não admite anos futuros. Apenas anos atuais e anteriores são permitidos.";
     public const string TOKEN_INVALIDO = "Token inválido";
+    public const string CAMPO_X_ESPERADO_NUMERICO_E_COM_CASAS_DECIMAIS = "É esperado que o campo '{0}' seja um numérico com duas casas decimais separados por vírgula";
 }
