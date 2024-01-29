@@ -20,8 +20,8 @@ public class AcervoDocumentalCadastroDTO : AcervoCadastroDTO
     [MaxLength(50, ErrorMessage = "O tipo anexo do acervo documental não pode conter mais que 50 caracteres")]
     public string? TipoAnexo { get; set; }
     
-    public double? Largura { get; set; }
-    public double? Altura { get; set; }
+    public string? Largura { get; set; }
+    public string? Altura { get; set; }
     
     [MaxLength(15, ErrorMessage = "O tamanho do arquivo do acervo documental não pode conter mais que 15 caracteres")]
     public string? TamanhoArquivo { get; set; }

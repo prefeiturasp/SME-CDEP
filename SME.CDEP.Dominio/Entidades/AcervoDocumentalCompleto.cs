@@ -13,8 +13,8 @@ public class AcervoDocumentalCompleto : EntidadeBaseAuditavel
     public string NumeroPagina { get; set; }
     public string Volume { get; set; }
     public string TipoAnexo { get; set; }
-    public double? Largura { get; set; }
-    public double? Altura { get; set; }
+    public string? Largura { get; set; }
+    public string? Altura { get; set; }
     public string TamanhoArquivo { get; set; }
     public string Localizacao { get; set; }
     public bool? CopiaDigital { get; set; }

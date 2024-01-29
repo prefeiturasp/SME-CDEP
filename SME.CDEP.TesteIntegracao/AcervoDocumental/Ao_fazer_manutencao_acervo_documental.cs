@@ -82,8 +82,8 @@ namespace SME.CDEP.TesteIntegracao
                 CreditosAutoresIds = new long[]{4,5},
                 Localizacao = faker.Lorem.Text().Limite(100),
                 ConservacaoId = random.Next(1, 5),
-                Largura = double.Parse("50,45"),
-                Altura = double.Parse("1020"),
+                Largura = "50,45",
+                Altura = "10,20",
                 Descricao = faker.Lorem.Text(),
                 Arquivos = arquivosSelecionados,
                 AcessoDocumentosIds = acessoDocumentosSelecionados,
@@ -116,8 +116,8 @@ namespace SME.CDEP.TesteIntegracao
            var acervoDocumental = ObterTodos<AcervoDocumental>().FirstOrDefault(w=> w.AcervoId == 3);
             acervoDocumental.Localizacao.ShouldBe(acervoDocumentalAlteracaoDto.Localizacao);
             acervoDocumental.ConservacaoId.ShouldBe(acervoDocumentalAlteracaoDto.ConservacaoId);
-            acervoDocumental.Largura.ShouldBe(acervoDocumentalAlteracaoDto.Largura.Value);
-            acervoDocumental.Altura.ShouldBe(acervoDocumentalAlteracaoDto.Altura.FormatarParaDoubleComCasasDecimais());
+            acervoDocumental.Largura.ShouldBe(acervoDocumentalAlteracaoDto.Largura);
+            acervoDocumental.Altura.ShouldBe(acervoDocumentalAlteracaoDto.Altura);
             acervoDocumental.MaterialId.ShouldBe(acervoDocumentalAlteracaoDto.MaterialId);
             acervoDocumental.IdiomaId.ShouldBe(acervoDocumentalAlteracaoDto.IdiomaId);
             acervoDocumental.NumeroPagina.ShouldBe(acervoDocumentalAlteracaoDto.NumeroPagina);
@@ -169,8 +169,8 @@ namespace SME.CDEP.TesteIntegracao
                 CreditosAutoresIds = new long[]{4,5},
                 Localizacao = faker.Lorem.Text().Limite(100),
                 ConservacaoId = random.Next(1, 5),
-                Largura = double.Parse("50,45"),
-                Altura = double.Parse("1020"),
+                Largura = "50,45",
+                Altura = "10,20",
                 Descricao = faker.Lorem.Text(),
                 Arquivos = arquivosSelecionados,
                 AcessoDocumentosIds = acessoDocumentosSelecionados,
@@ -203,8 +203,8 @@ namespace SME.CDEP.TesteIntegracao
            var acervoDocumental = ObterTodos<AcervoDocumental>().FirstOrDefault(w=> w.AcervoId == 3);
             acervoDocumental.Localizacao.ShouldBe(acervoDocumentalAlteracaoDto.Localizacao);
             acervoDocumental.ConservacaoId.ShouldBe(acervoDocumentalAlteracaoDto.ConservacaoId);
-            acervoDocumental.Largura.ShouldBe(acervoDocumentalAlteracaoDto.Largura.Value);
-            acervoDocumental.Altura.ShouldBe(acervoDocumentalAlteracaoDto.Altura.FormatarParaDoubleComCasasDecimais());
+            acervoDocumental.Largura.ShouldBe(acervoDocumentalAlteracaoDto.Largura);
+            acervoDocumental.Altura.ShouldBe(acervoDocumentalAlteracaoDto.Altura);
             acervoDocumental.MaterialId.ShouldBe(acervoDocumentalAlteracaoDto.MaterialId);
             acervoDocumental.IdiomaId.ShouldBe(acervoDocumentalAlteracaoDto.IdiomaId);
             acervoDocumental.NumeroPagina.ShouldBe(acervoDocumentalAlteracaoDto.NumeroPagina);
@@ -256,8 +256,8 @@ namespace SME.CDEP.TesteIntegracao
                 CreditosAutoresIds = new long[]{4,5},
                 Localizacao = faker.Lorem.Text().Limite(100),
                 ConservacaoId = random.Next(1, 5),
-                Largura = double.Parse("50,45"),
-                Altura = double.Parse("1020"),
+                Largura = "50,45",
+                Altura = "10,20",
                 Descricao = faker.Lorem.Text(),
                 Arquivos = arquivosSelecionados,
                 AcessoDocumentosIds = acessoDocumentosSelecionados,
@@ -290,8 +290,8 @@ namespace SME.CDEP.TesteIntegracao
            var acervoDocumental = ObterTodos<AcervoDocumental>().FirstOrDefault(w=> w.AcervoId == 3);
             acervoDocumental.Localizacao.ShouldBe(acervoDocumentalAlteracaoDto.Localizacao);
             acervoDocumental.ConservacaoId.ShouldBe(acervoDocumentalAlteracaoDto.ConservacaoId);
-            acervoDocumental.Largura.ShouldBe(acervoDocumentalAlteracaoDto.Largura.Value);
-            acervoDocumental.Altura.ShouldBe(acervoDocumentalAlteracaoDto.Altura.FormatarParaDoubleComCasasDecimais());
+            acervoDocumental.Largura.ShouldBe(acervoDocumentalAlteracaoDto.Largura);
+            acervoDocumental.Altura.ShouldBe(acervoDocumentalAlteracaoDto.Altura);
             acervoDocumental.MaterialId.ShouldBe(acervoDocumentalAlteracaoDto.MaterialId);
             acervoDocumental.IdiomaId.ShouldBe(acervoDocumentalAlteracaoDto.IdiomaId);
             acervoDocumental.NumeroPagina.ShouldBe(acervoDocumentalAlteracaoDto.NumeroPagina);
@@ -343,8 +343,8 @@ namespace SME.CDEP.TesteIntegracao
                 CreditosAutoresIds = new long[]{2,3},
                 Localizacao = faker.Lorem.Text().Limite(100),
                 ConservacaoId = random.Next(1, 5),
-                Largura = double.Parse("50,45"),
-                Altura = double.Parse("1020"),
+                Largura = "50,45",
+                Altura = "10,20",
                 Descricao = faker.Lorem.Text(),
                 Arquivos = arquivosSelecionados,
                 AcessoDocumentosIds = acessoDocumentosSelecionados,
@@ -377,8 +377,8 @@ namespace SME.CDEP.TesteIntegracao
             var acervoDocumental = ObterTodos<AcervoDocumental>().FirstOrDefault(w=> w.AcervoId == 3);
             acervoDocumental.Localizacao.ShouldBe(acervoDocumentalAlteracaoDto.Localizacao);
             acervoDocumental.ConservacaoId.ShouldBe(acervoDocumentalAlteracaoDto.ConservacaoId);
-            acervoDocumental.Largura.ShouldBe(acervoDocumentalAlteracaoDto.Largura.Value);
-            acervoDocumental.Altura.ShouldBe(acervoDocumentalAlteracaoDto.Altura.FormatarParaDoubleComCasasDecimais());
+            acervoDocumental.Largura.ShouldBe(acervoDocumentalAlteracaoDto.Largura);
+            acervoDocumental.Altura.ShouldBe(acervoDocumentalAlteracaoDto.Altura);
             acervoDocumental.MaterialId.ShouldBe(acervoDocumentalAlteracaoDto.MaterialId);
             acervoDocumental.IdiomaId.ShouldBe(acervoDocumentalAlteracaoDto.IdiomaId);
             acervoDocumental.NumeroPagina.ShouldBe(acervoDocumentalAlteracaoDto.NumeroPagina);
@@ -427,8 +427,8 @@ namespace SME.CDEP.TesteIntegracao
                 CreditosAutoresIds = new long[]{1,5},
                 Localizacao = faker.Lorem.Text().Limite(100),
                 ConservacaoId = random.Next(1, 5),
-                Largura = double.Parse("50,45"),
-                Altura = double.Parse("1020"),
+                Largura = "50,45",
+                Altura = "10,20",
                 Descricao = faker.Lorem.Text(),
                 Arquivos = arquivosSelecionados,
                 AcessoDocumentosIds = acessoDocumentosSelecionados,
@@ -461,8 +461,8 @@ namespace SME.CDEP.TesteIntegracao
             var acervoDocumental = ObterTodos<AcervoDocumental>().FirstOrDefault(w=> w.AcervoId == 3);
             acervoDocumental.Localizacao.ShouldBe(acervoDocumentalAlteracaoDto.Localizacao);
             acervoDocumental.ConservacaoId.ShouldBe(acervoDocumentalAlteracaoDto.ConservacaoId);
-            acervoDocumental.Largura.ShouldBe(acervoDocumentalAlteracaoDto.Largura.Value);
-            acervoDocumental.Altura.ShouldBe(acervoDocumentalAlteracaoDto.Altura.FormatarParaDoubleComCasasDecimais());
+            acervoDocumental.Largura.ShouldBe(acervoDocumentalAlteracaoDto.Largura);
+            acervoDocumental.Altura.ShouldBe(acervoDocumentalAlteracaoDto.Altura);
             acervoDocumental.MaterialId.ShouldBe(acervoDocumentalAlteracaoDto.MaterialId);
             acervoDocumental.IdiomaId.ShouldBe(acervoDocumentalAlteracaoDto.IdiomaId);
             acervoDocumental.NumeroPagina.ShouldBe(acervoDocumentalAlteracaoDto.NumeroPagina);
@@ -510,8 +510,8 @@ namespace SME.CDEP.TesteIntegracao
                 CreditosAutoresIds = new long[]{4,5},
                 Localizacao = faker.Lorem.Text().Limite(100),
                 ConservacaoId = random.Next(1, 5),
-                Largura = double.Parse("50,45"),
-                Altura = double.Parse("1020"),
+                Largura = "50,45",
+                Altura = "10,20",
                 Descricao = faker.Lorem.Text(),
                 Arquivos = arquivosSelecionados,
                 AcessoDocumentosIds = acessoDocumentosSelecionados,
@@ -545,8 +545,8 @@ namespace SME.CDEP.TesteIntegracao
             var acervoDocumental = ObterTodos<AcervoDocumental>().LastOrDefault();
             acervoDocumental.Localizacao.ShouldBe(acervoDocumentalCadastroDto.Localizacao);
             acervoDocumental.ConservacaoId.ShouldBe(acervoDocumentalCadastroDto.ConservacaoId);
-            acervoDocumental.Largura.ShouldBe(acervoDocumentalCadastroDto.Largura.Value);
-            acervoDocumental.Altura.ShouldBe(acervoDocumentalCadastroDto.Altura.FormatarParaDoubleComCasasDecimais());
+            acervoDocumental.Largura.ShouldBe(acervoDocumentalCadastroDto.Largura);
+            acervoDocumental.Altura.ShouldBe(acervoDocumentalCadastroDto.Altura);
             acervoDocumental.MaterialId.ShouldBe(acervoDocumentalCadastroDto.MaterialId);
             acervoDocumental.IdiomaId.ShouldBe(acervoDocumentalCadastroDto.IdiomaId);
             acervoDocumental.NumeroPagina.ShouldBe(acervoDocumentalCadastroDto.NumeroPagina);
@@ -596,8 +596,8 @@ namespace SME.CDEP.TesteIntegracao
                 CreditosAutoresIds = new long[]{4,5},
                 Localizacao = faker.Lorem.Text().Limite(100),
                 ConservacaoId = random.Next(1, 5),
-                Largura = double.Parse("50,45"),
-                Altura = double.Parse("1020"),
+                Largura = "50,45",
+                Altura = "10,20",
                 Descricao = faker.Lorem.Text(),
                 Arquivos = arquivosSelecionados,
                 AcessoDocumentosIds = acessoDocumentosSelecionados,
@@ -638,8 +638,8 @@ namespace SME.CDEP.TesteIntegracao
                 CreditosAutoresIds = new long[]{4,5},
                 Localizacao = faker.Lorem.Text().Limite(100),
                 ConservacaoId = random.Next(1, 5),
-                Largura = double.Parse("50,45"),
-                Altura = double.Parse("1020"),
+                Largura = "50,45",
+                Altura = "10,20",
                 Descricao = faker.Lorem.Text(),
                 Arquivos = arquivosSelecionados,
                 AcessoDocumentosIds = acessoDocumentosSelecionados,
@@ -680,8 +680,8 @@ namespace SME.CDEP.TesteIntegracao
                 CreditosAutoresIds = new long[]{4,5},
                 Localizacao = faker.Lorem.Text().Limite(100),
                 ConservacaoId = random.Next(1, 5),
-                Largura = double.Parse("50,45"),
-                Altura = double.Parse("1020"),
+                Largura = "50,45",
+                Altura = "10,20",
                 Descricao = faker.Lorem.Text(),
                 Arquivos = arquivosSelecionados,
                 AcessoDocumentosIds = acessoDocumentosSelecionados,
@@ -724,8 +724,8 @@ namespace SME.CDEP.TesteIntegracao
                 CreditosAutoresIds = new long[]{4,5},
                 Localizacao = faker.Lorem.Text().Limite(100),
                 ConservacaoId = random.Next(1, 5),
-                Largura = double.Parse("50,45"),
-                Altura = double.Parse("1020"),
+                Largura = "50,45",
+                Altura = "10,20",
                 Descricao = faker.Lorem.Text(),
                 Arquivos = arquivosSelecionados,
                 AcessoDocumentosIds = acessoDocumentosSelecionados,
@@ -767,8 +767,8 @@ namespace SME.CDEP.TesteIntegracao
                 CreditosAutoresIds = new long[]{4,5},
                 Localizacao = faker.Lorem.Text().Limite(100),
                 ConservacaoId = random.Next(1, 5),
-                Largura = double.Parse("50,45"),
-                Altura = double.Parse("1020"),
+                Largura = "50,45",
+                Altura = "10,20",
                 Descricao = faker.Lorem.Text(),
                 Arquivos = arquivosSelecionados,
                 AcessoDocumentosIds = acessoDocumentosSelecionados,
@@ -813,8 +813,8 @@ namespace SME.CDEP.TesteIntegracao
                 CreditosAutoresIds = new long[]{1,5},
                 Localizacao = faker.Lorem.Text().Limite(100),
                 ConservacaoId = random.Next(1, 5),
-                Largura = double.Parse("50,45"),
-                Altura = double.Parse("1020"),
+                Largura = "50,45",
+                Altura = "10,20",
                 Descricao = faker.Lorem.Text(),
                 Arquivos = arquivosSelecionados,
                 AcessoDocumentosIds = acessoDocumentosSelecionados,
@@ -859,8 +859,8 @@ namespace SME.CDEP.TesteIntegracao
                 CreditosAutoresIds = new long[]{1,5},
                 Localizacao = faker.Lorem.Text().Limite(100),
                 ConservacaoId = random.Next(1, 5),
-                Largura = double.Parse("50,45"),
-                Altura = double.Parse("1020"),
+                Largura = "50,45",
+                Altura = "10,20",
                 Descricao = faker.Lorem.Text(),
                 Arquivos = arquivosSelecionados,
                 AcessoDocumentosIds = acessoDocumentosSelecionados,
@@ -903,8 +903,8 @@ namespace SME.CDEP.TesteIntegracao
                 CreditosAutoresIds = new long[]{1,5},
                 Localizacao = faker.Lorem.Text().Limite(100),
                 ConservacaoId = random.Next(1, 5),
-                Largura = double.Parse("50,45"),
-                Altura = double.Parse("1020"),
+                Largura = "50,45",
+                Altura = "10,20",
                 Descricao = faker.Lorem.Text(),
                 Arquivos = arquivosSelecionados,
                 AcessoDocumentosIds = acessoDocumentosSelecionados,
@@ -947,8 +947,8 @@ namespace SME.CDEP.TesteIntegracao
                 CreditosAutoresIds = new long[]{1,5},
                 Localizacao = faker.Lorem.Text().Limite(100),
                 ConservacaoId = random.Next(1, 5),
-                Largura = double.Parse("50,45"),
-                Altura = double.Parse("1020"),
+                Largura = "50,45",
+                Altura = "10,20",
                 Descricao = faker.Lorem.Text(),
                 Arquivos = arquivosSelecionados,
                 AcessoDocumentosIds = acessoDocumentosSelecionados,
@@ -993,8 +993,8 @@ namespace SME.CDEP.TesteIntegracao
                 CreditosAutoresIds = new long[]{1,5},
                 Localizacao = faker.Lorem.Text().Limite(100),
                 ConservacaoId = random.Next(1, 5),
-                Largura = double.Parse("50,45"),
-                Altura = double.Parse("1020"),
+                Largura = "50,45",
+                Altura = "10,20",
                 Descricao = faker.Lorem.Text(),
                 Arquivos = arquivosSelecionados,
                 AcessoDocumentosIds = acessoDocumentosSelecionados,
@@ -1039,8 +1039,8 @@ namespace SME.CDEP.TesteIntegracao
                 CreditosAutoresIds = new long[]{1,5},
                 Localizacao = faker.Lorem.Text().Limite(100),
                 ConservacaoId = random.Next(1, 5),
-                Largura = double.Parse("50,45"),
-                Altura = double.Parse("1020"),
+                Largura = "50,45",
+                Altura = "10,20",
                 Descricao = faker.Lorem.Text(),
                 Arquivos = arquivosSelecionados,
                 AcessoDocumentosIds = acessoDocumentosSelecionados,
@@ -1105,8 +1105,8 @@ namespace SME.CDEP.TesteIntegracao
                     NumeroPagina = faker.Lorem.Text().Limite(4),
                     Volume = faker.Lorem.Text().Limite(15),
                     TipoAnexo = faker.Lorem.Text().Limite(50),
-                    Largura = double.Parse("50,45"),
-                    Altura = double.Parse("1020"),
+                    Largura = "50,45",
+                    Altura = "10,20",
                     TamanhoArquivo = faker.Lorem.Text().Limite(15),
                     Localizacao = faker.Lorem.Text().Limite(100),
                     CopiaDigital = true,

@@ -54,6 +54,8 @@ namespace SME.CDEP.Aplicacao.Servicos
 
         public async Task<long> Inserir(AcervoDocumentalCadastroDTO acervoDocumentalCadastroDto)
         {
+            ValidarPreenchimentoAcervoDocumental(acervoDocumentalCadastroDto.Altura, acervoDocumentalCadastroDto.Largura);
+            
             var arquivosCompletos =  acervoDocumentalCadastroDto.Arquivos.NaoEhNulo()
                 ? await ObterArquivosPorIds(acervoDocumentalCadastroDto.Arquivos) 
                 : Enumerable.Empty<Arquivo>();
@@ -107,6 +109,15 @@ namespace SME.CDEP.Aplicacao.Servicos
           
             return acervoDocumental.AcervoId;
         }
+        
+        private void ValidarPreenchimentoAcervoDocumental(string? altura, string? largura)
+        {
+            if (largura.NaoEhNumericoComCasasDecimais())
+                throw new NegocioException(string.Format(MensagemNegocio.CAMPO_X_ESPERADO_NUMERICO_E_COM_CASAS_DECIMAIS, Constantes.LARGURA));
+
+            if (altura.NaoEhNumericoComCasasDecimais())
+                throw new NegocioException(string.Format(MensagemNegocio.CAMPO_X_ESPERADO_NUMERICO_E_COM_CASAS_DECIMAIS, Constantes.ALTURA));
+        }
 
         public async Task<IEnumerable<AcervoDocumentalDTO>> ObterTodos()
         {
@@ -115,6 +126,8 @@ namespace SME.CDEP.Aplicacao.Servicos
 
         public async Task<AcervoDocumentalDTO> Alterar(AcervoDocumentalAlteracaoDTO acervoDocumentalAlteracaoDto)
         {
+            ValidarPreenchimentoAcervoDocumental(acervoDocumentalAlteracaoDto.Altura, acervoDocumentalAlteracaoDto.Largura);
+            
             var arquivosIdsInserir =  Enumerable.Empty<long>();
             var arquivosIdsExcluir =  Enumerable.Empty<long>();
             

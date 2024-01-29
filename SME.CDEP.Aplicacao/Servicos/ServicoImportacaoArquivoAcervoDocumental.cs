@@ -290,8 +290,8 @@ namespace SME.CDEP.Aplicacao.Servicos
                         Volume = acervoDocumentalLinha.Volume.Conteudo,
                         Descricao = acervoDocumentalLinha.Descricao.Conteudo,
                         TipoAnexo = acervoDocumentalLinha.TipoAnexo.Conteudo,
-                        Largura = acervoDocumentalLinha.Largura.Conteudo.ObterDoubleOuNuloPorValorDoCampo(),
-                        Altura = acervoDocumentalLinha.Altura.Conteudo.ObterDoubleOuNuloPorValorDoCampo(),
+                        Largura = acervoDocumentalLinha.Largura.Conteudo,
+                        Altura = acervoDocumentalLinha.Altura.Conteudo,
                         TamanhoArquivo = acervoDocumentalLinha.TamanhoArquivo.Conteudo,
                         AcessoDocumentosIds = ObterAcessoDocumentosIdsPorValorDoCampo(acervoDocumentalLinha.AcessoDocumento.Conteudo),
                         Localizacao = acervoDocumentalLinha.Localizacao.Conteudo,
@@ -472,13 +472,15 @@ namespace SME.CDEP.Aplicacao.Servicos
                         },
                         Largura = new LinhaConteudoAjustarDTO()
                         {
-                            Conteudo = planilha.ObterValorDaCelula(numeroLinha, Constantes.ACERVO_DOCUMENTAL_CAMPO_DIMENSAO_LARGURA),
-                            FormatoTipoDeCampo = Constantes.FORMATO_DOUBLE
+                            Conteudo = planilha.ObterValorDaCelula(numeroLinha, Constantes.ACERVO_DOCUMENTAL_CAMPO_DIMENSAO_LARGURA).TratarLiteralComoDecimalComCasasDecimais(),
+                            ValidarComExpressaoRegular = Constantes.PERMITIR_SOMENTE_NUMERAL_SEPARADO_POR_VIRGULA_DUAS_CASAS_DECIMAIS,
+                            MensagemValidacao = string.Format(MensagemNegocio.CAMPO_X_ESPERADO_NUMERICO_E_COM_CASAS_DECIMAIS, Constantes.LARGURA)
                         },
                         Altura = new LinhaConteudoAjustarDTO()
                         {
-                            Conteudo = planilha.ObterValorDaCelula(numeroLinha, Constantes.ACERVO_DOCUMENTAL_CAMPO_DIMENSAO_ALTURA),
-                            FormatoTipoDeCampo = Constantes.FORMATO_DOUBLE
+                            Conteudo = planilha.ObterValorDaCelula(numeroLinha, Constantes.ACERVO_DOCUMENTAL_CAMPO_DIMENSAO_ALTURA).TratarLiteralComoDecimalComCasasDecimais(),
+                            ValidarComExpressaoRegular = Constantes.PERMITIR_SOMENTE_NUMERAL_SEPARADO_POR_VIRGULA_DUAS_CASAS_DECIMAIS,
+                            MensagemValidacao = string.Format(MensagemNegocio.CAMPO_X_ESPERADO_NUMERICO_E_COM_CASAS_DECIMAIS, Constantes.ALTURA)
                         },
                         TamanhoArquivo = new LinhaConteudoAjustarDTO()
                         {

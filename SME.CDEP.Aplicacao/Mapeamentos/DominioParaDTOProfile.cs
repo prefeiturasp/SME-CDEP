@@ -89,15 +89,9 @@ namespace SME.CDEP.Aplicacao.Mapeamentos
                 .ForMember(dest => dest.Id, opt => opt.MapFrom(o => o.AcervoId))
                 .ReverseMap();
             
-            CreateMap<AcervoDocumentalCadastroDTO, AcervoDocumental>()
-                .ForMember(dest => dest.Largura, opt => opt.MapFrom(o => o.Largura.FormatarParaDoubleComCasasDecimais()))
-                .ForMember(dest => dest.Altura, opt => opt.MapFrom(o => o.Altura.FormatarParaDoubleComCasasDecimais()))
-                .ReverseMap();
+            CreateMap<AcervoDocumentalCadastroDTO, AcervoDocumental>().ReverseMap();
             
-            CreateMap<AcervoDocumentalAlteracaoDTO, AcervoDocumental>()
-                .ForMember(dest => dest.Largura, opt => opt.MapFrom(o => o.Largura.FormatarParaDoubleComCasasDecimais()))
-                .ForMember(dest => dest.Altura, opt => opt.MapFrom(o => o.Altura.FormatarParaDoubleComCasasDecimais()))
-                .ReverseMap();
+            CreateMap<AcervoDocumentalAlteracaoDTO, AcervoDocumental>().ReverseMap();
             
             CreateMap<AcervoDocumentalAlteracaoDTO, AcervoDocumentalDTO>().ReverseMap();
             CreateMap<AcervoDocumentalCadastroDTO, Acervo>().ReverseMap();
