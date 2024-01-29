@@ -192,21 +192,14 @@ namespace SME.CDEP.Dominio.Extensions
         {
             return !(valor.EstaPreenchido() && Regex.IsMatch(valor, Constantes.Constantes.PERMITIR_SOMENTE_NUMERAL_SEPARADO_POR_VIRGULA_DUAS_CASAS_DECIMAIS));
         }
-        
-        public static string SubstituirVirgulaPorPonto(this string valor)
-        {
-            if (valor.NaoEstaPreenchido())
-                return valor;
-            
-            return valor.Contains(",") ? valor.Replace(",",".") : valor;
-        }
 
         public static string TratarLiteralComoDecimalComCasasDecimais(this string valor)
         {
-            var valorTratado = valor.SubstituirVirgulaPorPonto();
-
-            return decimal.TryParse(valorTratado.SubstituirVirgulaPorPonto(), NumberStyles.Currency, CultureInfo.InvariantCulture, out decimal valorConvertido) 
-                ? valorConvertido.ToString("F2") 
+            if (valor.NaoEstaPreenchido() || valor.Contains("."))
+                return valor;
+            
+            return decimal.TryParse(valor, out decimal valorConvertido) 
+                ? valorConvertido.ToString("N2")
                 : valor;
         }
     }
