@@ -59,13 +59,5 @@ namespace SME.CDEP.Dominio.Extensions
             
             return valor/100; 
         }
-        
-        public static string FormatarDoubleComCasasDecimais(this double? valor)
-        {
-            if (!valor.HasValue)
-                return default;
-            
-            return valor.Value.ToString("F2"); 
-        }
     }
 }

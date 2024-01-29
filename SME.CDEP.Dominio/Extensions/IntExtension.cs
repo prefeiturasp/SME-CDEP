@@ -44,5 +44,13 @@ namespace SME.CDEP.Dominio.Extensions
         {
             return year > DateTimeExtension.HorarioBrasilia().Year; 
         }
+        
+        public static int? ObterInteiroOuNuloPorValorDoCampo(this string valorDoCampo)
+        {
+            if (valorDoCampo.NaoEhNulo() && valorDoCampo.EstaPreenchido())
+                return int.Parse(valorDoCampo);
+
+            return default;
+        }
     }
 }

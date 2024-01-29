@@ -12,6 +12,8 @@ public class LinhaConteudoAjustarDTO
     public IEnumerable<string> ValoresPermitidos { get; set; }
     public string FormatoTipoDeCampo { get; set; } = Constantes.FORMATO_STRING;
     public bool PermiteNovoRegistro { get; set; }
+    public string ValidarComExpressaoRegular { get; set; }
+    public string MensagemValidacao { get; set; }
 
     public void DefinirComoSucesso()
     {

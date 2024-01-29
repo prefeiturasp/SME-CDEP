@@ -10,9 +10,9 @@ public class AcervoBibliograficoDetalhe
     public string Editora { get; set; }
     public string Ano { get; set; }
     public string Edicao { get; set; }
-    public float? NumeroPagina { get; set; }
-    public float? Largura { get; set; }
-    public float? Altura { get; set; }
+    public int? NumeroPagina { get; set; }
+    public string? Largura { get; set; }
+    public string? Altura { get; set; }
     public string SerieColecao { get; set; }
     public string Volume { get; set; }
     public string Idioma { get; set; }

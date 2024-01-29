@@ -654,10 +654,10 @@ namespace SME.CDEP.TesteIntegracao
                     Procedencia = faker.Lorem.Text().Limite(200),
                     ConservacaoId = random.Next(1,5),
                     Quantidade = random.Next(15,55),
-                    Largura = double.Parse("50,45"),
-                    Altura = double.Parse("10.20"),
-                    Diametro = double.Parse("1540"),	
-                    Profundidade = double.Parse("1801"),	
+                    Largura = "50,45",
+                    Altura = "10,20",
+                    Diametro = "15,40",	
+                    Profundidade = "18,01",	
                 });
                 
                 await InserirNaBase(new Arquivo()

@@ -16,22 +16,19 @@ namespace SME.CDEP.Infra.Dados.Repositorios
         {
             var query = @"
             select 
-              id,
-              acervo_solicitacao_id,
-              acervo_id,
-              situacao,
-              criado_em,
-              criado_por,
-              criado_login,
-              alterado_em,
-              alterado_por,
-              alterado_login,
-              excluido,
-              situacao
-            from acervo_solicitacao_item 
-            where acervo_solicitacao_id in (select id from acervo_solicitacao where usuario_id = @usuario_id)
-            and not excluido
-            order by criado_em desc";
+              asi.acervo_solicitacao_id as AcervoSolicitacaoId,
+              asi.criado_em as DataCriacao,              
+              asi.situacao,
+              a.tipo as TipoAcervo,
+              a.titulo 
+            from acervo_solicitacao_item asi
+            join acervo_solicitacao aso on asi.acervo_solicitacao_id = aso.id 
+            join acervo a on a.id = asi.acervo_id 
+            where aso.usuario_id = @usuarioId
+            and not asi.excluido
+            and not aso.excluido
+            and not a.excluido
+            order by asi.criado_em desc";
             
             return await conexao.Obter().QueryAsync<AcervoSolicitacaoItem>(query, new { usuarioId });
         }

@@ -17,7 +17,7 @@ public class AcervoBibliograficoDTO
     public long[] AssuntosIds { get; set; }
     public int? Ano { get; set; }
     public string? Edicao { get; set; }
-    public string? NumeroPagina { get; set; }
+    public int? NumeroPagina { get; set; }
     public string? Largura { get; set; }
     public string? Altura { get; set; }
     public long? SerieColecaoId { get; set; }

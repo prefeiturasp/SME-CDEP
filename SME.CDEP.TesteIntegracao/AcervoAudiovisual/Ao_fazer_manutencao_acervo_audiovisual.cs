@@ -143,7 +143,7 @@ namespace SME.CDEP.TesteIntegracao
                 CreditosAutoresIds = new long[]{4,5},
                 Localizacao = faker.Lorem.Text().Limite(100),
                 Procedencia = faker.Lorem.Text().Limite(200),
-                Ano = faker.Date.Future().AddYears(1).Year,
+                Ano = DateTimeExtension.HorarioBrasilia().Date.AddYears(1).Year,
                 DataAcervo = DateTimeExtension.HorarioBrasilia().Date.ToString("dd/MM/yyyy"),
                 Copia = faker.Lorem.Text().Limite(100),
                 PermiteUsoImagem = true,
