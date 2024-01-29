@@ -195,10 +195,10 @@ namespace SME.CDEP.Dominio.Extensions
 
         public static string TratarLiteralComoDecimalComCasasDecimais(this string valor)
         {
-            if (valor.NaoEstaPreenchido() || valor.Contains("."))
+            if (valor.NaoEstaPreenchido())
                 return valor;
             
-            return decimal.TryParse(valor, out decimal valorConvertido) 
+            return decimal.TryParse(valor, NumberStyles.AllowDecimalPoint, CultureInfo.GetCultureInfo("pt-BR"), out decimal valorConvertido) 
                 ? valorConvertido.ToString("N2")
                 : valor;
         }
