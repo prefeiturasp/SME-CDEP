@@ -165,7 +165,7 @@ namespace SME.CDEP.TesteIntegracao
 
             var servicoAcervoSolicitacao = GetServicoAcervoSolicitacao();
 
-            var filtro = new FiltroSolicitacaoDTO() { DataSolicitacao = DateTimeExtension.HorarioBrasilia() };
+            var filtro = new FiltroSolicitacaoDTO() { DataSolicitacaoInicio = DateTimeExtension.HorarioBrasilia() };
             var retorno = await servicoAcervoSolicitacao.ObterSolicitacoesPorFiltro(filtro);
             retorno.Items.Count().ShouldBeGreaterThan(0);
         }

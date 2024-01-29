@@ -36,8 +36,8 @@ namespace SME.CDEP.Infra.Dados.Repositorios
             return await conexao.Obter().QueryAsync<AcervoSolicitacaoItem>(query, new { usuarioId });
         }
 
-        public async Task<IEnumerable<AcervoSolicitacaoItemDetalhe>> ObterSolicitacoesPorFiltro(long? acervoSolicitacaoId, TipoAcervo? tipoAcervo, DateTime? dataSolicitacao,
-            string? responsavel, SituacaoSolicitacaoItem? situacaoItem, DateTime? dataVisitaInicio, DateTime? dataVisitaFim)
+        public async Task<IEnumerable<AcervoSolicitacaoItemDetalhe>> ObterSolicitacoesPorFiltro(long? acervoSolicitacaoId, TipoAcervo? tipoAcervo, DateTime? dataSolicitacaoInicio,
+            DateTime? dataSolicitacaoFim, string? responsavel, SituacaoSolicitacaoItem? situacaoItem, DateTime? dataVisitaInicio, DateTime? dataVisitaFim)
         {
             var query = new StringBuilder();
             
@@ -68,8 +68,8 @@ namespace SME.CDEP.Infra.Dados.Repositorios
             if (situacaoItem.HasValue)
                 query.AppendLine(" and asi.situacao = @situacaoItem ");
             
-            if (dataSolicitacao.HasValue)
-                query.AppendLine(" and asi.criado_em::Date = @dataSolicitacao::Date ");
+            if (dataSolicitacaoInicio.HasValue && dataSolicitacaoFim.HasValue)
+                query.AppendLine(" and asi.criado_em::Date between @dataSolicitacaoInicio::Date and @dataSolicitacaoFim::Date ");
             
             if (dataVisitaInicio.HasValue && dataVisitaFim.HasValue)
                 query.AppendLine(" and asi.dt_visita is not null and asi.dt_visita::Date between @dataVisitaInicio::Date and @dataVisitaFim::Date ");
@@ -77,7 +77,7 @@ namespace SME.CDEP.Infra.Dados.Repositorios
             query.AppendLine(" order by asi.criado_em desc ");
             
             return await conexao.Obter().QueryAsync<AcervoSolicitacaoItemDetalhe>(query.ToString(), 
-                new { acervoSolicitacaoId, tipoAcervo, situacaoItem, dataSolicitacao, dataVisitaInicio, dataVisitaFim});
+                new { acervoSolicitacaoId, tipoAcervo, situacaoItem, dataSolicitacaoInicio, dataSolicitacaoFim, dataVisitaInicio, dataVisitaFim});
         }
     }
 }
