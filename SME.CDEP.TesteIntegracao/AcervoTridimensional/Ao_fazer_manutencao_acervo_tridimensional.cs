@@ -65,9 +65,9 @@ namespace SME.CDEP.TesteIntegracao
                 Quantidade = random.Next(15, 55),
                 Descricao = faker.Lorem.Text(),
                 Largura = "50,45",
-                Altura = "10,20d",
-                Diametro = "15",	
-                Profundidade = "18.20",	
+                Altura = "10,20",
+                Diametro = "15,00",	
+                Profundidade = "18,20",	
                 Arquivos = arquivosSelecionados
             };
             

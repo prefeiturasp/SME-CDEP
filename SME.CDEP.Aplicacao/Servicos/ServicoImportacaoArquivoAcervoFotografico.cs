@@ -290,7 +290,7 @@ namespace SME.CDEP.Aplicacao.Servicos
                         PermiteUsoImagem = ObterAutorizaUsoDeImagemPorValorDoCampo(acervoFotograficoLinha.PermiteUsoImagem.Conteudo),
                         ConservacaoId = ObterConservacaoIdPorValorDoCampo(acervoFotograficoLinha.EstadoConservacao.Conteudo),
                         Descricao = acervoFotograficoLinha.Descricao.Conteudo,
-                        Quantidade = acervoFotograficoLinha.Quantidade.Conteudo.ObterLongoPorValorDoCampo(),
+                        Quantidade = acervoFotograficoLinha.Quantidade.Conteudo.ConverterParaInteiro(),
                         Largura = acervoFotograficoLinha.Largura.Conteudo,
                         Altura = acervoFotograficoLinha.Altura.Conteudo,
                         SuporteId = ObterSuporteImagemIdPorValorDoCampo(acervoFotograficoLinha.Suporte.Conteudo),

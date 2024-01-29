@@ -12,7 +12,7 @@ public class AcervoDocumentalCadastroDTO : AcervoCadastroDTO
     
     [Required(ErrorMessage = "É necessário informar o número de página do acervo documental")]
     [MaxLength(4, ErrorMessage = "O número de página do acervo documental não pode conter mais que 4 caracteres")]
-    public string NumeroPagina { get; set; }
+    public int NumeroPagina { get; set; }
     
     [MaxLength(15, ErrorMessage = "O volume do acervo documental não pode conter mais que 15 caracteres")]
     public string? Volume { get; set; }

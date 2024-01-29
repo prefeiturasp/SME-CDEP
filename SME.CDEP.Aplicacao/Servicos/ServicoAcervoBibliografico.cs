@@ -1,7 +1,9 @@
 ﻿using AutoMapper;
 using SME.CDEP.Aplicacao.DTOS;
 using SME.CDEP.Aplicacao.Servicos.Interface;
+using SME.CDEP.Dominio.Constantes;
 using SME.CDEP.Dominio.Entidades;
+using SME.CDEP.Dominio.Excecoes;
 using SME.CDEP.Dominio.Extensions;
 using SME.CDEP.Infra.Dados;
 using SME.CDEP.Infra.Dados.Repositorios.Interfaces;
@@ -38,6 +40,8 @@ namespace SME.CDEP.Aplicacao.Servicos
 
         public async Task<long> Inserir(AcervoBibliograficoCadastroDTO acervoBibliograficoCadastroDto)
         {
+            ValidarPreenchimentoAcervoBibliografico(acervoBibliograficoCadastroDto.Altura, acervoBibliograficoCadastroDto.Largura);
+            
             var assuntosSelecionados =  await repositorioAssunto.ObterPorIds(acervoBibliograficoCadastroDto.AssuntosIds);
             
             var acervo = mapper.Map<Acervo>(acervoBibliograficoCadastroDto);
@@ -76,6 +80,15 @@ namespace SME.CDEP.Aplicacao.Servicos
 
             return acervoBibliografico.AcervoId;
         }
+        
+        private void ValidarPreenchimentoAcervoBibliografico(string? altura, string? largura)
+        {
+            if (largura.NaoEhNumericoComCasasDecimais())
+                throw new NegocioException(string.Format(MensagemNegocio.CAMPO_X_ESPERADO_NUMERICO_E_COM_CASAS_DECIMAIS, Constantes.LARGURA));
+
+            if (altura.NaoEhNumericoComCasasDecimais())
+                throw new NegocioException(string.Format(MensagemNegocio.CAMPO_X_ESPERADO_NUMERICO_E_COM_CASAS_DECIMAIS, Constantes.ALTURA));
+        }
 
         public async Task<IEnumerable<AcervoBibliograficoDTO>> ObterTodos()
         {
@@ -84,6 +97,8 @@ namespace SME.CDEP.Aplicacao.Servicos
 
         public async Task<AcervoBibliograficoDTO> Alterar(AcervoBibliograficoAlteracaoDTO acervoBibliograficoAlteracaoDto)
         {
+            ValidarPreenchimentoAcervoBibliografico(acervoBibliograficoAlteracaoDto.Altura, acervoBibliograficoAlteracaoDto.Largura);
+            
             var assuntosIdsInserir =  Enumerable.Empty<long>();
             var assuntosIdsExcluir =  Enumerable.Empty<long>();
             

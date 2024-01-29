@@ -18,7 +18,7 @@ public class AcervoFotograficoCompleto: EntidadeBaseAuditavel
     public bool? PermiteUsoImagem { get; set; }
     public long ConservacaoId { get; set; }
     public string Descricao { get; set; }
-    public long Quantidade { get; set; }
+    public int Quantidade { get; set; }
     public string? Largura { get; set; }
     public string? Altura { get; set; }
     public long SuporteId { get; set; }

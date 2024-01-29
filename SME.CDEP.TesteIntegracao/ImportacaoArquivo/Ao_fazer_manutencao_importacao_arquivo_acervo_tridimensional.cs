@@ -250,7 +250,7 @@ namespace SME.CDEP.TesteIntegracao
                 
                 //Campos livres
                 acervosTridimensional.Any(a=> a.Procedencia.SaoIguais(linhasComSucesso.Procedencia.Conteudo)).ShouldBeTrue();
-                acervosTridimensional.Any(a=> a.Quantidade.SaoIguais(linhasComSucesso.Quantidade.Conteudo.ObterLongoPorValorDoCampo())).ShouldBeTrue();
+                acervosTridimensional.Any(a=> a.Quantidade.SaoIguais(linhasComSucesso.Quantidade.Conteudo.ConverterParaInteiro())).ShouldBeTrue();
                 acervosTridimensional.Any(a=> a.Largura.SaoIguais(linhasComSucesso.Largura.Conteudo)).ShouldBeTrue();
                 acervosTridimensional.Any(a=> a.Altura.SaoIguais(linhasComSucesso.Altura.Conteudo)).ShouldBeTrue();
                 acervosTridimensional.Any(a=> a.Profundidade.SaoIguais(linhasComSucesso.Profundidade.Conteudo)).ShouldBeTrue();
@@ -366,7 +366,7 @@ namespace SME.CDEP.TesteIntegracao
                 
                 //Campos livres
                 acervosTridimensional.Any(a=> a.Procedencia.SaoIguais(linhasComSucesso.Procedencia.Conteudo)).ShouldBeTrue();
-                acervosTridimensional.Any(a=> a.Quantidade.SaoIguais(linhasComSucesso.Quantidade.Conteudo.ObterLongoPorValorDoCampo())).ShouldBeTrue();
+                acervosTridimensional.Any(a=> a.Quantidade.SaoIguais(linhasComSucesso.Quantidade.Conteudo.ConverterParaInteiro())).ShouldBeTrue();
                 acervosTridimensional.Any(a=> a.Largura.SaoIguais(linhasComSucesso.Largura.Conteudo)).ShouldBeTrue();
                 acervosTridimensional.Any(a=> a.Altura.SaoIguais(linhasComSucesso.Altura.Conteudo)).ShouldBeTrue();
                 acervosTridimensional.Any(a=> a.Profundidade.SaoIguais(linhasComSucesso.Profundidade.Conteudo)).ShouldBeTrue();
@@ -481,7 +481,7 @@ namespace SME.CDEP.TesteIntegracao
                 
                 //Campos livres
                 acervosTridimensional.Any(a=> a.Procedencia.SaoIguais(linhasComSucesso.Procedencia.Conteudo)).ShouldBeTrue();
-                acervosTridimensional.Any(a=> a.Quantidade.SaoIguais(linhasComSucesso.Quantidade.Conteudo.ObterLongoPorValorDoCampo())).ShouldBeTrue();
+                acervosTridimensional.Any(a=> a.Quantidade.SaoIguais(linhasComSucesso.Quantidade.Conteudo.ConverterParaInteiro())).ShouldBeTrue();
                 acervosTridimensional.Any(a=> a.Largura.SaoIguais(linhasComSucesso.Largura.Conteudo)).ShouldBeTrue();
                 acervosTridimensional.Any(a=> a.Altura.SaoIguais(linhasComSucesso.Altura.Conteudo)).ShouldBeTrue();
                 acervosTridimensional.Any(a=> a.Profundidade.SaoIguais(linhasComSucesso.Profundidade.Conteudo)).ShouldBeTrue();

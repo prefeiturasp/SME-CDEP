@@ -286,7 +286,7 @@ namespace SME.CDEP.Aplicacao.Servicos
                         IdiomaId = ObterIdiomaIdPorValorDoCampo(acervoDocumentalLinha.Idioma.Conteudo),
                         CreditosAutoresIds = ObterCreditoAutoresIdsPorValorDoCampo(acervoDocumentalLinha.Autor.Conteudo, TipoCreditoAutoria.Autoria),
                         Ano = acervoDocumentalLinha.Ano.Conteudo.ConverterParaInteiro(),
-                        NumeroPagina = acervoDocumentalLinha.NumeroPaginas.Conteudo,
+                        NumeroPagina = acervoDocumentalLinha.NumeroPaginas.Conteudo.ConverterParaInteiro(),
                         Volume = acervoDocumentalLinha.Volume.Conteudo,
                         Descricao = acervoDocumentalLinha.Descricao.Conteudo,
                         TipoAnexo = acervoDocumentalLinha.TipoAnexo.Conteudo,
@@ -453,7 +453,8 @@ namespace SME.CDEP.Aplicacao.Servicos
                         {
                             Conteudo = planilha.ObterValorDaCelula(numeroLinha, Constantes.ACERVO_DOCUMENTAL_CAMPO_NUMERO_PAGINAS),
                             LimiteCaracteres = Constantes.CARACTERES_PERMITIDOS_4,
-                            EhCampoObrigatorio = true
+                            EhCampoObrigatorio = true,
+                            FormatoTipoDeCampo = Constantes.FORMATO_INTEIRO
                         },
                         Volume = new LinhaConteudoAjustarDTO()
                         {

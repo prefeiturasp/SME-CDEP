@@ -6,7 +6,7 @@
         public long AcervoId { get; set; }
         public long? MaterialId { get; set; }
         public long IdiomaId { get; set; }
-        public string NumeroPagina { get; set; }
+        public int NumeroPagina { get; set; }
         public string Volume { get; set; }
         public string TipoAnexo { get; set; }
         public string? Largura { get; set; }

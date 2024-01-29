@@ -293,7 +293,7 @@ namespace SME.CDEP.TesteIntegracao
                 acervosFotografico.Any(a=> a.CopiaDigital.Value.SaoIguais(linhasComSucesso.CopiaDigital.Conteudo.EhOpcaoSim())).ShouldBeTrue();
                 acervosFotografico.Any(a=> a.PermiteUsoImagem.HasValue).ShouldBeTrue();
                 acervosFotografico.Any(a=> a.PermiteUsoImagem.Value.SaoIguais(linhasComSucesso.PermiteUsoImagem.Conteudo.EhOpcaoSim())).ShouldBeTrue();
-                acervosFotografico.Any(a=> a.Quantidade.SaoIguais(linhasComSucesso.Quantidade.Conteudo.ObterLongoPorValorDoCampo())).ShouldBeTrue();
+                acervosFotografico.Any(a=> a.Quantidade.SaoIguais(linhasComSucesso.Quantidade.Conteudo.ConverterParaInteiro())).ShouldBeTrue();
                 acervosFotografico.Any(a=> a.Largura.SaoIguais(linhasComSucesso.Largura.Conteudo)).ShouldBeTrue();
                 acervosFotografico.Any(a=> a.Altura.SaoIguais(linhasComSucesso.Altura.Conteudo)).ShouldBeTrue();
                 acervosFotografico.Any(a=> a.TamanhoArquivo.SaoIguais(linhasComSucesso.TamanhoArquivo.Conteudo)).ShouldBeTrue();
@@ -442,7 +442,7 @@ namespace SME.CDEP.TesteIntegracao
                 acervosFotografico.Any(a=> a.CopiaDigital.Value.SaoIguais(linhasComSucesso.CopiaDigital.Conteudo.EhOpcaoSim())).ShouldBeTrue();
                 acervosFotografico.Any(a=> a.PermiteUsoImagem.HasValue).ShouldBeTrue();
                 acervosFotografico.Any(a=> a.PermiteUsoImagem.Value.SaoIguais(linhasComSucesso.PermiteUsoImagem.Conteudo.EhOpcaoSim())).ShouldBeTrue();
-                acervosFotografico.Any(a=> a.Quantidade.SaoIguais(linhasComSucesso.Quantidade.Conteudo.ObterLongoPorValorDoCampo())).ShouldBeTrue();
+                acervosFotografico.Any(a=> a.Quantidade.SaoIguais(linhasComSucesso.Quantidade.Conteudo.ConverterParaInteiro())).ShouldBeTrue();
                 acervosFotografico.Any(a=> a.Largura.SaoIguais(linhasComSucesso.Largura.Conteudo)).ShouldBeTrue();
                 acervosFotografico.Any(a=> a.Altura.SaoIguais(linhasComSucesso.Altura.Conteudo)).ShouldBeTrue();
                 acervosFotografico.Any(a=> a.TamanhoArquivo.SaoIguais(linhasComSucesso.TamanhoArquivo.Conteudo)).ShouldBeTrue();
@@ -591,7 +591,7 @@ namespace SME.CDEP.TesteIntegracao
                 acervosFotografico.Any(a=> a.CopiaDigital.Value.SaoIguais(linhasComSucesso.CopiaDigital.Conteudo.EhOpcaoSim())).ShouldBeTrue();
                 acervosFotografico.Any(a=> a.PermiteUsoImagem.HasValue).ShouldBeTrue();
                 acervosFotografico.Any(a=> a.PermiteUsoImagem.Value.SaoIguais(linhasComSucesso.PermiteUsoImagem.Conteudo.EhOpcaoSim())).ShouldBeTrue();
-                acervosFotografico.Any(a=> a.Quantidade.SaoIguais(linhasComSucesso.Quantidade.Conteudo.ObterLongoPorValorDoCampo())).ShouldBeTrue();
+                acervosFotografico.Any(a=> a.Quantidade.SaoIguais(linhasComSucesso.Quantidade.Conteudo.ConverterParaInteiro())).ShouldBeTrue();
                 acervosFotografico.Any(a=> a.Largura.SaoIguais(linhasComSucesso.Largura.Conteudo)).ShouldBeTrue();
                 acervosFotografico.Any(a=> a.Altura.SaoIguais(linhasComSucesso.Altura.Conteudo)).ShouldBeTrue();
                 acervosFotografico.Any(a=> a.TamanhoArquivo.SaoIguais(linhasComSucesso.TamanhoArquivo.Conteudo)).ShouldBeTrue();

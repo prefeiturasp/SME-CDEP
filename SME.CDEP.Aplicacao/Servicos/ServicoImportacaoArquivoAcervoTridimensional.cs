@@ -233,7 +233,7 @@ namespace SME.CDEP.Aplicacao.Servicos
                         Ano = acervoTridimensionalLinha.Ano.Conteudo.ConverterParaInteiro(),
                         DataAcervo = acervoTridimensionalLinha.Data.Conteudo,
                         ConservacaoId = ObterConservacaoIdPorValorDoCampo(acervoTridimensionalLinha.EstadoConservacao.Conteudo),
-                        Quantidade = acervoTridimensionalLinha.Quantidade.Conteudo.ObterLongoPorValorDoCampo(),
+                        Quantidade = acervoTridimensionalLinha.Quantidade.Conteudo.ConverterParaInteiro(),
                         Descricao = acervoTridimensionalLinha.Descricao.Conteudo,
                         Largura = acervoTridimensionalLinha.Largura.Conteudo,
                         Altura = acervoTridimensionalLinha.Altura.Conteudo,
