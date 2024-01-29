@@ -37,15 +37,8 @@ namespace SME.CDEP.Aplicacao.Mapeamentos
             CreateMap<AuditoriaDTO, AcervoFotograficoCompleto>().ReverseMap();
             CreateMap<ArquivoResumidoDTO, ArquivoResumido>().ReverseMap();
             
-            CreateMap<AcervoFotograficoCadastroDTO, AcervoFotografico>()
-                .ForMember(dest => dest.Largura, opt => opt.MapFrom(o => o.Largura.FormatarParaDoubleComCasasDecimais()))
-                .ForMember(dest => dest.Altura, opt => opt.MapFrom(o => o.Altura.FormatarParaDoubleComCasasDecimais()))
-                .ReverseMap();
-            
-            CreateMap<AcervoFotograficoAlteracaoDTO, AcervoFotografico>()
-                .ForMember(dest => dest.Largura, opt => opt.MapFrom(o => o.Largura.FormatarParaDoubleComCasasDecimais()))
-                .ForMember(dest => dest.Altura, opt => opt.MapFrom(o => o.Altura.FormatarParaDoubleComCasasDecimais()))
-                .ReverseMap();
+            CreateMap<AcervoFotograficoCadastroDTO, AcervoFotografico>().ReverseMap();
+            CreateMap<AcervoFotograficoAlteracaoDTO, AcervoFotografico>().ReverseMap();
             
             CreateMap<AcervoFotograficoAlteracaoDTO,AcervoFotograficoDTO>().ReverseMap();
             

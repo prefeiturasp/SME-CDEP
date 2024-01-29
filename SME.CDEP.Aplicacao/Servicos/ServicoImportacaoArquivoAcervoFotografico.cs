@@ -291,8 +291,8 @@ namespace SME.CDEP.Aplicacao.Servicos
                         ConservacaoId = ObterConservacaoIdPorValorDoCampo(acervoFotograficoLinha.EstadoConservacao.Conteudo),
                         Descricao = acervoFotograficoLinha.Descricao.Conteudo,
                         Quantidade = acervoFotograficoLinha.Quantidade.Conteudo.ObterLongoPorValorDoCampo(),
-                        Largura = acervoFotograficoLinha.Largura.Conteudo.ObterDoubleOuNuloPorValorDoCampo(),
-                        Altura = acervoFotograficoLinha.Altura.Conteudo.ObterDoubleOuNuloPorValorDoCampo(),
+                        Largura = acervoFotograficoLinha.Largura.Conteudo,
+                        Altura = acervoFotograficoLinha.Altura.Conteudo,
                         SuporteId = ObterSuporteImagemIdPorValorDoCampo(acervoFotograficoLinha.Suporte.Conteudo),
                         FormatoId = ObterFormatoImagemIdPorValorDoCampo(acervoFotograficoLinha.FormatoImagem.Conteudo),
                         TamanhoArquivo = acervoFotograficoLinha.TamanhoArquivo.Conteudo,
@@ -485,13 +485,15 @@ namespace SME.CDEP.Aplicacao.Servicos
                         },
                         Largura = new LinhaConteudoAjustarDTO()
                         {
-                            Conteudo = planilha.ObterValorDaCelula(numeroLinha, Constantes.ACERVO_FOTOGRAFICO_CAMPO_LARGURA),
-                            FormatoTipoDeCampo = Constantes.FORMATO_DOUBLE
+                            Conteudo = planilha.ObterValorDaCelula(numeroLinha, Constantes.ACERVO_FOTOGRAFICO_CAMPO_LARGURA).TratarLiteralComoDecimalComCasasDecimais(),
+                            ValidarComExpressaoRegular = Constantes.PERMITIR_SOMENTE_NUMERAL_SEPARADO_POR_VIRGULA_DUAS_CASAS_DECIMAIS,
+                            MensagemValidacao = string.Format(MensagemNegocio.CAMPO_X_ESPERADO_NUMERICO_E_COM_CASAS_DECIMAIS, Constantes.LARGURA)
                         },
                         Altura = new LinhaConteudoAjustarDTO()
                         {
-                            Conteudo = planilha.ObterValorDaCelula(numeroLinha, Constantes.ACERVO_FOTOGRAFICO_CAMPO_ALTURA),
-                            FormatoTipoDeCampo = Constantes.FORMATO_DOUBLE
+                            Conteudo = planilha.ObterValorDaCelula(numeroLinha, Constantes.ACERVO_FOTOGRAFICO_CAMPO_ALTURA).TratarLiteralComoDecimalComCasasDecimais(),
+                            ValidarComExpressaoRegular = Constantes.PERMITIR_SOMENTE_NUMERAL_SEPARADO_POR_VIRGULA_DUAS_CASAS_DECIMAIS,
+                            MensagemValidacao = string.Format(MensagemNegocio.CAMPO_X_ESPERADO_NUMERICO_E_COM_CASAS_DECIMAIS, Constantes.LARGURA)
                         },
                         Suporte = new LinhaConteudoAjustarDTO()
                         {
