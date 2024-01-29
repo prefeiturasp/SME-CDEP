@@ -753,9 +753,9 @@ namespace SME.CDEP.TesteIntegracao
         {
             "12".TratarLiteralComoDecimalComCasasDecimais().ShouldBe("12,00");
             "15,1".TratarLiteralComoDecimalComCasasDecimais().ShouldBe("15,10");
-            "25.2".TratarLiteralComoDecimalComCasasDecimais().ShouldBe("25.2");
+            "25.2".TratarLiteralComoDecimalComCasasDecimais().ShouldBe("25,20");
             "15,10".TratarLiteralComoDecimalComCasasDecimais().ShouldBe("15,10");
-            "25.20".TratarLiteralComoDecimalComCasasDecimais().ShouldBe("25.20");
+            "25.20".TratarLiteralComoDecimalComCasasDecimais().ShouldBe("25,20");
             "25.2b".TratarLiteralComoDecimalComCasasDecimais().ShouldBe("25.2b"); 
             "qualquer valor".TratarLiteralComoDecimalComCasasDecimais().ShouldBe("qualquer valor");
             "1.450,30".TratarLiteralComoDecimalComCasasDecimais().ShouldBe("1.450,30");
