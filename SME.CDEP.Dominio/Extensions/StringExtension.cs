@@ -198,7 +198,9 @@ namespace SME.CDEP.Dominio.Extensions
             if (valor.NaoEstaPreenchido())
                 return valor;
             
-            return decimal.TryParse(valor, NumberStyles.AllowDecimalPoint, CultureInfo.GetCultureInfo("pt-BR"), out decimal valorConvertido) 
+            var valorTratado = valor.Contains(".") ? valor.Replace(".",",") : valor; 
+            
+            return decimal.TryParse(valorTratado, NumberStyles.AllowDecimalPoint, CultureInfo.GetCultureInfo("pt-BR"), out decimal valorConvertido) 
                 ? valorConvertido.ToString("N2")
                 : valor;
         }
