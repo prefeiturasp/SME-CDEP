@@ -201,7 +201,7 @@ namespace SME.CDEP.Dominio.Extensions
             var valorTratado = valor.Contains(".") ? valor.Replace(".",",") : valor; 
             
             return decimal.TryParse(valorTratado, NumberStyles.AllowDecimalPoint, CultureInfo.GetCultureInfo("pt-BR"), out decimal valorConvertido) 
-                ? valorConvertido.ToString("N2")
+                ? valorConvertido.ToString("N2",CultureInfo.GetCultureInfo("pt-BR"))
                 : valor;
         }
     }
