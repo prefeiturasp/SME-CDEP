@@ -106,13 +106,13 @@ namespace SME.CDEP.Aplicacao.Servicos
         
         private void ValidarPreenchimentoAcervoArteGrafica(string? altura, string? largura, string? diametro)
         {
-            if (largura.NaoEhNumericoComCasasDecimais())
+            if (largura.EstaPreenchido() && largura.NaoEhNumericoComCasasDecimais())
                 throw new NegocioException(string.Format(MensagemNegocio.CAMPO_X_ESPERADO_NUMERICO_E_COM_CASAS_DECIMAIS, Constantes.LARGURA));
 
-            if (altura.NaoEhNumericoComCasasDecimais())
+            if (altura.EstaPreenchido() && altura.NaoEhNumericoComCasasDecimais())
                 throw new NegocioException(string.Format(MensagemNegocio.CAMPO_X_ESPERADO_NUMERICO_E_COM_CASAS_DECIMAIS, Constantes.ALTURA));
 
-            if (diametro.NaoEhNumericoComCasasDecimais())
+            if (diametro.EstaPreenchido() && diametro.NaoEhNumericoComCasasDecimais())
                 throw new NegocioException(string.Format(MensagemNegocio.CAMPO_X_ESPERADO_NUMERICO_E_COM_CASAS_DECIMAIS, Constantes.DIAMETRO));
         }
 
