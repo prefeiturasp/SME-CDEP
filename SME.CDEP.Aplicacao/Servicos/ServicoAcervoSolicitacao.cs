@@ -143,7 +143,7 @@ namespace SME.CDEP.Aplicacao.Servicos
                 TotalPaginas = (int)Math.Ceiling((double)totalRegistros / paginacao.QuantidadeRegistros)
             };
         }
-        
+
         public Paginacao Paginacao
         {
             get
@@ -161,6 +161,38 @@ namespace SME.CDEP.Aplicacao.Servicos
 
                 return new Paginacao(numeroPagina, numeroRegistros == 0 ? 10 : numeroRegistros,ordenacao);
             }
+        }
+
+        public Task<IEnumerable<SituacaoItemDTO>> ObterSituacoesAtendimentosItem()
+        {
+            var lista = Enum.GetValues(typeof(SituacaoSolicitacaoItem))
+                .Cast<SituacaoSolicitacaoItem>()
+                .OrderBy(O=> O)
+                .Select(v => new SituacaoItemDTO
+                {
+                    Id = (short)v,
+                    Nome = v.Descricao()
+                });
+
+            return Task.FromResult(lista);
+        }
+
+        public async Task<PaginacaoResultadoDTO<SolicitacaoDTO>> ObterSolicitacoesPorFiltro(FiltroSolicitacaoDTO filtroSolicitacaoDto)
+        {
+            var solicitacoes = mapper.Map<IEnumerable<SolicitacaoDTO>>(await repositorioAcervoSolicitacaoItem
+                .ObterSolicitacoesPorFiltro(filtroSolicitacaoDto.AcervoSolicitacaoId, filtroSolicitacaoDto.TipoAcervo, 
+                    filtroSolicitacaoDto.DataSolicitacaoInicio, filtroSolicitacaoDto.DataSolicitacaoFim,filtroSolicitacaoDto.Responsavel, filtroSolicitacaoDto.SituacaoItem, 
+                    filtroSolicitacaoDto.DataVisitaInicio, filtroSolicitacaoDto.DataVisitaFim));
+            
+            var totalRegistros = solicitacoes.Count();
+            var paginacao = Paginacao;
+            
+            return new PaginacaoResultadoDTO<SolicitacaoDTO>()
+            {
+                Items = solicitacoes.Skip(paginacao.QuantidadeRegistrosIgnorados).Take(paginacao.QuantidadeRegistros),
+                TotalRegistros = totalRegistros,
+                TotalPaginas = (int)Math.Ceiling((double)totalRegistros / paginacao.QuantidadeRegistros)
+            };
         }
     }
 }

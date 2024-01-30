@@ -193,6 +193,11 @@ namespace SME.CDEP.Aplicacao.Mapeamentos
                 .ForMember(dest => dest.Situacao, opt => opt.MapFrom(o => o.Situacao.Descricao()))
                 .ForMember(dest => dest.TipoAcervo, opt => opt.MapFrom(o => o.TipoAcervo.Descricao()))
                 .ReverseMap();
+            
+            CreateMap<AcervoSolicitacaoItemDetalhe,SolicitacaoDTO>()
+                .ForMember(dest => dest.TipoAcervo, opt => opt.MapFrom(o => o.TipoAcervo.Descricao()))
+                .ForMember(dest => dest.Situacao, opt => opt.MapFrom(o => o.Situacao.Descricao()))
+                .ReverseMap();
         }
     }
 }

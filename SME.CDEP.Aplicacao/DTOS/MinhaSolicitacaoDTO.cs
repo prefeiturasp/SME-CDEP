@@ -1,4 +1,4 @@
-﻿
+
 namespace SME.CDEP.Aplicacao.DTOS;
 
 public class MinhaSolicitacaoDTO  

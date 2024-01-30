@@ -360,5 +360,16 @@ namespace SME.CDEP.Aplicacao.Servicos
 
             return dadosSolicitante;
         }
+
+        public async Task<IEnumerable<ResponsavelDTO>> ObterUsuariosComPerfisResponsavel()
+        {
+            return await servicoAcessos.ObterUsuariosComPerfisResponsavel(new Guid[]
+                { 
+                    new (Constantes.PERFIL_ADMIN_BIBLIOTECA_GUID),
+                    new (Constantes.PERFIL_ADMIN_GERAL_GUID), 
+                    new (Constantes.PERFIL_ADMIN_MEMORIA_GUID), 
+                    new (Constantes.PERFIL_ADMIN_MEMORIAL_GUID)
+                });
+        }
     }
 }

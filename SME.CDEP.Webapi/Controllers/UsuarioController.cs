@@ -143,4 +143,14 @@ public class UsuarioController: BaseController
     {
         return Ok(await servicoUsuario.ObterDadosSolicitante());
     }
+    
+    [HttpGet("perfis/responsaveis")] 
+    [ProducesResponseType(typeof(IEnumerable<ResponsavelDTO>), 200)]
+    [ProducesResponseType(typeof(RetornoBaseDTO), 400)]
+    [ProducesResponseType(typeof(RetornoBaseDTO), 500)]
+    [Permissao(Permissao.OperacoesSolicitacoes_C, Policy = "Bearer")]
+    public async Task<IActionResult> ObterUsuariosComPerfisResponsavel([FromServices] IServicoUsuario servicoUsuario)
+    {
+        return Ok(await servicoUsuario.ObterUsuariosComPerfisResponsavel());
+    }
 }

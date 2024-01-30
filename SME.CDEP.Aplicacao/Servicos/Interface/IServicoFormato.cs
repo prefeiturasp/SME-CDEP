@@ -2,7 +2,7 @@
 
 namespace SME.CDEP.Aplicacao.Servicos.Interface
 {
-    public interface IServicoFormato : IServicoAplicacao, IServicoIdNomeTipoExcluido
+    public interface IServicoFormato : IServicoIdNomeTipoExcluido
     {
         Task<long> ObterPorNomeETipo(string nome, int tipoFormato);
     }
