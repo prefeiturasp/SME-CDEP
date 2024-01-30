@@ -12,7 +12,7 @@ namespace SME.CDEP.Infra.Dados.Repositorios
         public RepositorioAcervoSolicitacaoItem(IContextoAplicacao contexto, ICdepConexao conexao) : base(contexto,conexao)
         { }
         
-        public async Task<IEnumerable<AcervoSolicitacaoItem>> ObterMinhasSolicitacoes(long usuarioId)
+        public async Task<IEnumerable<AcervoSolicitacaoItemResumido>> ObterMinhasSolicitacoes(long usuarioId)
         {
             var query = @"
             select 
@@ -30,7 +30,7 @@ namespace SME.CDEP.Infra.Dados.Repositorios
             and not a.excluido
             order by asi.criado_em desc";
             
-            return await conexao.Obter().QueryAsync<AcervoSolicitacaoItem>(query, new { usuarioId });
+            return await conexao.Obter().QueryAsync<AcervoSolicitacaoItemResumido>(query, new { usuarioId });
         }
 
         public async Task<IEnumerable<AcervoSolicitacaoItemDetalhe>> ObterSolicitacoesPorFiltro(long? acervoSolicitacaoId, TipoAcervo? tipoAcervo, DateTime? dataSolicitacaoInicio,
