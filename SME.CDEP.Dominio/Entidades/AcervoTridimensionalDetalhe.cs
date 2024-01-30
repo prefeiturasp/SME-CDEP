@@ -10,11 +10,11 @@ public class AcervoTridimensionalDetalhe
     public int Ano { get; set; }
     public string DataAcervo { get; set; }
     public string Conservacao { get; set; }
-    public long Quantidade { get; set; }
+    public int Quantidade { get; set; }
     public string Descricao { get; set; }
-    public double? Largura { get; set; }
-    public double? Altura { get; set; }
-    public double? Profundidade { get; set; }
-    public double? Diametro { get; set; }
+    public string? Largura { get; set; }
+    public string? Altura { get; set; }
+    public string? Profundidade { get; set; }
+    public string? Diametro { get; set; }
     public IEnumerable<ImagemDetalhe> Imagens { get; set; }
 }

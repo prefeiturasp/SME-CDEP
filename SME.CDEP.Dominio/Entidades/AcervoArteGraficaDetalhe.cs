@@ -14,9 +14,9 @@ public class AcervoArteGraficaDetalhe
     public bool PermiteUsoImagem { get; set; }
     public string Conservacao { get; set; }
     public string Cromia { get; set; }
-    public double? Largura { get; set; }
-    public double? Altura { get; set; }
-    public double? Diametro { get; set; }
+    public string? Largura { get; set; }
+    public string? Altura { get; set; }
+    public string? Diametro { get; set; }
     public string Tecnica { get; set; }
     public string Suporte { get; set; }
     public long Quantidade { get; set; }

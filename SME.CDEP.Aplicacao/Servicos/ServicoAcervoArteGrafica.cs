@@ -3,6 +3,7 @@ using SME.CDEP.Aplicacao.DTOS;
 using SME.CDEP.Aplicacao.Servicos.Interface;
 using SME.CDEP.Dominio.Constantes;
 using SME.CDEP.Dominio.Entidades;
+using SME.CDEP.Dominio.Excecoes;
 using SME.CDEP.Dominio.Extensions;
 using SME.CDEP.Infra.Dados;
 using SME.CDEP.Infra.Dados.Repositorios.Interfaces;
@@ -52,6 +53,8 @@ namespace SME.CDEP.Aplicacao.Servicos
 
         public async Task<long> Inserir(AcervoArteGraficaCadastroDTO acervoArteGraficaCadastroDto)
         {
+            ValidarPreenchimentoAcervoArteGrafica(acervoArteGraficaCadastroDto.Altura, acervoArteGraficaCadastroDto.Largura, acervoArteGraficaCadastroDto.Diametro);
+            
             var arquivosCompletos =  acervoArteGraficaCadastroDto.Arquivos.NaoEhNulo()
                 ? await ObterArquivosPorIds(acervoArteGraficaCadastroDto.Arquivos) 
                 : Enumerable.Empty<Arquivo>();
@@ -100,6 +103,18 @@ namespace SME.CDEP.Aplicacao.Servicos
             
             return acervoArteGrafica.AcervoId;
         }
+        
+        private void ValidarPreenchimentoAcervoArteGrafica(string? altura, string? largura, string? diametro)
+        {
+            if (largura.NaoEhNumericoComCasasDecimais())
+                throw new NegocioException(string.Format(MensagemNegocio.CAMPO_X_ESPERADO_NUMERICO_E_COM_CASAS_DECIMAIS, Constantes.LARGURA));
+
+            if (altura.NaoEhNumericoComCasasDecimais())
+                throw new NegocioException(string.Format(MensagemNegocio.CAMPO_X_ESPERADO_NUMERICO_E_COM_CASAS_DECIMAIS, Constantes.ALTURA));
+
+            if (diametro.NaoEhNumericoComCasasDecimais())
+                throw new NegocioException(string.Format(MensagemNegocio.CAMPO_X_ESPERADO_NUMERICO_E_COM_CASAS_DECIMAIS, Constantes.DIAMETRO));
+        }
 
         private string ObterCodigoAcervo(string codigo)
         {
@@ -115,6 +130,8 @@ namespace SME.CDEP.Aplicacao.Servicos
 
         public async Task<AcervoArteGraficaDTO> Alterar(AcervoArteGraficaAlteracaoDTO acervoArteGraficaAlteracaoDto)
         {
+            ValidarPreenchimentoAcervoArteGrafica(acervoArteGraficaAlteracaoDto.Altura, acervoArteGraficaAlteracaoDto.Largura, acervoArteGraficaAlteracaoDto.Diametro);
+            
             var arquivosIdsInserir =  Enumerable.Empty<long>();
             var arquivosIdsExcluir =  Enumerable.Empty<long>();
             
