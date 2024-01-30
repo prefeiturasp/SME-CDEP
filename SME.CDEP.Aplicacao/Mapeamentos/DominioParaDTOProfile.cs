@@ -167,8 +167,9 @@ namespace SME.CDEP.Aplicacao.Mapeamentos
             CreateMap<AcervoBibliograficoDetalhe, AcervoBibliograficoDetalheDTO>()
                 .ForMember(dest => dest.CreditosAutores, opt => opt.MapFrom(o => o.Autores))
                 .ForMember(dest => dest.Dimensoes, opt => opt.MapFrom(o => 
-                    $"{o.Largura.ToString().ObterValorOuZero()} x {o.Altura.ToString().ObterValorOuZero()}")
-                ).ReverseMap(); 
+                    $"{o.Largura.ToString().ObterValorOuZero()} x {o.Altura.ToString().ObterValorOuZero()}"))
+                .ForMember(dest => dest.Localizacao, opt => opt.MapFrom(o => $"{o.Localizacaocdd} - {o.Localizacaopha}"))
+                .ReverseMap(); 
 
             CreateMap<Usuario,DadosSolicitanteDTO>()
                 .ForMember(dest => dest.Cpf, opt => opt.MapFrom(o => o.TipoUsuario.EhCoreSSO() ? null : o.Login))
