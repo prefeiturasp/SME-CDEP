@@ -17,4 +17,5 @@ public class AcervoArteGraficaDetalheDTO : AcervoDetalheDTO
     public long Quantidade { get; set; }
     public ImagemDTO[] Imagens { get; set; }
     public string Dimensoes { get; set; }
+    public string DimensoesLegendas { get; set; } = "L = largura | A = altura | D = diâmetro";
 }
