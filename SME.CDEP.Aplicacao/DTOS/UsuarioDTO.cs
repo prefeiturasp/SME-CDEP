@@ -23,5 +23,6 @@
         public DateTime CriadoEm { get; set; }
         public string CriadoPor { get; set; }
         public string CriadoLogin { get; set; }
+        public string Instituicao { get; set; }
     }
 }
