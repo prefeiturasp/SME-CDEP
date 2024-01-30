@@ -127,7 +127,8 @@ namespace SME.CDEP.TesteIntegracao.Usuario
                 Estado = faker.Address.StateAbbr(),
                 Telefone = faker.Phone.PhoneNumber("(##) #####-####"),
                 Bairro = faker.Address.County(),
-                Tipo = TipoUsuario.PROFESSOR
+                Tipo = TipoUsuario.PROFESSOR,
+                Instituicao = faker.Company.CompanyName()
             };
             var usuario = await GetServicoUsuario().InserirUsuarioExterno(usuarioExterno);
             usuario.ShouldBeTrue();
@@ -136,6 +137,7 @@ namespace SME.CDEP.TesteIntegracao.Usuario
             usuarios.Any(f => f.Login.Equals(ConstantesTestes.LOGIN_99999999999)).ShouldBeTrue();
             usuarios.Any(f => f.UltimoLogin.HasValue).ShouldBeFalse();
             usuarios.Any(f => f.TipoUsuario == TipoUsuario.PROFESSOR).ShouldBeTrue();
+            usuarios.Any(f => f.Instituicao == usuarioExterno.Instituicao).ShouldBeTrue();
         }
         
         [Fact(DisplayName = "Usuário - O usuário já existe no CoreSSO")]
@@ -190,7 +192,8 @@ namespace SME.CDEP.TesteIntegracao.Usuario
                 UltimoLogin = DateTimeExtension.HorarioBrasilia().Date.AddDays(-5),
                 TipoUsuario = TipoUsuario.PROFESSOR,
                 CriadoLogin = ConstantesTestes.SISTEMA, CriadoPor = ConstantesTestes.SISTEMA,
-                CriadoEm = DateTimeExtension.HorarioBrasilia().Date
+                CriadoEm = DateTimeExtension.HorarioBrasilia().Date,
+                Instituicao = faker.Company.CompanyName()
             };
             
             await InserirNaBase(usuarioInserir);
