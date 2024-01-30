@@ -519,9 +519,9 @@ namespace SME.CDEP.TesteIntegracao
                 
                 //Campos livres
                 acervosBibliograficos.Any(a=> a.Edicao.SaoIguais(linhasComSucesso.Edicao.Conteudo)).ShouldBeTrue();
-                acervosBibliograficos.Any(a=> a.NumeroPagina.SaoIguais(linhasComSucesso.NumeroPaginas.Conteudo.ObterDoubleOuNuloPorValorDoCampo())).ShouldBeTrue();
-                acervosBibliograficos.Any(a=> a.Altura.SaoIguais(linhasComSucesso.Altura.Conteudo.ConverterParaDouble().FormatarDoubleComCasasDecimais())).ShouldBeTrue();
-                acervosBibliograficos.Any(a=> a.Largura.SaoIguais(linhasComSucesso.Largura.Conteudo.ConverterParaDouble().FormatarDoubleComCasasDecimais())).ShouldBeTrue();
+                acervosBibliograficos.Any(a=> a.NumeroPagina.SaoIguais(linhasComSucesso.NumeroPaginas.Conteudo.ObterInteiroOuNuloPorValorDoCampo())).ShouldBeTrue();
+                acervosBibliograficos.Any(a=> a.Altura.SaoIguais(linhasComSucesso.Altura.Conteudo)).ShouldBeTrue();
+                acervosBibliograficos.Any(a=> a.Largura.SaoIguais(linhasComSucesso.Largura.Conteudo)).ShouldBeTrue();
                 acervosBibliograficos.Any(a=> a.Volume.SaoIguais(linhasComSucesso.Volume.Conteudo)).ShouldBeTrue();
                 acervosBibliograficos.Any(a=> a.LocalizacaoCDD.SaoIguais(linhasComSucesso.LocalizacaoCDD.Conteudo)).ShouldBeTrue();
                 acervosBibliograficos.Any(a=> a.LocalizacaoPHA.SaoIguais(linhasComSucesso.LocalizacaoPHA.Conteudo)).ShouldBeTrue();
@@ -658,7 +658,7 @@ namespace SME.CDEP.TesteIntegracao
                 retorno.Erros.Any(a=> a.RetornoObjeto.EditoraId.NaoEhNulo()).ShouldBeTrue();
                 retorno.Erros.Any(a=> a.RetornoObjeto.Ano.SaoIguais(linhaInserida.Ano.Conteudo.ConverterParaInteiro())).ShouldBeTrue();
                 retorno.Erros.Any(a=> a.RetornoObjeto.Edicao.SaoIguais(linhaInserida.Edicao.Conteudo)).ShouldBeTrue();
-                retorno.Erros.Any(a=> a.RetornoObjeto.NumeroPagina.SaoIguais(linhaInserida.NumeroPaginas.Conteudo)).ShouldBeTrue();
+                retorno.Erros.Any(a=> a.RetornoObjeto.NumeroPagina.SaoIguais(linhaInserida.NumeroPaginas.Conteudo.ConverterParaInteiro())).ShouldBeTrue();
                
                 retorno.Erros.Any(a=> a.RetornoObjeto.Altura.SaoIguais(linhaInserida.Altura.Conteudo)).ShouldBeTrue();
                 retorno.Erros.Any(a=> a.RetornoObjeto.Largura.SaoIguais(linhaInserida.Largura.Conteudo)).ShouldBeTrue();
@@ -710,9 +710,202 @@ namespace SME.CDEP.TesteIntegracao
                 
                 //Campos livres
                 acervosBibliograficos.Any(a=> a.Edicao.SaoIguais(linhasComSucesso.Edicao.Conteudo)).ShouldBeTrue();
-                acervosBibliograficos.Any(a=> a.NumeroPagina.SaoIguais(linhasComSucesso.NumeroPaginas.Conteudo.ObterDoubleOuNuloPorValorDoCampo())).ShouldBeTrue();
-                acervosBibliograficos.Any(a=> a.Altura.SaoIguais(linhasComSucesso.Altura.Conteudo.ConverterParaDouble().FormatarDoubleComCasasDecimais())).ShouldBeTrue();
-                acervosBibliograficos.Any(a=> a.Largura.SaoIguais(linhasComSucesso.Largura.Conteudo.ConverterParaDouble().FormatarDoubleComCasasDecimais())).ShouldBeTrue();
+                acervosBibliograficos.Any(a=> a.NumeroPagina.SaoIguais(linhasComSucesso.NumeroPaginas.Conteudo.ObterInteiroOuNuloPorValorDoCampo())).ShouldBeTrue();
+                acervosBibliograficos.Any(a=> a.Altura.SaoIguais(linhasComSucesso.Altura.Conteudo)).ShouldBeTrue();
+                acervosBibliograficos.Any(a=> a.Largura.SaoIguais(linhasComSucesso.Largura.Conteudo)).ShouldBeTrue();
+                acervosBibliograficos.Any(a=> a.Volume.SaoIguais(linhasComSucesso.Volume.Conteudo)).ShouldBeTrue();
+                acervosBibliograficos.Any(a=> a.LocalizacaoCDD.SaoIguais(linhasComSucesso.LocalizacaoCDD.Conteudo)).ShouldBeTrue();
+                acervosBibliograficos.Any(a=> a.LocalizacaoPHA.SaoIguais(linhasComSucesso.LocalizacaoPHA.Conteudo)).ShouldBeTrue();
+                acervosBibliograficos.Any(a=> a.NotasGerais.SaoIguais(linhasComSucesso.NotasGerais.Conteudo)).ShouldBeTrue();
+                acervosBibliograficos.Any(a=> a.Isbn.SaoIguais(linhasComSucesso.Isbn.Conteudo)).ShouldBeTrue();
+                
+                //Assuntos
+                var assuntosAInserir = linhasComSucesso.Assunto.Conteudo.FormatarTextoEmArray().ToArray().UnificarPipe().SplitPipe().Distinct();
+                
+                foreach (var assunto in assuntosAInserir)
+                    assuntos.Any(a=> a.Nome.SaoIguais(assunto)).ShouldBeTrue();
+                
+                foreach (var acervoBibliograficoAssunto in acervoBibliograficoAssuntos)
+                    assuntos.Any(a=> a.Id.SaoIguais(acervoBibliograficoAssunto.AssuntoId)).ShouldBeTrue();
+                
+                //Autor
+                var autorAInserir = linhasComSucesso.Autor.Conteudo.FormatarTextoEmArray().ToArray().UnificarPipe().SplitPipe().Distinct();
+                
+                foreach (var autor in autorAInserir)
+                    creditoAutores.Any(a=> a.Nome.SaoIguais(autor)).ShouldBeTrue();
+                
+                foreach (var creditoAutor in acervoCreditoAutors)
+                    creditoAutores.Any(a=> a.Id.SaoIguais(creditoAutor.CreditoAutorId)).ShouldBeTrue();
+                
+                //Coautor
+                var coAutorAInserir = linhasComSucesso.CoAutor.Conteudo.FormatarTextoEmArray().ToArray().UnificarPipe().SplitPipe().Distinct();
+                
+                foreach (var coautor in coAutorAInserir)
+                    creditoAutores.Any(a=> a.Nome.SaoIguais(coautor)).ShouldBeTrue();
+                
+                //TipoAutoria
+                var tipoAutoriaAInserir = linhasComSucesso.TipoAutoria.Conteudo.FormatarTextoEmArray().ToArray().UnificarPipe().SplitPipe().Distinct();
+                
+                foreach (var tipoAutoria in tipoAutoriaAInserir)
+                    acervoCreditoAutors.Any(a=> a.TipoAutoria.NaoEhNulo() && a.TipoAutoria.SaoIguais(tipoAutoria)).ShouldBeTrue();
+                
+            }
+        }
+        
+         [Fact(DisplayName = "Importação Arquivo Acervo Bibliográfico - Geral - Com erros em 3 linhas, com altura e largura")]
+        public async Task Importacao_geral_com_altura_e_largura_invalidos()
+        {
+            await InserirDadosBasicos();
+            
+            var servicoImportacaoArquivo = GetServicoImportacaoArquivoAcervoBibliografico();
+
+            var acervoBibliograficoLinhas = AcervoBibliograficoLinhaMock.GerarAcervoBibliograficoLinhaDTO().Generate(10);
+           
+            var autores = acervoBibliograficoLinhas
+                .SelectMany(acervo => acervo.Autor.Conteudo.FormatarTextoEmArray().UnificarPipe().SplitPipe())
+                .Distinct()
+                .ToList();
+
+            await InserirCreditosAutorias(autores,TipoCreditoAutoria.Autoria);
+            
+            var coAutores = acervoBibliograficoLinhas
+                .SelectMany(acervo => acervo.CoAutor.Conteudo.FormatarTextoEmArray().UnificarPipe().SplitPipe())
+                .Distinct()
+                .ToList();
+
+            await InserirCreditosAutorias(coAutores,TipoCreditoAutoria.Autoria);
+            
+            var inserirAssuntos = acervoBibliograficoLinhas
+                .SelectMany(acervo => acervo.Assunto.Conteudo.FormatarTextoEmArray().UnificarPipe().SplitPipe())
+                .Distinct()
+                .ToList();
+
+            await InserirAssuntos(inserirAssuntos);
+            
+            acervoBibliograficoLinhas[3].Largura.Conteudo = "10";
+            acervoBibliograficoLinhas[5].Altura.Conteudo = "10.30";
+            acervoBibliograficoLinhas[7].Altura.Conteudo = "abc";
+            acervoBibliograficoLinhas[7].Largura.Conteudo = "10,30";
+            
+            await InserirNaBase(new ImportacaoArquivo()
+            {
+                Nome = faker.Hacker.Verb(),
+                TipoAcervo = TipoAcervo.Bibliografico,
+                Status = ImportacaoStatus.Pendente,
+                Conteudo = JsonConvert.SerializeObject(acervoBibliograficoLinhas),
+                CriadoEm = DateTimeExtension.HorarioBrasilia().Date, CriadoPor = ConstantesTestes.SISTEMA, CriadoLogin = ConstantesTestes.LOGIN_123456789
+            });
+            
+            await servicoImportacaoArquivo.CarregarDominios();
+            servicoImportacaoArquivo.ValidarPreenchimentoValorFormatoQtdeCaracteres(acervoBibliograficoLinhas);
+            await servicoImportacaoArquivo.PersistenciaAcervo(acervoBibliograficoLinhas);
+            await servicoImportacaoArquivo.AtualizarImportacao(1, JsonConvert.SerializeObject(acervoBibliograficoLinhas), acervoBibliograficoLinhas.Any(a=> a.PossuiErros) ? ImportacaoStatus.Erros : ImportacaoStatus.Sucesso);
+            var retorno = await servicoImportacaoArquivo.ObterImportacaoPendente();
+
+            var acervos = ObterTodos<Acervo>();
+            var acervosBibliograficos = ObterTodos<AcervoBibliografico>();
+            var materiais = ObterTodos<Material>();
+            var editoras = ObterTodos<Editora>();
+            var serieColecoes = ObterTodos<SerieColecao>();
+            var idiomas = ObterTodos<Idioma>();
+            var assuntos = ObterTodos<Assunto>();
+            var acervoBibliograficoAssuntos = ObterTodos<AcervoBibliograficoAssunto>();
+            var acervoCreditoAutors = ObterTodos<AcervoCreditoAutor>();
+            var creditoAutores = ObterTodos<CreditoAutor>();
+            
+            //Acervos inseridos
+            acervos.ShouldNotBeNull();
+            acervos.Count().ShouldBe(7);
+            
+            //Acervos bibliográficos inseridos
+            acervosBibliograficos.ShouldNotBeNull();
+            acervosBibliograficos.Count().ShouldBe(7);
+            
+            //Linhas com erros
+            acervoBibliograficoLinhas.Count(w=> !w.PossuiErros).ShouldBe(7);
+            acervoBibliograficoLinhas.Count(w=> w.PossuiErros).ShouldBe(3);
+            
+            //Retorno front
+            retorno.Id.ShouldBe(1);
+            retorno.Nome.ShouldNotBeEmpty();
+            retorno.TipoAcervo.ShouldBe(TipoAcervo.Bibliografico);
+            retorno.DataImportacao.Value.Date.ShouldBe(DateTimeExtension.HorarioBrasilia().Date);
+            
+            foreach (var linhaInserida in acervoBibliograficoLinhas.Where(w=> !w.PossuiErros))
+            {
+                retorno.Sucesso.Any(a=> a.Titulo.SaoIguais(linhaInserida.Titulo.Conteudo)).ShouldBeTrue();
+                retorno.Sucesso.Any(a=> a.Tombo.SaoIguais(linhaInserida.Codigo.Conteudo)).ShouldBeTrue();
+                retorno.Sucesso.Any(a=> a.NumeroLinha.SaoIguais(linhaInserida.NumeroLinha)).ShouldBeTrue();
+            }
+            
+            foreach (var linhaInserida in acervoBibliograficoLinhas.Where(w=> w.PossuiErros))
+            {
+                retorno.Erros.Any(a=> a.Titulo.SaoIguais(linhaInserida.Titulo.Conteudo)).ShouldBeTrue();
+                retorno.Erros.Any(a=> a.Tombo.SaoIguais(linhaInserida.Codigo.Conteudo)).ShouldBeTrue();
+                retorno.Erros.Any(a=> a.NumeroLinha.SaoIguais(linhaInserida.NumeroLinha)).ShouldBeTrue();
+                
+                retorno.Erros.Any(a=> a.RetornoObjeto.Titulo.SaoIguais(linhaInserida.Titulo.Conteudo)).ShouldBeTrue();
+                retorno.Erros.Any(a=> a.RetornoObjeto.SubTitulo.SaoIguais(linhaInserida.SubTitulo.Conteudo)).ShouldBeTrue();
+                retorno.Erros.Any(a=> a.RetornoObjeto.MaterialId.NaoEhNulo()).ShouldBeTrue();
+                retorno.Erros.Any(a=> a.RetornoObjeto.CoAutores.NaoEhNulo()).ShouldBeTrue();
+                retorno.Erros.Any(a=> a.RetornoObjeto.EditoraId.NaoEhNulo()).ShouldBeTrue();
+                retorno.Erros.Any(a=> a.RetornoObjeto.Ano.SaoIguais(linhaInserida.Ano.Conteudo.ConverterParaInteiro())).ShouldBeTrue();
+                retorno.Erros.Any(a=> a.RetornoObjeto.Edicao.SaoIguais(linhaInserida.Edicao.Conteudo)).ShouldBeTrue();
+                retorno.Erros.Any(a=> a.RetornoObjeto.NumeroPagina.SaoIguais(linhaInserida.NumeroPaginas.Conteudo.ConverterParaInteiro())).ShouldBeTrue();
+               
+                retorno.Erros.Any(a=> a.RetornoObjeto.Altura.SaoIguais(linhaInserida.Altura.Conteudo)).ShouldBeTrue();
+                retorno.Erros.Any(a=> a.RetornoObjeto.Largura.SaoIguais(linhaInserida.Largura.Conteudo)).ShouldBeTrue();
+                
+                retorno.Erros.Any(a=> a.RetornoObjeto.SerieColecaoId.NaoEhNulo()).ShouldBeTrue();
+                retorno.Erros.Any(a=> a.RetornoObjeto.Volume.SaoIguais(linhaInserida.Volume.Conteudo)).ShouldBeTrue();
+                retorno.Erros.Any(a=> a.RetornoObjeto.IdiomaId.NaoEhNulo()).ShouldBeTrue();
+                retorno.Erros.Any(a=> a.RetornoObjeto.LocalizacaoCDD.SaoIguais(linhaInserida.LocalizacaoCDD.Conteudo)).ShouldBeTrue();
+                retorno.Erros.Any(a=> a.RetornoObjeto.LocalizacaoPHA.SaoIguais(linhaInserida.LocalizacaoPHA.Conteudo)).ShouldBeTrue();
+                retorno.Erros.Any(a=> a.RetornoObjeto.NotasGerais.SaoIguais(linhaInserida.NotasGerais.Conteudo)).ShouldBeTrue();
+                retorno.Erros.Any(a=> a.RetornoObjeto.Isbn.SaoIguais(linhaInserida.Isbn.Conteudo)).ShouldBeTrue();
+                retorno.Erros.Any(a=> a.RetornoObjeto.Codigo.SaoIguais(linhaInserida.Codigo.Conteudo)).ShouldBeTrue();
+                
+                retorno.Erros.Any(a=> a.RetornoErro.Titulo.Conteudo.SaoIguais(linhaInserida.Titulo.Conteudo)).ShouldBeTrue();
+                retorno.Erros.Any(a=> a.RetornoErro.SubTitulo.Conteudo.SaoIguais(linhaInserida.SubTitulo.Conteudo)).ShouldBeTrue();
+                retorno.Erros.Any(a=> a.RetornoErro.MaterialId.Conteudo.SaoIguais(linhaInserida.Material.Conteudo)).ShouldBeTrue();
+                retorno.Erros.Any(a=> a.RetornoErro.CreditosAutoresIds.Conteudo.SaoIguais(linhaInserida.Autor.Conteudo)).ShouldBeTrue();
+                retorno.Erros.Any(a=> a.RetornoErro.CoAutores.Conteudo.SaoIguais(linhaInserida.CoAutor.Conteudo)).ShouldBeTrue();
+                retorno.Erros.Any(a=> a.RetornoErro.EditoraId.Conteudo.SaoIguais(linhaInserida.Editora.Conteudo)).ShouldBeTrue();
+                retorno.Erros.Any(a=> a.RetornoErro.AssuntosIds.Conteudo.SaoIguais(linhaInserida.Assunto.Conteudo)).ShouldBeTrue();
+                retorno.Erros.Any(a=> a.RetornoErro.Ano.Conteudo.SaoIguais(linhaInserida.Ano.Conteudo)).ShouldBeTrue();
+                retorno.Erros.Any(a=> a.RetornoErro.Edicao.Conteudo.SaoIguais(linhaInserida.Edicao.Conteudo)).ShouldBeTrue();
+                retorno.Erros.Any(a=> a.RetornoErro.NumeroPagina.Conteudo.SaoIguais(linhaInserida.NumeroPaginas.Conteudo)).ShouldBeTrue();
+                retorno.Erros.Any(a=> a.RetornoErro.Largura.Conteudo.SaoIguais(linhaInserida.Largura.Conteudo)).ShouldBeTrue();
+                retorno.Erros.Any(a=> a.RetornoErro.Altura.Conteudo.SaoIguais(linhaInserida.Altura.Conteudo)).ShouldBeTrue();
+                retorno.Erros.Any(a=> a.RetornoErro.SerieColecaoId.Conteudo.SaoIguais(linhaInserida.SerieColecao.Conteudo)).ShouldBeTrue();
+                retorno.Erros.Any(a=> a.RetornoErro.Volume.Conteudo.SaoIguais(linhaInserida.Volume.Conteudo)).ShouldBeTrue();
+                retorno.Erros.Any(a=> a.RetornoErro.IdiomaId.Conteudo.SaoIguais(linhaInserida.Idioma.Conteudo)).ShouldBeTrue();
+                retorno.Erros.Any(a=> a.RetornoErro.LocalizacaoCDD.Conteudo.SaoIguais(linhaInserida.LocalizacaoCDD.Conteudo)).ShouldBeTrue();
+                retorno.Erros.Any(a=> a.RetornoErro.LocalizacaoPHA.Conteudo.SaoIguais(linhaInserida.LocalizacaoPHA.Conteudo)).ShouldBeTrue();
+                retorno.Erros.Any(a=> a.RetornoErro.NotasGerais.Conteudo.SaoIguais(linhaInserida.NotasGerais.Conteudo)).ShouldBeTrue();
+                retorno.Erros.Any(a=> a.RetornoErro.Isbn.Conteudo.SaoIguais(linhaInserida.Isbn.Conteudo)).ShouldBeTrue();
+                retorno.Erros.Any(a=> a.RetornoErro.Codigo.Conteudo.SaoIguais(linhaInserida.Codigo.Conteudo)).ShouldBeTrue();
+            }
+
+            foreach (var linhasComSucesso in acervoBibliograficoLinhas.Where(w=> !w.PossuiErros))
+            {
+                //Acervo
+                acervos.Any(a=> a.Titulo.SaoIguais(linhasComSucesso.Titulo.Conteudo)).ShouldBeTrue();
+                acervos.Any(a=> a.SubTitulo.SaoIguais(linhasComSucesso.SubTitulo.Conteudo)).ShouldBeTrue();
+                acervos.Any(a=> a.Codigo.SaoIguais(linhasComSucesso.Codigo.Conteudo)).ShouldBeTrue();  
+                acervos.Any(a=> a.Ano.SaoIguais(linhasComSucesso.Ano.Conteudo.ConverterParaInteiro())).ShouldBeTrue();
+                
+                //Referência 1:1
+                acervosBibliograficos.Any(a=> a.MaterialId.SaoIguais(materiais.FirstOrDefault(f=> f.Nome.SaoIguais(linhasComSucesso.Material.Conteudo) && f.Tipo == TipoMaterial.BIBLIOGRAFICO).Id)).ShouldBeTrue();
+                acervosBibliograficos.Any(a=> a.EditoraId.SaoIguais(editoras.FirstOrDefault(f=> f.Nome.SaoIguais(linhasComSucesso.Editora.Conteudo)).Id)).ShouldBeTrue();
+                acervosBibliograficos.Any(a=> a.SerieColecaoId.SaoIguais(serieColecoes.FirstOrDefault(f=> f.Nome.SaoIguais(linhasComSucesso.SerieColecao.Conteudo)).Id)).ShouldBeTrue();
+                acervosBibliograficos.Any(a=> a.IdiomaId.SaoIguais(idiomas.FirstOrDefault(f=> f.Nome.SaoIguais(linhasComSucesso.Idioma.Conteudo)).Id)).ShouldBeTrue();
+                
+                //Campos livres
+                acervosBibliograficos.Any(a=> a.Edicao.SaoIguais(linhasComSucesso.Edicao.Conteudo)).ShouldBeTrue();
+                acervosBibliograficos.Any(a=> a.NumeroPagina.SaoIguais(linhasComSucesso.NumeroPaginas.Conteudo.ObterInteiroOuNuloPorValorDoCampo())).ShouldBeTrue();
+                acervosBibliograficos.Any(a=> a.Altura.SaoIguais(linhasComSucesso.Altura.Conteudo)).ShouldBeTrue();
+                acervosBibliograficos.Any(a=> a.Largura.SaoIguais(linhasComSucesso.Largura.Conteudo)).ShouldBeTrue();
                 acervosBibliograficos.Any(a=> a.Volume.SaoIguais(linhasComSucesso.Volume.Conteudo)).ShouldBeTrue();
                 acervosBibliograficos.Any(a=> a.LocalizacaoCDD.SaoIguais(linhasComSucesso.LocalizacaoCDD.Conteudo)).ShouldBeTrue();
                 acervosBibliograficos.Any(a=> a.LocalizacaoPHA.SaoIguais(linhasComSucesso.LocalizacaoPHA.Conteudo)).ShouldBeTrue();
@@ -807,7 +1000,7 @@ namespace SME.CDEP.TesteIntegracao
                 retorno.Erros.Any(a=> a.RetornoObjeto.CoAutores.NaoEhNulo()).ShouldBeTrue();
                 retorno.Erros.Any(a=> a.RetornoObjeto.Ano.SaoIguais(linhaInserida.Ano.Conteudo.ConverterParaInteiro())).ShouldBeTrue();
                 retorno.Erros.Any(a=> a.RetornoObjeto.Edicao.SaoIguais(linhaInserida.Edicao.Conteudo)).ShouldBeTrue();
-                retorno.Erros.Any(a=> a.RetornoObjeto.NumeroPagina.SaoIguais(linhaInserida.NumeroPaginas.Conteudo)).ShouldBeTrue();
+                retorno.Erros.Any(a=> a.RetornoObjeto.NumeroPagina.SaoIguais(linhaInserida.NumeroPaginas.Conteudo.ConverterParaInteiro())).ShouldBeTrue();
                 retorno.Erros.Any(a=> a.RetornoObjeto.Largura.SaoIguais(linhaInserida.Largura.Conteudo)).ShouldBeTrue();
 
                 retorno.Erros.Any(a=> a.RetornoObjeto.Altura.SaoIguais(linhaInserida.Altura.Conteudo)).ShouldBeTrue();

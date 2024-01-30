@@ -10,9 +10,9 @@
         public bool PermiteUsoImagem { get; set; }
         public long ConservacaoId { get; set; }
         public long CromiaId { get; set; }
-        public double? Largura { get; set; }
-        public double? Altura { get; set; }
-        public double? Diametro { get; set; }
+        public string? Largura { get; set; }
+        public string? Altura { get; set; }
+        public string? Diametro { get; set; }
         public string Tecnica { get; set; }
         public long SuporteId { get; set; }
         public long Quantidade { get; set; }

@@ -100,8 +100,8 @@ namespace SME.CDEP.TesteIntegracao
            acervoBibliografico.EditoraId.ShouldBe(acervoBibliograficoAlteracaoDto.EditoraId);
            acervoBibliografico.Edicao.ShouldBe(acervoBibliograficoAlteracaoDto.Edicao);
            acervoBibliografico.NumeroPagina.ShouldBe(acervoBibliograficoAlteracaoDto.NumeroPagina);
-           acervoBibliografico.Largura.ShouldBe(acervoBibliograficoAlteracaoDto.Largura.Value);
-           acervoBibliografico.Altura.ShouldBe(acervoBibliograficoAlteracaoDto.Altura.FormatarParaDoubleComCasasDecimais());
+           acervoBibliografico.Largura.ShouldBe(acervoBibliograficoAlteracaoDto.Largura);
+           acervoBibliografico.Altura.ShouldBe(acervoBibliograficoAlteracaoDto.Altura);
            acervoBibliografico.Volume.ShouldBe(acervoBibliograficoAlteracaoDto.Volume);
            acervoBibliografico.IdiomaId.ShouldBe(acervoBibliograficoAlteracaoDto.IdiomaId);
            acervoBibliografico.LocalizacaoCDD.ShouldBe(acervoBibliograficoAlteracaoDto.LocalizacaoCDD);
@@ -206,8 +206,8 @@ namespace SME.CDEP.TesteIntegracao
            acervoBibliografico.EditoraId.ShouldBe(acervoBibliograficoAlteracaoDto.EditoraId);
            acervoBibliografico.Edicao.ShouldBe(acervoBibliograficoAlteracaoDto.Edicao);
            acervoBibliografico.NumeroPagina.ShouldBe(acervoBibliograficoAlteracaoDto.NumeroPagina);
-           acervoBibliografico.Largura.ShouldBe(acervoBibliograficoAlteracaoDto.Largura.Value);
-           acervoBibliografico.Altura.ShouldBe(acervoBibliograficoAlteracaoDto.Altura.FormatarParaDoubleComCasasDecimais());
+           acervoBibliografico.Largura.ShouldBe(acervoBibliograficoAlteracaoDto.Largura);
+           acervoBibliografico.Altura.ShouldBe(acervoBibliograficoAlteracaoDto.Altura);
            acervoBibliografico.Volume.ShouldBe(acervoBibliograficoAlteracaoDto.Volume);
            acervoBibliografico.IdiomaId.ShouldBe(acervoBibliograficoAlteracaoDto.IdiomaId);
            acervoBibliografico.LocalizacaoCDD.ShouldBe(acervoBibliograficoAlteracaoDto.LocalizacaoCDD);
@@ -340,8 +340,8 @@ namespace SME.CDEP.TesteIntegracao
            acervoBibliografico.EditoraId.ShouldBe(acervoBibliograficoAlteracaoDto.EditoraId);
            acervoBibliografico.Edicao.ShouldBe(acervoBibliograficoAlteracaoDto.Edicao);
            acervoBibliografico.NumeroPagina.ShouldBe(acervoBibliograficoAlteracaoDto.NumeroPagina);
-           acervoBibliografico.Largura.ShouldBe(acervoBibliograficoAlteracaoDto.Largura.Value);
-           acervoBibliografico.Altura.ShouldBe(acervoBibliograficoAlteracaoDto.Altura.FormatarParaDoubleComCasasDecimais());
+           acervoBibliografico.Largura.ShouldBe(acervoBibliograficoAlteracaoDto.Largura);
+           acervoBibliografico.Altura.ShouldBe(acervoBibliograficoAlteracaoDto.Altura);
            acervoBibliografico.Volume.ShouldBe(acervoBibliograficoAlteracaoDto.Volume);
            acervoBibliografico.IdiomaId.ShouldBe(acervoBibliograficoAlteracaoDto.IdiomaId);
            acervoBibliografico.LocalizacaoCDD.ShouldBe(acervoBibliograficoAlteracaoDto.LocalizacaoCDD);
@@ -409,8 +409,8 @@ namespace SME.CDEP.TesteIntegracao
            acervoBibliografico.EditoraId.ShouldBe(acervoBibliograficoCadastroDto.EditoraId);
            acervoBibliografico.Edicao.ShouldBe(acervoBibliograficoCadastroDto.Edicao);
            acervoBibliografico.NumeroPagina.ShouldBe(acervoBibliograficoCadastroDto.NumeroPagina);
-           acervoBibliografico.Largura.ShouldBe(acervoBibliograficoCadastroDto.Largura.Value);
-           acervoBibliografico.Altura.ShouldBe(acervoBibliograficoCadastroDto.Altura.FormatarParaDoubleComCasasDecimais());
+           acervoBibliografico.Largura.ShouldBe(acervoBibliograficoCadastroDto.Largura);
+           acervoBibliografico.Altura.ShouldBe(acervoBibliograficoCadastroDto.Altura);
            acervoBibliografico.Volume.ShouldBe(acervoBibliograficoCadastroDto.Volume);
            acervoBibliografico.IdiomaId.ShouldBe(acervoBibliograficoCadastroDto.IdiomaId);
            acervoBibliografico.LocalizacaoCDD.ShouldBe(acervoBibliograficoCadastroDto.LocalizacaoCDD);
@@ -478,8 +478,8 @@ namespace SME.CDEP.TesteIntegracao
            acervoBibliografico.EditoraId.ShouldBe(acervoBibliograficoCadastroDto.EditoraId);
            acervoBibliografico.Edicao.ShouldBe(acervoBibliograficoCadastroDto.Edicao);
            acervoBibliografico.NumeroPagina.ShouldBe(acervoBibliograficoCadastroDto.NumeroPagina);
-           acervoBibliografico.Largura.ShouldBe(acervoBibliograficoCadastroDto.Largura.Value);
-           acervoBibliografico.Altura.ShouldBe(acervoBibliograficoCadastroDto.Altura.FormatarParaDoubleComCasasDecimais());
+           acervoBibliografico.Largura.ShouldBe(acervoBibliograficoCadastroDto.Largura);
+           acervoBibliografico.Altura.ShouldBe(acervoBibliograficoCadastroDto.Altura);
            acervoBibliografico.Volume.ShouldBe(acervoBibliograficoCadastroDto.Volume);
            acervoBibliografico.IdiomaId.ShouldBe(acervoBibliograficoCadastroDto.IdiomaId);
            acervoBibliografico.LocalizacaoCDD.ShouldBe(acervoBibliograficoCadastroDto.LocalizacaoCDD);
@@ -649,8 +649,8 @@ namespace SME.CDEP.TesteIntegracao
                     EditoraId = random.Next(1,5),
                     Edicao = faker.Lorem.Sentence().Limite(15),
                     NumeroPagina = random.Next(15,55),
-                    Largura = double.Parse("50,45"),
-                    Altura = double.Parse("1020"),
+                    Largura = "50,45",
+                    Altura ="10,20",
                     SerieColecaoId = random.Next(1,5),
                     Volume = faker.Lorem.Sentence().Limite(15),
                     IdiomaId = random.Next(1,5),

@@ -53,8 +53,8 @@ namespace SME.CDEP.Aplicacao.Servicos
 
         public async Task<long> Inserir(AcervoFotograficoCadastroDTO acervoFotograficoCadastroDto)
         {
-            if (acervoFotograficoCadastroDto.CreditosAutoresIds.EhNulo())
-                throw new NegocioException(MensagemNegocio.CREDITO_OU_AUTORES_SAO_OBRIGATORIOS);
+            ValidarPreenchimentoAcervoFotografico(acervoFotograficoCadastroDto.CreditosAutoresIds, 
+                acervoFotograficoCadastroDto.Altura, acervoFotograficoCadastroDto.Largura);
             
             var arquivosCompletos =  acervoFotograficoCadastroDto.Arquivos.NaoEhNulo()
                 ? await ObterArquivosPorIds(acervoFotograficoCadastroDto.Arquivos) 
@@ -105,6 +105,18 @@ namespace SME.CDEP.Aplicacao.Servicos
             return acervoFotografico.AcervoId;
         }
         
+        private void ValidarPreenchimentoAcervoFotografico(long[]? creditosAutoresIds, string? altura, string? largura)
+        {
+            if (creditosAutoresIds.EhNulo())
+                throw new NegocioException(MensagemNegocio.CREDITO_OU_AUTORES_SAO_OBRIGATORIOS);
+
+            if (largura.NaoEhNumericoComCasasDecimais())
+                throw new NegocioException(string.Format(MensagemNegocio.CAMPO_X_ESPERADO_NUMERICO_E_COM_CASAS_DECIMAIS, Constantes.LARGURA));
+
+            if (altura.NaoEhNumericoComCasasDecimais())
+                throw new NegocioException(string.Format(MensagemNegocio.CAMPO_X_ESPERADO_NUMERICO_E_COM_CASAS_DECIMAIS, Constantes.ALTURA));
+        }
+        
         private async Task GerarMiniaturaEVinculoArquivo(IEnumerable<Arquivo> arquivosAInserir)
         {
             foreach (var arquivo in arquivosAInserir)
@@ -132,8 +144,8 @@ namespace SME.CDEP.Aplicacao.Servicos
 
         public async Task<AcervoFotograficoDTO> Alterar(AcervoFotograficoAlteracaoDTO acervoFotograficoAlteracaoDto)
         {
-            if (acervoFotograficoAlteracaoDto.CreditosAutoresIds.EhNulo())
-                throw new NegocioException(MensagemNegocio.CREDITO_OU_AUTORES_SAO_OBRIGATORIOS);
+            ValidarPreenchimentoAcervoFotografico(acervoFotograficoAlteracaoDto.CreditosAutoresIds, 
+                acervoFotograficoAlteracaoDto.Altura, acervoFotograficoAlteracaoDto.Largura);
             
             var arquivosIdsInserir =  Enumerable.Empty<long>();
             var arquivosIdsExcluir =  Enumerable.Empty<long>();

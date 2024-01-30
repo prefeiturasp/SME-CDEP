@@ -1,3 +1,4 @@
+using System.Text.RegularExpressions;
 using AutoMapper;
 using ClosedXML.Excel;
 using Microsoft.AspNetCore.Http;
@@ -282,7 +283,14 @@ namespace SME.CDEP.Aplicacao.Servicos
                         if (campo.ValoresPermitidos.NaoEhNulo())
                         {
                             if (!campo.ValoresPermitidos.Contains(campo.Conteudo.ToLower()))
+                            {
                                 DefinirMensagemErro(campo, string.Format(Constantes.VALOR_X_DO_CAMPO_X_NAO_PERMITIDO_ESPERADO_X, item, nomeCampo, string.Join(", ", campo.ValoresPermitidos)));
+                                break;
+                            }
+                        }
+                        if(campo.Conteudo.EstaPreenchido() && campo.ValidarComExpressaoRegular.EstaPreenchido() && !Regex.IsMatch(campo.Conteudo,campo.ValidarComExpressaoRegular))
+                        {
+                            DefinirMensagemErro(campo, campo.MensagemValidacao);
                             break;
                         }
                         

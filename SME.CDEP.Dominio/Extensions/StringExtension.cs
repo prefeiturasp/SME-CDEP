@@ -187,5 +187,22 @@ namespace SME.CDEP.Dominio.Extensions
                 
             return Path.GetExtension(valor);
         }
+        
+        public static bool NaoEhNumericoComCasasDecimais(this string valor)
+        {
+            return !(valor.EstaPreenchido() && Regex.IsMatch(valor, Constantes.Constantes.PERMITIR_SOMENTE_NUMERAL_SEPARADO_POR_VIRGULA_DUAS_CASAS_DECIMAIS));
+        }
+
+        public static string TratarLiteralComoDecimalComCasasDecimais(this string valor)
+        {
+            if (valor.NaoEstaPreenchido())
+                return valor;
+            
+            var valorTratado = valor.Contains(".") ? valor.Replace(".",",") : valor; 
+            
+            return decimal.TryParse(valorTratado, NumberStyles.AllowDecimalPoint, CultureInfo.GetCultureInfo("pt-BR"), out decimal valorConvertido) 
+                ? valorConvertido.ToString("N2",CultureInfo.GetCultureInfo("pt-BR"))
+                : valor;
+        }
     }
 }

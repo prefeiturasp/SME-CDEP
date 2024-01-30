@@ -1,5 +1,6 @@
 ﻿using Bogus;
 using SME.CDEP.Aplicacao.DTOS;
+using SME.CDEP.Dominio.Constantes;
 using SME.CDEP.Dominio.Extensions;
 using SME.CDEP.TesteIntegracao.Constantes;
 
@@ -95,19 +96,22 @@ public static class AcervoArteGraficaLinhaMock
             faker.RuleFor(x => x.Largura, f => new LinhaConteudoAjustarDTO()
             {
                 Conteudo = "50,45",
-                FormatoTipoDeCampo = ConstantesTestes.FORMATO_DOUBLE
+                ValidarComExpressaoRegular = Dominio.Constantes.Constantes.PERMITIR_SOMENTE_NUMERAL_SEPARADO_POR_VIRGULA_DUAS_CASAS_DECIMAIS,
+                MensagemValidacao = string.Format(MensagemNegocio.CAMPO_X_ESPERADO_NUMERICO_E_COM_CASAS_DECIMAIS, Dominio.Constantes.Constantes.LARGURA)
             });
             
             faker.RuleFor(x => x.Altura, f => new LinhaConteudoAjustarDTO()
             {
-                Conteudo = "10.20",
-                FormatoTipoDeCampo = ConstantesTestes.FORMATO_DOUBLE
+                Conteudo = "10,20",
+                ValidarComExpressaoRegular = Dominio.Constantes.Constantes.PERMITIR_SOMENTE_NUMERAL_SEPARADO_POR_VIRGULA_DUAS_CASAS_DECIMAIS,
+                MensagemValidacao = string.Format(MensagemNegocio.CAMPO_X_ESPERADO_NUMERICO_E_COM_CASAS_DECIMAIS, Dominio.Constantes.Constantes.ALTURA)
             });
             
             faker.RuleFor(x => x.Diametro, f => new LinhaConteudoAjustarDTO()
             {
-                Conteudo = "1540",
-                FormatoTipoDeCampo = ConstantesTestes.FORMATO_DOUBLE
+                Conteudo = "15,40",
+                ValidarComExpressaoRegular = Dominio.Constantes.Constantes.PERMITIR_SOMENTE_NUMERAL_SEPARADO_POR_VIRGULA_DUAS_CASAS_DECIMAIS,
+                MensagemValidacao = string.Format(MensagemNegocio.CAMPO_X_ESPERADO_NUMERICO_E_COM_CASAS_DECIMAIS, Dominio.Constantes.Constantes.DIAMETRO)
             });
             
             faker.RuleFor(x => x.Tecnica, f => new LinhaConteudoAjustarDTO()
