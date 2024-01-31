@@ -10,7 +10,6 @@ public class AcervoBibliograficoDetalheDTO : AcervoDetalheDTO
     public string Edicao { get; set; }
     public int NumeroPagina { get; set; }
     public string Dimensoes { get; set; }
-    public string DimensoesLegendas { get; set; } = "L = largura | A = altura";
     public string SerieColecao { get; set; }
     public string Volume { get; set; }
     public string Idioma { get; set; }
