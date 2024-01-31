@@ -372,14 +372,14 @@ namespace SME.CDEP.Aplicacao.Servicos
                 {
                     var retornoDocumental =  mapper.Map<AcervoDocumentalDetalheDTO>(await repositorioAcervoDocumental.ObterDetalhamentoPorCodigo(filtro.Codigo));
                     retornoDocumental.Imagens = await AplicarEndereco(retornoDocumental.Imagens);
-                    retornoDocumental.EnderecoImagemPadrao = await ObterEnderecoImagemPadrao(TipoAcervo.DocumentacaoHistorica);
+                    retornoDocumental.EnderecoImagemPadrao = retornoDocumental.Imagens.PossuiElementos() ? string.Empty : await ObterEnderecoImagemPadrao(TipoAcervo.DocumentacaoHistorica);
                     return retornoDocumental;
                 }
                 case TipoAcervo.ArtesGraficas:
                 {
                     var retornoArteGrafica =  mapper.Map<AcervoArteGraficaDetalheDTO>(await repositorioAcervoArteGrafica.ObterDetalhamentoPorCodigo(filtro.Codigo));
                     retornoArteGrafica.Imagens = await AplicarEndereco(retornoArteGrafica.Imagens);
-                    retornoArteGrafica.EnderecoImagemPadrao = await ObterEnderecoImagemPadrao(TipoAcervo.ArtesGraficas);
+                    retornoArteGrafica.EnderecoImagemPadrao = retornoArteGrafica.Imagens.PossuiElementos() ? string.Empty : await ObterEnderecoImagemPadrao(TipoAcervo.ArtesGraficas);
                     return retornoArteGrafica;
                 }
                 case TipoAcervo.Audiovisual:
@@ -391,14 +391,14 @@ namespace SME.CDEP.Aplicacao.Servicos
                 {
                     var retornoFotografico =  mapper.Map<AcervoFotograficoDetalheDTO>(await repositorioAcervoFotografico.ObterDetalhamentoPorCodigo(filtro.Codigo));
                     retornoFotografico.Imagens = await AplicarEndereco(retornoFotografico.Imagens);
-                    retornoFotografico.EnderecoImagemPadrao = await ObterEnderecoImagemPadrao(TipoAcervo.Fotografico);
+                    retornoFotografico.EnderecoImagemPadrao = retornoFotografico.Imagens.PossuiElementos() ? string.Empty : await ObterEnderecoImagemPadrao(TipoAcervo.Fotografico);
                     return retornoFotografico;
                 }
                 case TipoAcervo.Tridimensional:
                 {
                     var retornoTridimensional =  mapper.Map<AcervoTridimensionalDetalheDTO>(await repositorioAcervoTridimensional.ObterDetalhamentoPorCodigo(filtro.Codigo));
                     retornoTridimensional.Imagens = await AplicarEndereco(retornoTridimensional.Imagens);
-                    retornoTridimensional.EnderecoImagemPadrao = await ObterEnderecoImagemPadrao(TipoAcervo.Tridimensional);
+                    retornoTridimensional.EnderecoImagemPadrao = retornoTridimensional.Imagens.PossuiElementos() ? string.Empty : await ObterEnderecoImagemPadrao(TipoAcervo.Tridimensional);
                     return retornoTridimensional;
                 }
                 default:
