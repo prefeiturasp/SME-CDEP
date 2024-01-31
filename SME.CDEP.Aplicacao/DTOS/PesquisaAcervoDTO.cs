@@ -15,4 +15,5 @@ public class PesquisaAcervoDTO
     public string DataAcervo { get; set; }
     public int Ano { get; set; }
     public long AcervoId { get; set; }
+    public string EnderecoImagemPadrao { get; set; }
 }

@@ -11,6 +11,7 @@ using SME.CDEP.Dominio.Excecoes;
 using SME.CDEP.Dominio.Extensions;
 using SME.CDEP.Infra.Dados.Repositorios.Interfaces;
 using SME.CDEP.Infra.Dominio.Enumerados;
+using Exception = System.Exception;
 
 namespace SME.CDEP.Aplicacao.Servicos
 {
@@ -239,6 +240,8 @@ namespace SME.CDEP.Aplicacao.Servicos
 
                 var miniaturasDosAcervos = await repositorioArquivo.ObterAcervoCodigoNomeArquivoPorAcervoId(acervosIds);
 
+                var imagensPadrao = await ObterImagensPadrao();
+
                 var hostAplicacao = configuration["UrlFrontEnd"];
             
                 var acervosAgrupandoCreditoAutor = acervos
@@ -257,7 +260,8 @@ namespace SME.CDEP.Aplicacao.Servicos
                         Assunto = s.Any(w=> w.Assunto.NaoEhNulo() ) ? string.Join(", ", s.Select(ca=> ca.Assunto).Distinct()) : string.Empty,
                         EnderecoImagem = miniaturasDosAcervos.Any(f=> f.AcervoId == s.Key.AcervoId) 
                             ? $"{hostAplicacao}{Constantes.BUCKET_CDEP}/{miniaturasDosAcervos.FirstOrDefault(f=> f.AcervoId == s.Key.AcervoId).Thumbnail}"
-                            : string.Empty
+                            : string.Empty,
+                        EnderecoImagemPadrao = $"{hostAplicacao}{Constantes.BUCKET_CDEP}/{imagensPadrao.FirstOrDefault(f=> f.TipoAcervo == s.Key.Tipo).NomeArquivoFisico}" 
                     });
             
                 var totalRegistros = acervosAgrupandoCreditoAutor.Count();
@@ -270,6 +274,45 @@ namespace SME.CDEP.Aplicacao.Servicos
                 };
             }
             return default;
+        }
+
+        private async Task<IEnumerable<TipoAcervoNomeArquivoFisicoDTO>> ObterImagensPadrao()
+        {
+            var imagensPadrao = new List<TipoAcervoNomeArquivoFisicoDTO>();
+            
+            var tiposDeAcervos = Enum.GetValues(typeof(TipoAcervo))
+                .Cast<TipoAcervo>()
+                .OrderBy(O=> O)
+                .Select(v => v);
+
+            foreach (var tipoAcervo in tiposDeAcervos)
+            {
+                var nomeImagemPadrao = ObterNomesDasImagensPadrao(tipoAcervo);
+                
+                var imagem = await repositorioArquivo.ObterArquivoPorNomeTipoArquivo(nomeImagemPadrao, TipoArquivo.Sistema);
+                
+                imagensPadrao.Add(new TipoAcervoNomeArquivoFisicoDTO()
+                {
+                    TipoAcervo = tipoAcervo,
+                    NomeArquivoFisico = imagem.NomeArquivoFisico
+                });
+            }
+
+            return imagensPadrao;
+        }
+
+        private string ObterNomesDasImagensPadrao(TipoAcervo tipoAcervo)
+        {
+            return tipoAcervo switch
+            {
+                TipoAcervo.Bibliografico => Constantes.IMAGEM_PADRAO_ACERVO_BIBLIOGRAFICO,
+                TipoAcervo.DocumentacaoHistorica => Constantes.IMAGEM_PADRAO_ACERVO_DOCUMENTAL,
+                TipoAcervo.ArtesGraficas => Constantes.IMAGEM_PADRAO_ACERVO_ARTE_GRAFICA,
+                TipoAcervo.Audiovisual => Constantes.IMAGEM_PADRAO_ACERVO_AUDIOVISUAL,
+                TipoAcervo.Fotografico => Constantes.IMAGEM_PADRAO_ACERVO_FOTOGRAFICO,
+                TipoAcervo.Tridimensional => Constantes.IMAGEM_PADRAO_ACERVO_TRIDIMENSIONAL,
+                _ => throw new ArgumentOutOfRangeException(nameof(tipoAcervo), tipoAcervo, null)
+            };
         }
 
         public async Task<PaginacaoResultadoDTO<IdTipoTituloCreditoAutoriaCodigoAcervoDTO>> ObterPorFiltro(int? tipoAcervo, string titulo, long? creditoAutorId, string codigo)
@@ -321,41 +364,58 @@ namespace SME.CDEP.Aplicacao.Servicos
             switch (filtro.Tipo)
             {
                 case TipoAcervo.Bibliografico:
-                    return mapper.Map<AcervoBibliograficoDetalheDTO>(await repositorioAcervoBibliografico.ObterDetalhamentoPorCodigo(filtro.Codigo));
+                    var retornoBibliografico = mapper.Map<AcervoBibliograficoDetalheDTO>(await repositorioAcervoBibliografico.ObterDetalhamentoPorCodigo(filtro.Codigo));
+                    retornoBibliografico.EnderecoImagemPadrao = await ObterEnderecoImagemPadrao(TipoAcervo.Bibliografico);
+                    return retornoBibliografico;
                 
                 case TipoAcervo.DocumentacaoHistorica:
                 {
-                    var retorno =  mapper.Map<AcervoDocumentalDetalheDTO>(await repositorioAcervoDocumental.ObterDetalhamentoPorCodigo(filtro.Codigo));
-                    retorno.Imagens = AplicarEndereco(retorno.Imagens);
-                    return retorno;
+                    var retornoDocumental =  mapper.Map<AcervoDocumentalDetalheDTO>(await repositorioAcervoDocumental.ObterDetalhamentoPorCodigo(filtro.Codigo));
+                    retornoDocumental.Imagens = await AplicarEndereco(retornoDocumental.Imagens);
+                    retornoDocumental.EnderecoImagemPadrao = await ObterEnderecoImagemPadrao(TipoAcervo.DocumentacaoHistorica);
+                    return retornoDocumental;
                 }
                 case TipoAcervo.ArtesGraficas:
                 {
-                    var retorno =  mapper.Map<AcervoArteGraficaDetalheDTO>(await repositorioAcervoArteGrafica.ObterDetalhamentoPorCodigo(filtro.Codigo));
-                    retorno.Imagens = AplicarEndereco(retorno.Imagens);
-                    return retorno;
+                    var retornoArteGrafica =  mapper.Map<AcervoArteGraficaDetalheDTO>(await repositorioAcervoArteGrafica.ObterDetalhamentoPorCodigo(filtro.Codigo));
+                    retornoArteGrafica.Imagens = await AplicarEndereco(retornoArteGrafica.Imagens);
+                    retornoArteGrafica.EnderecoImagemPadrao = await ObterEnderecoImagemPadrao(TipoAcervo.ArtesGraficas);
+                    return retornoArteGrafica;
                 }
                 case TipoAcervo.Audiovisual:
-                    return mapper.Map<AcervoAudiovisualDetalheDTO>(await repositorioAcervoAudiovisual.ObterDetalhamentoPorCodigo(filtro.Codigo));
+                    var retornoAudiovisual = mapper.Map<AcervoAudiovisualDetalheDTO>(await repositorioAcervoAudiovisual.ObterDetalhamentoPorCodigo(filtro.Codigo));
+                    retornoAudiovisual.EnderecoImagemPadrao = await ObterEnderecoImagemPadrao(TipoAcervo.Audiovisual);
+                    return retornoAudiovisual;
                 
                 case TipoAcervo.Fotografico:
                 {
-                    var retorno =  mapper.Map<AcervoFotograficoDetalheDTO>(await repositorioAcervoFotografico.ObterDetalhamentoPorCodigo(filtro.Codigo));
-                    retorno.Imagens = AplicarEndereco(retorno.Imagens);
-                    return retorno;
+                    var retornoFotografico =  mapper.Map<AcervoFotograficoDetalheDTO>(await repositorioAcervoFotografico.ObterDetalhamentoPorCodigo(filtro.Codigo));
+                    retornoFotografico.Imagens = await AplicarEndereco(retornoFotografico.Imagens);
+                    retornoFotografico.EnderecoImagemPadrao = await ObterEnderecoImagemPadrao(TipoAcervo.Fotografico);
+                    return retornoFotografico;
                 }
                 case TipoAcervo.Tridimensional:
                 {
-                    var retorno =  mapper.Map<AcervoTridimensionalDetalheDTO>(await repositorioAcervoTridimensional.ObterDetalhamentoPorCodigo(filtro.Codigo));
-                    retorno.Imagens = AplicarEndereco(retorno.Imagens);
-                    return retorno;
+                    var retornoTridimensional =  mapper.Map<AcervoTridimensionalDetalheDTO>(await repositorioAcervoTridimensional.ObterDetalhamentoPorCodigo(filtro.Codigo));
+                    retornoTridimensional.Imagens = await AplicarEndereco(retornoTridimensional.Imagens);
+                    retornoTridimensional.EnderecoImagemPadrao = await ObterEnderecoImagemPadrao(TipoAcervo.Tridimensional);
+                    return retornoTridimensional;
                 }
                 default:
-                    throw new ArgumentOutOfRangeException();
+                    throw new Exception("Tipo de Acervo inválido!");
             }
         }
+        
+        private async Task<string> ObterEnderecoImagemPadrao(TipoAcervo tipoAcervo)
+        {
+            var hostAplicacao = configuration["UrlFrontEnd"];
 
-        private ImagemDTO[] AplicarEndereco(ImagemDTO[] imagens)
+           var nomeImagemPadrao = await repositorioArquivo.ObterArquivoPorNomeTipoArquivo(ObterNomesDasImagensPadrao(tipoAcervo), TipoArquivo.Sistema);
+                
+           return $"{hostAplicacao}{Constantes.BUCKET_CDEP}/{nomeImagemPadrao.NomeArquivoFisico}";
+        }
+
+        private async Task<ImagemDTO[]> AplicarEndereco(ImagemDTO[] imagens)
         {
             var hostAplicacao = configuration["UrlFrontEnd"];
             
