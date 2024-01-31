@@ -255,6 +255,13 @@ public class Constantes
     public const string PLANILHA_ACERVO_FOTOGRAFICO = "planilha_acervo_fotografico.xlsx";
     public const string PLANILHA_ACERVO_TRIDIMENSIONAL = "planilha_acervo_tridimensional.xlsx";
     
+    public const string IMAGEM_PADRAO_ACERVO_BIBLIOGRAFICO = "Bibliografico_sem_imagem.svg";
+    public const string IMAGEM_PADRAO_ACERVO_DOCUMENTAL = "Documentacao_sem_imagem.svg";
+    public const string IMAGEM_PADRAO_ACERVO_ARTE_GRAFICA = "Artesgraficas_sem_imagem.svg";
+    public const string IMAGEM_PADRAO_ACERVO_AUDIOVISUAL = "Audiovisual_sem_imagem.svg";
+    public const string IMAGEM_PADRAO_ACERVO_FOTOGRAFICO = "Fotografico_sem_imagem.svg";
+    public const string IMAGEM_PADRAO_ACERVO_TRIDIMENSIONAL = "Tridimensional_sem_Imagem.svg";
+    
     public const string SIGLA_ACERVO_FOTOGRAFICO = ".FT";
     public const string SIGLA_ACERVO_ARTE_GRAFICA = ".AG";
     public const string SIGLA_ACERVO_TRIDIMENSIONAL = ".TD";
