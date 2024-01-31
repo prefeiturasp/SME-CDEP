@@ -205,17 +205,22 @@ namespace SME.CDEP.Dominio.Extensions
                 : valor;
         }
         
-        public static string ExtrairSomenteNumeralDoAno(this string valor)
+        public static int ObterAnoNumerico(this string valor)
         {
             if (valor.NaoEstaPreenchido())
-                return valor;
+                return default;
             
             var anoTratado = valor.Replace("[", "").Replace("]", "").Replace("-", "").Replace("?", "");
 
             while (anoTratado.Length < 4)
                 anoTratado += "0";
 
-            return anoTratado;
+            return anoTratado.ConverterParaInteiro();
+        }
+        
+        public static bool ContemDecadaOuSeculoCertoOuPossivel(this string valor)
+        {
+           return valor.Contains("-");
         }
     }
 }

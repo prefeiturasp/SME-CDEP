@@ -348,9 +348,8 @@ namespace SME.CDEP.Aplicacao.Servicos
                         Ano = new LinhaConteudoAjustarDTO()
                         {
                             Conteudo = planilha.ObterValorDaCelula(numeroLinha, Constantes.ACERVO_TRIDIMENSIONAL_CAMPO_ANO),
-                            LimiteCaracteres = Constantes.CARACTERES_PERMITIDOS_4,
+                            LimiteCaracteres = Constantes.CARACTERES_PERMITIDOS_7,
                             EhCampoObrigatorio = true,
-                            FormatoTipoDeCampo = Constantes.FORMATO_INTEIRO,
                         },
                         Data = new LinhaConteudoAjustarDTO()
                         {

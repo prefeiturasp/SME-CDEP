@@ -73,6 +73,9 @@ namespace SME.CDEP.Aplicacao.Servicos
             acervo.CriadoEm = DateTimeExtension.HorarioBrasilia();
             acervo.CriadoPor = contextoAplicacao.NomeUsuario;
             acervo.CriadoLogin = contextoAplicacao.UsuarioLogado;
+            
+            ObterAnoInicialFinal(acervo);
+            
             var acervoId = await repositorioAcervo.Inserir(acervo);
 
             foreach (var creditoAutorId in acervo.CreditosAutoresIds)
@@ -142,7 +145,9 @@ namespace SME.CDEP.Aplicacao.Servicos
             acervo.AlteradoEm = DateTimeExtension.HorarioBrasilia();
             acervo.AlteradoLogin = contextoAplicacao.UsuarioLogado;
             acervo.AlteradoPor = contextoAplicacao.NomeUsuario;
-            
+
+            ObterAnoInicialFinal(acervo);
+
             if (acervo.CodigoNovo.EstaPreenchido() && acervo.TipoAcervoId.NaoEhAcervoDocumental())
                 throw new NegocioException(MensagemNegocio.SOMENTE_ACERVO_DOCUMENTAL_POSSUI_CODIGO_NOVO);
             
@@ -184,7 +189,15 @@ namespace SME.CDEP.Aplicacao.Servicos
 
             return acervoAlterado;
         }
-        
+
+        private static void ObterAnoInicialFinal(Acervo acervo)
+        {
+            var ehDecadaOuSeculo = acervo.Ano.ContemDecadaOuSeculoCertoOuPossivel();
+            var anoBase = acervo.Ano.ObterAnoNumerico();
+            acervo.AnoInicio = anoBase;
+            acervo.AnoFim = ehDecadaOuSeculo ? anoBase.ObterFimDaDecadaOuSeculo() : anoBase;
+        }
+
         public async Task<AcervoDTO> Alterar(AcervoDTO acervoDTO)
         {
             var acervo = await repositorioAcervo.ObterPorId(acervoDTO.Id);

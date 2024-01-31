@@ -13,5 +13,7 @@
         public string Ano { get; set; }
         public string DataAcervo { get; set; }
         public IEnumerable<CoAutor>? CoAutores { get; set; }
+        public int AnoInicio { get; set; }
+        public int AnoFim { get; set; }
     }
 }
