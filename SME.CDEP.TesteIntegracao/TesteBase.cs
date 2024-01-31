@@ -644,7 +644,7 @@ namespace SME.CDEP.TesteIntegracao
                     CriadoPor = ConstantesTestes.SISTEMA,
                     CriadoEm = DateTimeExtension.HorarioBrasilia().AddMinutes(-15),
                     CriadoLogin = ConstantesTestes.LOGIN_123456789,
-                    Ano = faker.Date.Past().Year,
+                    Ano = faker.Date.Past().Year.ToString(),
                     DataAcervo = DateTimeExtension.HorarioBrasilia().Date.ToString("dd/MM/yyyy"),
                 });
 

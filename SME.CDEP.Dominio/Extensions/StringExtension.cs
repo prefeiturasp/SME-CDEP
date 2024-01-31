@@ -204,5 +204,18 @@ namespace SME.CDEP.Dominio.Extensions
                 ? valorConvertido.ToString("N2",CultureInfo.GetCultureInfo("pt-BR"))
                 : valor;
         }
+        
+        public static string ExtrairSomenteNumeralDoAno(this string valor)
+        {
+            if (valor.NaoEstaPreenchido())
+                return valor;
+            
+            var anoTratado = valor.Replace("[", "").Replace("]", "").Replace("-", "").Replace("?", "");
+
+            while (anoTratado.Length < 4)
+                anoTratado += "0";
+
+            return anoTratado;
+        }
     }
 }

@@ -284,7 +284,7 @@ namespace SME.CDEP.TesteIntegracao
                 acervos.Any(a=> a.Codigo.SaoIguais(linhasComSucesso.Codigo.Conteudo)).ShouldBeTrue();
                 acervos.Any(a=> a.Descricao.SaoIguais(linhasComSucesso.Descricao.Conteudo)).ShouldBeTrue(); 
                 acervos.Any(a=> a.DataAcervo.SaoIguais(linhasComSucesso.Data.Conteudo)).ShouldBeTrue(); 
-                acervos.Any(a=> a.Ano.SaoIguais(linhasComSucesso.Ano.Conteudo.ConverterParaInteiro())).ShouldBeTrue(); 
+                acervos.Any(a=> a.Ano.SaoIguais(linhasComSucesso.Ano.Conteudo)).ShouldBeTrue(); 
                 
                 //Referência 1:1
                 acervosAudiovisual.Any(a=> a.SuporteId.SaoIguais(suportes.FirstOrDefault(f=> f.Nome.SaoIguais(linhasComSucesso.Suporte.Conteudo)).Id)).ShouldBeTrue();
@@ -425,7 +425,7 @@ namespace SME.CDEP.TesteIntegracao
                 acervos.Any(a=> a.Codigo.SaoIguais(linhasComSucesso.Codigo.Conteudo)).ShouldBeTrue();
                 acervos.Any(a=> a.Descricao.SaoIguais(linhasComSucesso.Descricao.Conteudo)).ShouldBeTrue();  
                 acervos.Any(a=> a.DataAcervo.SaoIguais(linhasComSucesso.Data.Conteudo)).ShouldBeTrue();
-                acervos.Any(a=> a.Ano.SaoIguais(linhasComSucesso.Data.Conteudo.ConverterParaInteiro())).ShouldBeTrue();
+                acervos.Any(a=> a.Ano.SaoIguais(linhasComSucesso.Data.Conteudo)).ShouldBeTrue();
                 
                 //Referência 1:1
                 acervosAudiovisual.Any(a=> a.SuporteId.SaoIguais(suportes.FirstOrDefault(f=> f.Nome.SaoIguais(linhasComSucesso.Suporte.Conteudo)).Id)).ShouldBeTrue();

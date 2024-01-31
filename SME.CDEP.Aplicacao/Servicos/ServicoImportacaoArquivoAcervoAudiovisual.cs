@@ -270,7 +270,7 @@ namespace SME.CDEP.Aplicacao.Servicos
                             .Select(s => s.Id).ToArray(),
                         Localizacao = acervoAudiovisualLinha.Localizacao.Conteudo,
                         Procedencia = acervoAudiovisualLinha.Procedencia.Conteudo,
-                        Ano = acervoAudiovisualLinha.Ano.Conteudo.ConverterParaInteiro(),
+                        Ano = acervoAudiovisualLinha.Ano.Conteudo,
                         DataAcervo = acervoAudiovisualLinha.Data.Conteudo,
                         Copia = acervoAudiovisualLinha.Copia.Conteudo,
                         PermiteUsoImagem = ObterAutorizaUsoDeImagemPorValorDoCampo(acervoAudiovisualLinha.PermiteUsoImagem.Conteudo),

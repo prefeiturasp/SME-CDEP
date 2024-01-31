@@ -296,7 +296,7 @@ namespace SME.CDEP.Aplicacao.Servicos
 
                         AssuntosIds = ObterAssuntosIdsPorValorDoCampo(acervoBibliograficoLinha.Assunto.Conteudo),
 
-                        Ano = acervoBibliograficoLinha.Ano.Conteudo.ConverterParaInteiro(),
+                        Ano = acervoBibliograficoLinha.Ano.Conteudo,
                         Edicao = acervoBibliograficoLinha.Edicao.Conteudo,
                         NumeroPagina = acervoBibliograficoLinha.NumeroPaginas.Conteudo.ObterInteiroOuNuloPorValorDoCampo(),
                         Largura = acervoBibliograficoLinha.Largura.Conteudo,

@@ -277,7 +277,7 @@ namespace SME.CDEP.Aplicacao.Servicos
                             .Select(s => s.Id).ToArray(),
                         Localizacao = acervoArteGraficaLinha.Localizacao.Conteudo,
                         Procedencia = acervoArteGraficaLinha.Procedencia.Conteudo,
-                        Ano = acervoArteGraficaLinha.Ano.Conteudo.ConverterParaInteiro(),
+                        Ano = acervoArteGraficaLinha.Ano.Conteudo,
                         DataAcervo = acervoArteGraficaLinha.Data.Conteudo,
                         CopiaDigital = ObterCopiaDigitalPorValorDoCampo(acervoArteGraficaLinha.CopiaDigital.Conteudo),
                         PermiteUsoImagem = ObterAutorizaUsoDeImagemPorValorDoCampo(acervoArteGraficaLinha.PermiteUsoImagem.Conteudo),

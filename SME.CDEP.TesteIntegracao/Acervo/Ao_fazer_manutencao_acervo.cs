@@ -55,7 +55,7 @@ namespace SME.CDEP.TesteIntegracao
             acervoAlterar.Titulo = faker.Lorem.Sentence();
             acervoAlterar.SubTitulo = faker.Lorem.Sentence();
             acervoAlterar.DataAcervo = DateTimeExtension.HorarioBrasilia().Date.ToString();
-            acervoAlterar.Ano = DateTimeExtension.HorarioBrasilia().Year;
+            acervoAlterar.Ano = DateTimeExtension.HorarioBrasilia().Year.ToString();
             
             var creditoAutores = (ObterTodos<AcervoCreditoAutor>()).Where(w => w.AcervoId == acervoAlterar.Id);
             acervoAlterar.CreditosAutoresIds = creditoAutores.Take(2).Select(s => s.CreditoAutorId).ToArray();
@@ -93,7 +93,7 @@ namespace SME.CDEP.TesteIntegracao
             acervoAlterar.Titulo = faker.Lorem.Sentence();
             acervoAlterar.SubTitulo = faker.Lorem.Sentence();
             acervoAlterar.DataAcervo = DateTimeExtension.HorarioBrasilia().Date.ToString();
-            acervoAlterar.Ano = DateTimeExtension.HorarioBrasilia().Year;
+            acervoAlterar.Ano = DateTimeExtension.HorarioBrasilia().Year.ToString();
             
             var creditoAutores = (ObterTodos<AcervoCreditoAutor>()).Where(w => w.AcervoId == acervoAlterar.Id);
             acervoAlterar.CreditosAutoresIds = creditoAutores.Take(2).Select(s => s.CreditoAutorId).ToArray();
@@ -130,7 +130,7 @@ namespace SME.CDEP.TesteIntegracao
             acervoAlterar.SubTitulo = acervos.LastOrDefault().SubTitulo;
             acervoAlterar.Codigo = acervos.LastOrDefault().Codigo;
             acervoAlterar.DataAcervo = DateTimeExtension.HorarioBrasilia().Date.ToString();
-            acervoAlterar.Ano = DateTimeExtension.HorarioBrasilia().Year;
+            acervoAlterar.Ano = DateTimeExtension.HorarioBrasilia().Year.ToString();
             
             var creditoAutores = (ObterTodos<AcervoCreditoAutor>()).Where(w => w.AcervoId == acervoAlterar.Id);
             acervoAlterar.CreditosAutoresIds = creditoAutores.Take(2).Select(s => s.CreditoAutorId).ToArray();
@@ -152,7 +152,7 @@ namespace SME.CDEP.TesteIntegracao
             acervoAlterar.SubTitulo = acervos.LastOrDefault().SubTitulo;
             acervoAlterar.Codigo = acervos.LastOrDefault().Codigo;
             acervoAlterar.DataAcervo = DateTimeExtension.HorarioBrasilia().Date.ToString();
-            acervoAlterar.Ano = faker.Date.Future().Year;
+            acervoAlterar.Ano = faker.Date.Future().Year.ToString();
             
             var creditoAutores = (ObterTodos<AcervoCreditoAutor>()).Where(w => w.AcervoId == acervoAlterar.Id);
             acervoAlterar.CreditosAutoresIds = creditoAutores.Take(2).Select(s => s.CreditoAutorId).ToArray();
@@ -175,7 +175,7 @@ namespace SME.CDEP.TesteIntegracao
             acervoAlterar.SubTitulo = acervos.LastOrDefault().SubTitulo;
             acervoAlterar.Codigo = "196";
             acervoAlterar.DataAcervo = DateTimeExtension.HorarioBrasilia().Date.ToString();
-            acervoAlterar.Ano = DateTimeExtension.HorarioBrasilia().Year;
+            acervoAlterar.Ano = DateTimeExtension.HorarioBrasilia().Year.ToString();
             
             var creditoAutores = (ObterTodos<AcervoCreditoAutor>()).Where(w => w.AcervoId == acervoAlterar.Id);
             acervoAlterar.CreditosAutoresIds = creditoAutores.Take(2).Select(s => s.CreditoAutorId).ToArray();
@@ -215,7 +215,7 @@ namespace SME.CDEP.TesteIntegracao
             acervoAlterar.SubTitulo = acervos.LastOrDefault().SubTitulo;
             acervoAlterar.Codigo = acervos.FirstOrDefault().Codigo;
             acervoAlterar.DataAcervo = DateTimeExtension.HorarioBrasilia().Date.ToString();
-            acervoAlterar.Ano = DateTimeExtension.HorarioBrasilia().Year;
+            acervoAlterar.Ano = DateTimeExtension.HorarioBrasilia().Year.ToString();
             
             var creditoAutores = (ObterTodos<AcervoCreditoAutor>()).Where(w => w.AcervoId == acervoAlterar.Id);
             acervoAlterar.CreditosAutoresIds = creditoAutores.Take(2).Select(s => s.CreditoAutorId).ToArray();
@@ -255,7 +255,7 @@ namespace SME.CDEP.TesteIntegracao
             acervoAlterar.SubTitulo = acervos.LastOrDefault().SubTitulo;
             acervoAlterar.Codigo = "196";
             acervoAlterar.DataAcervo = DateTimeExtension.HorarioBrasilia().Date.ToString();
-            acervoAlterar.Ano = DateTimeExtension.HorarioBrasilia().Year;
+            acervoAlterar.Ano = DateTimeExtension.HorarioBrasilia().Year.ToString();
             
             var creditoAutores = (ObterTodos<AcervoCreditoAutor>()).Where(w => w.AcervoId == acervoAlterar.Id);
             acervoAlterar.CreditosAutoresIds = creditoAutores.Take(3).Select(s => s.CreditoAutorId).ToArray();
@@ -295,7 +295,7 @@ namespace SME.CDEP.TesteIntegracao
             acervoAlterar.SubTitulo = acervos.LastOrDefault().SubTitulo;
             acervoAlterar.Codigo = "196";
             acervoAlterar.DataAcervo = DateTimeExtension.HorarioBrasilia().Date.ToString();
-            acervoAlterar.Ano = DateTimeExtension.HorarioBrasilia().Year;
+            acervoAlterar.Ano = DateTimeExtension.HorarioBrasilia().Year.ToString();
             
             var creditoAutores = (ObterTodos<AcervoCreditoAutor>()).Where(w => w.AcervoId == acervoAlterar.Id);
             acervoAlterar.CreditosAutoresIds = creditoAutores.Take(1).Select(s => s.CreditoAutorId).ToArray();
@@ -393,21 +393,6 @@ namespace SME.CDEP.TesteIntegracao
             await servicoAcervo.Inserir(acervoInserir).ShouldThrowAsync<NegocioException>();
         }
         
-        [Fact(DisplayName = "Acervo - Não deve inserir ano futuro")]
-        public async Task Nao_deve_inserir_ano_futuro()
-        {
-            await InserirDadosBasicosAleatorios();
-            await InserirAcervo();
-            var servicoAcervo = GetServicoAcervo();
-            
-            var acervoInserir = AcervoMock.Instance.GerarAcervo(TipoAcervo.Bibliografico).Generate();
-            acervoInserir.CreditosAutoresIds = new long []{1,2,3,4,5};
-            acervoInserir.CoAutores = new List<CoAutor>() { new () { CreditoAutorId = new Random().Next(1,5), TipoAutoria = faker.Lorem.Word().Limite(15)}}.ToList();
-            acervoInserir.Ano = faker.Date.Future().Year;
-            
-            await servicoAcervo.Inserir(acervoInserir).ShouldThrowAsync<NegocioException>();
-        }
-        
         [Fact(DisplayName = "Acervo - Deve inserir com códigos iguais e acervos diferentes")]
         public async Task Deve_inserir_com_codigo_iguais_e_acervos_diferentes()
         {
@@ -425,7 +410,7 @@ namespace SME.CDEP.TesteIntegracao
             acervoInserir.SubTitulo = acervos.LastOrDefault().SubTitulo;
             acervoInserir.Codigo = acervos.FirstOrDefault().Codigo;
             acervoInserir.DataAcervo = DateTimeExtension.HorarioBrasilia().Date.ToString();
-            acervoInserir.Ano = DateTimeExtension.HorarioBrasilia().Year;
+            acervoInserir.Ano = DateTimeExtension.HorarioBrasilia().Year.ToString();
             
             var acervoId = await servicoAcervo.Inserir(acervoInserir);
             var acervoinserido = (ObterTodos<Acervo>()).FirstOrDefault(w=> w.Id == acervoId);
@@ -481,6 +466,22 @@ namespace SME.CDEP.TesteIntegracao
             acervos.Count(a=> !a.Excluido).ShouldBeEquivalentTo(34);
         }
 
+        [Fact(DisplayName = "Acervo - Gerar anos indexadores iniciais e finais com base no Ano [197-] ou [197-?] ou [19--] ou [19--?] ou [1987]")]
+        public async Task Deve_gerar_anos_indexadores_iniciais_finais_com_base_ano()
+        {
+            var decadaCerta = "[197-]";
+            var decadaPossivel = "[197-?]";
+            var seculoCerto = "[19--]";
+            var seculoPossivel = "[19--?]";
+            var anoExato = "[1987]";
+
+            var decadaCertaTratada = decadaCerta.ExtrairSomenteNumeralDoAno();
+            var decadaPossivelTratada = decadaPossivel.ExtrairSomenteNumeralDoAno();
+            var seculoCertoTratada = seculoCerto.ExtrairSomenteNumeralDoAno();
+            var seculoPossivelTratada = seculoPossivel.ExtrairSomenteNumeralDoAno();
+            var anoTratado = anoExato.ExtrairSomenteNumeralDoAno();
+        }
+
         private async Task InserirAcervo(TipoAcervo tipoAcervo = TipoAcervo.Bibliografico)
         {
             for (int j = 1; j <= 35; j++)
@@ -492,7 +493,7 @@ namespace SME.CDEP.TesteIntegracao
                     Descricao = faker.Lorem.Text(),
                     SubTitulo = faker.Lorem.Sentence(),
                     DataAcervo = faker.Date.ToString(),
-                    Ano = faker.Date.Past().Year,
+                    Ano = faker.Date.Past().Year.ToString(),
                     TipoAcervoId = (int)tipoAcervo,
                     CriadoPor = ConstantesTestes.SISTEMA,
                     CriadoEm = DateTimeExtension.HorarioBrasilia(),

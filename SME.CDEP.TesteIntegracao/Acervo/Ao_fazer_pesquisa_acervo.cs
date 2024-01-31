@@ -133,7 +133,7 @@ namespace SME.CDEP.TesteIntegracao
             {
                 arteGrafica.Codigo = $"{arteGrafica.Codigo}{contador}";
                 arteGrafica.DataAcervo = DateTimeExtension.HorarioBrasilia().Date.ToString("dd/MM/yyyy");
-                arteGrafica.Ano = DateTimeExtension.HorarioBrasilia().Year;
+                arteGrafica.Ano = DateTimeExtension.HorarioBrasilia().Year.ToString();
                 arteGrafica.Arquivos = arquivosInseridos.Select(s => s.Id).ToArray();
                 await servicoAcervoArteGrafica.Inserir(arteGrafica);
                 contador++;
@@ -187,7 +187,7 @@ namespace SME.CDEP.TesteIntegracao
             {
                 arteGrafica.Codigo = $"{arteGrafica.Codigo}{contador}";
                 arteGrafica.DataAcervo = DateTimeExtension.HorarioBrasilia().Date.ToString("dd/MM/yyyy");
-                arteGrafica.Ano = DateTimeExtension.HorarioBrasilia().Year;
+                arteGrafica.Ano = DateTimeExtension.HorarioBrasilia().Year.ToString();
                 arteGrafica.Arquivos = arquivosInseridos.Select(s => s.Id).ToArray();
                 await servicoAcervoArteGrafica.Inserir(arteGrafica);
                 contador++;
@@ -243,7 +243,7 @@ namespace SME.CDEP.TesteIntegracao
                 arteGrafica.DataAcervo = DateTimeExtension.HorarioBrasilia().Date.ToString("dd/MM/yyyy");
                 arteGrafica.PermiteUsoImagem = true;
                 arteGrafica.Arquivos = arquivosInseridos.Select(s => s.Id).ToArray();
-                arteGrafica.Ano = DateTimeExtension.HorarioBrasilia().AddYears(-3).Year;
+                arteGrafica.Ano = DateTimeExtension.HorarioBrasilia().AddYears(-3).Year.ToString();
                 await servicoAcervoArteGrafica.Inserir(arteGrafica);
                 contador++;
             }
@@ -330,7 +330,7 @@ namespace SME.CDEP.TesteIntegracao
             {
                 arteGrafica.Codigo = $"{arteGrafica.Codigo}{contador}";
                 arteGrafica.DataAcervo = DateTimeExtension.HorarioBrasilia().Date.ToString("dd/MM/yyyy");
-                arteGrafica.Ano = DateTimeExtension.HorarioBrasilia().AddYears(-3).Year;
+                arteGrafica.Ano = DateTimeExtension.HorarioBrasilia().AddYears(-3).Year.ToString();
                 arteGrafica.PermiteUsoImagem = false;
                 arteGrafica.Arquivos = arquivosInseridos.Select(s => s.Id).ToArray();
                 await servicoAcervoArteGrafica.Inserir(arteGrafica);
