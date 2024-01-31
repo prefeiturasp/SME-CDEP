@@ -12,7 +12,6 @@ public class AcervoFotograficoDetalheDTO : AcervoDetalheDTO
     public string Conservacao { get; set; }
     public long Quantidade { get; set; }
     public string Dimensoes { get; set; }
-    public string DimensoesLegendas { get; set; } = "L = largura | A = altura";
     public string Suporte { get; set; }
     public string Formato { get; set; }
     public string TamanhoArquivo { get; set; }

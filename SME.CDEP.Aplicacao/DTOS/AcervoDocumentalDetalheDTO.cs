@@ -11,7 +11,6 @@ public class AcervoDocumentalDetalheDTO : AcervoDetalheDTO
     public string Volume { get; set; }
     public string TipoAnexo { get; set; }
     public string Dimensoes { get; set; }
-    public string DimensoesLegendas { get; set; } = "L = largura | A = altura";
     public string TamanhoArquivo { get; set; }
     public string Localizacao { get; set; }
     public string CopiaDigital { get; set; }
