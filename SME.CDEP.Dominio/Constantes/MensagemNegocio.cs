@@ -2,7 +2,7 @@
 
 public class MensagemNegocio
 {
-    public const string O_ANO_NAO_ESTA_SEGUINDO_FORMATO_ABNT = "O Ano do acervo não está seguingo o formato da ABNT";
+    public const string O_ANO_NAO_ESTA_SEGUINDO_FORMATO_ABNT = "O Ano do acervo não está seguindo o formato da ABNT";
     public const string ACERVO_NAO_ENCONTRADO = "Acervo não encontrado";
     public const string USUARIO_NAO_ENCONTRADO = "Usuário não encontrado";
     public const string O_ITEM_X_DO_DOMINIO_X_NAO_ENCONTRADO = "O item '{0}' do domínio '{1}' não foi encontrado";
