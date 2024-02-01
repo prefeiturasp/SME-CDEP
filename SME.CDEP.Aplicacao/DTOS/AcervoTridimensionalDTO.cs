@@ -22,5 +22,5 @@ public class AcervoTridimensionalDTO
     public string? Diametro { get; set; }
     public ArquivoResumidoDTO[]? Arquivos { get; set; }
     public AuditoriaDTO Auditoria { get; set; }
-    public int? Ano { get; set; }
+    public string? Ano { get; set; }
 }

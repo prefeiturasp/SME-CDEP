@@ -10,8 +10,10 @@
         public string CodigoNovo { get; set; }
         public string SubTitulo { get; set; }
         public string Descricao { get; set; }
-        public int Ano { get; set; }
+        public string Ano { get; set; }
         public string DataAcervo { get; set; }
         public IEnumerable<CoAutor>? CoAutores { get; set; }
+        public int AnoInicio { get; set; }
+        public int AnoFim { get; set; }
     }
 }

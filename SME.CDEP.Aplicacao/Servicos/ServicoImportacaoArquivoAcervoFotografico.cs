@@ -157,7 +157,7 @@ namespace SME.CDEP.Aplicacao.Servicos
                 Codigo = ObterSufixo(ObterConteudoTexto(linha.Codigo),Constantes.SIGLA_ACERVO_FOTOGRAFICO),
                 Localizacao = ObterConteudoTexto(linha.Localizacao),
                 Procedencia = ObterConteudoTexto(linha.Procedencia),
-                Ano = ObterConteudoInteiroOuNulo(linha.Ano),
+                Ano = ObterConteudoTexto(linha.Ano),
                 DataAcervo = ObterConteudoTexto(linha.Data),
                 CopiaDigital = ObterConteudoSimNao(linha.CopiaDigital),
                 PermiteUsoImagem = ObterConteudoSimNao(linha.PermiteUsoImagem),
@@ -284,7 +284,7 @@ namespace SME.CDEP.Aplicacao.Servicos
                             .Select(s => s.Id).ToArray(),
                         Localizacao = acervoFotograficoLinha.Localizacao.Conteudo,
                         Procedencia = acervoFotograficoLinha.Procedencia.Conteudo,
-                        Ano = acervoFotograficoLinha.Ano.Conteudo.ConverterParaInteiro(),
+                        Ano = acervoFotograficoLinha.Ano.Conteudo,
                         DataAcervo = acervoFotograficoLinha.Data.Conteudo,
                         CopiaDigital = ObterCopiaDigitalPorValorDoCampo(acervoFotograficoLinha.CopiaDigital.Conteudo),
                         PermiteUsoImagem = ObterAutorizaUsoDeImagemPorValorDoCampo(acervoFotograficoLinha.PermiteUsoImagem.Conteudo),
@@ -444,9 +444,8 @@ namespace SME.CDEP.Aplicacao.Servicos
                         Ano = new LinhaConteudoAjustarDTO()
                         {
                             Conteudo = planilha.ObterValorDaCelula(numeroLinha, Constantes.ACERVO_FOTOGRAFICO_CAMPO_ANO),
-                            LimiteCaracteres = Constantes.CARACTERES_PERMITIDOS_4,
+                            LimiteCaracteres = Constantes.CARACTERES_PERMITIDOS_7,
                             EhCampoObrigatorio = true,
-                            FormatoTipoDeCampo = Constantes.FORMATO_INTEIRO,
                         },
                         Data = new LinhaConteudoAjustarDTO()
                         {

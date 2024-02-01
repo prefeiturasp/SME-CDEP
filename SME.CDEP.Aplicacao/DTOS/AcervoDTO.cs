@@ -12,5 +12,5 @@ public class AcervoDTO : BaseAuditavelDTO
     public string SubTitulo { get; set; }
     public IEnumerable<CoAutorDTO> CoAutores { get; set; }
     public string DataAcervo { get; set; }
-    public int Ano { get; set; }
+    public string Ano { get; set; }
 }
