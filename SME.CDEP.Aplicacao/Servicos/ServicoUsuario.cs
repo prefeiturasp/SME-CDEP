@@ -69,14 +69,10 @@ namespace SME.CDEP.Aplicacao.Servicos
 
             if (!retornoCoreSSO)
                 throw new NegocioException(MensagemNegocio.NAO_FOI_POSSIVEL_CADASTRAR_USUARIO_EXTERNO_NO_CORESSO);
+
+            var usuario = mapper.Map<Usuario>(usuarioExternoDto);
                 
-            var retorno = await repositorioUsuario.Inserir(new Usuario()
-            {
-                Login = usuarioExternoDto.Cpf, Nome = usuarioExternoDto.Nome,
-                Telefone = usuarioExternoDto.Telefone, Endereco = usuarioExternoDto.Endereco, Numero = usuarioExternoDto.Numero,
-                Complemento = usuarioExternoDto.Complemento, Cidade = usuarioExternoDto.Cidade, Estado = usuarioExternoDto.Estado,
-                Cep = usuarioExternoDto.Cep, TipoUsuario = usuarioExternoDto.Tipo, Bairro = usuarioExternoDto.Bairro
-            });
+            var retorno = await repositorioUsuario.Inserir(usuario);
 
             return retorno != 0;
         }
@@ -110,6 +106,7 @@ namespace SME.CDEP.Aplicacao.Servicos
                 dadosUsuarioCoreSSO.Cidade = dadosusuarioAcervo.Cidade;
                 dadosUsuarioCoreSSO.Estado = dadosusuarioAcervo.Estado;
                 dadosUsuarioCoreSSO.Tipo = (int)dadosusuarioAcervo.TipoUsuario;
+                dadosUsuarioCoreSSO.Instituicao = dadosusuarioAcervo.Instituicao;
             }
             return dadosUsuarioCoreSSO;
         }

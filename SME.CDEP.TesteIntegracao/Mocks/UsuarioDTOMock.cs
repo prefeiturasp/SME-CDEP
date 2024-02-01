@@ -22,6 +22,7 @@ public static class UsuarioDTOMock
         faker.RuleFor(x => x.Telefone, f => f.Phone.PhoneNumber("(##) #####-####"));
         faker.RuleFor(x => x.Bairro, f => f.Address.County().Limite(200));
         faker.RuleFor(x => x.TipoUsuario, f => (int)tipoUsuario);
+        faker.RuleFor(x => x.Instituicao, f => f.Company.CompanyName());
         return faker;
     }
 }

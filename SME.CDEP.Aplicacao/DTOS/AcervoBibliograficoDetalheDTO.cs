@@ -13,8 +13,7 @@ public class AcervoBibliograficoDetalheDTO : AcervoDetalheDTO
     public string SerieColecao { get; set; }
     public string Volume { get; set; }
     public string Idioma { get; set; }
-    public string LocalizacaoCDD { get; set; }
-    public string LocalizacaoPHA { get; set; }
+    public string Localizacao { get; set; }
     public string NotasGerais { get; set; }
     public string Isbn { get; set; }
 }

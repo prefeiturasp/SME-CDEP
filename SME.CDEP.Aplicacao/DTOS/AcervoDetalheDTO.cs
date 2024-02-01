@@ -6,4 +6,5 @@ public class AcervoDetalheDTO
     public string Codigo { get; set; }
     public int Ano { get; set; }
     public long AcervoId { get; set; }
+    public string EnderecoImagemPadrao { get; set; }
 }

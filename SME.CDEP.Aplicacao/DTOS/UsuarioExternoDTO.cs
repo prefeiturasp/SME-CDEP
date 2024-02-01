@@ -57,5 +57,8 @@ namespace SME.CDEP.Aplicacao.DTOS
         
         [Required(ErrorMessage = "É necessário informar o bairro.")]
         public string Bairro { get; set; }
+        
+        [Required(ErrorMessage = "É necessário informar a instituição/empresa.")]
+        public string Instituicao { get; set; }
     }
 }
