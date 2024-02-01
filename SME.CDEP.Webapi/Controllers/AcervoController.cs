@@ -35,6 +35,7 @@ public class AcervoController: BaseController
     
     [HttpGet("pesquisar-acervos")]
     [ProducesResponseType(typeof(PaginacaoResultadoDTO<PesquisaAcervoDTO>), 200)]
+    [ProducesResponseType(typeof(RetornoBaseDTO), 204)]
     [ProducesResponseType(typeof(RetornoBaseDTO), 400)]
     [ProducesResponseType(typeof(RetornoBaseDTO), 403)]
     [ProducesResponseType(typeof(RetornoBaseDTO), 601)]
