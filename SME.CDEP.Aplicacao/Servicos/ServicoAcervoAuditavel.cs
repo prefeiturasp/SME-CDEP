@@ -301,7 +301,7 @@ namespace SME.CDEP.Aplicacao.Servicos
                     TotalPaginas = (int)Math.Ceiling((double)totalRegistros / paginacao.QuantidadeRegistros)
                 };
             }
-            return default;
+            return new PaginacaoResultadoDTO<PesquisaAcervoDTO>();
         }
 
         private async Task<IEnumerable<TipoAcervoNomeArquivoFisicoDTO>> ObterImagensPadrao()
