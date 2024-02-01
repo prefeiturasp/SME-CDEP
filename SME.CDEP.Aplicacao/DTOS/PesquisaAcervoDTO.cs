@@ -13,6 +13,6 @@ public class PesquisaAcervoDTO
     public TipoAcervoTag TipoAcervoTag { get; set; }
     public string EnderecoImagem { get; set; }
     public string DataAcervo { get; set; }
-    public int Ano { get; set; }
+    public string Ano { get; set; }
     public long AcervoId { get; set; }
 }

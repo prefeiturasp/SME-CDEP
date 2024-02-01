@@ -11,7 +11,7 @@ namespace SME.CDEP.Dominio.Entidades
         public string CreditoAutoria { get; set; }
         public string Assunto { get; set; }
         public string Descricao { get; set; }
-        public int Ano { get; set; }
+        public string Ano { get; set; }
 
         public TipoAcervoTag TipoAcervoTag
         {

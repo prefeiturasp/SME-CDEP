@@ -2,6 +2,7 @@
 
 public class MensagemNegocio
 {
+    public const string O_ANO_NAO_ESTA_SEGUINDO_FORMATO_ABNT = "O Ano do acervo não está seguingo o formato da ABNT";
     public const string ACERVO_NAO_ENCONTRADO = "Acervo não encontrado";
     public const string USUARIO_NAO_ENCONTRADO = "Usuário não encontrado";
     public const string O_ITEM_X_DO_DOMINIO_X_NAO_ENCONTRADO = "O item '{0}' do domínio '{1}' não foi encontrado";
@@ -31,6 +32,7 @@ public class MensagemNegocio
     public const string VOCE_JA_POSSUI_LOGIN_ACERVO = "Você já possui login no sistema. Caso tenha esquecido a senha, clique em 'esqueci a senha'";
     public const string VOCE_JA_POSSUI_LOGIN_CORESSO = "Você já possui login no sistema. Acesse informando seu RF e senha dos Sistemas da SME (SGP ou Plateia)";
     public const string PLANILHA_VAZIA = "A planilha importada está vazia";
+    public const string NAO_PERMITIDO_ANO_FUTURO = "O campo ano não admite anos futuros. Apenas anos atuais e anteriores são permitidos.";
     public const string TOKEN_INVALIDO = "Token inválido";
     public const string CAMPO_X_ESPERADO_NUMERICO_E_COM_CASAS_DECIMAIS = "É esperado que o campo '{0}' seja um numérico com duas casas decimais separados por vírgula";
 }

@@ -1,4 +1,5 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using System.Text.RegularExpressions;
 using AutoMapper;
 using Microsoft.Extensions.Configuration;
 using SME.CDEP.Aplicacao.DTOS;
@@ -73,8 +74,13 @@ namespace SME.CDEP.Aplicacao.Servicos
             acervo.CriadoEm = DateTimeExtension.HorarioBrasilia();
             acervo.CriadoPor = contextoAplicacao.NomeUsuario;
             acervo.CriadoLogin = contextoAplicacao.UsuarioLogado;
+
+            if (!acervo.Ano.EhAnoConformeFormatoABNT())
+                throw new NegocioException(MensagemNegocio.O_ANO_NAO_ESTA_SEGUINDO_FORMATO_ABNT);
             
             ObterAnoInicialFinal(acervo);
+            
+            ValidarAnoFuturo(acervo);
             
             var acervoId = await repositorioAcervo.Inserir(acervo);
 
@@ -95,6 +101,12 @@ namespace SME.CDEP.Aplicacao.Servicos
                 });
 
             return acervoId;
+        }
+
+        private static void ValidarAnoFuturo(Acervo acervo)
+        {
+            if (acervo.AnoInicio.EhAnoFuturo())
+                throw new NegocioException(MensagemNegocio.NAO_PERMITIDO_ANO_FUTURO);
         }
 
         private static void ValidarCodigoTomboCodigoNovoAno(Acervo acervo)
@@ -145,8 +157,13 @@ namespace SME.CDEP.Aplicacao.Servicos
             acervo.AlteradoEm = DateTimeExtension.HorarioBrasilia();
             acervo.AlteradoLogin = contextoAplicacao.UsuarioLogado;
             acervo.AlteradoPor = contextoAplicacao.NomeUsuario;
-
+            
+            if (!acervo.Ano.EhAnoConformeFormatoABNT())
+                throw new NegocioException(MensagemNegocio.O_ANO_NAO_ESTA_SEGUINDO_FORMATO_ABNT);
+            
             ObterAnoInicialFinal(acervo);
+            
+            ValidarAnoFuturo(acervo);
 
             if (acervo.CodigoNovo.EstaPreenchido() && acervo.TipoAcervoId.NaoEhAcervoDocumental())
                 throw new NegocioException(MensagemNegocio.SOMENTE_ACERVO_DOCUMENTAL_POSSUI_CODIGO_NOVO);
@@ -194,6 +211,7 @@ namespace SME.CDEP.Aplicacao.Servicos
         {
             var ehDecadaOuSeculo = acervo.Ano.ContemDecadaOuSeculoCertoOuPossivel();
             var anoBase = acervo.Ano.ObterAnoNumerico();
+            
             acervo.AnoInicio = anoBase;
             acervo.AnoFim = ehDecadaOuSeculo ? anoBase.ObterFimDaDecadaOuSeculo() : anoBase;
         }

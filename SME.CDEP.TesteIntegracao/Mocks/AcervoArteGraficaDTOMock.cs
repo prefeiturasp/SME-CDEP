@@ -1,6 +1,7 @@
 ﻿using Bogus;
 using SME.CDEP.Aplicacao.DTOS;
 using SME.CDEP.Dominio.Extensions;
+using SME.CDEP.Infra.Dominio.Enumerados;
 
 namespace SME.CDEP.TesteIntegracao;
 
@@ -30,6 +31,7 @@ public static class AcervoArteGraficaDTOMock
         faker.RuleFor(x => x.Quantidade, f => random.Next(15,55));
         faker.RuleFor(x => x.CreditosAutoresIds, f => new long[]{1,2,3,4,5});
         faker.RuleFor(x => x.Arquivos, f => new long[]{random.Next(1,10),random.Next(1,10),random.Next(1,10),random.Next(1,10),random.Next(1,10)});
+        faker.RuleFor(x => x.Ano, f => $"[{DateTimeExtension.HorarioBrasilia().Year}]");
         return faker;
     }
 }

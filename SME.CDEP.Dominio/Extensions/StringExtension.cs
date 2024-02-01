@@ -222,5 +222,14 @@ namespace SME.CDEP.Dominio.Extensions
         {
            return valor.Contains("-");
         }
+        
+        public static bool EhAnoConformeFormatoABNT(this string valor)
+        {
+            var ehSeculoValido =  Regex.IsMatch(valor, @"^\[\d{2}--(?:\d{2}|\?\d?)?\]$");
+            var ehDecadaValida = Regex.IsMatch(valor, @"^\[\d{3}-[?]?\]$");
+            var ehAnoValido =  Regex.IsMatch(valor, @"^\[?\d{4}\]?$");
+
+            return ehSeculoValido || ehDecadaValida || ehAnoValido;
+        }
     }
 }

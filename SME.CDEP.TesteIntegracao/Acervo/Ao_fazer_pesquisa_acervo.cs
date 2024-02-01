@@ -362,5 +362,161 @@ namespace SME.CDEP.TesteIntegracao
                 pesquisaAcervoDto.DataAcervo.ShouldBe(DateTimeExtension.HorarioBrasilia().Date.ToString("dd/MM/yyyy"));
             }
         }
+        
+        [Fact(DisplayName = "Acervo - Pesquisar acervos por ano exato (inicial e final) - retornar acervos com anos exatos")]
+        public async Task Pesquisar_acervo_por_ano_exato_inicial_e_final()
+        {
+            await InserirDadosBasicosAleatorios();
+
+            var servicoAcervoArteGrafica = GetServicoAcervoArteGrafica();
+            var servicoAcervo = GetServicoAcervo();
+
+            var arquivos = ArquivoMock.Instance.GerarArquivo(TipoArquivo.AcervoArteGrafica).Generate(10);
+
+            foreach (var arquivo in arquivos)
+                await InserirNaBase(arquivo);
+
+            var arquivosInseridos = ObterTodos<Arquivo>();
+
+            var acervoArteGraficas = AcervoArteGraficaDTOMock.GerarAcervoArteGraficaCadastroDTO().Generate(60);
+
+            var contador = 1;
+
+            foreach (var arteGrafica in acervoArteGraficas)
+            {
+                arteGrafica.Codigo = $"{arteGrafica.Codigo}{contador}";
+                arteGrafica.DataAcervo = DateTimeExtension.HorarioBrasilia().Date.ToString("dd/MM/yyyy");
+                arteGrafica.PermiteUsoImagem = true;
+                arteGrafica.Arquivos = arquivosInseridos.Select(s => s.Id).ToArray();
+
+                arteGrafica.Ano = contador switch
+                {
+                    <= 10 => "[19--]",
+                    <= 20 => "[19--?]",
+                    <= 30 => "[195-]",
+                    <= 40 => "[195-?]",
+                    <= 50 => "[1950]",
+                    <= 60 => "1950",
+                    _ => arteGrafica.Ano
+                };
+
+                await servicoAcervoArteGrafica.Inserir(arteGrafica);
+                contador++;
+            }
+
+            var filtro = new FiltroTextoLivreTipoAcervoDTO()
+            {
+                AnoInicial = 1950,
+                AnoFinal = 1950,
+            };
+            
+            var pesquisa = await servicoAcervo.ObterPorTextoLivreETipoAcervo(filtro);
+            pesquisa.ShouldNotBeNull();
+            pesquisa.TotalRegistros.ShouldBe(20);
+        }
+        
+        [Fact(DisplayName = "Acervo - Pesquisar acervos por década possível e exata (inicial e final) - retornar acervos com ano exato e décadas certas e possíveis")]
+        public async Task Pesquisar_acervo_por_decada_possivel_exata_exato_inicial_e_final()
+        {
+            await InserirDadosBasicosAleatorios();
+
+            var servicoAcervoArteGrafica = GetServicoAcervoArteGrafica();
+            var servicoAcervo = GetServicoAcervo();
+
+            var arquivos = ArquivoMock.Instance.GerarArquivo(TipoArquivo.AcervoArteGrafica).Generate(10);
+
+            foreach (var arquivo in arquivos)
+                await InserirNaBase(arquivo);
+
+            var arquivosInseridos = ObterTodos<Arquivo>();
+
+            var acervoArteGraficas = AcervoArteGraficaDTOMock.GerarAcervoArteGraficaCadastroDTO().Generate(60);
+
+            var contador = 1;
+
+            foreach (var arteGrafica in acervoArteGraficas)
+            {
+                arteGrafica.Codigo = $"{arteGrafica.Codigo}{contador}";
+                arteGrafica.DataAcervo = DateTimeExtension.HorarioBrasilia().Date.ToString("dd/MM/yyyy");
+                arteGrafica.PermiteUsoImagem = true;
+                arteGrafica.Arquivos = arquivosInseridos.Select(s => s.Id).ToArray();
+
+                arteGrafica.Ano = contador switch
+                {
+                    <= 10 => "[19--]",
+                    <= 20 => "[19--?]",
+                    <= 30 => "[195-]",
+                    <= 40 => "[195-?]",
+                    <= 50 => "[1950]",
+                    <= 60 => "1950",
+                    _ => arteGrafica.Ano
+                };
+
+                await servicoAcervoArteGrafica.Inserir(arteGrafica);
+                contador++;
+            }
+
+            var filtro = new FiltroTextoLivreTipoAcervoDTO()
+            {
+                AnoInicial = 1940,
+                AnoFinal = 1960,
+            };
+            
+            var pesquisa = await servicoAcervo.ObterPorTextoLivreETipoAcervo(filtro);
+            pesquisa.ShouldNotBeNull();
+            pesquisa.TotalRegistros.ShouldBe(40);
+        }
+        
+        [Fact(DisplayName = "Acervo - Pesquisar acervos por século possível e exato (inicial e final) - retornar acervos com anos exatos, décadas e séculos certos e possíveis (tudo)")]
+        public async Task Pesquisar_acervo_por_seculo_possivel_exata_exato_inicial_e_final()
+        {
+            await InserirDadosBasicosAleatorios();
+
+            var servicoAcervoArteGrafica = GetServicoAcervoArteGrafica();
+            var servicoAcervo = GetServicoAcervo();
+
+            var arquivos = ArquivoMock.Instance.GerarArquivo(TipoArquivo.AcervoArteGrafica).Generate(10);
+
+            foreach (var arquivo in arquivos)
+                await InserirNaBase(arquivo);
+
+            var arquivosInseridos = ObterTodos<Arquivo>();
+
+            var acervoArteGraficas = AcervoArteGraficaDTOMock.GerarAcervoArteGraficaCadastroDTO().Generate(60);
+
+            var contador = 1;
+
+            foreach (var arteGrafica in acervoArteGraficas)
+            {
+                arteGrafica.Codigo = $"{arteGrafica.Codigo}{contador}";
+                arteGrafica.DataAcervo = DateTimeExtension.HorarioBrasilia().Date.ToString("dd/MM/yyyy");
+                arteGrafica.PermiteUsoImagem = true;
+                arteGrafica.Arquivos = arquivosInseridos.Select(s => s.Id).ToArray();
+
+                arteGrafica.Ano = contador switch
+                {
+                    <= 10 => "[19--]",
+                    <= 20 => "[19--?]",
+                    <= 30 => "[195-]",
+                    <= 40 => "[195-?]",
+                    <= 50 => "[1950]",
+                    <= 60 => "1950",
+                    _ => arteGrafica.Ano
+                };
+
+                await servicoAcervoArteGrafica.Inserir(arteGrafica);
+                contador++;
+            }
+
+            var filtro = new FiltroTextoLivreTipoAcervoDTO()
+            {
+                AnoInicial = 1900,
+                AnoFinal = 2000,
+            };
+            
+            var pesquisa = await servicoAcervo.ObterPorTextoLivreETipoAcervo(filtro);
+            pesquisa.ShouldNotBeNull();
+            pesquisa.TotalRegistros.ShouldBe(60);
+        }
     }
 }
