@@ -141,7 +141,7 @@ namespace SME.CDEP.Aplicacao.Servicos
                 TipoAcervoId = (int)tipoAcervo,
                 Codigo = ObterSufixo(ObterConteudoTexto(linha.Codigo),Constantes.SIGLA_ACERVO_TRIDIMENSIONAL),
                 Procedencia = ObterConteudoTexto(linha.Procedencia),
-                Ano = ObterConteudoInteiroOuNulo(linha.Ano),
+                Ano = ObterConteudoTexto(linha.Ano),
                 DataAcervo = ObterConteudoTexto(linha.Data),
                 ConservacaoId = ObterConservacaoIdOuNuloPorValorDoCampo(linha.EstadoConservacao.Conteudo),
                 Quantidade = ObterConteudoLongoOuNulo(linha.Quantidade),
@@ -230,7 +230,7 @@ namespace SME.CDEP.Aplicacao.Servicos
                         Titulo = acervoTridimensionalLinha.Titulo.Conteudo,
                         Codigo = acervoTridimensionalLinha.Codigo.Conteudo,
                         Procedencia = acervoTridimensionalLinha.Procedencia.Conteudo,
-                        Ano = acervoTridimensionalLinha.Ano.Conteudo.ConverterParaInteiro(),
+                        Ano = acervoTridimensionalLinha.Ano.Conteudo,
                         DataAcervo = acervoTridimensionalLinha.Data.Conteudo,
                         ConservacaoId = ObterConservacaoIdPorValorDoCampo(acervoTridimensionalLinha.EstadoConservacao.Conteudo),
                         Quantidade = acervoTridimensionalLinha.Quantidade.Conteudo.ConverterParaInteiro(),
@@ -348,9 +348,8 @@ namespace SME.CDEP.Aplicacao.Servicos
                         Ano = new LinhaConteudoAjustarDTO()
                         {
                             Conteudo = planilha.ObterValorDaCelula(numeroLinha, Constantes.ACERVO_TRIDIMENSIONAL_CAMPO_ANO),
-                            LimiteCaracteres = Constantes.CARACTERES_PERMITIDOS_4,
+                            LimiteCaracteres = Constantes.CARACTERES_PERMITIDOS_7,
                             EhCampoObrigatorio = true,
-                            FormatoTipoDeCampo = Constantes.FORMATO_INTEIRO,
                         },
                         Data = new LinhaConteudoAjustarDTO()
                         {

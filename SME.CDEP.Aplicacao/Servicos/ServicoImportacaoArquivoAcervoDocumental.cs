@@ -165,7 +165,7 @@ namespace SME.CDEP.Aplicacao.Servicos
                 TipoAcervoId = (int)tipoAcervo,
                 MaterialId = ObterMaterialDocumentalIdOuNuloPorValorDoCampo(linha.Material.Conteudo),
                 IdiomaId = ObterIdiomaIdOuNuloPorValorDoCampo(linha.Idioma.Conteudo),
-                Ano = ObterConteudoInteiroOuNulo(linha.Ano),
+                Ano = ObterConteudoTexto(linha.Ano),
                 NumeroPagina = ObterConteudoTexto(linha.NumeroPaginas),
                 Volume = ObterConteudoTexto(linha.Volume),
                 Descricao = ObterConteudoTexto(linha.Descricao),
@@ -285,7 +285,7 @@ namespace SME.CDEP.Aplicacao.Servicos
                         MaterialId = ObterMaterialDocumentalIdOuNuloPorValorDoCampo(acervoDocumentalLinha.Material.Conteudo),
                         IdiomaId = ObterIdiomaIdPorValorDoCampo(acervoDocumentalLinha.Idioma.Conteudo),
                         CreditosAutoresIds = ObterCreditoAutoresIdsPorValorDoCampo(acervoDocumentalLinha.Autor.Conteudo, TipoCreditoAutoria.Autoria),
-                        Ano = acervoDocumentalLinha.Ano.Conteudo.ConverterParaInteiro(),
+                        Ano = acervoDocumentalLinha.Ano.Conteudo,
                         NumeroPagina = acervoDocumentalLinha.NumeroPaginas.Conteudo.ConverterParaInteiro(),
                         Volume = acervoDocumentalLinha.Volume.Conteudo,
                         Descricao = acervoDocumentalLinha.Descricao.Conteudo,
@@ -445,9 +445,8 @@ namespace SME.CDEP.Aplicacao.Servicos
                         Ano = new LinhaConteudoAjustarDTO()
                         {
                             Conteudo = planilha.ObterValorDaCelula(numeroLinha, Constantes.ACERVO_DOCUMENTAL_CAMPO_ANO),
-                            LimiteCaracteres = Constantes.CARACTERES_PERMITIDOS_4,
-                            EhCampoObrigatorio = true,
-                            FormatoTipoDeCampo = Constantes.FORMATO_INTEIRO,
+                            LimiteCaracteres = Constantes.CARACTERES_PERMITIDOS_7,
+                            EhCampoObrigatorio = true
                         },
                         NumeroPaginas = new LinhaConteudoAjustarDTO()
                         {

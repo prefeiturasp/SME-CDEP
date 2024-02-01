@@ -78,7 +78,7 @@ namespace SME.CDEP.TesteIntegracao
             acervoBibliograficoAlteracaoDto.Codigo = acervoAtual.Codigo;
             acervoBibliograficoAlteracaoDto.SubTitulo = acervoBibliograficoCompleto.Acervo.SubTitulo;
             acervoBibliograficoAlteracaoDto.AcervoId = acervoAtual.Id;
-            acervoBibliograficoAlteracaoDto.Ano = DateTimeExtension.HorarioBrasilia().Year;
+            acervoBibliograficoAlteracaoDto.Ano = DateTimeExtension.HorarioBrasilia().Year.ToString();
             
             await servicoAcervobibliografico.Alterar(acervoBibliograficoAlteracaoDto);
 
@@ -156,7 +156,7 @@ namespace SME.CDEP.TesteIntegracao
             acervoBibliograficoAlteracaoDto.Codigo = acervoAtual.Codigo;
             acervoBibliograficoAlteracaoDto.SubTitulo = acervoBibliograficoCompleto.Acervo.SubTitulo;
             acervoBibliograficoAlteracaoDto.AcervoId = acervoAtual.Id;
-            acervoBibliograficoAlteracaoDto.Ano = DateTimeExtension.HorarioBrasilia().AddYears(1).Year;
+            acervoBibliograficoAlteracaoDto.Ano = DateTimeExtension.HorarioBrasilia().AddYears(1).Year.ToString();
             
             await servicoAcervobibliografico.Alterar(acervoBibliograficoAlteracaoDto).ShouldThrowAsync<NegocioException>();
         }
@@ -185,7 +185,7 @@ namespace SME.CDEP.TesteIntegracao
             acervoBibliograficoAlteracaoDto.Codigo = new Random().Next(100,200).ToString();
             acervoBibliograficoAlteracaoDto.SubTitulo = acervoBibliograficoCompleto.Acervo.SubTitulo;
             acervoBibliograficoAlteracaoDto.AcervoId = acervoAtual.Id;
-            acervoBibliograficoAlteracaoDto.Ano = DateTimeExtension.HorarioBrasilia().Year;
+            acervoBibliograficoAlteracaoDto.Ano = DateTimeExtension.HorarioBrasilia().Year.ToString();
             
             await servicoAcervobibliografico.Alterar(acervoBibliograficoAlteracaoDto);
 
@@ -261,7 +261,7 @@ namespace SME.CDEP.TesteIntegracao
             acervoBibliograficoAlteracaoDto.Titulo = acervoBibliograficoCompleto.Acervo.Titulo;
             acervoBibliograficoAlteracaoDto.SubTitulo = acervoBibliograficoCompleto.Acervo.SubTitulo;
             acervoBibliograficoAlteracaoDto.AcervoId = acervoAtual.Id;
-            acervoBibliograficoAlteracaoDto.Ano = DateTimeExtension.HorarioBrasilia().Year;
+            acervoBibliograficoAlteracaoDto.Ano = DateTimeExtension.HorarioBrasilia().Year.ToString();
             
             await servicoAcervobibliografico.Alterar(acervoBibliograficoAlteracaoDto).ShouldThrowAsync<NegocioException>();
         }
@@ -290,7 +290,7 @@ namespace SME.CDEP.TesteIntegracao
             acervoBibliograficoAlteracaoDto.Codigo = "1";
             acervoBibliograficoAlteracaoDto.SubTitulo = acervoBibliograficoCompleto.Acervo.SubTitulo;
             acervoBibliograficoAlteracaoDto.AcervoId = acervoAtual.Id;
-            acervoBibliograficoAlteracaoDto.Ano = DateTimeExtension.HorarioBrasilia().Year;
+            acervoBibliograficoAlteracaoDto.Ano = DateTimeExtension.HorarioBrasilia().Year.ToString();
             
             await servicoAcervobibliografico.Alterar(acervoBibliograficoAlteracaoDto).ShouldThrowAsync<NegocioException>();
         }
@@ -319,7 +319,7 @@ namespace SME.CDEP.TesteIntegracao
             acervoBibliograficoAlteracaoDto.Codigo = acervoAtual.Codigo;
             acervoBibliograficoAlteracaoDto.SubTitulo = acervoBibliograficoCompleto.Acervo.SubTitulo;
             acervoBibliograficoAlteracaoDto.AcervoId = acervoAtual.Id;
-            acervoBibliograficoAlteracaoDto.Ano = DateTimeExtension.HorarioBrasilia().Year;
+            acervoBibliograficoAlteracaoDto.Ano = DateTimeExtension.HorarioBrasilia().Year.ToString();
             
             await servicoAcervobibliografico.Alterar(acervoBibliograficoAlteracaoDto);
 
@@ -387,7 +387,7 @@ namespace SME.CDEP.TesteIntegracao
             acervoBibliograficoCadastroDto.Titulo = acervoBibliograficoCompleto.Acervo.Titulo;
             acervoBibliograficoCadastroDto.Codigo = new Random().Next(100,200).ToString();
             acervoBibliograficoCadastroDto.SubTitulo = acervoBibliograficoCompleto.Acervo.SubTitulo;
-            acervoBibliograficoCadastroDto.Ano = DateTimeExtension.HorarioBrasilia().Year;
+            acervoBibliograficoCadastroDto.Ano = DateTimeExtension.HorarioBrasilia().Year.ToString();
             
             await servicoAcervobibliografico.Inserir(acervoBibliograficoCadastroDto);
 
@@ -456,7 +456,7 @@ namespace SME.CDEP.TesteIntegracao
             acervoBibliograficoCadastroDto.Titulo = acervoBibliograficoCompleto.Acervo.Titulo;
             acervoBibliograficoCadastroDto.Codigo = new Random().Next(100,200).ToString();
             acervoBibliograficoCadastroDto.SubTitulo = acervoBibliograficoCompleto.Acervo.SubTitulo;
-            acervoBibliograficoCadastroDto.Ano = DateTimeExtension.HorarioBrasilia().Year;
+            acervoBibliograficoCadastroDto.Ano = DateTimeExtension.HorarioBrasilia().Year.ToString();
             
             await servicoAcervobibliografico.Inserir(acervoBibliograficoCadastroDto);
 
@@ -525,7 +525,7 @@ namespace SME.CDEP.TesteIntegracao
             acervoBibliograficoCadastroDto.Titulo = acervoBibliograficoCompleto.Acervo.Titulo;
             acervoBibliograficoCadastroDto.Codigo = new Random().Next(1,35).ToString();
             acervoBibliograficoCadastroDto.SubTitulo = acervoBibliograficoCompleto.Acervo.SubTitulo;
-            acervoBibliograficoCadastroDto.Ano = DateTimeExtension.HorarioBrasilia().Year;
+            acervoBibliograficoCadastroDto.Ano = DateTimeExtension.HorarioBrasilia().Year.ToString();
             
             await servicoAcervobibliografico.Inserir(acervoBibliograficoCadastroDto).ShouldThrowAsync<NegocioException>();
         }
@@ -550,7 +550,7 @@ namespace SME.CDEP.TesteIntegracao
             acervoBibliograficoCadastroDto.Titulo = acervoBibliograficoCompleto.Acervo.Titulo;
             acervoBibliograficoCadastroDto.Codigo = new Random().Next(1,35).ToString();
             acervoBibliograficoCadastroDto.SubTitulo = acervoBibliograficoCompleto.Acervo.SubTitulo;
-            acervoBibliograficoCadastroDto.Ano = faker.Date.Future().Year;
+            acervoBibliograficoCadastroDto.Ano = faker.Date.Future().Year.ToString();
             
             await servicoAcervobibliografico.Inserir(acervoBibliograficoCadastroDto).ShouldThrowAsync<NegocioException>();
         }
@@ -574,7 +574,7 @@ namespace SME.CDEP.TesteIntegracao
             acervoBibliograficoCadastroDto.AssuntosIds = new long[] { 1, 2 };
             acervoBibliograficoCadastroDto.Titulo = acervoBibliograficoCompleto.Acervo.Titulo;
             acervoBibliograficoCadastroDto.SubTitulo = acervoBibliograficoCompleto.Acervo.SubTitulo;
-            acervoBibliograficoCadastroDto.Ano = DateTimeExtension.HorarioBrasilia().Year;
+            acervoBibliograficoCadastroDto.Ano = DateTimeExtension.HorarioBrasilia().Year.ToString();
             
             await servicoAcervobibliografico.Inserir(acervoBibliograficoCadastroDto).ShouldThrowAsync<NegocioException>();
         }
