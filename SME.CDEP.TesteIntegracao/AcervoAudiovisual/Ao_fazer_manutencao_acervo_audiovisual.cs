@@ -189,6 +189,7 @@ namespace SME.CDEP.TesteIntegracao
                 TamanhoArquivo = faker.Lorem.Text().Limite(15),
                 Acessibilidade = faker.Lorem.Text().Limite(100),
                 Disponibilizacao = faker.Lorem.Text().Limite(100),
+                Ano = "[1950]"
             };
             
             var acervoAudiovisualInserido = await servicoAcervoAudiovisual.Inserir(acervoAudiovisualCadastroDto);
