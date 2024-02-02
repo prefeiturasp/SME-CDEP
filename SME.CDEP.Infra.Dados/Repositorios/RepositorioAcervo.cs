@@ -203,12 +203,12 @@ namespace SME.CDEP.Infra.Dados.Repositorios
         private string IncluirFiltroPorAno(int? anoInicial, int? anoFinal)
         {
             if (anoInicial.HasValue && anoFinal.HasValue)
-                return "and a.ano between @anoInicial and @anoFinal ";
+                return " and a.ano_inicio between @anoInicial and @anoFinal or a.ano_fim between @anoInicial and @anoFinal ";
             
             if (anoInicial.HasValue)
-                return "and a.ano >= @anoInicial ";
+                return " and @anoInicial between a.ano_inicio and a.ano_fim";
                 
-            return anoFinal.HasValue ? "and a.ano <= @anoFinal " : string.Empty;
+            return anoFinal.HasValue ? " and @anoFinal between a.ano_inicio and a.ano_fim " : string.Empty;
         }
         
         private string IncluirFiltroPorTextoLivre(string? textoLivre)

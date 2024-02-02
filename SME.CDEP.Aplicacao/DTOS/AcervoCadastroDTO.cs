@@ -16,5 +16,5 @@ public class AcervoCadastroDTO
     public string? DataAcervo { get; set; }
     
     [Required(ErrorMessage = "É necessário informar o ano do acervo")]
-    public int Ano { get; set; }
+    public string Ano { get; set; }
 }

@@ -52,5 +52,15 @@ namespace SME.CDEP.Dominio.Extensions
 
             return default;
         }
+        
+        public static int ObterFimDaDecadaOuSeculo(this int anoBase)
+        {
+            return anoBase.ContemSeculo() ? anoBase + 99  : anoBase + 9;
+        }
+        
+        public static bool ContemSeculo(this int anoBase)
+        {
+            return anoBase % 100 == 0;
+        }
     }
 }

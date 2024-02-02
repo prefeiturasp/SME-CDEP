@@ -204,5 +204,32 @@ namespace SME.CDEP.Dominio.Extensions
                 ? valorConvertido.ToString("N2",CultureInfo.GetCultureInfo("pt-BR"))
                 : valor;
         }
+        
+        public static int ObterAnoNumerico(this string valor)
+        {
+            if (valor.NaoEstaPreenchido())
+                return default;
+            
+            var anoTratado = valor.Replace("[", "").Replace("]", "").Replace("-", "").Replace("?", "");
+
+            while (anoTratado.Length < 4)
+                anoTratado += "0";
+
+            return anoTratado.ConverterParaInteiro();
+        }
+        
+        public static bool ContemDecadaOuSeculoCertoOuPossivel(this string valor)
+        {
+           return valor.Contains("-");
+        }
+        
+        public static bool EhAnoConformeFormatoABNT(this string valor)
+        {
+            var ehSeculoValido =  Regex.IsMatch(valor, @"^\[\d{2}--(?:\d{2}|\?\d?)?\]$");
+            var ehDecadaValida = Regex.IsMatch(valor, @"^\[\d{3}-[?]?\]$");
+            var ehAnoValido =  Regex.IsMatch(valor, @"^\[?\d{4}\]?$");
+
+            return ehSeculoValido || ehDecadaValida || ehAnoValido;
+        }
     }
 }

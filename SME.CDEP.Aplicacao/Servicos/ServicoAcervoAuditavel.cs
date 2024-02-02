@@ -1,4 +1,5 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using System.Text.RegularExpressions;
 using AutoMapper;
 using Microsoft.Extensions.Configuration;
 using SME.CDEP.Aplicacao.DTOS;
@@ -74,6 +75,14 @@ namespace SME.CDEP.Aplicacao.Servicos
             acervo.CriadoEm = DateTimeExtension.HorarioBrasilia();
             acervo.CriadoPor = contextoAplicacao.NomeUsuario;
             acervo.CriadoLogin = contextoAplicacao.UsuarioLogado;
+
+            if (!acervo.Ano.EhAnoConformeFormatoABNT())
+                throw new NegocioException(MensagemNegocio.O_ANO_NAO_ESTA_SEGUINDO_FORMATO_ABNT);
+            
+            ObterAnoInicialFinal(acervo);
+            
+            ValidarAnoFuturo(acervo);
+            
             var acervoId = await repositorioAcervo.Inserir(acervo);
 
             foreach (var creditoAutorId in acervo.CreditosAutoresIds)
@@ -95,6 +104,12 @@ namespace SME.CDEP.Aplicacao.Servicos
             return acervoId;
         }
 
+        private static void ValidarAnoFuturo(Acervo acervo)
+        {
+            if (acervo.AnoInicio.EhAnoFuturo())
+                throw new NegocioException(MensagemNegocio.NAO_PERMITIDO_ANO_FUTURO);
+        }
+
         private static void ValidarCodigoTomboCodigoNovoAno(Acervo acervo)
         {
             var codigoNaoPreenchido = acervo.Codigo.NaoEstaPreenchido();
@@ -105,9 +120,6 @@ namespace SME.CDEP.Aplicacao.Servicos
             
             if ((!codigoNaoPreenchido && !codigoNovoNaoPreenchido) && acervo.Codigo.Equals(acervo.CodigoNovo))
                 throw new NegocioException(string.Format(MensagemNegocio.REGISTRO_X_DUPLICADO, ObterCodigoOuTomboPorTipoAcervo((TipoAcervo)acervo.TipoAcervoId)));
-            
-            if (acervo.Ano.EhAnoFuturo())
-                throw new NegocioException(MensagemNegocio.NAO_PERMITIDO_ANO_FUTURO);
         }
 
         private static string ObterCodigoOuTomboPorTipoAcervo(TipoAcervo tipoAcervo)
@@ -147,6 +159,13 @@ namespace SME.CDEP.Aplicacao.Servicos
             acervo.AlteradoLogin = contextoAplicacao.UsuarioLogado;
             acervo.AlteradoPor = contextoAplicacao.NomeUsuario;
             
+            if (!acervo.Ano.EhAnoConformeFormatoABNT())
+                throw new NegocioException(MensagemNegocio.O_ANO_NAO_ESTA_SEGUINDO_FORMATO_ABNT);
+            
+            ObterAnoInicialFinal(acervo);
+            
+            ValidarAnoFuturo(acervo);
+
             if (acervo.CodigoNovo.EstaPreenchido() && acervo.TipoAcervoId.NaoEhAcervoDocumental())
                 throw new NegocioException(MensagemNegocio.SOMENTE_ACERVO_DOCUMENTAL_POSSUI_CODIGO_NOVO);
             
@@ -188,7 +207,16 @@ namespace SME.CDEP.Aplicacao.Servicos
 
             return acervoAlterado;
         }
-        
+
+        private static void ObterAnoInicialFinal(Acervo acervo)
+        {
+            var ehDecadaOuSeculo = acervo.Ano.ContemDecadaOuSeculoCertoOuPossivel();
+            var anoBase = acervo.Ano.ObterAnoNumerico();
+            
+            acervo.AnoInicio = anoBase;
+            acervo.AnoFim = ehDecadaOuSeculo ? anoBase.ObterFimDaDecadaOuSeculo() : anoBase;
+        }
+
         public async Task<AcervoDTO> Alterar(AcervoDTO acervoDTO)
         {
             var acervo = await repositorioAcervo.ObterPorId(acervoDTO.Id);
@@ -273,7 +301,13 @@ namespace SME.CDEP.Aplicacao.Servicos
                     TotalPaginas = (int)Math.Ceiling((double)totalRegistros / paginacao.QuantidadeRegistros)
                 };
             }
-            return default;
+
+            return new PaginacaoResultadoDTO<PesquisaAcervoDTO>()
+            {
+                Items = new List<PesquisaAcervoDTO>(),
+                TotalPaginas = 0,
+                TotalRegistros = 0
+            };
         }
 
         private async Task<IEnumerable<TipoAcervoNomeArquivoFisicoDTO>> ObterImagensPadrao()

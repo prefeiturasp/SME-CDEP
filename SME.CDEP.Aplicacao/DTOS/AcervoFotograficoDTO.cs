@@ -29,5 +29,5 @@ public class AcervoFotograficoDTO
     public ArquivoResumidoDTO[]? Arquivos { get; set; }
     public AuditoriaDTO Auditoria { get; set; }
     public long[] CreditosAutoresIds { get; set; }
-    public int? Ano { get; set; }
+    public string? Ano { get; set; }
 }

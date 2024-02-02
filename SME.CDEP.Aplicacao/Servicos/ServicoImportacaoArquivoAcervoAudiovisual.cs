@@ -153,7 +153,7 @@ namespace SME.CDEP.Aplicacao.Servicos
                 Codigo = ObterSufixo(ObterConteudoTexto(linha.Codigo),Constantes.SIGLA_ACERVO_AUDIOVISUAL),
                 Localizacao = ObterConteudoTexto(linha.Localizacao),
                 Procedencia = ObterConteudoTexto(linha.Procedencia),
-                Ano = ObterConteudoInteiroOuNulo(linha.Ano),
+                Ano = ObterConteudoTexto(linha.Ano),
                 DataAcervo = ObterConteudoTexto(linha.Data),
                 Copia = ObterConteudoTexto(linha.Copia),
                 PermiteUsoImagem = ObterConteudoSimNao(linha.PermiteUsoImagem),
@@ -270,7 +270,7 @@ namespace SME.CDEP.Aplicacao.Servicos
                             .Select(s => s.Id).ToArray(),
                         Localizacao = acervoAudiovisualLinha.Localizacao.Conteudo,
                         Procedencia = acervoAudiovisualLinha.Procedencia.Conteudo,
-                        Ano = acervoAudiovisualLinha.Ano.Conteudo.ConverterParaInteiro(),
+                        Ano = acervoAudiovisualLinha.Ano.Conteudo,
                         DataAcervo = acervoAudiovisualLinha.Data.Conteudo,
                         Copia = acervoAudiovisualLinha.Copia.Conteudo,
                         PermiteUsoImagem = ObterAutorizaUsoDeImagemPorValorDoCampo(acervoAudiovisualLinha.PermiteUsoImagem.Conteudo),
@@ -417,9 +417,8 @@ namespace SME.CDEP.Aplicacao.Servicos
                         Ano = new LinhaConteudoAjustarDTO()
                         {
                             Conteudo = planilha.ObterValorDaCelula(numeroLinha, Constantes.ACERVO_AUDIOVISUAL_CAMPO_ANO),
-                            LimiteCaracteres = Constantes.CARACTERES_PERMITIDOS_4,
-                            EhCampoObrigatorio = true,
-                            FormatoTipoDeCampo = Constantes.FORMATO_INTEIRO,
+                            LimiteCaracteres = Constantes.CARACTERES_PERMITIDOS_7,
+                            EhCampoObrigatorio = true
                         },
                         Data = new LinhaConteudoAjustarDTO()
                         {
