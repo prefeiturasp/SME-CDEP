@@ -110,10 +110,10 @@ namespace SME.CDEP.Aplicacao.Servicos
             if (creditosAutoresIds.EhNulo())
                 throw new NegocioException(MensagemNegocio.CREDITO_OU_AUTORES_SAO_OBRIGATORIOS);
 
-            if (largura.NaoEhNumericoComCasasDecimais())
+            if (largura.EstaPreenchido() && largura.NaoEhNumericoComCasasDecimais())
                 throw new NegocioException(string.Format(MensagemNegocio.CAMPO_X_ESPERADO_NUMERICO_E_COM_CASAS_DECIMAIS, Constantes.LARGURA));
 
-            if (altura.NaoEhNumericoComCasasDecimais())
+            if (altura.EstaPreenchido() && altura.NaoEhNumericoComCasasDecimais())
                 throw new NegocioException(string.Format(MensagemNegocio.CAMPO_X_ESPERADO_NUMERICO_E_COM_CASAS_DECIMAIS, Constantes.ALTURA));
         }
         
