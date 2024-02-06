@@ -213,6 +213,30 @@ namespace SME.CDEP.TesteIntegracao
             var retorno = await servicoAcervoSolicitacao.ObterSolicitacoesPorFiltro(filtro);
             retorno.Items.Count().ShouldBe(0);
         }
+        
+        [Fact(DisplayName = "Acervo Solicitação - Obter Detalhes por Id")]
+        public async Task Obter_detalhes_por_id()
+        {
+            await InserirDadosBasicosAleatorios();
+
+            await InserirAcervoTridimensional();
+
+            var acervoSolicitacao = ObterAcervoSolicitacao();
+            
+            await InserirAcervoSolicitacao(acervoSolicitacao);
+
+            var servicoAcervoSolicitacao = GetServicoAcervoSolicitacao();
+
+            var retorno = await servicoAcervoSolicitacao.ObterDetalhesPorId(1);
+            retorno.ShouldNotBeNull();
+            retorno.DadosSolicitante.ShouldNotBeNull();
+            retorno.DadosSolicitante.Nome.ShouldNotBeEmpty();
+            retorno.DadosSolicitante.Tipo.ShouldNotBeEmpty();
+            retorno.Id.ShouldBeGreaterThan(0);
+            retorno.Situacao.ShouldNotBeEmpty();
+            retorno.UsuarioId.ShouldBeGreaterThan(0);
+            retorno.Itens.Any().ShouldBeTrue();
+        }
 
         private List<AcervoSolicitacaoItemCadastroDTO> ObterItens()
         {
