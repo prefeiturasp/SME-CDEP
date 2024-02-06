@@ -89,4 +89,15 @@ public class AcervoSolicitacaoController: BaseController
     {
         return Ok(await servicoAcervoSolicitacao.ObterSolicitacoesPorFiltro(filtroSolicitacaoDto));
     }
+    
+    [HttpGet("detalhes/{acervoSolicitacaoId}")]
+    [ProducesResponseType(typeof(IEnumerable<AcervoSolicitacaoItemRetornoCadastroDTO>), 200)]
+    [ProducesResponseType(typeof(RetornoBaseDTO), 400)]
+    [ProducesResponseType(typeof(RetornoBaseDTO), 403)]
+    [ProducesResponseType(typeof(RetornoBaseDTO), 601)]
+    [Permissao(Permissao.OperacoesSolicitacoes_C, Policy = "Bearer")]
+    public async Task<IActionResult> ObterDetalhesPorId([FromRoute] long acervoSolicitacaoId,[FromServices] IServicoAcervoSolicitacao servicoAcervoSolicitacao)
+    {
+        return Ok(await servicoAcervoSolicitacao.ObterDetalhesPorId(acervoSolicitacaoId));
+    }
 }

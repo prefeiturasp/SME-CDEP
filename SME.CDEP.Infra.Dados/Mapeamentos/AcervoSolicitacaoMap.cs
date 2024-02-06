@@ -6,6 +6,7 @@
         {
             ToTable("acervo_solicitacao");
             Map(c => c.UsuarioId).ToColumn("usuario_id");
+            Map(c => c.ResponsavelId).ToColumn("responsavel_id");
             Map(c => c.Situacao).ToColumn("situacao");
         }
     }
