@@ -2,14 +2,13 @@
 
 namespace SME.CDEP.Dominio.Entidades
 {
-    public class AcervoSolicitacaoItemDetalhe
+    public class AcervoSolicitacaoItemDetalheResumido
     {
         public long Id { get; set; }
-        public long AcervoSolicitacaoId { get; set; }
+        public string Codigo { get; set; }
         public TipoAcervo TipoAcervo { get; set; }
-        public DateTime DataCriacao { get; set; }
+        public string Titulo { get; set; }
         public DateTime? DataVisita { get; set; }
-        public string Solicitante { get; set; }
         public SituacaoSolicitacaoItem Situacao { get; set; }
     }
 }

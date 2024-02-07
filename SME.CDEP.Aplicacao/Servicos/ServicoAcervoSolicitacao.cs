@@ -194,5 +194,14 @@ namespace SME.CDEP.Aplicacao.Servicos
                 TotalPaginas = (int)Math.Ceiling((double)totalRegistros / paginacao.QuantidadeRegistros)
             };
         }
+
+        public async Task<AcervoSolicitacaoDetalheDTO> ObterDetalhesPorId(long acervoSolicitacaoId)
+        {
+            var acervoSolicitacao = mapper.Map<AcervoSolicitacaoDetalheDTO>(await repositorioAcervoSolicitacao.ObterDetalhesPorId(acervoSolicitacaoId));
+
+            acervoSolicitacao.DadosSolicitante = mapper.Map<DadosSolicitanteDTO>(await servicoUsuario.ObterDadosSolicitantePorUsuarioId(acervoSolicitacao.UsuarioId));
+
+            return acervoSolicitacao;
+        }
     }
 }
