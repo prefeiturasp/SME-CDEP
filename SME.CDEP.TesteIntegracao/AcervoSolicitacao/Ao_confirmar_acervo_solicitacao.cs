@@ -30,7 +30,6 @@ namespace SME.CDEP.TesteIntegracao
             var retorno = await servicoAcervoSolicitacao.ConfirmarAtendimento(new AcervoSolicitacaoConfirmarDTO()
             {
                 Id = 1,
-                Situacao = SituacaoSolicitacao.AGUARDANDO_VISITA,
                 Itens = new List<AcervoSolicitacaoItemConfirmarDTO>()
                 {
                     new()
@@ -85,8 +84,7 @@ namespace SME.CDEP.TesteIntegracao
             
             var acervoArteGraficaCadastroDto = new AcervoSolicitacaoConfirmarDTO()
             {
-                Id = 1,
-                Situacao = SituacaoSolicitacao.AGUARDANDO_VISITA
+                Id = 1
             };
             
             await servicoAcervoSolicitacao.ConfirmarAtendimento(acervoArteGraficaCadastroDto).ShouldThrowAsync<NegocioException>();
@@ -106,7 +104,6 @@ namespace SME.CDEP.TesteIntegracao
             var acervoArteGraficaCadastroDto = new AcervoSolicitacaoConfirmarDTO()
             {
                 Id = 1,
-                Situacao = SituacaoSolicitacao.AGUARDANDO_VISITA,
                 Itens = new List<AcervoSolicitacaoItemConfirmarDTO>()
                 {
                     new()
@@ -144,7 +141,6 @@ namespace SME.CDEP.TesteIntegracao
             var acervoArteGraficaCadastroDto = new AcervoSolicitacaoConfirmarDTO()
             {
                 Id = 1,
-                Situacao = SituacaoSolicitacao.AGUARDANDO_VISITA,
                 Itens = new List<AcervoSolicitacaoItemConfirmarDTO>()
                 {
                     new()
@@ -183,7 +179,6 @@ namespace SME.CDEP.TesteIntegracao
             var acervoArteGraficaCadastroDto = new AcervoSolicitacaoConfirmarDTO()
             {
                 Id = 1,
-                Situacao = SituacaoSolicitacao.AGUARDANDO_VISITA,
                 Itens = new List<AcervoSolicitacaoItemConfirmarDTO>()
                 {
                     new()
@@ -224,7 +219,6 @@ namespace SME.CDEP.TesteIntegracao
             var acervoArteGraficaCadastroDto = new AcervoSolicitacaoConfirmarDTO()
             {
                 Id = 101515,
-                Situacao = SituacaoSolicitacao.AGUARDANDO_VISITA,
                 Itens = new List<AcervoSolicitacaoItemConfirmarDTO>()
                 {
                     new()
