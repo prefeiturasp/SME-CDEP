@@ -220,13 +220,12 @@ namespace SME.CDEP.Aplicacao.Servicos
             
             ValidacaoAcervoSolicitacaoEItens(acervoSolicitacaoConfirmar);
 
-            acervoSolicitacao.Situacao = acervoSolicitacaoConfirmar.Situacao;
-
             var itens = await repositorioAcervoSolicitacaoItem.ObterPorSolicitacaoId(acervoSolicitacaoConfirmar.Id);
 
             var tran = transacao.Iniciar();
             try
             {
+                acervoSolicitacao.Situacao = SituacaoSolicitacao.AGUARDANDO_VISITA;
                 await repositorioAcervoSolicitacao.Atualizar(acervoSolicitacao);
                 
                 foreach (var item in itens)

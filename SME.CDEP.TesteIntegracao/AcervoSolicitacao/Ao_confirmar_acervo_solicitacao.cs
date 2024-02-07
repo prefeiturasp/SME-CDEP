@@ -30,7 +30,7 @@ namespace SME.CDEP.TesteIntegracao
             var retorno = await servicoAcervoSolicitacao.ConfirmarAtendimento(new AcervoSolicitacaoConfirmarDTO()
             {
                 Id = 1,
-                Situacao = SituacaoSolicitacao.CONFIRMADO,
+                Situacao = SituacaoSolicitacao.AGUARDANDO_VISITA,
                 Itens = new List<AcervoSolicitacaoItemConfirmarDTO>()
                 {
                     new()
@@ -55,7 +55,7 @@ namespace SME.CDEP.TesteIntegracao
             retorno.ShouldBeTrue();
             var solicitacaoAlterada = ObterTodos<AcervoSolicitacao>().FirstOrDefault(f=> f.Id == 1);
             solicitacaoAlterada.Id.ShouldBe(1);
-            solicitacaoAlterada.Situacao.ShouldBe(SituacaoSolicitacao.CONFIRMADO);
+            solicitacaoAlterada.Situacao.ShouldBe(SituacaoSolicitacao.AGUARDANDO_VISITA);
             
             var itensAlterados = ObterTodos<AcervoSolicitacaoItem>().Where(w=> w.AcervoSolicitacaoId == 1);
             itensAlterados.Count().ShouldBe(3);
@@ -86,7 +86,7 @@ namespace SME.CDEP.TesteIntegracao
             var acervoArteGraficaCadastroDto = new AcervoSolicitacaoConfirmarDTO()
             {
                 Id = 1,
-                Situacao = SituacaoSolicitacao.CONFIRMADO
+                Situacao = SituacaoSolicitacao.AGUARDANDO_VISITA
             };
             
             await servicoAcervoSolicitacao.ConfirmarAtendimento(acervoArteGraficaCadastroDto).ShouldThrowAsync<NegocioException>();
@@ -106,7 +106,7 @@ namespace SME.CDEP.TesteIntegracao
             var acervoArteGraficaCadastroDto = new AcervoSolicitacaoConfirmarDTO()
             {
                 Id = 1,
-                Situacao = SituacaoSolicitacao.CONFIRMADO,
+                Situacao = SituacaoSolicitacao.AGUARDANDO_VISITA,
                 Itens = new List<AcervoSolicitacaoItemConfirmarDTO>()
                 {
                     new()
@@ -144,7 +144,7 @@ namespace SME.CDEP.TesteIntegracao
             var acervoArteGraficaCadastroDto = new AcervoSolicitacaoConfirmarDTO()
             {
                 Id = 1,
-                Situacao = SituacaoSolicitacao.CONFIRMADO,
+                Situacao = SituacaoSolicitacao.AGUARDANDO_VISITA,
                 Itens = new List<AcervoSolicitacaoItemConfirmarDTO>()
                 {
                     new()
@@ -183,7 +183,7 @@ namespace SME.CDEP.TesteIntegracao
             var acervoArteGraficaCadastroDto = new AcervoSolicitacaoConfirmarDTO()
             {
                 Id = 1,
-                Situacao = SituacaoSolicitacao.CONFIRMADO,
+                Situacao = SituacaoSolicitacao.AGUARDANDO_VISITA,
                 Itens = new List<AcervoSolicitacaoItemConfirmarDTO>()
                 {
                     new()
@@ -224,7 +224,7 @@ namespace SME.CDEP.TesteIntegracao
             var acervoArteGraficaCadastroDto = new AcervoSolicitacaoConfirmarDTO()
             {
                 Id = 101515,
-                Situacao = SituacaoSolicitacao.CONFIRMADO,
+                Situacao = SituacaoSolicitacao.AGUARDANDO_VISITA,
                 Itens = new List<AcervoSolicitacaoItemConfirmarDTO>()
                 {
                     new()

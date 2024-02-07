@@ -11,8 +11,8 @@ public enum SituacaoSolicitacao
     [Display(Description = "Finalizando atendimento")]
     FINALIZADO_ATENDIMENTO = 2,
     
-    [Display(Description = "Confirmado")]
-    CONFIRMADO = 3
+    [Display(Description = "Aguardando visita")]
+    AGUARDANDO_VISITA = 3
 }
 public static class SituacaoSolicitacaoExtension
 {
