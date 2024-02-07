@@ -5,6 +5,7 @@ public class MensagemNegocio
     public const string O_ANO_NAO_ESTA_SEGUINDO_FORMATO_ABNT = "O Ano do acervo não está seguindo o formato da ABNT";
     public const string ACERVO_NAO_ENCONTRADO = "Acervo não encontrado";
     public const string SOLICITACAO_ATENDIMENTO_NAO_ENCONTRADA = "Solicitação de atendimento não encontrada";
+    public const string SITUACAO_INVALIDA_PARA_FINALIZAR = "Existem itens de acervos com situação diferente de: Aguardando visita, Finalizado automaticamente e Cancelado";
     public const string SOLICITACAO_ATENDIMENTO_ITEM_NAO_CONTEM_ACERVOS = "Solicitação de atendimento não contém acervos";
     public const string ITENS_ACERVOS_PRESENCIAL_DEVEM_TER_DATA_ACERVO = "Nem todos os itens dos acervos do tipo presencial, tem data de visita";
     public const string ITENS_ACERVOS_PRESENCIAL_NAO_DEVEM_TER_DATA_ACERVO_PASSADAS = "As datas de visita dos acervos presenciais não podem ser datas passadas";

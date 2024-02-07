@@ -15,5 +15,6 @@ namespace SME.CDEP.Aplicacao.Servicos.Interface
         Task<AcervoSolicitacaoDetalheDTO> ObterDetalhesPorId(long acervoSolicitacaoId);
         IEnumerable<IdNomeDTO> ObterTiposDeAtendimentos();
         Task<bool> ConfirmarAtendimento(AcervoSolicitacaoConfirmarDTO acervoSolicitacaoConfirmar);
+        Task<bool> FinalizarAtendimento(long acervoSolicitacaoId);
     }
 }
