@@ -95,5 +95,24 @@ namespace SME.CDEP.Infra.Dados.Repositorios
             
             return conexao.Obter().QueryAsync<AcervoSolicitacaoItem>(query, new { acervoSolicitacaoId });
         }
+
+        public Task<bool> PossoFinalizarAtendimento(long acervoSolicitacaoId)
+        {
+            var situacoesParaCancelamento = new []
+            {
+                (int)SituacaoSolicitacaoItem.AGUARDANDO_VISITA, 
+                (int)SituacaoSolicitacaoItem.FINALIZADO_AUTOMATICAMENTE,
+                (int)SituacaoSolicitacaoItem.CANCELADO
+            };
+            
+            var query = @"
+             select 1
+            from acervo_solicitacao_item
+            where acervo_solicitacao_id = @acervoSolicitacaoId
+            and not excluido
+            and situacao = any(@situacoesParaCancelamento) ";
+            
+            return conexao.Obter().QueryFirstOrDefaultAsync<bool>(query, new { acervoSolicitacaoId, situacoesParaCancelamento });
+        }
     }
 }

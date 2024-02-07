@@ -256,6 +256,21 @@ namespace SME.CDEP.Aplicacao.Servicos
             }
         }
 
+        public async Task<bool> FinalizarAtendimento(long acervoSolicitacaoId)
+        {
+            var acervoSolicitacao = await repositorioAcervoSolicitacao.ObterPorId(acervoSolicitacaoId);
+            
+            if (acervoSolicitacao.EhNulo())
+                throw new NegocioException(MensagemNegocio.SOLICITACAO_ATENDIMENTO_NAO_ENCONTRADA);
+            
+            if (!await repositorioAcervoSolicitacaoItem.PossoFinalizarAtendimento(acervoSolicitacaoId))
+                throw new NegocioException(MensagemNegocio.SITUACAO_INVALIDA_PARA_FINALIZAR);
+
+            acervoSolicitacao.Situacao = SituacaoSolicitacao.FINALIZADO_ATENDIMENTO;
+            await repositorioAcervoSolicitacao.Atualizar(acervoSolicitacao);
+            return true;
+        }
+
         private static void ValidacaoAcervoSolicitacaoEItens(AcervoSolicitacaoConfirmarDTO acervoSolicitacaoConfirmarDto)
         {
             if (acervoSolicitacaoConfirmarDto.EhNulo())
