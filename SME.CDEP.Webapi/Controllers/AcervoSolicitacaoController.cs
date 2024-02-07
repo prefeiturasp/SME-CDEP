@@ -118,8 +118,8 @@ public class AcervoSolicitacaoController: BaseController
     [ProducesResponseType(typeof(RetornoBaseDTO), 403)]
     [ProducesResponseType(typeof(RetornoBaseDTO), 601)]
     [Permissao(Permissao.OperacoesSolicitacoes_A, Policy = "Bearer")]
-    public IActionResult ConfirmarAtendimento([FromBody] AcervoSolicitacaoConfirmarDTO acervoSolicitacaoConfirmar, [FromServices] IServicoAcervoSolicitacao servicoAcervoSolicitacao)
+    public async Task<IActionResult> ConfirmarAtendimento([FromBody] AcervoSolicitacaoConfirmarDTO acervoSolicitacaoConfirmar, [FromServices] IServicoAcervoSolicitacao servicoAcervoSolicitacao)
     {
-        return Ok(servicoAcervoSolicitacao.ConfirmarAtendimento(acervoSolicitacaoConfirmar));
+        return Ok(await servicoAcervoSolicitacao.ConfirmarAtendimento(acervoSolicitacaoConfirmar));
     }
 }
