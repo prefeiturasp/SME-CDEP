@@ -12,5 +12,8 @@ namespace SME.CDEP.Aplicacao.Servicos.Interface
         Task<PaginacaoResultadoDTO<MinhaSolicitacaoDTO>> ObterMinhasSolicitacoes();
         Task<IEnumerable<SituacaoItemDTO>> ObterSituacoesAtendimentosItem();
         Task<PaginacaoResultadoDTO<SolicitacaoDTO>> ObterSolicitacoesPorFiltro(FiltroSolicitacaoDTO filtroSolicitacaoDto);
+        Task<AcervoSolicitacaoDetalheDTO> ObterDetalhesPorId(long acervoSolicitacaoId);
+        IEnumerable<IdNomeDTO> ObterTiposDeAtendimentos();
+        Task<bool> ConfirmarAtendimento(AcervoSolicitacaoConfirmarDTO acervoSolicitacaoConfirmar);
     }
 }
