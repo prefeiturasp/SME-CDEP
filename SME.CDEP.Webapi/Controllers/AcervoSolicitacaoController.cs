@@ -100,4 +100,26 @@ public class AcervoSolicitacaoController: BaseController
     {
         return Ok(await servicoAcervoSolicitacao.ObterDetalhesPorId(acervoSolicitacaoId));
     }
+    
+    [HttpGet("tipo-atendimento")]
+    [ProducesResponseType(typeof(IEnumerable<IdNomeDTO>), 200)]
+    [ProducesResponseType(typeof(RetornoBaseDTO), 400)]
+    [ProducesResponseType(typeof(RetornoBaseDTO), 403)]
+    [ProducesResponseType(typeof(RetornoBaseDTO), 601)]
+    [Permissao(Permissao.OperacoesSolicitacoes_C, Policy = "Bearer")]
+    public IActionResult ObterTiposDeAtendimentos([FromServices] IServicoAcervoSolicitacao servicoAcervoSolicitacao)
+    {
+        return Ok(servicoAcervoSolicitacao.ObterTiposDeAtendimentos());
+    }
+    
+    [HttpPut("confirmar-atendimento")]
+    [ProducesResponseType(typeof(bool), 200)]
+    [ProducesResponseType(typeof(RetornoBaseDTO), 400)]
+    [ProducesResponseType(typeof(RetornoBaseDTO), 403)]
+    [ProducesResponseType(typeof(RetornoBaseDTO), 601)]
+    [Permissao(Permissao.OperacoesSolicitacoes_A, Policy = "Bearer")]
+    public IActionResult ConfirmarAtendimento([FromBody] AcervoSolicitacaoConfirmarDTO acervoSolicitacaoConfirmar, [FromServices] IServicoAcervoSolicitacao servicoAcervoSolicitacao)
+    {
+        return Ok(servicoAcervoSolicitacao.ConfirmarAtendimento(acervoSolicitacaoConfirmar));
+    }
 }

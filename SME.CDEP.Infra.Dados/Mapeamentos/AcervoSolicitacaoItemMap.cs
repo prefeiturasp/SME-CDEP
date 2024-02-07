@@ -9,6 +9,7 @@
             Map(c => c.AcervoId).ToColumn("acervo_id");
             Map(c => c.DataVisita).ToColumn("dt_visita");
             Map(c => c.Situacao).ToColumn("situacao");
+            Map(c => c.TipoAtendimento).ToColumn("tipo_atendimento");
         }
     }
 }

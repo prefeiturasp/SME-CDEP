@@ -4,6 +4,11 @@ public class MensagemNegocio
 {
     public const string O_ANO_NAO_ESTA_SEGUINDO_FORMATO_ABNT = "O Ano do acervo não está seguindo o formato da ABNT";
     public const string ACERVO_NAO_ENCONTRADO = "Acervo não encontrado";
+    public const string SOLICITACAO_ATENDIMENTO_NAO_ENCONTRADA = "Solicitação de atendimento não encontrada";
+    public const string SOLICITACAO_ATENDIMENTO_ITEM_NAO_CONTEM_ACERVOS = "Solicitação de atendimento não contém acervos";
+    public const string ITENS_ACERVOS_PRESENCIAL_DEVEM_TER_DATA_ACERVO = "Nem todos os itens dos acervos do tipo presencial, tem data de visita";
+    public const string ITENS_ACERVOS_PRESENCIAL_NAO_DEVEM_TER_DATA_ACERVO_PASSADAS = "As datas de visita dos acervos presenciais não podem ser datas passadas";
+    public const string ITENS_ACERVOS_EMAIL_NAO_DEVEM_TER_DATA_ACERVO = "As datas de visita não devem ser informados nos acervos com tipo de atendimento por e-mail";
     public const string USUARIO_NAO_ENCONTRADO = "Usuário não encontrado";
     public const string O_ITEM_X_DO_DOMINIO_X_NAO_ENCONTRADO = "O item '{0}' do domínio '{1}' não foi encontrado";
     public const string SOMENTE_ARQUIVO_XLSX_SUPORTADO = "Esse arquivo não é um XLSX. Somente arquivos do tipo XLSX são permitidos";
