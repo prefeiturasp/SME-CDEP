@@ -12,5 +12,8 @@ namespace SME.CDEP.Infra.Dados.Repositorios.Interfaces
             DateTime? dataSolicitacaoInicio, DateTime? dataSolicitacaoFim, string? responsavel, SituacaoSolicitacaoItem? situacaoItem, DateTime? dataVisitaInicio, 
             DateTime? dataVisitaFim);
         Task<IEnumerable<AcervoSolicitacaoItem>> ObterPorSolicitacaoId(long acervoSolicitacaoId);
+        Task<bool> PossuiSituacoesNaoFinalizaveis(long acervoSolicitacaoId);
+        Task<bool> PossuiSituacoesNaoCancelaveis(long acervoSolicitacaoId);
+        Task<bool> PossuiSituacoesItemNaoCancelaveis(long acervoSolicitacaoId);
     }
 }

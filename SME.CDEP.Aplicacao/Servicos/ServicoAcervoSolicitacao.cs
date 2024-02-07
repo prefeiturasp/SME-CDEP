@@ -255,7 +255,6 @@ namespace SME.CDEP.Aplicacao.Servicos
                 tran.Dispose();
             }
         }
-
         private static void ValidacaoAcervoSolicitacaoEItens(AcervoSolicitacaoConfirmarDTO acervoSolicitacaoConfirmarDto)
         {
             if (acervoSolicitacaoConfirmarDto.EhNulo())
@@ -273,5 +272,51 @@ namespace SME.CDEP.Aplicacao.Servicos
             if (acervoSolicitacaoConfirmarDto.Itens.Any(a=> a.TipoAtendimento.EhAtendimentoViaEmail() && a.DataVisita.HasValue ))
                 throw new NegocioException(MensagemNegocio.ITENS_ACERVOS_EMAIL_NAO_DEVEM_TER_DATA_ACERVO);
         }
+
+        public async Task<bool> FinalizarAtendimento(long acervoSolicitacaoId)
+        {
+            var acervoSolicitacao = await repositorioAcervoSolicitacao.ObterPorId(acervoSolicitacaoId);
+            
+            if (acervoSolicitacao.EhNulo())
+                throw new NegocioException(MensagemNegocio.SOLICITACAO_ATENDIMENTO_NAO_ENCONTRADA);
+            
+            if (await repositorioAcervoSolicitacaoItem.PossuiSituacoesNaoFinalizaveis(acervoSolicitacaoId))
+                throw new NegocioException(MensagemNegocio.SITUACAO_INVALIDA_PARA_FINALIZAR);
+
+            acervoSolicitacao.Situacao = SituacaoSolicitacao.FINALIZADO_ATENDIMENTO;
+            await repositorioAcervoSolicitacao.Atualizar(acervoSolicitacao);
+            return true;
+        }
+
+        public async Task<bool> CancelarAtendimento(long acervoSolicitacaoId)
+        {
+            var acervoSolicitacao = await repositorioAcervoSolicitacao.ObterPorId(acervoSolicitacaoId);
+            
+            if (acervoSolicitacao.EhNulo())
+                throw new NegocioException(MensagemNegocio.SOLICITACAO_ATENDIMENTO_NAO_ENCONTRADA);
+            
+            if (await repositorioAcervoSolicitacaoItem.PossuiSituacoesNaoCancelaveis(acervoSolicitacaoId))
+                throw new NegocioException(MensagemNegocio.SITUACAO_INVALIDA_PARA_CANCELAR);
+
+            acervoSolicitacao.Situacao = SituacaoSolicitacao.CANCELADO;
+            await repositorioAcervoSolicitacao.Atualizar(acervoSolicitacao);
+            return true;
+        }
+
+        public async Task<bool> CancelarItemAtendimento(long acervoSolicitacaoItemId)
+        {
+            var acervoSolicitacaoItem = await repositorioAcervoSolicitacaoItem.ObterPorId(acervoSolicitacaoItemId);
+            
+            if (acervoSolicitacaoItem.EhNulo())
+                throw new NegocioException(MensagemNegocio.SOLICITACAO_ATENDIMENTO_ITEM_NAO_ENCONTRADA);
+            
+            if (await repositorioAcervoSolicitacaoItem.PossuiSituacoesItemNaoCancelaveis(acervoSolicitacaoItemId))
+                throw new NegocioException(MensagemNegocio.SITUACAO_INVALIDA_PARA_FINALIZAR);
+
+            acervoSolicitacaoItem.Situacao = SituacaoSolicitacaoItem.CANCELADO;
+            await repositorioAcervoSolicitacaoItem.Atualizar(acervoSolicitacaoItem);
+            return true;
+        }
+
     }
 }
