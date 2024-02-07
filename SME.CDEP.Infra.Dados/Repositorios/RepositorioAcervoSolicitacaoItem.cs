@@ -96,7 +96,7 @@ namespace SME.CDEP.Infra.Dados.Repositorios
             return conexao.Obter().QueryAsync<AcervoSolicitacaoItem>(query, new { acervoSolicitacaoId });
         }
 
-        public Task<bool> PossoFinalizarAtendimento(long acervoSolicitacaoId)
+        public Task<bool> PossuiSituacoesNaoFinalizaveis(long acervoSolicitacaoId)
         {
             var situacoesParaCancelamento = new []
             {
@@ -113,6 +113,30 @@ namespace SME.CDEP.Infra.Dados.Repositorios
             and situacao = any(@situacoesParaCancelamento) ";
             
             return conexao.Obter().QueryFirstOrDefaultAsync<bool>(query, new { acervoSolicitacaoId, situacoesParaCancelamento });
+        }
+        
+        public Task<bool> PossuiSituacoesNaoCancelaveis(long acervoSolicitacaoId)
+        {
+            var query = @"
+             select 1
+            from acervo_solicitacao_item
+            where acervo_solicitacao_id = @acervoSolicitacaoId
+            and not excluido
+            and situacao <> @situacaoCancelado ";
+            
+            return conexao.Obter().QueryFirstOrDefaultAsync<bool>(query, new { acervoSolicitacaoId, situacaoCancelado = (int)SituacaoSolicitacaoItem.CANCELADO });
+        }
+        
+        public Task<bool> PossuiSituacoesItemNaoCancelaveis(long acervoSolicitacaoId)
+        {
+            var query = @"
+             select 1
+            from acervo_solicitacao_item
+            where acervo_solicitacao_id = @acervoSolicitacaoId
+            and not excluido
+            and situacao = @situacaoFinalizadoAutomaticamente ";
+            
+            return conexao.Obter().QueryFirstOrDefaultAsync<bool>(query, new { acervoSolicitacaoId, situacaoFinalizadoAutomaticamente = (int)SituacaoSolicitacaoItem.FINALIZADO_AUTOMATICAMENTE });
         }
     }
 }
