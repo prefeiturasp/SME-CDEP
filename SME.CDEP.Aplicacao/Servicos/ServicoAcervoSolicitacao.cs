@@ -318,5 +318,23 @@ namespace SME.CDEP.Aplicacao.Servicos
             return true;
         }
 
+        public async Task<bool> AlterarDataVisitaDoItemAtendimento(AlterarDataVisitaAcervoSolicitacaoItemDTO alterarDataVisitaAcervoSolicitacaoItemDto)
+        {
+            if (alterarDataVisitaAcervoSolicitacaoItemDto.DataVisita < DateTimeExtension.HorarioBrasilia().Date)
+                throw new NegocioException(MensagemNegocio.ITENS_ACERVOS_PRESENCIAL_NAO_DEVEM_TER_DATA_ACERVO_PASSADAS);
+            
+            var acervoSolicitacaoItem = await repositorioAcervoSolicitacaoItem.ObterPorId(alterarDataVisitaAcervoSolicitacaoItemDto.Id);
+            
+            if (acervoSolicitacaoItem.EhNulo())
+                throw new NegocioException(MensagemNegocio.SOLICITACAO_ATENDIMENTO_ITEM_NAO_ENCONTRADA);
+            
+            if (await repositorioAcervoSolicitacaoItem.AtendimentoPossuiSituacaoNaoConfirmadas(alterarDataVisitaAcervoSolicitacaoItemDto.Id))
+                throw new NegocioException(MensagemNegocio.ATENDIMENTO_NAO_ESTA_AGUARDANDO_VISITA);
+
+            acervoSolicitacaoItem.DataVisita = alterarDataVisitaAcervoSolicitacaoItemDto.DataVisita;
+            await repositorioAcervoSolicitacaoItem.Atualizar(acervoSolicitacaoItem);
+            
+            return true;
+        }
     }
 }

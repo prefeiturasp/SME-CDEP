@@ -138,5 +138,25 @@ namespace SME.CDEP.Infra.Dados.Repositorios
             
             return conexao.Obter().QueryFirstOrDefaultAsync<bool>(query, new { acervoSolicitacaoId, situacaoFinalizadoAutomaticamente = (int)SituacaoSolicitacaoItem.FINALIZADO_AUTOMATICAMENTE });
         }
+
+        public Task<bool> AtendimentoPossuiSituacaoNaoConfirmadas(long acervoSolicitacaoItemId)
+        {
+            var situacoesItensConfirmadas = new []
+            {
+                (int)SituacaoSolicitacaoItem.FINALIZADO_AUTOMATICAMENTE,
+                (int)SituacaoSolicitacaoItem.CANCELADO
+            };
+            
+            var query = @"
+             select 1
+            from acervo_solicitacao_item i
+            join acervo_solicitacao a on a.id = i.acervo_solicitacao_id 
+            where i.id = @acervoSolicitacaoItemId
+             and not i.excluido
+             and not a.excluido
+             and (a.situacao <> @situacaoAguardandoVisita or i.situacao = any(@situacoesItensConfirmadas)) ";
+            
+            return conexao.Obter().QueryFirstOrDefaultAsync<bool>(query, new { acervoSolicitacaoItemId, situacaoAguardandoVisita = (int)SituacaoSolicitacao.AGUARDANDO_VISITA, situacoesItensConfirmadas });
+        }
     }
 }
