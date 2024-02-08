@@ -14,5 +14,6 @@ namespace SME.CDEP.Aplicacao.Servicos.Interface
         Task<PaginacaoResultadoDTO<IdTipoTituloCreditoAutoriaCodigoAcervoDTO>> ObterPorFiltro(int? tipoAcervo, string titulo, long? creditoAutorId, string codigo);
         Task<AcervoDetalheDTO> ObterDetalhamentoPorTipoAcervoECodigo(FiltroDetalharAcervoDTO filtro);
         Task<string> ObterTermoDeCompromisso();
+        Task<IdNomeDTO> PesquisarAcervoPorCodigoTombo(string codigoTombo);
     }
 }

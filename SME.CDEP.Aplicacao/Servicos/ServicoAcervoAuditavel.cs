@@ -485,6 +485,11 @@ namespace SME.CDEP.Aplicacao.Servicos
             return retorno.Valor;
         }
 
+        public async Task<IdNomeDTO> PesquisarAcervoPorCodigoTombo(string codigoTombo)
+        {
+            return mapper.Map<IdNomeDTO>(await repositorioAcervo.PesquisarAcervoPorCodigoTombo(codigoTombo));
+        }
+
         public Paginacao Paginacao
         {
             get
