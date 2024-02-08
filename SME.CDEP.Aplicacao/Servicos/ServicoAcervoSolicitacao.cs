@@ -213,6 +213,17 @@ namespace SME.CDEP.Aplicacao.Servicos
                         Nome = v.ObterAtributo<DisplayAttribute>().Description,
                     });
         }
+        
+        public IEnumerable<IdNomeDTO> ObterSituacoesDeAtendimentos()
+        {
+            return Enum.GetValues(typeof(SituacaoAtendimento))
+                .Cast<SituacaoAtendimento>()
+                .Select(v => new IdNomeDTO
+                {
+                    Id = (int)v,
+                    Nome = v.ObterAtributo<DisplayAttribute>().Description,
+                });
+        }
 
         public async Task<bool> ConfirmarAtendimento(AcervoSolicitacaoConfirmarDTO acervoSolicitacaoConfirmar)
         {
