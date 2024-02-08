@@ -166,6 +166,7 @@ namespace SME.CDEP.Aplicacao.Servicos
         {
             var lista = Enum.GetValues(typeof(SituacaoSolicitacaoItem))
                 .Cast<SituacaoSolicitacaoItem>()
+                .Where(w=> w != SituacaoSolicitacaoItem.FINALIZADO)
                 .OrderBy(O=> O)
                 .Select(v => new SituacaoItemDTO
                 {
@@ -216,8 +217,9 @@ namespace SME.CDEP.Aplicacao.Servicos
         
         public IEnumerable<IdNomeDTO> ObterSituacoesDeAtendimentos()
         {
-            return Enum.GetValues(typeof(SituacaoAtendimento))
-                .Cast<SituacaoAtendimento>()
+            return Enum.GetValues(typeof(SituacaoSolicitacaoItem))
+                .Cast<SituacaoSolicitacaoItem>()
+                .Where(w=> w == SituacaoSolicitacaoItem.AGUARDANDO_VISITA || w == SituacaoSolicitacaoItem.FINALIZADO)
                 .Select(v => new IdNomeDTO
                 {
                     Id = (int)v,
