@@ -15,5 +15,6 @@ namespace SME.CDEP.Infra.Dados.Repositorios.Interfaces
         Task<bool> PossuiSituacoesNaoFinalizaveis(long acervoSolicitacaoId);
         Task<bool> PossuiSituacoesNaoCancelaveis(long acervoSolicitacaoId);
         Task<bool> PossuiSituacoesItemNaoCancelaveis(long acervoSolicitacaoId);
+        Task<bool> AtendimentoPossuiSituacaoNaoConfirmadas(long acervoSolicitacaoItemId);
     }
 }
