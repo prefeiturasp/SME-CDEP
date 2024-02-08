@@ -104,7 +104,7 @@ namespace SME.CDEP.Infra.Dados.Repositorios
             
             return await conexao.Obter().QueryAsync<ArquivoCodigoNomeAcervoId>(query, new { acervosIds });
         }
-        
+
         public async Task<IEnumerable<AcervoSolicitacaoItemCompleto>> ObterAcervosSolicitacoesItensCompletoPorId(long acervoSolicitacaoId)
         {
             var query = @"
@@ -227,6 +227,17 @@ namespace SME.CDEP.Infra.Dados.Repositorios
                 return "and a.tipo = @tipoAcervo ";
 
             return string.Empty;
+        }
+
+        public Task<Acervo> PesquisarAcervoPorCodigoTombo(string codigoTombo)
+        {
+            var query = @"
+            select id, titulo 
+            from acervo
+            where (lower(codigo) = @codigo or lower(codigo_novo) = @codigo) 
+              and not excluido ";
+            
+            return conexao.Obter().QueryFirstOrDefaultAsync<Acervo>(query,new { codigo = codigoTombo.ToLower() });
         }
     }
 }
