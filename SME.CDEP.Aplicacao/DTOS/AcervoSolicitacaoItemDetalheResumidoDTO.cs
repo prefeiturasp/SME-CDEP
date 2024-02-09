@@ -1,4 +1,6 @@
-﻿namespace SME.CDEP.Aplicacao.DTOS
+﻿using SME.CDEP.Infra.Dominio.Enumerados;
+
+namespace SME.CDEP.Aplicacao.DTOS
 {
     public class AcervoSolicitacaoItemDetalheResumidoDTO
     {
@@ -8,5 +10,6 @@
         public string Titulo { get; set; }
         public string Situacao { get; set; }
         public DateTime? DataVisita { get; set; }
+        public TipoAtendimento? TipoAtendimento { get; set; }
     }
 }

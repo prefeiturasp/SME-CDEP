@@ -9,6 +9,7 @@ namespace SME.CDEP.Dominio.Entidades
         public DateTime DataSolicitacao { get; set; }
         public string Responsavel { get; set; }
         public SituacaoSolicitacao Situacao { get; set; }
+        public TipoAtendimento TipoAtendimento { get; set; }
         public IEnumerable<AcervoSolicitacaoItemDetalheResumido> Itens { get; set; } = Enumerable.Empty<AcervoSolicitacaoItemDetalheResumido>();
     }
 }
