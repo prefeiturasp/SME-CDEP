@@ -232,7 +232,9 @@ namespace SME.CDEP.Infra.Dados.Repositorios
         public Task<Acervo> PesquisarAcervoPorCodigoTombo(string codigoTombo)
         {
             var query = @"
-            select id, titulo 
+            select id, 
+                   titulo,
+                   coalesce(codigo, codigo_novo) as codigo
             from acervo
             where (lower(codigo) = @codigo or lower(codigo_novo) = @codigo) 
               and not excluido ";

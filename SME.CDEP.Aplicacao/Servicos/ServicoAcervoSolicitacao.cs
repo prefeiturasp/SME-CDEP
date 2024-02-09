@@ -89,6 +89,76 @@ namespace SME.CDEP.Aplicacao.Servicos
                 tran.Dispose();
             }
         }
+        
+        public async Task<long> Inserir(AcervoSolicitacaoManualCadastroDTO acervoSolicitacaoManualCadastroDTO)
+        {
+            var usuario = await servicoUsuario.ObterPorId(acervoSolicitacaoManualCadastroDTO.UsuarioId);
+            
+            if (usuario.EhNulo())
+                throw new NegocioException(MensagemNegocio.USUARIO_NAO_ENCONTRADO);
+
+            var acervoSolicitacao = mapper.Map<AcervoSolicitacao>(acervoSolicitacaoManualCadastroDTO);
+            
+            acervoSolicitacao.DataSolicitacao = acervoSolicitacaoManualCadastroDTO.DataSolicitacao;
+            
+            acervoSolicitacao.Origem = Origem.Manual;
+
+            acervoSolicitacao.ResponsavelId = (await servicoUsuario.ObterUsuarioLogado()).Id;
+            
+            acervoSolicitacao.Situacao = acervoSolicitacao.Itens.Any(a=> a.TipoAtendimento.EhAtendimentoPresencial()) 
+                ? SituacaoSolicitacao.AGUARDANDO_VISITA 
+                : SituacaoSolicitacao.FINALIZADO_ATENDIMENTO;
+            
+            ValidacaoAcervoSolicitacaoItens(acervoSolicitacao);
+
+            var arquivosEncontrados = await repositorioAcervo
+                .ObterArquivosPorAcervoId(acervoSolicitacaoManualCadastroDTO.Itens
+                    .Select(s=> s.AcervoId).ToArray());
+            
+            var tran = transacao.Iniciar();
+            try
+            {
+                acervoSolicitacao.Id =  await repositorioAcervoSolicitacao.Inserir(acervoSolicitacao);
+
+                foreach (var item in acervoSolicitacao.Itens)
+                {
+                    item.AcervoSolicitacaoId = acervoSolicitacao.Id;
+                    
+                    item.Situacao = item.TipoAtendimento.EhAtendimentoViaEmail() && arquivosEncontrados.Any(a => a.AcervoId == item.AcervoId)
+                        ? SituacaoSolicitacaoItem.FINALIZADO_AUTOMATICAMENTE
+                        : SituacaoSolicitacaoItem.AGUARDANDO_VISITA;
+                    
+                    await repositorioAcervoSolicitacaoItem.Inserir(item);
+                }
+                tran.Commit();
+
+                return acervoSolicitacao.Id;
+            }
+            catch
+            {
+                tran.Rollback();
+                throw;
+            }
+            finally
+            {
+                tran.Dispose();
+            }
+        }
+
+        private void ValidacaoAcervoSolicitacaoItens(AcervoSolicitacao acervoSolicitacao)
+        {
+            if (acervoSolicitacao.Itens.NaoPossuiElementos())
+                throw new NegocioException(MensagemNegocio.SOLICITACAO_ATENDIMENTO_ITEM_NAO_CONTEM_ACERVOS);
+            
+            if (acervoSolicitacao.Itens.Any(a=> a.TipoAtendimento.EhAtendimentoPresencial() && !a.DataVisita.HasValue))
+                throw new NegocioException(MensagemNegocio.ITENS_ACERVOS_PRESENCIAL_DEVEM_TER_DATA_ACERVO);
+            
+            if (acervoSolicitacao.Itens.Any(a=> a.TipoAtendimento.EhAtendimentoPresencial() && a.DataVisita.Value < DateTimeExtension.HorarioBrasilia().Date ))
+                throw new NegocioException(MensagemNegocio.ITENS_ACERVOS_PRESENCIAL_NAO_DEVEM_TER_DATA_ACERVO_PASSADAS);
+            
+            if (acervoSolicitacao.Itens.Any(a=> a.TipoAtendimento.EhAtendimentoViaEmail() && a.DataVisita.HasValue ))
+                throw new NegocioException(MensagemNegocio.ITENS_ACERVOS_EMAIL_NAO_DEVEM_TER_DATA_ACERVO);
+        }
 
         public async Task<bool> Remover(long acervoSolicitacaoId)
         {
@@ -166,7 +236,6 @@ namespace SME.CDEP.Aplicacao.Servicos
         {
             var lista = Enum.GetValues(typeof(SituacaoSolicitacaoItem))
                 .Cast<SituacaoSolicitacaoItem>()
-                .Where(w=> w != SituacaoSolicitacaoItem.FINALIZADO)
                 .OrderBy(O=> O)
                 .Select(v => new SituacaoItemDTO
                 {
@@ -219,7 +288,7 @@ namespace SME.CDEP.Aplicacao.Servicos
         {
             return Enum.GetValues(typeof(SituacaoSolicitacaoItem))
                 .Cast<SituacaoSolicitacaoItem>()
-                .Where(w=> w == SituacaoSolicitacaoItem.AGUARDANDO_VISITA || w == SituacaoSolicitacaoItem.FINALIZADO)
+                .Where(w=> w == SituacaoSolicitacaoItem.AGUARDANDO_VISITA || w == SituacaoSolicitacaoItem.FINALIZADO_AUTOMATICAMENTE)
                 .Select(v => new IdNomeDTO
                 {
                     Id = (int)v,

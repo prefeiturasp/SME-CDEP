@@ -1,5 +1,4 @@
-﻿using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using SME.CDEP.Aplicacao.DTOS;
 using SME.CDEP.Aplicacao.Servicos.Interface;
 using SME.CDEP.Infra.Dominio.Enumerados;
@@ -30,7 +29,7 @@ public class AcervoSolicitacaoController: BaseController
     [ProducesResponseType(typeof(RetornoBaseDTO), 500)]
     [ProducesResponseType(typeof(RetornoBaseDTO), 601)]
     [Permissao(Permissao.OperacoesSolicitacoes_I, Policy = "Bearer")]
-    public async Task<IActionResult> Inserir([FromBody] AcervoSolicitacaoItemCadastroDTO[] acervosSolicitacaoItensCadastroDTO, [FromServices] IServicoAcervoSolicitacao servicoAcervoSolicitacao)
+    public async Task<IActionResult> CadastrarAcervoSolicitacaoViaPortal([FromBody] AcervoSolicitacaoItemCadastroDTO[] acervosSolicitacaoItensCadastroDTO, [FromServices] IServicoAcervoSolicitacao servicoAcervoSolicitacao)
     {
         return Ok(await servicoAcervoSolicitacao.Inserir(acervosSolicitacaoItensCadastroDTO));
     }
@@ -91,7 +90,7 @@ public class AcervoSolicitacaoController: BaseController
     }
     
     [HttpGet("detalhes/{acervoSolicitacaoId}")]
-    [ProducesResponseType(typeof(IEnumerable<AcervoSolicitacaoItemRetornoCadastroDTO>), 200)]
+    [ProducesResponseType(typeof(AcervoSolicitacaoDetalheDTO), 200)]
     [ProducesResponseType(typeof(RetornoBaseDTO), 400)]
     [ProducesResponseType(typeof(RetornoBaseDTO), 403)]
     [ProducesResponseType(typeof(RetornoBaseDTO), 601)]
@@ -176,5 +175,18 @@ public class AcervoSolicitacaoController: BaseController
     public IActionResult ObterSituacaoAtendimentos([FromServices] IServicoAcervoSolicitacao servicoAcervoSolicitacao)
     {
         return Ok(servicoAcervoSolicitacao.ObterSituacoesDeAtendimentos());
+    }
+    
+    [HttpPost("manual")]
+    [ProducesResponseType(typeof(long), 200)]
+    [ProducesResponseType(typeof(RetornoBaseDTO), 400)]
+    [ProducesResponseType(typeof(RetornoBaseDTO), 403)]
+    [ProducesResponseType(typeof(RetornoBaseDTO), 422)]
+    [ProducesResponseType(typeof(RetornoBaseDTO), 500)]
+    [ProducesResponseType(typeof(RetornoBaseDTO), 601)]
+    [Permissao(Permissao.OperacoesSolicitacoes_I, Policy = "Bearer")]
+    public async Task<IActionResult> CadastrarAcervoSolicitacaoManual([FromBody] AcervoSolicitacaoManualCadastroDTO acervoSolicitacaoManualCadastroDTO, [FromServices] IServicoAcervoSolicitacao servicoAcervoSolicitacao)
+    {
+        return Ok(await servicoAcervoSolicitacao.Inserir(acervoSolicitacaoManualCadastroDTO));
     }
 }
