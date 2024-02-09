@@ -14,10 +14,7 @@ public enum SituacaoSolicitacaoItem
     FINALIZADO_AUTOMATICAMENTE = 3,
     
     [Display(Description = "Cancelado")]
-    CANCELADO = 4,
-    
-    [Display(Description = "Finalizado")] //somente para o manual
-    FINALIZADO = 5
+    CANCELADO = 4
 }
 public static class SituacaoSolicitacaoItemExtension
 {
