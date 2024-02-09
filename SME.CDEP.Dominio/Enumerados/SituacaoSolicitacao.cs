@@ -28,4 +28,9 @@ public static class SituacaoSolicitacaoExtension
     {
         return situacaoSolicitacao == SituacaoSolicitacao.FINALIZADO_ATENDIMENTO;
     }
+    
+    public static bool EstaAguardandoVisita(this SituacaoSolicitacao situacaoSolicitacao)
+    {
+        return situacaoSolicitacao == SituacaoSolicitacao.AGUARDANDO_VISITA;
+    }
 }

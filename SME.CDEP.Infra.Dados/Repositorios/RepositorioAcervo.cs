@@ -113,9 +113,10 @@ namespace SME.CDEP.Infra.Dados.Repositorios
               a.tipo as tipoAcervo,
               a.titulo,
               a.id as acervoId,
-              asi.situacao,
+              asi.situacao as situacaoItem,
               asi.tipo_atendimento as tipoAtendimento,
-              asi.dt_visita as DataVisita
+              asi.dt_visita as DataVisita,
+              aso.situacao
             from acervo a 
             join acervo_solicitacao_item asi on asi.acervo_id = a.id
             join acervo_solicitacao aso on aso.id = asi.acervo_solicitacao_id
