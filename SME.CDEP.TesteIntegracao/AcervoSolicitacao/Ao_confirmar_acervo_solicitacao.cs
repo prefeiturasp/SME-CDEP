@@ -59,11 +59,11 @@ namespace SME.CDEP.TesteIntegracao
             var itensAlterados = ObterTodos<AcervoSolicitacaoItem>().Where(w=> w.AcervoSolicitacaoId == 1);
             itensAlterados.Count().ShouldBe(3);
             
-            var itensAlteradosPresenciais = itensAlterados.Where(w => w.TipoAtendimento.EhAtendimentoPresencial());
+            var itensAlteradosPresenciais = itensAlterados.Where(w => w.TipoAtendimento.HasValue && w.TipoAtendimento.Value.EhAtendimentoPresencial());
             itensAlteradosPresenciais.FirstOrDefault().DataVisita.Value.Date.ShouldBe(DateTimeExtension.HorarioBrasilia().Date);
             itensAlteradosPresenciais.FirstOrDefault().TipoAtendimento.ShouldBe(TipoAtendimento.Presencial);
 
-            var itensAlteradosEmail = itensAlterados.Where(w => w.TipoAtendimento.EhAtendimentoViaEmail());
+            var itensAlteradosEmail = itensAlterados.Where(w => w.TipoAtendimento.HasValue && w.TipoAtendimento.Value.EhAtendimentoViaEmail());
             itensAlteradosEmail.FirstOrDefault().DataVisita.ShouldBeNull();
             itensAlteradosEmail.FirstOrDefault().TipoAtendimento.ShouldBe(TipoAtendimento.Email);
             

@@ -178,9 +178,10 @@ namespace SME.CDEP.Aplicacao.Mapeamentos
             
             CreateMap<AcervoSolicitacaoItemCompleto,AcervoSolicitacaoItemRetornoCadastroDTO>()
                 .ForMember(dest => dest.AutoresCreditos, opt => opt.MapFrom(o => o.AutoresCreditos.Select(s=> s.Nome).ToArray()))
-                .ForMember(dest => dest.Situacao, opt => opt.MapFrom(o => o.Situacao.Descricao()))
+                .ForMember(dest => dest.Situacao, opt => opt.MapFrom(o => o.SituacaoItem.Descricao()))
                 .ForMember(dest => dest.TipoAcervo, opt => opt.MapFrom(o => o.TipoAcervo.Descricao()))
-                .ForMember(dest => dest.TipoAtendimento, opt => opt.MapFrom(o => o.TipoAtendimento.Descricao()))
+                .ForMember(dest => dest.TipoAtendimento, opt => opt.MapFrom(o => o.TipoAtendimento.NaoEhNulo() ? o.TipoAtendimento.Descricao() : String.Empty))
+                .ForMember(dest => dest.AlteraDataVisita, opt => opt.MapFrom(o => o.Situacao.EstaAguardandoVisita()))
                 .ReverseMap();
             
             CreateMap<ArquivoCodigoNomeDTO,ArquivoCodigoNomeAcervoId>().ReverseMap();
