@@ -28,6 +28,11 @@ public static class SituacaoSolicitacaoItemExtension
         return situacaoSolicitacaoItem == SituacaoSolicitacaoItem.FINALIZADO_AUTOMATICAMENTE;
     }
     
+    public static bool EstaCancelado(this SituacaoSolicitacaoItem situacaoSolicitacaoItem)
+    {
+        return situacaoSolicitacaoItem == SituacaoSolicitacaoItem.CANCELADO;
+    }
+    
     public static bool PodeFinalizarAtendimento(this SituacaoSolicitacaoItem situacaoSolicitacaoItem)
     {
         return situacaoSolicitacaoItem == SituacaoSolicitacaoItem.AGUARDANDO_VISITA 

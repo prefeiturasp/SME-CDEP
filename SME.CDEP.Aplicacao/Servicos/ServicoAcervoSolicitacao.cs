@@ -106,7 +106,7 @@ namespace SME.CDEP.Aplicacao.Servicos
             return mapper.Map<IEnumerable<AcervoTipoTituloAcervoIdCreditosAutoresDTO>>(acervos);
         }
         
-        public async Task<IEnumerable<AcervoSolicitacaoItemRetornoCadastroDTO>> ObterPorId(long acervoSolicitacaoId)
+        public async Task<AcervoSolicitacaoRetornoCadastroDTO> ObterPorId(long acervoSolicitacaoId)
         {
             var acervosItensCompletos = await repositorioAcervo.ObterAcervosSolicitacoesItensCompletoPorId(acervoSolicitacaoId);
 
@@ -117,7 +117,11 @@ namespace SME.CDEP.Aplicacao.Servicos
             foreach (var retorno in acervoItensRetorno)
                 retorno.Arquivos = mapper.Map<IEnumerable<ArquivoCodigoNomeDTO>>(arquivosDoAcervo.Where(w => w.AcervoId == retorno.AcervoId).Select(s=> s));
 
-            return acervoItensRetorno;
+            return new AcervoSolicitacaoRetornoCadastroDTO()
+            {
+                PodeCancelarSolicitacao = !acervosItensCompletos.Any(a=> a.SituacaoItem == SituacaoSolicitacaoItem.FINALIZADO_AUTOMATICAMENTE),
+                Itens = acervoItensRetorno
+            };
         }
         
         public async Task<bool> Excluir(long acervoSolicitacaoId)
