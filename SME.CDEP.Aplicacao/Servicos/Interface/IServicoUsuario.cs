@@ -29,5 +29,6 @@ namespace SME.CDEP.Aplicacao.Servicos.Interface
         Task<UsuarioDTO> ObterUsuarioLogado();
         Task<IEnumerable<ResponsavelDTO>> ObterUsuariosComPerfisResponsavel();
         Task<DadosSolicitanteDTO> ObterDadosSolicitantePorUsuarioId(long usuarioId);
+        Task<DadosSolicitanteDTO> ObterDadosSolicitantePorRfOuCpf(string rfOuCpf);
     }
 }

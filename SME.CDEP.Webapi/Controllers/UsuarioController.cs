@@ -153,4 +153,14 @@ public class UsuarioController: BaseController
     {
         return Ok(await servicoUsuario.ObterUsuariosComPerfisResponsavel());
     }
+    
+    [HttpGet("{rfCpf}/dados-solicitante")] 
+    [ProducesResponseType(typeof(DadosSolicitanteDTO), 200)]
+    [ProducesResponseType(typeof(RetornoBaseDTO), 400)]
+    [ProducesResponseType(typeof(RetornoBaseDTO), 500)]
+    [Permissao(Permissao.OperacoesSolicitacoes_C, Policy = "Bearer")]
+    public async Task<IActionResult> ObterDadosSolicitantePorRfOuCpf([FromRoute] string rfCpf, [FromServices] IServicoUsuario servicoUsuario)
+    {
+        return Ok(await servicoUsuario.ObterDadosSolicitantePorRfOuCpf(rfCpf));
+    }
 }
