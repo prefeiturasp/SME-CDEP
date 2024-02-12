@@ -340,5 +340,15 @@ namespace SME.CDEP.Aplicacao.Servicos
             
             return true;
         }
+
+        public async Task<bool> CancelarItensAcervoSolicitacao(long[] acervoSolicitacaoItemIds)
+        {
+            var retornoCancelamento = false;
+            
+            foreach (var item in acervoSolicitacaoItemIds)
+                retornoCancelamento = await CancelarItemAtendimento(item);
+
+            return retornoCancelamento;
+        }
     }
 }
