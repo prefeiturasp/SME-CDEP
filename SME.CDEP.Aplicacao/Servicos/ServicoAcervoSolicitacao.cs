@@ -286,8 +286,8 @@ namespace SME.CDEP.Aplicacao.Servicos
                         Id = (int)v,
                         Nome = v.ObterAtributo<DisplayAttribute>().Description,
                     });
-        }
-        
+        } 
+
         public IEnumerable<IdNomeDTO> ObterSituacoesDeAtendimentos()
         {
             return Enum.GetValues(typeof(SituacaoSolicitacaoItem))
@@ -312,6 +312,7 @@ namespace SME.CDEP.Aplicacao.Servicos
             try
             {
                 acervoSolicitacao.Situacao = SituacaoSolicitacao.AGUARDANDO_VISITA;
+                acervoSolicitacao.UsuarioId = acervoSolicitacaoConfirmar.UsuarioId;
                 await repositorioAcervoSolicitacao.Atualizar(acervoSolicitacao);
                 
                 foreach (var item in itens)
@@ -365,7 +366,7 @@ namespace SME.CDEP.Aplicacao.Servicos
             
             if (acervoSolicitacao.EhNulo())
                 throw new NegocioException(MensagemNegocio.SOLICITACAO_ATENDIMENTO_NAO_ENCONTRADA);
-            
+
             if (await repositorioAcervoSolicitacaoItem.PossuiSituacoesNaoFinalizaveis(acervoSolicitacaoId))
                 throw new NegocioException(MensagemNegocio.SITUACAO_INVALIDA_PARA_FINALIZAR);
 
@@ -381,7 +382,7 @@ namespace SME.CDEP.Aplicacao.Servicos
             if (acervoSolicitacao.EhNulo())
                 throw new NegocioException(MensagemNegocio.SOLICITACAO_ATENDIMENTO_NAO_ENCONTRADA);
             
-            if (await repositorioAcervoSolicitacaoItem.PossuiSituacoesNaoCancelaveis(acervoSolicitacaoId))
+            if (await repositorioAcervoSolicitacaoItem.PossuiSituacoesNaoCancelaveisParaAtendimento(acervoSolicitacaoId))
                 throw new NegocioException(MensagemNegocio.SITUACAO_INVALIDA_PARA_CANCELAR);
 
             acervoSolicitacao.Situacao = SituacaoSolicitacao.CANCELADO;
@@ -421,16 +422,6 @@ namespace SME.CDEP.Aplicacao.Servicos
             await repositorioAcervoSolicitacaoItem.Atualizar(acervoSolicitacaoItem);
             
             return true;
-        }
-
-        public async Task<bool> CancelarItensAcervoSolicitacao(long[] acervoSolicitacaoItemIds)
-        {
-            var retornoCancelamento = false;
-            
-            foreach (var item in acervoSolicitacaoItemIds)
-                retornoCancelamento = await CancelarItemAtendimento(item);
-
-            return retornoCancelamento;
         }
     }
 }
