@@ -2,10 +2,8 @@
 using SME.CDEP.Aplicacao.DTOS;
 using SME.CDEP.Dominio.Entidades;
 using SME.CDEP.Dominio.Excecoes;
-using SME.CDEP.Dominio.Extensions;
 using SME.CDEP.Infra.Dominio.Enumerados;
 using SME.CDEP.TesteIntegracao.Setup;
-using SME.CDEP.TesteIntegracao.Constantes;
 using Xunit;
 
 namespace SME.CDEP.TesteIntegracao
@@ -30,6 +28,7 @@ namespace SME.CDEP.TesteIntegracao
             var retorno = await servicoAcervoSolicitacao.ConfirmarAtendimento(new AcervoSolicitacaoConfirmarDTO()
             {
                 Id = 1,
+                UsuarioId = 1,
                 Itens = new List<AcervoSolicitacaoItemConfirmarDTO>()
                 {
                     new()
@@ -54,6 +53,7 @@ namespace SME.CDEP.TesteIntegracao
             retorno.ShouldBeTrue();
             var solicitacaoAlterada = ObterTodos<AcervoSolicitacao>().FirstOrDefault(f=> f.Id == 1);
             solicitacaoAlterada.Id.ShouldBe(1);
+            solicitacaoAlterada.UsuarioId.ShouldBe(1);
             solicitacaoAlterada.Situacao.ShouldBe(SituacaoSolicitacao.AGUARDANDO_VISITA);
             
             var itensAlterados = ObterTodos<AcervoSolicitacaoItem>().Where(w=> w.AcervoSolicitacaoId == 1);
