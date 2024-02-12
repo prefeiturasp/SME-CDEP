@@ -1,11 +1,8 @@
 ﻿using Shouldly;
-using SME.CDEP.Aplicacao.DTOS;
 using SME.CDEP.Dominio.Entidades;
 using SME.CDEP.Dominio.Excecoes;
-using SME.CDEP.Dominio.Extensions;
 using SME.CDEP.Infra.Dominio.Enumerados;
 using SME.CDEP.TesteIntegracao.Setup;
-using SME.CDEP.TesteIntegracao.Constantes;
 using Xunit;
 
 namespace SME.CDEP.TesteIntegracao
@@ -88,6 +85,7 @@ namespace SME.CDEP.TesteIntegracao
             {
                 item.AcervoSolicitacaoId = acervoSolicitadoId;
                 item.Situacao = SituacaoSolicitacaoItem.AGUARDANDO_VISITA;
+                item.DataVisita = DateTimeExtension.HorarioBrasilia().AddDays(-2);
                 await InserirNaBase(item);
             }
             
@@ -159,6 +157,32 @@ namespace SME.CDEP.TesteIntegracao
             var solicitacaoAlterada = ObterTodos<AcervoSolicitacao>().FirstOrDefault(f=> f.Id == 1);
             solicitacaoAlterada.Id.ShouldBe(1);
             solicitacaoAlterada.Situacao.ShouldBe(SituacaoSolicitacao.FINALIZADO_ATENDIMENTO);
+        }
+        
+        [Fact(DisplayName = "Acervo Solicitação - Não deve finalizar atendimento com itens em situação aguardando visita com data de visita futura")]
+        public async Task Nao_deve_finalizar_atendimento_com_itens_em_situacao_aguardando_visita_com_data_de_visita_futura()
+        {
+            await InserirDadosBasicosAleatorios();
+
+            await InserirAcervoTridimensional();
+
+            var acervoSolicitacao = ObterAcervoSolicitacao();
+            
+            await InserirNaBase(acervoSolicitacao);
+
+            var acervoSolicitadoId = (ObterTodos<AcervoSolicitacao>()).LastOrDefault().Id;
+           
+            foreach (var item in acervoSolicitacao.Itens)
+            {
+                item.AcervoSolicitacaoId = acervoSolicitadoId;
+                item.Situacao = SituacaoSolicitacaoItem.AGUARDANDO_VISITA;
+                item.DataVisita = DateTimeExtension.HorarioBrasilia().AddDays(+2);
+                await InserirNaBase(item);
+            }
+            
+            var servicoAcervoSolicitacao = GetServicoAcervoSolicitacao();
+            
+            await servicoAcervoSolicitacao.FinalizarAtendimento(1).ShouldThrowAsync<NegocioException>();
         }
     }
 }

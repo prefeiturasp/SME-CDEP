@@ -98,9 +98,23 @@ namespace SME.CDEP.Infra.Dados.Repositorios
 
         public Task<bool> PossuiSituacoesNaoFinalizaveis(long acervoSolicitacaoId)
         {
-            var situacoesParaCancelamento = new []
+            var query = @"
+             select 1
+            from acervo_solicitacao_item
+            where acervo_solicitacao_id = @acervoSolicitacaoId
+            and not excluido
+            and situacao = @situacaoAguardandoAtendimento 
+            or (situacao = @situacaoAguardandoVisita and dt_visita::date > @dataAtual::date )";
+            
+            return conexao.Obter().QueryFirstOrDefaultAsync<bool>(query, new { acervoSolicitacaoId, 
+                situacaoAguardandoAtendimento = (int)SituacaoSolicitacaoItem.AGUARDANDO_ATENDIMENTO,
+                situacaoAguardandoVisita = (int)SituacaoSolicitacaoItem.AGUARDANDO_VISITA, dataAtual = DateTimeExtension.HorarioBrasilia().Date });
+        }
+
+        public Task<bool> PossuiSituacoesItemNaoCancelaveis(long acervoSolicitacaoItemId)
+        {
+            var situacoesItensNaoCancelaveis = new []
             {
-                (int)SituacaoSolicitacaoItem.AGUARDANDO_VISITA, 
                 (int)SituacaoSolicitacaoItem.FINALIZADO_AUTOMATICAMENTE,
                 (int)SituacaoSolicitacaoItem.CANCELADO
             };
@@ -108,35 +122,23 @@ namespace SME.CDEP.Infra.Dados.Repositorios
             var query = @"
              select 1
             from acervo_solicitacao_item
-            where acervo_solicitacao_id = @acervoSolicitacaoId
+            where id = @acervoSolicitacaoItemId
             and not excluido
-            and situacao = any(@situacoesParaCancelamento) ";
+            and situacao = any(@situacoesItensNaoCancelaveis) ";
             
-            return conexao.Obter().QueryFirstOrDefaultAsync<bool>(query, new { acervoSolicitacaoId, situacoesParaCancelamento });
+            return conexao.Obter().QueryFirstOrDefaultAsync<bool>(query, new { acervoSolicitacaoItemId, situacoesItensNaoCancelaveis });
         }
         
-        public Task<bool> PossuiSituacoesNaoCancelaveis(long acervoSolicitacaoId)
+        public Task<bool> PossuiSituacoesNaoCancelaveisParaAtendimento(long acervoSolicitacaoId)
         {
             var query = @"
              select 1
             from acervo_solicitacao_item
             where acervo_solicitacao_id = @acervoSolicitacaoId
             and not excluido
-            and situacao <> @situacaoCancelado ";
+            and situacao = @finalizadoAutomaticamente ";
             
-            return conexao.Obter().QueryFirstOrDefaultAsync<bool>(query, new { acervoSolicitacaoId, situacaoCancelado = (int)SituacaoSolicitacaoItem.CANCELADO });
-        }
-        
-        public Task<bool> PossuiSituacoesItemNaoCancelaveis(long acervoSolicitacaoId)
-        {
-            var query = @"
-             select 1
-            from acervo_solicitacao_item
-            where acervo_solicitacao_id = @acervoSolicitacaoId
-            and not excluido
-            and situacao = @situacaoFinalizadoAutomaticamente ";
-            
-            return conexao.Obter().QueryFirstOrDefaultAsync<bool>(query, new { acervoSolicitacaoId, situacaoFinalizadoAutomaticamente = (int)SituacaoSolicitacaoItem.FINALIZADO_AUTOMATICAMENTE });
+            return conexao.Obter().QueryFirstOrDefaultAsync<bool>(query, new { acervoSolicitacaoId, finalizadoAutomaticamente = (int)SituacaoSolicitacaoItem.FINALIZADO_AUTOMATICAMENTE });
         }
 
         public Task<bool> AtendimentoPossuiSituacaoNaoConfirmadas(long acervoSolicitacaoItemId)

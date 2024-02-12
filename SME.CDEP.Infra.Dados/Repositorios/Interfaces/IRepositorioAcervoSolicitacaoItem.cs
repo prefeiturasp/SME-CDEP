@@ -13,8 +13,8 @@ namespace SME.CDEP.Infra.Dados.Repositorios.Interfaces
             DateTime? dataVisitaFim);
         Task<IEnumerable<AcervoSolicitacaoItem>> ObterPorSolicitacaoId(long acervoSolicitacaoId);
         Task<bool> PossuiSituacoesNaoFinalizaveis(long acervoSolicitacaoId);
-        Task<bool> PossuiSituacoesNaoCancelaveis(long acervoSolicitacaoId);
-        Task<bool> PossuiSituacoesItemNaoCancelaveis(long acervoSolicitacaoId);
+        Task<bool> PossuiSituacoesItemNaoCancelaveis(long acervoSolicitacaoItemId);
         Task<bool> AtendimentoPossuiSituacaoNaoConfirmadas(long acervoSolicitacaoItemId);
+        Task<bool> PossuiSituacoesNaoCancelaveisParaAtendimento(long acervoSolicitacaoId);
     }
 }
