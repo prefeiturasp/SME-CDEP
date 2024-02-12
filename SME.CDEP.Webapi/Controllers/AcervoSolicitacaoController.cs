@@ -166,6 +166,17 @@ public class AcervoSolicitacaoController: BaseController
         return Ok(await servicoAcervoSolicitacao.AlterarDataVisitaDoItemAtendimento(alterarDataVisitaAcervoSolicitacaoItemDto));
     }
     
+    [HttpPut("cancelar-itens")]
+    [ProducesResponseType(typeof(bool), 200)]
+    [ProducesResponseType(typeof(RetornoBaseDTO), 400)]
+    [ProducesResponseType(typeof(RetornoBaseDTO), 403)]
+    [ProducesResponseType(typeof(RetornoBaseDTO), 601)]
+    [Permissao(Permissao.OperacoesSolicitacoes_E, Policy = "Bearer")]
+    public async Task<IActionResult> CancelarItensAcervoSolicitacao([FromBody] long[] acervoSolicitacaoItemIds, [FromServices] IServicoAcervoSolicitacao servicoAcervoSolicitacao)
+    {
+        return Ok(await servicoAcervoSolicitacao.CancelarItensAcervoSolicitacao(acervoSolicitacaoItemIds));
+    }
+    
     [HttpGet("situacao-atendimento")]
     [ProducesResponseType(typeof(IEnumerable<IdNomeDTO>), 200)]
     [ProducesResponseType(typeof(RetornoBaseDTO), 400)]
