@@ -307,12 +307,16 @@ namespace SME.CDEP.Aplicacao.Servicos
             ValidacaoAcervoSolicitacaoEItens(acervoSolicitacaoConfirmar);
 
             var itens = await repositorioAcervoSolicitacaoItem.ObterPorSolicitacaoId(acervoSolicitacaoConfirmar.Id);
+            
+            var usuarioResponsavel = await repositorioUsuario.ObterPorLogin(acervoSolicitacaoConfirmar.ResponsavelRf);
+            if (usuarioResponsavel.EhNulo())
+                throw new NegocioException(Constantes.USUARIO_RESPONSAVEL_NAO_LOCALIZADO);
 
             var tran = transacao.Iniciar();
             try
             {
                 acervoSolicitacao.Situacao = SituacaoSolicitacao.AGUARDANDO_VISITA;
-                acervoSolicitacao.UsuarioId = acervoSolicitacaoConfirmar.UsuarioId;
+                acervoSolicitacao.UsuarioId = usuarioResponsavel.Id;
                 await repositorioAcervoSolicitacao.Atualizar(acervoSolicitacao);
                 
                 foreach (var item in itens)

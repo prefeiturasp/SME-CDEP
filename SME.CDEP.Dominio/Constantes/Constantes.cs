@@ -2,6 +2,7 @@
 
 public class Constantes
 {
+    public const string USUARIO_RESPONSAVEL_NAO_LOCALIZADO = "O usuário responsável informado não foi encontrado";
     public const string TRIDIMENSIONAL = "Tridimensional";
     public const string FOTOGRAFICO = "Fotográfico";
     public const string DOCUMENTAL = "Documental";

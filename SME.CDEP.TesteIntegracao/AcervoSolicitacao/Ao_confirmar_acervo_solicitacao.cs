@@ -28,7 +28,7 @@ namespace SME.CDEP.TesteIntegracao
             var retorno = await servicoAcervoSolicitacao.ConfirmarAtendimento(new AcervoSolicitacaoConfirmarDTO()
             {
                 Id = 1,
-                UsuarioId = 1,
+                ResponsavelRf = "login_1",
                 Itens = new List<AcervoSolicitacaoItemConfirmarDTO>()
                 {
                     new()
