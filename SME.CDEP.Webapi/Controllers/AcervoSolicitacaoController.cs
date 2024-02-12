@@ -68,13 +68,13 @@ public class AcervoSolicitacaoController: BaseController
         return Ok(await servicoAcervoSolicitacao.ObterMinhasSolicitacoes());
     }
     
-    [HttpGet("situacoes")]
+    [HttpGet("situacoes-item")]
     [ProducesResponseType(typeof(IEnumerable<SituacaoItemDTO>), 200)]
     [ProducesResponseType(typeof(RetornoBaseDTO), 400)]
     [ProducesResponseType(typeof(RetornoBaseDTO), 403)]
     [ProducesResponseType(typeof(RetornoBaseDTO), 601)]
     [Permissao(Permissao.OperacoesSolicitacoes_C, Policy = "Bearer")]
-    public async Task<IActionResult> ObterSituacoesAtendimentos([FromServices] IServicoAcervoSolicitacao servicoAcervoSolicitacao)
+    public async Task<IActionResult> ObterSituacoesAtendimentosItem([FromServices] IServicoAcervoSolicitacao servicoAcervoSolicitacao)
     {
         return Ok(await servicoAcervoSolicitacao.ObterSituacoesAtendimentosItem());
     }
