@@ -79,6 +79,12 @@ namespace SME.CDEP.Infra.Dados.Repositorios
 
         public Task<IEnumerable<AcervoSolicitacaoItem>> ObterPorSolicitacaoId(long acervoSolicitacaoId)
         {
+            var situacoesItensConfirmaveis = new []
+            {
+                (int)SituacaoSolicitacaoItem.AGUARDANDO_ATENDIMENTO,
+                (int)SituacaoSolicitacaoItem.AGUARDANDO_VISITA
+            };
+            
             var query = @"
              select id,
                acervo_solicitacao_id,
@@ -91,9 +97,10 @@ namespace SME.CDEP.Infra.Dados.Repositorios
                tipo_atendimento
             from acervo_solicitacao_item
             where acervo_solicitacao_id = @acervoSolicitacaoId
+              situacao = any(@situacoesItensConfirmaveis) 
             and not excluido";
             
-            return conexao.Obter().QueryAsync<AcervoSolicitacaoItem>(query, new { acervoSolicitacaoId });
+            return conexao.Obter().QueryAsync<AcervoSolicitacaoItem>(query, new { acervoSolicitacaoId, situacoesItensConfirmaveis });
         }
 
         public Task<bool> PossuiSituacoesNaoFinalizaveis(long acervoSolicitacaoId)
