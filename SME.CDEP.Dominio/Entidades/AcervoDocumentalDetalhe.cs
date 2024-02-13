@@ -1,4 +1,6 @@
-﻿namespace SME.CDEP.Dominio.Entidades;
+﻿using SME.CDEP.Dominio.Extensions;
+
+namespace SME.CDEP.Dominio.Entidades;
 
 public class AcervoDocumentalDetalhe
 {
@@ -23,4 +25,19 @@ public class AcervoDocumentalDetalhe
     public string Autores { get; set; }
     public string AcessosDocumentos { get; set; }
     public IEnumerable<ImagemDetalhe>? Imagens { get; set; }
+    public string Dimensoes
+    {
+        get
+        {
+            var dimensoes = string.Empty;
+
+            if (Largura.PossuiElementos())
+                dimensoes = $"{Largura}(Largura)";
+
+            if (Altura.PossuiElementos())
+                dimensoes += dimensoes.EstaPreenchido() ? $" x {Altura}(Altura)" : $"{Altura}(Altura)";
+
+            return dimensoes;
+        }
+    }
 }
