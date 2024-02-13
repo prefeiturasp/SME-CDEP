@@ -396,5 +396,36 @@ namespace SME.CDEP.TesteIntegracao
             await servicoAcervoTridimensional.Inserir(acervoTridimensionalCadastroDto).ShouldThrowAsync<NegocioException>();
            
         }
+        
+        [Fact(DisplayName = "Acervo Tridimensional - Tratar o retorno de dimensões")]
+        public async Task Tratar_retorno_dimensoes()
+        {
+            var detalhe = new AcervoTridimensionalDetalhe() { Largura = "15,20", Altura = "18,20", Diametro = "23,56", Profundidade = "45,16" };
+            detalhe.Dimensoes.ShouldBe("15,20(Largura) x 18,20(Altura) x 45,16(Profundidade) x 23,56(Diâmetro)");
+            
+            detalhe = new AcervoTridimensionalDetalhe() { Largura = "15,20", Altura = "18,20", Profundidade = "45,16"};
+            detalhe.Dimensoes.ShouldBe("15,20(Largura) x 18,20(Altura) x 45,16(Profundidade)");
+            
+            detalhe = new AcervoTridimensionalDetalhe() { Largura = "15,20", Diametro = "23,56", Profundidade = "45,16"};
+            detalhe.Dimensoes.ShouldBe("15,20(Largura) x 45,16(Profundidade) x 23,56(Diâmetro)");
+            
+            detalhe = new AcervoTridimensionalDetalhe() { Altura = "18,20", Diametro = "23,56" };
+            detalhe.Dimensoes.ShouldBe("18,20(Altura) x 23,56(Diâmetro)");
+            
+            detalhe = new AcervoTridimensionalDetalhe() { Largura = "15,20" };
+            detalhe.Dimensoes.ShouldBe("15,20(Largura)");
+            
+            detalhe = new AcervoTridimensionalDetalhe() { Altura = "18,20" };
+            detalhe.Dimensoes.ShouldBe("18,20(Altura)");
+            
+            detalhe = new AcervoTridimensionalDetalhe() { Diametro = "23,56" };
+            detalhe.Dimensoes.ShouldBe("23,56(Diâmetro)");
+            
+            detalhe = new AcervoTridimensionalDetalhe() { Profundidade = "45,16" };
+            detalhe.Dimensoes.ShouldBe("45,16(Profundidade)");
+            
+            detalhe = new AcervoTridimensionalDetalhe();
+            detalhe.Dimensoes.ShouldBe(string.Empty);
+        }
     }
 }

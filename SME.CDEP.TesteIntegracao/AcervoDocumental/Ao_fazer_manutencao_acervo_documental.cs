@@ -1057,6 +1057,31 @@ namespace SME.CDEP.TesteIntegracao
             await servicoAcervoDocumental.Alterar(acervoDocumentalAlteracaoDto).ShouldThrowAsync<NegocioException>();
            
         }
+        
+        [Fact(DisplayName = "Acervo documental - Tratar o retorno de dimensões")]
+        public async Task Tratar_retorno_dimensoes()
+        {
+            var detalhe = new AcervoDocumentalDetalhe() { Largura = "15,20", Altura = "18,20"};
+            detalhe.Dimensoes.ShouldBe("15,20(Largura) x 18,20(Altura)");
+            
+            detalhe = new AcervoDocumentalDetalhe() { Largura = "15,20", Altura = "18,20"};
+            detalhe.Dimensoes.ShouldBe("15,20(Largura) x 18,20(Altura)");
+            
+            detalhe = new AcervoDocumentalDetalhe() { Largura = "15,20"};
+            detalhe.Dimensoes.ShouldBe("15,20(Largura)");
+            
+            detalhe = new AcervoDocumentalDetalhe() { Altura = "18,20"};
+            detalhe.Dimensoes.ShouldBe("18,20(Altura)");
+            
+            detalhe = new AcervoDocumentalDetalhe() { Largura = "15,20" };
+            detalhe.Dimensoes.ShouldBe("15,20(Largura)");
+            
+            detalhe = new AcervoDocumentalDetalhe() { Altura = "18,20" };
+            detalhe.Dimensoes.ShouldBe("18,20(Altura)");
+            
+            detalhe = new AcervoDocumentalDetalhe();
+            detalhe.Dimensoes.ShouldBe(string.Empty);
+        }
 
         private async Task InserirAcervoDocumental(bool inserirCredor = true,bool inserirAcessoDocumento = true)
         {

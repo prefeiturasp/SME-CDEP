@@ -151,9 +151,7 @@ namespace SME.CDEP.Aplicacao.Mapeamentos
                 .ForMember(dest => dest.CopiaDigital, opt => opt.MapFrom(o => o.CopiaDigital.ObterSimNao()))
                 .ForMember(dest => dest.PermiteUsoImagem, opt => opt.MapFrom(o => o.PermiteUsoImagem.ObterSimNao()))
                 .ForMember(dest => dest.CreditosAutores, opt => opt.MapFrom(o => o.Creditos))
-                .ForMember(dest => dest.Dimensoes, opt => opt.MapFrom(o => 
-                    $"{o.Largura.ToString().ObterValorOuZero()}(Largura) x {o.Altura.ToString().ObterValorOuZero()}(Altura) x {o.Diametro.ToString().ObterValorOuZero()}(Diâmetro)")
-                ).ReverseMap();
+                .ReverseMap();
             
             CreateMap<AcervoAudiovisualDetalhe, AcervoAudiovisualDetalheDTO>()
                 .ForMember(dest => dest.CreditosAutores, opt => opt.MapFrom(o => o.Creditos))
@@ -164,26 +162,18 @@ namespace SME.CDEP.Aplicacao.Mapeamentos
                 .ForMember(dest => dest.CreditosAutores, opt => opt.MapFrom(o => o.Creditos))
                 .ForMember(dest => dest.CopiaDigital, opt => opt.MapFrom(o => o.CopiaDigital.ObterSimNaoVazio()))
                 .ForMember(dest => dest.PermiteUsoImagem, opt => opt.MapFrom(o => o.PermiteUsoImagem.ObterSimNaoVazio()))
-                .ForMember(dest => dest.Dimensoes, opt => opt.MapFrom(o => 
-                    $"{o.Largura.ToString().ObterValorOuZero()}(Largura) x {o.Altura.ToString().ObterValorOuZero()}(Altura)")
-                ).ReverseMap();
+                .ReverseMap();
             
             CreateMap<AcervoTridimensionalDetalhe, AcervoTridimensionalDetalheDTO>()
-                .ForMember(dest => dest.Dimensoes, opt => opt.MapFrom(o => 
-                    $"{o.Largura.ToString().ObterValorOuZero()}(Largura) x {o.Altura.ToString().ObterValorOuZero()}(Altura) x {o.Profundidade.ToString().ObterValorOuZero()}(Profundidade) x {o.Diametro.ToString().ObterValorOuZero()}(Diâmetro)")
-                    ).ReverseMap(); 
+                .ReverseMap(); 
             
             CreateMap<AcervoDocumentalDetalhe, AcervoDocumentalDetalheDTO>()
                 .ForMember(dest => dest.CreditosAutores, opt => opt.MapFrom(o => o.Autores))
                 .ForMember(dest => dest.CopiaDigital, opt => opt.MapFrom(o => o.CopiaDigital.ObterSimNaoVazio()))
-                .ForMember(dest => dest.Dimensoes, opt => opt.MapFrom(o => 
-                    $"{o.Largura.ToString().ObterValorOuZero()}(Largura) x {o.Altura.ToString().ObterValorOuZero()}(Altura)")
-                ).ReverseMap();
+                .ReverseMap();
             
             CreateMap<AcervoBibliograficoDetalhe, AcervoBibliograficoDetalheDTO>()
                 .ForMember(dest => dest.CreditosAutores, opt => opt.MapFrom(o => o.Autores))
-                .ForMember(dest => dest.Dimensoes, opt => opt.MapFrom(o => 
-                    $"{o.Largura.ToString().ObterValorOuZero()}(Largura) x {o.Altura.ToString().ObterValorOuZero()}(Altura)"))
                 .ForMember(dest => dest.Localizacao, opt => opt.MapFrom(o => $"{o.Localizacaocdd} - {o.Localizacaopha}"))
                 .ReverseMap(); 
 
