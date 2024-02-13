@@ -2,6 +2,7 @@
 using SME.CDEP.Aplicacao.DTOS;
 using SME.CDEP.Dominio.Entidades;
 using SME.CDEP.Dominio.Excecoes;
+using SME.CDEP.Dominio.Extensions;
 using SME.CDEP.Infra.Dominio.Enumerados;
 using SME.CDEP.TesteIntegracao.Setup;
 using Xunit;
@@ -41,11 +42,6 @@ namespace SME.CDEP.TesteIntegracao
                     {
                         Id = 2,
                         TipoAtendimento = TipoAtendimento.Email
-                    },
-                    new()
-                    {
-                        Id = 3,
-                        TipoAtendimento = TipoAtendimento.Email
                     }
                 }
             });
@@ -67,8 +63,9 @@ namespace SME.CDEP.TesteIntegracao
             itensAlteradosEmail.FirstOrDefault().DataVisita.ShouldBeNull();
             itensAlteradosEmail.FirstOrDefault().TipoAtendimento.ShouldBe(TipoAtendimento.Email);
             
-            itensAlteradosEmail.LastOrDefault().DataVisita.ShouldBeNull();
-            itensAlteradosEmail.LastOrDefault().TipoAtendimento.ShouldBe(TipoAtendimento.Email);
+            var itensImutavel = itensAlterados.Where(w => w.TipoAtendimento.EhNulo());
+            itensImutavel.LastOrDefault().DataVisita.ShouldBeNull();
+            itensImutavel.LastOrDefault().TipoAtendimento.ShouldBeNull();
         }
         
         [Fact(DisplayName = "Acervo Solicitação - Não deve confirmar o atendimento sem itens")]
