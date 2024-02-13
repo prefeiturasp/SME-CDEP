@@ -272,6 +272,9 @@ namespace SME.CDEP.Aplicacao.Servicos
             if (acervoSolicitacaoConfirmarDto.Itens.NaoPossuiElementos())
                 throw new NegocioException(MensagemNegocio.SOLICITACAO_ATENDIMENTO_ITEM_NAO_CONTEM_ACERVOS);
             
+            if (acervoSolicitacaoConfirmarDto.Itens.Any(a=> a.TipoAtendimento.EhInvalido()))
+                throw new NegocioException(MensagemNegocio.TIPO_ATENDIMENTO_INVALIDO);
+            
             if (acervoSolicitacaoConfirmarDto.Itens.Any(a=> a.TipoAtendimento.EhAtendimentoPresencial() && !a.DataVisita.HasValue))
                 throw new NegocioException(MensagemNegocio.ITENS_ACERVOS_PRESENCIAL_DEVEM_TER_DATA_ACERVO);
             
