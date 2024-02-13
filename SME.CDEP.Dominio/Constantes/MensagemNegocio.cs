@@ -10,6 +10,7 @@ public class MensagemNegocio
     public const string ATENDIMENTO_NAO_ESTA_AGUARDANDO_VISITA = "Não é permitido realizar a alteração da data de visita em item quando a solicitação não estiver aguardando visita";
     public const string SITUACAO_INVALIDA_PARA_CANCELAR = "Existem itens de acervos com situação diferente de Cancelado";
     public const string SOLICITACAO_ATENDIMENTO_ITEM_NAO_CONTEM_ACERVOS = "Solicitação de atendimento não contém acervos";
+    public const string TIPO_ATENDIMENTO_INVALIDO = "É necessário informar o tipo de atendimento em cada item do acervo";
     public const string ITENS_ACERVOS_PRESENCIAL_DEVEM_TER_DATA_ACERVO = "Nem todos os itens dos acervos do tipo presencial, tem data de visita";
     public const string ITENS_ACERVOS_PRESENCIAL_NAO_DEVEM_TER_DATA_ACERVO_PASSADAS = "As datas de visita dos acervos presenciais não podem ser datas passadas";
     public const string ITENS_ACERVOS_EMAIL_NAO_DEVEM_TER_DATA_ACERVO = "As datas de visita não devem ser informados nos acervos com tipo de atendimento por e-mail";

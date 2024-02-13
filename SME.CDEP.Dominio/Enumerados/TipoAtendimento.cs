@@ -34,4 +34,11 @@ public static class TipoAtendimentoExtensions
     {
         return tipoAtendimento == TipoAtendimento.Email;
     }
+    
+    public static bool EhInvalido(this TipoAtendimento tipoAtendimento)
+    {
+        var tiposValidos = new[] { TipoAtendimento.Presencial, TipoAtendimento.Email };
+        
+        return !tiposValidos.Contains(tipoAtendimento);
+    }
 }
