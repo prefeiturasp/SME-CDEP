@@ -77,12 +77,13 @@ namespace SME.CDEP.Infra.Dados.Repositorios
                 new { acervoSolicitacaoId, tipoAcervo, situacaoItem, dataSolicitacaoInicio, dataSolicitacaoFim, dataVisitaInicio, dataVisitaFim});
         }
 
-        public Task<IEnumerable<AcervoSolicitacaoItem>> ObterPorSolicitacaoId(long acervoSolicitacaoId)
+        public Task<IEnumerable<AcervoSolicitacaoItem>> ObterItensEmSituacaoAguardandoAtendimentoOuVisitaOuFinalizadoManualmentePorSolicitacaoId(long acervoSolicitacaoId)
         {
-            var situacoesItensConfirmaveis = new []
+            var situacoesItensAguardandoAtendimentoEVisitaOuFinalizadoManualmente = new []
             {
                 (int)SituacaoSolicitacaoItem.AGUARDANDO_ATENDIMENTO,
-                (int)SituacaoSolicitacaoItem.AGUARDANDO_VISITA
+                (int)SituacaoSolicitacaoItem.AGUARDANDO_VISITA,
+                (int)SituacaoSolicitacaoItem.FINALIZADO_MANUALMENTE,
             };
             
             var query = @"
@@ -97,13 +98,33 @@ namespace SME.CDEP.Infra.Dados.Repositorios
                tipo_atendimento
             from acervo_solicitacao_item
             where acervo_solicitacao_id = @acervoSolicitacaoId
-              and situacao = any(@situacoesItensConfirmaveis) 
-            and not excluido";
+              and situacao = any(@situacoesItensAguardandoAtendimentoEVisitaOuFinalizadoManualmente) 
+              and not excluido";
             
-            return conexao.Obter().QueryAsync<AcervoSolicitacaoItem>(query, new { acervoSolicitacaoId, situacoesItensConfirmaveis });
+            return conexao.Obter().QueryAsync<AcervoSolicitacaoItem>(query, new { acervoSolicitacaoId, situacoesItensAguardandoAtendimentoEVisitaOuFinalizadoManualmente });
+        }
+        
+        public Task<IEnumerable<AcervoSolicitacaoItem>> ObterItensEmSituacaoAguardandoVisitaPorSolicitacaoId(long acervoSolicitacaoId)
+        {
+            var query = @"
+             select id,
+               acervo_solicitacao_id,
+               acervo_id,
+               situacao,
+               dt_visita,
+               criado_em,
+               criado_por,
+               criado_login,
+               tipo_atendimento
+            from acervo_solicitacao_item
+            where acervo_solicitacao_id = @acervoSolicitacaoId
+              and situacao = @situacaoAguardandoVisita 
+              and not excluido";
+            
+            return conexao.Obter().QueryAsync<AcervoSolicitacaoItem>(query, new { acervoSolicitacaoId, situacaoAguardandoVisita = (int)SituacaoSolicitacaoItem.AGUARDANDO_VISITA });
         }
 
-        public Task<bool> PossuiSituacoesNaoFinalizaveis(long acervoSolicitacaoId)
+        public Task<bool> PossuiItensEmSituacaoAguardandoAtendimentoOuAguardandoVisitaComDataFutura(long acervoSolicitacaoId)
         {
             var query = @"
              select 1
@@ -118,7 +139,7 @@ namespace SME.CDEP.Infra.Dados.Repositorios
                 situacaoAguardandoVisita = (int)SituacaoSolicitacaoItem.AGUARDANDO_VISITA, dataAtual = DateTimeExtension.HorarioBrasilia().Date });
         }
 
-        public Task<bool> PossuiSituacoesItemNaoCancelaveis(long acervoSolicitacaoItemId)
+        public Task<bool> PossuiItensEmSituacaoFinalizadoAutomaticamenteOuCancelado(long acervoSolicitacaoItemId)
         {
             var situacoesItensNaoCancelaveis = new []
             {
@@ -136,7 +157,7 @@ namespace SME.CDEP.Infra.Dados.Repositorios
             return conexao.Obter().QueryFirstOrDefaultAsync<bool>(query, new { acervoSolicitacaoItemId, situacoesItensNaoCancelaveis });
         }
         
-        public Task<bool> PossuiSituacoesNaoCancelaveisParaAtendimento(long acervoSolicitacaoId)
+        public Task<bool> PossuiItensEmSituacaoFinalizadoAutomaticamente(long acervoSolicitacaoId)
         {
             var query = @"
              select 1
@@ -148,7 +169,7 @@ namespace SME.CDEP.Infra.Dados.Repositorios
             return conexao.Obter().QueryFirstOrDefaultAsync<bool>(query, new { acervoSolicitacaoId, finalizadoAutomaticamente = (int)SituacaoSolicitacaoItem.FINALIZADO_AUTOMATICAMENTE });
         }
 
-        public Task<bool> AtendimentoPossuiSituacaoNaoConfirmadas(long acervoSolicitacaoItemId)
+        public Task<bool> AtendimentoPossuiSituacaoAguardandoVisitaEItemSituacaoFinalizadoAutomaticamenteOuCancelado(long acervoSolicitacaoItemId)
         {
             var situacoesItensConfirmadas = new []
             {
