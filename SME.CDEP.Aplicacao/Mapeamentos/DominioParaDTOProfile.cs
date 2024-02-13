@@ -124,11 +124,27 @@ namespace SME.CDEP.Aplicacao.Mapeamentos
                 .ReverseMap();
             
             CreateMap<ImportacaoArquivoDTO, ImportacaoArquivo>().ReverseMap();
-            CreateMap<IdNomeTipoExcluidoDTO, IdNomeTipoDTO>().ReverseMap();
-            CreateMap<IdNomeExcluidoDTO, IdNomeDTO>().ReverseMap();
-            CreateMap<IdNomeTipoExcluidoAuditavelDTO, IdNomeTipoDTO>().ReverseMap();
-            CreateMap<IdNomeExcluidoAuditavelDTO, IdNomeDTO>().ReverseMap();
-            CreateMap<IdNomeTipoDTO, IdNomeDTO>().ReverseMap();
+            
+            CreateMap<IdNomeTipoExcluidoDTO, IdNomeTipoDTO>()
+                .ForMember(dest => dest.Nome, opt => opt.MapFrom(o=> o.Nome.Trim()))
+                .ReverseMap();
+            
+            CreateMap<IdNomeExcluidoDTO, IdNomeDTO>()
+                .ForMember(dest => dest.Nome, opt => opt.MapFrom(o=> o.Nome.Trim()))
+                .ReverseMap();
+            
+            CreateMap<IdNomeTipoExcluidoAuditavelDTO, IdNomeTipoDTO>()
+                .ForMember(dest => dest.Nome, opt => opt.MapFrom(o=> o.Nome.Trim()))
+                .ReverseMap();
+            
+            CreateMap<IdNomeExcluidoAuditavelDTO, IdNomeDTO>()
+                .ForMember(dest => dest.Nome, opt => opt.MapFrom(o=> o.Nome.Trim()))
+                .ReverseMap();
+            
+            CreateMap<IdNomeTipoDTO, IdNomeDTO>()
+                .ForMember(dest => dest.Nome, opt => opt.MapFrom(o=> o.Nome.Trim()))
+                .ReverseMap();
+            
             CreateMap<ImagemDetalhe, ImagemDTO>().ReverseMap();
             
             CreateMap<AcervoArteGraficaDetalhe, AcervoArteGraficaDetalheDTO>()
