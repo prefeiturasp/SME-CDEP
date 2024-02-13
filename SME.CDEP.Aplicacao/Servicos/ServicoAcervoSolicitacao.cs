@@ -331,7 +331,10 @@ namespace SME.CDEP.Aplicacao.Servicos
                         item.Situacao = SituacaoSolicitacaoItem.AGUARDANDO_VISITA;
                     }
                     else
+                    {
                         item.Situacao = SituacaoSolicitacaoItem.FINALIZADO_MANUALMENTE;
+                        item.DataVisita = null;
+                    }
                     
                     await repositorioAcervoSolicitacaoItem.Atualizar(item);
                 }
