@@ -97,7 +97,7 @@ namespace SME.CDEP.Infra.Dados.Repositorios
                tipo_atendimento
             from acervo_solicitacao_item
             where acervo_solicitacao_id = @acervoSolicitacaoId
-              situacao = any(@situacoesItensConfirmaveis) 
+              and situacao = any(@situacoesItensConfirmaveis) 
             and not excluido";
             
             return conexao.Obter().QueryAsync<AcervoSolicitacaoItem>(query, new { acervoSolicitacaoId, situacoesItensConfirmaveis });
