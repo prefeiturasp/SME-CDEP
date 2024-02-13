@@ -68,6 +68,79 @@ namespace SME.CDEP.TesteIntegracao
             itensImutavel.LastOrDefault().TipoAtendimento.ShouldBeNull();
         }
         
+        [Fact(DisplayName = "Acervo Solicitação - Confirmar editando confirmacao")]
+        public async Task Deve_confirmar_atendimento_editando_confirmacao()
+        {
+            await InserirDadosBasicosAleatorios();
+
+            await InserirAcervoTridimensional();
+
+            await InserirAcervoSolicitacao(10);
+            
+            var servicoAcervoSolicitacao = GetServicoAcervoSolicitacao();
+            
+            await servicoAcervoSolicitacao.ConfirmarAtendimento(new AcervoSolicitacaoConfirmarDTO()
+            {
+                Id = 1,
+                ResponsavelRf = "login_1",
+                Itens = new List<AcervoSolicitacaoItemConfirmarDTO>()
+                {
+                    new()
+                    {
+                        Id = 1,
+                        DataVisita = DateTimeExtension.HorarioBrasilia().Date,
+                        TipoAtendimento = TipoAtendimento.Presencial
+                    },
+                    new()
+                    {
+                        Id = 2,
+                        TipoAtendimento = TipoAtendimento.Email
+                    }
+                }
+            });
+            
+            var retorno = await servicoAcervoSolicitacao.ConfirmarAtendimento(new AcervoSolicitacaoConfirmarDTO()
+            {
+                Id = 1,
+                ResponsavelRf = "login_1",
+                Itens = new List<AcervoSolicitacaoItemConfirmarDTO>()
+                {
+                    new()
+                    {
+                        Id = 1,
+                        TipoAtendimento = TipoAtendimento.Email
+                    },
+                    new()
+                    {
+                        Id = 2,
+                        DataVisita = DateTimeExtension.HorarioBrasilia().Date,
+                        TipoAtendimento = TipoAtendimento.Presencial
+                    }
+                }
+            });
+            
+            retorno.ShouldBeTrue();
+            var solicitacaoAlterada = ObterTodos<AcervoSolicitacao>().FirstOrDefault(f=> f.Id == 1);
+            solicitacaoAlterada.Id.ShouldBe(1);
+            solicitacaoAlterada.UsuarioId.ShouldBe(1);
+            solicitacaoAlterada.Situacao.ShouldBe(SituacaoSolicitacao.AGUARDANDO_VISITA);
+            
+            var itensAlterados = ObterTodos<AcervoSolicitacaoItem>().Where(w=> w.AcervoSolicitacaoId == 1);
+            itensAlterados.Count().ShouldBe(3);
+            
+            var itensAlteradosPresenciais = itensAlterados.Where(w => w.TipoAtendimento.HasValue && w.TipoAtendimento.Value.EhAtendimentoPresencial());
+            itensAlteradosPresenciais.FirstOrDefault().DataVisita.Value.Date.ShouldBe(DateTimeExtension.HorarioBrasilia().Date);
+            itensAlteradosPresenciais.FirstOrDefault().TipoAtendimento.ShouldBe(TipoAtendimento.Presencial);
+
+            var itensAlteradosEmail = itensAlterados.Where(w => w.TipoAtendimento.HasValue && w.TipoAtendimento.Value.EhAtendimentoViaEmail());
+            itensAlteradosEmail.FirstOrDefault().DataVisita.ShouldBeNull();
+            itensAlteradosEmail.FirstOrDefault().TipoAtendimento.ShouldBe(TipoAtendimento.Email);
+            
+            var itensImutavel = itensAlterados.Where(w => w.TipoAtendimento.EhNulo());
+            itensImutavel.LastOrDefault().DataVisita.ShouldBeNull();
+            itensImutavel.LastOrDefault().TipoAtendimento.ShouldBeNull();
+        }
+        
         [Fact(DisplayName = "Acervo Solicitação - Não deve confirmar o atendimento sem itens")]
         public async Task Noa_deve_confirmar_atendimento_sem_itens()
         {
