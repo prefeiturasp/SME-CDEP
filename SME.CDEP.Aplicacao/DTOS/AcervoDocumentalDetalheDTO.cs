@@ -7,7 +7,7 @@ public class AcervoDocumentalDetalheDTO : AcervoDetalheDTO
     public string CodigoNovo { get; set; }
     public string Material { get; set; }
     public string Idioma { get; set; }
-    public string NumeroPagina { get; set; }
+    public int NumeroPagina { get; set; }
     public string Volume { get; set; }
     public string TipoAnexo { get; set; }
     public string Dimensoes { get; set; }
