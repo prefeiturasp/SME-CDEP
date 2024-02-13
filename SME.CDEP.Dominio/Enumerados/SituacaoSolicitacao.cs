@@ -8,7 +8,7 @@ public enum SituacaoSolicitacao
     [Display(Description = "Aguardando atendimento")]
     AGUARDANDO_ATENDIMENTO = 1,
     
-    [Display(Description = "Finalizando atendimento")]
+    [Display(Description = "Finalizado atendimento")]
     FINALIZADO_ATENDIMENTO = 2,
     
     [Display(Description = "Aguardando visita")]
