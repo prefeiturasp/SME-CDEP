@@ -1,4 +1,6 @@
-﻿namespace SME.CDEP.Aplicacao.DTOS
+﻿using SME.CDEP.Infra.Dominio.Enumerados;
+
+namespace SME.CDEP.Aplicacao.DTOS
 {
     public class AcervoSolicitacaoDetalheDTO
     {
@@ -9,6 +11,7 @@
         public DateTime DataSolicitacao { get; set; }
         public string ResponsavelRf { get; set; }
         public string Situacao { get; set; }
+        public SituacaoSolicitacao SituacaoId { get; set; }
         public IEnumerable<AcervoSolicitacaoItemDetalheResumidoDTO> Itens { get; set; } = Enumerable.Empty<AcervoSolicitacaoItemDetalheResumidoDTO>();
     }
 }
