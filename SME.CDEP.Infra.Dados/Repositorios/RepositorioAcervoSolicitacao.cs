@@ -86,7 +86,7 @@ namespace SME.CDEP.Infra.Dados.Repositorios
 		     aso.id,
              aso.usuario_id as usuarioId,
              aso.criado_em as dataSolicitacao,
-             resp.nome as responsavel,
+             resp.login as responsavelRf,
              aso.situacao 
 		   from acervo_solicitacao aso
 		     left join usuario resp on resp.id = aso.usuario_responsavel_id and not resp.excluido
