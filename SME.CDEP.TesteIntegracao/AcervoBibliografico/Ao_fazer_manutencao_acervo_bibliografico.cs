@@ -579,6 +579,31 @@ namespace SME.CDEP.TesteIntegracao
             await servicoAcervobibliografico.Inserir(acervoBibliograficoCadastroDto).ShouldThrowAsync<NegocioException>();
         }
         
+        [Fact(DisplayName = "Acervo bibliografico - Tratar o retorno de dimensões")]
+        public async Task Tratar_retorno_dimensoes()
+        {
+            var detalhe = new AcervoBibliograficoDetalhe() { Largura = "15,20", Altura = "18,20"};
+            detalhe.Dimensoes.ShouldBe("15,20(Largura) x 18,20(Altura)");
+            
+            detalhe = new AcervoBibliograficoDetalhe() { Largura = "15,20", Altura = "18,20"};
+            detalhe.Dimensoes.ShouldBe("15,20(Largura) x 18,20(Altura)");
+            
+            detalhe = new AcervoBibliograficoDetalhe() { Largura = "15,20"};
+            detalhe.Dimensoes.ShouldBe("15,20(Largura)");
+            
+            detalhe = new AcervoBibliograficoDetalhe() { Altura = "18,20"};
+            detalhe.Dimensoes.ShouldBe("18,20(Altura)");
+            
+            detalhe = new AcervoBibliograficoDetalhe() { Largura = "15,20" };
+            detalhe.Dimensoes.ShouldBe("15,20(Largura)");
+            
+            detalhe = new AcervoBibliograficoDetalhe() { Altura = "18,20" };
+            detalhe.Dimensoes.ShouldBe("18,20(Altura)");
+            
+            detalhe = new AcervoBibliograficoDetalhe();
+            detalhe.Dimensoes.ShouldBe(string.Empty);
+        }
+        
         private async Task InserirAcervoBibliografico(bool inserirCoAutor = true)
         {
             var random = new Random();
