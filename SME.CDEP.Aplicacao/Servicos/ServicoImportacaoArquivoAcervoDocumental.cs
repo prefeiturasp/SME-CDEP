@@ -166,7 +166,7 @@ namespace SME.CDEP.Aplicacao.Servicos
                 MaterialId = ObterMaterialDocumentalIdOuNuloPorValorDoCampo(linha.Material.Conteudo),
                 IdiomaId = ObterIdiomaIdOuNuloPorValorDoCampo(linha.Idioma.Conteudo),
                 Ano = ObterConteudoTexto(linha.Ano),
-                NumeroPagina = ObterConteudoTexto(linha.NumeroPaginas),
+                NumeroPagina = ObterConteudoInteiroOuNulo(linha.NumeroPaginas),
                 Volume = ObterConteudoTexto(linha.Volume),
                 Descricao = ObterConteudoTexto(linha.Descricao),
                 TipoAnexo = ObterConteudoTexto(linha.TipoAnexo),

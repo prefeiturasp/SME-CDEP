@@ -12,7 +12,7 @@ public class AcervoBibliograficoTelaDTO
     public string Assunto { get; set; }
     public string Ano { get; set; }
     public string? Edicao { get; set; }
-    public string? NumeroPaginas { get; set; }
+    public int? NumeroPaginas { get; set; }
     public string? Altura { get; set; }
     public string? Largura { get; set; }
     public string? SerieColecao { get; set; }
