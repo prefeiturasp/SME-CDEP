@@ -10,6 +10,7 @@ namespace SME.CDEP.Dominio.Entidades
         public DateTime DataCriacao { get; set; }
         public DateTime? DataVisita { get; set; }
         public string Solicitante { get; set; }
+        public string Responsavel { get; set; }
         public SituacaoSolicitacaoItem Situacao { get; set; }
     }
 }

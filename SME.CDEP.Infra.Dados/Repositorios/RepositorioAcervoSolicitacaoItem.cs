@@ -46,15 +46,18 @@ namespace SME.CDEP.Infra.Dados.Repositorios
                  asi.criado_em as dataCriacao,
                  asi.dt_visita as DataVisita, 
                  u.nome as solicitante,
-                 asi.situacao
+                 asi.situacao,
+                 ur.nome as Responsavel
             from acervo_solicitacao_item asi
                join acervo_solicitacao aso on aso.id = asi.acervo_solicitacao_id
                join acervo a on a.id = asi.acervo_id
                join usuario u on u.id = aso.usuario_id
+               left join usuario ur on ur.id = aso.usuario_responsavel_id
             where not asi.excluido
               and not aso.excluido
               and not a.excluido 
-              and not u.excluido ");
+              and not u.excluido 
+              and not ur.excluido ");
 
             if (acervoSolicitacaoId.HasValue)
                 query.AppendLine(" and aso.id = @acervoSolicitacaoId ");
