@@ -166,7 +166,7 @@ namespace SME.CDEP.Aplicacao.Servicos
             return true;
         }
 
-        public async Task<IEnumerable<AcervoTipoTituloAcervoIdCreditosAutoresDTO>> ObterItensDoAcervoPorFiltros(long[] acervosIds)
+        public async Task<IEnumerable<AcervoTipoTituloAcervoIdCreditosAutoresDTO>> ObterItensAcervoPorAcervosIds(long[] acervosIds)
         {
             var acervos = await repositorioAcervoSolicitacao.ObterItensDoAcervoPorAcervosIds(acervosIds);
 
@@ -250,7 +250,7 @@ namespace SME.CDEP.Aplicacao.Servicos
             return Task.FromResult(lista);
         }
 
-        public async Task<PaginacaoResultadoDTO<SolicitacaoDTO>> ObterSolicitacoesPorFiltro(FiltroSolicitacaoDTO filtroSolicitacaoDto)
+        public async Task<PaginacaoResultadoDTO<SolicitacaoDTO>> ObterAtendimentoSolicitacoesPorFiltro(FiltroSolicitacaoDTO filtroSolicitacaoDto)
         {
             var solicitacoes = mapper.Map<IEnumerable<SolicitacaoDTO>>(await repositorioAcervoSolicitacaoItem
                 .ObterSolicitacoesPorFiltro(filtroSolicitacaoDto.AcervoSolicitacaoId, filtroSolicitacaoDto.TipoAcervo, 
@@ -268,7 +268,7 @@ namespace SME.CDEP.Aplicacao.Servicos
             };
         }
 
-        public async Task<AcervoSolicitacaoDetalheDTO> ObterDetalhesPorId(long acervoSolicitacaoId)
+        public async Task<AcervoSolicitacaoDetalheDTO> ObterDetalhesParaAtendimentoSolicitadoesPorId(long acervoSolicitacaoId)
         {
             var acervoSolicitacao = mapper.Map<AcervoSolicitacaoDetalheDTO>(await repositorioAcervoSolicitacao.ObterDetalhesPorId(acervoSolicitacaoId));
 
