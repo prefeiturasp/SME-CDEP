@@ -11,6 +11,7 @@ namespace SME.CDEP.Aplicacao.DTOS
         public string Endereco { get; set; }
         public string Email { get; set; }
         public string Tipo { get; set; }
+        public TipoUsuario TipoId { get; set; }
 
         public string ObterEnderecoCompleto(int numero, string complemento, string cidade, string estado, string cep)
         {
