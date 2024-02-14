@@ -180,6 +180,7 @@ namespace SME.CDEP.Aplicacao.Mapeamentos
             CreateMap<Usuario,DadosSolicitanteDTO>()
                 .ForMember(dest => dest.Cpf, opt => opt.MapFrom(o => o.TipoUsuario.EhCoreSSO() ? null : o.Login))
                 .ForMember(dest => dest.Tipo, opt => opt.MapFrom(o => o.TipoUsuario.Descricao()))
+                .ForMember(dest => dest.TipoId, opt => opt.MapFrom(o => o.TipoUsuario))
                 .ReverseMap();
             
             CreateMap<AcervoSolicitacaoItemCompleto,AcervoSolicitacaoItemRetornoCadastroDTO>()
@@ -187,7 +188,7 @@ namespace SME.CDEP.Aplicacao.Mapeamentos
                 .ForMember(dest => dest.Situacao, opt => opt.MapFrom(o => o.SituacaoItem.Descricao()))
                 .ForMember(dest => dest.TipoAcervo, opt => opt.MapFrom(o => o.TipoAcervo.Descricao()))
                 .ForMember(dest => dest.TipoAtendimento, opt => opt.MapFrom(o => o.TipoAtendimento.Descricao()))
-                .ForMember(dest => dest.AlteraDataVisita, opt => opt.MapFrom(o => o.Situacao.EstaAguardandoVisita() && o.TipoAtendimento.EhAtendimentoPresencial() && o.SituacaoItem.EstaCancelado()))
+                .ForMember(dest => dest.AlteraDataVisita, opt => opt.MapFrom(o => o.SituacaoItem.EstaAguardandoVisita() && o.TipoAtendimento.EhAtendimentoPresencial() && o.SituacaoItem.NaoEstaCancelado()))
                 .ReverseMap();
             
             CreateMap<ArquivoCodigoNomeDTO,ArquivoCodigoNomeAcervoId>().ReverseMap();

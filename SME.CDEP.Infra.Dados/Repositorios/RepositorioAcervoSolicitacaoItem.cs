@@ -2,6 +2,7 @@
 using Dapper;
 using SME.CDEP.Dominio.Contexto;
 using SME.CDEP.Dominio.Entidades;
+using SME.CDEP.Dominio.Extensions;
 using SME.CDEP.Infra.Dados.Repositorios.Interfaces;
 using SME.CDEP.Infra.Dominio.Enumerados;
 
@@ -20,7 +21,8 @@ namespace SME.CDEP.Infra.Dados.Repositorios
               asi.criado_em as DataCriacao,              
               asi.situacao,
               a.tipo as TipoAcervo,
-              a.titulo 
+              a.titulo,
+              asi.dt_visita dataVisita
             from acervo_solicitacao_item asi
             join acervo_solicitacao aso on asi.acervo_solicitacao_id = aso.id 
             join acervo a on a.id = asi.acervo_id 
@@ -52,12 +54,11 @@ namespace SME.CDEP.Infra.Dados.Repositorios
                join acervo_solicitacao aso on aso.id = asi.acervo_solicitacao_id
                join acervo a on a.id = asi.acervo_id
                join usuario u on u.id = aso.usuario_id
-               left join usuario ur on ur.id = aso.usuario_responsavel_id
+               left join usuario ur on ur.id = aso.usuario_responsavel_id and not ur.excluido
             where not asi.excluido
               and not aso.excluido
               and not a.excluido 
-              and not u.excluido 
-              and not ur.excluido ");
+              and not u.excluido ");
 
             if (acervoSolicitacaoId.HasValue)
                 query.AppendLine(" and aso.id = @acervoSolicitacaoId ");
@@ -74,10 +75,13 @@ namespace SME.CDEP.Infra.Dados.Repositorios
             if (dataVisitaInicio.HasValue && dataVisitaFim.HasValue)
                 query.AppendLine(" and asi.dt_visita is not null and asi.dt_visita::Date between @dataVisitaInicio::Date and @dataVisitaFim::Date ");
 
+            if (responsavel.EstaPreenchido())
+                query.AppendLine(" and ur.login = @responsavel ");
+            
             query.AppendLine(" order by asi.criado_em desc ");
             
             return await conexao.Obter().QueryAsync<AcervoSolicitacaoItemDetalhe>(query.ToString(), 
-                new { acervoSolicitacaoId, tipoAcervo, situacaoItem, dataSolicitacaoInicio, dataSolicitacaoFim, dataVisitaInicio, dataVisitaFim});
+                new { acervoSolicitacaoId, tipoAcervo, situacaoItem, dataSolicitacaoInicio, dataSolicitacaoFim, dataVisitaInicio, dataVisitaFim, responsavel});
         }
 
         public Task<IEnumerable<AcervoSolicitacaoItem>> ObterItensEmSituacaoAguardandoAtendimentoOuVisitaOuFinalizadoManualmentePorSolicitacaoId(long acervoSolicitacaoId)

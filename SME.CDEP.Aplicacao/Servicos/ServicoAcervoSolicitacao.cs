@@ -315,8 +315,10 @@ namespace SME.CDEP.Aplicacao.Servicos
             var tran = transacao.Iniciar();
             try
             {
-                acervoSolicitacao.Situacao = SituacaoSolicitacao.AGUARDANDO_VISITA;
-                acervoSolicitacao.UsuarioId = usuarioResponsavel.Id;
+                acervoSolicitacao.Situacao = acervoSolicitacaoConfirmar.Itens.All(a=> a.TipoAtendimento.EhAtendimentoViaEmail()) 
+                    ? SituacaoSolicitacao.FINALIZADO_ATENDIMENTO : SituacaoSolicitacao.AGUARDANDO_VISITA;
+                
+                acervoSolicitacao.ResponsavelId = usuarioResponsavel.Id;
                 await repositorioAcervoSolicitacao.Atualizar(acervoSolicitacao);
                 
                 foreach (var item in itens)
