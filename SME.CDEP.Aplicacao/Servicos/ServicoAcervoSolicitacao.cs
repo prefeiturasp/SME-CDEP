@@ -337,10 +337,33 @@ namespace SME.CDEP.Aplicacao.Servicos
             
             if (await repositorioAcervoSolicitacaoItem.PossuiItensQueForamAtendidosParcialmente(acervoSolicitacaoId))
                 throw new NegocioException(MensagemNegocio.SITUACAO_INVALIDA_PARA_CANCELAR);
+            
+            var itens = await repositorioAcervoSolicitacaoItem.ObterItensPorSolicitacaoId(acervoSolicitacaoId);
 
-            acervoSolicitacao.Situacao = SituacaoSolicitacao.CANCELADO;
-            await repositorioAcervoSolicitacao.Atualizar(acervoSolicitacao);
-            return true;
+            var tran = transacao.Iniciar();
+            try
+            {
+                acervoSolicitacao.Situacao = SituacaoSolicitacao.CANCELADO;
+                await repositorioAcervoSolicitacao.Atualizar(acervoSolicitacao);
+
+                foreach (var item in itens)
+                {
+                    item.Situacao = SituacaoSolicitacaoItem.CANCELADO;
+                    await repositorioAcervoSolicitacaoItem.Atualizar(item);
+                }
+                
+                tran.Commit();
+                return true;
+            }
+            catch
+            {
+                tran.Rollback();
+                throw;
+            }
+            finally
+            {
+                tran.Dispose();
+            }
         }
 
         public async Task<bool> CancelarItemAtendimento(long acervoSolicitacaoItemId)
