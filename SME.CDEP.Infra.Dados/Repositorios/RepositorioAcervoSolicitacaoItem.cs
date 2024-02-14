@@ -156,16 +156,23 @@ namespace SME.CDEP.Infra.Dados.Repositorios
             return conexao.Obter().QueryFirstOrDefaultAsync<bool>(query, new { acervoSolicitacaoItemId, situacoesItensNaoCancelaveis });
         }
         
-        public Task<bool> PossuiItensEmSituacaoFinalizadoAutomaticamente(long acervoSolicitacaoId)
+        public Task<bool> PossuiItensQueForamAtendidosParcialmente(long acervoSolicitacaoId)
         {
+            var situacoesForamAtendidosParcialmente = new []
+            {
+                (int)SituacaoSolicitacaoItem.AGUARDANDO_VISITA,
+                (int)SituacaoSolicitacaoItem.FINALIZADO_MANUALMENTE,
+                (int)SituacaoSolicitacaoItem.FINALIZADO_AUTOMATICAMENTE,
+            };
+            
             var query = @"
              select 1
             from acervo_solicitacao_item
             where acervo_solicitacao_id = @acervoSolicitacaoId
             and not excluido
-            and situacao = @finalizadoAutomaticamente ";
+            and situacao = any(@situacoesForamAtendidosParcialmente) ";
             
-            return conexao.Obter().QueryFirstOrDefaultAsync<bool>(query, new { acervoSolicitacaoId, finalizadoAutomaticamente = (int)SituacaoSolicitacaoItem.FINALIZADO_AUTOMATICAMENTE });
+            return conexao.Obter().QueryFirstOrDefaultAsync<bool>(query, new { acervoSolicitacaoId, situacoesForamAtendidosParcialmente });
         }
 
         public Task<bool> AtendimentoPossuiSituacaoAguardandoVisitaEItemSituacaoFinalizadoAutomaticamenteOuCancelado(long acervoSolicitacaoItemId)

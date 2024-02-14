@@ -15,7 +15,7 @@ namespace SME.CDEP.Infra.Dados.Repositorios.Interfaces
         Task<bool> PossuiItensEmSituacaoAguardandoAtendimentoOuAguardandoVisitaComDataFutura(long acervoSolicitacaoId);
         Task<bool> PossuiItensEmSituacaoFinalizadoAutomaticamenteOuCancelado(long acervoSolicitacaoItemId);
         Task<bool> AtendimentoPossuiSituacaoAguardandoVisitaEItemSituacaoFinalizadoAutomaticamenteOuCancelado(long acervoSolicitacaoItemId);
-        Task<bool> PossuiItensEmSituacaoFinalizadoAutomaticamente(long acervoSolicitacaoId);
+        Task<bool> PossuiItensQueForamAtendidosParcialmente(long acervoSolicitacaoId);
         Task<IEnumerable<AcervoSolicitacaoItem>> ObterItensEmSituacaoAguardandoVisitaPorSolicitacaoId(long acervoSolicitacaoId);
     }
 }

@@ -335,7 +335,7 @@ namespace SME.CDEP.Aplicacao.Servicos
             if (acervoSolicitacao.EhNulo())
                 throw new NegocioException(MensagemNegocio.SOLICITACAO_ATENDIMENTO_NAO_ENCONTRADA);
             
-            if (await repositorioAcervoSolicitacaoItem.PossuiItensEmSituacaoFinalizadoAutomaticamente(acervoSolicitacaoId))
+            if (await repositorioAcervoSolicitacaoItem.PossuiItensQueForamAtendidosParcialmente(acervoSolicitacaoId))
                 throw new NegocioException(MensagemNegocio.SITUACAO_INVALIDA_PARA_CANCELAR);
 
             acervoSolicitacao.Situacao = SituacaoSolicitacao.CANCELADO;
