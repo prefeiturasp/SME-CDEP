@@ -8,7 +8,7 @@ public class AcervoSolicitacaoConfirmarDTO
     [Required(ErrorMessage = "É necessário informar o identificador do atendimento da solicitação")]
     public long Id { get; set; }
     
-    [Required(ErrorMessage = "É necessário informar o Rf do usuário que assumiu o atendimento da solicitação")]
+    [Required(ErrorMessage = "É necessário informar o Responsável do atendimento")]
     public string ResponsavelRf { get; set; }
     
     [Required(ErrorMessage = "É necessário informar os itens do atendimento da solicitação")]

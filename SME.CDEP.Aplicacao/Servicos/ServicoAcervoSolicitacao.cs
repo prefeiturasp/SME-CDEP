@@ -119,7 +119,7 @@ namespace SME.CDEP.Aplicacao.Servicos
 
             return new AcervoSolicitacaoRetornoCadastroDTO()
             {
-                PodeCancelarSolicitacao = !acervosItensCompletos.Any(a=> a.SituacaoItem == SituacaoSolicitacaoItem.FINALIZADO_AUTOMATICAMENTE),
+                PodeCancelarSolicitacao = acervosItensCompletos.Any(a=> a.SituacaoItem.PodeCancelarAtendimento()),
                 Itens = acervoItensRetorno
             };
         }
@@ -233,8 +233,10 @@ namespace SME.CDEP.Aplicacao.Servicos
             var tran = transacao.Iniciar();
             try
             {
-                acervoSolicitacao.Situacao = SituacaoSolicitacao.AGUARDANDO_VISITA;
-                acervoSolicitacao.UsuarioId = usuarioResponsavel.Id;
+                acervoSolicitacao.Situacao = acervoSolicitacaoConfirmar.Itens.All(a=> a.TipoAtendimento.EhAtendimentoViaEmail()) 
+                    ? SituacaoSolicitacao.FINALIZADO_ATENDIMENTO : SituacaoSolicitacao.AGUARDANDO_VISITA;
+                
+                acervoSolicitacao.ResponsavelId = usuarioResponsavel.Id;
                 await repositorioAcervoSolicitacao.Atualizar(acervoSolicitacao);
                 
                 foreach (var item in itens)
