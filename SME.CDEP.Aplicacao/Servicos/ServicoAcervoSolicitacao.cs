@@ -119,7 +119,7 @@ namespace SME.CDEP.Aplicacao.Servicos
 
             return new AcervoSolicitacaoRetornoCadastroDTO()
             {
-                PodeCancelarSolicitacao = !acervosItensCompletos.Any(a=> a.SituacaoItem == SituacaoSolicitacaoItem.FINALIZADO_AUTOMATICAMENTE),
+                PodeCancelarSolicitacao = acervosItensCompletos.Any(a=> a.SituacaoItem.PodeCancelarAtendimento()),
                 Itens = acervoItensRetorno
             };
         }
