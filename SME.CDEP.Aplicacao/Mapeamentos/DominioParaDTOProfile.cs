@@ -174,6 +174,7 @@ namespace SME.CDEP.Aplicacao.Mapeamentos
             CreateMap<Usuario,DadosSolicitanteDTO>()
                 .ForMember(dest => dest.Cpf, opt => opt.MapFrom(o => o.TipoUsuario.EhCoreSSO() ? null : o.Login))
                 .ForMember(dest => dest.Tipo, opt => opt.MapFrom(o => o.TipoUsuario.Descricao()))
+                .ForMember(dest => dest.TipoId, opt => opt.MapFrom(o => o.TipoUsuario))
                 .ReverseMap();
             
             CreateMap<AcervoSolicitacaoItemCompleto,AcervoSolicitacaoItemRetornoCadastroDTO>()
