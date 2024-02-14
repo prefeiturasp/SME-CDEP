@@ -627,7 +627,56 @@ namespace SME.CDEP.TesteIntegracao
                 await InserirNaBase(new Material() { Nome = material, Tipo = tipoMaterial });
         }
         
-        protected async Task InserirAcervoTridimensional()
+        protected async Task InserirAcervoSolicitacao(int quantidade = 1)
+        {
+            var acervoSolicitacao = ObterAcervoSolicitacao();
+            
+            for (int i = 1; i <= quantidade; i++)
+            {
+                await InserirNaBase(acervoSolicitacao);
+
+                var acervoSolicitadoId = (ObterTodos<AcervoSolicitacao>()).LastOrDefault().Id;
+                foreach (var item in acervoSolicitacao.Itens)
+                {
+                    item.AcervoSolicitacaoId = acervoSolicitadoId;
+                    await InserirNaBase(item);
+                }
+            }
+        }
+        
+        protected AcervoSolicitacao ObterAcervoSolicitacao()
+        {
+            var acervoSolicitacao = new AcervoSolicitacao()
+            {
+                UsuarioId = 1,
+                Situacao = SituacaoSolicitacao.AGUARDANDO_ATENDIMENTO,
+                CriadoEm = DateTimeExtension.HorarioBrasilia(), CriadoLogin = "Sistema", CriadoPor = "Sistema",
+                Itens = new List<AcervoSolicitacaoItem>()
+                {
+                    new ()
+                    {
+                        Situacao =  SituacaoSolicitacaoItem.AGUARDANDO_ATENDIMENTO,
+                        AcervoId = 1, CriadoEm = DateTimeExtension.HorarioBrasilia(), 
+                        CriadoLogin = "Sistema", CriadoPor = "Sistema",
+                    },
+                    new ()
+                    {
+                        Situacao = SituacaoSolicitacaoItem.AGUARDANDO_ATENDIMENTO,
+                        AcervoId = 2, CriadoEm = DateTimeExtension.HorarioBrasilia(), 
+                        CriadoLogin = "Sistema", CriadoPor = "Sistema",
+                    },
+                    new ()
+                    {
+                        Situacao = SituacaoSolicitacaoItem.FINALIZADO_AUTOMATICAMENTE,
+                        AcervoId = 3, CriadoEm = DateTimeExtension.HorarioBrasilia(), 
+                        CriadoLogin = "Sistema", CriadoPor = "Sistema",
+                    }
+                }
+            };
+            return acervoSolicitacao;
+        }
+        
+        protected async Task InserirAcervoTridimensional(bool incluirArquivos = true)
         {
             var random = new Random();
             
@@ -659,39 +708,42 @@ namespace SME.CDEP.TesteIntegracao
                     Diametro = "15,40",	
                     Profundidade = "18,01",	
                 });
-                
-                await InserirNaBase(new Arquivo()
+
+                if (incluirArquivos)
                 {
-                    Nome = faker.Lorem.Text(),
-                    Codigo = Guid.NewGuid(),
-                    Tipo = TipoArquivo.AcervoTridimensional,
-                    TipoConteudo = ConstantesTestes.MIME_TYPE_JPG,
-                    CriadoPor = ConstantesTestes.SISTEMA,
-                    CriadoEm = DateTimeExtension.HorarioBrasilia().AddMinutes(-15),
-                    CriadoLogin = ConstantesTestes.LOGIN_123456789,
-                });
-                
-                arquivoId++;
-                
-                await InserirNaBase(new Arquivo()
-                {
-                    Nome = $"{faker.Lorem.Text()}_{arquivoId}.jpeg",
-                    Codigo = Guid.NewGuid(),
-                    Tipo = TipoArquivo.AcervoArteGrafica,
-                    TipoConteudo = ConstantesTestes.MIME_TYPE_JPG,
-                    CriadoPor = ConstantesTestes.SISTEMA,
-                    CriadoEm = DateTimeExtension.HorarioBrasilia().AddMinutes(-15),
-                    CriadoLogin = ConstantesTestes.LOGIN_123456789,
-                });
-                
-                await InserirNaBase(new AcervoTridimensionalArquivo()
-                {
-                    ArquivoId = arquivoId-1,
-                    AcervoTridimensionalId = j,
-                    ArquivoMiniaturaId = arquivoId
-                });
-                
-                arquivoId++;
+                    await InserirNaBase(new Arquivo()
+                    {
+                        Nome = faker.Lorem.Text(),
+                        Codigo = Guid.NewGuid(),
+                        Tipo = TipoArquivo.AcervoTridimensional,
+                        TipoConteudo = ConstantesTestes.MIME_TYPE_JPG,
+                        CriadoPor = ConstantesTestes.SISTEMA,
+                        CriadoEm = DateTimeExtension.HorarioBrasilia().AddMinutes(-15),
+                        CriadoLogin = ConstantesTestes.LOGIN_123456789,
+                    });
+                    
+                    arquivoId++;
+                    
+                    await InserirNaBase(new Arquivo()
+                    {
+                        Nome = $"{faker.Lorem.Text()}_{arquivoId}.jpeg",
+                        Codigo = Guid.NewGuid(),
+                        Tipo = TipoArquivo.AcervoArteGrafica,
+                        TipoConteudo = ConstantesTestes.MIME_TYPE_JPG,
+                        CriadoPor = ConstantesTestes.SISTEMA,
+                        CriadoEm = DateTimeExtension.HorarioBrasilia().AddMinutes(-15),
+                        CriadoLogin = ConstantesTestes.LOGIN_123456789,
+                    });
+                    
+                    await InserirNaBase(new AcervoTridimensionalArquivo()
+                    {
+                        ArquivoId = arquivoId-1,
+                        AcervoTridimensionalId = j,
+                        ArquivoMiniaturaId = arquivoId
+                    });
+                    
+                    arquivoId++;
+                }
             }
         }
     }

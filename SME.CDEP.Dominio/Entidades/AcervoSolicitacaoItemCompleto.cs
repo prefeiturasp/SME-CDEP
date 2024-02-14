@@ -9,8 +9,11 @@ namespace SME.CDEP.Dominio.Entidades
         public long AcervoId { get; set; }
         public string Titulo  { get; set; }
         public IEnumerable<CreditoAutorNomeAcervoId> AutoresCreditos { get; set; }
-        public SituacaoSolicitacaoItem Situacao { get; set; }
+        public SituacaoSolicitacaoItem SituacaoItem { get; set; }
         public IEnumerable<ArquivoCodigoNomeAcervoId> Arquivos  { get; set; }
+        public TipoAtendimento? TipoAtendimento  { get; set; }
+        public DateTime? DataVisita  { get; set; }
+        public SituacaoSolicitacao Situacao { get; set; }
     }
     
     public class CreditoAutorNomeAcervoId 

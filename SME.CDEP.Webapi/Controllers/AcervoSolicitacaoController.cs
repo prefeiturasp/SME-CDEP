@@ -36,7 +36,7 @@ public class AcervoSolicitacaoController: BaseController
     }
     
     [HttpGet("{acervoSolicitacaoId}")]
-    [ProducesResponseType(typeof(IEnumerable<AcervoSolicitacaoItemRetornoCadastroDTO>), 200)]
+    [ProducesResponseType(typeof(AcervoSolicitacaoRetornoCadastroDTO), 200)]
     [ProducesResponseType(typeof(RetornoBaseDTO), 400)]
     [ProducesResponseType(typeof(RetornoBaseDTO), 403)]
     [ProducesResponseType(typeof(RetornoBaseDTO), 601)]
@@ -68,13 +68,13 @@ public class AcervoSolicitacaoController: BaseController
         return Ok(await servicoAcervoSolicitacao.ObterMinhasSolicitacoes());
     }
     
-    [HttpGet("situacoes")]
+    [HttpGet("situacoes-item")]
     [ProducesResponseType(typeof(IEnumerable<SituacaoItemDTO>), 200)]
     [ProducesResponseType(typeof(RetornoBaseDTO), 400)]
     [ProducesResponseType(typeof(RetornoBaseDTO), 403)]
     [ProducesResponseType(typeof(RetornoBaseDTO), 601)]
     [Permissao(Permissao.OperacoesSolicitacoes_C, Policy = "Bearer")]
-    public async Task<IActionResult> ObterSituacoesAtendimentos([FromServices] IServicoAcervoSolicitacao servicoAcervoSolicitacao)
+    public async Task<IActionResult> ObterSituacoesAtendimentosItem([FromServices] IServicoAcervoSolicitacao servicoAcervoSolicitacao)
     {
         return Ok(await servicoAcervoSolicitacao.ObterSituacoesAtendimentosItem());
     }
@@ -88,5 +88,82 @@ public class AcervoSolicitacaoController: BaseController
     public async Task<IActionResult> ObterSolicitacoesPorFiltro([FromQuery] FiltroSolicitacaoDTO filtroSolicitacaoDto, [FromServices] IServicoAcervoSolicitacao servicoAcervoSolicitacao)
     {
         return Ok(await servicoAcervoSolicitacao.ObterSolicitacoesPorFiltro(filtroSolicitacaoDto));
+    }
+    
+    [HttpGet("detalhes/{acervoSolicitacaoId}")]
+    [ProducesResponseType(typeof(AcervoSolicitacaoDetalheDTO), 200)]
+    [ProducesResponseType(typeof(RetornoBaseDTO), 400)]
+    [ProducesResponseType(typeof(RetornoBaseDTO), 403)]
+    [ProducesResponseType(typeof(RetornoBaseDTO), 601)]
+    [Permissao(Permissao.OperacoesSolicitacoes_C, Policy = "Bearer")]
+    public async Task<IActionResult> ObterDetalhesPorId([FromRoute] long acervoSolicitacaoId,[FromServices] IServicoAcervoSolicitacao servicoAcervoSolicitacao)
+    {
+        return Ok(await servicoAcervoSolicitacao.ObterDetalhesPorId(acervoSolicitacaoId));
+    }
+    
+    [HttpGet("tipo-atendimento")]
+    [ProducesResponseType(typeof(IEnumerable<IdNomeDTO>), 200)]
+    [ProducesResponseType(typeof(RetornoBaseDTO), 400)]
+    [ProducesResponseType(typeof(RetornoBaseDTO), 403)]
+    [ProducesResponseType(typeof(RetornoBaseDTO), 601)]
+    [Permissao(Permissao.OperacoesSolicitacoes_C, Policy = "Bearer")]
+    public IActionResult ObterTiposDeAtendimentos([FromServices] IServicoAcervoSolicitacao servicoAcervoSolicitacao)
+    {
+        return Ok(servicoAcervoSolicitacao.ObterTiposDeAtendimentos());
+    }
+    
+    [HttpPut("confirmar-atendimento")]
+    [ProducesResponseType(typeof(bool), 200)]
+    [ProducesResponseType(typeof(RetornoBaseDTO), 400)]
+    [ProducesResponseType(typeof(RetornoBaseDTO), 403)]
+    [ProducesResponseType(typeof(RetornoBaseDTO), 601)]
+    [Permissao(Permissao.OperacoesSolicitacoes_A, Policy = "Bearer")]
+    public async Task<IActionResult> ConfirmarAtendimento([FromBody] AcervoSolicitacaoConfirmarDTO acervoSolicitacaoConfirmar, [FromServices] IServicoAcervoSolicitacao servicoAcervoSolicitacao)
+    {
+        return Ok(await servicoAcervoSolicitacao.ConfirmarAtendimento(acervoSolicitacaoConfirmar));
+    }
+    
+    [HttpPut("{acervoSolicitacaoId}/finalizar-atendimento")]
+    [ProducesResponseType(typeof(bool), 200)]
+    [ProducesResponseType(typeof(RetornoBaseDTO), 400)]
+    [ProducesResponseType(typeof(RetornoBaseDTO), 403)]
+    [ProducesResponseType(typeof(RetornoBaseDTO), 601)]
+    [Permissao(Permissao.OperacoesSolicitacoes_A, Policy = "Bearer")]
+    public async Task<IActionResult> FinalizarAtendimento([FromRoute] long acervoSolicitacaoId, [FromServices] IServicoAcervoSolicitacao servicoAcervoSolicitacao)
+    {
+        return Ok(await servicoAcervoSolicitacao.FinalizarAtendimento(acervoSolicitacaoId));
+    }
+    
+    [HttpPut("{acervoSolicitacaoId}/cancelar-atendimento")]
+    [ProducesResponseType(typeof(bool), 200)]
+    [ProducesResponseType(typeof(RetornoBaseDTO), 400)]
+    [ProducesResponseType(typeof(RetornoBaseDTO), 403)]
+    [ProducesResponseType(typeof(RetornoBaseDTO), 601)]
+    [Permissao(Permissao.OperacoesSolicitacoes_A, Policy = "Bearer")]
+    public async Task<IActionResult> CancelarAtendimento([FromRoute] long acervoSolicitacaoId, [FromServices] IServicoAcervoSolicitacao servicoAcervoSolicitacao)
+    {
+        return Ok(await servicoAcervoSolicitacao.CancelarAtendimento(acervoSolicitacaoId));
+    }
+    
+    [HttpPut("{acervoSolicitacaoItemId}/cancelar-item-atendimento")]
+    [ProducesResponseType(typeof(bool), 200)]
+    [ProducesResponseType(typeof(RetornoBaseDTO), 400)]
+    [ProducesResponseType(typeof(RetornoBaseDTO), 403)]
+    [ProducesResponseType(typeof(RetornoBaseDTO), 601)]
+    [Permissao(Permissao.OperacoesSolicitacoes_A, Policy = "Bearer")]
+    public async Task<IActionResult> CancelarItemAtendimento([FromRoute] long acervoSolicitacaoItemId, [FromServices] IServicoAcervoSolicitacao servicoAcervoSolicitacao)
+    {
+        return Ok(await servicoAcervoSolicitacao.CancelarItemAtendimento(acervoSolicitacaoItemId));
+    }
+    
+    [HttpPut("alterar-data-visita")]
+    [ProducesResponseType(typeof(bool), 200)]
+    [ProducesResponseType(typeof(RetornoBaseDTO), 400)]
+    [ProducesResponseType(typeof(RetornoBaseDTO), 403)]
+    [ProducesResponseType(typeof(RetornoBaseDTO), 601)]
+    [Permissao(Permissao.OperacoesSolicitacoes_A, Policy = "Bearer")]
+    public async Task<IActionResult> AlterarDataVisitaDoItemAtendimento([FromBody] AlterarDataVisitaAcervoSolicitacaoItemDTO alterarDataVisitaAcervoSolicitacaoItemDto, [FromServices] IServicoAcervoSolicitacao servicoAcervoSolicitacao)
+    {
+        return Ok(await servicoAcervoSolicitacao.AlterarDataVisitaDoItemAtendimento(alterarDataVisitaAcervoSolicitacaoItemDto));
     }
 }

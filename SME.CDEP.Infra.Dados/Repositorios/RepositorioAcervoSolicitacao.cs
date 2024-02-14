@@ -78,5 +78,45 @@ namespace SME.CDEP.Infra.Dados.Repositorios
 
             return conexao.Obter().ExecuteAsync(query, parametros);
         }
+
+        public async Task<AcervoSolicitacaoDetalhe> ObterDetalhesPorId(long acervoSolicitacaoId)
+        {
+	        var query = @"
+           select 
+		     aso.id,
+             aso.usuario_id as usuarioId,
+             aso.criado_em as dataSolicitacao,
+             resp.login as responsavelRf,
+             aso.situacao 
+		   from acervo_solicitacao aso
+		     left join usuario resp on resp.id = aso.usuario_responsavel_id and not resp.excluido
+		   where aso.id = @acervoSolicitacaoId
+		      and not aso.excluido;
+		   
+		   select 
+		     asi.id,
+             coalesce(a.codigo, a.codigo_novo) as codigo,
+             a.tipo as tipoAcervo,
+             a.titulo,
+             asi.dt_visita as dataVisita,
+             asi.situacao,
+             asi.tipo_atendimento as tipoAtendimento
+		   from acervo_solicitacao_item asi
+		     join acervo a on a.id = asi.acervo_id 
+		   where not asi.excluido
+		     and not a.excluido
+		     and asi.acervo_solicitacao_id = @acervoSolicitacaoId; ";
+            
+	        var queryMultiple = await conexao.Obter().QueryMultipleAsync(query, new { acervoSolicitacaoId });
+
+	        var acervoSolicitacao = queryMultiple.ReadFirst<AcervoSolicitacaoDetalhe>();
+
+	        if (acervoSolicitacao.EhNulo())
+		        return default;
+
+	        acervoSolicitacao.Itens = queryMultiple.Read<AcervoSolicitacaoItemDetalheResumido>();
+
+	        return acervoSolicitacao;
+        }
     }
 }

@@ -357,6 +357,18 @@ namespace SME.CDEP.Aplicacao.Servicos
 
             return dadosSolicitante;
         }
+        
+        public async Task<DadosSolicitanteDTO> ObterDadosSolicitantePorUsuarioId(long usuarioId)
+        {
+            var usuario = await repositorioUsuario.ObterPorId(usuarioId);
+
+            var dadosSolicitante = mapper.Map<DadosSolicitanteDTO>(usuario);
+            
+            dadosSolicitante.ObterEnderecoCompleto(usuario.Numero, usuario.Complemento, 
+                usuario.Cidade, usuario.Estado, usuario.Cep);
+
+            return dadosSolicitante;
+        }
 
         public async Task<IEnumerable<ResponsavelDTO>> ObterUsuariosComPerfisResponsavel()
         {
