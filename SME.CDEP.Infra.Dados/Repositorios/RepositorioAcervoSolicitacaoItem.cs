@@ -123,6 +123,25 @@ namespace SME.CDEP.Infra.Dados.Repositorios
             
             return conexao.Obter().QueryAsync<AcervoSolicitacaoItem>(query, new { acervoSolicitacaoId, situacaoAguardandoVisita = (int)SituacaoSolicitacaoItem.AGUARDANDO_VISITA });
         }
+        
+        public Task<IEnumerable<AcervoSolicitacaoItem>> ObterItensPorSolicitacaoId(long acervoSolicitacaoId)
+        {
+            var query = @"
+             select id,
+               acervo_solicitacao_id,
+               acervo_id,
+               situacao,
+               dt_visita,
+               criado_em,
+               criado_por,
+               criado_login,
+               tipo_atendimento
+            from acervo_solicitacao_item
+            where acervo_solicitacao_id = @acervoSolicitacaoId 
+              and not excluido";
+            
+            return conexao.Obter().QueryAsync<AcervoSolicitacaoItem>(query, new { acervoSolicitacaoId });
+        }
 
         public Task<bool> PossuiItensEmSituacaoAguardandoAtendimentoOuAguardandoVisitaComDataFutura(long acervoSolicitacaoId)
         {
