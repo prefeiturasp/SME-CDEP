@@ -11,10 +11,12 @@ namespace SME.CDEP.Infra.Dados.Repositorios.Interfaces
         Task<IEnumerable<AcervoSolicitacaoItemDetalhe>> ObterSolicitacoesPorFiltro(long? acervoSolicitacaoId, TipoAcervo? tipoAcervo, 
             DateTime? dataSolicitacaoInicio, DateTime? dataSolicitacaoFim, string? responsavel, SituacaoSolicitacaoItem? situacaoItem, DateTime? dataVisitaInicio, 
             DateTime? dataVisitaFim);
-        Task<IEnumerable<AcervoSolicitacaoItem>> ObterPorSolicitacaoId(long acervoSolicitacaoId);
-        Task<bool> PossuiSituacoesNaoFinalizaveis(long acervoSolicitacaoId);
-        Task<bool> PossuiSituacoesNaoCancelaveis(long acervoSolicitacaoId);
-        Task<bool> PossuiSituacoesItemNaoCancelaveis(long acervoSolicitacaoId);
-        Task<bool> AtendimentoPossuiSituacaoNaoConfirmadas(long acervoSolicitacaoItemId);
+        Task<IEnumerable<AcervoSolicitacaoItem>> ObterItensEmSituacaoAguardandoAtendimentoOuVisitaOuFinalizadoManualmentePorSolicitacaoId(long acervoSolicitacaoId);
+        Task<bool> PossuiItensEmSituacaoAguardandoAtendimentoOuAguardandoVisitaComDataFutura(long acervoSolicitacaoId);
+        Task<bool> PossuiItensEmSituacaoFinalizadoAutomaticamenteOuCancelado(long acervoSolicitacaoItemId);
+        Task<bool> AtendimentoPossuiSituacaoAguardandoVisitaEItemSituacaoFinalizadoAutomaticamenteOuCancelado(long acervoSolicitacaoItemId);
+        Task<bool> PossuiItensQueForamAtendidosParcialmente(long acervoSolicitacaoId);
+        Task<IEnumerable<AcervoSolicitacaoItem>> ObterItensEmSituacaoAguardandoVisitaPorSolicitacaoId(long acervoSolicitacaoId);
+        Task<IEnumerable<AcervoSolicitacaoItem>> ObterItensPorSolicitacaoId(long acervoSolicitacaoId);
     }
 }

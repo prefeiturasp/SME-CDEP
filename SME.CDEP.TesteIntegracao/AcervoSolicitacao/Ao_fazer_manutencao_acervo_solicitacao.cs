@@ -71,7 +71,7 @@ namespace SME.CDEP.TesteIntegracao
             retornoAcervoSolicitacaoAlterado.ShouldBeTrue();
             
             var acervoSolicitacaoAlterado = await servicoAcervoSolicitacao.ObterPorId(1);
-            acervoSolicitacaoAlterado.PossuiElementos().ShouldBeFalse();
+            acervoSolicitacaoAlterado.Itens.PossuiElementos().ShouldBeFalse();
         }
         
         private List<AcervoSolicitacaoItemCadastroDTO> ObterItens()

@@ -679,6 +679,34 @@ namespace SME.CDEP.TesteIntegracao
             }
         }
         
+        [Fact(DisplayName = "Acervo Arte Gráfica - Tratar o retorno de dimensões")]
+        public async Task Tratar_retorno_dimensoes()
+        {
+            var detalhe = new AcervoArteGraficaDetalhe() { Largura = "15,20", Altura = "18,20", Diametro = "23,56" };
+            detalhe.Dimensoes.ShouldBe("15,20(Largura) x 18,20(Altura) x 23,56(Diâmetro)");
+            
+            detalhe = new AcervoArteGraficaDetalhe() { Largura = "15,20", Altura = "18,20" };
+            detalhe.Dimensoes.ShouldBe("15,20(Largura) x 18,20(Altura)");
+            
+            detalhe = new AcervoArteGraficaDetalhe() { Largura = "15,20", Diametro = "23,56" };
+            detalhe.Dimensoes.ShouldBe("15,20(Largura) x 23,56(Diâmetro)");
+            
+            detalhe = new AcervoArteGraficaDetalhe() { Altura = "18,20", Diametro = "23,56" };
+            detalhe.Dimensoes.ShouldBe("18,20(Altura) x 23,56(Diâmetro)");
+            
+            detalhe = new AcervoArteGraficaDetalhe() { Largura = "15,20" };
+            detalhe.Dimensoes.ShouldBe("15,20(Largura)");
+            
+            detalhe = new AcervoArteGraficaDetalhe() { Altura = "18,20" };
+            detalhe.Dimensoes.ShouldBe("18,20(Altura)");
+            
+            detalhe = new AcervoArteGraficaDetalhe() { Diametro = "23,56" };
+            detalhe.Dimensoes.ShouldBe("23,56(Diâmetro)");
+            
+            detalhe = new AcervoArteGraficaDetalhe();
+            detalhe.Dimensoes.ShouldBe(string.Empty);
+        }
+        
         private async Task InserirAcervoArteGrafica(bool inserirCredor = true)
         {
             var random = new Random();

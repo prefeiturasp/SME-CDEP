@@ -35,7 +35,7 @@ public class AcervoSolicitacaoController: BaseController
     }
     
     [HttpGet("{acervoSolicitacaoId}")]
-    [ProducesResponseType(typeof(IEnumerable<AcervoSolicitacaoItemRetornoCadastroDTO>), 200)]
+    [ProducesResponseType(typeof(AcervoSolicitacaoRetornoCadastroDTO), 200)]
     [ProducesResponseType(typeof(RetornoBaseDTO), 400)]
     [ProducesResponseType(typeof(RetornoBaseDTO), 403)]
     [ProducesResponseType(typeof(RetornoBaseDTO), 601)]
@@ -67,7 +67,7 @@ public class AcervoSolicitacaoController: BaseController
         return Ok(await servicoAcervoSolicitacao.ObterMinhasSolicitacoes());
     }
     
-    [HttpGet("situacoes")]
+    [HttpGet("situacoes-item")]
     [ProducesResponseType(typeof(IEnumerable<SituacaoItemDTO>), 200)]
     [ProducesResponseType(typeof(RetornoBaseDTO), 400)]
     [ProducesResponseType(typeof(RetornoBaseDTO), 403)]

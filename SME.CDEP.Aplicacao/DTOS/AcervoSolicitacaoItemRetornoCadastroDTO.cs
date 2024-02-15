@@ -11,4 +11,5 @@ public class AcervoSolicitacaoItemRetornoCadastroDTO
     public string TipoAtendimento { get; set; }
     public DateTime? DataVisita { get; set; }
     public IEnumerable<ArquivoCodigoNomeDTO> Arquivos { get; set; }
+    public bool AlteraDataVisita { get; set; }
 }

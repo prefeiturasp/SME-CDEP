@@ -14,7 +14,10 @@ public enum SituacaoSolicitacaoItem
     FINALIZADO_AUTOMATICAMENTE = 3,
     
     [Display(Description = "Cancelado")]
-    CANCELADO = 4
+    CANCELADO = 4,
+    
+    [Display(Description = "Finalizado manualmente")]
+    FINALIZADO_MANUALMENTE = 5
 }
 public static class SituacaoSolicitacaoItemExtension
 {
@@ -28,10 +31,32 @@ public static class SituacaoSolicitacaoItemExtension
         return situacaoSolicitacaoItem == SituacaoSolicitacaoItem.FINALIZADO_AUTOMATICAMENTE;
     }
     
+    public static bool EstaCancelado(this SituacaoSolicitacaoItem situacaoSolicitacaoItem)
+    {
+        return situacaoSolicitacaoItem == SituacaoSolicitacaoItem.CANCELADO;
+    }
+    
+    public static bool NaoEstaCancelado(this SituacaoSolicitacaoItem situacaoSolicitacaoItem)
+    {
+        return situacaoSolicitacaoItem != SituacaoSolicitacaoItem.CANCELADO;
+    }
+    
     public static bool PodeFinalizarAtendimento(this SituacaoSolicitacaoItem situacaoSolicitacaoItem)
     {
         return situacaoSolicitacaoItem == SituacaoSolicitacaoItem.AGUARDANDO_VISITA 
                || situacaoSolicitacaoItem == SituacaoSolicitacaoItem.FINALIZADO_AUTOMATICAMENTE
                || situacaoSolicitacaoItem == SituacaoSolicitacaoItem.CANCELADO;
+    }
+    
+    public static bool PodeCancelarAtendimento(this SituacaoSolicitacaoItem situacaoSolicitacaoItem)
+    {
+        return situacaoSolicitacaoItem != SituacaoSolicitacaoItem.FINALIZADO_AUTOMATICAMENTE 
+               && situacaoSolicitacaoItem != SituacaoSolicitacaoItem.CANCELADO
+               && situacaoSolicitacaoItem != SituacaoSolicitacaoItem.FINALIZADO_MANUALMENTE;
+    }
+    
+    public static bool EstaAguardandoVisita(this SituacaoSolicitacaoItem situacaoSolicitacaoItem)
+    {
+        return situacaoSolicitacaoItem == SituacaoSolicitacaoItem.AGUARDANDO_VISITA;
     }
 }

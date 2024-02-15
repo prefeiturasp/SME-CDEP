@@ -476,6 +476,31 @@ namespace SME.CDEP.TesteIntegracao
                 
             await servicoAcervoFotografico.Alterar(acervoFotograficoAlteracaoDto).ShouldThrowAsync<NegocioException>();
         }
+        
+        [Fact(DisplayName = "Acervo fotográfico - Tratar o retorno de dimensões")]
+        public async Task Tratar_retorno_dimensoes()
+        {
+            var detalhe = new AcervoFotograficoDetalhe() { Largura = "15,20", Altura = "18,20" };
+            detalhe.Dimensoes.ShouldBe("15,20(Largura) x 18,20(Altura)");
+            
+            detalhe = new AcervoFotograficoDetalhe() { Largura = "15,20", Altura = "18,20" };
+            detalhe.Dimensoes.ShouldBe("15,20(Largura) x 18,20(Altura)");
+            
+            detalhe = new AcervoFotograficoDetalhe() { Largura = "15,20"};
+            detalhe.Dimensoes.ShouldBe("15,20(Largura)");
+            
+            detalhe = new AcervoFotograficoDetalhe() { Altura = "18,20" };
+            detalhe.Dimensoes.ShouldBe("18,20(Altura)");
+            
+            detalhe = new AcervoFotograficoDetalhe() { Largura = "15,20" };
+            detalhe.Dimensoes.ShouldBe("15,20(Largura)");
+            
+            detalhe = new AcervoFotograficoDetalhe() { Altura = "18,20" };
+            detalhe.Dimensoes.ShouldBe("18,20(Altura)");
+            
+            detalhe = new AcervoFotograficoDetalhe();
+            detalhe.Dimensoes.ShouldBe(string.Empty);
+        }
 
         private async Task InserirAcervoFotografico()
         {

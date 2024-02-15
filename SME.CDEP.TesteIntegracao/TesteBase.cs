@@ -656,12 +656,12 @@ namespace SME.CDEP.TesteIntegracao
                     new ()
                     {
                         Situacao =  SituacaoSolicitacaoItem.AGUARDANDO_ATENDIMENTO,
-                        AcervoId = 1, DataVisita = DateTimeExtension.HorarioBrasilia().AddDays(2),
-                        CriadoEm = DateTimeExtension.HorarioBrasilia(), CriadoLogin = "Sistema", CriadoPor = "Sistema",
+                        AcervoId = 1, CriadoEm = DateTimeExtension.HorarioBrasilia(), 
+                        CriadoLogin = "Sistema", CriadoPor = "Sistema",
                     },
                     new ()
                     {
-                        Situacao = SituacaoSolicitacaoItem.FINALIZADO_AUTOMATICAMENTE,
+                        Situacao = SituacaoSolicitacaoItem.AGUARDANDO_ATENDIMENTO,
                         AcervoId = 2, CriadoEm = DateTimeExtension.HorarioBrasilia(), 
                         CriadoLogin = "Sistema", CriadoPor = "Sistema",
                     },
