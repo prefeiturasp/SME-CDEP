@@ -300,18 +300,6 @@ namespace SME.CDEP.Aplicacao.Servicos
                 });
         }
         
-        public IEnumerable<IdNomeDTO> ObterSituacaoItemAtendimentosManual()
-        {
-            return Enum.GetValues(typeof(SituacaoSolicitacaoItem))
-                .Cast<SituacaoSolicitacaoItem>()
-                .Where(w=> w == SituacaoSolicitacaoItem.AGUARDANDO_VISITA || w == SituacaoSolicitacaoItem.FINALIZADO_MANUALMENTE)
-                .Select(v => new IdNomeDTO
-                {
-                    Id = (int)v,
-                    Nome = v.ObterAtributo<DisplayAttribute>().Description,
-                });
-        }
-
         public async Task<bool> ConfirmarAtendimento(AcervoSolicitacaoConfirmarDTO acervoSolicitacaoConfirmar)
         {
             var acervoSolicitacao = await repositorioAcervoSolicitacao.ObterPorId(acervoSolicitacaoConfirmar.Id);
