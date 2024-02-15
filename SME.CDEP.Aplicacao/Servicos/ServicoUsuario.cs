@@ -354,7 +354,7 @@ namespace SME.CDEP.Aplicacao.Servicos
             var usuario = await repositorioUsuario.ObterPorLogin(login);
 
             if (usuario.EhNulo())
-                return default;
+                throw new NegocioException(Constantes.USUARIO_NAO_ENCONTRADO); 
             
             var dadosSolicitante = mapper.Map<DadosSolicitanteDTO>(usuario);
             
