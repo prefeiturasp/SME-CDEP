@@ -51,9 +51,9 @@ public class AcervoSolicitacaoController: BaseController
     [ProducesResponseType(typeof(RetornoBaseDTO), 403)]
     [ProducesResponseType(typeof(RetornoBaseDTO), 601)]
     [Permissao(Permissao.OperacoesSolicitacoes_E, Policy = "Bearer")]
-    public async Task<IActionResult> ExclusaoLogica([FromRoute] long acervoSolicitacaoId, [FromServices] IServicoAcervoSolicitacao servicoAcervoSolicitac)
+    public async Task<IActionResult> ExcluirAtendimentoLogicamente([FromRoute] long acervoSolicitacaoId, [FromServices] IServicoAcervoSolicitacao servicoAcervoSolicitacao)
     {
-        return Ok(await servicoAcervoSolicitac.Excluir(acervoSolicitacaoId));
+        return Ok(await servicoAcervoSolicitacao.Excluir(acervoSolicitacaoId));
     }
     
     [HttpGet("minhas-solicitacoes")]
@@ -164,17 +164,6 @@ public class AcervoSolicitacaoController: BaseController
     public async Task<IActionResult> AlterarDataVisitaDoItemAtendimento([FromBody] AlterarDataVisitaAcervoSolicitacaoItemDTO alterarDataVisitaAcervoSolicitacaoItemDto, [FromServices] IServicoAcervoSolicitacao servicoAcervoSolicitacao)
     {
         return Ok(await servicoAcervoSolicitacao.AlterarDataVisitaDoItemAtendimento(alterarDataVisitaAcervoSolicitacaoItemDto));
-    }
-    
-    [HttpGet("situacoes-item-manual")]
-    [ProducesResponseType(typeof(IEnumerable<IdNomeDTO>), 200)]
-    [ProducesResponseType(typeof(RetornoBaseDTO), 400)]
-    [ProducesResponseType(typeof(RetornoBaseDTO), 403)]
-    [ProducesResponseType(typeof(RetornoBaseDTO), 601)]
-    [Permissao(Permissao.OperacoesSolicitacoes_C, Policy = "Bearer")]
-    public IActionResult ObterSituacaoItemAtendimentosManual([FromServices] IServicoAcervoSolicitacao servicoAcervoSolicitacao)
-    {
-        return Ok(servicoAcervoSolicitacao.ObterSituacaoItemAtendimentosManual());
     }
     
     [HttpPost("manual")]
