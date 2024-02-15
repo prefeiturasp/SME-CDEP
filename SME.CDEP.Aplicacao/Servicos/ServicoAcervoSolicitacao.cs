@@ -288,7 +288,7 @@ namespace SME.CDEP.Aplicacao.Servicos
                     });
         }
         
-        public IEnumerable<IdNomeDTO> ObterSituacoesDeAtendimentos()
+        public IEnumerable<IdNomeDTO> ObterSituacaoItemAtendimentosManual()
         {
             return Enum.GetValues(typeof(SituacaoSolicitacaoItem))
                 .Cast<SituacaoSolicitacaoItem>()
