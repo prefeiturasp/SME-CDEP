@@ -99,8 +99,6 @@ namespace SME.CDEP.Aplicacao.Servicos
 
             var acervoSolicitacao = mapper.Map<AcervoSolicitacao>(acervoSolicitacaoManualCadastroDTO);
             
-            acervoSolicitacao.DataSolicitacao = acervoSolicitacaoManualCadastroDTO.DataSolicitacao;
-            
             acervoSolicitacao.Origem = Origem.Manual;
 
             acervoSolicitacao.ResponsavelId = (await servicoUsuario.ObterUsuarioLogado()).Id;
