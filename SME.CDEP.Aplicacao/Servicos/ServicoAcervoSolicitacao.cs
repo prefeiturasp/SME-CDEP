@@ -189,7 +189,7 @@ namespace SME.CDEP.Aplicacao.Servicos
 
             return new AcervoSolicitacaoRetornoCadastroDTO()
             {
-                PodeCancelarSolicitacao = !acervosItensCompletos.Any(a=> a.SituacaoItem == SituacaoSolicitacaoItem.FINALIZADO_AUTOMATICAMENTE),
+                PodeCancelarSolicitacao = acervosItensCompletos.Any(a=> a.SituacaoItem.PodeCancelarAtendimento()),
                 Itens = acervoItensRetorno
             };
         }
@@ -293,6 +293,18 @@ namespace SME.CDEP.Aplicacao.Servicos
             return Enum.GetValues(typeof(SituacaoSolicitacaoItem))
                 .Cast<SituacaoSolicitacaoItem>()
                 .Where(w=> w == SituacaoSolicitacaoItem.AGUARDANDO_VISITA || w == SituacaoSolicitacaoItem.FINALIZADO_AUTOMATICAMENTE)
+                .Select(v => new IdNomeDTO
+                {
+                    Id = (int)v,
+                    Nome = v.ObterAtributo<DisplayAttribute>().Description,
+                });
+        }
+        
+        public IEnumerable<IdNomeDTO> ObterSituacoesDeAtendimentos()
+        {
+            return Enum.GetValues(typeof(SituacaoSolicitacaoItem))
+                .Cast<SituacaoSolicitacaoItem>()
+                .Where(w=> w == SituacaoSolicitacaoItem.AGUARDANDO_VISITA || w == SituacaoSolicitacaoItem.FINALIZADO_MANUALMENTE)
                 .Select(v => new IdNomeDTO
                 {
                     Id = (int)v,

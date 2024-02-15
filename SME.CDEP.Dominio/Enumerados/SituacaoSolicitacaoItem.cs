@@ -48,6 +48,13 @@ public static class SituacaoSolicitacaoItemExtension
                || situacaoSolicitacaoItem == SituacaoSolicitacaoItem.CANCELADO;
     }
     
+    public static bool PodeCancelarAtendimento(this SituacaoSolicitacaoItem situacaoSolicitacaoItem)
+    {
+        return situacaoSolicitacaoItem != SituacaoSolicitacaoItem.FINALIZADO_AUTOMATICAMENTE 
+               && situacaoSolicitacaoItem != SituacaoSolicitacaoItem.CANCELADO
+               && situacaoSolicitacaoItem != SituacaoSolicitacaoItem.FINALIZADO_MANUALMENTE;
+    }
+    
     public static bool EstaAguardandoVisita(this SituacaoSolicitacaoItem situacaoSolicitacaoItem)
     {
         return situacaoSolicitacaoItem == SituacaoSolicitacaoItem.AGUARDANDO_VISITA;
