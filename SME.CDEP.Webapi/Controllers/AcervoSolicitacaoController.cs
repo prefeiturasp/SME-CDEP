@@ -166,15 +166,15 @@ public class AcervoSolicitacaoController: BaseController
         return Ok(await servicoAcervoSolicitacao.AlterarDataVisitaDoItemAtendimento(alterarDataVisitaAcervoSolicitacaoItemDto));
     }
     
-    [HttpGet("situacao-atendimento")]
+    [HttpGet("situacoes-item-manual")]
     [ProducesResponseType(typeof(IEnumerable<IdNomeDTO>), 200)]
     [ProducesResponseType(typeof(RetornoBaseDTO), 400)]
     [ProducesResponseType(typeof(RetornoBaseDTO), 403)]
     [ProducesResponseType(typeof(RetornoBaseDTO), 601)]
     [Permissao(Permissao.OperacoesSolicitacoes_C, Policy = "Bearer")]
-    public IActionResult ObterSituacaoAtendimentos([FromServices] IServicoAcervoSolicitacao servicoAcervoSolicitacao)
+    public IActionResult ObterSituacaoItemAtendimentosManual([FromServices] IServicoAcervoSolicitacao servicoAcervoSolicitacao)
     {
-        return Ok(servicoAcervoSolicitacao.ObterSituacoesDeAtendimentos());
+        return Ok(servicoAcervoSolicitacao.ObterSituacaoItemAtendimentosManual());
     }
     
     [HttpPost("manual")]
