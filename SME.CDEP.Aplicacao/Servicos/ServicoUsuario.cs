@@ -353,6 +353,9 @@ namespace SME.CDEP.Aplicacao.Servicos
         {
             var usuario = await repositorioUsuario.ObterPorLogin(login);
 
+            if (usuario.EhNulo())
+                return default;
+            
             var dadosSolicitante = mapper.Map<DadosSolicitanteDTO>(usuario);
             
             dadosSolicitante.ObterEnderecoCompleto(usuario.Numero, usuario.Complemento, 
