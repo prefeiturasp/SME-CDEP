@@ -12,5 +12,6 @@ namespace SME.CDEP.Aplicacao.DTOS
         public SituacaoSolicitacaoItem SituacaoId { get; set; }
         public DateTime? DataVisita { get; set; }
         public TipoAtendimento? TipoAtendimento { get; set; }
+        public long AcervoId { get; set; }
     }
 }

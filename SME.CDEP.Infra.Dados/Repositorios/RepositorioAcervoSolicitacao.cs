@@ -100,7 +100,8 @@ namespace SME.CDEP.Infra.Dados.Repositorios
              a.titulo,
              asi.dt_visita as dataVisita,
              asi.situacao,
-             asi.tipo_atendimento as tipoAtendimento
+             asi.tipo_atendimento as tipoAtendimento,
+             a.id as acervoId
 		   from acervo_solicitacao_item asi
 		     join acervo a on a.id = asi.acervo_id 
 		   where not asi.excluido
