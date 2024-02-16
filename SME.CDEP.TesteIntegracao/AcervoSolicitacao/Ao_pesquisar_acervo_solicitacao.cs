@@ -86,7 +86,7 @@ namespace SME.CDEP.TesteIntegracao
 
             await InserirAcervoTridimensional();
 
-            await InserirAcervoSolicitacao();
+            await InserirAcervoSolicitacao(inserirEmAtendimento:true);
 
             var servicoAcervoSolicitacao = GetServicoAcervoSolicitacao();
 

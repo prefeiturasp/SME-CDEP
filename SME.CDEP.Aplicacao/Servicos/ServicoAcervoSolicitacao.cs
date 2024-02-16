@@ -90,21 +90,6 @@ namespace SME.CDEP.Aplicacao.Servicos
             }
         }
 
-        private void ValidacaoAcervoSolicitacaoItens(AcervoSolicitacao acervoSolicitacao)
-        {
-            if (acervoSolicitacao.Itens.NaoPossuiElementos())
-                throw new NegocioException(MensagemNegocio.SOLICITACAO_ATENDIMENTO_ITEM_NAO_CONTEM_ACERVOS);
-            
-            if (acervoSolicitacao.Itens.Any(a=> a.TipoAtendimento.EhAtendimentoPresencial() && !a.DataVisita.HasValue))
-                throw new NegocioException(MensagemNegocio.ITENS_ACERVOS_PRESENCIAL_DEVEM_TER_DATA_ACERVO);
-            
-            if (acervoSolicitacao.Itens.Any(a=> a.TipoAtendimento.EhAtendimentoPresencial() && a.DataVisita.Value < DateTimeExtension.HorarioBrasilia().Date ))
-                throw new NegocioException(MensagemNegocio.ITENS_ACERVOS_PRESENCIAL_NAO_DEVEM_TER_DATA_ACERVO_PASSADAS);
-            
-            if (acervoSolicitacao.Itens.Any(a=> a.TipoAtendimento.EhAtendimentoViaEmail() && a.DataVisita.HasValue ))
-                throw new NegocioException(MensagemNegocio.ITENS_ACERVOS_EMAIL_NAO_DEVEM_TER_DATA_ACERVO);
-        }
-
         public async Task<bool> Remover(long acervoSolicitacaoId)
         {
             await repositorioAcervoSolicitacao.Remover(acervoSolicitacaoId);
@@ -240,8 +225,6 @@ namespace SME.CDEP.Aplicacao.Servicos
             if (acervoSolicitacao.EhNulo())
                 throw new NegocioException(MensagemNegocio.SOLICITACAO_ATENDIMENTO_NAO_ENCONTRADA);
             
-            ValidacaoAcervoSolicitacaoEItens(acervoSolicitacaoConfirmar.Itens);
-
             var itens = await repositorioAcervoSolicitacaoItem.ObterItensEmSituacaoAguardandoAtendimentoOuVisitaOuFinalizadoManualmentePorSolicitacaoId(acervoSolicitacaoConfirmar.Id);
             
             var usuarioResponsavel = await repositorioUsuario.ObterPorLogin(acervoSolicitacaoConfirmar.ResponsavelRf);
@@ -274,6 +257,7 @@ namespace SME.CDEP.Aplicacao.Servicos
                         item.DataVisita = null;
                     }
                     
+                    item.Validar();
                     await repositorioAcervoSolicitacaoItem.Atualizar(item);
                 }
                 tran.Commit();
@@ -288,41 +272,6 @@ namespace SME.CDEP.Aplicacao.Servicos
             {
                 tran.Dispose();
             }
-        }
-        private static void ValidacaoAcervoSolicitacaoEItens(IEnumerable<AcervoSolicitacaoItemConfirmarDTO> itens)
-        {
-            if (itens.NaoPossuiElementos())
-                throw new NegocioException(MensagemNegocio.SOLICITACAO_ATENDIMENTO_ITEM_NAO_CONTEM_ACERVOS);
-            
-            if (itens.Any(a=> a.TipoAtendimento.EhInvalido()))
-                throw new NegocioException(MensagemNegocio.TIPO_ATENDIMENTO_INVALIDO);
-            
-            if (itens.Any(a=> a.TipoAtendimento.EhAtendimentoPresencial() && !a.DataVisita.HasValue))
-                throw new NegocioException(MensagemNegocio.ITENS_ACERVOS_PRESENCIAL_DEVEM_TER_DATA_ACERVO);
-            
-            if (itens.Any(a=> a.TipoAtendimento.EhAtendimentoPresencial() && a.DataVisita.Value < DateTimeExtension.HorarioBrasilia().Date ))
-                throw new NegocioException(MensagemNegocio.ITENS_ACERVOS_PRESENCIAL_NAO_DEVEM_TER_DATA_ACERVO_PASSADAS);
-            
-            if (itens.Any(a=> a.TipoAtendimento.EhAtendimentoViaEmail() && a.DataVisita.HasValue ))
-                throw new NegocioException(MensagemNegocio.ITENS_ACERVOS_EMAIL_NAO_DEVEM_TER_DATA_ACERVO);
-        }
-        
-        private static void ValidacaoAcervoSolicitacaoEItens(IEnumerable<AcervoSolicitacaoItemManualDTO> itens)
-        {
-            if (itens.NaoPossuiElementos())
-                throw new NegocioException(MensagemNegocio.SOLICITACAO_ATENDIMENTO_ITEM_NAO_CONTEM_ACERVOS);
-            
-            if (itens.Any(a=> a.TipoAtendimento.EhInvalido()))
-                throw new NegocioException(MensagemNegocio.TIPO_ATENDIMENTO_INVALIDO);
-            
-            if (itens.Any(a=> a.TipoAtendimento.EhAtendimentoPresencial() && !a.DataVisita.HasValue))
-                throw new NegocioException(MensagemNegocio.ITENS_ACERVOS_PRESENCIAL_DEVEM_TER_DATA_ACERVO);
-            
-            if (itens.Any(a=> a.TipoAtendimento.EhAtendimentoPresencial() && a.DataVisita.Value < DateTimeExtension.HorarioBrasilia().Date ))
-                throw new NegocioException(MensagemNegocio.ITENS_ACERVOS_PRESENCIAL_NAO_DEVEM_TER_DATA_ACERVO_PASSADAS);
-            
-            if (itens.Any(a=> a.TipoAtendimento.EhAtendimentoViaEmail() && a.DataVisita.HasValue ))
-                throw new NegocioException(MensagemNegocio.ITENS_ACERVOS_EMAIL_NAO_DEVEM_TER_DATA_ACERVO);
         }
 
         public async Task<bool> FinalizarAtendimento(long acervoSolicitacaoId)
@@ -451,8 +400,6 @@ namespace SME.CDEP.Aplicacao.Servicos
                 ? SituacaoSolicitacao.AGUARDANDO_VISITA 
                 : SituacaoSolicitacao.FINALIZADO_ATENDIMENTO;
             
-            ValidacaoAcervoSolicitacaoItens(acervoSolicitacao);
-            
             var tran = transacao.Iniciar();
             try
             {
@@ -465,6 +412,8 @@ namespace SME.CDEP.Aplicacao.Servicos
                     item.Situacao = item.TipoAtendimento.EhAtendimentoViaEmail()
                         ? SituacaoSolicitacaoItem.FINALIZADO_MANUALMENTE
                         : SituacaoSolicitacaoItem.AGUARDANDO_VISITA;
+                    
+                    item.Validar();
                     
                     await repositorioAcervoSolicitacaoItem.Inserir(item);
                 }
@@ -503,8 +452,6 @@ namespace SME.CDEP.Aplicacao.Servicos
                 ? SituacaoSolicitacao.AGUARDANDO_VISITA 
                 : SituacaoSolicitacao.FINALIZADO_ATENDIMENTO;
             
-            ValidacaoAcervoSolicitacaoEItens(acervoSolicitacaoManualDto.Itens);
-            
             var itensAtuais = await repositorioAcervoSolicitacaoItem.ObterItensPorSolicitacaoId(acervoSolicitacao.Id);
             
             var tran = transacao.Iniciar();
@@ -530,6 +477,8 @@ namespace SME.CDEP.Aplicacao.Servicos
                         
                         itemAtual.Situacao = item.Situacao;
                         
+                        itemAtual.Validar();
+                            
                         await repositorioAcervoSolicitacaoItem.Atualizar(itemAtual);
                     }
                     else

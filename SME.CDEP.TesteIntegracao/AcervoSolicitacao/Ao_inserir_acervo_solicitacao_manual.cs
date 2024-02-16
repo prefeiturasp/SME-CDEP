@@ -62,7 +62,7 @@ namespace SME.CDEP.TesteIntegracao
             var itensCadastrados = ObterTodos<AcervoSolicitacaoItem>();
 
             var itemEmail = itensCadastrados.FirstOrDefault(f => f.AcervoId == 1);
-            itemEmail.Situacao.ShouldBe(SituacaoSolicitacaoItem.FINALIZADO_AUTOMATICAMENTE);
+            itemEmail.Situacao.ShouldBe(SituacaoSolicitacaoItem.FINALIZADO_MANUALMENTE);
             itemEmail.TipoAtendimento.ShouldBe(TipoAtendimento.Email);
             itemEmail.DataVisita.ShouldBeNull();
             
@@ -123,17 +123,17 @@ namespace SME.CDEP.TesteIntegracao
             var itensCadastrados = ObterTodos<AcervoSolicitacaoItem>();
 
             var primeiroAcervoViaEmail = itensCadastrados.FirstOrDefault(f => f.AcervoId == 1);
-            primeiroAcervoViaEmail.Situacao.ShouldBe(SituacaoSolicitacaoItem.FINALIZADO_AUTOMATICAMENTE);
+            primeiroAcervoViaEmail.Situacao.ShouldBe(SituacaoSolicitacaoItem.FINALIZADO_MANUALMENTE);
             primeiroAcervoViaEmail.TipoAtendimento.ShouldBe(TipoAtendimento.Email);
             primeiroAcervoViaEmail.DataVisita.ShouldBeNull();
             
             var segundoAcevoViaEmail = itensCadastrados.FirstOrDefault(f => f.AcervoId == 1);
-            segundoAcevoViaEmail.Situacao.ShouldBe(SituacaoSolicitacaoItem.FINALIZADO_AUTOMATICAMENTE);
+            segundoAcevoViaEmail.Situacao.ShouldBe(SituacaoSolicitacaoItem.FINALIZADO_MANUALMENTE);
             segundoAcevoViaEmail.TipoAtendimento.ShouldBe(TipoAtendimento.Email);
             segundoAcevoViaEmail.DataVisita.ShouldBeNull();
             
             var terceiroAcervoViaEmail = itensCadastrados.FirstOrDefault(f => f.AcervoId == 3);
-            terceiroAcervoViaEmail.Situacao.ShouldBe(SituacaoSolicitacaoItem.FINALIZADO_AUTOMATICAMENTE);
+            terceiroAcervoViaEmail.Situacao.ShouldBe(SituacaoSolicitacaoItem.FINALIZADO_MANUALMENTE);
             terceiroAcervoViaEmail.TipoAtendimento.ShouldBe(TipoAtendimento.Email);
             terceiroAcervoViaEmail.DataVisita.ShouldBeNull();
         }
