@@ -487,7 +487,12 @@ namespace SME.CDEP.Aplicacao.Servicos
 
         public async Task<IdNomeCodigoDTO> PesquisarAcervoPorCodigoTombo(string codigoTombo)
         {
-            return mapper.Map<IdNomeCodigoDTO>(await repositorioAcervo.PesquisarAcervoPorCodigoTombo(codigoTombo));
+            var retorno = await repositorioAcervo.PesquisarAcervoPorCodigoTombo(codigoTombo);
+
+            if (retorno.EhNulo())
+                throw new NegocioException(MensagemNegocio.ACERVO_NAO_ENCONTRADO);
+            
+            return mapper.Map<IdNomeCodigoDTO>(retorno);
         }
 
         public Paginacao Paginacao
