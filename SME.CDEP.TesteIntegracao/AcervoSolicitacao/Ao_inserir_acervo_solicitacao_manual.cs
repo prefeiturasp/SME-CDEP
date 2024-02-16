@@ -9,9 +9,9 @@ using Xunit;
 
 namespace SME.CDEP.TesteIntegracao
 {
-    public class Ao_fazer_acervo_solicitacao_manual : TesteBase
+    public class Ao_inserir_acervo_solicitacao_manual : TesteBase
     {
-        public Ao_fazer_acervo_solicitacao_manual(CollectionFixture collectionFixture) : base(collectionFixture)
+        public Ao_inserir_acervo_solicitacao_manual(CollectionFixture collectionFixture) : base(collectionFixture)
         {}
         
         [Fact(DisplayName = "Acervo Solicitação - Ao fazer solicitação de acervo manual com itens presenciais e via e-mail")]
@@ -32,21 +32,18 @@ namespace SME.CDEP.TesteIntegracao
                     new ()
                     {
                         AcervoId = 1,
-                        TipoAtendimento = TipoAtendimento.Email,
-                        Situacao = SituacaoSolicitacaoItem.FINALIZADO_AUTOMATICAMENTE
+                        TipoAtendimento = TipoAtendimento.Email
                     },
                     new ()
                     {
                         AcervoId = 2,
                         TipoAtendimento = TipoAtendimento.Presencial,
-                        Situacao = SituacaoSolicitacaoItem.AGUARDANDO_VISITA,
                         DataVisita = DateTimeExtension.HorarioBrasilia().AddDays(4)
                     },
                     new ()
                     {
                         AcervoId = 3,
                         TipoAtendimento = TipoAtendimento.Presencial,
-                        Situacao = SituacaoSolicitacaoItem.AGUARDANDO_VISITA,
                         DataVisita = DateTimeExtension.HorarioBrasilia().AddDays(40)
                     }
                 }
@@ -98,20 +95,17 @@ namespace SME.CDEP.TesteIntegracao
                     new ()
                     {
                         AcervoId = 1,
-                        TipoAtendimento = TipoAtendimento.Email,
-                        Situacao = SituacaoSolicitacaoItem.FINALIZADO_AUTOMATICAMENTE
+                        TipoAtendimento = TipoAtendimento.Email
                     },
                     new ()
                     {
                         AcervoId = 2,
-                        TipoAtendimento = TipoAtendimento.Email,
-                        Situacao = SituacaoSolicitacaoItem.FINALIZADO_AUTOMATICAMENTE
+                        TipoAtendimento = TipoAtendimento.Email
                     },
                     new ()
                     {
                         AcervoId = 3,
-                        TipoAtendimento = TipoAtendimento.Email,
-                        Situacao = SituacaoSolicitacaoItem.FINALIZADO_AUTOMATICAMENTE
+                        TipoAtendimento = TipoAtendimento.Email
                     }
                 }
             };
@@ -163,21 +157,18 @@ namespace SME.CDEP.TesteIntegracao
                     {
                         AcervoId = 1,
                         TipoAtendimento = TipoAtendimento.Presencial,
-                        Situacao = SituacaoSolicitacaoItem.AGUARDANDO_VISITA,
                         DataVisita = DateTimeExtension.HorarioBrasilia()
                     },
                     new ()
                     {
                         AcervoId = 2,
                         TipoAtendimento = TipoAtendimento.Presencial,
-                        Situacao = SituacaoSolicitacaoItem.AGUARDANDO_VISITA,
                         DataVisita = DateTimeExtension.HorarioBrasilia().AddDays(4)
                     },
                     new ()
                     {
                         AcervoId = 3,
                         TipoAtendimento = TipoAtendimento.Presencial,
-                        Situacao = SituacaoSolicitacaoItem.AGUARDANDO_VISITA,
                         DataVisita = DateTimeExtension.HorarioBrasilia().AddDays(40)
                     }
                 }
@@ -230,21 +221,18 @@ namespace SME.CDEP.TesteIntegracao
                     {
                         AcervoId = 1,
                         TipoAtendimento = TipoAtendimento.Presencial,
-                        Situacao = SituacaoSolicitacaoItem.AGUARDANDO_VISITA,
                         DataVisita = DateTimeExtension.HorarioBrasilia().AddDays(-8)
                     },
                     new ()
                     {
                         AcervoId = 2,
                         TipoAtendimento = TipoAtendimento.Presencial,
-                        Situacao = SituacaoSolicitacaoItem.AGUARDANDO_VISITA,
                         DataVisita = DateTimeExtension.HorarioBrasilia().AddDays(4)
                     },
                     new ()
                     {
                         AcervoId = 3,
                         TipoAtendimento = TipoAtendimento.Presencial,
-                        Situacao = SituacaoSolicitacaoItem.AGUARDANDO_VISITA,
                         DataVisita = DateTimeExtension.HorarioBrasilia().AddDays(40)
                     }
                 }
@@ -272,21 +260,18 @@ namespace SME.CDEP.TesteIntegracao
                     {
                         AcervoId = 2,
                         TipoAtendimento = TipoAtendimento.Email,
-                        Situacao = SituacaoSolicitacaoItem.AGUARDANDO_VISITA,
                         DataVisita = DateTimeExtension.HorarioBrasilia().AddDays(4)
                     },
                     new ()
                     {
                         AcervoId = 2,
                         TipoAtendimento = TipoAtendimento.Presencial,
-                        Situacao = SituacaoSolicitacaoItem.AGUARDANDO_VISITA,
                         DataVisita = DateTimeExtension.HorarioBrasilia().AddDays(4)
                     },
                     new ()
                     {
                         AcervoId = 3,
                         TipoAtendimento = TipoAtendimento.Presencial,
-                        Situacao = SituacaoSolicitacaoItem.AGUARDANDO_VISITA,
                         DataVisita = DateTimeExtension.HorarioBrasilia().AddDays(40)
                     }
                 }
@@ -314,21 +299,18 @@ namespace SME.CDEP.TesteIntegracao
                     {
                         AcervoId = 2,
                         TipoAtendimento = TipoAtendimento.Presencial,
-                        Situacao = SituacaoSolicitacaoItem.AGUARDANDO_VISITA,
                         DataVisita = DateTimeExtension.HorarioBrasilia().AddDays(4)
                     },
                     new ()
                     {
                         AcervoId = 3,
                         TipoAtendimento = TipoAtendimento.Presencial,
-                        Situacao = SituacaoSolicitacaoItem.AGUARDANDO_VISITA,
                         DataVisita = DateTimeExtension.HorarioBrasilia().AddDays(40)
                     },
                     new ()
                     {
                         AcervoId = 3,
-                        TipoAtendimento = TipoAtendimento.Presencial,
-                        Situacao = SituacaoSolicitacaoItem.AGUARDANDO_VISITA
+                        TipoAtendimento = TipoAtendimento.Presencial
                     }
                 }
             };
