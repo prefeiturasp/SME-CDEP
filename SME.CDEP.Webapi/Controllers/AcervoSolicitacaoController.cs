@@ -166,7 +166,7 @@ public class AcervoSolicitacaoController: BaseController
         return Ok(await servicoAcervoSolicitacao.AlterarDataVisitaDoItemAtendimento(alterarDataVisitaAcervoSolicitacaoItemDto));
     }
     
-    [HttpPost("manual")]
+    [HttpPost("inserir-manual")]
     [ProducesResponseType(typeof(long), 200)]
     [ProducesResponseType(typeof(RetornoBaseDTO), 400)]
     [ProducesResponseType(typeof(RetornoBaseDTO), 403)]
@@ -177,5 +177,18 @@ public class AcervoSolicitacaoController: BaseController
     public async Task<IActionResult> CadastrarAcervoSolicitacaoManual([FromBody] AcervoSolicitacaoManualCadastroDTO acervoSolicitacaoManualCadastroDTO, [FromServices] IServicoAcervoSolicitacao servicoAcervoSolicitacao)
     {
         return Ok(await servicoAcervoSolicitacao.Inserir(acervoSolicitacaoManualCadastroDTO));
+    }
+    
+    [HttpPut("alterar-manual")]
+    [ProducesResponseType(typeof(long), 200)]
+    [ProducesResponseType(typeof(RetornoBaseDTO), 400)]
+    [ProducesResponseType(typeof(RetornoBaseDTO), 403)]
+    [ProducesResponseType(typeof(RetornoBaseDTO), 422)]
+    [ProducesResponseType(typeof(RetornoBaseDTO), 500)]
+    [ProducesResponseType(typeof(RetornoBaseDTO), 601)]
+    [Permissao(Permissao.OperacoesSolicitacoes_A, Policy = "Bearer")]
+    public async Task<IActionResult> AlterarAcervoSolicitacaoManual([FromBody] AcervoSolicitacaoManualDTO acervoSolicitacaoManualDTO, [FromServices] IServicoAcervoSolicitacao servicoAcervoSolicitacao)
+    {
+        return Ok(await servicoAcervoSolicitacao.Alterar(acervoSolicitacaoManualDTO));
     }
 }
