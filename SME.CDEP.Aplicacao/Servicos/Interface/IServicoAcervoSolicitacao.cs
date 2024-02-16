@@ -20,5 +20,6 @@ namespace SME.CDEP.Aplicacao.Servicos.Interface
         Task<bool> CancelarItemAtendimento(long acervoSolicitacaoItemId);
         Task<bool> AlterarDataVisitaDoItemAtendimento(AlterarDataVisitaAcervoSolicitacaoItemDTO alterarDataVisitaAcervoSolicitacaoItemDto);
         Task<long> Inserir(AcervoSolicitacaoManualCadastroDTO acervoSolicitacaoManualCadastroDTO);
+        Task<long> Alterar(AcervoSolicitacaoManualDTO acervoSolicitacaoManualDto);
     }
 }
