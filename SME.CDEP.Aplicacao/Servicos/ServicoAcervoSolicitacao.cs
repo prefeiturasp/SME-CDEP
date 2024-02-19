@@ -230,6 +230,9 @@ namespace SME.CDEP.Aplicacao.Servicos
             
             var itens = await repositorioAcervoSolicitacaoItem.ObterItensEmSituacaoAguardandoAtendimentoOuVisitaOuFinalizadoManualmentePorSolicitacaoId(acervoSolicitacaoConfirmar.Id);
             
+            if (acervoSolicitacaoConfirmar.ResponsavelRf.NaoEstaPreenchido())
+                throw new NegocioException(Constantes.USUARIO_RESPONSAVEL_NAO_LOCALIZADO);
+            
             var usuarioResponsavel = await repositorioUsuario.ObterPorLogin(acervoSolicitacaoConfirmar.ResponsavelRf);
             if (usuarioResponsavel.EhNulo())
                 throw new NegocioException(Constantes.USUARIO_RESPONSAVEL_NAO_LOCALIZADO);
@@ -241,6 +244,7 @@ namespace SME.CDEP.Aplicacao.Servicos
                     ? SituacaoSolicitacao.FINALIZADO_ATENDIMENTO : SituacaoSolicitacao.AGUARDANDO_VISITA;
                 
                 acervoSolicitacao.ResponsavelId = usuarioResponsavel.Id;
+                acervoSolicitacao.DataSolicitacao = DateTimeExtension.HorarioBrasilia().Date;
                 await repositorioAcervoSolicitacao.Atualizar(acervoSolicitacao);
                 
                 foreach (var item in itens)
