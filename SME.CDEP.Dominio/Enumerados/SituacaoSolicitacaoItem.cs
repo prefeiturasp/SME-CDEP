@@ -59,4 +59,10 @@ public static class SituacaoSolicitacaoItemExtension
     {
         return situacaoSolicitacaoItem == SituacaoSolicitacaoItem.AGUARDANDO_VISITA;
     }
+    
+    public static bool EstaEmSituacaoFinalizadoAutomaticamenteOuCancelado(this SituacaoSolicitacaoItem situacaoSolicitacaoItem)
+    {
+        return situacaoSolicitacaoItem == SituacaoSolicitacaoItem.FINALIZADO_AUTOMATICAMENTE 
+               || situacaoSolicitacaoItem == SituacaoSolicitacaoItem.CANCELADO;
+    }
 }
