@@ -174,9 +174,9 @@ public class AcervoSolicitacaoController: BaseController
     [ProducesResponseType(typeof(RetornoBaseDTO), 500)]
     [ProducesResponseType(typeof(RetornoBaseDTO), 601)]
     [Permissao(Permissao.OperacoesSolicitacoes_I, Policy = "Bearer")]
-    public async Task<IActionResult> CadastrarAcervoSolicitacaoManual([FromBody] AcervoSolicitacaoManualCadastroDTO acervoSolicitacaoManualCadastroDTO, [FromServices] IServicoAcervoSolicitacao servicoAcervoSolicitacao)
+    public async Task<IActionResult> CadastrarAcervoSolicitacaoManual([FromBody] AcervoSolicitacaoManualDTO acervoSolicitacaoManualDto, [FromServices] IServicoAcervoSolicitacao servicoAcervoSolicitacao)
     {
-        return Ok(await servicoAcervoSolicitacao.Inserir(acervoSolicitacaoManualCadastroDTO));
+        return Ok(await servicoAcervoSolicitacao.Inserir(acervoSolicitacaoManualDto));
     }
     
     [HttpPut("alterar-manual")]
