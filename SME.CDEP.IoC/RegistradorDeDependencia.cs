@@ -110,6 +110,7 @@ public class RegistradorDeDependencia
             config.AddMap(new AcervoSolicitacaoMap());
             config.AddMap(new AcervoSolicitacaoItemMap());
             config.AddMap(new ParametroSistemaMap());
+            config.AddMap(new EventoMap());
             config.ForDommel();
         });
     }
@@ -163,6 +164,7 @@ public class RegistradorDeDependencia
         _serviceCollection.TryAddScoped<IRepositorioParametroSistema, RepositorioParametroSistema>();
         _serviceCollection.TryAddScoped<IRepositorioAcervoSolicitacao, RepositorioAcervoSolicitacao>();
         _serviceCollection.TryAddScoped<IRepositorioAcervoSolicitacaoItem, RepositorioAcervoSolicitacaoItem>();
+        _serviceCollection.TryAddScoped<IRepositorioEvento, RepositorioEvento>();
     }
 
     protected virtual void RegistrarServicos()
@@ -208,6 +210,7 @@ public class RegistradorDeDependencia
         _serviceCollection.TryAddScoped<IServicoImportacaoArquivoAcervoTridimensional, ServicoImportacaoArquivoAcervoTridimensional>();
         _serviceCollection.TryAddScoped<IServicoImportacaoArquivoAcervo, ServicoImportacaoArquivoAcervo>();
         _serviceCollection.TryAddScoped<IServicoAcervoSolicitacao, ServicoAcervoSolicitacao>();
+        _serviceCollection.TryAddScoped<IServicoEvento, ServicoEvento>();
     }
     protected virtual void RegistrarHttpClients()
     {

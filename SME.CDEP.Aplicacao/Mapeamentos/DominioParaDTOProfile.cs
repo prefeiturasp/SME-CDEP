@@ -225,6 +225,7 @@ namespace SME.CDEP.Aplicacao.Mapeamentos
                 .ForMember(dest => dest.SituacaoId, opt => opt.MapFrom(o => o.Situacao))
                 .ReverseMap();
             
+            CreateMap<Evento,EventoDTO>().ReverseMap();
         }
     }
 }
