@@ -57,7 +57,7 @@ namespace SME.CDEP.TesteIntegracao
             {
                 Id = 1,
                 UsuarioId = 1,
-                DataSolicitacao = DateTimeExtension.HorarioBrasilia().Date.AddDays(-5),
+                DataSolicitacao = DateTimeExtension.HorarioBrasilia().Date.AddDays(-10),
                 Itens = new List<AcervoSolicitacaoItemManualDTO>()
                 {
                     new ()
