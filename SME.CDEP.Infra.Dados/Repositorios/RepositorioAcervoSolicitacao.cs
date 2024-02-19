@@ -110,7 +110,7 @@ namespace SME.CDEP.Infra.Dados.Repositorios
             
 	        var queryMultiple = await conexao.Obter().QueryMultipleAsync(query, new { acervoSolicitacaoId });
 
-	        var acervoSolicitacao = queryMultiple.ReadFirst<AcervoSolicitacaoDetalhe>();
+	        var acervoSolicitacao = await queryMultiple.ReadFirstOrDefaultAsync<AcervoSolicitacaoDetalhe>();
 
 	        if (acervoSolicitacao.EhNulo())
 		        return default;
