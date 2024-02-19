@@ -244,7 +244,7 @@ namespace SME.CDEP.Aplicacao.Servicos
                     ? SituacaoSolicitacao.FINALIZADO_ATENDIMENTO : SituacaoSolicitacao.AGUARDANDO_VISITA;
                 
                 acervoSolicitacao.ResponsavelId = usuarioResponsavel.Id;
-                acervoSolicitacao.DataSolicitacao = DateTimeExtension.HorarioBrasilia().Date;
+                acervoSolicitacao.DataSolicitacao = DateTimeExtension.HorarioBrasilia();
                 await repositorioAcervoSolicitacao.Atualizar(acervoSolicitacao);
                 
                 foreach (var item in itens)
