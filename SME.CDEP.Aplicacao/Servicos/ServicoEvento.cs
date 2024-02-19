@@ -30,7 +30,13 @@ namespace SME.CDEP.Aplicacao.Servicos
 
         public async Task<EventoDTO> Alterar(EventoDTO eventoDto)
         {
+            var eventoAtual = await repositorioEvento.ObterPorId(eventoDto.Id);
+            
             var evento = mapper.Map<Evento>(eventoDto);
+            evento.CriadoEm = eventoAtual.CriadoEm;
+            evento.CriadoPor = eventoAtual.CriadoPor;
+            evento.CriadoLogin = eventoAtual.CriadoLogin;
+            
             return mapper.Map<EventoDTO>(await repositorioEvento.Atualizar(evento));
         }
 
