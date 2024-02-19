@@ -122,5 +122,50 @@ namespace SME.CDEP.TesteIntegracao
            
             await servicoAcervoSolicitacao.CancelarItemAtendimento(1).ShouldThrowAsync<NegocioException>();
         }
+        
+        [Fact(DisplayName = "Acervo Solicitação Item - Deve cancelar o único item e cancelar a solicitação")]
+        public async Task Deve_cancelar_o_unico_item_e_cancelar_solicitacao()
+        {
+            await InserirDadosBasicosAleatorios();
+
+            await InserirAcervoTridimensional();
+
+            var acervoSolicitacao = ObterAcervoSolicitacao();
+            
+            await InserirNaBase(acervoSolicitacao);
+
+            var acervoSolicitadoId = (ObterTodos<AcervoSolicitacao>()).LastOrDefault().Id;
+           
+            foreach (var item in acervoSolicitacao.Itens)
+            {
+                item.AcervoSolicitacaoId = acervoSolicitadoId;
+                item.Situacao = SituacaoSolicitacaoItem.AGUARDANDO_VISITA;
+                await InserirNaBase(item);
+            }
+            
+            var servicoAcervoSolicitacao = GetServicoAcervoSolicitacao();
+            
+            var retorno = await servicoAcervoSolicitacao.CancelarItemAtendimento(1);
+            retorno.ShouldBeTrue();
+            var solicitacaoItemAlterada = ObterTodos<AcervoSolicitacaoItem>().FirstOrDefault(f=> f.Id == 1);
+            solicitacaoItemAlterada.Id.ShouldBe(1);
+            solicitacaoItemAlterada.Situacao.ShouldBe(SituacaoSolicitacaoItem.CANCELADO);
+            
+            retorno = await servicoAcervoSolicitacao.CancelarItemAtendimento(2);
+            retorno.ShouldBeTrue();
+            solicitacaoItemAlterada = ObterTodos<AcervoSolicitacaoItem>().FirstOrDefault(f=> f.Id == 2);
+            solicitacaoItemAlterada.Id.ShouldBe(2);
+            solicitacaoItemAlterada.Situacao.ShouldBe(SituacaoSolicitacaoItem.CANCELADO);
+            
+            retorno = await servicoAcervoSolicitacao.CancelarItemAtendimento(3);
+            retorno.ShouldBeTrue();
+            solicitacaoItemAlterada = ObterTodos<AcervoSolicitacaoItem>().FirstOrDefault(f=> f.Id == 3);
+            solicitacaoItemAlterada.Id.ShouldBe(3);
+            solicitacaoItemAlterada.Situacao.ShouldBe(SituacaoSolicitacaoItem.CANCELADO);
+            
+            var solicitacaoAlterada = ObterTodos<AcervoSolicitacao>().FirstOrDefault(f=> f.Id == 1);
+            solicitacaoAlterada.Id.ShouldBe(1);
+            solicitacaoAlterada.Situacao.ShouldBe(SituacaoSolicitacao.CANCELADO);
+        }
     }
 }

@@ -372,11 +372,20 @@ namespace SME.CDEP.Aplicacao.Servicos
             if (acervoSolicitacaoItem.EhNulo())
                 throw new NegocioException(MensagemNegocio.SOLICITACAO_ATENDIMENTO_ITEM_NAO_ENCONTRADA);
             
-            if (await repositorioAcervoSolicitacaoItem.PossuiItensEmSituacaoFinalizadoAutomaticamenteOuCancelado(acervoSolicitacaoItemId))
-                throw new NegocioException(MensagemNegocio.SITUACAO_INVALIDA_PARA_FINALIZAR);
+            var itens = await repositorioAcervoSolicitacaoItem.ObterItensPorSolicitacaoId(acervoSolicitacaoItem.AcervoSolicitacaoId);
+
+            if (itens.Any(a=> a.Situacao.EstaEmSituacaoFinalizadoAutomaticamenteOuCancelado() && a.Id == acervoSolicitacaoItemId)) 
+                throw new NegocioException(MensagemNegocio.SITUACAO_INVALIDA_PARA_CANCELAR);
 
             acervoSolicitacaoItem.Situacao = SituacaoSolicitacaoItem.CANCELADO;
             await repositorioAcervoSolicitacaoItem.Atualizar(acervoSolicitacaoItem);
+
+            if (itens.Where(w=> w.Id != acervoSolicitacaoItemId).All(a=> a.Situacao.EstaCancelado()))
+            {
+                var acervoSolicitacao = await repositorioAcervoSolicitacao.ObterPorId(acervoSolicitacaoItem.AcervoSolicitacaoId);
+                acervoSolicitacao.Situacao = SituacaoSolicitacao.CANCELADO;
+                await repositorioAcervoSolicitacao.Atualizar(acervoSolicitacao);
+            }
             return true;
         }
 

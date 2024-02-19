@@ -162,25 +162,7 @@ namespace SME.CDEP.Infra.Dados.Repositorios
             return conexao.Obter().QueryFirstOrDefaultAsync<bool>(query, new { acervoSolicitacaoId, 
                 situacaoAguardandoAtendimento = (int)SituacaoSolicitacaoItem.AGUARDANDO_ATENDIMENTO,
                 situacaoAguardandoVisita = (int)SituacaoSolicitacaoItem.AGUARDANDO_VISITA, dataAtual = DateTimeExtension.HorarioBrasilia().Date });
-        }
-
-        public Task<bool> PossuiItensEmSituacaoFinalizadoAutomaticamenteOuCancelado(long acervoSolicitacaoItemId)
-        {
-            var situacoesItensNaoCancelaveis = new []
-            {
-                (int)SituacaoSolicitacaoItem.FINALIZADO_AUTOMATICAMENTE,
-                (int)SituacaoSolicitacaoItem.CANCELADO
-            };
-            
-            var query = @"
-             select 1
-            from acervo_solicitacao_item
-            where id = @acervoSolicitacaoItemId
-            and not excluido
-            and situacao = any(@situacoesItensNaoCancelaveis) ";
-            
-            return conexao.Obter().QueryFirstOrDefaultAsync<bool>(query, new { acervoSolicitacaoItemId, situacoesItensNaoCancelaveis });
-        }
+        }     
         
         public Task<bool> PossuiItensQueForamAtendidosParcialmente(long acervoSolicitacaoId)
         {
