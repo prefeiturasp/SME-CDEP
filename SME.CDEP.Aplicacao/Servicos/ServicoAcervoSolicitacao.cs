@@ -219,18 +219,6 @@ namespace SME.CDEP.Aplicacao.Servicos
                         Id = (int)v,
                         Nome = v.ObterAtributo<DisplayAttribute>().Description,
                     });
-        } 
-
-        public IEnumerable<IdNomeDTO> ObterSituacoesDeAtendimentos()
-        {
-            return Enum.GetValues(typeof(SituacaoSolicitacaoItem))
-                .Cast<SituacaoSolicitacaoItem>()
-                .Where(w=> w == SituacaoSolicitacaoItem.AGUARDANDO_VISITA || w == SituacaoSolicitacaoItem.FINALIZADO_AUTOMATICAMENTE)
-                .Select(v => new IdNomeDTO
-                {
-                    Id = (int)v,
-                    Nome = v.ObterAtributo<DisplayAttribute>().Description,
-                });
         }
         
         public async Task<bool> ConfirmarAtendimento(AcervoSolicitacaoConfirmarDTO acervoSolicitacaoConfirmar)
@@ -241,9 +229,6 @@ namespace SME.CDEP.Aplicacao.Servicos
                 throw new NegocioException(MensagemNegocio.SOLICITACAO_ATENDIMENTO_NAO_ENCONTRADA);
             
             var itens = await repositorioAcervoSolicitacaoItem.ObterItensEmSituacaoAguardandoAtendimentoOuVisitaOuFinalizadoManualmentePorSolicitacaoId(acervoSolicitacaoConfirmar.Id);
-            
-            if (acervoSolicitacaoConfirmar.ResponsavelRf.NaoEstaPreenchido())
-                throw new NegocioException(Constantes.USUARIO_RESPONSAVEL_NAO_LOCALIZADO);
             
             var usuarioResponsavel = await repositorioUsuario.ObterPorLogin(acervoSolicitacaoConfirmar.ResponsavelRf);
             if (usuarioResponsavel.EhNulo())
@@ -380,10 +365,7 @@ namespace SME.CDEP.Aplicacao.Servicos
 
             if (itens.Any(a=> a.Situacao.EstaEmSituacaoFinalizadoAutomaticamenteOuCancelado() && a.Id == acervoSolicitacaoItemId)) 
                 throw new NegocioException(MensagemNegocio.SITUACAO_INVALIDA_PARA_CANCELAR);
-
-            acervoSolicitacaoItem.Situacao = SituacaoSolicitacaoItem.CANCELADO;
-            await repositorioAcervoSolicitacaoItem.Atualizar(acervoSolicitacaoItem);
-
+            
             if (itens.Where(w=> w.Id != acervoSolicitacaoItemId).All(a=> a.Situacao.EstaCancelado()))
             {
                 var acervoSolicitacao = await repositorioAcervoSolicitacao.ObterPorId(acervoSolicitacaoItem.AcervoSolicitacaoId);
