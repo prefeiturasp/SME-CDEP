@@ -6,7 +6,7 @@ create table if not exists public.evento (
 	descricao varchar(200) NOT NULL,
 	acervo_solicitacao_item_id int4 NULL,
 	justificativa varchar(200) NOT NULL,
-	ativo bool NOT NULL DEFAULT true,
+	excluido bool NOT NULL DEFAULT false,
 	criado_em timestamp NOT NULL,
 	criado_por varchar(200) NOT NULL,
 	alterado_em timestamp NULL,
@@ -20,3 +20,4 @@ create table if not exists public.evento (
 --> Criando índices
 drop index if exists evento_acervo_solicitacao_item_idx;
 CREATE INDEX evento_acervo_solicitacao_item_idx ON public.acervo_solicitacao_item USING btree (id);
+

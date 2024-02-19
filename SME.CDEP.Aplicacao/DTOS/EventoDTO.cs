@@ -1,10 +1,11 @@
 ﻿using SME.CDEP.Infra.Dominio.Enumerados;
 
-namespace SME.CDEP.Dominio.Entidades
+namespace SME.CDEP.Aplicacao.DTOS
 {
-    public class Evento : EntidadeBaseAuditavel
+    public class EventoDTO
     {
-        public DateTime Data { get; set; }
+        public long Id { get; set; }
+        public DateTime? Data { get; set; }
         public TipoEvento Tipo { get; set; }
         public string Descricao { get; set; }
         public string Justificativa { get; set; }
