@@ -5,7 +5,7 @@ create table if not exists public.evento (
 	tipo int4 NOT NULL,
 	descricao varchar(200) NOT NULL,
 	acervo_solicitacao_item_id int8 NULL,
-	justificativa varchar(200) NOT NULL,
+	justificativa varchar(200) NULL,
 	excluido bool NOT NULL DEFAULT false,
 	criado_em timestamp NOT NULL,
 	criado_por varchar(200) NOT NULL,
