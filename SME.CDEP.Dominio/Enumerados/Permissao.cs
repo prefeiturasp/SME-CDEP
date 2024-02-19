@@ -41,5 +41,10 @@
         OperacoesSolicitacoes_I = 274,
         OperacoesSolicitacoes_E = 275,
         OperacoesSolicitacoes_A = 276,
+        
+        GestaoDeVisitaCalendario_C = 308,
+        GestaoDeVisitaCalendario_I = 308,
+        GestaoDeVisitaCalendario_E = 308,
+        GestaoDeVisitaCalendario_A = 308,
     }
 }
