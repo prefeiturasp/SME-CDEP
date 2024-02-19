@@ -367,6 +367,9 @@ namespace SME.CDEP.Aplicacao.Servicos
         public async Task<DadosSolicitanteDTO> ObterDadosSolicitantePorUsuarioId(long usuarioId)
         {
             var usuario = await repositorioUsuario.ObterPorId(usuarioId);
+            
+            if (usuario.EhNulo())
+                throw new NegocioException(MensagemNegocio.USUARIO_NAO_ENCONTRADO);
 
             var dadosSolicitante = mapper.Map<DadosSolicitanteDTO>(usuario);
             
