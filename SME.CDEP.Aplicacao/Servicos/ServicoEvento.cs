@@ -1,8 +1,12 @@
 ﻿using AutoMapper;
 using SME.CDEP.Aplicacao.DTOS;
 using SME.CDEP.Aplicacao.Servicos.Interface;
+using SME.CDEP.Dominio.Constantes;
 using SME.CDEP.Dominio.Entidades;
+using SME.CDEP.Dominio.Excecoes;
+using SME.CDEP.Dominio.Extensions;
 using SME.CDEP.Infra.Dados.Repositorios.Interfaces;
+using SME.CDEP.Infra.Dominio.Enumerados;
 
 namespace SME.CDEP.Aplicacao.Servicos
 {
@@ -19,8 +23,13 @@ namespace SME.CDEP.Aplicacao.Servicos
 
         public async Task<long> Inserir(EventoDTO eventoDto)
         {
-            var usuario = mapper.Map<Evento>(eventoDto);
-            return await repositorioEvento.Inserir(usuario);
+            if (await repositorioEvento.Existe)
+            {
+                await 
+            }
+            var evento = mapper.Map<Evento>(eventoDto);
+            evento.Validar();
+            return await repositorioEvento.Inserir(evento);
         }
 
         public async Task<IEnumerable<EventoDTO>> ObterTodos()
@@ -36,6 +45,8 @@ namespace SME.CDEP.Aplicacao.Servicos
             evento.CriadoEm = eventoAtual.CriadoEm;
             evento.CriadoPor = eventoAtual.CriadoPor;
             evento.CriadoLogin = eventoAtual.CriadoLogin;
+            
+            evento.Validar();
             
             return mapper.Map<EventoDTO>(await repositorioEvento.Atualizar(evento));
         }

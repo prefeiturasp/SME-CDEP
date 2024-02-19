@@ -18,9 +18,22 @@ public class EventoController: BaseController
     [ProducesResponseType(typeof(RetornoBaseDTO), 422)]
     [ProducesResponseType(typeof(RetornoBaseDTO), 500)]
     [ProducesResponseType(typeof(RetornoBaseDTO), 601)]
-    [Permissao(Permissao., Policy = "Bearer")]
-    public async Task<IActionResult> Inserir([FromBody] AcervoSolicitacaoItemCadastroDTO[] acervosSolicitacaoItensCadastroDTO, [FromServices] IServicoAcervoSolicitacao servicoAcervoSolicitacao)
+    [Permissao(Permissao.GestaoDeVisitaCalendario_I, Policy = "Bearer")]
+    public async Task<IActionResult> Inserir([FromBody] EventoDTO eventoDto, [FromServices] IServicoEvento servicoEvento)
     {
-        return Ok(await servicoAcervoSolicitacao.Inserir(acervosSolicitacaoItensCadastroDTO));
+        return Ok(await servicoEvento.Inserir(eventoDto));
+    }
+    
+    [HttpPut]
+    [ProducesResponseType(typeof(long), 200)]
+    [ProducesResponseType(typeof(RetornoBaseDTO), 400)]
+    [ProducesResponseType(typeof(RetornoBaseDTO), 403)]
+    [ProducesResponseType(typeof(RetornoBaseDTO), 422)]
+    [ProducesResponseType(typeof(RetornoBaseDTO), 500)]
+    [ProducesResponseType(typeof(RetornoBaseDTO), 601)]
+    [Permissao(Permissao.GestaoDeVisitaCalendario_A, Policy = "Bearer")]
+    public async Task<IActionResult> Alterar([FromBody] EventoDTO eventoDto, [FromServices] IServicoEvento servicoEvento)
+    {
+        return Ok(await servicoEvento.Alterar(eventoDto));
     }
 }

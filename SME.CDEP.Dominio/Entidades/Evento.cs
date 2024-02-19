@@ -1,4 +1,7 @@
-﻿using SME.CDEP.Infra.Dominio.Enumerados;
+﻿using SME.CDEP.Dominio.Constantes;
+using SME.CDEP.Dominio.Excecoes;
+using SME.CDEP.Dominio.Extensions;
+using SME.CDEP.Infra.Dominio.Enumerados;
 
 namespace SME.CDEP.Dominio.Entidades
 {
@@ -9,5 +12,11 @@ namespace SME.CDEP.Dominio.Entidades
         public string Descricao { get; set; }
         public string Justificativa { get; set; }
         public long? AcervoSolicitacaoItemId { get; set; }
+
+        public void Validar()
+        {
+            if (Justificativa.NaoEstaPreenchido() && Tipo.EhSuspensao())
+                throw new NegocioException(MensagemNegocio.JUSTIFICATIVA_NAO_INFORMADA);    
+        }
     }
 }
