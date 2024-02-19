@@ -383,14 +383,14 @@ namespace SME.CDEP.Aplicacao.Servicos
             
             return true;
         }
-        public async Task<long> Inserir(AcervoSolicitacaoManualCadastroDTO acervoSolicitacaoManualCadastroDTO)
+        public async Task<long> Inserir(AcervoSolicitacaoManualDTO acervoSolicitacaoManualDto)
         {
-            var usuario = await servicoUsuario.ObterPorId(acervoSolicitacaoManualCadastroDTO.UsuarioId);
+            var usuario = await servicoUsuario.ObterPorId(acervoSolicitacaoManualDto.UsuarioId);
             
             if (usuario.EhNulo())
                 throw new NegocioException(MensagemNegocio.USUARIO_NAO_ENCONTRADO);
 
-            var acervoSolicitacao = mapper.Map<AcervoSolicitacao>(acervoSolicitacaoManualCadastroDTO);
+            var acervoSolicitacao = mapper.Map<AcervoSolicitacao>(acervoSolicitacaoManualDto);
             
             acervoSolicitacao.Origem = Origem.Manual;
 

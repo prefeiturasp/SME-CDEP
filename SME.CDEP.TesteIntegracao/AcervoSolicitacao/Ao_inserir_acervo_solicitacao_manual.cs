@@ -23,11 +23,11 @@ namespace SME.CDEP.TesteIntegracao
 
             var servicoAcervoSolicitacao = GetServicoAcervoSolicitacao();
             
-            var acervoSolicitacaoManual = new AcervoSolicitacaoManualCadastroDTO()
+            var acervoSolicitacaoManual = new AcervoSolicitacaoManualDTO()
             {
                 UsuarioId = 1,
                 DataSolicitacao = DateTimeExtension.HorarioBrasilia().Date.AddDays(-5),
-                Itens = new List<AcervoSolicitacaoItemManualCadastroDTO>()
+                Itens = new List<AcervoSolicitacaoItemManualDTO>()
                 {
                     new ()
                     {
@@ -86,11 +86,11 @@ namespace SME.CDEP.TesteIntegracao
 
             var servicoAcervoSolicitacao = GetServicoAcervoSolicitacao();
             
-            var acervoSolicitacaoManual = new AcervoSolicitacaoManualCadastroDTO()
+            var acervoSolicitacaoManual = new AcervoSolicitacaoManualDTO()
             {
                 UsuarioId = 1,
                 DataSolicitacao = DateTimeExtension.HorarioBrasilia().Date.AddDays(-5),
-                Itens = new List<AcervoSolicitacaoItemManualCadastroDTO>()
+                Itens = new List<AcervoSolicitacaoItemManualDTO>()
                 {
                     new ()
                     {
@@ -147,11 +147,11 @@ namespace SME.CDEP.TesteIntegracao
 
             var servicoAcervoSolicitacao = GetServicoAcervoSolicitacao();
             
-            var acervoSolicitacaoManual = new AcervoSolicitacaoManualCadastroDTO()
+            var acervoSolicitacaoManual = new AcervoSolicitacaoManualDTO()
             {
                 UsuarioId = 1,
                 DataSolicitacao = DateTimeExtension.HorarioBrasilia().Date.AddDays(-5),
-                Itens = new List<AcervoSolicitacaoItemManualCadastroDTO>()
+                Itens = new List<AcervoSolicitacaoItemManualDTO>()
                 {
                     new ()
                     {
@@ -211,11 +211,11 @@ namespace SME.CDEP.TesteIntegracao
 
             var servicoAcervoSolicitacao = GetServicoAcervoSolicitacao();
             
-            var acervoSolicitacaoManual = new AcervoSolicitacaoManualCadastroDTO()
+            var acervoSolicitacaoManual = new AcervoSolicitacaoManualDTO()
             {
                 UsuarioId = 1,
                 DataSolicitacao = DateTimeExtension.HorarioBrasilia().Date.AddDays(-5),
-                Itens = new List<AcervoSolicitacaoItemManualCadastroDTO>()
+                Itens = new List<AcervoSolicitacaoItemManualDTO>()
                 {
                     new ()
                     {
@@ -250,11 +250,11 @@ namespace SME.CDEP.TesteIntegracao
 
             var servicoAcervoSolicitacao = GetServicoAcervoSolicitacao();
             
-            var acervoSolicitacaoManual = new AcervoSolicitacaoManualCadastroDTO()
+            var acervoSolicitacaoManual = new AcervoSolicitacaoManualDTO()
             {
                 UsuarioId = 1,
                 DataSolicitacao = DateTimeExtension.HorarioBrasilia().Date.AddDays(-5),
-                Itens = new List<AcervoSolicitacaoItemManualCadastroDTO>()
+                Itens = new List<AcervoSolicitacaoItemManualDTO>()
                 {
                     new ()
                     {
@@ -289,11 +289,11 @@ namespace SME.CDEP.TesteIntegracao
 
             var servicoAcervoSolicitacao = GetServicoAcervoSolicitacao();
             
-            var acervoSolicitacaoManual = new AcervoSolicitacaoManualCadastroDTO()
+            var acervoSolicitacaoManual = new AcervoSolicitacaoManualDTO()
             {
                 UsuarioId = 1,
                 DataSolicitacao = DateTimeExtension.HorarioBrasilia().Date.AddDays(-5),
-                Itens = new List<AcervoSolicitacaoItemManualCadastroDTO>()
+                Itens = new List<AcervoSolicitacaoItemManualDTO>()
                 {
                     new ()
                     {
