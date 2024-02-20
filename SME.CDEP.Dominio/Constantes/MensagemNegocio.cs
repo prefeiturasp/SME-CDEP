@@ -2,6 +2,10 @@
 
 public class MensagemNegocio
 {
+    public const string EXISTE_SUSPENSAO_OU_FERIADO_NESSE_DIA = "Já existe uma suspensão ou feriado cadastrado para essa data";
+    public const string DIA_INVALIDO = "Dia inválido";
+    public const string MES_INVALIDO = "Mês inválido";
+    public const string JUSTIFICATIVA_NAO_INFORMADA = "Justificativa não informada para a suspensão";
     public const string O_ANO_NAO_ESTA_SEGUINDO_FORMATO_ABNT = "O Ano do acervo não está seguindo o formato da ABNT";
     public const string ACERVO_NAO_ENCONTRADO = "Acervo não encontrado";
     public const string SOLICITACAO_ATENDIMENTO_NAO_ENCONTRADA = "Solicitação de atendimento não encontrada";
