@@ -19,9 +19,9 @@ public class EventoController: BaseController
     [ProducesResponseType(typeof(RetornoBaseDTO), 500)]
     [ProducesResponseType(typeof(RetornoBaseDTO), 601)]
     [Permissao(Permissao.GestaoDeVisitaCalendario_I, Policy = "Bearer")]
-    public async Task<IActionResult> Inserir([FromBody] EventoDTO eventoDto, [FromServices] IServicoEvento servicoEvento)
+    public async Task<IActionResult> Inserir([FromBody] EventoCadastroDTO eventoCadastroDto, [FromServices] IServicoEvento servicoEvento)
     {
-        return Ok(await servicoEvento.Inserir(eventoDto));
+        return Ok(await servicoEvento.Inserir(eventoCadastroDto));
     }
     
     [HttpPut]
@@ -32,8 +32,21 @@ public class EventoController: BaseController
     [ProducesResponseType(typeof(RetornoBaseDTO), 500)]
     [ProducesResponseType(typeof(RetornoBaseDTO), 601)]
     [Permissao(Permissao.GestaoDeVisitaCalendario_A, Policy = "Bearer")]
-    public async Task<IActionResult> Alterar([FromBody] EventoDTO eventoDto, [FromServices] IServicoEvento servicoEvento)
+    public async Task<IActionResult> Alterar([FromBody] EventoCadastroDTO eventoCadastroDto, [FromServices] IServicoEvento servicoEvento)
     {
-        return Ok(await servicoEvento.Alterar(eventoDto));
+        return Ok(await servicoEvento.Alterar(eventoCadastroDto));
+    }
+    
+    [HttpGet("eventos-tag")]
+    [ProducesResponseType(typeof(IEnumerable<EventoTagDTO>), 200)]
+    [ProducesResponseType(typeof(RetornoBaseDTO), 400)]
+    [ProducesResponseType(typeof(RetornoBaseDTO), 403)]
+    [ProducesResponseType(typeof(RetornoBaseDTO), 422)]
+    [ProducesResponseType(typeof(RetornoBaseDTO), 500)]
+    [ProducesResponseType(typeof(RetornoBaseDTO), 601)]
+    [Permissao(Permissao.GestaoDeVisitaCalendario_C, Policy = "Bearer")]
+    public async Task<IActionResult> ObterEventosTagPorData([FromBody] DiaMesDTO diaMesDto, [FromServices] IServicoEvento servicoEvento)
+    {
+        return Ok(await servicoEvento.ObterEventosTagPorData(diaMesDto));
     }
 }

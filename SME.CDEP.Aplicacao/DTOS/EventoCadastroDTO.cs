@@ -6,7 +6,7 @@ using SME.CDEP.Infra.Dominio.Enumerados;
 
 namespace SME.CDEP.Aplicacao.DTOS
 {
-    public class EventoDTO
+    public class EventoCadastroDTO : DiaMesDTO
     {
         public long Id { get; set; }
         public TipoEvento Tipo { get; set; }
@@ -15,6 +15,5 @@ namespace SME.CDEP.Aplicacao.DTOS
         public string Descricao { get; set; }
         public string Justificativa { get; set; }
         public long? AcervoSolicitacaoItemId { get; set; }
-        public DateTime Data { get; set; }
     }
 }

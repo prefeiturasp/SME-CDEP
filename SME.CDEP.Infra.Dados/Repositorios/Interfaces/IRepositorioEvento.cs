@@ -6,5 +6,6 @@ namespace SME.CDEP.Infra.Dados.Repositorios.Interfaces
     public interface IRepositorioEvento : IRepositorioBaseAuditavel<Evento>
     {
         Task<bool> ExisteFeriadoOuSuspensaoNoDia(DateTime data);
+        Task<IEnumerable<Evento>> ObterEventosTagPorData(DateTime data);
     }
 }
