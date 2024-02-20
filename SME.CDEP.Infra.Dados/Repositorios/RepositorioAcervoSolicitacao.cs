@@ -85,7 +85,7 @@ namespace SME.CDEP.Infra.Dados.Repositorios
            select 
 		     aso.id,
              aso.usuario_id as usuarioId,
-             aso.criado_em as dataSolicitacao,
+             aso.data_solicitacao as dataSolicitacao,
              resp.login as responsavelRf,
              aso.situacao 
 		   from acervo_solicitacao aso
