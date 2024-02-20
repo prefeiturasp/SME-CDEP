@@ -49,4 +49,17 @@ public class EventoController: BaseController
     {
         return Ok(await servicoEvento.ObterEventosTagPorData(diaMesDto));
     }
+    
+    [HttpDelete("{eventoId}")]
+    [ProducesResponseType(typeof(long), 200)]
+    [ProducesResponseType(typeof(RetornoBaseDTO), 400)]
+    [ProducesResponseType(typeof(RetornoBaseDTO), 403)]
+    [ProducesResponseType(typeof(RetornoBaseDTO), 422)]
+    [ProducesResponseType(typeof(RetornoBaseDTO), 500)]
+    [ProducesResponseType(typeof(RetornoBaseDTO), 601)]
+    [Permissao(Permissao.GestaoDeVisitaCalendario_E, Policy = "Bearer")]
+    public async Task<IActionResult> ExcluirLogicamente([FromRoute] long eventoId, [FromServices] IServicoEvento servicoEvento)
+    {
+        return Ok(await servicoEvento.ExcluirLogicamente(eventoId));
+    }
 }

@@ -35,7 +35,7 @@ namespace SME.CDEP.Aplicacao.Servicos
             if (eventoCadastroDto.Justificativa.NaoEstaPreenchido() && eventoCadastroDto.Tipo.EhSuspensao())
                 throw new NegocioException(MensagemNegocio.JUSTIFICATIVA_NAO_INFORMADA);  
             
-            if (await repositorioEvento.ExisteFeriadoOuSuspensaoNoDia(eventoCadastroDto.Data))
+            if (await repositorioEvento.ExisteFeriadoOuSuspensaoNoDia(eventoCadastroDto.Data, eventoCadastroDto.Id))
                 throw new NegocioException(MensagemNegocio.EXISTE_SUSPENSAO_OU_FERIADO_NESSE_DIA);
         }
 
@@ -51,7 +51,10 @@ namespace SME.CDEP.Aplicacao.Servicos
 
         public async Task<EventoDTO> Alterar(EventoCadastroDTO eventoCadastroDto)
         {
-            var eventoAtual = await repositorioEvento.ObterPorId(eventoCadastroDto.Id);
+            if (!eventoCadastroDto.Id.HasValue)
+                throw new NegocioException(MensagemNegocio.EVENTO_NAO_ENCONTRADO);
+            
+            var eventoAtual = await repositorioEvento.ObterPorId(eventoCadastroDto.Id.Value);
             
             var evento = mapper.Map<Evento>(eventoCadastroDto);
             evento.CriadoEm = eventoAtual.CriadoEm;
@@ -81,6 +84,19 @@ namespace SME.CDEP.Aplicacao.Servicos
                 return default;
          
             return mapper.Map<IEnumerable<EventoTagDTO>>(eventosTag);
+        }
+
+        public async Task<bool> ExcluirLogicamente(long eventoId)
+        {
+            var evento = await repositorioEvento.ObterPorId(eventoId);
+
+            if (evento.EhNulo())
+                throw new NegocioException(MensagemNegocio.EVENTO_NAO_ENCONTRADO);
+
+            evento.Excluido = true;
+            await repositorioEvento.Remover(evento);
+
+            return true;
         }
     }
 }

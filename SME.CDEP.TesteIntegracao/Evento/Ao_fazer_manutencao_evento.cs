@@ -74,7 +74,8 @@ namespace SME.CDEP.TesteIntegracao.Usuario
             
             var retorno = await servicoEvento.Alterar(eventoAlteracao);
             retorno.ShouldNotBeNull();
-            retorno.Id.ShouldBe(eventoAlteracao.Id);
+            eventoAlteracao.Id.ShouldNotBeNull();
+            retorno.Id.ShouldBe(eventoAlteracao.Id.Value);
             retorno.Data.ShouldBe(eventoAlteracao.Data);
             retorno.Descricao.ShouldBe(eventoAlteracao.Descricao);
             retorno.Tipo.ShouldBe(eventoAlteracao.Tipo);
@@ -98,6 +99,24 @@ namespace SME.CDEP.TesteIntegracao.Usuario
             var eventosTag = await servicoEvento.ObterEventosTagPorData(diaMes);
             eventosTag.ShouldNotBeNull();
             eventosTag.All(a=> a.Tipo.EstaPreenchido()).ShouldBeTrue();
+        }
+        
+        [Fact(DisplayName = "Evento - Excluir logicamente")]
+        public async Task Excluir()
+        {
+            CriarClaimUsuario();
+            IServicoEvento servicoEvento = await CadastrarVarios(TipoEvento.FERIADO);
+
+            var retorno = await servicoEvento.ExcluirLogicamente(1);
+            retorno.ShouldBeTrue();
+
+            var eventos = ObterTodos<Evento>();
+            
+            var primeiroEvento = eventos.FirstOrDefault(f => f.Id == 1);
+            primeiroEvento.Excluido.ShouldBeTrue();
+            
+            var segundoEvento = eventos.FirstOrDefault(f => f.Id == 2);
+            segundoEvento.Excluido.ShouldBeFalse();
         }
 
         private async Task<IServicoEvento> CadastrarVarios(TipoEvento tipoEvento)

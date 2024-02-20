@@ -2,6 +2,7 @@
 
 public class MensagemNegocio
 {
+    public const string EVENTO_NAO_ENCONTRADO = "Evento não encontrado";
     public const string EXISTE_SUSPENSAO_OU_FERIADO_NESSE_DIA = "Já existe uma suspensão ou feriado cadastrado para essa data";
     public const string DIA_INVALIDO = "Dia inválido";
     public const string MES_INVALIDO = "Mês inválido";
