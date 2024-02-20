@@ -34,7 +34,7 @@ namespace SME.CDEP.Aplicacao.DTOS
                     throw new NegocioException(MensagemNegocio.MES_INVALIDO);
 
                 return new DateTime(DateTimeExtension.HorarioBrasilia().Year, Mes, Dia);
-            };
+            }
         }
     }
 }

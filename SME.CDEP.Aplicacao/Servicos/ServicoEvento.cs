@@ -23,12 +23,13 @@ namespace SME.CDEP.Aplicacao.Servicos
 
         public async Task<long> Inserir(EventoDTO eventoDto)
         {
-            if (await repositorioEvento.Existe)
-            {
-                await 
-            }
+            if (await repositorioEvento.ExisteFeriadoOuSuspensaoNoDia(eventoDto.Data))
+                throw new NegocioException(MensagemNegocio.EXISTE_SUSPENSAO_OU_FERIADO_NESSE_DIA);
+            
             var evento = mapper.Map<Evento>(eventoDto);
+            
             evento.Validar();
+            
             return await repositorioEvento.Inserir(evento);
         }
 

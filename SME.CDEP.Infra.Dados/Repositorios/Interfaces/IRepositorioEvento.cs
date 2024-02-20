@@ -4,5 +4,7 @@ using SME.CDEP.Dominio.Repositorios;
 namespace SME.CDEP.Infra.Dados.Repositorios.Interfaces
 {
     public interface IRepositorioEvento : IRepositorioBaseAuditavel<Evento>
-    {}
+    {
+        Task<bool> ExisteFeriadoOuSuspensaoNoDia(DateTime data);
+    }
 }
