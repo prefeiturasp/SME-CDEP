@@ -62,4 +62,30 @@ public class EventoController: BaseController
     {
         return Ok(await servicoEvento.ExcluirLogicamente(eventoId));
     }
+    
+    [HttpGet("{eventoId}")]
+    [ProducesResponseType(typeof(IEnumerable<EventoTagDTO>), 200)]
+    [ProducesResponseType(typeof(RetornoBaseDTO), 400)]
+    [ProducesResponseType(typeof(RetornoBaseDTO), 403)]
+    [ProducesResponseType(typeof(RetornoBaseDTO), 422)]
+    [ProducesResponseType(typeof(RetornoBaseDTO), 500)]
+    [ProducesResponseType(typeof(RetornoBaseDTO), 601)]
+    [Permissao(Permissao.GestaoDeVisitaCalendario_C, Policy = "Bearer")]
+    public async Task<IActionResult> ObterEventoPorId([FromRoute] int eventoId, [FromServices] IServicoEvento servicoEvento)
+    {
+        return Ok(await servicoEvento.ObterEventoPorId(eventoId));
+    }
+    
+    [HttpGet("calendario/{mes}")]
+    [ProducesResponseType(typeof(CalendarioEventoDTO), 200)]
+    [ProducesResponseType(typeof(RetornoBaseDTO), 400)]
+    [ProducesResponseType(typeof(RetornoBaseDTO), 403)]
+    [ProducesResponseType(typeof(RetornoBaseDTO), 422)]
+    [ProducesResponseType(typeof(RetornoBaseDTO), 500)]
+    [ProducesResponseType(typeof(RetornoBaseDTO), 601)]
+    [Permissao(Permissao.GestaoDeVisitaCalendario_C, Policy = "Bearer")]
+    public async Task<IActionResult> ObterCalendarioDeEventosPorMes([FromRoute] int mes, [FromServices] IServicoEvento servicoEvento)
+    {
+        return Ok(await servicoEvento.ObterCalendarioDeEventosPorMes(mes, DateTimeExtension.HorarioBrasilia().Year));
+    }
 }

@@ -10,5 +10,7 @@ namespace SME.CDEP.Aplicacao.Servicos.Interface
         Task<EventoDTO> ObterPorId(long eventoId);
         Task<IEnumerable<EventoTagDTO>> ObterEventosTagPorData(DiaMesDTO diaMesDto);
         Task<bool> ExcluirLogicamente(long eventoId);
+        Task<EventoDTO> ObterEventoPorId(int eventoId);
+        Task<CalendarioEventoDTO> ObterCalendarioDeEventosPorMes(int mes, int ano);
     }
 }
