@@ -346,10 +346,16 @@ namespace SME.CDEP.Aplicacao.Servicos
 
         public async Task<DadosSolicitanteDTO> ObterDadosSolicitante()
         {
-            var usuarioLogado = await ObterUsuarioLogado();
+            return await ObterDadosSolicitantePorLogin((await ObterUsuarioLogado()).Login);
+        }
 
-            var usuario = await repositorioUsuario.ObterPorLogin(usuarioLogado.Login);
+        private async Task<DadosSolicitanteDTO> ObterDadosSolicitantePorLogin(string login)
+        {
+            var usuario = await repositorioUsuario.ObterPorLogin(login);
 
+            if (usuario.EhNulo())
+                throw new NegocioException(Constantes.USUARIO_NAO_ENCONTRADO); 
+            
             var dadosSolicitante = mapper.Map<DadosSolicitanteDTO>(usuario);
             
             dadosSolicitante.ObterEnderecoCompleto(usuario.Numero, usuario.Complemento, 
@@ -357,10 +363,13 @@ namespace SME.CDEP.Aplicacao.Servicos
 
             return dadosSolicitante;
         }
-        
+
         public async Task<DadosSolicitanteDTO> ObterDadosSolicitantePorUsuarioId(long usuarioId)
         {
             var usuario = await repositorioUsuario.ObterPorId(usuarioId);
+            
+            if (usuario.EhNulo())
+                throw new NegocioException(MensagemNegocio.USUARIO_NAO_ENCONTRADO);
 
             var dadosSolicitante = mapper.Map<DadosSolicitanteDTO>(usuario);
             
@@ -379,6 +388,11 @@ namespace SME.CDEP.Aplicacao.Servicos
                     new (Constantes.PERFIL_ADMIN_MEMORIA_GUID), 
                     new (Constantes.PERFIL_ADMIN_MEMORIAL_GUID)
                 });
+        }
+        
+        public async Task<DadosSolicitanteDTO> ObterDadosSolicitantePorRfOuCpf(string rfOuCpf)
+        {
+            return await ObterDadosSolicitantePorLogin(rfOuCpf);
         }
     }
 }

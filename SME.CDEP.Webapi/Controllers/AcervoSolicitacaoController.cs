@@ -1,5 +1,4 @@
-﻿using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using SME.CDEP.Aplicacao.DTOS;
 using SME.CDEP.Aplicacao.Servicos.Interface;
 using SME.CDEP.Infra.Dominio.Enumerados;
@@ -17,9 +16,9 @@ public class AcervoSolicitacaoController: BaseController
     [ProducesResponseType(typeof(RetornoBaseDTO), 403)]
     [ProducesResponseType(typeof(RetornoBaseDTO), 601)]
     [Permissao(Permissao.OperacoesSolicitacoes_C, Policy = "Bearer")]
-    public async Task<IActionResult> ObterItensDoAcervoPorFiltros([FromQuery] long[] acervosIds, [FromServices] IServicoAcervoSolicitacao servicoAcervoSolicitacao)
+    public async Task<IActionResult> ObterItensAcervoPorAcervosIdsViaConsultaAcervoPortal([FromQuery] long[] acervosIds, [FromServices] IServicoAcervoSolicitacao servicoAcervoSolicitacao)
     {
-        return Ok(await servicoAcervoSolicitacao.ObterItensDoAcervoPorFiltros(acervosIds));
+        return Ok(await servicoAcervoSolicitacao.ObterItensAcervoPorAcervosIds(acervosIds));
     }
 
     [HttpPost]
@@ -30,7 +29,7 @@ public class AcervoSolicitacaoController: BaseController
     [ProducesResponseType(typeof(RetornoBaseDTO), 500)]
     [ProducesResponseType(typeof(RetornoBaseDTO), 601)]
     [Permissao(Permissao.OperacoesSolicitacoes_I, Policy = "Bearer")]
-    public async Task<IActionResult> Inserir([FromBody] AcervoSolicitacaoItemCadastroDTO[] acervosSolicitacaoItensCadastroDTO, [FromServices] IServicoAcervoSolicitacao servicoAcervoSolicitacao)
+    public async Task<IActionResult> CadastrarAcervoSolicitacaoViaPortal([FromBody] AcervoSolicitacaoItemCadastroDTO[] acervosSolicitacaoItensCadastroDTO, [FromServices] IServicoAcervoSolicitacao servicoAcervoSolicitacao)
     {
         return Ok(await servicoAcervoSolicitacao.Inserir(acervosSolicitacaoItensCadastroDTO));
     }
@@ -41,7 +40,7 @@ public class AcervoSolicitacaoController: BaseController
     [ProducesResponseType(typeof(RetornoBaseDTO), 403)]
     [ProducesResponseType(typeof(RetornoBaseDTO), 601)]
     [Permissao(Permissao.OperacoesSolicitacoes_C, Policy = "Bearer")]
-    public async Task<IActionResult> ObterPorId([FromRoute] long acervoSolicitacaoId,[FromServices] IServicoAcervoSolicitacao servicoAcervoSolicitacao)
+    public async Task<IActionResult> ObterSolicitacaoPorId([FromRoute] long acervoSolicitacaoId,[FromServices] IServicoAcervoSolicitacao servicoAcervoSolicitacao)
     {
         return Ok(await servicoAcervoSolicitacao.ObterPorId(acervoSolicitacaoId));
     }
@@ -52,9 +51,9 @@ public class AcervoSolicitacaoController: BaseController
     [ProducesResponseType(typeof(RetornoBaseDTO), 403)]
     [ProducesResponseType(typeof(RetornoBaseDTO), 601)]
     [Permissao(Permissao.OperacoesSolicitacoes_E, Policy = "Bearer")]
-    public async Task<IActionResult> ExclusaoLogica([FromRoute] long acervoSolicitacaoId, [FromServices] IServicoAcervoSolicitacao servicoAcervoSolicitac)
+    public async Task<IActionResult> ExcluirAtendimentoLogicamente([FromRoute] long acervoSolicitacaoId, [FromServices] IServicoAcervoSolicitacao servicoAcervoSolicitacao)
     {
-        return Ok(await servicoAcervoSolicitac.Excluir(acervoSolicitacaoId));
+        return Ok(await servicoAcervoSolicitacao.Excluir(acervoSolicitacaoId));
     }
     
     [HttpGet("minhas-solicitacoes")]
@@ -85,9 +84,9 @@ public class AcervoSolicitacaoController: BaseController
     [ProducesResponseType(typeof(RetornoBaseDTO), 403)]
     [ProducesResponseType(typeof(RetornoBaseDTO), 601)]
     [Permissao(Permissao.OperacoesSolicitacoes_C, Policy = "Bearer")]
-    public async Task<IActionResult> ObterSolicitacoesPorFiltro([FromQuery] FiltroSolicitacaoDTO filtroSolicitacaoDto, [FromServices] IServicoAcervoSolicitacao servicoAcervoSolicitacao)
+    public async Task<IActionResult> ObterAtendimentoSolicitacoesPorFiltro([FromQuery] FiltroSolicitacaoDTO filtroSolicitacaoDto, [FromServices] IServicoAcervoSolicitacao servicoAcervoSolicitacao)
     {
-        return Ok(await servicoAcervoSolicitacao.ObterSolicitacoesPorFiltro(filtroSolicitacaoDto));
+        return Ok(await servicoAcervoSolicitacao.ObterAtendimentoSolicitacoesPorFiltro(filtroSolicitacaoDto));
     }
     
     [HttpGet("detalhes/{acervoSolicitacaoId}")]
@@ -96,9 +95,9 @@ public class AcervoSolicitacaoController: BaseController
     [ProducesResponseType(typeof(RetornoBaseDTO), 403)]
     [ProducesResponseType(typeof(RetornoBaseDTO), 601)]
     [Permissao(Permissao.OperacoesSolicitacoes_C, Policy = "Bearer")]
-    public async Task<IActionResult> ObterDetalhesPorId([FromRoute] long acervoSolicitacaoId,[FromServices] IServicoAcervoSolicitacao servicoAcervoSolicitacao)
+    public async Task<IActionResult> ObterDetalhesParaAtendimentoSolicitadoesPorId([FromRoute] long acervoSolicitacaoId,[FromServices] IServicoAcervoSolicitacao servicoAcervoSolicitacao)
     {
-        return Ok(await servicoAcervoSolicitacao.ObterDetalhesPorId(acervoSolicitacaoId));
+        return Ok(await servicoAcervoSolicitacao.ObterDetalhesParaAtendimentoSolicitadoesPorId(acervoSolicitacaoId));
     }
     
     [HttpGet("tipo-atendimento")]
@@ -165,5 +164,31 @@ public class AcervoSolicitacaoController: BaseController
     public async Task<IActionResult> AlterarDataVisitaDoItemAtendimento([FromBody] AlterarDataVisitaAcervoSolicitacaoItemDTO alterarDataVisitaAcervoSolicitacaoItemDto, [FromServices] IServicoAcervoSolicitacao servicoAcervoSolicitacao)
     {
         return Ok(await servicoAcervoSolicitacao.AlterarDataVisitaDoItemAtendimento(alterarDataVisitaAcervoSolicitacaoItemDto));
+    }
+    
+    [HttpPost("inserir-manual")]
+    [ProducesResponseType(typeof(long), 200)]
+    [ProducesResponseType(typeof(RetornoBaseDTO), 400)]
+    [ProducesResponseType(typeof(RetornoBaseDTO), 403)]
+    [ProducesResponseType(typeof(RetornoBaseDTO), 422)]
+    [ProducesResponseType(typeof(RetornoBaseDTO), 500)]
+    [ProducesResponseType(typeof(RetornoBaseDTO), 601)]
+    [Permissao(Permissao.OperacoesSolicitacoes_I, Policy = "Bearer")]
+    public async Task<IActionResult> CadastrarAcervoSolicitacaoManual([FromBody] AcervoSolicitacaoManualDTO acervoSolicitacaoManualDto, [FromServices] IServicoAcervoSolicitacao servicoAcervoSolicitacao)
+    {
+        return Ok(await servicoAcervoSolicitacao.Inserir(acervoSolicitacaoManualDto));
+    }
+    
+    [HttpPut("alterar-manual")]
+    [ProducesResponseType(typeof(long), 200)]
+    [ProducesResponseType(typeof(RetornoBaseDTO), 400)]
+    [ProducesResponseType(typeof(RetornoBaseDTO), 403)]
+    [ProducesResponseType(typeof(RetornoBaseDTO), 422)]
+    [ProducesResponseType(typeof(RetornoBaseDTO), 500)]
+    [ProducesResponseType(typeof(RetornoBaseDTO), 601)]
+    [Permissao(Permissao.OperacoesSolicitacoes_A, Policy = "Bearer")]
+    public async Task<IActionResult> AlterarAcervoSolicitacaoManual([FromBody] AcervoSolicitacaoManualDTO acervoSolicitacaoManualDTO, [FromServices] IServicoAcervoSolicitacao servicoAcervoSolicitacao)
+    {
+        return Ok(await servicoAcervoSolicitacao.Alterar(acervoSolicitacaoManualDTO));
     }
 }

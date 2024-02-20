@@ -8,6 +8,8 @@
             Map(c => c.UsuarioId).ToColumn("usuario_id");
             Map(c => c.ResponsavelId).ToColumn("usuario_responsavel_id");
             Map(c => c.Situacao).ToColumn("situacao");
+            Map(c => c.Origem).ToColumn("origem");
+            Map(c => c.DataSolicitacao).ToColumn("data_solicitacao");
         }
     }
 }

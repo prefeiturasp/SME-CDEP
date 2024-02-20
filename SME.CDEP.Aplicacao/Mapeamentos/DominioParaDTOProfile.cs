@@ -178,7 +178,6 @@ namespace SME.CDEP.Aplicacao.Mapeamentos
                 .ReverseMap(); 
 
             CreateMap<Usuario,DadosSolicitanteDTO>()
-                .ForMember(dest => dest.Cpf, opt => opt.MapFrom(o => o.TipoUsuario.EhCoreSSO() ? null : o.Login))
                 .ForMember(dest => dest.Tipo, opt => opt.MapFrom(o => o.TipoUsuario.Descricao()))
                 .ForMember(dest => dest.TipoId, opt => opt.MapFrom(o => o.TipoUsuario))
                 .ReverseMap();
@@ -225,6 +224,15 @@ namespace SME.CDEP.Aplicacao.Mapeamentos
                 .ForMember(dest => dest.SituacaoId, opt => opt.MapFrom(o => o.Situacao))
                 .ReverseMap();
             
-        }
+            CreateMap<Acervo,IdNomeCodigoDTO>()
+                .ForMember(dest => dest.Nome, opt => opt.MapFrom(o => o.Titulo))
+                .ReverseMap();
+            
+            CreateMap<AcervoSolicitacao,AcervoSolicitacaoManualDTO>().ReverseMap();
+            CreateMap<AcervoSolicitacaoItem,AcervoSolicitacaoItemManualDTO>().ReverseMap();
+            
+            CreateMap<AcervoSolicitacaoItemManualDTO,AcervoSolicitacaoItem>()
+                .ReverseMap();
+        }            
     }
 }

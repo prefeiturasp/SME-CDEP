@@ -36,7 +36,7 @@ namespace SME.CDEP.TesteIntegracao
 
             var servicoAcervoSolicitacao = GetServicoAcervoSolicitacao();
 
-            var retorno = await servicoAcervoSolicitacao.ObterDetalhesPorId(1);
+            var retorno = await servicoAcervoSolicitacao.ObterDetalhesParaAtendimentoSolicitadoesPorId(1);
             retorno.ShouldNotBeNull();
             retorno.DadosSolicitante.ShouldNotBeNull();
             retorno.DadosSolicitante.Nome.ShouldNotBeEmpty();
