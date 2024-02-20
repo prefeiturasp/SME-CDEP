@@ -13,7 +13,7 @@ public class EventoMock : AuditoriaMock
     {
         var faker = new Faker<SME.CDEP.Dominio.Entidades.Evento>("pt_BR");
             
-        faker.RuleFor(x => x.Data, f => f.Date.Future().Date);
+        faker.RuleFor(x => x.Data, f => f.Date.Recent().Date);
         faker.RuleFor(x => x.Descricao, f => f.Lorem.Text().Limite(200));
         faker.RuleFor(x => x.Justificativa, f => f.Address.FullAddress().Limite(200));
         faker.RuleFor(x => x.Tipo, f => tipoEvento);
