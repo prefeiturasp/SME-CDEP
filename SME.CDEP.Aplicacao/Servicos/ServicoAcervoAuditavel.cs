@@ -280,7 +280,7 @@ namespace SME.CDEP.Aplicacao.Servicos
                         Codigo = s.Key.Codigo,
                         Tipo = s.Key.Tipo,
                         Titulo = s.Key.Titulo,
-                        Descricao = s.Key.Descricao,
+                        Descricao = s.Key.Descricao.RemoverTagsHtml(),
                         DataAcervo = s.Key.DataAcervo,
                         Ano = s.Key.Ano,
                         TipoAcervoTag = s.Key.TipoAcervoTag,
