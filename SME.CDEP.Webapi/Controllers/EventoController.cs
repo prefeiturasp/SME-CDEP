@@ -45,7 +45,7 @@ public class EventoController: BaseController
     [ProducesResponseType(typeof(RetornoBaseDTO), 500)]
     [ProducesResponseType(typeof(RetornoBaseDTO), 601)]
     [Permissao(Permissao.GestaoDeVisitaCalendario_C, Policy = "Bearer")]
-    public async Task<IActionResult> ObterEventosTagPorData([FromBody] DiaMesDTO diaMesDto, [FromServices] IServicoEvento servicoEvento)
+    public async Task<IActionResult> ObterEventosTagPorData([FromQuery] DiaMesDTO diaMesDto, [FromServices] IServicoEvento servicoEvento)
     {
         return Ok(await servicoEvento.ObterEventosTagPorData(diaMesDto));
     }
@@ -87,5 +87,18 @@ public class EventoController: BaseController
     public async Task<IActionResult> ObterCalendarioDeEventosPorMes([FromRoute] int mes, [FromServices] IServicoEvento servicoEvento)
     {
         return Ok(await servicoEvento.ObterCalendarioDeEventosPorMes(mes, DateTimeExtension.HorarioBrasilia().Year));
+    }
+    
+    [HttpGet("detalhes-dia")]
+    [ProducesResponseType(typeof(IEnumerable<EventoDetalheDTO>), 200)]
+    [ProducesResponseType(typeof(RetornoBaseDTO), 400)]
+    [ProducesResponseType(typeof(RetornoBaseDTO), 403)]
+    [ProducesResponseType(typeof(RetornoBaseDTO), 422)]
+    [ProducesResponseType(typeof(RetornoBaseDTO), 500)]
+    [ProducesResponseType(typeof(RetornoBaseDTO), 601)]
+    [Permissao(Permissao.GestaoDeVisitaCalendario_C, Policy = "Bearer")]
+    public async Task<IActionResult> ObterDetalhesDoDiaPorDiaMes([FromQuery] DiaMesDTO diaMesDto, [FromServices] IServicoEvento servicoEvento)
+    {
+        return Ok(await servicoEvento.ObterDetalhesDoDiaPorDiaMes(diaMesDto));
     }
 }
