@@ -6,6 +6,7 @@ namespace SME.CDEP.Aplicacao.DTOS
     {
         public long Id { get; set; }
         public TipoEvento TipoId { get; set; }
+        public string Tipo { get; set; }
         public string Solicitante { get; set; }
         public string Titulo { get; set; }
         public string CodigoTombo { get; set; }

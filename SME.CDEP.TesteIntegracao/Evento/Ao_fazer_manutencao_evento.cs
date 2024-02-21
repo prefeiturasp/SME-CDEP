@@ -98,7 +98,7 @@ namespace SME.CDEP.TesteIntegracao.Usuario
 
             var eventosTag = await servicoEvento.ObterEventosTagPorData(diaMes);
             eventosTag.ShouldNotBeNull();
-            eventosTag.All(a=> a.Tipo.EstaPreenchido()).ShouldBeTrue();
+            eventosTag.All(a=> a.TipoId.EstaPreenchido()).ShouldBeTrue();
         }
         
         [Fact(DisplayName = "Evento - Excluir logicamente")]
