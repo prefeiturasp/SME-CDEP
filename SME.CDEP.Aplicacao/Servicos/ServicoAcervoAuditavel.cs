@@ -485,9 +485,9 @@ namespace SME.CDEP.Aplicacao.Servicos
             return retorno.Valor;
         }
 
-        public async Task<IdNomeCodigoDTO> PesquisarAcervoPorCodigoTombo(string codigoTombo)
+        public async Task<IdNomeCodigoDTO> PesquisarAcervoPorCodigoTombo(FiltroCodigoTomboDTO filtro)
         {
-            var retorno = await repositorioAcervo.PesquisarAcervoPorCodigoTombo(codigoTombo);
+            var retorno = await repositorioAcervo.PesquisarAcervoPorCodigoTombo(filtro.CodigoTombo);
 
             if (retorno.EhNulo())
                 throw new NegocioException(MensagemNegocio.ACERVO_NAO_ENCONTRADO);
