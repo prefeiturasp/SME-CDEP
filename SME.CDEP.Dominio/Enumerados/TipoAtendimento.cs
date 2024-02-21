@@ -41,4 +41,14 @@ public static class TipoAtendimentoExtensions
         
         return !tiposValidos.Contains(tipoAtendimento);
     }
+    
+    public static bool EhInvalido(this TipoAtendimento? tipoAtendimento)
+    {
+        if (!tipoAtendimento.HasValue)
+            return false;
+        
+        var tiposValidos = new[] { TipoAtendimento.Presencial, TipoAtendimento.Email };
+        
+        return !tiposValidos.Contains(tipoAtendimento.Value);
+    }
 }

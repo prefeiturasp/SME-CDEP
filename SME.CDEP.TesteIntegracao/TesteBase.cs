@@ -632,9 +632,9 @@ namespace SME.CDEP.TesteIntegracao
                 await InserirNaBase(new Material() { Nome = material, Tipo = tipoMaterial });
         }
         
-        protected async Task InserirAcervoSolicitacao(int quantidade = 1)
+        protected async Task InserirAcervoSolicitacao(int quantidade = 1, bool inserirEmAtendimento = false)
         {
-            var acervoSolicitacao = ObterAcervoSolicitacao();
+            var acervoSolicitacao = inserirEmAtendimento ? ObterAcervoSolicitacaoAtendido() : ObterAcervoSolicitacao();
             
             for (int i = 1; i <= quantidade; i++)
             {
@@ -667,6 +667,40 @@ namespace SME.CDEP.TesteIntegracao
                     new ()
                     {
                         Situacao = SituacaoSolicitacaoItem.AGUARDANDO_ATENDIMENTO,
+                        AcervoId = 2, CriadoEm = DateTimeExtension.HorarioBrasilia(), 
+                        CriadoLogin = "Sistema", CriadoPor = "Sistema",
+                    },
+                    new ()
+                    {
+                        Situacao = SituacaoSolicitacaoItem.FINALIZADO_AUTOMATICAMENTE,
+                        AcervoId = 3, CriadoEm = DateTimeExtension.HorarioBrasilia(), 
+                        CriadoLogin = "Sistema", CriadoPor = "Sistema",
+                    }
+                }
+            };
+            return acervoSolicitacao;
+        }
+        
+        protected AcervoSolicitacao ObterAcervoSolicitacaoAtendido()
+        {
+            var acervoSolicitacao = new AcervoSolicitacao()
+            {
+                UsuarioId = 1,
+                Situacao = SituacaoSolicitacao.AGUARDANDO_VISITA,
+                CriadoEm = DateTimeExtension.HorarioBrasilia(), CriadoLogin = "Sistema", CriadoPor = "Sistema",
+                Itens = new List<AcervoSolicitacaoItem>()
+                {
+                    new ()
+                    {
+                        Situacao =  SituacaoSolicitacaoItem.AGUARDANDO_VISITA,
+                        DataVisita = DateTimeExtension.HorarioBrasilia().AddDays(2),
+                        AcervoId = 1, CriadoEm = DateTimeExtension.HorarioBrasilia(), 
+                        CriadoLogin = "Sistema", CriadoPor = "Sistema",
+                    },
+                    new ()
+                    {
+                        Situacao = SituacaoSolicitacaoItem.AGUARDANDO_VISITA,
+                        DataVisita = DateTimeExtension.HorarioBrasilia().AddDays(4),
                         AcervoId = 2, CriadoEm = DateTimeExtension.HorarioBrasilia(), 
                         CriadoLogin = "Sistema", CriadoPor = "Sistema",
                     },

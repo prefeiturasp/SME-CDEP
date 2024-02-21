@@ -62,8 +62,19 @@ public class AcervoController: BaseController
     [ProducesResponseType(typeof(RetornoBaseDTO), 403)]
     [ProducesResponseType(typeof(RetornoBaseDTO), 601)]
     [Permissao(Permissao.OperacoesSolicitacoes_C, Policy = "Bearer")]
-    public async Task<IActionResult> ObterTermoDeCompromisso([FromServices]IServicoAcervo servicoAcervo)
+    public async Task<IActionResult> ObterTermoDeCompromisso([FromServices] IServicoAcervo servicoAcervo)
     {
         return Ok(await servicoAcervo.ObterTermoDeCompromisso());
+    }
+    
+    [HttpGet("pesquisar")]
+    [ProducesResponseType(typeof(IdNomeCodigoDTO), 200)]
+    [ProducesResponseType(typeof(RetornoBaseDTO), 400)]
+    [ProducesResponseType(typeof(RetornoBaseDTO), 403)]
+    [ProducesResponseType(typeof(RetornoBaseDTO), 601)]
+    [Permissao(Permissao.CadastroAcervo_C, Policy = "Bearer")]
+    public async Task<IActionResult> PesquisarAcervoPorCodigoTombo([FromQuery] string codigoTombo,[FromServices] IServicoAcervo servicoAcervo)
+    {
+        return Ok(await servicoAcervo.PesquisarAcervoPorCodigoTombo(codigoTombo));
     }
 }

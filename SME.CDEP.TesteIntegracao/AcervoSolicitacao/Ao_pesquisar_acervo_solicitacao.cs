@@ -27,7 +27,7 @@ namespace SME.CDEP.TesteIntegracao
             var servicoAcervoSolicitacao = GetServicoAcervoSolicitacao();
 
             var filtro = new FiltroSolicitacaoDTO() { AcervoSolicitacaoId = 1 };
-            var retorno = await servicoAcervoSolicitacao.ObterSolicitacoesPorFiltro(filtro);
+            var retorno = await servicoAcervoSolicitacao.ObterAtendimentoSolicitacoesPorFiltro(filtro);
             retorno.Items.Count().ShouldBeGreaterThan(0);
         }
         
@@ -43,7 +43,7 @@ namespace SME.CDEP.TesteIntegracao
             var servicoAcervoSolicitacao = GetServicoAcervoSolicitacao();
 
             var filtro = new FiltroSolicitacaoDTO() { SituacaoItem = SituacaoSolicitacaoItem.FINALIZADO_AUTOMATICAMENTE };
-            var retorno = await servicoAcervoSolicitacao.ObterSolicitacoesPorFiltro(filtro);
+            var retorno = await servicoAcervoSolicitacao.ObterAtendimentoSolicitacoesPorFiltro(filtro);
             retorno.Items.Count().ShouldBeGreaterThan(0);
         }
         
@@ -59,7 +59,7 @@ namespace SME.CDEP.TesteIntegracao
             var servicoAcervoSolicitacao = GetServicoAcervoSolicitacao();
 
             var filtro = new FiltroSolicitacaoDTO() { TipoAcervo = TipoAcervo.Tridimensional };
-            var retorno = await servicoAcervoSolicitacao.ObterSolicitacoesPorFiltro(filtro);
+            var retorno = await servicoAcervoSolicitacao.ObterAtendimentoSolicitacoesPorFiltro(filtro);
             retorno.Items.Count().ShouldBeGreaterThan(0);
         }
         
@@ -75,7 +75,7 @@ namespace SME.CDEP.TesteIntegracao
             var servicoAcervoSolicitacao = GetServicoAcervoSolicitacao();
 
             var filtro = new FiltroSolicitacaoDTO() { DataSolicitacaoInicio = DateTimeExtension.HorarioBrasilia() };
-            var retorno = await servicoAcervoSolicitacao.ObterSolicitacoesPorFiltro(filtro);
+            var retorno = await servicoAcervoSolicitacao.ObterAtendimentoSolicitacoesPorFiltro(filtro);
             retorno.Items.Count().ShouldBeGreaterThan(0);
         }
         
@@ -86,7 +86,7 @@ namespace SME.CDEP.TesteIntegracao
 
             await InserirAcervoTridimensional();
 
-            await InserirAcervoSolicitacao();
+            await InserirAcervoSolicitacao(inserirEmAtendimento:true);
 
             var servicoAcervoSolicitacao = GetServicoAcervoSolicitacao();
 
@@ -95,7 +95,7 @@ namespace SME.CDEP.TesteIntegracao
                 DataVisitaInicio = DateTimeExtension.HorarioBrasilia(),
                 DataVisitaFim = DateTimeExtension.HorarioBrasilia().AddDays(20)
             };
-            var retorno = await servicoAcervoSolicitacao.ObterSolicitacoesPorFiltro(filtro);
+            var retorno = await servicoAcervoSolicitacao.ObterAtendimentoSolicitacoesPorFiltro(filtro);
             retorno.Items.Count().ShouldBeGreaterThan(0);
         }
         
@@ -115,7 +115,7 @@ namespace SME.CDEP.TesteIntegracao
                 DataVisitaInicio = DateTimeExtension.HorarioBrasilia(),
                 DataVisitaFim = DateTimeExtension.HorarioBrasilia()
             };
-            var retorno = await servicoAcervoSolicitacao.ObterSolicitacoesPorFiltro(filtro);
+            var retorno = await servicoAcervoSolicitacao.ObterAtendimentoSolicitacoesPorFiltro(filtro);
             retorno.Items.Count().ShouldBe(0);
         }
     }

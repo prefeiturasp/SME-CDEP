@@ -157,7 +157,7 @@ namespace SME.CDEP.Infra.Dados.Repositorios
             from acervo_solicitacao_item
             where acervo_solicitacao_id = @acervoSolicitacaoId
             and not excluido
-            and (situacao = @situacaoAguardandoAtendimento or situacao = @situacaoAguardandoVisita and dt_visita::date >= @dataAtual::date )";
+            and (situacao = @situacaoAguardandoAtendimento or situacao = @situacaoAguardandoVisita and dt_visita::date > @dataAtual::date )";
             
             return conexao.Obter().QueryFirstOrDefaultAsync<bool>(query, new { acervoSolicitacaoId, 
                 situacaoAguardandoAtendimento = (int)SituacaoSolicitacaoItem.AGUARDANDO_ATENDIMENTO,

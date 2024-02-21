@@ -8,5 +8,7 @@ namespace SME.CDEP.Dominio.Entidades
         public long? ResponsavelId { get; set; }
         public SituacaoSolicitacao Situacao { get; set; }
         public IEnumerable<AcervoSolicitacaoItem> Itens { get; set; }
+        public Origem Origem { get; set; } = Origem.Portal;
+        public DateTime DataSolicitacao { get; set; }
     }
 }

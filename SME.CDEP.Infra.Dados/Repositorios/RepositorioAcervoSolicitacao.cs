@@ -85,7 +85,7 @@ namespace SME.CDEP.Infra.Dados.Repositorios
            select 
 		     aso.id,
              aso.usuario_id as usuarioId,
-             aso.criado_em as dataSolicitacao,
+             aso.data_solicitacao as dataSolicitacao,
              resp.login as responsavelRf,
              aso.situacao 
 		   from acervo_solicitacao aso
@@ -100,7 +100,8 @@ namespace SME.CDEP.Infra.Dados.Repositorios
              a.titulo,
              asi.dt_visita as dataVisita,
              asi.situacao,
-             asi.tipo_atendimento as tipoAtendimento
+             asi.tipo_atendimento as tipoAtendimento,
+             a.id as acervoId
 		   from acervo_solicitacao_item asi
 		     join acervo a on a.id = asi.acervo_id 
 		   where not asi.excluido
@@ -109,7 +110,7 @@ namespace SME.CDEP.Infra.Dados.Repositorios
             
 	        var queryMultiple = await conexao.Obter().QueryMultipleAsync(query, new { acervoSolicitacaoId });
 
-	        var acervoSolicitacao = queryMultiple.ReadFirst<AcervoSolicitacaoDetalhe>();
+	        var acervoSolicitacao = await queryMultiple.ReadFirstOrDefaultAsync<AcervoSolicitacaoDetalhe>();
 
 	        if (acervoSolicitacao.EhNulo())
 		        return default;

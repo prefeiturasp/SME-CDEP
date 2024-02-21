@@ -2,6 +2,7 @@
 
 public class Constantes
 {
+    public const string USUARIO_NAO_ENCONTRADO = "Usuário sem cadastro no CDEP, para que o atendimento seja realizado, é necessário que o usuário se cadastre primeiro.";
     public const string USUARIO_RESPONSAVEL_NAO_LOCALIZADO = "O usuário responsável informado não foi encontrado";
     public const string TRIDIMENSIONAL = "Tridimensional";
     public const string FOTOGRAFICO = "Fotográfico";
