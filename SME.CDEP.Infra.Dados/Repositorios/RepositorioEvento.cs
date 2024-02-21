@@ -44,5 +44,23 @@ namespace SME.CDEP.Infra.Dados.Repositorios
             
             return conexao.Obter().QueryAsync<Evento>(query,new { data });
         }
+
+        public Task<IEnumerable<Evento>> ObterEventosTagPorMesAno(int mes, int ano)
+        {
+            var dataInicial = new DateTime(ano, mes, 1);
+            var dataFinal = dataInicial.AddMonths(1).AddDays(-1);
+            
+            var query = @"select id,
+                                 data,
+                                 tipo,
+                                 descricao,
+                                 acervo_solicitacao_item_id,
+                                 justificativa                                 
+                          from evento 
+                          where data::date between @dataInicial::date and @dataFinal::date 
+                            and not excluido ";
+            
+            return conexao.Obter().QueryAsync<Evento>(query,new { dataInicial, dataFinal });
+        }
     }
 }

@@ -118,6 +118,184 @@ namespace SME.CDEP.TesteIntegracao.Usuario
             var segundoEvento = eventos.FirstOrDefault(f => f.Id == 2);
             segundoEvento.Excluido.ShouldBeFalse();
         }
+        
+        [Fact(DisplayName = "Evento - Obter calendário de eventos do mês de janeiro de 2024")]
+        public async Task Calendario_de_eventos_do_mes_janeiro_2024()
+        {
+            var servicoEvento = GetServicoEvento();
+
+            var retorno = await servicoEvento.ObterCalendarioDeEventosPorMes(1, 2024);
+            retorno.ShouldNotBeNull();
+            
+            var diasPrimeiraSemana = retorno.Semanas.FirstOrDefault(a => a.Numero == 1);
+            diasPrimeiraSemana.Dias.FirstOrDefault().Dia.ShouldBe(31);
+            diasPrimeiraSemana.Dias.LastOrDefault().Dia.ShouldBe(6);
+            
+            var diasSegundaSemana = retorno.Semanas.FirstOrDefault(a => a.Numero == 2);
+            diasSegundaSemana.Dias.FirstOrDefault().Dia.ShouldBe(7);
+            diasSegundaSemana.Dias.LastOrDefault().Dia.ShouldBe(13);
+            
+            var diasTerceiraSemana = retorno.Semanas.FirstOrDefault(a => a.Numero == 3);
+            diasTerceiraSemana.Dias.FirstOrDefault().Dia.ShouldBe(14);
+            diasTerceiraSemana.Dias.LastOrDefault().Dia.ShouldBe(20);
+            
+            var diasQuartaSemana = retorno.Semanas.FirstOrDefault(a => a.Numero == 4);
+            diasQuartaSemana.Dias.FirstOrDefault().Dia.ShouldBe(21);
+            diasQuartaSemana.Dias.LastOrDefault().Dia.ShouldBe(27);
+            
+            var diasQuintaSemana = retorno.Semanas.FirstOrDefault(a => a.Numero == 5);
+            diasQuintaSemana.Dias.FirstOrDefault().Dia.ShouldBe(28);
+            diasQuintaSemana.Dias.LastOrDefault().Dia.ShouldBe(03);
+        }
+        
+        [Fact(DisplayName = "Evento - Obter calendário de eventos do mês de fevereiro de 2024")]
+        public async Task Calendario_de_eventos_do_mes_fevereiro_2024()
+        {
+            var servicoEvento = GetServicoEvento();
+
+            var retorno = await servicoEvento.ObterCalendarioDeEventosPorMes(2, 2024);
+            retorno.ShouldNotBeNull();
+            
+            var diasPrimeiraSemana = retorno.Semanas.FirstOrDefault(a => a.Numero == 1);
+            diasPrimeiraSemana.Dias.FirstOrDefault().Dia.ShouldBe(28);
+            diasPrimeiraSemana.Dias.LastOrDefault().Dia.ShouldBe(3);
+            
+            var diasSegundaSemana = retorno.Semanas.FirstOrDefault(a => a.Numero == 2);
+            diasSegundaSemana.Dias.FirstOrDefault().Dia.ShouldBe(4);
+            diasSegundaSemana.Dias.LastOrDefault().Dia.ShouldBe(10);
+            
+            var diasTerceiraSemana = retorno.Semanas.FirstOrDefault(a => a.Numero == 3);
+            diasTerceiraSemana.Dias.FirstOrDefault().Dia.ShouldBe(11);
+            diasTerceiraSemana.Dias.LastOrDefault().Dia.ShouldBe(17);
+            
+            var diasQuartaSemana = retorno.Semanas.FirstOrDefault(a => a.Numero == 4);
+            diasQuartaSemana.Dias.FirstOrDefault().Dia.ShouldBe(18);
+            diasQuartaSemana.Dias.LastOrDefault().Dia.ShouldBe(24);
+            
+            var diasQuintaSemana = retorno.Semanas.FirstOrDefault(a => a.Numero == 5);
+            diasQuintaSemana.Dias.FirstOrDefault().Dia.ShouldBe(25);
+            diasQuintaSemana.Dias.LastOrDefault().Dia.ShouldBe(2);
+        }
+        
+        [Fact(DisplayName = "Evento - Obter calendário de eventos do mês de setembro de 2024")]
+        public async Task Calendario_de_eventos_do_mes_setembro_2024()
+        {
+            var servicoEvento = GetServicoEvento();
+
+            var retorno = await servicoEvento.ObterCalendarioDeEventosPorMes(9, 2024);
+            retorno.ShouldNotBeNull();
+            
+            var diasPrimeiraSemana = retorno.Semanas.FirstOrDefault(a => a.Numero == 1);
+            diasPrimeiraSemana.Dias.FirstOrDefault().Dia.ShouldBe(1);
+            diasPrimeiraSemana.Dias.LastOrDefault().Dia.ShouldBe(7);
+            
+            var diasSegundaSemana = retorno.Semanas.FirstOrDefault(a => a.Numero == 2);
+            diasSegundaSemana.Dias.FirstOrDefault().Dia.ShouldBe(8);
+            diasSegundaSemana.Dias.LastOrDefault().Dia.ShouldBe(14);
+            
+            var diasTerceiraSemana = retorno.Semanas.FirstOrDefault(a => a.Numero == 3);
+            diasTerceiraSemana.Dias.FirstOrDefault().Dia.ShouldBe(15);
+            diasTerceiraSemana.Dias.LastOrDefault().Dia.ShouldBe(21);
+            
+            var diasQuartaSemana = retorno.Semanas.FirstOrDefault(a => a.Numero == 4);
+            diasQuartaSemana.Dias.FirstOrDefault().Dia.ShouldBe(22);
+            diasQuartaSemana.Dias.LastOrDefault().Dia.ShouldBe(28);
+            
+            var diasQuintaSemana = retorno.Semanas.FirstOrDefault(a => a.Numero == 5);
+            diasQuintaSemana.Dias.FirstOrDefault().Dia.ShouldBe(29);
+            diasQuintaSemana.Dias.LastOrDefault().Dia.ShouldBe(5);
+        }
+        
+        [Fact(DisplayName = "Evento - Obter calendário de eventos do mês de agosto de 2025")]
+        public async Task Calendario_de_eventos_do_mes_agosto_2025()
+        {
+            var servicoEvento = GetServicoEvento();
+
+            var retorno = await servicoEvento.ObterCalendarioDeEventosPorMes(8, 2025);
+            retorno.ShouldNotBeNull();
+            
+            var diasPrimeiraSemana = retorno.Semanas.FirstOrDefault(a => a.Numero == 1);
+            diasPrimeiraSemana.Dias.FirstOrDefault().Dia.ShouldBe(27);
+            diasPrimeiraSemana.Dias.LastOrDefault().Dia.ShouldBe(2);
+            
+            var diasSegundaSemana = retorno.Semanas.FirstOrDefault(a => a.Numero == 2);
+            diasSegundaSemana.Dias.FirstOrDefault().Dia.ShouldBe(3);
+            diasSegundaSemana.Dias.LastOrDefault().Dia.ShouldBe(9);
+            
+            var diasTerceiraSemana = retorno.Semanas.FirstOrDefault(a => a.Numero == 3);
+            diasTerceiraSemana.Dias.FirstOrDefault().Dia.ShouldBe(10);
+            diasTerceiraSemana.Dias.LastOrDefault().Dia.ShouldBe(16);
+            
+            var diasQuartaSemana = retorno.Semanas.FirstOrDefault(a => a.Numero == 4);
+            diasQuartaSemana.Dias.FirstOrDefault().Dia.ShouldBe(17);
+            diasQuartaSemana.Dias.LastOrDefault().Dia.ShouldBe(23);
+            
+            var diasQuintaSemana = retorno.Semanas.FirstOrDefault(a => a.Numero == 5);
+            diasQuintaSemana.Dias.FirstOrDefault().Dia.ShouldBe(24);
+            diasQuintaSemana.Dias.LastOrDefault().Dia.ShouldBe(30);
+            
+            var diasSextaSemana = retorno.Semanas.FirstOrDefault(a => a.Numero == 6);
+            diasSextaSemana.Dias.FirstOrDefault().Dia.ShouldBe(31);
+            diasSextaSemana.Dias.LastOrDefault().Dia.ShouldBe(6);
+        }
+        
+        [Fact(DisplayName = "Evento - Obter calendário de eventos do mês de fevereiro de 2025")]
+        public async Task Calendario_de_eventos_do_mes_fevereiro_2025()
+        {
+            var servicoEvento = GetServicoEvento();
+
+            var retorno = await servicoEvento.ObterCalendarioDeEventosPorMes(2, 2025);
+            retorno.ShouldNotBeNull();
+            
+            var diasPrimeiraSemana = retorno.Semanas.FirstOrDefault(a => a.Numero == 1);
+            diasPrimeiraSemana.Dias.FirstOrDefault().Dia.ShouldBe(26);
+            diasPrimeiraSemana.Dias.LastOrDefault().Dia.ShouldBe(1);
+            
+            var diasSegundaSemana = retorno.Semanas.FirstOrDefault(a => a.Numero == 2);
+            diasSegundaSemana.Dias.FirstOrDefault().Dia.ShouldBe(2);
+            diasSegundaSemana.Dias.LastOrDefault().Dia.ShouldBe(8);
+            
+            var diasTerceiraSemana = retorno.Semanas.FirstOrDefault(a => a.Numero == 3);
+            diasTerceiraSemana.Dias.FirstOrDefault().Dia.ShouldBe(9);
+            diasTerceiraSemana.Dias.LastOrDefault().Dia.ShouldBe(15);
+            
+            var diasQuartaSemana = retorno.Semanas.FirstOrDefault(a => a.Numero == 4);
+            diasQuartaSemana.Dias.FirstOrDefault().Dia.ShouldBe(16);
+            diasQuartaSemana.Dias.LastOrDefault().Dia.ShouldBe(22);
+            
+            var diasQuintaSemana = retorno.Semanas.FirstOrDefault(a => a.Numero == 5);
+            diasQuintaSemana.Dias.FirstOrDefault().Dia.ShouldBe(23);
+            diasQuintaSemana.Dias.LastOrDefault().Dia.ShouldBe(1);
+        }
+        
+        [Fact(DisplayName = "Evento - Obter calendário de eventos do mês de junho de 2025")]
+        public async Task Calendario_de_eventos_do_mes_junho_2025()
+        {
+            var servicoEvento = GetServicoEvento();
+
+            var retorno = await servicoEvento.ObterCalendarioDeEventosPorMes(6, 2025);
+            retorno.ShouldNotBeNull();
+            
+            var diasPrimeiraSemana = retorno.Semanas.FirstOrDefault(a => a.Numero == 1);
+            diasPrimeiraSemana.Dias.FirstOrDefault().Dia.ShouldBe(1);
+            diasPrimeiraSemana.Dias.LastOrDefault().Dia.ShouldBe(7);
+            
+            var diasSegundaSemana = retorno.Semanas.FirstOrDefault(a => a.Numero == 2);
+            diasSegundaSemana.Dias.FirstOrDefault().Dia.ShouldBe(8);
+            diasSegundaSemana.Dias.LastOrDefault().Dia.ShouldBe(14);
+            
+            var diasTerceiraSemana = retorno.Semanas.FirstOrDefault(a => a.Numero == 3);
+            diasTerceiraSemana.Dias.FirstOrDefault().Dia.ShouldBe(15);
+            diasTerceiraSemana.Dias.LastOrDefault().Dia.ShouldBe(21);
+            
+            var diasQuartaSemana = retorno.Semanas.FirstOrDefault(a => a.Numero == 4);
+            diasQuartaSemana.Dias.FirstOrDefault().Dia.ShouldBe(22);
+            diasQuartaSemana.Dias.LastOrDefault().Dia.ShouldBe(28);
+            
+            var diasQuintaSemana = retorno.Semanas.FirstOrDefault(a => a.Numero == 5);
+            diasQuintaSemana.Dias.FirstOrDefault().Dia.ShouldBe(29);
+            diasQuintaSemana.Dias.LastOrDefault().Dia.ShouldBe(5);
+        }
 
         private async Task<IServicoEvento> CadastrarVarios(TipoEvento tipoEvento)
         {

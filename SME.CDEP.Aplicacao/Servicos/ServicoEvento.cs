@@ -98,5 +98,80 @@ namespace SME.CDEP.Aplicacao.Servicos
 
             return true;
         }
+
+        public async Task<EventoDTO> ObterEventoPorId(int eventoId)
+        {
+            var evento = await repositorioEvento.ObterPorId(eventoId);
+
+            if (evento.EhNulo())
+                throw new NegocioException(MensagemNegocio.EVENTO_NAO_ENCONTRADO);
+
+            return mapper.Map<EventoDTO>(evento);
+        }
+
+        public async Task<CalendarioEventoDTO> ObterCalendarioDeEventosPorMes(int mes, int ano)
+        {
+            var calendarioEvento = new CalendarioEventoDTO();
+            
+            var primeiroDiaMes = new DateTime(ano, mes, 1);
+            var ultimoDiaMes = primeiroDiaMes.AddMonths(1).AddDays(-1);
+
+            var eventosTag = await repositorioEvento.ObterEventosTagPorMesAno(mes, ano);
+            
+            var percorrerSemanasAte = ultimoDiaMes.ObterSabado();
+            
+            var primeiroDiaSemana = primeiroDiaMes.ObterDomingoRetroativo();
+            var ultimoDiaSemana = primeiroDiaMes.ObterSabado();
+
+            var podePercorrerSemana = true;
+            var contadorSemanas = 1;
+            
+            while (podePercorrerSemana)
+            {
+                var dias = new List<DiaDTO>();
+                
+                while (primeiroDiaSemana <= ultimoDiaSemana)
+                {
+                    var desabilitado = primeiroDiaSemana.Month != primeiroDiaMes.Month;
+                    
+                    var data = new DateTime(ano, primeiroDiaSemana.Month, primeiroDiaSemana.Day);
+                    
+                    dias.Add(new DiaDTO()
+                    {
+                        Dia = primeiroDiaSemana.Day,
+                        Desabilitado = desabilitado,
+                        DayOfWeek =  (int)primeiroDiaSemana.DayOfWeek,
+                        EventosTag = desabilitado 
+                                     ? Enumerable.Empty<EventoTagDTO>() 
+                                     : ObterEventosTag(eventosTag, data) 
+                    });
+                    primeiroDiaSemana = primeiroDiaSemana.AddDays(1);
+                    
+                }
+
+                calendarioEvento.Semanas.Add(new SemanaDTO()
+                {
+                    Numero = contadorSemanas,
+                    Dias = dias
+                });
+                contadorSemanas++;
+                
+                primeiroDiaSemana = primeiroDiaSemana.ObterDomingoRetroativo();
+                ultimoDiaSemana = primeiroDiaSemana.ObterSabado();
+
+                if (primeiroDiaSemana > percorrerSemanasAte)
+                    podePercorrerSemana = false;
+            }
+
+            return calendarioEvento;
+        }
+
+        private IEnumerable<EventoTagDTO> ObterEventosTag(IEnumerable<Evento> eventosTag, DateTime data)
+        {
+            if (eventosTag.NaoPossuiElementos())
+                return default;
+            
+            return mapper.Map<IEnumerable<EventoTagDTO>>(eventosTag.Where(w=> w.Data == data));
+        }
     }
 }

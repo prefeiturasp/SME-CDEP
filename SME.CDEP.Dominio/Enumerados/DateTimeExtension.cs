@@ -56,5 +56,12 @@ namespace SME.CDEP.Infra.Dominio.Enumerados
 
             return dataRetorno;
         }
+        public static DateTime ObterDomingoRetroativo(this DateTime data)
+        {
+            if (data.DayOfWeek == DayOfWeek.Sunday)
+                return data;
+            int diferenca = (((int)DayOfWeek.Sunday - (int)data.DayOfWeek - 7) % 7);
+            return data.AddDays(diferenca);
+        }
     }
 }
