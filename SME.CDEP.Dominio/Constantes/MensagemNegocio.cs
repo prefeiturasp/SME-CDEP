@@ -6,7 +6,7 @@ public class MensagemNegocio
     public const string ACERVO_NAO_ENCONTRADO = "Acervo não encontrado";
     public const string SOLICITACAO_ATENDIMENTO_NAO_ENCONTRADA = "Solicitação de atendimento não encontrada";
     public const string SOLICITACAO_ATENDIMENTO_ITEM_NAO_ENCONTRADA = "Solicitação de atendimento item não encontrada";
-    public const string SITUACAO_INVALIDA_PARA_FINALIZAR = "Existem itens de acervos com situação diferente de: Aguardando visita, Finalizado automaticamente e Cancelado";
+    public const string NÃO_PODE_FINALIZAR_QUANDO_AGUARDANDO_VISITA_DATA_FUTURA_OU_AGUARDANDO_ATENDIMENTO = "O atendimento não pode ser finalizado enquanto houver itens aguardando para visita (datas de visita futura) ou aguardando atendimento";
     public const string ATENDIMENTO_NAO_ESTA_AGUARDANDO_VISITA = "Não é permitido realizar a alteração da data de visita em item quando a solicitação não estiver aguardando visita";
     public const string SITUACAO_INVALIDA_PARA_CANCELAR = "O atendimento não pode ser cancelado quando os itens do acervo foram atendidos parcialmente";
     public const string SOLICITACAO_ATENDIMENTO_ITEM_NAO_CONTEM_ACERVOS = "Solicitação de atendimento não contém acervos";
