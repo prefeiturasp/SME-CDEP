@@ -62,5 +62,15 @@ namespace SME.CDEP.Dominio.Extensions
         {
             return anoBase % 100 == 0;
         }
+        
+        public static bool EhDiaValido(this int dia)
+        {
+            return dia > 0 && dia <= 31;
+        }
+        
+        public static bool EhMesValido(this int mes)
+        {
+            return mes > 0 && mes <= 12;
+        }
     }
 }

@@ -231,8 +231,15 @@ namespace SME.CDEP.Aplicacao.Mapeamentos
             CreateMap<AcervoSolicitacao,AcervoSolicitacaoManualDTO>().ReverseMap();
             CreateMap<AcervoSolicitacaoItem,AcervoSolicitacaoItemManualDTO>().ReverseMap();
             
-            CreateMap<AcervoSolicitacaoItemManualDTO,AcervoSolicitacaoItem>()
-                .ReverseMap();
-        }            
+            CreateMap<AcervoSolicitacaoItemManualDTO,AcervoSolicitacaoItem>().ReverseMap();
+            
+            CreateMap<DiaMesDTO,EventoCadastroDTO>().ReverseMap();
+            
+            CreateMap<EventoCadastroDTO,Evento>().ReverseMap();
+            
+            CreateMap<Evento,EventoTagDTO>().ReverseMap();
+            
+            CreateMap<Evento,EventoDTO>().ReverseMap();
+        }
     }
 }
