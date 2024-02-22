@@ -36,7 +36,7 @@ namespace SME.CDEP.Infra.Dados.Repositorios
         }
 
         public async Task<IEnumerable<AcervoSolicitacaoItemDetalhe>> ObterSolicitacoesPorFiltro(long? acervoSolicitacaoId, TipoAcervo? tipoAcervo, DateTime? dataSolicitacaoInicio,
-            DateTime? dataSolicitacaoFim, string? responsavel, SituacaoSolicitacaoItem? situacaoItem, DateTime? dataVisitaInicio, DateTime? dataVisitaFim)
+            DateTime? dataSolicitacaoFim, string? responsavel, SituacaoSolicitacaoItem? situacaoItem, DateTime? dataVisitaInicio, DateTime? dataVisitaFim, string? solicitanteRf)
         {
             var query = new StringBuilder();
             
@@ -78,10 +78,13 @@ namespace SME.CDEP.Infra.Dados.Repositorios
             if (responsavel.EstaPreenchido())
                 query.AppendLine(" and ur.login = @responsavel ");
             
+            if (solicitanteRf.EstaPreenchido())
+                query.AppendLine(" and u.login = @solicitanteRf ");
+            
             query.AppendLine(" order by asi.criado_em desc ");
             
             return await conexao.Obter().QueryAsync<AcervoSolicitacaoItemDetalhe>(query.ToString(), 
-                new { acervoSolicitacaoId, tipoAcervo, situacaoItem, dataSolicitacaoInicio, dataSolicitacaoFim, dataVisitaInicio, dataVisitaFim, responsavel});
+                new { acervoSolicitacaoId, tipoAcervo, situacaoItem, dataSolicitacaoInicio, dataSolicitacaoFim, dataVisitaInicio, dataVisitaFim, responsavel, solicitanteRf});
         }
 
         public Task<IEnumerable<AcervoSolicitacaoItem>> ObterItensEmSituacaoAguardandoAtendimentoOuVisitaOuFinalizadoManualmentePorSolicitacaoId(long acervoSolicitacaoId)

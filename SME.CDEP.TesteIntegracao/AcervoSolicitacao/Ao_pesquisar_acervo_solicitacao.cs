@@ -118,5 +118,43 @@ namespace SME.CDEP.TesteIntegracao
             var retorno = await servicoAcervoSolicitacao.ObterAtendimentoSolicitacoesPorFiltro(filtro);
             retorno.Items.Count().ShouldBe(0);
         }
+        
+        [Fact(DisplayName = "Acervo Solicitação - Pesquisar por Responsavel")]
+        public async Task Obter_pesquisar_por_responsavel()
+        {
+            await InserirDadosBasicosAleatorios();
+
+            await InserirAcervoTridimensional();
+
+            await InserirAcervoSolicitacao();
+
+            var servicoAcervoSolicitacao = GetServicoAcervoSolicitacao();
+
+            var filtro = new FiltroSolicitacaoDTO()
+            {
+                Responsavel = "login_2"
+            };
+            var retorno = await servicoAcervoSolicitacao.ObterAtendimentoSolicitacoesPorFiltro(filtro);
+            retorno.Items.Count().ShouldBe(3);
+        }
+        
+        [Fact(DisplayName = "Acervo Solicitação - Pesquisar por Solicitante")]
+        public async Task Obter_pesquisar_por_solicitante()
+        {
+            await InserirDadosBasicosAleatorios();
+
+            await InserirAcervoTridimensional();
+
+            await InserirAcervoSolicitacao();
+
+            var servicoAcervoSolicitacao = GetServicoAcervoSolicitacao();
+
+            var filtro = new FiltroSolicitacaoDTO()
+            {
+                SolicitanteRf = "login_1"
+            };
+            var retorno = await servicoAcervoSolicitacao.ObterAtendimentoSolicitacoesPorFiltro(filtro);
+            retorno.Items.Count().ShouldBe(3);
+        }
     }
 }
