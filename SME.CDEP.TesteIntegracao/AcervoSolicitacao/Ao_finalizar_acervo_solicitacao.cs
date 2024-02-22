@@ -13,8 +13,8 @@ namespace SME.CDEP.TesteIntegracao
         {}
        
        
-        [Fact(DisplayName = "Acervo Solicitação - Finalizar")]
-        public async Task Deve_finalizar_atendimento()
+        [Fact(DisplayName = "Acervo Solicitação - Finalizar com todos os itens cancelados")]
+        public async Task Deve_finalizar_atendimento_com_itens_cancelados()
         {
             await InserirDadosBasicosAleatorios();
 
@@ -30,6 +30,7 @@ namespace SME.CDEP.TesteIntegracao
            {
                 item.AcervoSolicitacaoId = acervoSolicitadoId;
                 item.Situacao = SituacaoSolicitacaoItem.CANCELADO;
+                item.TipoAtendimento = TipoAtendimento.Email;
                 await InserirNaBase(item);
            }
             
@@ -68,8 +69,8 @@ namespace SME.CDEP.TesteIntegracao
             await servicoAcervoSolicitacao.FinalizarAtendimento(1).ShouldThrowAsync<NegocioException>();
         }
         
-        [Fact(DisplayName = "Acervo Solicitação - Deve finalizar atendimento com itens em situação aguardando visita")]
-        public async Task Deve_finalizar_atendimento_com_itens_em_situacao_aguardando_visita()
+        [Fact(DisplayName = "Acervo Solicitação - Deve finalizar atendimento com itens em situação aguardando visita que já passou")]
+        public async Task Deve_finalizar_atendimento_com_itens_em_situacao_aguardando_visita_que_ja_passou()
         {
             await InserirDadosBasicosAleatorios();
 
@@ -84,6 +85,7 @@ namespace SME.CDEP.TesteIntegracao
             foreach (var item in acervoSolicitacao.Itens)
             {
                 item.AcervoSolicitacaoId = acervoSolicitadoId;
+                item.TipoAtendimento = TipoAtendimento.Presencial;
                 item.Situacao = SituacaoSolicitacaoItem.AGUARDANDO_VISITA;
                 item.DataVisita = DateTimeExtension.HorarioBrasilia().AddDays(-2);
                 await InserirNaBase(item);
@@ -99,8 +101,8 @@ namespace SME.CDEP.TesteIntegracao
             solicitacaoAlterada.Situacao.ShouldBe(SituacaoSolicitacao.FINALIZADO_ATENDIMENTO);
         }
         
-        [Fact(DisplayName = "Acervo Solicitação - Deve finalizar atendimento com itens em situação cancelada")]
-        public async Task Deve_finalizar_atendimento_com_itens_em_situacao_cancelada()
+        [Fact(DisplayName = "Acervo Solicitação - Deve finalizar atendimento com itens em situação finalizada manualmente")]
+        public async Task Deve_finalizar_atendimento_com_itens_em_situacao_finalizada_manualmente()
         {
             await InserirDadosBasicosAleatorios();
 
@@ -115,7 +117,8 @@ namespace SME.CDEP.TesteIntegracao
             foreach (var item in acervoSolicitacao.Itens)
             {
                 item.AcervoSolicitacaoId = acervoSolicitadoId;
-                item.Situacao = SituacaoSolicitacaoItem.CANCELADO;
+                item.TipoAtendimento = TipoAtendimento.Email;
+                item.Situacao = SituacaoSolicitacaoItem.FINALIZADO_MANUALMENTE;
                 await InserirNaBase(item);
             }
             
@@ -129,8 +132,8 @@ namespace SME.CDEP.TesteIntegracao
             solicitacaoAlterada.Situacao.ShouldBe(SituacaoSolicitacao.FINALIZADO_ATENDIMENTO);
         }
         
-        [Fact(DisplayName = "Acervo Solicitação - Deve finalizar atendimento com itens em Situação finalizado automaticamente")]
-        public async Task Deve_finalizar_atendimento_com_itens_em_situacao_finalizado_automaticamente()
+        [Fact(DisplayName = "Acervo Solicitação - Deve finalizar atendimento com itens em situação finalizada automaticamente")]
+        public async Task Deve_finalizar_atendimento_com_itens_em_situacao_finalizada_automaticamente()
         {
             await InserirDadosBasicosAleatorios();
 
@@ -175,8 +178,9 @@ namespace SME.CDEP.TesteIntegracao
             foreach (var item in acervoSolicitacao.Itens)
             {
                 item.AcervoSolicitacaoId = acervoSolicitadoId;
+                item.TipoAtendimento = TipoAtendimento.Presencial;
                 item.Situacao = SituacaoSolicitacaoItem.AGUARDANDO_VISITA;
-                item.DataVisita = DateTimeExtension.HorarioBrasilia().AddDays(+2);
+                item.DataVisita = DateTimeExtension.HorarioBrasilia().AddDays(2);
                 await InserirNaBase(item);
             }
             

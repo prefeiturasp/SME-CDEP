@@ -280,7 +280,7 @@ namespace SME.CDEP.Aplicacao.Servicos
                         Codigo = s.Key.Codigo,
                         Tipo = s.Key.Tipo,
                         Titulo = s.Key.Titulo,
-                        Descricao = s.Key.Descricao,
+                        Descricao = s.Key.Descricao.RemoverTagsHtml(),
                         DataAcervo = s.Key.DataAcervo,
                         Ano = s.Key.Ano,
                         TipoAcervoTag = s.Key.TipoAcervoTag,
@@ -485,9 +485,9 @@ namespace SME.CDEP.Aplicacao.Servicos
             return retorno.Valor;
         }
 
-        public async Task<IdNomeCodigoDTO> PesquisarAcervoPorCodigoTombo(string codigoTombo)
+        public async Task<IdNomeCodigoDTO> PesquisarAcervoPorCodigoTombo(FiltroCodigoTomboDTO filtro)
         {
-            var retorno = await repositorioAcervo.PesquisarAcervoPorCodigoTombo(codigoTombo);
+            var retorno = await repositorioAcervo.PesquisarAcervoPorCodigoTombo(filtro.CodigoTombo);
 
             if (retorno.EhNulo())
                 throw new NegocioException(MensagemNegocio.ACERVO_NAO_ENCONTRADO);

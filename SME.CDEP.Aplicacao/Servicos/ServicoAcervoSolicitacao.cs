@@ -286,7 +286,7 @@ namespace SME.CDEP.Aplicacao.Servicos
                 throw new NegocioException(MensagemNegocio.SOLICITACAO_ATENDIMENTO_NAO_ENCONTRADA);
 
             if (await repositorioAcervoSolicitacaoItem.PossuiItensEmSituacaoAguardandoAtendimentoOuAguardandoVisitaComDataFutura(acervoSolicitacaoId))
-                throw new NegocioException(MensagemNegocio.SITUACAO_INVALIDA_PARA_FINALIZAR);
+                throw new NegocioException(MensagemNegocio.NÃO_PODE_FINALIZAR_QUANDO_AGUARDANDO_VISITA_DATA_FUTURA_OU_AGUARDANDO_ATENDIMENTO);
 
             var itens = await repositorioAcervoSolicitacaoItem.ObterItensEmSituacaoAguardandoVisitaPorSolicitacaoId(acervoSolicitacaoId);
             
@@ -323,8 +323,8 @@ namespace SME.CDEP.Aplicacao.Servicos
             if (acervoSolicitacao.EhNulo())
                 throw new NegocioException(MensagemNegocio.SOLICITACAO_ATENDIMENTO_NAO_ENCONTRADA);
             
-            if (await repositorioAcervoSolicitacaoItem.PossuiItensQueForamAtendidosParcialmente(acervoSolicitacaoId))
-                throw new NegocioException(MensagemNegocio.SITUACAO_INVALIDA_PARA_CANCELAR);
+            if (await repositorioAcervoSolicitacaoItem.PossuiItensFinalizadosAutomaticamente(acervoSolicitacaoId))
+                throw new NegocioException(MensagemNegocio.NAO_PODE_CANCELAR_ATENDIMENTO_COM_ITEM_FINALIZADO_AUTOMATICAMENTE);
             
             var itens = await repositorioAcervoSolicitacaoItem.ObterItensPorSolicitacaoId(acervoSolicitacaoId);
 
@@ -364,7 +364,7 @@ namespace SME.CDEP.Aplicacao.Servicos
             var itens = await repositorioAcervoSolicitacaoItem.ObterItensPorSolicitacaoId(acervoSolicitacaoItem.AcervoSolicitacaoId);
 
             if (itens.Any(a=> a.Situacao.EstaEmSituacaoFinalizadoAutomaticamenteOuCancelado() && a.Id == acervoSolicitacaoItemId)) 
-                throw new NegocioException(MensagemNegocio.SITUACAO_INVALIDA_PARA_CANCELAR);
+                throw new NegocioException(MensagemNegocio.NAO_PODE_CANCELAR_ATENDIMENTO_COM_ITEM_FINALIZADO_AUTOMATICAMENTE);
             
             acervoSolicitacaoItem.Situacao = SituacaoSolicitacaoItem.CANCELADO;
             await repositorioAcervoSolicitacaoItem.Atualizar(acervoSolicitacaoItem);
