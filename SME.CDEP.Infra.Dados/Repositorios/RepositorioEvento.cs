@@ -85,5 +85,22 @@ namespace SME.CDEP.Infra.Dados.Repositorios
             
             return conexao.Obter().QueryAsync<EventoDetalhe>(query,new { data });
         }
+
+        public Task<IEnumerable<DateTime>> ObterEventosDeFeriadoESuspensaoPorDatas(DateTime[] datasDasVisitas)
+        {
+            var feriadoOuSuspensao = new []
+            {
+                (int)TipoEvento.FERIADO, 
+                (int)TipoEvento.SUSPENSAO
+            };
+            
+            var query = @"select data
+                          from evento
+                          where data::date = any(@datasDasVisitas::date[])
+                          and tipo = any(@feriadoOuSuspensao)
+                            and not excluido";
+            
+            return conexao.Obter().QueryAsync<DateTime>(query,new { datasDasVisitas, feriadoOuSuspensao });
+        }
     }
 }
