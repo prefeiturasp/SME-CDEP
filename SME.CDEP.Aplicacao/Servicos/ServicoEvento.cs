@@ -13,12 +13,14 @@ namespace SME.CDEP.Aplicacao.Servicos
     public class ServicoEvento : IServicoEvento
     {
         private readonly IRepositorioEvento repositorioEvento;
+        private readonly IRepositorioEventoFixo repositorioEventoFixo;
         private readonly IMapper mapper;
         
-        public ServicoEvento(IRepositorioEvento repositorioEvento,IMapper mapper) 
+        public ServicoEvento(IRepositorioEvento repositorioEvento,IMapper mapper,IRepositorioEventoFixo repositorioEventoFixo) 
         {
             this.repositorioEvento = repositorioEvento ?? throw new ArgumentNullException(nameof(repositorioEvento));
             this.mapper = mapper ?? throw new ArgumentNullException(nameof(mapper));
+            this.repositorioEventoFixo = repositorioEventoFixo ?? throw new ArgumentNullException(nameof(repositorioEventoFixo));
         }
 
         public async Task<long> Inserir(EventoCadastroDTO eventoCadastroDto)
@@ -219,6 +221,27 @@ namespace SME.CDEP.Aplicacao.Servicos
                 throw new NegocioException(MensagemNegocio.SOLICITACAO_ATENDIMENTO_ITEM_NAO_ENCONTRADA);
 
             await repositorioEvento.Remover(evento.Id);
+        }
+
+        public async Task<bool> GerarEventosFixos()
+        {
+            var eventosFixos = await repositorioEventoFixo.ObterTodos();
+
+            foreach (var eventoFixo in eventosFixos)
+            {
+                var eventoVisita = new EventoCadastroDTO()
+                {
+                    Dia = eventoFixo.Data.Day,
+                    Mes = eventoFixo.Data.Month,
+                    Ano = DateTimeExtension.HorarioBrasilia().Year,
+                    Tipo = eventoFixo.Tipo,
+                    Descricao = eventoFixo.Descricao
+                };
+
+                await Inserir(eventoVisita);
+            }
+
+            return true;
         }
     }
 }
