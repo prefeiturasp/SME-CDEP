@@ -188,17 +188,7 @@ namespace SME.CDEP.Aplicacao.Servicos
 
         public async Task InserirEventoVisita(DateTime dataVisita, long atendimentoItemId)
         {
-            var eventoVisita = new EventoCadastroDTO()
-            {
-                Dia = dataVisita.Day,
-                Mes = dataVisita.Month,
-                Ano = dataVisita.Year,
-                Tipo = TipoEvento.VISITA,
-                Descricao = TipoEvento.VISITA.Descricao(),
-                AcervoSolicitacaoItemId = atendimentoItemId
-            };
-
-            await Inserir(eventoVisita);
+            await Inserir(new EventoCadastroDTO(dataVisita, TipoEvento.VISITA, TipoEvento.VISITA.Descricao(),atendimentoItemId));
         }
 
         public async Task AtualizarEventoVisita(DateTime dataVisita, long atendimentoItemId)
@@ -223,25 +213,54 @@ namespace SME.CDEP.Aplicacao.Servicos
             await repositorioEvento.Remover(evento.Id);
         }
 
-        public async Task<bool> GerarEventosFixos()
+        public async Task GerarEventosFixos()
         {
             var eventosFixos = await repositorioEventoFixo.ObterTodos();
 
             foreach (var eventoFixo in eventosFixos)
+                await Inserir(new EventoCadastroDTO(eventoFixo.Data, eventoFixo.Tipo, eventoFixo.Descricao));
+        }
+
+        public async Task GerarEventosMoveis()
+        {
+            var pascoa = CalcularPascoa(DateTimeExtension.HorarioBrasilia().Year);
+            var carnaval = pascoa.AddDays(-47);
+            var sextaFeiraSanta = pascoa.AddDays(-2);
+            var corpusChristi = pascoa.AddDays(60);
+
+            var eventosMoveis = new List<EventoCadastroDTO>()
             {
-                var eventoVisita = new EventoCadastroDTO()
-                {
-                    Dia = eventoFixo.Data.Day,
-                    Mes = eventoFixo.Data.Month,
-                    Ano = DateTimeExtension.HorarioBrasilia().Year,
-                    Tipo = eventoFixo.Tipo,
-                    Descricao = eventoFixo.Descricao
-                };
+                new (pascoa, TipoEvento.FERIADO, "Páscoa"),
+                new (carnaval, TipoEvento.FERIADO, "Carnaval"),
+                new (sextaFeiraSanta, TipoEvento.FERIADO, "Sexta-feira Santa"),
+                new (corpusChristi, TipoEvento.FERIADO, "Corpus Christi")
+            };
+            
+            foreach (var eventoMovel in eventosMoveis)
+               await Inserir(eventoMovel);
+        }
+        
+        private static DateTime CalcularPascoa(int ano)
+        {
+            int r1 = ano % 19;
+            int r2 = ano % 4;
+            int r3 = ano % 7;
+            int r4 = (19 * r1 + 24) % 30;
+            int r5 = (6 * r4 + 4 * r3 + 2 * r2 + 5) % 7;
+            DateTime dataPascoa = new DateTime(ano, 3, 22).AddDays(r4 + r5);
+            int dia = dataPascoa.Day;
+            switch (dia)
+            {
+                case 26:
+                    dataPascoa = new DateTime(ano, 4, 19);
+                    break;
 
-                await Inserir(eventoVisita);
+                case 25:
+                    if (r1 > 10)
+                        dataPascoa = new DateTime(ano, 4, 18);
+                    break;
             }
-
-            return true;
+            return dataPascoa.Date;
         }
     }
 }

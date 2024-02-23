@@ -15,7 +15,9 @@ namespace SME.CDEP.Aplicacao
 
         public async Task<bool> Executar(MensagemRabbit param)
         {
-            return await servicoEvento.GerarEventosFixos();
+            await servicoEvento.GerarEventosFixos();
+            await servicoEvento.GerarEventosMoveis();
+            return true;
         }
     }
 }
