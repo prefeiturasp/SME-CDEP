@@ -10,6 +10,6 @@ namespace SME.CDEP.Aplicacao.DTOS
         public string Solicitante { get; set; }
         public string Titulo { get; set; }
         public string CodigoTombo { get; set; }
-        public long? AcervoSolicitacaoItemId { get; set; }
+        public long? AcervoSolicitacaoId { get; set; }
     }
 }
