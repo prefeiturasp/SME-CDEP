@@ -25,12 +25,13 @@ namespace SME.CDEP.Aplicacao.Servicos
         private readonly IServicoUsuario servicoUsuario;
         private readonly IContextoAplicacao contextoAplicacao;
         private readonly IRepositorioEvento repositorioEvento;
+        private readonly IServicoEvento servicoEvento;
         
         public ServicoAcervoSolicitacao(IRepositorioAcervoSolicitacao repositorioAcervoSolicitacao, 
             IMapper mapper,ITransacao transacao,IRepositorioAcervoSolicitacaoItem repositorioAcervoSolicitacaoItem,
             IRepositorioUsuario repositorioUsuario,IRepositorioAcervo repositorioAcervo,
             IServicoUsuario servicoUsuario,IContextoAplicacao contextoAplicacao,
-            IRepositorioEvento repositorioEvento) 
+            IRepositorioEvento repositorioEvento, IServicoEvento servicoEvento) 
         {
             this.repositorioAcervoSolicitacao = repositorioAcervoSolicitacao ?? throw new ArgumentNullException(nameof(repositorioAcervoSolicitacao));
             this.repositorioAcervoSolicitacaoItem = repositorioAcervoSolicitacaoItem ?? throw new ArgumentNullException(nameof(repositorioAcervoSolicitacaoItem));
@@ -41,6 +42,7 @@ namespace SME.CDEP.Aplicacao.Servicos
             this.servicoUsuario = servicoUsuario ?? throw new ArgumentNullException(nameof(servicoUsuario));
             this.contextoAplicacao = contextoAplicacao ?? throw new ArgumentNullException(nameof(contextoAplicacao));
             this.repositorioEvento = repositorioEvento ?? throw new ArgumentNullException(nameof(repositorioEvento));
+            this.servicoEvento = servicoEvento ?? throw new ArgumentNullException(nameof(servicoEvento));
         }
 
         public async Task<long> Inserir(AcervoSolicitacaoItemCadastroDTO[] acervosSolicitacaoItensCadastroDTO)
@@ -261,6 +263,8 @@ namespace SME.CDEP.Aplicacao.Servicos
                 foreach (var item in itens)
                 {
                     var itemAlterado = acervoSolicitacaoConfirmar.Itens.FirstOrDefault(f => f.Id == item.Id);
+
+                    var eraPresencial = item.TipoAtendimento.EhAtendimentoPresencial();
                     
                     item.TipoAtendimento = itemAlterado.TipoAtendimento;
 
@@ -277,6 +281,13 @@ namespace SME.CDEP.Aplicacao.Servicos
                     
                     item.Validar();
                     await repositorioAcervoSolicitacaoItem.Atualizar(item);
+
+                    if (eraPresencial && item.TipoAtendimento.EhAtendimentoViaEmail())
+                        await servicoEvento.ExcluirEventoPorAcervoSolicitacaoItem(item.Id);
+                    
+                    if (item.TipoAtendimento.EhAtendimentoPresencial())
+                        await servicoEvento.InserirEventoVisita(item.DataVisita.Value, item.Id);
+                    
                 }
                 tran.Commit();
                 return true;
@@ -362,6 +373,9 @@ namespace SME.CDEP.Aplicacao.Servicos
                 {
                     item.Situacao = SituacaoSolicitacaoItem.CANCELADO;
                     await repositorioAcervoSolicitacaoItem.Atualizar(item);
+
+                    if (item.TipoAtendimento.EhAtendimentoPresencial())
+                        await servicoEvento.ExcluirEventoPorAcervoSolicitacaoItem(item.Id);
                 }
                 
                 tran.Commit();
@@ -392,6 +406,9 @@ namespace SME.CDEP.Aplicacao.Servicos
             
             acervoSolicitacaoItem.Situacao = SituacaoSolicitacaoItem.CANCELADO;
             await repositorioAcervoSolicitacaoItem.Atualizar(acervoSolicitacaoItem);
+
+            if (acervoSolicitacaoItem.TipoAtendimento.EhAtendimentoPresencial())
+                await servicoEvento.ExcluirEventoPorAcervoSolicitacaoItem(acervoSolicitacaoItem.Id);
             
             if (itens.Where(w=> w.Id != acervoSolicitacaoItemId).All(a=> a.Situacao.EstaCancelado()))
             {
@@ -462,6 +479,9 @@ namespace SME.CDEP.Aplicacao.Servicos
                     item.Validar();
                     
                     await repositorioAcervoSolicitacaoItem.Inserir(item);
+                    
+                    if (item.TipoAtendimento.EhAtendimentoPresencial())
+                        await servicoEvento.InserirEventoVisita(item.DataVisita.Value, item.Id);
                 }
                 tran.Commit();
 
@@ -527,6 +547,8 @@ namespace SME.CDEP.Aplicacao.Servicos
                     if (item.Id.EhMaiorQueZero())
                     {
                         var itemAtual = itensAtuais.FirstOrDefault(f=> f.Id == item.Id);
+
+                        var eraPresencial = itemAtual.TipoAtendimento.EhAtendimentoPresencial();
                         
                         itemAtual.TipoAtendimento = item.TipoAtendimento;
                         
@@ -537,12 +559,21 @@ namespace SME.CDEP.Aplicacao.Servicos
                         itemAtual.Validar();
                             
                         await repositorioAcervoSolicitacaoItem.Atualizar(itemAtual);
+
+                        if (eraPresencial && item.TipoAtendimento.EhAtendimentoViaEmail())
+                            await servicoEvento.ExcluirEventoPorAcervoSolicitacaoItem(item.Id);
+                        
+                        if (item.TipoAtendimento.EhAtendimentoPresencial())
+                            await servicoEvento.AtualizarEventoVisita(item.DataVisita.Value, item.Id);
                     }
                     else
                     {
                         item.AcervoSolicitacaoId = acervoSolicitacao.Id;
                     
                         await repositorioAcervoSolicitacaoItem.Inserir(item);
+                        
+                        if (item.TipoAtendimento.EhAtendimentoPresencial())
+                            await servicoEvento.InserirEventoVisita(item.DataVisita.Value, item.Id);
                     }
                 }
                 tran.Commit();

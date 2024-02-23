@@ -102,5 +102,27 @@ namespace SME.CDEP.Infra.Dados.Repositorios
             
             return conexao.Obter().QueryAsync<DateTime>(query,new { datasDasVisitas, feriadoOuSuspensao });
         }
+
+        public Task<Evento> ObterPorAtendimentoItemId(long atendimentoItemId)
+        {
+            var query = @"select id,
+                                 data,
+                                 tipo,
+                                 descricao,
+                                 acervo_solicitacao_item_id,
+                                 justificativa,
+                                 excluido,
+                                 criado_em,
+                                 criado_por,
+                                 criado_login,
+                                 alterado_em,
+                                 alterado_por,
+                                 alterado_login
+                          from evento 
+                          where acervo_solicitacao_item_id = @atendimentoItemId 
+                            and not excluido ";
+            
+            return conexao.Obter().QueryFirstOrDefaultAsync<Evento>(query,new { atendimentoItemId });
+        }
     }
 }

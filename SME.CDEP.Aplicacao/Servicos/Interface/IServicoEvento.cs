@@ -13,5 +13,8 @@ namespace SME.CDEP.Aplicacao.Servicos.Interface
         Task<EventoDTO> ObterEventoPorId(int eventoId);
         Task<CalendarioEventoDTO> ObterCalendarioDeEventosPorMes(int mes, int ano);
         Task<IEnumerable<EventoDetalheDTO>> ObterDetalhesDoDiaPorDiaMes(DiaMesDTO diaMesDto);
+        Task InserirEventoVisita(DateTime dataVisita, long atendimentoItemId);
+        Task AtualizarEventoVisita(DateTime dataVisita, long atendimentoItemId);
+        Task ExcluirEventoPorAcervoSolicitacaoItem(long atendimentoItemId);
     }
 }
