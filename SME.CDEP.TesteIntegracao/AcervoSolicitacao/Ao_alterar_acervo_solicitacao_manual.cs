@@ -256,8 +256,6 @@ namespace SME.CDEP.TesteIntegracao
             eventos.Count(a=> a.Data.Date == DateTimeExtension.HorarioBrasilia().AddDays(50).Date).ShouldBe(2);
         }
         
-        //Alterar uma data de visita e ver se a data do evento também foi alterada
-        
         [Fact(DisplayName = "Acervo Solicitação - Não deve alterar solicitação de acervo manual em dia de feriado")]
         public async Task Nao_deve_alterar_solicitacao_manual_em_dia_de_feriado()
         {
