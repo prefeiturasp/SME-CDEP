@@ -62,5 +62,45 @@ namespace SME.CDEP.Infra.Dados.Repositorios
             
             return conexao.Obter().QueryAsync<Evento>(query,new { dataInicial, dataFinal });
         }
+        
+        public Task<IEnumerable<EventoDetalhe>> ObterDetalhesDoDiaPorData(DateTime data)
+        {
+            var query = @"select e.id,
+                                 e.data,
+                                 e.tipo,
+                                 e.descricao,
+                                 e.acervo_solicitacao_item_id as acervoSolicitacaoItemId,
+                                 e.justificativa,
+                                 a.titulo,
+                                 a.codigo, 
+                                 a.codigo_novo as codigoNovo,
+                                 u.nome as solicitante
+                          from evento e
+                            left join acervo_solicitacao_item asi on e.acervo_solicitacao_item_id = asi.id and not asi.excluido 
+                            left join acervo a on asi.acervo_id = a.id and not a.excluido 
+                            left join acervo_solicitacao aso on aso.id = asi.acervo_solicitacao_id  and not aso.excluido  
+                            left join usuario u on u.id = aso.usuario_id  and not u.excluido                          
+                          where e.data::date = @data::date
+                            and not e.excluido ";
+            
+            return conexao.Obter().QueryAsync<EventoDetalhe>(query,new { data });
+        }
+
+        public Task<IEnumerable<DateTime>> ObterEventosDeFeriadoESuspensaoPorDatas(DateTime[] datasDasVisitas)
+        {
+            var feriadoOuSuspensao = new []
+            {
+                (int)TipoEvento.FERIADO, 
+                (int)TipoEvento.SUSPENSAO
+            };
+            
+            var query = @"select data
+                          from evento
+                          where data::date = any(@datasDasVisitas::date[])
+                          and tipo = any(@feriadoOuSuspensao)
+                            and not excluido";
+            
+            return conexao.Obter().QueryAsync<DateTime>(query,new { datasDasVisitas, feriadoOuSuspensao });
+        }
     }
 }

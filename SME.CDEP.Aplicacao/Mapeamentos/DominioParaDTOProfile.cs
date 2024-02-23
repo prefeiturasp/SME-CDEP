@@ -237,9 +237,17 @@ namespace SME.CDEP.Aplicacao.Mapeamentos
             
             CreateMap<EventoCadastroDTO,Evento>().ReverseMap();
             
-            CreateMap<Evento,EventoTagDTO>().ReverseMap();
+            CreateMap<Evento,EventoTagDTO>()
+                .ForMember(dest => dest.TipoId, opt => opt.MapFrom(o => o.Tipo))
+                .ForMember(dest => dest.Tipo, opt => opt.MapFrom(o => o.Tipo.Descricao()))
+                .ReverseMap();
             
             CreateMap<Evento,EventoDTO>().ReverseMap();
+            
+            CreateMap<EventoDetalhe,EventoDetalheDTO>()
+                .ForMember(dest => dest.TipoId, opt => opt.MapFrom(o => o.Tipo))
+                .ForMember(dest => dest.Tipo, opt => opt.MapFrom(o => o.Tipo.Descricao()))
+                .ReverseMap();
         }
     }
 }

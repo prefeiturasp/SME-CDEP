@@ -12,4 +12,5 @@ public class FiltroSolicitacaoDTO
     public DateTime? DataVisitaFim { get; set; }
     public string? Responsavel { get; set; }
     public SituacaoSolicitacaoItem? SituacaoItem { get; set; }
+    public string? SolicitanteRf { get; set; }
 }

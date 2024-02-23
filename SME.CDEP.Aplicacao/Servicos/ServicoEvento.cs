@@ -173,5 +173,10 @@ namespace SME.CDEP.Aplicacao.Servicos
             
             return mapper.Map<IEnumerable<EventoTagDTO>>(eventosTag.Where(w=> w.Data == data));
         }
+
+        public async Task<IEnumerable<EventoDetalheDTO>> ObterDetalhesDoDiaPorDiaMes(DiaMesDTO diaMesDto)
+        {
+            return mapper.Map<IEnumerable<EventoDetalheDTO>>(await repositorioEvento.ObterDetalhesDoDiaPorData(diaMesDto.Data));
+        }
     }
 }

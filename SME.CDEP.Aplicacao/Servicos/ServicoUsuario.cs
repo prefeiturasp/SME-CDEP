@@ -219,7 +219,7 @@ namespace SME.CDEP.Aplicacao.Servicos
             {
                 await repositorioUsuario.Inserir(new Usuario()
                 {
-                    Login = retorno.Login, Nome = retorno.Nome, UltimoLogin = DateTimeExtension.HorarioBrasilia(),
+                    Login = retorno.Login, Nome = retorno.Nome, UltimoLogin = DateTimeExtension.HorarioBrasilia(),Email = retorno.Email
                 });
             }
         }

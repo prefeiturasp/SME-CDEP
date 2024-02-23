@@ -6,14 +6,13 @@ namespace SME.CDEP.Infra.Dominio.Enumerados;
 public enum TipoEvento
 {
     [Display(Description = "Visita")]
-    VISITA = 0,
-    
-    [Display(Description = "Suspensão")]
-    SUSPENSAO = 1,
+    VISITA = 1,
     
     [Display(Description = "Feriado")]
     FERIADO = 2,
     
+    [Display(Description = "Suspensão")]
+    SUSPENSAO = 3
 }
 
 public static class TipoEventoExtension
