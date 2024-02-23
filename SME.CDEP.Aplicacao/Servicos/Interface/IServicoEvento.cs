@@ -16,5 +16,6 @@ namespace SME.CDEP.Aplicacao.Servicos.Interface
         Task InserirEventoVisita(DateTime dataVisita, long atendimentoItemId);
         Task AtualizarEventoVisita(DateTime dataVisita, long atendimentoItemId);
         Task ExcluirEventoPorAcervoSolicitacaoItem(long atendimentoItemId);
+        Task<bool> GerarEventosFixos();
     }
 }
