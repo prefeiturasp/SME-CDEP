@@ -25,12 +25,26 @@ namespace SME.CDEP.TesteIntegracao
 
            var acervoSolicitadoId = (ObterTodos<AcervoSolicitacao>()).LastOrDefault().Id;
            
+           var itemCount = 1;
+           
            foreach (var item in acervoSolicitacao.Itens)
            {
                 item.AcervoSolicitacaoId = acervoSolicitadoId;
                 item.Situacao = SituacaoSolicitacaoItem.AGUARDANDO_VISITA;
+                item.TipoAtendimento = TipoAtendimento.Presencial;
                 item.DataVisita = DateTimeExtension.HorarioBrasilia().Date.AddDays(2);
                 await InserirNaBase(item);
+                
+                await InserirNaBase(new Evento()
+                {
+                    Data = DateTimeExtension.HorarioBrasilia().AddDays(2).Date,
+                    Tipo = TipoEvento.VISITA,
+                    AcervoSolicitacaoItemId = itemCount,
+                    Descricao = "Visita",
+                    CriadoPor = "Sistema", CriadoEm = DateTimeExtension.HorarioBrasilia(), CriadoLogin = "Sistema"
+                });
+                
+                itemCount++;
            }
             
             var servicoAcervoSolicitacao = GetServicoAcervoSolicitacao();
@@ -41,6 +55,45 @@ namespace SME.CDEP.TesteIntegracao
             var solicitacaoItemAlterada = ObterTodos<AcervoSolicitacaoItem>().FirstOrDefault(f=> f.Id == 1);
             solicitacaoItemAlterada.Id.ShouldBe(1);
             solicitacaoItemAlterada.Situacao.ShouldBe(SituacaoSolicitacaoItem.CANCELADO);
+            
+            var eventos = ObterTodos<Evento>();
+            eventos.Count().ShouldBe(3);
+            eventos.Count(a=> !a.Excluido).ShouldBe(2);
+            eventos.Count(a=> a.Excluido).ShouldBe(1);
+        }
+        
+        [Fact(DisplayName = "Acervo Solicitação Item - Deve cancelar um item em situação finalizado manualmente")]
+        public async Task Deve_cancelar_um_item_em_situacao_finalizado_manualmente()
+        {
+            await InserirDadosBasicosAleatorios();
+
+            await InserirAcervoTridimensional();
+
+            var acervoSolicitacao = ObterAcervoSolicitacao();
+            
+            await InserirNaBase(acervoSolicitacao);
+
+            var acervoSolicitadoId = (ObterTodos<AcervoSolicitacao>()).LastOrDefault().Id;
+           
+            foreach (var item in acervoSolicitacao.Itens)
+            {
+                item.AcervoSolicitacaoId = acervoSolicitadoId;
+                item.Situacao = SituacaoSolicitacaoItem.FINALIZADO_MANUALMENTE;
+                item.DataVisita = null;
+                await InserirNaBase(item);
+            }
+            
+            var servicoAcervoSolicitacao = GetServicoAcervoSolicitacao();
+            
+            var retorno = await servicoAcervoSolicitacao.CancelarItemAtendimento(1);
+            
+            retorno.ShouldBeTrue();
+            var solicitacaoItemAlterada = ObterTodos<AcervoSolicitacaoItem>().FirstOrDefault(f=> f.Id == 1);
+            solicitacaoItemAlterada.Id.ShouldBe(1);
+            solicitacaoItemAlterada.Situacao.ShouldBe(SituacaoSolicitacaoItem.CANCELADO);
+            
+            var eventos = ObterTodos<Evento>();
+            eventos.Count().ShouldBe(0);
         }
         
         [Fact(DisplayName = "Acervo Solicitação Item - Deve cancelar um item em situação aguardando atendimento")]

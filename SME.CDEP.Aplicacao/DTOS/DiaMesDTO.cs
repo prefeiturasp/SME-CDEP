@@ -13,6 +13,8 @@ namespace SME.CDEP.Aplicacao.DTOS
         
         [Required(ErrorMessage = "É necessário informar o mês do evento")]
         public int Mes { get; set; }
+
+        public int? Ano { get; set; } = DateTimeExtension.HorarioBrasilia().Year;
         
         public DateTime Data
         {
@@ -24,7 +26,7 @@ namespace SME.CDEP.Aplicacao.DTOS
                 if (!Mes.EhMesValido())
                     throw new NegocioException(MensagemNegocio.MES_INVALIDO);
 
-                return new DateTime(DateTimeExtension.HorarioBrasilia().Year, Mes, Dia);
+                return new DateTime(Ano.Value, Mes, Dia);
             }
         }
     }

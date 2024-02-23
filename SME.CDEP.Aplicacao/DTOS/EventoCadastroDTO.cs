@@ -5,6 +5,28 @@ namespace SME.CDEP.Aplicacao.DTOS
 {
     public class EventoCadastroDTO : DiaMesDTO
     {
+        public EventoCadastroDTO()
+        { }
+        
+        public EventoCadastroDTO(DateTime data, TipoEvento tipoEvento, string descricao)
+        {
+            Dia = data.Day;
+            Mes = data.Month;
+            Ano = data.Year;
+            Tipo = tipoEvento;
+            Descricao = descricao;
+        }
+        
+        public EventoCadastroDTO(DateTime data, TipoEvento tipoEvento, string descricao,long atendimentoItemId)
+        {
+            Dia = data.Day;
+            Mes = data.Month;
+            Ano = data.Year;
+            Tipo = tipoEvento;
+            Descricao = descricao;
+            AcervoSolicitacaoItemId = atendimentoItemId;
+        }
+        
         public long? Id { get; set; }
         public TipoEvento Tipo { get; set; }
         

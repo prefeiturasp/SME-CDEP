@@ -7,7 +7,7 @@ using SME.CDEP.TesteIntegracao.Setup;
 using SME.CDEP.Infra.Dominio.Enumerados;
 using Xunit;
 
-namespace SME.CDEP.TesteIntegracao.Usuario
+namespace SME.CDEP.TesteIntegracao.Eventos
 {
     public class Ao_fazer_manutencao_evento : TesteBase
     {
@@ -80,6 +80,9 @@ namespace SME.CDEP.TesteIntegracao.Usuario
             retorno.Descricao.ShouldBe(eventoAlteracao.Descricao);
             retorno.Tipo.ShouldBe(eventoAlteracao.Tipo);
             retorno.Justificativa.ShouldBe(eventoAlteracao.Justificativa);
+
+            var eventos = ObterTodos<Evento>();
+            eventos.Count().ShouldBe(10);
         }
         
         [Fact(DisplayName = "Evento - Obter Eventos tag")]

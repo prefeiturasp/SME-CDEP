@@ -1,8 +1,8 @@
 ﻿namespace SME.CDEP.Infra.Servicos.Mensageria
 {
-    public class MensagemRabbit
+    public class MensagemRabbitLogs
     {
-        public MensagemRabbit(string mensagem)
+        public MensagemRabbitLogs(string mensagem)
         {
             Mensagem = mensagem;
         }

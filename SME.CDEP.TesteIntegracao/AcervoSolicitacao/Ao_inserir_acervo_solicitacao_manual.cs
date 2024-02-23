@@ -88,8 +88,14 @@ namespace SME.CDEP.TesteIntegracao
             segundoPresencial.Excluido.ShouldBeFalse();
 
             var eventos = ObterTodos<Evento>();
-            eventos.Count().ShouldBe(1);
+            eventos.Count().ShouldBe(3);
             eventos.Any(a=> a.Data.Date == DateTimeExtension.HorarioBrasilia().AddDays(40).Date).ShouldBeTrue();
+            
+            eventos.Count(a=> a.Data.Date == DateTimeExtension.HorarioBrasilia().AddDays(4).Date).ShouldBe(1);
+            eventos.Any(a=> a.Data.Date == DateTimeExtension.HorarioBrasilia().AddDays(4).Date && a.Tipo.EhVisita()).ShouldBeTrue();
+            
+            eventos.Count(a=> a.Data.Date == DateTimeExtension.HorarioBrasilia().AddDays(40).Date).ShouldBe(2);
+            eventos.Any(a=> a.Data.Date == DateTimeExtension.HorarioBrasilia().AddDays(40).Date && a.Tipo.EhVisita()).ShouldBeTrue();
         }
         
         [Fact(DisplayName = "Acervo Solicitação - Ao fazer solicitação de acervo manual com todos os itens via e-mail")]
@@ -245,8 +251,14 @@ namespace SME.CDEP.TesteIntegracao
             terceiroAcervoPresencial.Excluido.ShouldBeFalse();
             
             var eventos = ObterTodos<Evento>();
-            eventos.Count().ShouldBe(1);
-            eventos.Any(a=> a.Data.Date == DateTimeExtension.HorarioBrasilia().AddDays(40).Date).ShouldBeTrue();
+            eventos.Count().ShouldBe(4);
+            eventos.Count(a=> a.Data.Date == DateTimeExtension.HorarioBrasilia().AddDays(40).Date && a.Tipo.EhVisita()).ShouldBe(2);
+            
+            eventos.Count(a=> a.Data.Date == DateTimeExtension.HorarioBrasilia().Date).ShouldBe(1);
+            eventos.Any(a=> a.Data.Date == DateTimeExtension.HorarioBrasilia().Date && a.Tipo.EhVisita()).ShouldBeTrue();
+            
+            eventos.Count(a=> a.Data.Date == DateTimeExtension.HorarioBrasilia().AddDays(4).Date).ShouldBe(1);
+            eventos.Any(a=> a.Data.Date == DateTimeExtension.HorarioBrasilia().AddDays(4).Date && a.Tipo.EhVisita()).ShouldBeTrue();
         }
         
         [Fact(DisplayName = "Acervo Solicitação - Não deve fazer solicitação de acervo manual com data de visita passada em acervo presencial")]

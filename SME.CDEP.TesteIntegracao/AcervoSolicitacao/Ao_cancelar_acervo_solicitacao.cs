@@ -24,14 +24,29 @@ namespace SME.CDEP.TesteIntegracao
            await InserirNaBase(acervoSolicitacao);
 
            var acervoSolicitadoId = (ObterTodos<AcervoSolicitacao>()).LastOrDefault().Id;
+
+           var itemCount = 1;
            
            foreach (var item in acervoSolicitacao.Itens)
            {
                 item.AcervoSolicitacaoId = acervoSolicitadoId;
                 item.Situacao = SituacaoSolicitacaoItem.AGUARDANDO_VISITA;
+                item.TipoAtendimento = TipoAtendimento.Presencial;
+                item.DataVisita = DateTimeExtension.HorarioBrasilia().AddDays(15);
                 await InserirNaBase(item);
+                
+                await InserirNaBase(new Evento()
+                {
+                    Data = DateTimeExtension.HorarioBrasilia().AddDays(15),
+                    Tipo = TipoEvento.VISITA,
+                    AcervoSolicitacaoItemId = itemCount,
+                    Descricao = "Visita",
+                    CriadoPor = "Sistema", CriadoEm = DateTimeExtension.HorarioBrasilia(), CriadoLogin = "Sistema"
+                });
+
+                itemCount++;
            }
-            
+           
             var servicoAcervoSolicitacao = GetServicoAcervoSolicitacao();
             
             var retorno = await servicoAcervoSolicitacao.CancelarAtendimento(1);
@@ -43,6 +58,12 @@ namespace SME.CDEP.TesteIntegracao
 
             var itens = ObterTodos<AcervoSolicitacaoItem>();
             itens.All(a=> a.Situacao.EstaCancelado()).ShouldBeTrue();
+            
+            var eventos = ObterTodos<Evento>();
+            eventos.Count().ShouldBe(3);
+            eventos.Count(a=> !a.Excluido).ShouldBe(0);
+            eventos.Count(a=> a.Excluido).ShouldBe(3);
+            eventos.Any(a=> a.Data.Date == DateTimeExtension.HorarioBrasilia().AddDays(15).Date).ShouldBeTrue();
         }
         
         [Fact(DisplayName = "Acervo Solicitação - Deve cancelar atendimento quando itens cancelados")]
@@ -76,6 +97,9 @@ namespace SME.CDEP.TesteIntegracao
             
             var itens = ObterTodos<AcervoSolicitacaoItem>();
             itens.All(a=> a.Situacao.EstaCancelado()).ShouldBeTrue();
+            
+            var eventos = ObterTodos<Evento>();
+            eventos.Count().ShouldBe(0);
         }
         
         [Fact(DisplayName = "Acervo Solicitação - Deve cancelar atendimento quando itens aguardando atendimento")]
@@ -110,6 +134,9 @@ namespace SME.CDEP.TesteIntegracao
             
             var itens = ObterTodos<AcervoSolicitacaoItem>();
             itens.All(a=> a.Situacao.EstaCancelado()).ShouldBeTrue();
+            
+            var eventos = ObterTodos<Evento>();
+            eventos.Count().ShouldBe(0);
         }
         
         [Fact(DisplayName = "Acervo Solicitação - Deve cancelar atendimento quando itens finalizados manualmente")]
@@ -143,6 +170,9 @@ namespace SME.CDEP.TesteIntegracao
             
             var itens = ObterTodos<AcervoSolicitacaoItem>();
             itens.All(a=> a.Situacao.EstaCancelado()).ShouldBeTrue();
+            
+            var eventos = ObterTodos<Evento>();
+            eventos.Count().ShouldBe(0);
         }
         
         [Fact(DisplayName = "Acervo Solicitação - Não deve cancelar atendimento com itens em situação finalizado automaticamente")]

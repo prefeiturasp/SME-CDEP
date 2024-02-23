@@ -6,12 +6,12 @@ using SME.CDEP.Infra.Servicos.Polly;
 
 namespace SME.CDEP.Infra.Servicos.Mensageria
 {
-    public class ServicoMensageria : IServicoMensageria
+    public class ServicoMensageriaLogs : IServicoMensageriaLogs
     {
         private readonly IConexoesRabbitLogs conexoesRabbit;
         private readonly IAsyncPolicy policy;
 
-        public ServicoMensageria(IConexoesRabbitLogs conexoesRabbit, IReadOnlyPolicyRegistry<string> registry)
+        public ServicoMensageriaLogs(IConexoesRabbitLogs conexoesRabbit, IReadOnlyPolicyRegistry<string> registry)
         {
             this.conexoesRabbit = conexoesRabbit ?? throw new ArgumentNullException(nameof(conexoesRabbit));
             this.policy = registry.Get<IAsyncPolicy>(ConstsPoliticaPolly.PublicaFila);
@@ -19,7 +19,7 @@ namespace SME.CDEP.Infra.Servicos.Mensageria
 
         public async Task Enviar(string mensagem, string rota, string exchange)
         {
-            var logMensagem = JsonConvert.SerializeObject(new MensagemRabbit(mensagem),
+            var logMensagem = JsonConvert.SerializeObject(new MensagemRabbitLogs(mensagem),
                 new JsonSerializerSettings { NullValueHandling = NullValueHandling.Ignore });
 
             var body = Encoding.UTF8.GetBytes(logMensagem);

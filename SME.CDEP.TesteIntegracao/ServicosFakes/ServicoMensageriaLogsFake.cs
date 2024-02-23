@@ -7,7 +7,7 @@ using SME.CDEP.Infra.Servicos.Polly;
 
 namespace SSME.CDEP.TesteIntegracao.ServicosFakes
 {
-    public class ServicoMensageriaFake : IServicoMensageria
+    public class ServicoMensageriaLogsFake : IServicoMensageriaLogs
     {
         public async Task Enviar(string mensagem, string rota, string exchange)
         {

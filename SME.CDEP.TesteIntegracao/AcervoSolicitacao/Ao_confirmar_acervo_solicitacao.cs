@@ -51,6 +51,7 @@ namespace SME.CDEP.TesteIntegracao
             solicitacaoAlterada.Id.ShouldBe(1);
             solicitacaoAlterada.UsuarioId.ShouldBe(1);
             solicitacaoAlterada.Situacao.ShouldBe(SituacaoSolicitacao.AGUARDANDO_VISITA);
+            solicitacaoAlterada.Excluido.ShouldBeFalse();
             
             var itensAlterados = ObterTodos<AcervoSolicitacaoItem>().Where(w=> w.AcervoSolicitacaoId == 1);
             itensAlterados.Count().ShouldBe(3);
@@ -58,17 +59,24 @@ namespace SME.CDEP.TesteIntegracao
             var itensAlteradosPresenciais = itensAlterados.Where(w => w.TipoAtendimento.HasValue && w.TipoAtendimento.Value.EhAtendimentoPresencial());
             itensAlteradosPresenciais.FirstOrDefault().DataVisita.Value.Date.ShouldBe(DateTimeExtension.HorarioBrasilia().Date);
             itensAlteradosPresenciais.FirstOrDefault().TipoAtendimento.ShouldBe(TipoAtendimento.Presencial);
-
+            itensAlteradosPresenciais.FirstOrDefault().Excluido.ShouldBeFalse();
+            
             var itensAlteradosEmail = itensAlterados.Where(w => w.TipoAtendimento.HasValue && w.TipoAtendimento.Value.EhAtendimentoViaEmail());
             itensAlteradosEmail.FirstOrDefault().DataVisita.ShouldBeNull();
             itensAlteradosEmail.FirstOrDefault().TipoAtendimento.ShouldBe(TipoAtendimento.Email);
+            itensAlteradosEmail.FirstOrDefault().Excluido.ShouldBeFalse();
             
             var itensImutavel = itensAlterados.Where(w => w.TipoAtendimento.EhNulo());
             itensImutavel.LastOrDefault().DataVisita.ShouldBeNull();
             itensImutavel.LastOrDefault().TipoAtendimento.ShouldBeNull();
+            itensImutavel.FirstOrDefault().Excluido.ShouldBeFalse();
+            
+            var eventos = ObterTodos<Evento>();
+            eventos.Count().ShouldBe(1);
+            eventos.Any(a=> a.Data.Date == DateTimeExtension.HorarioBrasilia().Date).ShouldBeTrue();
         }
         
-        [Fact(DisplayName = "Acervo Solicitação - Confirmar editando confirmacao")]
+        [Fact(DisplayName = "Acervo Solicitação - Confirmar editando tipo de atendimento e data de visita")]
         public async Task Deve_confirmar_atendimento_editando_confirmacao()
         {
             await InserirDadosBasicosAleatorios();
@@ -113,7 +121,7 @@ namespace SME.CDEP.TesteIntegracao
                     new()
                     {
                         Id = 2,
-                        DataVisita = DateTimeExtension.HorarioBrasilia().Date,
+                        DataVisita = DateTimeExtension.HorarioBrasilia().AddDays(10).Date,
                         TipoAtendimento = TipoAtendimento.Presencial
                     }
                 }
@@ -124,21 +132,31 @@ namespace SME.CDEP.TesteIntegracao
             solicitacaoAlterada.Id.ShouldBe(1);
             solicitacaoAlterada.UsuarioId.ShouldBe(1);
             solicitacaoAlterada.Situacao.ShouldBe(SituacaoSolicitacao.AGUARDANDO_VISITA);
+            solicitacaoAlterada.Excluido.ShouldBeFalse();
             
             var itensAlterados = ObterTodos<AcervoSolicitacaoItem>().Where(w=> w.AcervoSolicitacaoId == 1);
             itensAlterados.Count().ShouldBe(3);
             
             var itensAlteradosPresenciais = itensAlterados.Where(w => w.TipoAtendimento.HasValue && w.TipoAtendimento.Value.EhAtendimentoPresencial());
-            itensAlteradosPresenciais.FirstOrDefault().DataVisita.Value.Date.ShouldBe(DateTimeExtension.HorarioBrasilia().Date);
+            itensAlteradosPresenciais.FirstOrDefault().DataVisita.Value.Date.ShouldBe(DateTimeExtension.HorarioBrasilia().AddDays(10).Date);
             itensAlteradosPresenciais.FirstOrDefault().TipoAtendimento.ShouldBe(TipoAtendimento.Presencial);
-
+            itensAlteradosPresenciais.FirstOrDefault().Excluido.ShouldBeFalse();
+            
             var itensAlteradosEmail = itensAlterados.Where(w => w.TipoAtendimento.HasValue && w.TipoAtendimento.Value.EhAtendimentoViaEmail());
             itensAlteradosEmail.FirstOrDefault().DataVisita.ShouldBeNull();
             itensAlteradosEmail.FirstOrDefault().TipoAtendimento.ShouldBe(TipoAtendimento.Email);
+            itensAlteradosEmail.FirstOrDefault().Excluido.ShouldBeFalse();
             
             var itensImutavel = itensAlterados.Where(w => w.TipoAtendimento.EhNulo());
             itensImutavel.LastOrDefault().DataVisita.ShouldBeNull();
             itensImutavel.LastOrDefault().TipoAtendimento.ShouldBeNull();
+            itensImutavel.FirstOrDefault().Excluido.ShouldBeFalse();
+            
+            var eventos = ObterTodos<Evento>();
+            eventos.Count().ShouldBe(2);
+            eventos.Count(a=> a.Excluido).ShouldBe(1);
+            eventos.Count(a=> !a.Excluido).ShouldBe(1);
+            eventos.Any(a=> a.Data.Date == DateTimeExtension.HorarioBrasilia().AddDays(10).Date).ShouldBeTrue();
         }
         
         [Fact(DisplayName = "Acervo Solicitação - Não deve confirmar o atendimento sem itens")]
@@ -491,8 +509,10 @@ namespace SME.CDEP.TesteIntegracao
             terceiroItemPresencial.Situacao.ShouldBe(SituacaoSolicitacaoItem.FINALIZADO_AUTOMATICAMENTE);
             
             var eventos = ObterTodos<Evento>();
-            eventos.Count().ShouldBe(1);
-            eventos.Any(f=> f.Data.Date == DateTimeExtension.HorarioBrasilia().AddDays(10).Date.Date).ShouldBeTrue();
+            eventos.Count().ShouldBe(3);
+            eventos.Any(f=> f.Data.Date == DateTimeExtension.HorarioBrasilia().AddDays(10).Date).ShouldBeTrue();
+            eventos.Count(f=> f.Data.Date == DateTimeExtension.HorarioBrasilia().AddDays(10).Date).ShouldBe(2);
+            eventos.Count(f=> f.Data.Date == DateTimeExtension.HorarioBrasilia().AddDays(5).Date).ShouldBe(1);
         }
     }
 }

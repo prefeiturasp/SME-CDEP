@@ -13,29 +13,31 @@ namespace SME.CDEP.Aplicacao.Servicos
     public class ServicoEvento : IServicoEvento
     {
         private readonly IRepositorioEvento repositorioEvento;
+        private readonly IRepositorioEventoFixo repositorioEventoFixo;
         private readonly IMapper mapper;
         
-        public ServicoEvento(IRepositorioEvento repositorioEvento,IMapper mapper) 
+        public ServicoEvento(IRepositorioEvento repositorioEvento,IMapper mapper,IRepositorioEventoFixo repositorioEventoFixo) 
         {
             this.repositorioEvento = repositorioEvento ?? throw new ArgumentNullException(nameof(repositorioEvento));
             this.mapper = mapper ?? throw new ArgumentNullException(nameof(mapper));
+            this.repositorioEventoFixo = repositorioEventoFixo ?? throw new ArgumentNullException(nameof(repositorioEventoFixo));
         }
 
         public async Task<long> Inserir(EventoCadastroDTO eventoCadastroDto)
         {
             var evento = mapper.Map<Evento>(eventoCadastroDto);
             
-            await Validar(eventoCadastroDto);
+            await Validar(evento);
             
             return await repositorioEvento.Inserir(evento);
         }
         
-        private async Task Validar(EventoCadastroDTO eventoCadastroDto)
+        private async Task Validar(Evento evento)
         {
-            if (eventoCadastroDto.Justificativa.NaoEstaPreenchido() && eventoCadastroDto.Tipo.EhSuspensao())
+            if (evento.Justificativa.NaoEstaPreenchido() && evento.Tipo.EhSuspensao())
                 throw new NegocioException(MensagemNegocio.JUSTIFICATIVA_NAO_INFORMADA);  
             
-            if (await repositorioEvento.ExisteFeriadoOuSuspensaoNoDia(eventoCadastroDto.Data, eventoCadastroDto.Id))
+            if (await repositorioEvento.ExisteFeriadoOuSuspensaoNoDia(evento.Data, evento.Id))
                 throw new NegocioException(MensagemNegocio.EXISTE_SUSPENSAO_OU_FERIADO_NESSE_DIA);
         }
 
@@ -51,18 +53,23 @@ namespace SME.CDEP.Aplicacao.Servicos
 
         public async Task<EventoDTO> Alterar(EventoCadastroDTO eventoCadastroDto)
         {
-            if (!eventoCadastroDto.Id.HasValue)
-                throw new NegocioException(MensagemNegocio.EVENTO_NAO_ENCONTRADO);
-            
             var eventoAtual = await repositorioEvento.ObterPorId(eventoCadastroDto.Id.Value);
+           
+            if (eventoAtual.EhNulo())
+                throw new NegocioException(MensagemNegocio.EVENTO_NAO_ENCONTRADO);
             
             var evento = mapper.Map<Evento>(eventoCadastroDto);
             evento.CriadoEm = eventoAtual.CriadoEm;
             evento.CriadoPor = eventoAtual.CriadoPor;
             evento.CriadoLogin = eventoAtual.CriadoLogin;
             
-            await Validar(eventoCadastroDto);
-            
+            return await ValidarEAtualizar(evento);
+        }
+
+        private async Task<EventoDTO> ValidarEAtualizar(Evento evento)
+        {
+            await Validar(evento);
+
             return mapper.Map<EventoDTO>(await repositorioEvento.Atualizar(evento));
         }
 
@@ -177,6 +184,83 @@ namespace SME.CDEP.Aplicacao.Servicos
         public async Task<IEnumerable<EventoDetalheDTO>> ObterDetalhesDoDiaPorDiaMes(DiaMesDTO diaMesDto)
         {
             return mapper.Map<IEnumerable<EventoDetalheDTO>>(await repositorioEvento.ObterDetalhesDoDiaPorData(diaMesDto.Data));
+        }
+
+        public async Task InserirEventoVisita(DateTime dataVisita, long atendimentoItemId)
+        {
+            await Inserir(new EventoCadastroDTO(dataVisita, TipoEvento.VISITA, TipoEvento.VISITA.Descricao(),atendimentoItemId));
+        }
+
+        public async Task AtualizarEventoVisita(DateTime dataVisita, long atendimentoItemId)
+        {
+            var evento = await repositorioEvento.ObterPorAtendimentoItemId(atendimentoItemId);
+
+            if (evento.EhNulo())
+                throw new NegocioException(MensagemNegocio.SOLICITACAO_ATENDIMENTO_ITEM_NAO_ENCONTRADA);
+
+            evento.Data = dataVisita;
+            
+            await ValidarEAtualizar(evento);
+        }
+
+        public async Task ExcluirEventoPorAcervoSolicitacaoItem(long atendimentoItemId)
+        {
+            var evento = await repositorioEvento.ObterPorAtendimentoItemId(atendimentoItemId);
+
+            if (evento.EhNulo())
+                throw new NegocioException(MensagemNegocio.SOLICITACAO_ATENDIMENTO_ITEM_NAO_ENCONTRADA);
+
+            await repositorioEvento.Remover(evento.Id);
+        }
+
+        public async Task GerarEventosFixos()
+        {
+            var eventosFixos = await repositorioEventoFixo.ObterTodos();
+
+            foreach (var eventoFixo in eventosFixos)
+                await Inserir(new EventoCadastroDTO(eventoFixo.Data, eventoFixo.Tipo, eventoFixo.Descricao));
+        }
+
+        public async Task GerarEventosMoveis()
+        {
+            var pascoa = CalcularPascoa(DateTimeExtension.HorarioBrasilia().Year);
+            var carnaval = pascoa.AddDays(-47);
+            var sextaFeiraSanta = pascoa.AddDays(-2);
+            var corpusChristi = pascoa.AddDays(60);
+
+            var eventosMoveis = new List<EventoCadastroDTO>()
+            {
+                new (pascoa, TipoEvento.FERIADO, "Páscoa"),
+                new (carnaval, TipoEvento.FERIADO, "Carnaval"),
+                new (sextaFeiraSanta, TipoEvento.FERIADO, "Sexta-feira Santa"),
+                new (corpusChristi, TipoEvento.FERIADO, "Corpus Christi")
+            };
+            
+            foreach (var eventoMovel in eventosMoveis)
+               await Inserir(eventoMovel);
+        }
+        
+        private static DateTime CalcularPascoa(int ano)
+        {
+            int r1 = ano % 19;
+            int r2 = ano % 4;
+            int r3 = ano % 7;
+            int r4 = (19 * r1 + 24) % 30;
+            int r5 = (6 * r4 + 4 * r3 + 2 * r2 + 5) % 7;
+            DateTime dataPascoa = new DateTime(ano, 3, 22).AddDays(r4 + r5);
+            int dia = dataPascoa.Day;
+            switch (dia)
+            {
+                case 26:
+                    dataPascoa = new DateTime(ano, 4, 19);
+                    break;
+
+                case 25:
+                    if (r1 > 10)
+                        dataPascoa = new DateTime(ano, 4, 18);
+                    break;
+            }
+            return dataPascoa.Date;
         }
     }
 }
