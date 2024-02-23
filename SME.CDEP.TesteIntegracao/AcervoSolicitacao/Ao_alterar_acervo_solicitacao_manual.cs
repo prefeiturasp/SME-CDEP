@@ -131,8 +131,12 @@ namespace SME.CDEP.TesteIntegracao
             quartoItemEmail.Excluido.ShouldBeFalse();
             
             var eventos = ObterTodos<Evento>();
-            eventos.Count().ShouldBe(1);
+            eventos.Count().ShouldBe(3);
             eventos.Any(a=> a.Data.Date == DateTimeExtension.HorarioBrasilia().AddDays(20).Date).ShouldBeTrue();
+            eventos.Count(a=> a.Data.Date == DateTimeExtension.HorarioBrasilia().AddDays(20).Date).ShouldBe(2);
+            eventos.Count(a=> a.Excluido).ShouldBe(1);
+            eventos.Count(a=> !a.Excluido).ShouldBe(2);
+            
         }
         
         [Fact(DisplayName = "Acervo Solicitação - Ao alterar solicitação de acervo manual com itens presenciais e via e-mail, com todos os itens novos")]
@@ -144,7 +148,7 @@ namespace SME.CDEP.TesteIntegracao
             
             await InserirNaBase(new Evento()
             {
-                Data = DateTimeExtension.HorarioBrasilia().AddDays(40).Date,
+                Data = DateTimeExtension.HorarioBrasilia().AddDays(50).Date,
                 Tipo = TipoEvento.VISITA,
                 Descricao = "Visita",
                 CriadoPor = "Sistema", CriadoEm = DateTimeExtension.HorarioBrasilia(), CriadoLogin = "Sistema"
@@ -178,8 +182,14 @@ namespace SME.CDEP.TesteIntegracao
                 }
             };
             
-            var retorno = await servicoAcervoSolicitacao.Inserir(acervoSolicitacaoManual);
-            retorno.ShouldBeGreaterThan(0);
+            var acervoSolicitacaoInserida = await servicoAcervoSolicitacao.Inserir(acervoSolicitacaoManual);
+            acervoSolicitacaoInserida.ShouldBeGreaterThan(0);
+
+            var itensInseridos = ObterTodos<AcervoSolicitacaoItem>().Where(w => w.AcervoSolicitacaoId == acervoSolicitacaoInserida);
+            
+            //Cancelando itens
+            foreach (var item in itensInseridos)
+                (await servicoAcervoSolicitacao.CancelarItemAtendimento(item.Id)).ShouldBeTrue();
             
             //Atualizando
             var alteracaoAcervoSolicitacaoManual = new AcervoSolicitacaoManualDTO()
@@ -203,13 +213,13 @@ namespace SME.CDEP.TesteIntegracao
                     {
                         AcervoId = 6,
                         TipoAtendimento = TipoAtendimento.Presencial,
-                        DataVisita = DateTimeExtension.HorarioBrasilia().AddDays(40)
+                        DataVisita = DateTimeExtension.HorarioBrasilia().AddDays(50)
                     }
                 }
             };
             
-            retorno = await servicoAcervoSolicitacao.Alterar(alteracaoAcervoSolicitacaoManual);
-            retorno.ShouldBeGreaterThan(0);
+            acervoSolicitacaoInserida = await servicoAcervoSolicitacao.Alterar(alteracaoAcervoSolicitacaoManual);
+            acervoSolicitacaoInserida.ShouldBeGreaterThan(0);
 
             var solicitacaoCadastrada = ObterTodos<AcervoSolicitacao>().LastOrDefault();
             solicitacaoCadastrada.UsuarioId.ShouldBe(acervoSolicitacaoManual.UsuarioId);
@@ -235,12 +245,15 @@ namespace SME.CDEP.TesteIntegracao
             var terceiroItemPresencial = itensCadastrados.FirstOrDefault(f => f.AcervoId == 6);
             terceiroItemPresencial.Situacao.ShouldBe(SituacaoSolicitacaoItem.AGUARDANDO_VISITA);
             terceiroItemPresencial.TipoAtendimento.ShouldBe(TipoAtendimento.Presencial);
-            terceiroItemPresencial.DataVisita.Value.Date.ShouldBe(DateTimeExtension.HorarioBrasilia().AddDays(40).Date);
+            terceiroItemPresencial.DataVisita.Value.Date.ShouldBe(DateTimeExtension.HorarioBrasilia().AddDays(50).Date);
             terceiroItemPresencial.Excluido.ShouldBeFalse();
             
             var eventos = ObterTodos<Evento>();
-            eventos.Count().ShouldBe(1);
-            eventos.Any(a=> a.Data.Date == DateTimeExtension.HorarioBrasilia().AddDays(40).Date).ShouldBeTrue();
+            eventos.Count().ShouldBe(4);
+            eventos.Count(a=> a.Excluido).ShouldBe(2);
+            eventos.Count(a=> !a.Excluido).ShouldBe(2);
+            eventos.Any(a=> a.Data.Date == DateTimeExtension.HorarioBrasilia().AddDays(50).Date).ShouldBeTrue();
+            eventos.Count(a=> a.Data.Date == DateTimeExtension.HorarioBrasilia().AddDays(50).Date).ShouldBe(2);
         }
         
         [Fact(DisplayName = "Acervo Solicitação - Não deve alterar solicitação de acervo manual em dia de feriado")]

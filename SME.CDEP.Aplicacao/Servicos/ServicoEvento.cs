@@ -25,17 +25,17 @@ namespace SME.CDEP.Aplicacao.Servicos
         {
             var evento = mapper.Map<Evento>(eventoCadastroDto);
             
-            await Validar(eventoCadastroDto);
+            await Validar(evento);
             
             return await repositorioEvento.Inserir(evento);
         }
         
-        private async Task Validar(EventoCadastroDTO eventoCadastroDto)
+        private async Task Validar(Evento evento)
         {
-            if (eventoCadastroDto.Justificativa.NaoEstaPreenchido() && eventoCadastroDto.Tipo.EhSuspensao())
+            if (evento.Justificativa.NaoEstaPreenchido() && evento.Tipo.EhSuspensao())
                 throw new NegocioException(MensagemNegocio.JUSTIFICATIVA_NAO_INFORMADA);  
             
-            if (await repositorioEvento.ExisteFeriadoOuSuspensaoNoDia(eventoCadastroDto.Data, eventoCadastroDto.Id))
+            if (await repositorioEvento.ExisteFeriadoOuSuspensaoNoDia(evento.Data, evento.Id))
                 throw new NegocioException(MensagemNegocio.EXISTE_SUSPENSAO_OU_FERIADO_NESSE_DIA);
         }
 
@@ -51,18 +51,23 @@ namespace SME.CDEP.Aplicacao.Servicos
 
         public async Task<EventoDTO> Alterar(EventoCadastroDTO eventoCadastroDto)
         {
-            if (!eventoCadastroDto.Id.HasValue)
-                throw new NegocioException(MensagemNegocio.EVENTO_NAO_ENCONTRADO);
-            
             var eventoAtual = await repositorioEvento.ObterPorId(eventoCadastroDto.Id.Value);
+           
+            if (eventoAtual.EhNulo())
+                throw new NegocioException(MensagemNegocio.EVENTO_NAO_ENCONTRADO);
             
             var evento = mapper.Map<Evento>(eventoCadastroDto);
             evento.CriadoEm = eventoAtual.CriadoEm;
             evento.CriadoPor = eventoAtual.CriadoPor;
             evento.CriadoLogin = eventoAtual.CriadoLogin;
             
-            await Validar(eventoCadastroDto);
-            
+            return await ValidarEAtualizar(evento);
+        }
+
+        private async Task<EventoDTO> ValidarEAtualizar(Evento evento)
+        {
+            await Validar(evento);
+
             return mapper.Map<EventoDTO>(await repositorioEvento.Atualizar(evento));
         }
 
@@ -177,6 +182,43 @@ namespace SME.CDEP.Aplicacao.Servicos
         public async Task<IEnumerable<EventoDetalheDTO>> ObterDetalhesDoDiaPorDiaMes(DiaMesDTO diaMesDto)
         {
             return mapper.Map<IEnumerable<EventoDetalheDTO>>(await repositorioEvento.ObterDetalhesDoDiaPorData(diaMesDto.Data));
+        }
+
+        public async Task InserirEventoVisita(DateTime dataVisita, long atendimentoItemId)
+        {
+            var eventoVisita = new EventoCadastroDTO()
+            {
+                Dia = dataVisita.Day,
+                Mes = dataVisita.Month,
+                Ano = dataVisita.Year,
+                Tipo = TipoEvento.VISITA,
+                Descricao = TipoEvento.VISITA.Descricao(),
+                AcervoSolicitacaoItemId = atendimentoItemId
+            };
+
+            await Inserir(eventoVisita);
+        }
+
+        public async Task AtualizarEventoVisita(DateTime dataVisita, long atendimentoItemId)
+        {
+            var evento = await repositorioEvento.ObterPorAtendimentoItemId(atendimentoItemId);
+
+            if (evento.EhNulo())
+                throw new NegocioException(MensagemNegocio.SOLICITACAO_ATENDIMENTO_ITEM_NAO_ENCONTRADA);
+
+            evento.Data = dataVisita;
+            
+            await ValidarEAtualizar(evento);
+        }
+
+        public async Task ExcluirEventoPorAcervoSolicitacaoItem(long atendimentoItemId)
+        {
+            var evento = await repositorioEvento.ObterPorAtendimentoItemId(atendimentoItemId);
+
+            if (evento.EhNulo())
+                throw new NegocioException(MensagemNegocio.SOLICITACAO_ATENDIMENTO_ITEM_NAO_ENCONTRADA);
+
+            await repositorioEvento.Remover(evento.Id);
         }
     }
 }
