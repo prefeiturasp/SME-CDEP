@@ -57,8 +57,8 @@ namespace SME.CDEP.Infra
             conexaoRabbit = factory.CreateConnection();
             canalRabbit = conexaoRabbit.CreateModel();
             canalRabbit.BasicQos(0, consumoFilasOptions.Value.Qos, false);
-            canalRabbit.ExchangeDeclare(ExchangeRabbit.CDEP, ExchangeType.Direct, true, false);
-            canalRabbit.ExchangeDeclare(ExchangeRabbit.CDEPDeadLetter, ExchangeType.Direct, true, false);
+            canalRabbit.ExchangeDeclare(ExchangeRabbit.Cdep, ExchangeType.Direct, true, false);
+            canalRabbit.ExchangeDeclare(ExchangeRabbit.CdepDeadLetter, ExchangeType.Direct, true, false);
             canalRabbit.ExchangeDeclare(ExchangeRabbit.Logs, ExchangeType.Direct, true, false);
 
             Comandos = new Dictionary<string, ComandoRabbit>();
@@ -70,7 +70,7 @@ namespace SME.CDEP.Infra
 
         protected virtual void DeclararFilas()
         {
-            DeclararFilasPorRota(ExchangeRabbit.CDEP, ExchangeRabbit.CDEPDeadLetter);
+            DeclararFilasPorRota(ExchangeRabbit.Cdep, ExchangeRabbit.CdepDeadLetter);
         }
 
         protected void DeclararFilasPorRota(string exchange, string exchangeDeadLetter = "")
@@ -127,7 +127,7 @@ namespace SME.CDEP.Infra
             argsDlq.Add("x-queue-mode", "lazy");
             if (retryAutomatico)
             {
-                var ttl = Comandos.ContainsKey(fila) ? Comandos[fila].TTL : ExchangeRabbit.SgpDeadLetterTTL;
+                var ttl = Comandos.ContainsKey(fila) ? Comandos[fila].TTL : ExchangeRabbit.CdepDeadLetterTTL;
                 argsDlq.Add("x-message-ttl", ttl);
                 argsDlq.Add("x-dead-letter-exchange", exchange);
             }
@@ -200,7 +200,7 @@ namespace SME.CDEP.Infra
                         canalRabbit.BasicAck(ea.DeliveryTag, false);
 
                         var filaLimbo = $"{ea.RoutingKey}.limbo";
-                        await servicoMensageria.Publicar(mensagemRabbit, filaLimbo, ExchangeRabbit.CDEPDeadLetter, "PublicarDeadLetter");
+                        await servicoMensageria.Publicar(mensagemRabbit, filaLimbo, ExchangeRabbit.CdepDeadLetter, "PublicarDeadLetter");
                     }
                     else canalRabbit.BasicReject(ea.DeliveryTag, false);
 
