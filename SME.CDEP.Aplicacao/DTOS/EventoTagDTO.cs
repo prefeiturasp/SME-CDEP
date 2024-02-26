@@ -5,7 +5,7 @@ namespace SME.CDEP.Aplicacao.DTOS
 {
     public class EventoTagDTO
     {
-        public string TipoId { get; set; }
-        public TipoEvento Tipo { get; set; }
+        public TipoEvento TipoId { get; set; }
+        public string Tipo { get; set; }
     }
 }

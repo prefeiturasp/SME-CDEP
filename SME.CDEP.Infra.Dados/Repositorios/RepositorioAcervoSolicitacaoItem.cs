@@ -153,6 +153,23 @@ namespace SME.CDEP.Infra.Dados.Repositorios
             return conexao.Obter().QueryAsync<AcervoSolicitacaoItem>(query, new { acervoSolicitacaoId });
         }
 
+        public Task<Acervo> ObterAcervoPorAcervoSolicitacaoItemId(long acervoSolicitacaoItemId)
+        {
+            var query = @"
+             select a.id,
+                    a.tipo, 
+                    a.titulo, 
+                    a.codigo, 
+                    a.codigo_novo 
+             from acervo_solicitacao_item asi
+             join acervo a on a.id = asi.acervo_id 
+             where asi.id = @acervoSolicitacaoItemId 
+               and not asi.excluido
+               and not a.excluido";
+            
+            return conexao.Obter().QueryFirstOrDefaultAsync<Acervo>(query, new { acervoSolicitacaoItemId });
+        }
+
         public Task<bool> PossuiItensEmSituacaoAguardandoAtendimentoOuAguardandoVisitaComDataFutura(long acervoSolicitacaoId)
         {
             var query = @"
