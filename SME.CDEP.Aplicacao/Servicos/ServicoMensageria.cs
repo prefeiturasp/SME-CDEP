@@ -8,14 +8,14 @@ using SME.CDEP.Infra.Servicos.Rabbit.Dto;
 
 namespace SME.CDEP.Aplicacao.Servicos
 {
-    public class ServicoPublicarNaFilaRabbit : IServicoPublicarNaFilaRabbit
+    public class ServicoMensageria : IServicoMensageria
     {
         private readonly IServicoMensageriaCDEP servicoMensageria;
         private readonly IServicoMensageriaMetricas servicoMensageriaMetricas;
         private readonly IServicoUsuario servicoUsuario;
         private readonly IMapper mapper;
 
-        public ServicoPublicarNaFilaRabbit(IServicoMensageriaCDEP servicoMensageria, IServicoMensageriaMetricas servicoMensageriaMetricas,
+        public ServicoMensageria(IServicoMensageriaCDEP servicoMensageria, IServicoMensageriaMetricas servicoMensageriaMetricas,
             IServicoUsuario servicoUsuario,IMapper mapper)
         {
             this.servicoMensageria = servicoMensageria ?? throw new ArgumentNullException(nameof(servicoMensageria));
