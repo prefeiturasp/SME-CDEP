@@ -5,6 +5,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 using Microsoft.Extensions.ObjectPool;
 using Microsoft.Extensions.Options;
+using SME.CDEP.Aplicacao;
 using SME.CDEP.Aplicacao.Integracoes;
 using SME.CDEP.Aplicacao.Integracoes.Interfaces;
 using SME.CDEP.Aplicacao.Mapeamentos;
@@ -15,6 +16,7 @@ using SME.CDEP.Infra.Dados.Mapeamentos;
 using SME.CDEP.Infra.Dados.Repositorios;
 using SME.CDEP.Infra.Dados.Repositorios.Interfaces;
 using SME.CDEP.Infra.Servicos.Mensageria;
+using SME.CDEP.Infra.Servicos.Mensageria.IoC;
 using SME.CDEP.Infra.Servicos.Mensageria.Log;
 using SME.CDEP.Infra.Servicos.Options;
 using SME.CDEP.Infra.Servicos.Polly;
@@ -41,12 +43,42 @@ public class RegistradorDeDependencia
         RegistrarConexao();
         RegistrarRepositorios();
         RegistrarLogs();
+        RegistrarRabbit();
         RegistrarPolly();
         RegistrarMapeamentos();
         RegistrarServicos();
+        RegistrarCasosDeUso();
         RegistrarProfiles();
         RegistrarHttpClients();
         RegistrarServicoArmazenamento(_serviceCollection, _configuration);
+        ConfigurarMensageria();
+    }
+
+    protected virtual void RegistrarCasosDeUso()
+    {
+        _serviceCollection.TryAddScoped<IExecutarCriacaoDeEventosTipoFeriadoAnoAtualUseCase, ExecutarCriacaoDeEventosTipoFeriadoAnoAtualUseCase>();
+        _serviceCollection.TryAddScoped<IExecutarCriacaoDeEventosTipoFeriadoAnoAtualPorDataUseCase, ExecutarCriacaoDeEventosTipoFeriadoAnoAtualPorDataUseCase>();
+    }
+
+    protected virtual void RegistrarRabbit()
+    {
+        _serviceCollection.AddOptions<ConfiguracaoRabbitOptions>()
+            .Bind(_configuration.GetSection(ConfiguracaoRabbitOptions.Secao), c => c.BindNonPublicProperties = true);
+
+        _serviceCollection.AddSingleton<ConfiguracaoRabbitOptions>();
+        _serviceCollection.AddSingleton<IConexoesRabbit>(serviceProvider =>
+        {
+            var options = serviceProvider.GetService<IOptions<ConfiguracaoRabbitOptions>>().Value;
+            var provider = serviceProvider.GetService<IOptions<DefaultObjectPoolProvider>>().Value;
+            return new ConexoesRabbitAcessos(options, provider);
+        });
+
+        _serviceCollection.AddSingleton<IServicoLogs, ServicoLogs>();
+    }
+    
+    protected virtual void ConfigurarMensageria()
+    {
+        _serviceCollection.ConfigurarMensageria(_configuration);
     }
     
     protected virtual void RegistrarServicoArmazenamento(IServiceCollection services, IConfiguration configuration)
@@ -110,6 +142,8 @@ public class RegistradorDeDependencia
             config.AddMap(new AcervoSolicitacaoMap());
             config.AddMap(new AcervoSolicitacaoItemMap());
             config.AddMap(new ParametroSistemaMap());
+            config.AddMap(new EventoMap());
+            config.AddMap(new EventoFixoMap());
             config.ForDommel();
         });
     }
@@ -163,6 +197,8 @@ public class RegistradorDeDependencia
         _serviceCollection.TryAddScoped<IRepositorioParametroSistema, RepositorioParametroSistema>();
         _serviceCollection.TryAddScoped<IRepositorioAcervoSolicitacao, RepositorioAcervoSolicitacao>();
         _serviceCollection.TryAddScoped<IRepositorioAcervoSolicitacaoItem, RepositorioAcervoSolicitacaoItem>();
+        _serviceCollection.TryAddScoped<IRepositorioEvento, RepositorioEvento>();
+        _serviceCollection.TryAddScoped<IRepositorioEventoFixo, RepositorioEventoFixo>();
     }
 
     protected virtual void RegistrarServicos()
@@ -193,7 +229,7 @@ public class RegistradorDeDependencia
         _serviceCollection.TryAddScoped<IServicoDownloadArquivo, ServicoDownloadArquivo>();
         _serviceCollection.TryAddScoped<IServicoMoverArquivoTemporario, ServicoMoverArquivoTemporario>();
         _serviceCollection.TryAddScoped<IServicoGerarMiniatura, ServicoGerarMiniatura>();
-        _serviceCollection.TryAddScoped<IServicoMensageria, ServicoMensageria>();
+        _serviceCollection.TryAddScoped<IServicoMensageriaLogs, ServicoMensageriaLogs>();
         _serviceCollection.TryAddScoped<IServicoAcervoArteGrafica, ServicoAcervoArteGrafica>();
         _serviceCollection.TryAddScoped<IServicoAcervoTridimensional, ServicoAcervoTridimensional>();
         _serviceCollection.TryAddScoped<IServicoAcervoAudiovisual, ServicoAcervoAudiovisual>();
@@ -208,6 +244,8 @@ public class RegistradorDeDependencia
         _serviceCollection.TryAddScoped<IServicoImportacaoArquivoAcervoTridimensional, ServicoImportacaoArquivoAcervoTridimensional>();
         _serviceCollection.TryAddScoped<IServicoImportacaoArquivoAcervo, ServicoImportacaoArquivoAcervo>();
         _serviceCollection.TryAddScoped<IServicoAcervoSolicitacao, ServicoAcervoSolicitacao>();
+        _serviceCollection.TryAddScoped<IServicoEvento, ServicoEvento>();
+        _serviceCollection.TryAddScoped<IServicoMensageria, ServicoMensageria>();
         _serviceCollection.TryAddScoped<IServicoNotificacaoEmail, ServicoNotificacaoEmail>();
     }
     protected virtual void RegistrarHttpClients()

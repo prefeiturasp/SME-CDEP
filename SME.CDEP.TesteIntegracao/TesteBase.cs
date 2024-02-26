@@ -250,6 +250,11 @@ namespace SME.CDEP.TesteIntegracao
             return ServiceProvider.GetService<IServicoImportacaoArquivoAcervo>();
         }
         
+        protected IServicoEvento GetServicoEvento()
+        {
+            return ObterServicoAplicacao<IServicoEvento>();
+        }
+        
         public T ObterServicoAplicacao<T>()
             where T : IServicoAplicacao
         {
@@ -649,6 +654,7 @@ namespace SME.CDEP.TesteIntegracao
             var acervoSolicitacao = new AcervoSolicitacao()
             {
                 UsuarioId = 1,
+                ResponsavelId = 2,
                 Situacao = SituacaoSolicitacao.AGUARDANDO_ATENDIMENTO,
                 CriadoEm = DateTimeExtension.HorarioBrasilia(), CriadoLogin = "Sistema", CriadoPor = "Sistema",
                 Itens = new List<AcervoSolicitacaoItem>()
@@ -681,6 +687,7 @@ namespace SME.CDEP.TesteIntegracao
             var acervoSolicitacao = new AcervoSolicitacao()
             {
                 UsuarioId = 1,
+                ResponsavelId = 2,
                 Situacao = SituacaoSolicitacao.AGUARDANDO_VISITA,
                 CriadoEm = DateTimeExtension.HorarioBrasilia(), CriadoLogin = "Sistema", CriadoPor = "Sistema",
                 Itens = new List<AcervoSolicitacaoItem>()

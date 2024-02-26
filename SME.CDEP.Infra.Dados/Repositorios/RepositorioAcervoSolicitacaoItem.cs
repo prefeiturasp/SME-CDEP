@@ -36,7 +36,7 @@ namespace SME.CDEP.Infra.Dados.Repositorios
         }
 
         public async Task<IEnumerable<AcervoSolicitacaoItemDetalhe>> ObterSolicitacoesPorFiltro(long? acervoSolicitacaoId, TipoAcervo? tipoAcervo, DateTime? dataSolicitacaoInicio,
-            DateTime? dataSolicitacaoFim, string? responsavel, SituacaoSolicitacaoItem? situacaoItem, DateTime? dataVisitaInicio, DateTime? dataVisitaFim)
+            DateTime? dataSolicitacaoFim, string? responsavel, SituacaoSolicitacaoItem? situacaoItem, DateTime? dataVisitaInicio, DateTime? dataVisitaFim, string? solicitanteRf)
         {
             var query = new StringBuilder();
             
@@ -78,10 +78,13 @@ namespace SME.CDEP.Infra.Dados.Repositorios
             if (responsavel.EstaPreenchido())
                 query.AppendLine(" and ur.login = @responsavel ");
             
+            if (solicitanteRf.EstaPreenchido())
+                query.AppendLine(" and u.login = @solicitanteRf ");
+            
             query.AppendLine(" order by asi.criado_em desc ");
             
             return await conexao.Obter().QueryAsync<AcervoSolicitacaoItemDetalhe>(query.ToString(), 
-                new { acervoSolicitacaoId, tipoAcervo, situacaoItem, dataSolicitacaoInicio, dataSolicitacaoFim, dataVisitaInicio, dataVisitaFim, responsavel});
+                new { acervoSolicitacaoId, tipoAcervo, situacaoItem, dataSolicitacaoInicio, dataSolicitacaoFim, dataVisitaInicio, dataVisitaFim, responsavel, solicitanteRf});
         }
 
         public Task<IEnumerable<AcervoSolicitacaoItem>> ObterItensEmSituacaoAguardandoAtendimentoOuVisitaOuFinalizadoManualmentePorSolicitacaoId(long acervoSolicitacaoId)
@@ -148,6 +151,23 @@ namespace SME.CDEP.Infra.Dados.Repositorios
               and not excluido";
             
             return conexao.Obter().QueryAsync<AcervoSolicitacaoItem>(query, new { acervoSolicitacaoId });
+        }
+
+        public Task<Acervo> ObterAcervoPorAcervoSolicitacaoItemId(long acervoSolicitacaoItemId)
+        {
+            var query = @"
+             select a.id,
+                    a.tipo, 
+                    a.titulo, 
+                    a.codigo, 
+                    a.codigo_novo 
+             from acervo_solicitacao_item asi
+             join acervo a on a.id = asi.acervo_id 
+             where asi.id = @acervoSolicitacaoItemId 
+               and not asi.excluido
+               and not a.excluido";
+            
+            return conexao.Obter().QueryFirstOrDefaultAsync<Acervo>(query, new { acervoSolicitacaoItemId });
         }
 
         public Task<bool> PossuiItensEmSituacaoAguardandoAtendimentoOuAguardandoVisitaComDataFutura(long acervoSolicitacaoId)
