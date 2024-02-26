@@ -57,6 +57,7 @@ public class RegistradorDeDependencia
     protected virtual void RegistrarCasosDeUso()
     {
         _serviceCollection.TryAddScoped<IExecutarCriacaoDeEventosTipoFeriadoAnoAtualUseCase, ExecutarCriacaoDeEventosTipoFeriadoAnoAtualUseCase>();
+        _serviceCollection.TryAddScoped<IExecutarCriacaoDeEventosTipoFeriadoAnoAtualPorDataUseCase, ExecutarCriacaoDeEventosTipoFeriadoAnoAtualPorDataUseCase>();
     }
 
     protected virtual void RegistrarRabbit()
@@ -244,6 +245,7 @@ public class RegistradorDeDependencia
         _serviceCollection.TryAddScoped<IServicoImportacaoArquivoAcervo, ServicoImportacaoArquivoAcervo>();
         _serviceCollection.TryAddScoped<IServicoAcervoSolicitacao, ServicoAcervoSolicitacao>();
         _serviceCollection.TryAddScoped<IServicoEvento, ServicoEvento>();
+        _serviceCollection.TryAddScoped<IServicoPublicarNaFilaRabbit, ServicoPublicarNaFilaRabbit>();
     }
     protected virtual void RegistrarHttpClients()
     {
