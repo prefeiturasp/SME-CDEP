@@ -17,16 +17,16 @@ namespace SME.CDEP.Aplicacao.Servicos
         private readonly IRepositorioEventoFixo repositorioEventoFixo;
         private readonly IRepositorioAcervoSolicitacaoItem repositorioAcervoSolicitacaoItem;
         private readonly IMapper mapper;
-        private readonly IServicoPublicarNaFilaRabbit servicoPublicarNaFilaRabbit;
+        private readonly IServicoMensageria servicoMensageria;
         
         public ServicoEvento(IRepositorioEvento repositorioEvento,IMapper mapper,IRepositorioEventoFixo repositorioEventoFixo, 
-            IRepositorioAcervoSolicitacaoItem repositorioAcervoSolicitacaoItem,IServicoPublicarNaFilaRabbit servicoPublicarNaFilaRabbit) 
+            IRepositorioAcervoSolicitacaoItem repositorioAcervoSolicitacaoItem,IServicoMensageria servicoMensageria) 
         {
             this.repositorioEvento = repositorioEvento ?? throw new ArgumentNullException(nameof(repositorioEvento));
             this.mapper = mapper ?? throw new ArgumentNullException(nameof(mapper));
             this.repositorioEventoFixo = repositorioEventoFixo ?? throw new ArgumentNullException(nameof(repositorioEventoFixo));
             this.repositorioAcervoSolicitacaoItem = repositorioAcervoSolicitacaoItem ?? throw new ArgumentNullException(nameof(repositorioAcervoSolicitacaoItem));
-            this.servicoPublicarNaFilaRabbit = servicoPublicarNaFilaRabbit ?? throw new ArgumentNullException(nameof(servicoPublicarNaFilaRabbit));
+            this.servicoMensageria = servicoMensageria ?? throw new ArgumentNullException(nameof(servicoMensageria));
         }
 
         public async Task<long> Inserir(EventoCadastroDTO eventoCadastroDto)
@@ -242,7 +242,7 @@ namespace SME.CDEP.Aplicacao.Servicos
             var eventosFixos = await repositorioEventoFixo.ObterTodos();
 
             foreach (var eventoFixo in eventosFixos)
-                await servicoPublicarNaFilaRabbit.Publicar(RotasRabbit.ExecutarCriacaoDeEventosTipoFeriadoAnoAtualPorData, new EventoCadastroDTO(eventoFixo.Data, eventoFixo.Tipo, eventoFixo.Descricao), Guid.NewGuid(), null);
+                await servicoMensageria.Publicar(RotasRabbit.ExecutarCriacaoDeEventosTipoFeriadoAnoAtualPorData, new EventoCadastroDTO(eventoFixo.Data, eventoFixo.Tipo, eventoFixo.Descricao), Guid.NewGuid(), null);
         }
 
         public async Task GerarEventosMoveis()
@@ -261,7 +261,7 @@ namespace SME.CDEP.Aplicacao.Servicos
             };
             
             foreach (var eventoMovel in eventosMoveis)
-                await servicoPublicarNaFilaRabbit.Publicar(RotasRabbit.ExecutarCriacaoDeEventosTipoFeriadoAnoAtualPorData, eventoMovel, Guid.NewGuid(), null);
+                await servicoMensageria.Publicar(RotasRabbit.ExecutarCriacaoDeEventosTipoFeriadoAnoAtualPorData, eventoMovel, Guid.NewGuid(), null);
         }
         
         private static DateTime CalcularPascoa(int ano)
