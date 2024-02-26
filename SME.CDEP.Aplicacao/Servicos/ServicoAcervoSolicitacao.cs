@@ -10,6 +10,7 @@ using SME.CDEP.Dominio.Extensions;
 using SME.CDEP.Infra.Dados.Repositorios.Interfaces;
 using SME.CDEP.Infra.Dados;
 using SME.CDEP.Infra.Dominio.Enumerados;
+using SME.CDEP.Infra.Servicos.Mensageria;
 
 namespace SME.CDEP.Aplicacao.Servicos
 {
@@ -23,11 +24,12 @@ namespace SME.CDEP.Aplicacao.Servicos
         private readonly IRepositorioAcervo repositorioAcervo;
         private readonly IServicoUsuario servicoUsuario;
         private readonly IContextoAplicacao contextoAplicacao;
+        private readonly IServicoMensageria servicoMensageria;
         
         public ServicoAcervoSolicitacao(IRepositorioAcervoSolicitacao repositorioAcervoSolicitacao, 
             IMapper mapper,ITransacao transacao,IRepositorioAcervoSolicitacaoItem repositorioAcervoSolicitacaoItem,
             IRepositorioUsuario repositorioUsuario,IRepositorioAcervo repositorioAcervo,
-            IServicoUsuario servicoUsuario,IContextoAplicacao contextoAplicacao) 
+            IServicoUsuario servicoUsuario,IContextoAplicacao contextoAplicacao,IServicoMensageria servicoMensageria) 
         {
             this.repositorioAcervoSolicitacao = repositorioAcervoSolicitacao ?? throw new ArgumentNullException(nameof(repositorioAcervoSolicitacao));
             this.repositorioAcervoSolicitacaoItem = repositorioAcervoSolicitacaoItem ?? throw new ArgumentNullException(nameof(repositorioAcervoSolicitacaoItem));
@@ -37,6 +39,7 @@ namespace SME.CDEP.Aplicacao.Servicos
             this.repositorioAcervo = repositorioAcervo ?? throw new ArgumentNullException(nameof(repositorioAcervo));
             this.servicoUsuario = servicoUsuario ?? throw new ArgumentNullException(nameof(servicoUsuario));
             this.contextoAplicacao = contextoAplicacao ?? throw new ArgumentNullException(nameof(contextoAplicacao));
+            this.servicoMensageria = servicoMensageria ?? throw new ArgumentNullException(nameof(servicoMensageria));
         }
 
         public async Task<long> Inserir(AcervoSolicitacaoItemCadastroDTO[] acervosSolicitacaoItensCadastroDTO)
@@ -265,6 +268,7 @@ namespace SME.CDEP.Aplicacao.Servicos
                     await repositorioAcervoSolicitacaoItem.Atualizar(item);
                 }
                 tran.Commit();
+                
                 return true;
             }
             catch
@@ -341,6 +345,8 @@ namespace SME.CDEP.Aplicacao.Servicos
                 }
                 
                 tran.Commit();
+
+                await servicoMensageria.NotificarCancelamentoAtendimento(acervoSolicitacaoId);
                 return true;
             }
             catch
@@ -375,6 +381,8 @@ namespace SME.CDEP.Aplicacao.Servicos
                 acervoSolicitacao.Situacao = SituacaoSolicitacao.CANCELADO;
                 await repositorioAcervoSolicitacao.Atualizar(acervoSolicitacao);
             }
+            
+            await servicoMensageria.NotificarCancelamentoItemAtendimento(acervoSolicitacaoItemId);
             return true;
         }
 
