@@ -1,15 +1,13 @@
-﻿using System.Net.Mail;
+﻿using MailKit.Net.Smtp;
+using MimeKit;
 using SME.CDEP.Aplicacao.Servicos.Interface;
-using SME.CDEP.Dominio.Constantes;
 using SME.CDEP.Dominio.Entidades;
-using SME.CDEP.Dominio.Excecoes;
-using SME.CDEP.Infra.Dados.Repositorios;
 using SME.CDEP.Infra.Dados.Repositorios.Interfaces;
 using SME.CDEP.Infra.Dominio.Enumerados;
 
 namespace SME.CDEP.Aplicacao.Servicos
 {
-    public class ServicoNotificacaoEmail : ServicoNotificacao, IServicoNotificacaoEmail
+    public class ServicoNotificacaoEmail : IServicoNotificacaoEmail
     {
         private readonly string nomeDestinatario;
         private readonly string emailDestinatario;
@@ -17,17 +15,12 @@ namespace SME.CDEP.Aplicacao.Servicos
         private readonly string mensagem;
         private readonly IRepositorioParametroSistema repositorioParametroSistema;
 
-        public ServicoNotificacaoEmail(string nomeDestinatario, string emailDestinatario, string assunto, string mensagem,
-            IRepositorioParametroSistema repositorioParametroSistema)
+        public ServicoNotificacaoEmail(IRepositorioParametroSistema repositorioParametroSistema)
         {
-            this.nomeDestinatario = nomeDestinatario;
-            this.emailDestinatario = emailDestinatario;
-            this.assunto = assunto;
-            this.mensagem = mensagem;
-            this.repositorioParametroSistema = repositorioParametroSistema;
+            this.repositorioParametroSistema = repositorioParametroSistema ?? throw new ArgumentNullException(nameof(repositorioParametroSistema));
         }
 
-        public override async Task<bool> Enviar()
+        public async Task<bool> Enviar(string nomeDestinatario, string emailDestinatario, string assunto, string mensagem)
         {
             var anoAtual = DateTimeExtension.HorarioBrasilia().Year;
             
@@ -35,22 +28,25 @@ namespace SME.CDEP.Aplicacao.Servicos
             var nomeRemetente = await repositorioParametroSistema.ObterParametroPorTipoEAno(TipoParametroSistema.NomeRemetenteEmail, anoAtual);
             var enderecoSMTP = await repositorioParametroSistema.ObterParametroPorTipoEAno(TipoParametroSistema.EnderecoSMTP, anoAtual);
             var usuarioRemtenteEmail = await repositorioParametroSistema.ObterParametroPorTipoEAno(TipoParametroSistema.UsuarioRemetenteEmail, anoAtual);
+            var senhaRemtenteEmail = await repositorioParametroSistema.ObterParametroPorTipoEAno(TipoParametroSistema.SenhaRemetenteEmail, anoAtual);
+            var usarTLSEmail = await repositorioParametroSistema.ObterParametroPorTipoEAno(TipoParametroSistema.UsarTLSEmail, anoAtual);
+            var portaEnvioEmail = await repositorioParametroSistema.ObterParametroPorTipoEAno(TipoParametroSistema.PortaEnvioEmail, anoAtual);
 
             var message = new MimeMessage();
-            message.From.Add(new MailboxAddress(configuracaoEmail.Nome, configuracaoEmail.Email));
+            message.From.Add(new MailboxAddress(nomeRemetente.Valor, emailRemetente.Valor));
             message.To.Add(new MailboxAddress(nomeDestinatario, emailDestinatario));
             message.Subject = assunto;
 
             message.Body = new TextPart("html")
             {
-                Text = mensagemHtml
+                Text = mensagem
             };
 
             using (var client = new SmtpClient())
             {
-                client.Connect(configuracaoEmail.Smtp, configuracaoEmail.Porta, configuracaoEmail.TLS);
+                client.Connect(enderecoSMTP.Valor, int.Parse(portaEnvioEmail.Valor), bool.Parse(usarTLSEmail.Valor));
 
-                client.Authenticate(configuracaoEmail.Usuario, configuracaoEmail.Senha);
+                client.Authenticate(usuarioRemtenteEmail.Valor, senhaRemtenteEmail.Valor);
 
                 client.Send(message);
                 client.Disconnect(true);

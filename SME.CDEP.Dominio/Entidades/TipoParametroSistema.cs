@@ -10,5 +10,6 @@
         UsuarioRemetenteEmail = 6,
         SenhaRemetenteEmail = 7,
         UsarTLSEmail = 8,
+        PortaEnvioEmail = 9,
     }
 }

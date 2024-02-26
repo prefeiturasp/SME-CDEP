@@ -89,3 +89,16 @@ select 'UsarTLSEmail',
        'Sistema'
 where not exists (select 1 from public.parametro_sistema where nome = 'UsarTLSEmail' and tipo = 8);
 
+--> Porta
+INSERT INTO public.parametro_sistema (nome, tipo, descricao, valor, ano, ativo, criado_em, criado_por, criado_login)
+select 'PortaEnvioEmail', 
+       9,
+       'Número da porta para envio do e-mail',
+       '587',
+       2024,
+       true,
+       now(),
+       'Sistema',
+       'Sistema'
+where not exists (select 1 from public.parametro_sistema where nome = 'PortaEnvioEmail' and tipo = 9);
+
