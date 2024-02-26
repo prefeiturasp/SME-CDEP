@@ -1,9 +1,11 @@
 ﻿using System.Net.Mail;
 using SME.CDEP.Aplicacao.Servicos.Interface;
 using SME.CDEP.Dominio.Constantes;
+using SME.CDEP.Dominio.Entidades;
 using SME.CDEP.Dominio.Excecoes;
 using SME.CDEP.Infra.Dados.Repositorios;
 using SME.CDEP.Infra.Dados.Repositorios.Interfaces;
+using SME.CDEP.Infra.Dominio.Enumerados;
 
 namespace SME.CDEP.Aplicacao.Servicos
 {
@@ -27,7 +29,12 @@ namespace SME.CDEP.Aplicacao.Servicos
 
         public override async Task<bool> Enviar()
         {
-            var emailRemetente = await repositorioParametroSistema.ObterParametroPorTipoEAno()
+            var anoAtual = DateTimeExtension.HorarioBrasilia().Year;
+            
+            var emailRemetente = await repositorioParametroSistema.ObterParametroPorTipoEAno(TipoParametroSistema.EmailRemetente, anoAtual);
+            var nomeRemetente = await repositorioParametroSistema.ObterParametroPorTipoEAno(TipoParametroSistema.NomeRemetenteEmail, anoAtual);
+            var enderecoSMTP = await repositorioParametroSistema.ObterParametroPorTipoEAno(TipoParametroSistema.EnderecoSMTP, anoAtual);
+            var usuarioRemtenteEmail = await repositorioParametroSistema.ObterParametroPorTipoEAno(TipoParametroSistema.UsuarioRemetenteEmail, anoAtual);
 
             var message = new MimeMessage();
             message.From.Add(new MailboxAddress(configuracaoEmail.Nome, configuracaoEmail.Email));
