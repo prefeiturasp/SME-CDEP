@@ -21,7 +21,7 @@ select '2024-01-25'::timestamp,2,'Aniversário de São Paulo (Municipal)', now()
 select '2024-04-21'::timestamp,2,'Tiradentes', now(), 'Sistema','Sistema'  where not exists (select 1 from evento_fixo where descricao = 'Tiradentes') union all
 select '2024-07-09'::timestamp,2,'Revolução Constitucionalista (Estadual)', now(), 'Sistema','Sistema'  where not exists (select 1 from evento_fixo where descricao = 'Revolução Constitucionalista (Estadual)') union all
 select '2024-09-07'::timestamp,2,'Independência', now(), 'Sistema','Sistema'  where not exists (select 1 from evento_fixo where descricao = 'Independência') union all
-select '2024-12-10'::timestamp,2,'Nossa Senhora Aparecida', now(), 'Sistema','Sistema'  where not exists (select 1 from evento_fixo where descricao = 'Nossa Senhora Aparecida') union all
+select '2024-10-12'::timestamp,2,'Nossa Senhora Aparecida', now(), 'Sistema','Sistema'  where not exists (select 1 from evento_fixo where descricao = 'Nossa Senhora Aparecida') union all
 select '2024-11-02'::timestamp,2,'Finados', now(), 'Sistema','Sistema'  where not exists (select 1 from evento_fixo where descricao = 'Finados') union all
 select '2024-11-15'::timestamp,2,'Proclamação da República', now(), 'Sistema','Sistema'  where not exists (select 1 from evento_fixo where descricao = 'Proclamação da República') union all
 select '2024-11-20'::timestamp,2,'Consciência Negra (Municipal)', now(), 'Sistema','Sistema'  where not exists (select 1 from evento_fixo where descricao = 'Consciência Negra (Municipal)') union all
