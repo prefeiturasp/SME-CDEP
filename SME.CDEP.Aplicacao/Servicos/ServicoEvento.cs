@@ -14,24 +14,45 @@ namespace SME.CDEP.Aplicacao.Servicos
     {
         private readonly IRepositorioEvento repositorioEvento;
         private readonly IRepositorioEventoFixo repositorioEventoFixo;
+        private readonly IRepositorioAcervoSolicitacaoItem repositorioAcervoSolicitacaoItem;
         private readonly IMapper mapper;
         
-        public ServicoEvento(IRepositorioEvento repositorioEvento,IMapper mapper,IRepositorioEventoFixo repositorioEventoFixo) 
+        public ServicoEvento(IRepositorioEvento repositorioEvento,IMapper mapper,IRepositorioEventoFixo repositorioEventoFixo, 
+            IRepositorioAcervoSolicitacaoItem repositorioAcervoSolicitacaoItem) 
         {
             this.repositorioEvento = repositorioEvento ?? throw new ArgumentNullException(nameof(repositorioEvento));
             this.mapper = mapper ?? throw new ArgumentNullException(nameof(mapper));
             this.repositorioEventoFixo = repositorioEventoFixo ?? throw new ArgumentNullException(nameof(repositorioEventoFixo));
+            this.repositorioAcervoSolicitacaoItem = repositorioAcervoSolicitacaoItem ?? throw new ArgumentNullException(nameof(repositorioAcervoSolicitacaoItem));
         }
 
         public async Task<long> Inserir(EventoCadastroDTO eventoCadastroDto)
         {
             var evento = mapper.Map<Evento>(eventoCadastroDto);
+
+            evento.Descricao =  eventoCadastroDto.Tipo.EhSuspensao() ? "Suspensão" :
+                eventoCadastroDto.Tipo.EhFeriado() ? "Feriado" : await ObterDetalhesDoAcervo(evento);
             
             await Validar(evento);
             
             return await repositorioEvento.Inserir(evento);
         }
-        
+
+        private async Task<string> ObterDetalhesDoAcervo(Evento evento)
+        {
+            if (evento.AcervoSolicitacaoItemId.HasValue)
+            {
+                var acervo = await repositorioAcervoSolicitacaoItem.ObterAcervoPorAcervoSolicitacaoItemId(evento.AcervoSolicitacaoItemId.Value);
+                
+                var codigoTombo = acervo.Codigo.EstaPreenchido() && acervo.CodigoNovo.EstaPreenchido() ? $"{acervo.Codigo}/{acervo.CodigoNovo}"
+                    : acervo.Codigo.EstaPreenchido() ? acervo.Codigo : acervo.CodigoNovo;
+
+                return $"Visita agendada ao acervo de tombo/código: {codigoTombo}";
+            }
+
+            return "Visita agendada";
+        }
+
         private async Task Validar(Evento evento)
         {
             if (evento.Justificativa.NaoEstaPreenchido() && evento.Tipo.EhSuspensao())

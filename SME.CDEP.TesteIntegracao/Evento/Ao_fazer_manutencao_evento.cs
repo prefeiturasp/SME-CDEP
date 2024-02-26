@@ -14,8 +14,8 @@ namespace SME.CDEP.TesteIntegracao.Eventos
         public Ao_fazer_manutencao_evento(CollectionFixture collectionFixture) : base(collectionFixture)
         {}
         
-        [Fact(DisplayName = "Evento - Inserir")]
-        public async Task Inserir()
+        [Fact(DisplayName = "Evento - Inserir visita")]
+        public async Task Inserir_visita()
         {
             var servicoEvento = GetServicoEvento();
             var eventoDto = EventoCadastroDTO.GerarEventoDTO(TipoEvento.VISITA).Generate(); 
@@ -27,7 +27,68 @@ namespace SME.CDEP.TesteIntegracao.Eventos
             retorno.ShouldNotBeNull();
             retorno.Id.ShouldBe(eventoId);
             retorno.Data.ShouldBe(eventoDto.Data);
-            retorno.Descricao.ShouldBe(eventoDto.Descricao);
+            retorno.Descricao.ShouldBe("Visita agendada");
+            retorno.Tipo.ShouldBe(eventoDto.Tipo);
+            retorno.Justificativa.ShouldBe(eventoDto.Justificativa);
+        }
+        
+        [Fact(DisplayName = "Evento - Inserir visita com acervo")]
+        public async Task Inserir_visita_com_acervo()
+        {
+            await InserirDadosBasicosAleatorios();
+
+            await InserirAcervoTridimensional();
+
+            await InserirAcervoSolicitacao(10);
+            
+            var servicoEvento = GetServicoEvento();
+            var eventoDto = EventoCadastroDTO.GerarEventoDTO(TipoEvento.VISITA).Generate();
+            eventoDto.AcervoSolicitacaoItemId = 1;
+            
+            var eventoId = await servicoEvento.Inserir(eventoDto);
+            eventoId.ShouldBeGreaterThan(0);
+            
+            var retorno = ObterTodos<Dominio.Entidades.Evento>().LastOrDefault();
+            retorno.ShouldNotBeNull();
+            retorno.Id.ShouldBe(eventoId);
+            retorno.Data.ShouldBe(eventoDto.Data);
+            retorno.Descricao.Contains("Visita agendada ao acervo de tombo/código:").ShouldBeTrue();
+            retorno.Tipo.ShouldBe(eventoDto.Tipo);
+            retorno.Justificativa.ShouldBe(eventoDto.Justificativa);
+        }
+        
+        [Fact(DisplayName = "Evento - Inserir feriado")]
+        public async Task Inserir_feriado()
+        {
+            var servicoEvento = GetServicoEvento();
+            var eventoDto = EventoCadastroDTO.GerarEventoDTO(TipoEvento.FERIADO).Generate(); 
+
+            var eventoId = await servicoEvento.Inserir(eventoDto);
+            eventoId.ShouldBeGreaterThan(0);
+            
+            var retorno = ObterTodos<Dominio.Entidades.Evento>().LastOrDefault();
+            retorno.ShouldNotBeNull();
+            retorno.Id.ShouldBe(eventoId);
+            retorno.Data.ShouldBe(eventoDto.Data);
+            retorno.Descricao.ShouldBe("Feriado");
+            retorno.Tipo.ShouldBe(eventoDto.Tipo);
+            retorno.Justificativa.ShouldBe(eventoDto.Justificativa);
+        }
+        
+        [Fact(DisplayName = "Evento - Inserir suspensão")]
+        public async Task Inserir_suspensao()
+        {
+            var servicoEvento = GetServicoEvento();
+            var eventoDto = EventoCadastroDTO.GerarEventoDTO(TipoEvento.SUSPENSAO).Generate(); 
+
+            var eventoId = await servicoEvento.Inserir(eventoDto);
+            eventoId.ShouldBeGreaterThan(0);
+            
+            var retorno = ObterTodos<Dominio.Entidades.Evento>().LastOrDefault();
+            retorno.ShouldNotBeNull();
+            retorno.Id.ShouldBe(eventoId);
+            retorno.Data.ShouldBe(eventoDto.Data);
+            retorno.Descricao.ShouldBe("Suspensão");
             retorno.Tipo.ShouldBe(eventoDto.Tipo);
             retorno.Justificativa.ShouldBe(eventoDto.Justificativa);
         }
@@ -101,7 +162,7 @@ namespace SME.CDEP.TesteIntegracao.Eventos
 
             var eventosTag = await servicoEvento.ObterEventosTagPorData(diaMes);
             eventosTag.ShouldNotBeNull();
-            eventosTag.All(a=> a.TipoId.EstaPreenchido()).ShouldBeTrue();
+            eventosTag.All(a=> a.Tipo.EstaPreenchido()).ShouldBeTrue();
         }
         
         [Fact(DisplayName = "Evento - Excluir logicamente")]
