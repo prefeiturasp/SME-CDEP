@@ -2,6 +2,7 @@
 {
     public enum TipoParametroSistema
     {
-        TermoCompromissoPesquisador = 1
+        TermoCompromissoPesquisador = 1,
+        EnderecoContatoCDEPConfirmacaoCancelamentoVisita = 2
     }
 }
