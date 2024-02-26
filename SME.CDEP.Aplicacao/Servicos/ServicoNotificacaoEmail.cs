@@ -27,7 +27,7 @@ namespace SME.CDEP.Aplicacao.Servicos
 
         public override async Task<bool> Enviar()
         {
-            var emailRemetente = 
+            var emailRemetente = await repositorioParametroSistema.ObterParametroPorTipoEAno()
 
             var message = new MimeMessage();
             message.From.Add(new MailboxAddress(configuracaoEmail.Nome, configuracaoEmail.Email));
