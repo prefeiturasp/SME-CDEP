@@ -11,14 +11,14 @@ namespace SME.CDEP.Infra.Servicos.ServicoArmazenamento
     {
         private MinioClient minioClient;
         private ConfiguracaoArmazenamentoOptions configuracaoArmazenamentoOptions;
-        private IServicoMensageria servicoMensageria;
+        private IServicoMensageriaLogs servicoMensageriaLogs;
         private readonly IConfiguration configuration;
 
-        public ServicoArmazenamento(IOptions<ConfiguracaoArmazenamentoOptions> configuracaoArmazenamentoOptions, IConfiguration configuration, IServicoMensageria servicoMensageria)
+        public ServicoArmazenamento(IOptions<ConfiguracaoArmazenamentoOptions> configuracaoArmazenamentoOptions, IConfiguration configuration, IServicoMensageriaLogs servicoMensageriaLogs)
         {
             this.configuracaoArmazenamentoOptions = configuracaoArmazenamentoOptions?.Value ?? throw new ArgumentNullException(nameof(configuracaoArmazenamentoOptions));
             this.configuration = configuration ?? throw new ArgumentNullException(nameof(configuration));
-            this.servicoMensageria = servicoMensageria ?? throw new ArgumentNullException(nameof(servicoMensageria));
+            this.servicoMensageriaLogs = servicoMensageriaLogs ?? throw new ArgumentNullException(nameof(servicoMensageriaLogs));
 
             Inicializar();
         }

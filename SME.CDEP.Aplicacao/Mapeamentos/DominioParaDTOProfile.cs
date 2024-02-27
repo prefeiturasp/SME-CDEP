@@ -231,8 +231,23 @@ namespace SME.CDEP.Aplicacao.Mapeamentos
             CreateMap<AcervoSolicitacao,AcervoSolicitacaoManualDTO>().ReverseMap();
             CreateMap<AcervoSolicitacaoItem,AcervoSolicitacaoItemManualDTO>().ReverseMap();
             
-            CreateMap<AcervoSolicitacaoItemManualDTO,AcervoSolicitacaoItem>()
+            CreateMap<AcervoSolicitacaoItemManualDTO,AcervoSolicitacaoItem>().ReverseMap();
+            
+            CreateMap<DiaMesDTO,EventoCadastroDTO>().ReverseMap();
+            
+            CreateMap<EventoCadastroDTO,Evento>().ReverseMap();
+            
+            CreateMap<Evento,EventoTagDTO>()
+                .ForMember(dest => dest.TipoId, opt => opt.MapFrom(o => o.Tipo))
+                .ForMember(dest => dest.Tipo, opt => opt.MapFrom(o => o.Tipo.Descricao()))
                 .ReverseMap();
-        }            
+            
+            CreateMap<Evento,EventoDTO>().ReverseMap();
+            
+            CreateMap<EventoDetalhe,EventoDetalheDTO>()
+                .ForMember(dest => dest.TipoId, opt => opt.MapFrom(o => o.Tipo))
+                .ForMember(dest => dest.Tipo, opt => opt.MapFrom(o => o.Tipo.Descricao()))
+                .ReverseMap();
+        }
     }
 }

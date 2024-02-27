@@ -14,7 +14,7 @@ namespace SME.CDEP.IoC
                 .Bind(configuration.GetSection(ConfiguracaoArmazenamentoOptions.Secao), c => c.BindNonPublicProperties = true);
 
             services.AddSingleton<ConfiguracaoArmazenamentoOptions>();
-            services.AddSingleton<IServicoMensageria, ServicoMensageria>();
+            services.AddSingleton<IServicoMensageriaLogs, ServicoMensageriaLogs>();
             services.AddSingleton<IServicoArmazenamento, ServicoArmazenamento>();
         }
     }

@@ -84,7 +84,7 @@ namespace SME.CDEP.TesteIntegracao.Setup
             _serviceCollection.TryAddScoped<IServicoGerarMiniatura, ServicoGerarMiniaturaFake>();
             _serviceCollection.TryAddScoped<IServicoDownloadArquivo, ServicoDownloadArquivo>();
             _serviceCollection.TryAddScoped<IServicoMoverArquivoTemporario, ServicoMoverArquivoTemporario>();
-            _serviceCollection.TryAddScoped<IServicoMensageria, ServicoMensageriaFake>();
+            _serviceCollection.TryAddScoped<IServicoMensageriaLogs, ServicoMensageriaLogsFake>();
             _serviceCollection.TryAddScoped<IServicoAcervoArteGrafica, ServicoAcervoArteGrafica>();
             _serviceCollection.TryAddScoped<IServicoAcervoTridimensional, ServicoAcervoTridimensional>();
             _serviceCollection.TryAddScoped<IServicoAcervoAudiovisual, ServicoAcervoAudiovisual>();
@@ -99,6 +99,9 @@ namespace SME.CDEP.TesteIntegracao.Setup
             _serviceCollection.TryAddScoped<IServicoImportacaoArquivoAcervoTridimensional, ServicoImportacaoArquivoAcervoTridimensional>();
             _serviceCollection.TryAddScoped<IServicoImportacaoArquivoAcervo, ServicoImportacaoArquivoAcervo>();
             _serviceCollection.TryAddScoped<IServicoAcervoSolicitacao, ServicoAcervoSolicitacao>();
+            _serviceCollection.TryAddScoped<IServicoEvento, ServicoEvento>();
+            _serviceCollection.TryAddScoped<IServicoMensageria, ServicoMensageria>();
+            _serviceCollection.TryAddScoped<IServicoNotificacaoEmail, ServicoNotificacaoEmail>();
         }
         protected override void RegistrarHttpClients()
         {}

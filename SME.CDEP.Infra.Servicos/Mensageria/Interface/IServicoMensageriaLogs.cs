@@ -1,6 +1,6 @@
 ﻿namespace SME.CDEP.Infra.Servicos.Mensageria
 {
-    public interface IServicoMensageria
+    public interface IServicoMensageriaLogs
     {
         Task Enviar(string mensagem, string rota, string exchange);
     }
