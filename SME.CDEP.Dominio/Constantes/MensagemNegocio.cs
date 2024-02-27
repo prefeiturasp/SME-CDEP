@@ -2,6 +2,7 @@
 
 public class MensagemNegocio
 {
+    public const string PARAMETROS_INVALIDOS = "Parâmetros inválidos";
     public const string DATAS_DE_VISITAS_CONFLITANTES = "Já existem feriados ou suspensões registrados para a(s) data(s) da visita: {0}";
     public const string EVENTO_NAO_ENCONTRADO = "Evento não encontrado";
     public const string EXISTE_SUSPENSAO_OU_FERIADO_NESSE_DIA = "Já existe uma suspensão ou feriado cadastrado para essa data";

@@ -58,6 +58,10 @@ public class RegistradorDeDependencia
     {
         _serviceCollection.TryAddScoped<IExecutarCriacaoDeEventosTipoFeriadoAnoAtualUseCase, ExecutarCriacaoDeEventosTipoFeriadoAnoAtualUseCase>();
         _serviceCollection.TryAddScoped<IExecutarCriacaoDeEventosTipoFeriadoAnoAtualPorDataUseCase, ExecutarCriacaoDeEventosTipoFeriadoAnoAtualPorDataUseCase>();
+        
+        _serviceCollection.TryAddScoped<INotificarViaEmailCancelamentoAtendimento, NotificarViaEmailCancelamentoAtendimento>();
+        _serviceCollection.TryAddScoped<INotificarViaEmailCancelamentoAtendimentoItem, NotificarViaEmailCancelamentoAtendimentoItem>();
+        _serviceCollection.TryAddScoped<INotificarViaEmailConfirmacaoAtendimentoPresencial, NotificarViaEmailConfirmacaoAtendimentoPresencial>();
     }
 
     protected virtual void RegistrarRabbit()

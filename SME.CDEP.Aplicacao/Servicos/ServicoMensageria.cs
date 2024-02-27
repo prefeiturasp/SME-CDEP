@@ -41,16 +41,6 @@ namespace SME.CDEP.Aplicacao.Servicos
             return true;
         }
 
-        public Task NotificarCancelamentoAtendimento(long acervoSolicitacaoId)
-        {
-            throw new NotImplementedException();
-        }
-
-        public Task NotificarCancelamentoItemAtendimento(long acervoSolicitacaoItemId)
-        {
-            throw new NotImplementedException();
-        }
-
         private async Task<UsuarioDTO> ObterUsuario()
         {
             try

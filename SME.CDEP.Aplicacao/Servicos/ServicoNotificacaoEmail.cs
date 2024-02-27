@@ -54,5 +54,17 @@ namespace SME.CDEP.Aplicacao.Servicos
 
             return true;
         }
+
+        public Task NotificarCancelamentoAtendimento(IEnumerable<AcervoSolicitacaoItemDetalhe> detalhesAcervo)
+        {
+            var caminho = $"{Directory.GetCurrentDirectory()}/wwwroot/ModelosEmail/ValidacaoEmail_Conecta.txt";
+            
+            var textoArquivo = File.ReadAllText(caminho);
+            
+            var textoEmail = textoArquivo
+                .Replace("#NOME", nomeUsuario)
+                .Replace("#SISTEMA", nomeSistema)
+                .Replace("#LINK", string.Format(endereco,token));
+        }
     }
 }

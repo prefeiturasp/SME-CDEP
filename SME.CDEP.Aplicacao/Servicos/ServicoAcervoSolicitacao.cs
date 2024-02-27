@@ -7,6 +7,7 @@ using SME.CDEP.Dominio.Contexto;
 using SME.CDEP.Dominio.Entidades;
 using SME.CDEP.Dominio.Excecoes;
 using SME.CDEP.Dominio.Extensions;
+using SME.CDEP.Infra;
 using SME.CDEP.Infra.Dados.Repositorios.Interfaces;
 using SME.CDEP.Infra.Dados;
 using SME.CDEP.Infra.Dominio.Enumerados;
@@ -294,6 +295,8 @@ namespace SME.CDEP.Aplicacao.Servicos
                 }
                 tran.Commit();
                 
+                await servicoMensageria.Publicar(RotasRabbit.NotificarViaEmailConfirmacaoAtendimentoPresencial, itens.Where(w=> w.TipoAtendimento.EhAtendimentoPresencial()).Select(s=> s.Id).ToArray(), Guid.NewGuid(), null);
+                
                 return true;
             }
             catch
@@ -383,8 +386,7 @@ namespace SME.CDEP.Aplicacao.Servicos
                 }
                 
                 tran.Commit();
-
-                await servicoMensageria.NotificarCancelamentoAtendimento(acervoSolicitacaoId);
+                await servicoMensageria.Publicar(RotasRabbit.NotificarViaEmailCancelamentoAtendimentoItem, acervoSolicitacaoId, Guid.NewGuid(), null);
                 return true;
             }
             catch
@@ -422,8 +424,8 @@ namespace SME.CDEP.Aplicacao.Servicos
                 acervoSolicitacao.Situacao = SituacaoSolicitacao.CANCELADO;
                 await repositorioAcervoSolicitacao.Atualizar(acervoSolicitacao);
             }
+            await servicoMensageria.Publicar(RotasRabbit.NotificarViaEmailCancelamentoAtendimentoItem, acervoSolicitacaoItemId, Guid.NewGuid(), null);
             
-            await servicoMensageria.NotificarCancelamentoItemAtendimento(acervoSolicitacaoItemId);
             return true;
         }
 
