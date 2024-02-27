@@ -294,8 +294,9 @@ namespace SME.CDEP.Aplicacao.Servicos
                     
                 }
                 tran.Commit();
-                
-                await servicoMensageria.Publicar(RotasRabbit.NotificarViaEmailConfirmacaoAtendimentoPresencial, itens.Where(w=> w.TipoAtendimento.EhAtendimentoPresencial()).Select(s=> s.Id).ToArray(), Guid.NewGuid(), null);
+
+                if (acervoSolicitacaoConfirmar.Itens.Any(a=> a.TipoAtendimento.EhAtendimentoPresencial()))
+                    await servicoMensageria.Publicar(RotasRabbit.NotificarViaEmailConfirmacaoAtendimentoPresencial, acervoSolicitacao.Id, null);
                 
                 return true;
             }
@@ -386,7 +387,7 @@ namespace SME.CDEP.Aplicacao.Servicos
                 }
                 
                 tran.Commit();
-                await servicoMensageria.Publicar(RotasRabbit.NotificarViaEmailCancelamentoAtendimentoItem, acervoSolicitacaoId, Guid.NewGuid(), null);
+                await servicoMensageria.Publicar(RotasRabbit.NotificarViaEmailCancelamentoAtendimento, acervoSolicitacaoId, Guid.NewGuid(), null);
                 return true;
             }
             catch

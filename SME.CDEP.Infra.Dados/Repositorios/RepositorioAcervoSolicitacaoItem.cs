@@ -254,7 +254,8 @@ namespace SME.CDEP.Infra.Dados.Repositorios
               join acervo_solicitacao_item asi on aso.id = asi.acervo_solicitacao_id 
               join usuario u on u.id = aso.usuario_id 
               join acervo a on a.id = asi.acervo_id 
-            where not aso.excluido";
+            where not aso.excluido
+              and asi.situacao <> @finalizadoAutomaticamente ";
 
             if (acervoSolicitacaoId.HasValue)
                 query += " and aso.id = @acervoSolicitacaoId";
@@ -262,7 +263,13 @@ namespace SME.CDEP.Infra.Dados.Repositorios
             if (acervoSolicitacaoItemId.HasValue)
                 query += " and asi.id = @acervoSolicitacaoItemId";
             
-            return conexao.Obter().QueryAsync<AcervoSolicitacaoItemDetalhe>(query, new { acervoSolicitacaoId,acervoSolicitacaoItemId });
+            return conexao.Obter().QueryAsync<AcervoSolicitacaoItemDetalhe>(query, 
+                new
+                {
+                    acervoSolicitacaoId,
+                    acervoSolicitacaoItemId, 
+                    finalizadoAutomaticamente = (int)SituacaoSolicitacaoItem.FINALIZADO_AUTOMATICAMENTE
+                });
         }
         
         
