@@ -1,6 +1,9 @@
 ﻿using Dapper;
+using SME.CDEP.Dominio.Constantes;
 using SME.CDEP.Dominio.Contexto;
 using SME.CDEP.Dominio.Entidades;
+using SME.CDEP.Dominio.Excecoes;
+using SME.CDEP.Dominio.Extensions;
 using SME.CDEP.Infra.Dados.Repositorios.Interfaces;
 
 namespace SME.CDEP.Infra.Dados.Repositorios
@@ -18,7 +21,12 @@ namespace SME.CDEP.Infra.Dados.Repositorios
                              and tipo = @tipo
                              and ativo";
 
-            return await conexao.Obter().QueryFirstOrDefaultAsync<ParametroSistema>(query, new { tipo, ano });
+            var retorno = await conexao.Obter().QueryFirstOrDefaultAsync<ParametroSistema>(query, new { tipo, ano });
+            
+            if (retorno.EhNulo())
+                throw new NegocioException(string.Format(MensagemNegocio.PARAMETRO_NAO_ENCONTRADO_TIPO_X,tipo));
+
+            return retorno;
         }
     }
 }

@@ -243,12 +243,13 @@ namespace SME.CDEP.Infra.Dados.Repositorios
             var query = @"
             select asi.Id, 
                    aso.id as acervoSolicitacaoId,                   
-                   a.tipo as TipoAcervo
+                   a.tipo as TipoAcervo,
                    asi.dt_visita as dataVisita,
                    u.nome as solicitante,
                    a.titulo,
                    a.codigo,
-                   a.codigo_novo as codigoNovo                   
+                   a.codigo_novo as codigoNovo,
+                   u.email
             from acervo_solicitacao aso
               join acervo_solicitacao_item asi on aso.id = asi.acervo_solicitacao_id 
               join usuario u on u.id = aso.usuario_id 

@@ -11,5 +11,6 @@
         SenhaRemetenteEmail = 7,
         UsarTLSEmail = 8,
         PortaEnvioEmail = 9,
+        ModeloEmailCancelamentoSolicitacao = 10,
     }
 }
