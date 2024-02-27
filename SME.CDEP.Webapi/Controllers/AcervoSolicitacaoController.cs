@@ -9,6 +9,7 @@ namespace SME.CDEP.Webapi.Controllers;
 
 [ApiController]
 [ValidaDto]
+[ValidaDto]
 public class AcervoSolicitacaoController: BaseController
 {
     [HttpGet]

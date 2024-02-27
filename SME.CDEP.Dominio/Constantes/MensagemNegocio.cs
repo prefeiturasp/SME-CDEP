@@ -2,6 +2,14 @@
 
 public class MensagemNegocio
 {
+    public const string PARAMETRO_NAO_ENCONTRADO_TIPO_X = "Parâmetro não encontrado - Tipo:'{0}'";
+    public const string PARAMETROS_INVALIDOS = "Parâmetros inválidos";
+    public const string DATAS_DE_VISITAS_CONFLITANTES = "Já existem feriados ou suspensões registrados para a(s) data(s) da visita: {0}";
+    public const string EVENTO_NAO_ENCONTRADO = "Evento não encontrado";
+    public const string EXISTE_SUSPENSAO_OU_FERIADO_NESSE_DIA = "Já existe uma suspensão ou feriado cadastrado para essa data";
+    public const string DIA_INVALIDO = "Dia inválido";
+    public const string MES_INVALIDO = "Mês inválido";
+    public const string JUSTIFICATIVA_NAO_INFORMADA = "Justificativa não informada para a suspensão";
     public const string O_ANO_NAO_ESTA_SEGUINDO_FORMATO_ABNT = "O Ano do acervo não está seguindo o formato da ABNT";
     public const string ACERVO_NAO_ENCONTRADO = "Acervo não encontrado";
     public const string SOLICITACAO_ATENDIMENTO_NAO_ENCONTRADA = "Solicitação de atendimento não encontrada";
@@ -9,7 +17,7 @@ public class MensagemNegocio
     public const string NÃO_PODE_FINALIZAR_QUANDO_AGUARDANDO_VISITA_DATA_FUTURA_OU_AGUARDANDO_ATENDIMENTO = "O atendimento não pode ser finalizado enquanto houver itens aguardando para visita (datas de visita futura) ou aguardando atendimento";
     public const string ATENDIMENTO_NAO_ESTA_AGUARDANDO_VISITA = "Não é permitido realizar a alteração da data de visita em item quando a solicitação não estiver aguardando visita";
     public const string NAO_PODE_CANCELAR_ATENDIMENTO_COM_ITEM_FINALIZADO_AUTOMATICAMENTE = "O atendimento não pode ser cancelado quando existir itens finalizados automaticamente";
-    public const string SOLICITACAO_ATENDIMENTO_ITEM_NAO_CONTEM_ACERVOS = "Solicitação de atendimento não contém acervos";
+    public const string SOLICITACAO_ATENDIMENTO_NAO_CONTEM_ACERVOS = "Solicitação de atendimento não contém acervos";
     public const string TIPO_ATENDIMENTO_INVALIDO = "É necessário informar o tipo de atendimento em cada item do acervo";
     public const string ITENS_ACERVOS_PRESENCIAL_DEVEM_TER_DATA_ACERVO = "Nem todos os itens dos acervos do tipo presencial, tem data de visita";
     public const string ITENS_ACERVOS_PRESENCIAL_NAO_DEVEM_TER_DATA_ACERVO_PASSADAS = "As datas de visita dos acervos presenciais não podem ser datas passadas";
@@ -45,4 +53,5 @@ public class MensagemNegocio
     public const string NAO_PERMITIDO_ANO_FUTURO = "O campo ano não admite anos futuros. Apenas anos atuais e anteriores são permitidos.";
     public const string TOKEN_INVALIDO = "Token inválido";
     public const string CAMPO_X_ESPERADO_NUMERICO_E_COM_CASAS_DECIMAIS = "É esperado que o campo '{0}' seja um numérico com duas casas decimais separados por vírgula";
+    public const string SOLICITANTE_NAO_POSSUI_EMAIL = "O solicitante '{0}' não possui e-mail cadastrado, verifique!";
 }

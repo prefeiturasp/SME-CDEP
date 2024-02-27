@@ -1,7 +1,11 @@
-﻿using MailKit.Net.Smtp;
+﻿using System.Text;
+using MailKit.Net.Smtp;
 using MimeKit;
 using SME.CDEP.Aplicacao.Servicos.Interface;
+using SME.CDEP.Dominio.Constantes;
 using SME.CDEP.Dominio.Entidades;
+using SME.CDEP.Dominio.Excecoes;
+using SME.CDEP.Dominio.Extensions;
 using SME.CDEP.Infra.Dados.Repositorios.Interfaces;
 using SME.CDEP.Infra.Dominio.Enumerados;
 
@@ -53,6 +57,80 @@ namespace SME.CDEP.Aplicacao.Servicos
             }
 
             return true;
+        }
+
+        public async Task NotificarCancelamentoAtendimento(IEnumerable<AcervoSolicitacaoItemDetalhe> detalhesAcervo)
+        {
+            var destinatario = detalhesAcervo.FirstOrDefault().Solicitante;
+            
+            var anoAtual = DateTimeExtension.HorarioBrasilia().Year;
+
+            var modeloEmail = (await repositorioParametroSistema.ObterParametroPorTipoEAno(TipoParametroSistema.ModeloEmailCancelamentoSolicitacao, anoAtual)).Valor;
+
+            var enderecoContatoCDEP = (await repositorioParametroSistema.ObterParametroPorTipoEAno(TipoParametroSistema.EnderecoContatoCDEPConfirmacaoCancelamentoVisita, anoAtual)).Valor;
+            
+            var textoEmail = modeloEmail
+                .Replace("#NOME", destinatario)
+                .Replace("#CONTEUDO_TABELA", GerarConteudoTabela(detalhesAcervo))
+                .Replace("#ENDERECO_CDEP", enderecoContatoCDEP);
+
+            await Enviar(destinatario, detalhesAcervo.FirstOrDefault().Email, "CDEP - Atendimento cancelado", textoEmail);
+        }
+
+        private string GerarConteudoTabela(IEnumerable<AcervoSolicitacaoItemDetalhe> detalhesAcervo)
+        {
+            var conteudo = new StringBuilder();
+
+            conteudo.AppendLine(@"
+            <table>
+            <thead>
+                <tr>
+                    <th>Solicitação</th>
+                    <th>Item</th>
+                    <th>Código/Tombo</th>
+                    <th>Acervo</th>
+                    <th>Tipo</th>
+                    <th>Data da visita</th>                    
+                </tr>
+            </thead>
+            <tbody>");
+            
+            foreach (var detalhe in detalhesAcervo)
+            {
+                var codigoTombo = ObterCodigoTombo(detalhe);
+                
+                var dataVisita = ObterDataVisita(detalhe);
+                
+                conteudo.AppendLine($@"
+                <tr>
+                  <td>{detalhe.AcervoSolicitacaoId}</td>
+                  <td>{detalhe.Id}</td>
+                  <td>{codigoTombo}</td>
+                  <td>{detalhe.Titulo}</td>
+                  <td>{detalhe.TipoAcervo.Descricao()}</td>
+                  <td>{dataVisita}</td>
+                </tr>");
+            }
+
+            conteudo.AppendLine(@"
+            </tbody>
+            </table>");
+            
+            return conteudo.ToString();
+        }
+
+        private static string ObterDataVisita(AcervoSolicitacaoItemDetalhe detalhe)
+        {
+            return detalhe.DataVisita.HasValue ? detalhe.DataVisita.Value.ToString("dd/MM/yyyy") : "-";
+        }
+
+        private static string ObterCodigoTombo(AcervoSolicitacaoItemDetalhe detalhe)
+        {
+            return detalhe.Codigo.EstaPreenchido() && detalhe.codigoNovo.EstaPreenchido()
+                ? $"{detalhe.Codigo}/{detalhe.codigoNovo}"
+                : detalhe.Codigo.EstaPreenchido()
+                    ? detalhe.Codigo
+                    : detalhe.codigoNovo;
         }
     }
 }

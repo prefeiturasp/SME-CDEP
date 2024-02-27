@@ -1,0 +1,15 @@
+<Project Sdk="Microsoft.NET.Sdk.Web">
+
+    <PropertyGroup>
+        <TargetFramework>net6.0</TargetFramework>
+        <Nullable>enable</Nullable>
+        <ImplicitUsings>enable</ImplicitUsings>
+        <UserSecretsId>6b15fedf-a11f-4ab2-9d30-e61bb218a703</UserSecretsId>
+    </PropertyGroup>
+
+    <ItemGroup>
+      <ProjectReference Include="..\SME.CDEP.Dominio\SME.CDEP.Dominio.csproj" />
+      <ProjectReference Include="..\SME.CDEP.IoC\SME.CDEP.IoC.csproj" />
+    </ItemGroup>
+
+</Project>
