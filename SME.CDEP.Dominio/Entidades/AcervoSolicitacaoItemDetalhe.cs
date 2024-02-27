@@ -1,4 +1,5 @@
-﻿using SME.CDEP.Infra.Dominio.Enumerados;
+﻿using SME.CDEP.Dominio.Extensions;
+using SME.CDEP.Infra.Dominio.Enumerados;
 
 namespace SME.CDEP.Dominio.Entidades
 {
@@ -13,8 +14,30 @@ namespace SME.CDEP.Dominio.Entidades
         public string Responsavel { get; set; }
         public string Titulo { get; set; }
         public string Codigo { get; set; }
-        public string codigoNovo { get; set; }
+        public string CodigoNovo { get; set; }
         public string Email { get; set; }
         public SituacaoSolicitacaoItem Situacao { get; set; }
+        public string ObterDataVisitaOuTraco
+        {
+            get
+            {
+                if (!DataVisita.HasValue)
+                    return "-";
+
+                return DataVisita.Value.ToString("dd/MM/yyyy");
+            }
+        }
+        
+        public string ObterCodigoTombo
+        {
+            get
+            {
+                return Codigo.EstaPreenchido() && CodigoNovo.EstaPreenchido()
+                    ? $"{Codigo}/{CodigoNovo}"
+                    : Codigo.EstaPreenchido()
+                        ? Codigo
+                        : CodigoNovo;
+            }
+        }
     }
 }
