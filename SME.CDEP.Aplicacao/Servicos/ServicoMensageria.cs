@@ -40,6 +40,7 @@ namespace SME.CDEP.Aplicacao.Servicos
             await servicoMensageriaMetricas.Publicado(rota);
             return true;
         }
+
         private async Task<UsuarioDTO> ObterUsuario()
         {
             try

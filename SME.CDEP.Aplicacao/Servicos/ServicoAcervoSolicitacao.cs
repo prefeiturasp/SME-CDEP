@@ -7,10 +7,11 @@ using SME.CDEP.Dominio.Contexto;
 using SME.CDEP.Dominio.Entidades;
 using SME.CDEP.Dominio.Excecoes;
 using SME.CDEP.Dominio.Extensions;
+using SME.CDEP.Infra;
 using SME.CDEP.Infra.Dados.Repositorios.Interfaces;
 using SME.CDEP.Infra.Dados;
-using SME.CDEP.Infra.Dados.Repositorios;
 using SME.CDEP.Infra.Dominio.Enumerados;
+using SME.CDEP.Infra.Servicos.Mensageria;
 
 namespace SME.CDEP.Aplicacao.Servicos
 {
@@ -26,12 +27,14 @@ namespace SME.CDEP.Aplicacao.Servicos
         private readonly IContextoAplicacao contextoAplicacao;
         private readonly IRepositorioEvento repositorioEvento;
         private readonly IServicoEvento servicoEvento;
+        private readonly IServicoMensageria servicoMensageria;
         
         public ServicoAcervoSolicitacao(IRepositorioAcervoSolicitacao repositorioAcervoSolicitacao, 
             IMapper mapper,ITransacao transacao,IRepositorioAcervoSolicitacaoItem repositorioAcervoSolicitacaoItem,
             IRepositorioUsuario repositorioUsuario,IRepositorioAcervo repositorioAcervo,
             IServicoUsuario servicoUsuario,IContextoAplicacao contextoAplicacao,
-            IRepositorioEvento repositorioEvento, IServicoEvento servicoEvento) 
+            IRepositorioEvento repositorioEvento, IServicoEvento servicoEvento,
+            IServicoMensageria servicoMensageria) 
         {
             this.repositorioAcervoSolicitacao = repositorioAcervoSolicitacao ?? throw new ArgumentNullException(nameof(repositorioAcervoSolicitacao));
             this.repositorioAcervoSolicitacaoItem = repositorioAcervoSolicitacaoItem ?? throw new ArgumentNullException(nameof(repositorioAcervoSolicitacaoItem));
@@ -43,6 +46,7 @@ namespace SME.CDEP.Aplicacao.Servicos
             this.contextoAplicacao = contextoAplicacao ?? throw new ArgumentNullException(nameof(contextoAplicacao));
             this.repositorioEvento = repositorioEvento ?? throw new ArgumentNullException(nameof(repositorioEvento));
             this.servicoEvento = servicoEvento ?? throw new ArgumentNullException(nameof(servicoEvento));
+            this.servicoMensageria = servicoMensageria ?? throw new ArgumentNullException(nameof(servicoMensageria));
         }
 
         public async Task<long> Inserir(AcervoSolicitacaoItemCadastroDTO[] acervosSolicitacaoItensCadastroDTO)
@@ -290,6 +294,10 @@ namespace SME.CDEP.Aplicacao.Servicos
                     
                 }
                 tran.Commit();
+
+                if (acervoSolicitacaoConfirmar.Itens.Any(a=> a.TipoAtendimento.EhAtendimentoPresencial()))
+                    await servicoMensageria.Publicar(RotasRabbit.NotificarViaEmailConfirmacaoAtendimentoPresencial, acervoSolicitacao.Id, null);
+                
                 return true;
             }
             catch
@@ -379,6 +387,7 @@ namespace SME.CDEP.Aplicacao.Servicos
                 }
                 
                 tran.Commit();
+                await servicoMensageria.Publicar(RotasRabbit.NotificarViaEmailCancelamentoAtendimento, acervoSolicitacaoId, Guid.NewGuid(), null);
                 return true;
             }
             catch
@@ -416,6 +425,8 @@ namespace SME.CDEP.Aplicacao.Servicos
                 acervoSolicitacao.Situacao = SituacaoSolicitacao.CANCELADO;
                 await repositorioAcervoSolicitacao.Atualizar(acervoSolicitacao);
             }
+            await servicoMensageria.Publicar(RotasRabbit.NotificarViaEmailCancelamentoAtendimentoItem, acervoSolicitacaoItemId, Guid.NewGuid(), null);
+            
             return true;
         }
 
