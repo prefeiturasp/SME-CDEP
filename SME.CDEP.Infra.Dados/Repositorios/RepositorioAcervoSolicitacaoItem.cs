@@ -240,7 +240,7 @@ namespace SME.CDEP.Infra.Dados.Repositorios
         
         public Task<IEnumerable<AcervoSolicitacaoItemDetalhe>> ObterDetalhementoDosItensPorSolicitacaoOuItem(long? acervoSolicitacaoId,long? acervoSolicitacaoItemId)
         {
-            var query = $@"
+            var query = @"
             select asi.Id, 
                    aso.id as acervoSolicitacaoId,                   
                    a.tipo as TipoAcervo,
