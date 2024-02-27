@@ -133,7 +133,7 @@ select 'ModeloEmailCancelamentoSolicitacao',
     <p>Os acervos abaixo não estão disponíveis no momento, por isso sua solicitação foi cancelada:</p>
     #CONTEUDO_TABELA
     <p>Para mais detalhes, entre em contato com a equipe do CDEP por meio do formulário de contato disponível no endereço:</p>
-    <p><a href="#ENDERECO_CDEP">Formulário de Contato do CDEP</a></p>
+    <p><a href="#LINK_FORMULARIO_CDEP">Formulário de Contato do CDEP</a></p>
 </body>
 </html>
 ',
@@ -144,7 +144,7 @@ select 'ModeloEmailCancelamentoSolicitacao',
        'Sistema'
 where not exists (select 1 from public.parametro_sistema where nome = 'ModeloEmailCancelamentoSolicitacao' and tipo = 10);
 
---> Modelo e-mail para cancelamento de solicitação
+--> Modelo e-mail para cancelamento de solicitação item
 INSERT INTO public.parametro_sistema (nome, tipo, descricao, valor, ano, ativo, criado_em, criado_por, criado_login)
 select 'ModeloEmailCancelamentoSolicitacaoItem', 
        11,
@@ -172,10 +172,10 @@ select 'ModeloEmailCancelamentoSolicitacaoItem',
 </head>
 <body>
     <p><strong>Olá, #NOME</strong></p>
-    <p>O acervo abaixo foi cancelado:</p>
+    <p>A solicitação do acervo abaixo foi cancelada:</p>
     #CONTEUDO_TABELA
     <p>Para mais detalhes, entre em contato com a equipe do CDEP por meio do formulário de contato disponível no endereço:</p>
-    <p><a href="#ENDERECO_CDEP">Formulário de Contato do CDEP</a></p>
+    <p><a href="#LINK_FORMULARIO_CDEP">Formulário de Contato do CDEP</a></p>
 </body>
 </html>
 ',
@@ -185,4 +185,75 @@ select 'ModeloEmailCancelamentoSolicitacaoItem',
        'Sistema',
        'Sistema'
 where not exists (select 1 from public.parametro_sistema where nome = 'ModeloEmailCancelamentoSolicitacaoItem' and tipo = 11);
+
+--> Modelo e-mail para confirmação da solicitação
+INSERT INTO public.parametro_sistema (nome, tipo, descricao, valor, ano, ativo, criado_em, criado_por, criado_login)
+select 'ModeloEmailConfirmacaoSolicitacao', 
+       12,
+       'Modelo de conteúdo do e-mail a ser enviado quando confirmar o atendimento',
+       '<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Confirmação de Solicitação</title>
+    <style>
+        table {
+            border-collapse: collapse;
+            width: 100%;
+        }
+        th, td {
+            border: 1px solid #dddddd;
+            text-align: left;
+            padding: 8px;
+        }
+        th {
+            background-color: #f2f2f2;
+        }
+    </style>
+</head>
+<body>
+    <p><strong>Olá, #NOME</strong></p>
+    <p>Sua solicitação foi confirmada e você deverá se dirigir até a sede do CDEP para realizar a visita/retirada. </p>
+    <p>Caso não consiga comparecer nesta data, acesse o CDEP e altere a data na sua solicitação que está disponível na página inicial.</p>
+    #CONTEUDO_TABELA    
+	<p>#ENDERECO_SEDE_CDEP_VISITA</p>
+	<p>#HORARIO_FUNCIONAMENTO_SEDE_CDEP</p>
+	<p>Para mais detalhes, entre em contato com a equipe do CDEP por meio do formulário de contato disponível no endereço:</p>
+    <p><a href="#LINK_FORMULARIO_CDEP">Formulário de Contato do CDEP</a></p>
+</body>
+</html>
+',
+       2024,
+       true,
+       now(),
+       'Sistema',
+       'Sistema'
+where not exists (select 1 from public.parametro_sistema where nome = 'ModeloEmailConfirmacaoSolicitacao' and tipo = 12);
+
+--> Horário de funcionamento do CDEP para visitação
+INSERT INTO public.parametro_sistema (nome, tipo, descricao, valor, ano, ativo, criado_em, criado_por, criado_login)
+select 'EnderecoSedeCDEPVisita', 
+       13,
+       'Endereço da sede do CDEP para visitação',
+       'Endereço para visita: R. Estado de Israel, 200 - Vila Clementino, São Paulo - SP',
+       2024,
+       true,
+       now(),
+       'Sistema',
+       'Sistema'
+where not exists (select 1 from public.parametro_sistema where nome = 'EnderecoSedeCDEPVisita' and tipo = 13);
+
+--> Horário de funcionamento do CDEP para visitação
+INSERT INTO public.parametro_sistema (nome, tipo, descricao, valor, ano, ativo, criado_em, criado_por, criado_login)
+select 'HorarioFuncionamentoSedeCDEPVisita', 
+       14,
+       'Horário de funcionamento do CDEP para visitação',
+       'Horário de atendimento: 08:00 às 17:00h',
+       2024,
+       true,
+       now(),
+       'Sistema',
+       'Sistema'
+where not exists (select 1 from public.parametro_sistema where nome = 'HorarioFuncionamentoSedeCDEPVisita' and tipo = 14);
 

@@ -54,7 +54,7 @@ namespace SME.CDEP.Aplicacao
             var textoEmail = modeloEmail
                 .Replace("#NOME", destinatario)
                 .Replace("#CONTEUDO_TABELA", GerarConteudoTabela(detalhesAcervo.FirstOrDefault()))
-                .Replace("#ENDERECO_CDEP", enderecoContatoCDEP);
+                .Replace("#LINK_FORMULARIO_CDEP", enderecoContatoCDEP);
             
             await servicoNotificacaoEmail.Enviar(destinatario, detalhesAcervo.FirstOrDefault().Email, "CDEP - Atendimento item cancelado", textoEmail);
             
