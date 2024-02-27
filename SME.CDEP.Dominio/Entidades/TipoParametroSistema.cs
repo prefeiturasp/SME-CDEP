@@ -12,5 +12,6 @@
         UsarTLSEmail = 8,
         PortaEnvioEmail = 9,
         ModeloEmailCancelamentoSolicitacao = 10,
+        ModeloEmailCancelamentoSolicitacaoItem = 11,
     }
 }
