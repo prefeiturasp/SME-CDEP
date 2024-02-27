@@ -47,7 +47,7 @@ namespace SME.CDEP.Aplicacao
             
             var anoAtual = DateTimeExtension.HorarioBrasilia().Year;
 
-            var modeloEmail = (await repositorioParametroSistema.ObterParametroPorTipoEAno(TipoParametroSistema.ModeloEmailCancelamentoSolicitacao, anoAtual)).Valor;
+            var modeloEmail = (await repositorioParametroSistema.ObterParametroPorTipoEAno(TipoParametroSistema.ModeloEmailCancelamentoSolicitacaoItem, anoAtual)).Valor;
 
             var enderecoContatoCDEP = (await repositorioParametroSistema.ObterParametroPorTipoEAno(TipoParametroSistema.EnderecoContatoCDEPConfirmacaoCancelamentoVisita, anoAtual)).Valor;
             

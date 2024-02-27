@@ -144,3 +144,45 @@ select 'ModeloEmailCancelamentoSolicitacao',
        'Sistema'
 where not exists (select 1 from public.parametro_sistema where nome = 'ModeloEmailCancelamentoSolicitacao' and tipo = 10);
 
+--> Modelo e-mail para cancelamento de solicitação
+INSERT INTO public.parametro_sistema (nome, tipo, descricao, valor, ano, ativo, criado_em, criado_por, criado_login)
+select 'ModeloEmailCancelamentoSolicitacaoItem', 
+       11,
+       'Modelo de conteúdo do e-mail a ser enviado quando cancelar do item do atendimento',
+       '<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cancelamento de Item da Solicitação</title>
+    <style>
+        table {
+            border-collapse: collapse;
+            width: 100%;
+        }
+        th, td {
+            border: 1px solid #dddddd;
+            text-align: left;
+            padding: 8px;
+        }
+        th {
+            background-color: #f2f2f2;
+        }
+    </style>
+</head>
+<body>
+    <p><strong>Olá, #NOME</strong></p>
+    <p>O acervo abaixo foi cancelado:</p>
+    #CONTEUDO_TABELA
+    <p>Para mais detalhes, entre em contato com a equipe do CDEP por meio do formulário de contato disponível no endereço:</p>
+    <p><a href="#ENDERECO_CDEP">Formulário de Contato do CDEP</a></p>
+</body>
+</html>
+',
+       2024,
+       true,
+       now(),
+       'Sistema',
+       'Sistema'
+where not exists (select 1 from public.parametro_sistema where nome = 'ModeloEmailCancelamentoSolicitacaoItem' and tipo = 11);
+
