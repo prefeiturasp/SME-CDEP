@@ -212,7 +212,7 @@ namespace SME.CDEP.Aplicacao.Servicos
 
         public async Task InserirEventoVisita(DateTime dataVisita, long atendimentoItemId)
         {
-            await Inserir(new EventoCadastroDTO(dataVisita, TipoEvento.VISITA, TipoEvento.VISITA.Descricao(),atendimentoItemId));
+            await Inserir(new EventoCadastroDTO(dataVisita.Date, TipoEvento.VISITA, TipoEvento.VISITA.Descricao(),atendimentoItemId));
         }
 
         public async Task AtualizarEventoVisita(DateTime dataVisita, long atendimentoItemId)
@@ -223,7 +223,7 @@ namespace SME.CDEP.Aplicacao.Servicos
                 await InserirEventoVisita(dataVisita, atendimentoItemId);
             else
             {
-                evento.Data = dataVisita;
+                evento.Data = dataVisita.Date;
                 
                 await ValidarEAtualizar(evento);
             }
