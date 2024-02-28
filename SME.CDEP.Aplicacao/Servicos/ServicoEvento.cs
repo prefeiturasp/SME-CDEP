@@ -220,11 +220,13 @@ namespace SME.CDEP.Aplicacao.Servicos
             var evento = await repositorioEvento.ObterPorAtendimentoItemId(atendimentoItemId);
 
             if (evento.EhNulo())
-                throw new NegocioException(MensagemNegocio.SOLICITACAO_ATENDIMENTO_ITEM_NAO_ENCONTRADA);
-
-            evento.Data = dataVisita;
-            
-            await ValidarEAtualizar(evento);
+                await InserirEventoVisita(dataVisita, atendimentoItemId);
+            else
+            {
+                evento.Data = dataVisita;
+                
+                await ValidarEAtualizar(evento);
+            }
         }
 
         public async Task ExcluirEventoPorAcervoSolicitacaoItem(long atendimentoItemId)
