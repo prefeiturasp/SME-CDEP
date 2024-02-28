@@ -290,7 +290,7 @@ namespace SME.CDEP.Aplicacao.Servicos
                         await servicoEvento.ExcluirEventoPorAcervoSolicitacaoItem(item.Id);
                     
                     if (item.TipoAtendimento.EhAtendimentoPresencial())
-                        await servicoEvento.InserirEventoVisita(item.DataVisita.Value, item.Id);
+                        await servicoEvento.AtualizarEventoVisita(item.DataVisita.Value, item.Id);
                     
                 }
                 tran.Commit();
