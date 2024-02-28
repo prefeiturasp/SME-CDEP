@@ -20,7 +20,7 @@ namespace SME.CDEP.Aplicacao.Servicos
         {
             var retorno = await servicoAcessos.ObterPerfisUsuario(login);
             
-            if (retorno.PerfilUsuario.EhNulo())
+            if (retorno.PerfilUsuario.NaoPossuiElementos())
             {
                 await VincularPerfilExternoCoreSSO(login,new Guid(Constantes.PERFIL_EXTERNO_GUID));
                 retorno = await servicoAcessos.ObterPerfisUsuario(login);
