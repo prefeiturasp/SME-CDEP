@@ -42,9 +42,9 @@
         OperacoesSolicitacoes_E = 275,
         OperacoesSolicitacoes_A = 276,
         
-        GestaoDeVisitaCalendario_C = 305,
-        GestaoDeVisitaCalendario_I = 306,
-        GestaoDeVisitaCalendario_E = 307,
-        GestaoDeVisitaCalendario_A = 308,
+        GestaoDeVisitaCalendario_C = 297,
+        GestaoDeVisitaCalendario_I = 298,
+        GestaoDeVisitaCalendario_E = 299,
+        GestaoDeVisitaCalendario_A = 300,
     }
 }
