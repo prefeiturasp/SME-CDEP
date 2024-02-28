@@ -54,4 +54,5 @@ public class MensagemNegocio
     public const string TOKEN_INVALIDO = "Token inválido";
     public const string CAMPO_X_ESPERADO_NUMERICO_E_COM_CASAS_DECIMAIS = "É esperado que o campo '{0}' seja um numérico com duas casas decimais separados por vírgula";
     public const string SOLICITANTE_NAO_POSSUI_EMAIL = "O solicitante '{0}' não possui e-mail cadastrado, verifique!";
+    public const string EMAIL_INVALIDO = "O e-mail informado é inválido";
 }
