@@ -212,7 +212,7 @@ namespace SME.CDEP.Aplicacao.Servicos
 
         public async Task InserirEventoVisita(DateTime dataVisita, long atendimentoItemId)
         {
-            await Inserir(new EventoCadastroDTO(dataVisita, TipoEvento.VISITA, TipoEvento.VISITA.Descricao(),atendimentoItemId));
+            await Inserir(new EventoCadastroDTO(dataVisita.Date, TipoEvento.VISITA, TipoEvento.VISITA.Descricao(),atendimentoItemId));
         }
 
         public async Task AtualizarEventoVisita(DateTime dataVisita, long atendimentoItemId)
@@ -220,11 +220,13 @@ namespace SME.CDEP.Aplicacao.Servicos
             var evento = await repositorioEvento.ObterPorAtendimentoItemId(atendimentoItemId);
 
             if (evento.EhNulo())
-                throw new NegocioException(MensagemNegocio.SOLICITACAO_ATENDIMENTO_ITEM_NAO_ENCONTRADA);
-
-            evento.Data = dataVisita;
-            
-            await ValidarEAtualizar(evento);
+                await InserirEventoVisita(dataVisita, atendimentoItemId);
+            else
+            {
+                evento.Data = dataVisita.Date;
+                
+                await ValidarEAtualizar(evento);
+            }
         }
 
         public async Task ExcluirEventoPorAcervoSolicitacaoItem(long atendimentoItemId)
