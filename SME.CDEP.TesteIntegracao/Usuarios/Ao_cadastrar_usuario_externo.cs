@@ -120,7 +120,7 @@ namespace SME.CDEP.TesteIntegracao.Usuario
                 Nome = ConstantesTestes.USUARIO_INTERNO_99999999999, 
                 Senha = "Cdep@1234", ConfirmarSenha = "Cdep@1234",
                 Endereco = faker.Address.FullAddress(),
-                Numero = faker.Address.BuildingNumber().ConverterParaInteiro(),
+                Numero = faker.Address.BuildingNumber(),
                 Complemento = faker.Address.StreetSuffix(),
                 Cep = faker.Address.ZipCode(),
                 Cidade = faker.Address.City(),
@@ -182,7 +182,7 @@ namespace SME.CDEP.TesteIntegracao.Usuario
                 Login = login,
                 Nome = faker.Person.FullName,
                 Endereco = faker.Address.FullAddress(),
-                Numero = faker.Address.BuildingNumber().ConverterParaInteiro(),
+                Numero = faker.Address.BuildingNumber(),
                 Complemento = faker.Address.StreetSuffix(),
                 Cep = faker.Address.ZipCode(),
                 Cidade = faker.Address.City(),
@@ -201,7 +201,7 @@ namespace SME.CDEP.TesteIntegracao.Usuario
             var usuarioAlterado = new EnderecoUsuarioExternoDTO()
             {
                 Endereco = faker.Address.FullAddress(),
-                Numero = faker.Address.BuildingNumber().ConverterParaInteiro(),
+                Numero = faker.Address.BuildingNumber(),
                 Complemento = faker.Address.StreetSuffix(),
                 Cep = faker.Address.ZipCode(),
                 Cidade = faker.Address.City(),
@@ -258,7 +258,7 @@ namespace SME.CDEP.TesteIntegracao.Usuario
                 Login = login,
                 Nome = faker.Person.FullName,
                 Endereco = faker.Address.FullAddress(),
-                Numero = faker.Address.BuildingNumber().ConverterParaInteiro(),
+                Numero = faker.Address.BuildingNumber(),
                 Complemento = faker.Address.StreetSuffix(),
                 Cep = faker.Address.ZipCode(),
                 Cidade = faker.Address.City(),
@@ -276,7 +276,7 @@ namespace SME.CDEP.TesteIntegracao.Usuario
             var usuarioAlterado = new EnderecoUsuarioExternoDTO()
             {
                 Endereco = faker.Address.FullAddress(),
-                Numero = faker.Address.BuildingNumber().ConverterParaInteiro(),
+                Numero = faker.Address.BuildingNumber(),
                 Complemento = faker.Address.StreetSuffix(),
                 Cep = faker.Address.ZipCode(),
                 Cidade = faker.Address.City(),

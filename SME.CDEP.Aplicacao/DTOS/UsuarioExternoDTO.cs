@@ -28,7 +28,7 @@ namespace SME.CDEP.Aplicacao.DTOS
         
 
         [Required(ErrorMessage = "É necessário informar o número.")]
-        public int Numero { get; set; }
+        public string Numero { get; set; }
         
         
         [Required(ErrorMessage = "É necessário informar a cidade.")]
