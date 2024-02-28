@@ -11,5 +11,7 @@ namespace SME.CDEP.Aplicacao.DTOS
         public string Titulo { get; set; }
         public string CodigoTombo { get; set; }
         public long? AcervoSolicitacaoId { get; set; }
+        public string Descricao { get; set; }
+        public string Justificativa { get; set; }
     }
 }
