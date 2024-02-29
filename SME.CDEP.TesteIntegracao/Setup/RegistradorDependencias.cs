@@ -85,6 +85,8 @@ namespace SME.CDEP.TesteIntegracao.Setup
             _serviceCollection.TryAddScoped<IServicoDownloadArquivo, ServicoDownloadArquivo>();
             _serviceCollection.TryAddScoped<IServicoMoverArquivoTemporario, ServicoMoverArquivoTemporario>();
             _serviceCollection.TryAddScoped<IServicoMensageriaLogs, ServicoMensageriaLogsFake>();
+            _serviceCollection.TryAddScoped<IServicoMensageriaCDEP, ServicoMensageriaCDEPFake>();
+            _serviceCollection.TryAddScoped<IServicoMensageriaMetricas, ServicoMensageriaMetricasFake>();
             _serviceCollection.TryAddScoped<IServicoAcervoArteGrafica, ServicoAcervoArteGrafica>();
             _serviceCollection.TryAddScoped<IServicoAcervoTridimensional, ServicoAcervoTridimensional>();
             _serviceCollection.TryAddScoped<IServicoAcervoAudiovisual, ServicoAcervoAudiovisual>();
