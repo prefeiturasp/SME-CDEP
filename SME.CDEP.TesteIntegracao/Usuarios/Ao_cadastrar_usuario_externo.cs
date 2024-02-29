@@ -128,7 +128,8 @@ namespace SME.CDEP.TesteIntegracao.Usuario
                 Telefone = faker.Phone.PhoneNumber("(##) #####-####"),
                 Bairro = faker.Address.County(),
                 Tipo = TipoUsuario.PROFESSOR,
-                Instituicao = faker.Company.CompanyName()
+                Instituicao = faker.Company.CompanyName(),
+                Email = faker.Person.Email
             };
             var usuario = await GetServicoUsuario().InserirUsuarioExterno(usuarioExterno);
             usuario.ShouldBeTrue();
