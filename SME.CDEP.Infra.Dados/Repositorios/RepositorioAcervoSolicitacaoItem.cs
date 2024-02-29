@@ -249,7 +249,8 @@ namespace SME.CDEP.Infra.Dados.Repositorios
                    a.titulo,
                    a.codigo,
                    a.codigo_novo as codigoNovo,
-                   u.email
+                   u.email,
+                   asi.situacao
             from acervo_solicitacao aso
               join acervo_solicitacao_item asi on aso.id = asi.acervo_solicitacao_id 
               join usuario u on u.id = aso.usuario_id 
