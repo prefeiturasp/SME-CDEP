@@ -8,6 +8,7 @@ public class AcervoSolicitacaoItemRetornoCadastroDTO
     public string Titulo { get; set; }
     public string[] AutoresCreditos { get; set; }
     public string Situacao { get; set; }
+    public int SituacaoId { get; set; }
     public string TipoAtendimento { get; set; }
     public DateTime? DataVisita { get; set; }
     public IEnumerable<ArquivoCodigoNomeDTO> Arquivos { get; set; }
