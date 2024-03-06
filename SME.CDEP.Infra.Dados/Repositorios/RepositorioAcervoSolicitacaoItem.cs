@@ -241,7 +241,7 @@ namespace SME.CDEP.Infra.Dados.Repositorios
             return conexao.Obter().QueryFirstOrDefaultAsync<bool>(query, new { acervoSolicitacaoItemId, situacaoAguardandoVisita = (int)SituacaoSolicitacao.AGUARDANDO_VISITA, situacoesItensConfirmadas });
         }
         
-        public Task<IEnumerable<AcervoSolicitacaoItemDetalhe>> ObterDetalhementoDosItensPorSolicitacaoOuItem(long? acervoSolicitacaoId,long? acervoSolicitacaoItemId)
+        public Task<IEnumerable<AcervoSolicitacaoItemDetalhe>> ObterDetalhamentoDosItensPorSolicitacaoOuItem(long? acervoSolicitacaoId,long[] acervoSolicitacaoItensId)
         {
             var query = @"
             select asi.Id, 
@@ -264,14 +264,14 @@ namespace SME.CDEP.Infra.Dados.Repositorios
             if (acervoSolicitacaoId.HasValue)
                 query += " and aso.id = @acervoSolicitacaoId";
             
-            if (acervoSolicitacaoItemId.HasValue)
-                query += " and asi.id = @acervoSolicitacaoItemId";
+            if (acervoSolicitacaoItensId.NaoEhNulo())
+                query += " and asi.id = any(@acervoSolicitacaoItensId)";
             
             return conexao.Obter().QueryAsync<AcervoSolicitacaoItemDetalhe>(query, 
                 new
                 {
                     acervoSolicitacaoId,
-                    acervoSolicitacaoItemId, 
+                    acervoSolicitacaoItensId, 
                     finalizadoAutomaticamente = (int)SituacaoSolicitacaoItem.FINALIZADO_AUTOMATICAMENTE
                 });
         }

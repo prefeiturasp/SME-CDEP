@@ -234,6 +234,8 @@ namespace SME.CDEP.Aplicacao.Servicos
         
         public async Task<bool> ConfirmarAtendimento(AcervoSolicitacaoConfirmarDTO acervoSolicitacaoConfirmar)
         {
+            var ehAtendimentoPorItem = acervoSolicitacaoConfirmar.Itens.PossuiApenasUmItem(); 
+                
             var acervoSolicitacao = await repositorioAcervoSolicitacao.ObterPorId(acervoSolicitacaoConfirmar.Id);
             
             if (acervoSolicitacao.EhNulo())
@@ -245,7 +247,11 @@ namespace SME.CDEP.Aplicacao.Servicos
             if (acervoSolicitacaoConfirmar.Itens.Any(a=> a.TipoAtendimento.EhAtendimentoPresencial() && !a.DataVisita.HasValue))
                 throw new NegocioException(MensagemNegocio.ITENS_ACERVOS_PRESENCIAL_DEVEM_TER_DATA_ACERVO);
             
-            var itens = await repositorioAcervoSolicitacaoItem.ObterItensEmSituacaoAguardandoAtendimentoOuVisitaOuFinalizadoManualmentePorSolicitacaoId(acervoSolicitacaoConfirmar.Id);
+            var itensDaSolicitacao = await repositorioAcervoSolicitacaoItem.ObterItensEmSituacaoAguardandoAtendimentoOuVisitaOuFinalizadoManualmentePorSolicitacaoId(acervoSolicitacaoConfirmar.Id);
+
+            var itensConfirmados = ehAtendimentoPorItem 
+                ? itensDaSolicitacao.Where(w => w.Id == acervoSolicitacaoConfirmar.Itens.FirstOrDefault().Id) 
+                : itensDaSolicitacao;
             
             var datasDasVisitas = acervoSolicitacaoConfirmar.Itens
                 .Where(w => w.TipoAtendimento.EhAtendimentoPresencial())
@@ -258,13 +264,7 @@ namespace SME.CDEP.Aplicacao.Servicos
             var tran = transacao.Iniciar();
             try
             {
-                acervoSolicitacao.Situacao = acervoSolicitacaoConfirmar.Itens.All(a=> a.TipoAtendimento.EhAtendimentoViaEmail()) 
-                    ? SituacaoSolicitacao.FINALIZADO_ATENDIMENTO : SituacaoSolicitacao.AGUARDANDO_VISITA;
-                
-                acervoSolicitacao.DataSolicitacao = DateTimeExtension.HorarioBrasilia();
-                await repositorioAcervoSolicitacao.Atualizar(acervoSolicitacao);
-                
-                foreach (var item in itens)
+                foreach (var item in itensConfirmados)
                 {
                     var itemAlterado = acervoSolicitacaoConfirmar.Itens.FirstOrDefault(f => f.Id == item.Id);
 
@@ -296,9 +296,20 @@ namespace SME.CDEP.Aplicacao.Servicos
                     
                 }
                 tran.Commit();
+                
+                acervoSolicitacao.Situacao = await DeterminarSituacaoAtendimento(acervoSolicitacaoConfirmar.Id);
+                acervoSolicitacao.DataSolicitacao = DateTimeExtension.HorarioBrasilia();
+                await repositorioAcervoSolicitacao.Atualizar(acervoSolicitacao);
 
-                if (acervoSolicitacaoConfirmar.Itens.Any(a=> a.TipoAtendimento.EhAtendimentoPresencial()))
-                    await servicoMensageria.Publicar(RotasRabbit.NotificarViaEmailConfirmacaoAtendimentoPresencial, acervoSolicitacao.Id, null);
+                if (itensConfirmados.Any(a => a.TipoAtendimento.EhAtendimentoPresencial()))
+                {
+                    var confirmarAtendimento = new ConfirmarAtendimentoDTO()
+                    {
+                        Id = acervoSolicitacao.Id,
+                        Itens = itensConfirmados.Select(s => s.Id)
+                    };
+                    await servicoMensageria.Publicar(RotasRabbit.NotificarViaEmailConfirmacaoAtendimentoPresencial, confirmarAtendimento, null);
+                }
                 
                 return true;
             }
@@ -311,6 +322,27 @@ namespace SME.CDEP.Aplicacao.Servicos
             {
                 tran.Dispose();
             }
+        }
+
+        private async Task<SituacaoSolicitacao> DeterminarSituacaoAtendimento(long id)
+        {
+            var itensDaSolicitacao = await repositorioAcervoSolicitacaoItem.ObterItensEmSituacaoAguardandoAtendimentoOuVisitaOuFinalizadoManualmentePorSolicitacaoId(id);
+            
+            var temItensAguardandoVisita = itensDaSolicitacao.Any(a => a.Situacao.EstaAguardandoVisita());
+            var temItensAguardandoAtendimento = itensDaSolicitacao.Any(a => a.Situacao.EstaAguardandoAtendimento());
+            var todosItensFinalizadosManualmente = itensDaSolicitacao.All(a => a.Situacao.EstaFinalizadoManualmente());
+            var todosItensAguardandoVisita = itensDaSolicitacao.All(a => a.Situacao.EstaAguardandoVisita());
+            
+            if (todosItensFinalizadosManualmente)
+                return SituacaoSolicitacao.FINALIZADO_ATENDIMENTO;
+
+            if (temItensAguardandoAtendimento)
+                return SituacaoSolicitacao.ATENDIDO_PARCIALMENTE;
+            
+            if (todosItensAguardandoVisita || temItensAguardandoVisita)
+                return SituacaoSolicitacao.AGUARDANDO_VISITA;
+
+            throw new NegocioException(MensagemNegocio.SITUACAO_NAO_MAPEADA);
         }
 
         private async Task ValidarConflitosEventos(IEnumerable<DateTime> datasDasVisitas)
