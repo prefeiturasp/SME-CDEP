@@ -54,7 +54,7 @@ namespace SME.CDEP.Infra.Dados.Repositorios
                join acervo_solicitacao aso on aso.id = asi.acervo_solicitacao_id
                join acervo a on a.id = asi.acervo_id
                join usuario u on u.id = aso.usuario_id
-               left join usuario ur on ur.id = aso.usuario_responsavel_id and not ur.excluido
+               left join usuario ur on ur.id = asi.usuario_responsavel_id and not ur.excluido
             where not asi.excluido
               and not aso.excluido
               and not a.excluido 
@@ -105,7 +105,8 @@ namespace SME.CDEP.Infra.Dados.Repositorios
                criado_em,
                criado_por,
                criado_login,
-               tipo_atendimento
+               tipo_atendimento,
+               usuario_responsavel_id
             from acervo_solicitacao_item
             where acervo_solicitacao_id = @acervoSolicitacaoId
               and situacao = any(@situacoesItensAguardandoAtendimentoEVisitaOuFinalizadoManualmente) 
@@ -125,7 +126,8 @@ namespace SME.CDEP.Infra.Dados.Repositorios
                criado_em,
                criado_por,
                criado_login,
-               tipo_atendimento
+               tipo_atendimento,
+               usuario_responsavel_id
             from acervo_solicitacao_item
             where acervo_solicitacao_id = @acervoSolicitacaoId
               and situacao = @situacaoAguardandoVisita 
@@ -145,7 +147,8 @@ namespace SME.CDEP.Infra.Dados.Repositorios
                criado_em,
                criado_por,
                criado_login,
-               tipo_atendimento
+               tipo_atendimento,
+               usuario_responsavel_id
             from acervo_solicitacao_item
             where acervo_solicitacao_id = @acervoSolicitacaoId 
               and not excluido";
@@ -272,7 +275,5 @@ namespace SME.CDEP.Infra.Dados.Repositorios
                     finalizadoAutomaticamente = (int)SituacaoSolicitacaoItem.FINALIZADO_AUTOMATICAMENTE
                 });
         }
-        
-        
     }
 }

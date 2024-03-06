@@ -46,7 +46,6 @@ namespace SME.CDEP.TesteIntegracao
             solicitacoes.FirstOrDefault().DataSolicitacao.ShouldBe(DateTimeExtension.HorarioBrasilia().Date);
             solicitacoes.FirstOrDefault().Origem.ShouldBe(Origem.Portal);
             solicitacoes.FirstOrDefault().Situacao.ShouldBe(SituacaoSolicitacao.AGUARDANDO_ATENDIMENTO);
-            solicitacoes.FirstOrDefault().ResponsavelId.ShouldBeNull();
             solicitacoes.FirstOrDefault().UsuarioId.ShouldBeGreaterThan(0);
             solicitacoes.FirstOrDefault().Excluido.ShouldBeFalse();
             
@@ -59,6 +58,7 @@ namespace SME.CDEP.TesteIntegracao
             primeiroItem.DataVisita.ShouldBeNull();
             primeiroItem.AcervoSolicitacaoId.ShouldBeGreaterThan(0);
             primeiroItem.Excluido.ShouldBeFalse();
+            primeiroItem.ResponsavelId.ShouldBeNull();
             
             var segundoItem = itens.FirstOrDefault(f => f.AcervoId == 2);
             segundoItem.Situacao.ShouldBe(SituacaoSolicitacaoItem.AGUARDANDO_ATENDIMENTO);
@@ -66,6 +66,7 @@ namespace SME.CDEP.TesteIntegracao
             segundoItem.DataVisita.ShouldBeNull();
             segundoItem.AcervoSolicitacaoId.ShouldBeGreaterThan(0);
             segundoItem.Excluido.ShouldBeFalse();
+            segundoItem.ResponsavelId.ShouldBeNull();
             
             var terceiroItem = itens.FirstOrDefault(f => f.AcervoId == 3);
             terceiroItem.Situacao.ShouldBe(SituacaoSolicitacaoItem.AGUARDANDO_ATENDIMENTO);
@@ -73,6 +74,7 @@ namespace SME.CDEP.TesteIntegracao
             terceiroItem.DataVisita.ShouldBeNull();
             terceiroItem.AcervoSolicitacaoId.ShouldBeGreaterThan(0);
             terceiroItem.Excluido.ShouldBeFalse();
+            terceiroItem.ResponsavelId.ShouldBeNull();
         }
         
         [Fact(DisplayName = "Acervo Solicitação - Ao enviar a solicitação para finalizado - online - com arquivos")]
@@ -93,7 +95,6 @@ namespace SME.CDEP.TesteIntegracao
             solicitacoes.FirstOrDefault().DataSolicitacao.ShouldBe(DateTimeExtension.HorarioBrasilia().Date);
             solicitacoes.FirstOrDefault().Origem.ShouldBe(Origem.Portal);
             solicitacoes.FirstOrDefault().Situacao.ShouldBe(SituacaoSolicitacao.FINALIZADO_ATENDIMENTO);
-            solicitacoes.FirstOrDefault().ResponsavelId.ShouldBeNull();
             solicitacoes.FirstOrDefault().UsuarioId.ShouldBeGreaterThan(0);
             solicitacoes.FirstOrDefault().Excluido.ShouldBeFalse();
             
@@ -106,6 +107,7 @@ namespace SME.CDEP.TesteIntegracao
             primeiroItem.DataVisita.ShouldBeNull();
             primeiroItem.AcervoSolicitacaoId.ShouldBeGreaterThan(0);
             primeiroItem.Excluido.ShouldBeFalse();
+            primeiroItem.ResponsavelId.ShouldBeNull();
             
             var segundoItem = itens.FirstOrDefault(f => f.AcervoId == 2);
             segundoItem.Situacao.ShouldBe(SituacaoSolicitacaoItem.FINALIZADO_AUTOMATICAMENTE);
@@ -113,6 +115,7 @@ namespace SME.CDEP.TesteIntegracao
             segundoItem.DataVisita.ShouldBeNull();
             segundoItem.AcervoSolicitacaoId.ShouldBeGreaterThan(0);
             segundoItem.Excluido.ShouldBeFalse();
+            segundoItem.ResponsavelId.ShouldBeNull();
             
             var terceiroItem = itens.FirstOrDefault(f => f.AcervoId == 3);
             terceiroItem.Situacao.ShouldBe(SituacaoSolicitacaoItem.FINALIZADO_AUTOMATICAMENTE);
@@ -120,6 +123,7 @@ namespace SME.CDEP.TesteIntegracao
             terceiroItem.DataVisita.ShouldBeNull();
             terceiroItem.AcervoSolicitacaoId.ShouldBeGreaterThan(0);
             terceiroItem.Excluido.ShouldBeFalse();
+            terceiroItem.ResponsavelId.ShouldBeNull();
         }
         
         [Fact(DisplayName = "Acervo Solicitação - Remover")]
