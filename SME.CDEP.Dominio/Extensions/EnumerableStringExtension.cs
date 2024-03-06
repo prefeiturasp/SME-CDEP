@@ -16,5 +16,15 @@
         {
             return items.EhNulo() || !items.Any();
         }
+        
+        public static bool PossuiVariosItens<T>(this IEnumerable<T> items)
+        {
+            return items.PossuiElementos() && items.Count() > 1;
+        }
+        
+        public static bool PossuiApenasUmItem<T>(this IEnumerable<T> items)
+        {
+            return items.PossuiElementos() && items.Count() == 1;
+        }
     }
 }

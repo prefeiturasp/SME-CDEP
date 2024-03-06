@@ -15,7 +15,10 @@ public enum SituacaoSolicitacao
     AGUARDANDO_VISITA = 3,
     
     [Display(Description = "Cancelado")]
-    CANCELADO = 4
+    CANCELADO = 4,
+    
+    [Display(Description = "Atendido parcialmente")]
+    ATENDIDO_PARCIALMENTE = 5
 }
 public static class SituacaoSolicitacaoExtension
 {
