@@ -1,5 +1,6 @@
 
 using System.Text;
+using SME.CDEP.Aplicacao.DTOS;
 using SME.CDEP.Aplicacao.Servicos.Interface;
 using SME.CDEP.Dominio.Constantes;
 using SME.CDEP.Dominio.Entidades;
@@ -27,15 +28,12 @@ namespace SME.CDEP.Aplicacao
 
         public async Task<bool> Executar(MensagemRabbit param)
         {
-            if (param.Mensagem.EhNulo())
-                throw new NegocioException(MensagemNegocio.PARAMETROS_INVALIDOS);
-
-            long acervoSolicitacaoId = 0;
+            var confirmarAtendimentoDto = param.ObterObjetoMensagem<ConfirmarAtendimentoDTO>();
             
-            if (!long.TryParse(param.Mensagem.ToString(),out acervoSolicitacaoId))
+            if (confirmarAtendimentoDto.EhNulo() || confirmarAtendimentoDto.Id < 0)
                 throw new NegocioException(MensagemNegocio.PARAMETROS_INVALIDOS);
 
-            var detalhesAcervo = await repositorioAcervoSolicitacaoItem.ObterDetalhementoDosItensPorSolicitacaoOuItem(acervoSolicitacaoId,null);
+            var detalhesAcervo = await repositorioAcervoSolicitacaoItem.ObterDetalhamentoDosItensPorSolicitacaoOuItem(confirmarAtendimentoDto.Id,confirmarAtendimentoDto.Itens.ToArray());
             
             if (detalhesAcervo.Any(a=> a.Email.NaoEstaPreenchido()))
                 throw new NegocioException(MensagemNegocio.SOLICITANTE_NAO_POSSUI_EMAIL);

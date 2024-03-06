@@ -55,24 +55,326 @@ namespace SME.CDEP.TesteIntegracao
             var itensAlterados = ObterTodos<AcervoSolicitacaoItem>().Where(w=> w.AcervoSolicitacaoId == 1);
             itensAlterados.Count().ShouldBe(3);
             
-            var itensAlteradosPresenciais = itensAlterados.Where(w => w.TipoAtendimento.HasValue && w.TipoAtendimento.Value.EhAtendimentoPresencial());
-            itensAlteradosPresenciais.FirstOrDefault().DataVisita.Value.Date.ShouldBe(DateTimeExtension.HorarioBrasilia().Date);
-            itensAlteradosPresenciais.FirstOrDefault().TipoAtendimento.ShouldBe(TipoAtendimento.Presencial);
-            itensAlteradosPresenciais.FirstOrDefault().Excluido.ShouldBeFalse();
+            var itemAguardandoVisita = itensAlterados.FirstOrDefault(w => w.Id == 1);
+            itemAguardandoVisita.DataVisita.Value.Date.ShouldBe(DateTimeExtension.HorarioBrasilia().Date);
+            itemAguardandoVisita.TipoAtendimento.ShouldBe(TipoAtendimento.Presencial);
+            itemAguardandoVisita.Excluido.ShouldBeFalse();
+            itemAguardandoVisita.Situacao.ShouldBe(SituacaoSolicitacaoItem.AGUARDANDO_VISITA);
             
-            var itensAlteradosEmail = itensAlterados.Where(w => w.TipoAtendimento.HasValue && w.TipoAtendimento.Value.EhAtendimentoViaEmail());
-            itensAlteradosEmail.FirstOrDefault().DataVisita.ShouldBeNull();
-            itensAlteradosEmail.FirstOrDefault().TipoAtendimento.ShouldBe(TipoAtendimento.Email);
-            itensAlteradosEmail.FirstOrDefault().Excluido.ShouldBeFalse();
+            var itemFinalizadoManualmente = itensAlterados.FirstOrDefault(w => w.Id == 2);
+            itemFinalizadoManualmente.DataVisita.ShouldBeNull();
+            itemFinalizadoManualmente.TipoAtendimento.ShouldBe(TipoAtendimento.Email);
+            itemFinalizadoManualmente.Excluido.ShouldBeFalse();
+            itemFinalizadoManualmente.Situacao.ShouldBe(SituacaoSolicitacaoItem.FINALIZADO_MANUALMENTE);
             
-            var itensImutavel = itensAlterados.Where(w => w.TipoAtendimento.EhNulo());
-            itensImutavel.LastOrDefault().DataVisita.ShouldBeNull();
-            itensImutavel.LastOrDefault().TipoAtendimento.ShouldBeNull();
-            itensImutavel.FirstOrDefault().Excluido.ShouldBeFalse();
+            var itemFinalizadoAutomaticamente = itensAlterados.FirstOrDefault(w => w.Id == 3);
+            itemFinalizadoAutomaticamente.DataVisita.ShouldBeNull();
+            itemFinalizadoAutomaticamente.TipoAtendimento.ShouldBeNull();
+            itemFinalizadoAutomaticamente.Excluido.ShouldBeFalse();
+            itemFinalizadoAutomaticamente.Situacao.ShouldBe(SituacaoSolicitacaoItem.FINALIZADO_AUTOMATICAMENTE);
             
             var eventos = ObterTodos<Evento>();
             eventos.Count().ShouldBe(1);
             eventos.Any(a=> a.Data.Date == DateTimeExtension.HorarioBrasilia().Date).ShouldBeTrue();
+        }
+        
+        [Fact(DisplayName = "Acervo Solicitação - Confirmar o atendimento como finalizado apenas quando todos os itens forem finalizados manualmente")]
+        public async Task Deve_confirmar_e_alterar_a_situação_do_atendimento_para_finalizado_quando_todos_os_itens_estiverem_finalizados_manualmente()
+        {
+            await InserirDadosBasicosAleatorios();
+
+            await InserirAcervoTridimensional();
+
+            await InserirAcervoSolicitacao(10);
+            
+            var servicoAcervoSolicitacao = GetServicoAcervoSolicitacao();
+            
+            var retorno = await servicoAcervoSolicitacao.ConfirmarAtendimento(new AcervoSolicitacaoConfirmarDTO()
+            {
+                Id = 1,
+                Itens = new List<AcervoSolicitacaoItemConfirmarDTO>()
+                {
+                    new()
+                    {
+                        Id = 1,
+                        TipoAtendimento = TipoAtendimento.Email
+                    },
+                    new()
+                    {
+                        Id = 2,
+                        TipoAtendimento = TipoAtendimento.Email
+                    }
+                }
+            });
+            
+            retorno.ShouldBeTrue();
+            var solicitacaoAlterada = ObterTodos<AcervoSolicitacao>().FirstOrDefault(f=> f.Id == 1);
+            solicitacaoAlterada.Id.ShouldBe(1);
+            solicitacaoAlterada.UsuarioId.ShouldBe(1);
+            solicitacaoAlterada.Situacao.ShouldBe(SituacaoSolicitacao.FINALIZADO_ATENDIMENTO); 
+            solicitacaoAlterada.Excluido.ShouldBeFalse();
+            
+            var itensAlterados = ObterTodos<AcervoSolicitacaoItem>().Where(w=> w.AcervoSolicitacaoId == 1);
+            itensAlterados.Count().ShouldBe(3);
+            
+            var primeiroItemFinalizadoManualmente = itensAlterados.FirstOrDefault(w => w.Id == 1);
+            primeiroItemFinalizadoManualmente.DataVisita.ShouldBeNull();
+            primeiroItemFinalizadoManualmente.TipoAtendimento.ShouldBe(TipoAtendimento.Email);
+            primeiroItemFinalizadoManualmente.Excluido.ShouldBeFalse();
+            primeiroItemFinalizadoManualmente.Situacao.ShouldBe(SituacaoSolicitacaoItem.FINALIZADO_MANUALMENTE);
+            
+            var ultimoItemFinalizadoManualmente = itensAlterados.LastOrDefault(w => w.Id == 2);
+            ultimoItemFinalizadoManualmente.DataVisita.ShouldBeNull();
+            ultimoItemFinalizadoManualmente.TipoAtendimento.ShouldBe(TipoAtendimento.Email);
+            ultimoItemFinalizadoManualmente.Excluido.ShouldBeFalse();
+            ultimoItemFinalizadoManualmente.Situacao.ShouldBe(SituacaoSolicitacaoItem.FINALIZADO_MANUALMENTE);
+            
+            var itemFinalizadoAutomaticamente = itensAlterados.FirstOrDefault(w => w.Id == 3);
+            itemFinalizadoAutomaticamente.DataVisita.ShouldBeNull();
+            itemFinalizadoAutomaticamente.TipoAtendimento.ShouldBeNull();
+            itemFinalizadoAutomaticamente.Excluido.ShouldBeFalse();
+            itemFinalizadoAutomaticamente.Situacao.ShouldBe(SituacaoSolicitacaoItem.FINALIZADO_AUTOMATICAMENTE);
+            
+            var eventos = ObterTodos<Evento>();
+            eventos.Count().ShouldBe(0);
+        }
+        
+        [Fact(DisplayName = "Acervo Solicitação - Confirmar o atendimento como finalizado apenas quando todos os itens forem aguardando visita")]
+        public async Task Deve_confirmar_e_alterar_a_situação_do_atendimento_para_finalizado_quando_todos_os_itens_estiverem_aguardando_visita()
+        {
+            await InserirDadosBasicosAleatorios();
+
+            await InserirAcervoTridimensional();
+
+            await InserirAcervoSolicitacao(10);
+            
+            var servicoAcervoSolicitacao = GetServicoAcervoSolicitacao();
+            
+            var retorno = await servicoAcervoSolicitacao.ConfirmarAtendimento(new AcervoSolicitacaoConfirmarDTO()
+            {
+                Id = 1,
+                Itens = new List<AcervoSolicitacaoItemConfirmarDTO>()
+                {
+                    new()
+                    {
+                        Id = 1,
+                        TipoAtendimento = TipoAtendimento.Presencial,
+                        DataVisita = DateTimeExtension.HorarioBrasilia().Date.AddDays(4).Date
+                    },
+                    new()
+                    {
+                        Id = 2,
+                        TipoAtendimento = TipoAtendimento.Presencial,
+                        DataVisita = DateTimeExtension.HorarioBrasilia().Date.AddDays(8).Date
+                    }
+                }
+            });
+            
+            retorno.ShouldBeTrue();
+            var solicitacaoAlterada = ObterTodos<AcervoSolicitacao>().FirstOrDefault(f=> f.Id == 1);
+            solicitacaoAlterada.Id.ShouldBe(1);
+            solicitacaoAlterada.UsuarioId.ShouldBe(1);
+            solicitacaoAlterada.Situacao.ShouldBe(SituacaoSolicitacao.AGUARDANDO_VISITA); 
+            solicitacaoAlterada.Excluido.ShouldBeFalse();
+            
+            var itensAlterados = ObterTodos<AcervoSolicitacaoItem>().Where(w=> w.AcervoSolicitacaoId == 1);
+            itensAlterados.Count().ShouldBe(3);
+            
+            var primeiroItemAguardandoVisita = itensAlterados.FirstOrDefault(w => w.Id == 1);
+            primeiroItemAguardandoVisita.TipoAtendimento.ShouldBe(TipoAtendimento.Presencial);
+            primeiroItemAguardandoVisita.DataVisita.ShouldBe(DateTimeExtension.HorarioBrasilia().Date.AddDays(4).Date);
+            primeiroItemAguardandoVisita.Excluido.ShouldBeFalse();
+            primeiroItemAguardandoVisita.Situacao.ShouldBe(SituacaoSolicitacaoItem.AGUARDANDO_VISITA);
+            
+            var ultimoItemAguardandoVisita = itensAlterados.FirstOrDefault(w => w.Id == 2);
+            ultimoItemAguardandoVisita.TipoAtendimento.ShouldBe(TipoAtendimento.Presencial);
+            ultimoItemAguardandoVisita.DataVisita.ShouldBe(DateTimeExtension.HorarioBrasilia().Date.AddDays(8).Date);
+            ultimoItemAguardandoVisita.Excluido.ShouldBeFalse();
+            ultimoItemAguardandoVisita.Situacao.ShouldBe(SituacaoSolicitacaoItem.AGUARDANDO_VISITA);
+            
+            var itemFinalizadoManualmente = itensAlterados.FirstOrDefault(w => w.Id == 3);
+            itemFinalizadoManualmente.DataVisita.ShouldBeNull();
+            itemFinalizadoManualmente.TipoAtendimento.ShouldBeNull();
+            itemFinalizadoManualmente.Excluido.ShouldBeFalse();
+            itemFinalizadoManualmente.Situacao.ShouldBe(SituacaoSolicitacaoItem.FINALIZADO_AUTOMATICAMENTE);
+            
+            var eventos = ObterTodos<Evento>();
+            eventos.Count().ShouldBe(2);
+        }
+        
+         [Fact(DisplayName = "Acervo Solicitação - Confirmar o atendimento como aguardando visita quando itens forem aguardando visita e finalizados manualmente")]
+        public async Task Deve_confirmar_e_alterar_a_situação_do_atendimento_para_aguardando_visita_quando_itens_forem_aguardando_visita_e_finalizados_manualmente()
+        {
+            await InserirDadosBasicosAleatorios();
+
+            await InserirAcervoTridimensional();
+
+            await InserirAcervoSolicitacao(10);
+            
+            var servicoAcervoSolicitacao = GetServicoAcervoSolicitacao();
+            
+            var retorno = await servicoAcervoSolicitacao.ConfirmarAtendimento(new AcervoSolicitacaoConfirmarDTO()
+            {
+                Id = 1,
+                Itens = new List<AcervoSolicitacaoItemConfirmarDTO>()
+                {
+                    new()
+                    {
+                        Id = 1,
+                        TipoAtendimento = TipoAtendimento.Presencial,
+                        DataVisita = DateTimeExtension.HorarioBrasilia().Date.AddDays(4).Date
+                    },
+                    new()
+                    {
+                        Id = 2,
+                        TipoAtendimento = TipoAtendimento.Email
+                    }
+                }
+            });
+            
+            retorno.ShouldBeTrue();
+            var solicitacaoAlterada = ObterTodos<AcervoSolicitacao>().FirstOrDefault(f=> f.Id == 1);
+            solicitacaoAlterada.Id.ShouldBe(1);
+            solicitacaoAlterada.UsuarioId.ShouldBe(1);
+            solicitacaoAlterada.Situacao.ShouldBe(SituacaoSolicitacao.AGUARDANDO_VISITA); 
+            solicitacaoAlterada.Excluido.ShouldBeFalse();
+            
+            var itensAlterados = ObterTodos<AcervoSolicitacaoItem>().Where(w=> w.AcervoSolicitacaoId == 1);
+            itensAlterados.Count().ShouldBe(3);
+            
+            var itemAguardandoVisita = itensAlterados.FirstOrDefault(w => w.Id == 1);
+            itemAguardandoVisita.TipoAtendimento.ShouldBe(TipoAtendimento.Presencial);
+            itemAguardandoVisita.DataVisita.ShouldBe(DateTimeExtension.HorarioBrasilia().Date.AddDays(4).Date);
+            itemAguardandoVisita.Excluido.ShouldBeFalse();
+            itemAguardandoVisita.Situacao.ShouldBe(SituacaoSolicitacaoItem.AGUARDANDO_VISITA);
+            
+            var itemFinalizadoManualmente = itensAlterados.FirstOrDefault(w => w.Id == 2);
+            itemFinalizadoManualmente.TipoAtendimento.ShouldBe(TipoAtendimento.Email);
+            itemFinalizadoManualmente.DataVisita.ShouldBeNull();
+            itemFinalizadoManualmente.Excluido.ShouldBeFalse();
+            itemFinalizadoManualmente.Situacao.ShouldBe(SituacaoSolicitacaoItem.FINALIZADO_MANUALMENTE);
+            
+            var itemFinalizadoAutomaticamente = itensAlterados.FirstOrDefault(w => w.Id == 3);
+            itemFinalizadoAutomaticamente.DataVisita.ShouldBeNull();
+            itemFinalizadoAutomaticamente.TipoAtendimento.ShouldBeNull();
+            itemFinalizadoAutomaticamente.Excluido.ShouldBeFalse();
+            itemFinalizadoAutomaticamente.Situacao.ShouldBe(SituacaoSolicitacaoItem.FINALIZADO_AUTOMATICAMENTE);
+            
+            var eventos = ObterTodos<Evento>();
+            eventos.Count().ShouldBe(1);
+        }
+        
+        [Fact(DisplayName = "Acervo Solicitação - Confirmar o atendimento como atendido parcialmente quando itens forem aguardando visita e aguardando atendimento")]
+        public async Task Deve_confirmar_e_alterar_a_situação_do_atendimento_para_atendido_parcialmente_quando_itens_forem_aguardando_visita_e_aguardando_atendimento()
+        {
+            await InserirDadosBasicosAleatorios();
+
+            await InserirAcervoTridimensional();
+
+            await InserirAcervoSolicitacao(10);
+            
+            var servicoAcervoSolicitacao = GetServicoAcervoSolicitacao();
+            
+            var retorno = await servicoAcervoSolicitacao.ConfirmarAtendimento(new AcervoSolicitacaoConfirmarDTO()
+            {
+                Id = 1,
+                Itens = new List<AcervoSolicitacaoItemConfirmarDTO>()
+                {
+                    new()
+                    {
+                        Id = 1,
+                        TipoAtendimento = TipoAtendimento.Presencial,
+                        DataVisita = DateTimeExtension.HorarioBrasilia().Date.AddDays(4).Date
+                    }
+                }
+            });
+            
+            retorno.ShouldBeTrue();
+            var solicitacaoAlterada = ObterTodos<AcervoSolicitacao>().FirstOrDefault(f=> f.Id == 1);
+            solicitacaoAlterada.Id.ShouldBe(1);
+            solicitacaoAlterada.UsuarioId.ShouldBe(1);
+            solicitacaoAlterada.Situacao.ShouldBe(SituacaoSolicitacao.ATENDIDO_PARCIALMENTE); 
+            solicitacaoAlterada.Excluido.ShouldBeFalse();
+            
+            var itensAlterados = ObterTodos<AcervoSolicitacaoItem>().Where(w=> w.AcervoSolicitacaoId == 1);
+            itensAlterados.Count().ShouldBe(3);
+            
+            var itemAguardandoVisita = itensAlterados.FirstOrDefault(w => w.Id == 1);
+            itemAguardandoVisita.TipoAtendimento.ShouldBe(TipoAtendimento.Presencial);
+            itemAguardandoVisita.DataVisita.ShouldBe(DateTimeExtension.HorarioBrasilia().Date.AddDays(4).Date);
+            itemAguardandoVisita.Excluido.ShouldBeFalse();
+            itemAguardandoVisita.Situacao.ShouldBe(SituacaoSolicitacaoItem.AGUARDANDO_VISITA);
+            
+            var itemAguardandoAtendimento = itensAlterados.FirstOrDefault(w => w.Id == 2);
+            itemAguardandoAtendimento.TipoAtendimento.ShouldBeNull();
+            itemAguardandoAtendimento.DataVisita.ShouldBeNull();
+            itemAguardandoAtendimento.Situacao.ShouldBe(SituacaoSolicitacaoItem.AGUARDANDO_ATENDIMENTO);
+            itemAguardandoAtendimento.Excluido.ShouldBeFalse();
+            
+            var itemFinalizadoAutomaticamente = itensAlterados.FirstOrDefault(w => w.Id == 3);
+            itemFinalizadoAutomaticamente.DataVisita.ShouldBeNull();
+            itemFinalizadoAutomaticamente.TipoAtendimento.ShouldBeNull();
+            itemFinalizadoAutomaticamente.Excluido.ShouldBeFalse();
+            itemFinalizadoAutomaticamente.Situacao.ShouldBe(SituacaoSolicitacaoItem.FINALIZADO_AUTOMATICAMENTE);
+            
+            var eventos = ObterTodos<Evento>();
+            eventos.Count().ShouldBe(1);
+        }
+        
+        [Fact(DisplayName = "Acervo Solicitação - Confirmar o atendimento como atendido parcialmente quando itens forem finalizados manualmente e aguardando atendimento")]
+        public async Task Deve_confirmar_e_alterar_a_situação_do_atendimento_para_atendido_parcialmente_quando_itens_forem_finalizados_manualmente_e_aguardando_atendimento()
+        {
+            await InserirDadosBasicosAleatorios();
+
+            await InserirAcervoTridimensional();
+
+            await InserirAcervoSolicitacao(10);
+            
+            var servicoAcervoSolicitacao = GetServicoAcervoSolicitacao();
+            
+            var retorno = await servicoAcervoSolicitacao.ConfirmarAtendimento(new AcervoSolicitacaoConfirmarDTO()
+            {
+                Id = 1,
+                Itens = new List<AcervoSolicitacaoItemConfirmarDTO>()
+                {
+                    new()
+                    {
+                        Id = 1,
+                        TipoAtendimento = TipoAtendimento.Email
+                    }
+                }
+            });
+            
+            retorno.ShouldBeTrue();
+            var solicitacaoAlterada = ObterTodos<AcervoSolicitacao>().FirstOrDefault(f=> f.Id == 1);
+            solicitacaoAlterada.Id.ShouldBe(1);
+            solicitacaoAlterada.UsuarioId.ShouldBe(1);
+            solicitacaoAlterada.Situacao.ShouldBe(SituacaoSolicitacao.ATENDIDO_PARCIALMENTE); 
+            solicitacaoAlterada.Excluido.ShouldBeFalse();
+            
+            var itensAlterados = ObterTodos<AcervoSolicitacaoItem>().Where(w=> w.AcervoSolicitacaoId == 1);
+            itensAlterados.Count().ShouldBe(3);
+            
+            var itemFinalizadoManualmente = itensAlterados.FirstOrDefault(w => w.Id == 1);
+            itemFinalizadoManualmente.TipoAtendimento.ShouldBe(TipoAtendimento.Email);
+            itemFinalizadoManualmente.DataVisita.ShouldBeNull();
+            itemFinalizadoManualmente.Excluido.ShouldBeFalse();
+            itemFinalizadoManualmente.Situacao.ShouldBe(SituacaoSolicitacaoItem.FINALIZADO_MANUALMENTE);
+            
+            var itemAguardandoAtendimento = itensAlterados.FirstOrDefault(w => w.Id == 2);
+            itemAguardandoAtendimento.TipoAtendimento.ShouldBeNull();
+            itemAguardandoAtendimento.DataVisita.ShouldBeNull();
+            itemAguardandoAtendimento.Situacao.ShouldBe(SituacaoSolicitacaoItem.AGUARDANDO_ATENDIMENTO);
+            itemAguardandoAtendimento.Excluido.ShouldBeFalse();
+            
+            var itemFinalizadoAutomaticamente = itensAlterados.FirstOrDefault(w => w.Id == 3);
+            itemFinalizadoAutomaticamente.DataVisita.ShouldBeNull();
+            itemFinalizadoAutomaticamente.TipoAtendimento.ShouldBeNull();
+            itemFinalizadoAutomaticamente.Excluido.ShouldBeFalse();
+            itemFinalizadoAutomaticamente.Situacao.ShouldBe(SituacaoSolicitacaoItem.FINALIZADO_AUTOMATICAMENTE);
+            
+            var eventos = ObterTodos<Evento>();
+            eventos.Count().ShouldBe(0);
         }
         
         [Fact(DisplayName = "Acervo Solicitação - Confirmar editando tipo de atendimento e data de visita")]

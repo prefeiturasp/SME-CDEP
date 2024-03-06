@@ -2,6 +2,7 @@
 
 public class MensagemNegocio
 {
+    public const string SITUACAO_NAO_MAPEADA = "Não foi possível mapear a situação do atendimento conforme as situações dos itens, verifique!";
     public const string PARAMETRO_NAO_ENCONTRADO_TIPO_X = "Parâmetro não encontrado - Tipo:'{0}'";
     public const string PARAMETROS_INVALIDOS = "Parâmetros inválidos";
     public const string DATAS_DE_VISITAS_CONFLITANTES = "Já existem feriados ou suspensões registrados para a(s) data(s) da visita: {0}";
