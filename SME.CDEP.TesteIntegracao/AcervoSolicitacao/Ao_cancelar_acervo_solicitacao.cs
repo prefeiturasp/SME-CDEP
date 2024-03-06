@@ -199,5 +199,59 @@ namespace SME.CDEP.TesteIntegracao
             
             await servicoAcervoSolicitacao.CancelarAtendimento(1).ShouldThrowAsync<NegocioException>();
         }
+        
+        [Fact(DisplayName = "Acervo Solicitação - Não deve cancelar atendimento com itens atendidos parcialmente com visita")]
+        public async Task Nao_deve_cancelar_atendimento_com_itens_em_atendidos_parcialmente_com_visita()
+        {
+            await InserirDadosBasicosAleatorios();
+
+            await InserirAcervoTridimensional();
+
+            var acervoSolicitacao = ObterAcervoSolicitacao();
+            acervoSolicitacao.Situacao = SituacaoSolicitacao.ATENDIDO_PARCIALMENTE;
+            await InserirNaBase(acervoSolicitacao);
+
+            var acervoSolicitadoId = (ObterTodos<AcervoSolicitacao>()).LastOrDefault().Id;
+
+            var contador = 1;
+            foreach (var item in acervoSolicitacao.Itens)
+            {
+                item.AcervoSolicitacaoId = acervoSolicitadoId;
+                item.Situacao = contador >= 2 ? SituacaoSolicitacaoItem.AGUARDANDO_VISITA : SituacaoSolicitacaoItem.AGUARDANDO_ATENDIMENTO;
+                await InserirNaBase(item);
+                contador++;
+            }
+            
+            var servicoAcervoSolicitacao = GetServicoAcervoSolicitacao();
+            
+            await servicoAcervoSolicitacao.CancelarAtendimento(1).ShouldThrowAsync<NegocioException>();
+        }
+        
+        [Fact(DisplayName = "Acervo Solicitação - Não deve cancelar atendimento com itens atendidos parcialmente aguardando atendimento")]
+        public async Task Nao_deve_cancelar_atendimento_com_itens_em_atendidos_parcialmente_finalizado_manualmente_aguardando_atendimento()
+        {
+            await InserirDadosBasicosAleatorios();
+
+            await InserirAcervoTridimensional();
+
+            var acervoSolicitacao = ObterAcervoSolicitacao();
+            acervoSolicitacao.Situacao = SituacaoSolicitacao.ATENDIDO_PARCIALMENTE;
+            await InserirNaBase(acervoSolicitacao);
+
+            var acervoSolicitadoId = (ObterTodos<AcervoSolicitacao>()).LastOrDefault().Id;
+
+            var contador = 1;
+            foreach (var item in acervoSolicitacao.Itens)
+            {
+                item.AcervoSolicitacaoId = acervoSolicitadoId;
+                item.Situacao = contador >= 2 ? SituacaoSolicitacaoItem.FINALIZADO_MANUALMENTE : SituacaoSolicitacaoItem.AGUARDANDO_ATENDIMENTO;
+                await InserirNaBase(item);
+                contador++;
+            }
+            
+            var servicoAcervoSolicitacao = GetServicoAcervoSolicitacao();
+            
+            await servicoAcervoSolicitacao.CancelarAtendimento(1).ShouldThrowAsync<NegocioException>();
+        }
     }
 }
