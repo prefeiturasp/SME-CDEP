@@ -36,12 +36,14 @@ namespace SME.CDEP.Aplicacao
                 throw new NegocioException(MensagemNegocio.PARAMETROS_INVALIDOS);
 
             var detalhesAcervo = await repositorioAcervoSolicitacaoItem.ObterDetalhementoDosItensPorSolicitacaoOuItem(acervoSolicitacaoId,null);
-
+            
             if (detalhesAcervo.Any(a=> a.Email.NaoEstaPreenchido()))
                 throw new NegocioException(MensagemNegocio.SOLICITANTE_NAO_POSSUI_EMAIL);
             
-            if (detalhesAcervo.NaoPossuiElementos())
+            if (detalhesAcervo.NaoPossuiElementos() || !detalhesAcervo.Any(w => w.Situacao.EstaAguardandoVisita()))
                 throw new NegocioException(MensagemNegocio.SOLICITACAO_ATENDIMENTO_NAO_CONTEM_ACERVOS);
+
+            detalhesAcervo = detalhesAcervo.Where(w => w.Situacao.EstaAguardandoVisita());
             
             var destinatario = detalhesAcervo.FirstOrDefault().Solicitante;
             

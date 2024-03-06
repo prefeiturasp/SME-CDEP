@@ -64,6 +64,8 @@ namespace SME.CDEP.Aplicacao.Servicos
             ValidarSenha(usuarioExternoDto.Senha, usuarioExternoDto.ConfirmarSenha);
             
             await ValidarCpfEmUsuarioAcervoECoreSSO(usuarioExternoDto.Cpf);
+        
+            ValidarEmail(usuarioExternoDto.Email);
 
             var retornoCoreSSO = await servicoAcessos.CadastrarUsuarioCoreSSO(usuarioExternoDto.Cpf, usuarioExternoDto.Nome, usuarioExternoDto.Email, usuarioExternoDto.Senha);
 
@@ -75,6 +77,12 @@ namespace SME.CDEP.Aplicacao.Servicos
             var retorno = await repositorioUsuario.Inserir(usuario);
 
             return retorno != 0;
+        }
+
+        private void ValidarEmail(string email)
+        {
+            if(!Regex.IsMatch(email, Constantes.VALIDAR_EMAIL))
+                throw new NegocioException(MensagemNegocio.EMAIL_INVALIDO);
         }
 
         private async Task<bool> ValidarCpfEmUsuarioAcervoECoreSSO(string cpf)
@@ -124,6 +132,8 @@ namespace SME.CDEP.Aplicacao.Servicos
 
         public Task<bool> AlterarEmail(string login, string email)
         {
+            ValidarEmail(email);
+            
             var retorno = servicoAcessos.AlterarEmail(login, email);
             
             return retorno;

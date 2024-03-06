@@ -29,7 +29,6 @@ namespace SME.CDEP.TesteIntegracao
             var retorno = await servicoAcervoSolicitacao.ConfirmarAtendimento(new AcervoSolicitacaoConfirmarDTO()
             {
                 Id = 1,
-                ResponsavelRf = "login_1",
                 Itens = new List<AcervoSolicitacaoItemConfirmarDTO>()
                 {
                     new()
@@ -90,7 +89,6 @@ namespace SME.CDEP.TesteIntegracao
             await servicoAcervoSolicitacao.ConfirmarAtendimento(new AcervoSolicitacaoConfirmarDTO()
             {
                 Id = 1,
-                ResponsavelRf = "login_1",
                 Itens = new List<AcervoSolicitacaoItemConfirmarDTO>()
                 {
                     new()
@@ -110,7 +108,6 @@ namespace SME.CDEP.TesteIntegracao
             var retorno = await servicoAcervoSolicitacao.ConfirmarAtendimento(new AcervoSolicitacaoConfirmarDTO()
             {
                 Id = 1,
-                ResponsavelRf = "login_1",
                 Itens = new List<AcervoSolicitacaoItemConfirmarDTO>()
                 {
                     new()
@@ -245,46 +242,6 @@ namespace SME.CDEP.TesteIntegracao
                     new()
                     {
                         Id = 3,
-                        TipoAtendimento = TipoAtendimento.Email
-                    }
-                }
-            };
-            
-            await servicoAcervoSolicitacao.ConfirmarAtendimento(acervoArteGraficaCadastroDto).ShouldThrowAsync<NegocioException>();
-        }
-        
-        [Fact(DisplayName = "Acervo Solicitação - Não deve confirmar atendimento com data de visita válida nos itens que são do tipo e-mail")]
-        public async Task Nao_deve_confirmar_atendimento_em_itens_com_data_de_visita_valida_nos_itens_tipo_email()
-        {
-            await InserirDadosBasicosAleatorios();
-
-            await InserirAcervoTridimensional();
-
-            await InserirAcervoSolicitacao(10);
-            
-            var servicoAcervoSolicitacao = GetServicoAcervoSolicitacao();
-
-            var acervoArteGraficaCadastroDto = new AcervoSolicitacaoConfirmarDTO()
-            {
-                Id = 1,
-                Itens = new List<AcervoSolicitacaoItemConfirmarDTO>()
-                {
-                    new()
-                    {
-                        Id = 1,
-                        DataVisita = DateTimeExtension.HorarioBrasilia().Date,
-                        TipoAtendimento = TipoAtendimento.Presencial
-                    },
-                    new()
-                    {
-                        Id = 2,
-                        DataVisita = DateTimeExtension.HorarioBrasilia().Date,
-                        TipoAtendimento = TipoAtendimento.Email
-                    },
-                    new()
-                    {
-                        Id = 3,
-                        DataVisita = DateTimeExtension.HorarioBrasilia().Date,
                         TipoAtendimento = TipoAtendimento.Email
                     }
                 }
@@ -466,7 +423,6 @@ namespace SME.CDEP.TesteIntegracao
             var retorno = await servicoAcervoSolicitacao.ConfirmarAtendimento(new AcervoSolicitacaoConfirmarDTO()
             {
                 Id = 1,
-                ResponsavelRf = "login_1",
                 Itens = new List<AcervoSolicitacaoItemConfirmarDTO>()
                 {
                     new()

@@ -32,7 +32,7 @@ namespace SME.CDEP.TesteIntegracao.Usuario
                 Login = faker.Person.FirstName,
                 Nome = faker.Person.FullName,
                 Endereco = faker.Address.FullAddress(),
-                Numero = faker.Address.BuildingNumber().ConverterParaInteiro(),
+                Numero = faker.Address.BuildingNumber(),
                 Complemento = faker.Address.StreetSuffix(),
                 Cep = faker.Address.ZipCode(),
                 Cidade = faker.Address.City(),

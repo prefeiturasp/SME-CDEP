@@ -654,7 +654,6 @@ namespace SME.CDEP.TesteIntegracao
             var acervoSolicitacao = new AcervoSolicitacao()
             {
                 UsuarioId = 1,
-                ResponsavelId = 2,
                 Situacao = SituacaoSolicitacao.AGUARDANDO_ATENDIMENTO,
                 CriadoEm = DateTimeExtension.HorarioBrasilia(), CriadoLogin = "Sistema", CriadoPor = "Sistema",
                 Itens = new List<AcervoSolicitacaoItem>()
@@ -664,18 +663,21 @@ namespace SME.CDEP.TesteIntegracao
                         Situacao =  SituacaoSolicitacaoItem.AGUARDANDO_ATENDIMENTO,
                         AcervoId = 1, CriadoEm = DateTimeExtension.HorarioBrasilia(), 
                         CriadoLogin = "Sistema", CriadoPor = "Sistema",
+                        ResponsavelId = 2,
                     },
                     new ()
                     {
                         Situacao = SituacaoSolicitacaoItem.AGUARDANDO_ATENDIMENTO,
                         AcervoId = 2, CriadoEm = DateTimeExtension.HorarioBrasilia(), 
                         CriadoLogin = "Sistema", CriadoPor = "Sistema",
+                        ResponsavelId = 2,
                     },
                     new ()
                     {
                         Situacao = SituacaoSolicitacaoItem.FINALIZADO_AUTOMATICAMENTE,
                         AcervoId = 3, CriadoEm = DateTimeExtension.HorarioBrasilia(), 
                         CriadoLogin = "Sistema", CriadoPor = "Sistema",
+                        ResponsavelId = 2,
                     }
                 }
             };
@@ -687,7 +689,6 @@ namespace SME.CDEP.TesteIntegracao
             var acervoSolicitacao = new AcervoSolicitacao()
             {
                 UsuarioId = 1,
-                ResponsavelId = 2,
                 Situacao = SituacaoSolicitacao.AGUARDANDO_VISITA,
                 CriadoEm = DateTimeExtension.HorarioBrasilia(), CriadoLogin = "Sistema", CriadoPor = "Sistema",
                 Itens = new List<AcervoSolicitacaoItem>()
@@ -698,6 +699,7 @@ namespace SME.CDEP.TesteIntegracao
                         DataVisita = DateTimeExtension.HorarioBrasilia().AddDays(2),
                         AcervoId = 1, CriadoEm = DateTimeExtension.HorarioBrasilia(), 
                         CriadoLogin = "Sistema", CriadoPor = "Sistema",
+                        ResponsavelId = 2,
                     },
                     new ()
                     {
@@ -705,12 +707,14 @@ namespace SME.CDEP.TesteIntegracao
                         DataVisita = DateTimeExtension.HorarioBrasilia().AddDays(4),
                         AcervoId = 2, CriadoEm = DateTimeExtension.HorarioBrasilia(), 
                         CriadoLogin = "Sistema", CriadoPor = "Sistema",
+                        ResponsavelId = 2,
                     },
                     new ()
                     {
                         Situacao = SituacaoSolicitacaoItem.FINALIZADO_AUTOMATICAMENTE,
                         AcervoId = 3, CriadoEm = DateTimeExtension.HorarioBrasilia(), 
                         CriadoLogin = "Sistema", CriadoPor = "Sistema",
+                        ResponsavelId = 2,
                     }
                 }
             };

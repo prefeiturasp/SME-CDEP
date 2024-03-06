@@ -14,9 +14,9 @@ namespace SME.CDEP.Aplicacao.DTOS
         public string Tipo { get; set; }
         public TipoUsuario TipoId { get; set; }
 
-        public string ObterEnderecoCompleto(int numero, string complemento, string cidade, string estado, string cep)
+        public string ObterEnderecoCompleto(string numero, string complemento, string cidade, string estado, string cep)
         {
-            if (numero.EhMaiorQueZero())
+            if (numero.EstaPreenchido())
                 Endereco += $", {numero}";
             
             if (complemento.EstaPreenchido())

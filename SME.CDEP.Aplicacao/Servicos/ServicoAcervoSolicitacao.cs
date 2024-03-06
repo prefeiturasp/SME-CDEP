@@ -238,21 +238,22 @@ namespace SME.CDEP.Aplicacao.Servicos
             
             if (acervoSolicitacao.EhNulo())
                 throw new NegocioException(MensagemNegocio.SOLICITACAO_ATENDIMENTO_NAO_ENCONTRADA);
+
+            if (acervoSolicitacaoConfirmar.Itens.NaoPossuiElementos())
+                throw new NegocioException(MensagemNegocio.SOLICITACAO_ATENDIMENTO_ITEM_NAO_ENCONTRADA);
             
             if (acervoSolicitacaoConfirmar.Itens.Any(a=> a.TipoAtendimento.EhAtendimentoPresencial() && !a.DataVisita.HasValue))
                 throw new NegocioException(MensagemNegocio.ITENS_ACERVOS_PRESENCIAL_DEVEM_TER_DATA_ACERVO);
             
             var itens = await repositorioAcervoSolicitacaoItem.ObterItensEmSituacaoAguardandoAtendimentoOuVisitaOuFinalizadoManualmentePorSolicitacaoId(acervoSolicitacaoConfirmar.Id);
             
-            var usuarioResponsavel = await repositorioUsuario.ObterPorLogin(acervoSolicitacaoConfirmar.ResponsavelRf);
-            if (usuarioResponsavel.EhNulo())
-                throw new NegocioException(Constantes.USUARIO_RESPONSAVEL_NAO_LOCALIZADO);
-
             var datasDasVisitas = acervoSolicitacaoConfirmar.Itens
                 .Where(w => w.TipoAtendimento.EhAtendimentoPresencial())
                 .Select(s => s.DataVisita.Value);
 
             await ValidarConflitosEventos(datasDasVisitas);
+            
+            var usuarioLogado = await servicoUsuario.ObterUsuarioLogado();
 
             var tran = transacao.Iniciar();
             try
@@ -260,7 +261,6 @@ namespace SME.CDEP.Aplicacao.Servicos
                 acervoSolicitacao.Situacao = acervoSolicitacaoConfirmar.Itens.All(a=> a.TipoAtendimento.EhAtendimentoViaEmail()) 
                     ? SituacaoSolicitacao.FINALIZADO_ATENDIMENTO : SituacaoSolicitacao.AGUARDANDO_VISITA;
                 
-                acervoSolicitacao.ResponsavelId = usuarioResponsavel.Id;
                 acervoSolicitacao.DataSolicitacao = DateTimeExtension.HorarioBrasilia();
                 await repositorioAcervoSolicitacao.Atualizar(acervoSolicitacao);
                 
@@ -282,6 +282,8 @@ namespace SME.CDEP.Aplicacao.Servicos
                         item.Situacao = SituacaoSolicitacaoItem.FINALIZADO_MANUALMENTE;
                         item.DataVisita = null;
                     }
+
+                    item.ResponsavelId = usuarioLogado.Id;
                     
                     item.Validar();
                     await repositorioAcervoSolicitacaoItem.Atualizar(item);
@@ -468,7 +470,7 @@ namespace SME.CDEP.Aplicacao.Servicos
             
             acervoSolicitacao.Origem = Origem.Manual;
 
-            acervoSolicitacao.ResponsavelId = (await servicoUsuario.ObterUsuarioLogado()).Id;
+            var usuarioLogado = await servicoUsuario.ObterUsuarioLogado();
             
             acervoSolicitacao.Situacao = acervoSolicitacao.Itens.Any(a=> a.TipoAtendimento.EhAtendimentoPresencial()) 
                 ? SituacaoSolicitacao.AGUARDANDO_VISITA 
@@ -482,6 +484,7 @@ namespace SME.CDEP.Aplicacao.Servicos
                 foreach (var item in acervoSolicitacao.Itens)
                 {
                     item.AcervoSolicitacaoId = acervoSolicitacao.Id;
+                    item.ResponsavelId = usuarioLogado.Id;
                     
                     item.Situacao = item.TipoAtendimento.EhAtendimentoViaEmail()
                         ? SituacaoSolicitacaoItem.FINALIZADO_MANUALMENTE
@@ -534,7 +537,7 @@ namespace SME.CDEP.Aplicacao.Servicos
             
             acervoSolicitacao.DataSolicitacao = acervoSolicitacaoManualDto.DataSolicitacao;
 
-            acervoSolicitacao.ResponsavelId = (await servicoUsuario.ObterUsuarioLogado()).Id;
+            var usuarioLogado = await servicoUsuario.ObterUsuarioLogado();
             
             acervoSolicitacao.Situacao = acervoSolicitacaoManualDto.Itens.Any(a=> a.TipoAtendimento.EhAtendimentoPresencial()) 
                 ? SituacaoSolicitacao.AGUARDANDO_VISITA 
@@ -554,6 +557,8 @@ namespace SME.CDEP.Aplicacao.Servicos
                     item.Situacao =  item.TipoAtendimento.EhAtendimentoViaEmail()
                                      ? SituacaoSolicitacaoItem.FINALIZADO_MANUALMENTE
                                      : SituacaoSolicitacaoItem.AGUARDANDO_VISITA;
+
+                    item.ResponsavelId = usuarioLogado.Id;
                     
                     if (item.Id.EhMaiorQueZero())
                     {

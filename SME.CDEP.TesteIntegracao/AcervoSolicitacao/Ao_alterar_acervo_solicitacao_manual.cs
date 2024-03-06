@@ -100,7 +100,6 @@ namespace SME.CDEP.TesteIntegracao
 
             var solicitacaoCadastrada = ObterTodos<AcervoSolicitacao>().LastOrDefault();
             solicitacaoCadastrada.UsuarioId.ShouldBe(alteracaoAcervoSolicitacaoManual.UsuarioId);
-            solicitacaoCadastrada.ResponsavelId.ShouldNotBeNull();
             solicitacaoCadastrada.DataSolicitacao.ShouldBe(alteracaoAcervoSolicitacaoManual.DataSolicitacao);
             solicitacaoCadastrada.Origem.ShouldBe(Origem.Manual);
             solicitacaoCadastrada.Situacao.ShouldBe(SituacaoSolicitacao.AGUARDANDO_VISITA);
@@ -113,22 +112,26 @@ namespace SME.CDEP.TesteIntegracao
             primeiroItemEmail.TipoAtendimento.ShouldBe(TipoAtendimento.Email);
             primeiroItemEmail.DataVisita.ShouldBeNull();
             primeiroItemEmail.Excluido.ShouldBeFalse();
+            primeiroItemEmail.ResponsavelId.ShouldNotBeNull();
             
             var segundoItemEmail = itensCadastrados.FirstOrDefault(f => f.AcervoId == 2);
             segundoItemEmail.Situacao.ShouldBe(SituacaoSolicitacaoItem.FINALIZADO_MANUALMENTE);
             segundoItemEmail.TipoAtendimento.ShouldBe(TipoAtendimento.Email);
             segundoItemEmail.Excluido.ShouldBeFalse();
+            segundoItemEmail.ResponsavelId.ShouldNotBeNull();
             
             var terceiroItemPresencial = itensCadastrados.FirstOrDefault(f => f.AcervoId == 3);
             terceiroItemPresencial.Situacao.ShouldBe(SituacaoSolicitacaoItem.AGUARDANDO_VISITA);
             terceiroItemPresencial.TipoAtendimento.ShouldBe(TipoAtendimento.Presencial);
             terceiroItemPresencial.DataVisita.Value.Date.ShouldBe(DateTimeExtension.HorarioBrasilia().AddDays(20).Date);
             terceiroItemPresencial.Excluido.ShouldBeFalse();
+            terceiroItemPresencial.ResponsavelId.ShouldNotBeNull();
             
             var quartoItemEmail = itensCadastrados.FirstOrDefault(f => f.AcervoId == 4);
             quartoItemEmail.Situacao.ShouldBe(SituacaoSolicitacaoItem.FINALIZADO_MANUALMENTE);
             quartoItemEmail.TipoAtendimento.ShouldBe(TipoAtendimento.Email);
             quartoItemEmail.Excluido.ShouldBeFalse();
+            quartoItemEmail.ResponsavelId.ShouldNotBeNull();
             
             var eventos = ObterTodos<Evento>();
             eventos.Count().ShouldBe(3);
@@ -223,7 +226,6 @@ namespace SME.CDEP.TesteIntegracao
 
             var solicitacaoCadastrada = ObterTodos<AcervoSolicitacao>().LastOrDefault();
             solicitacaoCadastrada.UsuarioId.ShouldBe(acervoSolicitacaoManual.UsuarioId);
-            solicitacaoCadastrada.ResponsavelId.ShouldNotBeNull();
             solicitacaoCadastrada.DataSolicitacao.ShouldBe(acervoSolicitacaoManual.DataSolicitacao);
             solicitacaoCadastrada.Origem.ShouldBe(Origem.Manual);
             solicitacaoCadastrada.Situacao.ShouldBe(SituacaoSolicitacao.AGUARDANDO_VISITA);
@@ -236,17 +238,20 @@ namespace SME.CDEP.TesteIntegracao
             primeiroItemEmail.TipoAtendimento.ShouldBe(TipoAtendimento.Email);
             primeiroItemEmail.DataVisita.ShouldBeNull();
             primeiroItemEmail.Excluido.ShouldBeFalse();
+            primeiroItemEmail.ResponsavelId.ShouldNotBeNull();
             
             var segundoItemEmail = itensCadastrados.FirstOrDefault(f => f.AcervoId == 5);
             segundoItemEmail.Situacao.ShouldBe(SituacaoSolicitacaoItem.FINALIZADO_MANUALMENTE);
             segundoItemEmail.TipoAtendimento.ShouldBe(TipoAtendimento.Email);
             segundoItemEmail.Excluido.ShouldBeFalse();
+            segundoItemEmail.ResponsavelId.ShouldNotBeNull();
             
             var terceiroItemPresencial = itensCadastrados.FirstOrDefault(f => f.AcervoId == 6);
             terceiroItemPresencial.Situacao.ShouldBe(SituacaoSolicitacaoItem.AGUARDANDO_VISITA);
             terceiroItemPresencial.TipoAtendimento.ShouldBe(TipoAtendimento.Presencial);
             terceiroItemPresencial.DataVisita.Value.Date.ShouldBe(DateTimeExtension.HorarioBrasilia().AddDays(50).Date);
             terceiroItemPresencial.Excluido.ShouldBeFalse();
+            terceiroItemPresencial.ResponsavelId.ShouldNotBeNull();
             
             var eventos = ObterTodos<Evento>();
             eventos.Count().ShouldBe(4);

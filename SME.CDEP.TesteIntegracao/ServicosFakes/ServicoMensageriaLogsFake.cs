@@ -1,9 +1,4 @@
-﻿using Newtonsoft.Json;
-using Polly;
-using Polly.Registry;
-using System.Text;
-using SME.CDEP.Infra.Servicos.Mensageria;
-using SME.CDEP.Infra.Servicos.Polly;
+﻿using SME.CDEP.Infra.Servicos.Mensageria;
 
 namespace SSME.CDEP.TesteIntegracao.ServicosFakes
 {
