@@ -56,4 +56,5 @@ public class MensagemNegocio
     public const string CAMPO_X_ESPERADO_NUMERICO_E_COM_CASAS_DECIMAIS = "É esperado que o campo '{0}' seja um numérico com duas casas decimais separados por vírgula";
     public const string SOLICITANTE_NAO_POSSUI_EMAIL = "O solicitante '{0}' não possui e-mail cadastrado, verifique!";
     public const string EMAIL_INVALIDO = "O e-mail informado é inválido";
+    public const string CANCELAR_SOLICITACAO_NAO_PERMITIDO_QUANDO_ITENS_ATENDIDOS_PARCIALMENTE = "Não é possível cancelar a solicitação de atendimento quando alguns itens foram atendidos parcialmente.";
 }
