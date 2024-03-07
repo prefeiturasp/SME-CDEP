@@ -297,9 +297,7 @@ namespace SME.CDEP.Aplicacao.Servicos
                 }
                 tran.Commit();
                 
-                acervoSolicitacao.Situacao = await DeterminarSituacaoAtendimento(acervoSolicitacaoConfirmar.Id);
-                acervoSolicitacao.DataSolicitacao = DateTimeExtension.HorarioBrasilia();
-                await repositorioAcervoSolicitacao.Atualizar(acervoSolicitacao);
+                await AtualizarSituacaoAtendimento(acervoSolicitacao);
 
                 if (itensConfirmados.Any(a => a.TipoAtendimento.EhAtendimentoPresencial()))
                 {
@@ -322,6 +320,17 @@ namespace SME.CDEP.Aplicacao.Servicos
             {
                 tran.Dispose();
             }
+        }
+
+        private async Task AtualizarSituacaoAtendimento(AcervoSolicitacao acervoSolicitacao, bool todosItensEstaoCancelados = false)
+        {
+            acervoSolicitacao.Situacao = todosItensEstaoCancelados 
+                ? SituacaoSolicitacao.CANCELADO 
+                : await DeterminarSituacaoAtendimento(acervoSolicitacao.Id);
+            
+            acervoSolicitacao.DataSolicitacao = DateTimeExtension.HorarioBrasilia();
+            
+            await repositorioAcervoSolicitacao.Atualizar(acervoSolicitacao);
         }
 
         private async Task<SituacaoSolicitacao> DeterminarSituacaoAtendimento(long id)
@@ -459,12 +468,11 @@ namespace SME.CDEP.Aplicacao.Servicos
             if (acervoSolicitacaoItem.TipoAtendimento.EhAtendimentoPresencial())
                 await servicoEvento.ExcluirEventoPorAcervoSolicitacaoItem(acervoSolicitacaoItem.Id);
             
-            if (itens.Where(w=> w.Id != acervoSolicitacaoItemId).All(a=> a.Situacao.EstaCancelado()))
-            {
-                var acervoSolicitacao = await repositorioAcervoSolicitacao.ObterPorId(acervoSolicitacaoItem.AcervoSolicitacaoId);
-                acervoSolicitacao.Situacao = SituacaoSolicitacao.CANCELADO;
-                await repositorioAcervoSolicitacao.Atualizar(acervoSolicitacao);
-            }
+            var acervoSolicitacao = await repositorioAcervoSolicitacao.ObterPorId(acervoSolicitacaoItem.AcervoSolicitacaoId);
+            var todosItensEstaoCancelados = itens.Where(w => w.Id != acervoSolicitacaoItemId).All(a => a.Situacao.EstaCancelado());
+            
+            await AtualizarSituacaoAtendimento(acervoSolicitacao,todosItensEstaoCancelados);
+            
             await servicoMensageria.Publicar(RotasRabbit.NotificarViaEmailCancelamentoAtendimentoItem, acervoSolicitacaoItemId, Guid.NewGuid(), null);
             
             return true;
