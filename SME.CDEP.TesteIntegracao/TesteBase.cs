@@ -53,7 +53,7 @@ namespace SME.CDEP.TesteIntegracao
             //    typeof(ObterTurmaEOLParaSyncEstruturaInstitucionalPorTurmaIdQueryHandlerFake), ServiceLifetime.Scoped));
         }
 
-        public Task InserirNaBase<T>(IEnumerable<T> objetos) where T : class, new()
+        public Task InserirVariosNaBase<T>(IEnumerable<T> objetos) where T : class, new()
         {
             _collectionFixture.Database.Inserir(objetos);
             return Task.CompletedTask;

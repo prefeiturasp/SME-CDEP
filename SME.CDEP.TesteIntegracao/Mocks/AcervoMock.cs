@@ -11,7 +11,7 @@ public class AcervoMock : AuditoriaMock
     private static AcervoMock _instance;
     public static AcervoMock Instance => _instance ??= new();
     
-    public Faker<Acervo> GerarAcervo(TipoAcervo tipoAcervo)
+    public Faker<Acervo> Gerar(TipoAcervo tipoAcervo)
     {
         var random = new Random();
         var faker = new Faker<Acervo>("pt_BR");

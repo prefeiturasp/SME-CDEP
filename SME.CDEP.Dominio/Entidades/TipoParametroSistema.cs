@@ -15,6 +15,7 @@
         ModeloEmailCancelamentoSolicitacaoItem = 11,
         ModeloEmailConfirmacaoSolicitacao = 12,
         EnderecoSedeCDEPVisita = 13,
-        HorarioFuncionamentoSedeCDEPVisita = 14
+        HorarioFuncionamentoSedeCDEPVisita = 14,
+        LimiteDiasEmprestimoAcervo = 15
     }
 }
