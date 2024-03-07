@@ -100,7 +100,7 @@ namespace SME.CDEP.Infra.Dados.Repositorios
              asi.situacao,
              asi.tipo_atendimento as tipoAtendimento,
              a.id as acervoId,
-             resp.login as responsavelRf
+             resp.nome as responsavel
 		   from acervo_solicitacao_item asi
 		     join acervo a on a.id = asi.acervo_id
 		     left join usuario resp on resp.id = asi.usuario_responsavel_id and not resp.excluido
