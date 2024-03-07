@@ -54,7 +54,7 @@ namespace SME.CDEP.Infra.Dados.Repositorios
                join acervo_solicitacao aso on aso.id = asi.acervo_solicitacao_id
                join acervo a on a.id = asi.acervo_id
                join usuario u on u.id = aso.usuario_id
-               left join usuario ur on ur.id = aso.usuario_responsavel_id and not ur.excluido
+               left join usuario ur on ur.id = asi.usuario_responsavel_id and not ur.excluido
             where not asi.excluido
               and not aso.excluido
               and not a.excluido 
@@ -105,7 +105,8 @@ namespace SME.CDEP.Infra.Dados.Repositorios
                criado_em,
                criado_por,
                criado_login,
-               tipo_atendimento
+               tipo_atendimento,
+               usuario_responsavel_id
             from acervo_solicitacao_item
             where acervo_solicitacao_id = @acervoSolicitacaoId
               and situacao = any(@situacoesItensAguardandoAtendimentoEVisitaOuFinalizadoManualmente) 
@@ -125,7 +126,8 @@ namespace SME.CDEP.Infra.Dados.Repositorios
                criado_em,
                criado_por,
                criado_login,
-               tipo_atendimento
+               tipo_atendimento,
+               usuario_responsavel_id
             from acervo_solicitacao_item
             where acervo_solicitacao_id = @acervoSolicitacaoId
               and situacao = @situacaoAguardandoVisita 
@@ -145,7 +147,8 @@ namespace SME.CDEP.Infra.Dados.Repositorios
                criado_em,
                criado_por,
                criado_login,
-               tipo_atendimento
+               tipo_atendimento,
+               usuario_responsavel_id
             from acervo_solicitacao_item
             where acervo_solicitacao_id = @acervoSolicitacaoId 
               and not excluido";
@@ -204,17 +207,23 @@ namespace SME.CDEP.Infra.Dados.Repositorios
         
         public Task<bool> PossuiItensFinalizadosAutomaticamente(long acervoSolicitacaoId)
         {
+            var situacoesItensFinalizados = new []
+            {
+                (int)SituacaoSolicitacaoItem.FINALIZADO_AUTOMATICAMENTE,
+                (int)SituacaoSolicitacaoItem.FINALIZADO_MANUALMENTE
+            };
+            
             var query = @"
              select 1
             from acervo_solicitacao_item
             where acervo_solicitacao_id = @acervoSolicitacaoId
             and not excluido
-            and situacao = @finalizadoAutomaticamente ";
+            and situacao = any(@situacoesItensFinalizados) ";
             
             return conexao.Obter().QueryFirstOrDefaultAsync<bool>(query, new
             {
                 acervoSolicitacaoId, 
-                finalizadoAutomaticamente = (int)SituacaoSolicitacaoItem.FINALIZADO_AUTOMATICAMENTE
+                situacoesItensFinalizados
             });
         }
 
@@ -238,7 +247,7 @@ namespace SME.CDEP.Infra.Dados.Repositorios
             return conexao.Obter().QueryFirstOrDefaultAsync<bool>(query, new { acervoSolicitacaoItemId, situacaoAguardandoVisita = (int)SituacaoSolicitacao.AGUARDANDO_VISITA, situacoesItensConfirmadas });
         }
         
-        public Task<IEnumerable<AcervoSolicitacaoItemDetalhe>> ObterDetalhementoDosItensPorSolicitacaoOuItem(long? acervoSolicitacaoId,long? acervoSolicitacaoItemId)
+        public Task<IEnumerable<AcervoSolicitacaoItemDetalhe>> ObterDetalhamentoDosItensPorSolicitacaoOuItem(long? acervoSolicitacaoId,long[] acervoSolicitacaoItensId)
         {
             var query = @"
             select asi.Id, 
@@ -261,18 +270,16 @@ namespace SME.CDEP.Infra.Dados.Repositorios
             if (acervoSolicitacaoId.HasValue)
                 query += " and aso.id = @acervoSolicitacaoId";
             
-            if (acervoSolicitacaoItemId.HasValue)
-                query += " and asi.id = @acervoSolicitacaoItemId";
+            if (acervoSolicitacaoItensId.NaoEhNulo())
+                query += " and asi.id = any(@acervoSolicitacaoItensId)";
             
             return conexao.Obter().QueryAsync<AcervoSolicitacaoItemDetalhe>(query, 
                 new
                 {
                     acervoSolicitacaoId,
-                    acervoSolicitacaoItemId, 
+                    acervoSolicitacaoItensId, 
                     finalizadoAutomaticamente = (int)SituacaoSolicitacaoItem.FINALIZADO_AUTOMATICAMENTE
                 });
         }
-        
-        
     }
 }

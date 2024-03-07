@@ -13,5 +13,6 @@ namespace SME.CDEP.Aplicacao.DTOS
         public DateTime? DataVisita { get; set; }
         public TipoAtendimento? TipoAtendimento { get; set; }
         public long AcervoId { get; set; }
+        public string Responsavel { get; set; }
     }
 }

@@ -86,10 +86,8 @@ namespace SME.CDEP.Infra.Dados.Repositorios
 		     aso.id,
              aso.usuario_id as usuarioId,
              aso.data_solicitacao as dataSolicitacao,
-             resp.login as responsavelRf,
              aso.situacao 
-		   from acervo_solicitacao aso
-		     left join usuario resp on resp.id = aso.usuario_responsavel_id and not resp.excluido
+		   from acervo_solicitacao aso		     
 		   where aso.id = @acervoSolicitacaoId
 		      and not aso.excluido;
 		   
@@ -101,9 +99,11 @@ namespace SME.CDEP.Infra.Dados.Repositorios
              asi.dt_visita as dataVisita,
              asi.situacao,
              asi.tipo_atendimento as tipoAtendimento,
-             a.id as acervoId
+             a.id as acervoId,
+             resp.nome as responsavel
 		   from acervo_solicitacao_item asi
-		     join acervo a on a.id = asi.acervo_id 
+		     join acervo a on a.id = asi.acervo_id
+		     left join usuario resp on resp.id = asi.usuario_responsavel_id and not resp.excluido
 		   where not asi.excluido
 		     and not a.excluido
 		     and asi.acervo_solicitacao_id = @acervoSolicitacaoId; ";

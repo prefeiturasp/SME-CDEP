@@ -13,7 +13,7 @@ namespace SME.CDEP.TesteIntegracao
         {}
        
        
-        [Fact(DisplayName = "Acervo Solicitação - Finalizar com todos os itens cancelados")]
+        [Fact(DisplayName = "Acervo Solicitação - Deve finalizar com todos os itens cancelados")]
         public async Task Deve_finalizar_atendimento_com_itens_cancelados()
         {
             await InserirDadosBasicosAleatorios();
@@ -180,6 +180,34 @@ namespace SME.CDEP.TesteIntegracao
                 item.AcervoSolicitacaoId = acervoSolicitadoId;
                 item.TipoAtendimento = TipoAtendimento.Presencial;
                 item.Situacao = SituacaoSolicitacaoItem.AGUARDANDO_VISITA;
+                item.DataVisita = DateTimeExtension.HorarioBrasilia().AddDays(2);
+                await InserirNaBase(item);
+            }
+            
+            var servicoAcervoSolicitacao = GetServicoAcervoSolicitacao();
+            
+            await servicoAcervoSolicitacao.FinalizarAtendimento(1).ShouldThrowAsync<NegocioException>();
+        }
+        
+        [Fact(DisplayName = "Acervo Solicitação - Não deve finalizar atendimento que foi parcialmente atendido")]
+        public async Task Nao_deve_finalizar_atendimento_que_foi_parcialmente_atendido()
+        {
+            await InserirDadosBasicosAleatorios();
+
+            await InserirAcervoTridimensional();
+
+            var acervoSolicitacao = ObterAcervoSolicitacao();
+            acervoSolicitacao.Situacao = SituacaoSolicitacao.ATENDIDO_PARCIALMENTE;
+            await InserirNaBase(acervoSolicitacao);
+
+            var acervoSolicitadoId = (ObterTodos<AcervoSolicitacao>()).LastOrDefault().Id;
+
+            var contador = 1;
+            foreach (var item in acervoSolicitacao.Itens)
+            {
+                item.AcervoSolicitacaoId = acervoSolicitadoId;
+                item.TipoAtendimento = TipoAtendimento.Presencial;
+                item.Situacao = contador > 1 ? SituacaoSolicitacaoItem.AGUARDANDO_VISITA : SituacaoSolicitacaoItem.AGUARDANDO_ATENDIMENTO;
                 item.DataVisita = DateTimeExtension.HorarioBrasilia().AddDays(2);
                 await InserirNaBase(item);
             }

@@ -64,5 +64,10 @@ public static class SituacaoSolicitacaoItemExtension
     {
         return situacaoSolicitacaoItem == SituacaoSolicitacaoItem.FINALIZADO_AUTOMATICAMENTE 
                || situacaoSolicitacaoItem == SituacaoSolicitacaoItem.CANCELADO;
+    } 
+    
+    public static bool EstaFinalizadoManualmente(this SituacaoSolicitacaoItem situacaoSolicitacaoItem)
+    {
+        return situacaoSolicitacaoItem == SituacaoSolicitacaoItem.FINALIZADO_MANUALMENTE;
     }
 }

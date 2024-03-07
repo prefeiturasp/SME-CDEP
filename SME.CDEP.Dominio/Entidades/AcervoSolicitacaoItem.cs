@@ -12,6 +12,7 @@ namespace SME.CDEP.Dominio.Entidades
         public DateTime? DataVisita { get; set; }
         public SituacaoSolicitacaoItem Situacao { get; set; }
         public TipoAtendimento? TipoAtendimento { get; set; }
+        public long? ResponsavelId { get; set; }
 
         public void Validar()
         {

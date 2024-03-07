@@ -234,37 +234,37 @@ namespace SME.CDEP.Aplicacao.Servicos
         
         public async Task<bool> ConfirmarAtendimento(AcervoSolicitacaoConfirmarDTO acervoSolicitacaoConfirmar)
         {
+            var ehAtendimentoPorItem = acervoSolicitacaoConfirmar.Itens.PossuiApenasUmItem(); 
+                
             var acervoSolicitacao = await repositorioAcervoSolicitacao.ObterPorId(acervoSolicitacaoConfirmar.Id);
             
             if (acervoSolicitacao.EhNulo())
                 throw new NegocioException(MensagemNegocio.SOLICITACAO_ATENDIMENTO_NAO_ENCONTRADA);
+
+            if (acervoSolicitacaoConfirmar.Itens.NaoPossuiElementos())
+                throw new NegocioException(MensagemNegocio.SOLICITACAO_ATENDIMENTO_ITEM_NAO_ENCONTRADA);
             
             if (acervoSolicitacaoConfirmar.Itens.Any(a=> a.TipoAtendimento.EhAtendimentoPresencial() && !a.DataVisita.HasValue))
                 throw new NegocioException(MensagemNegocio.ITENS_ACERVOS_PRESENCIAL_DEVEM_TER_DATA_ACERVO);
             
-            var itens = await repositorioAcervoSolicitacaoItem.ObterItensEmSituacaoAguardandoAtendimentoOuVisitaOuFinalizadoManualmentePorSolicitacaoId(acervoSolicitacaoConfirmar.Id);
-            
-            var usuarioResponsavel = await repositorioUsuario.ObterPorLogin(acervoSolicitacaoConfirmar.ResponsavelRf);
-            if (usuarioResponsavel.EhNulo())
-                throw new NegocioException(Constantes.USUARIO_RESPONSAVEL_NAO_LOCALIZADO);
+            var itensDaSolicitacao = await repositorioAcervoSolicitacaoItem.ObterItensEmSituacaoAguardandoAtendimentoOuVisitaOuFinalizadoManualmentePorSolicitacaoId(acervoSolicitacaoConfirmar.Id);
 
+            var itensConfirmados = ehAtendimentoPorItem 
+                ? itensDaSolicitacao.Where(w => w.Id == acervoSolicitacaoConfirmar.Itens.FirstOrDefault().Id) 
+                : itensDaSolicitacao;
+            
             var datasDasVisitas = acervoSolicitacaoConfirmar.Itens
                 .Where(w => w.TipoAtendimento.EhAtendimentoPresencial())
                 .Select(s => s.DataVisita.Value);
 
             await ValidarConflitosEventos(datasDasVisitas);
+            
+            var usuarioLogado = await servicoUsuario.ObterUsuarioLogado();
 
             var tran = transacao.Iniciar();
             try
             {
-                acervoSolicitacao.Situacao = acervoSolicitacaoConfirmar.Itens.All(a=> a.TipoAtendimento.EhAtendimentoViaEmail()) 
-                    ? SituacaoSolicitacao.FINALIZADO_ATENDIMENTO : SituacaoSolicitacao.AGUARDANDO_VISITA;
-                
-                acervoSolicitacao.ResponsavelId = usuarioResponsavel.Id;
-                acervoSolicitacao.DataSolicitacao = DateTimeExtension.HorarioBrasilia();
-                await repositorioAcervoSolicitacao.Atualizar(acervoSolicitacao);
-                
-                foreach (var item in itens)
+                foreach (var item in itensConfirmados)
                 {
                     var itemAlterado = acervoSolicitacaoConfirmar.Itens.FirstOrDefault(f => f.Id == item.Id);
 
@@ -282,6 +282,8 @@ namespace SME.CDEP.Aplicacao.Servicos
                         item.Situacao = SituacaoSolicitacaoItem.FINALIZADO_MANUALMENTE;
                         item.DataVisita = null;
                     }
+
+                    item.ResponsavelId = usuarioLogado.Id;
                     
                     item.Validar();
                     await repositorioAcervoSolicitacaoItem.Atualizar(item);
@@ -294,9 +296,18 @@ namespace SME.CDEP.Aplicacao.Servicos
                     
                 }
                 tran.Commit();
+                
+                await AtualizarSituacaoAtendimento(acervoSolicitacao);
 
-                if (acervoSolicitacaoConfirmar.Itens.Any(a=> a.TipoAtendimento.EhAtendimentoPresencial()))
-                    await servicoMensageria.Publicar(RotasRabbit.NotificarViaEmailConfirmacaoAtendimentoPresencial, acervoSolicitacao.Id, null);
+                if (itensConfirmados.Any(a => a.TipoAtendimento.EhAtendimentoPresencial()))
+                {
+                    var confirmarAtendimento = new ConfirmarAtendimentoDTO()
+                    {
+                        Id = acervoSolicitacao.Id,
+                        Itens = itensConfirmados.Select(s => s.Id)
+                    };
+                    await servicoMensageria.Publicar(RotasRabbit.NotificarViaEmailConfirmacaoAtendimentoPresencial, confirmarAtendimento, null);
+                }
                 
                 return true;
             }
@@ -309,6 +320,38 @@ namespace SME.CDEP.Aplicacao.Servicos
             {
                 tran.Dispose();
             }
+        }
+
+        private async Task AtualizarSituacaoAtendimento(AcervoSolicitacao acervoSolicitacao, bool todosItensEstaoCancelados = false)
+        {
+            acervoSolicitacao.Situacao = todosItensEstaoCancelados 
+                ? SituacaoSolicitacao.CANCELADO 
+                : await DeterminarSituacaoAtendimento(acervoSolicitacao.Id);
+            
+            acervoSolicitacao.DataSolicitacao = DateTimeExtension.HorarioBrasilia();
+            
+            await repositorioAcervoSolicitacao.Atualizar(acervoSolicitacao);
+        }
+
+        private async Task<SituacaoSolicitacao> DeterminarSituacaoAtendimento(long id)
+        {
+            var itensDaSolicitacao = await repositorioAcervoSolicitacaoItem.ObterItensEmSituacaoAguardandoAtendimentoOuVisitaOuFinalizadoManualmentePorSolicitacaoId(id);
+            
+            var temItensAguardandoVisita = itensDaSolicitacao.Any(a => a.Situacao.EstaAguardandoVisita());
+            var temItensAguardandoAtendimento = itensDaSolicitacao.Any(a => a.Situacao.EstaAguardandoAtendimento());
+            var todosItensFinalizadosManualmente = itensDaSolicitacao.All(a => a.Situacao.EstaFinalizadoManualmente());
+            var todosItensAguardandoVisita = itensDaSolicitacao.All(a => a.Situacao.EstaAguardandoVisita());
+            
+            if (todosItensFinalizadosManualmente)
+                return SituacaoSolicitacao.FINALIZADO_ATENDIMENTO;
+
+            if (temItensAguardandoAtendimento)
+                return SituacaoSolicitacao.ATENDIDO_PARCIALMENTE;
+            
+            if (todosItensAguardandoVisita || temItensAguardandoVisita)
+                return SituacaoSolicitacao.AGUARDANDO_VISITA;
+
+            throw new NegocioException(MensagemNegocio.SITUACAO_NAO_MAPEADA);
         }
 
         private async Task ValidarConflitosEventos(IEnumerable<DateTime> datasDasVisitas)
@@ -327,6 +370,9 @@ namespace SME.CDEP.Aplicacao.Servicos
             
             if (acervoSolicitacao.EhNulo())
                 throw new NegocioException(MensagemNegocio.SOLICITACAO_ATENDIMENTO_NAO_ENCONTRADA);
+            
+            if (acervoSolicitacao.Situacao.FoiAtendidaParcialmente())
+                throw new NegocioException(MensagemNegocio.CANCELAR_SOLICITACAO_NAO_PERMITIDO_QUANDO_ITENS_ATENDIDOS_PARCIALMENTE);
 
             if (await repositorioAcervoSolicitacaoItem.PossuiItensEmSituacaoAguardandoAtendimentoOuAguardandoVisitaComDataFutura(acervoSolicitacaoId))
                 throw new NegocioException(MensagemNegocio.NÃO_PODE_FINALIZAR_QUANDO_AGUARDANDO_VISITA_DATA_FUTURA_OU_AGUARDANDO_ATENDIMENTO);
@@ -367,7 +413,7 @@ namespace SME.CDEP.Aplicacao.Servicos
                 throw new NegocioException(MensagemNegocio.SOLICITACAO_ATENDIMENTO_NAO_ENCONTRADA);
             
             if (await repositorioAcervoSolicitacaoItem.PossuiItensFinalizadosAutomaticamente(acervoSolicitacaoId))
-                throw new NegocioException(MensagemNegocio.NAO_PODE_CANCELAR_ATENDIMENTO_COM_ITEM_FINALIZADO_AUTOMATICAMENTE);
+                throw new NegocioException(MensagemNegocio.NAO_PODE_CANCELAR_ATENDIMENTO_COM_ITEM_FINALIZADO_AUTOMATICAMENTE_MANUALMENTE);
             
             var itens = await repositorioAcervoSolicitacaoItem.ObterItensPorSolicitacaoId(acervoSolicitacaoId);
 
@@ -411,7 +457,7 @@ namespace SME.CDEP.Aplicacao.Servicos
             var itens = await repositorioAcervoSolicitacaoItem.ObterItensPorSolicitacaoId(acervoSolicitacaoItem.AcervoSolicitacaoId);
 
             if (itens.Any(a=> a.Situacao.EstaEmSituacaoFinalizadoAutomaticamenteOuCancelado() && a.Id == acervoSolicitacaoItemId)) 
-                throw new NegocioException(MensagemNegocio.NAO_PODE_CANCELAR_ATENDIMENTO_COM_ITEM_FINALIZADO_AUTOMATICAMENTE);
+                throw new NegocioException(MensagemNegocio.NAO_PODE_CANCELAR_ATENDIMENTO_COM_ITEM_FINALIZADO_AUTOMATICAMENTE_MANUALMENTE);
             
             acervoSolicitacaoItem.Situacao = SituacaoSolicitacaoItem.CANCELADO;
             await repositorioAcervoSolicitacaoItem.Atualizar(acervoSolicitacaoItem);
@@ -419,12 +465,11 @@ namespace SME.CDEP.Aplicacao.Servicos
             if (acervoSolicitacaoItem.TipoAtendimento.EhAtendimentoPresencial())
                 await servicoEvento.ExcluirEventoPorAcervoSolicitacaoItem(acervoSolicitacaoItem.Id);
             
-            if (itens.Where(w=> w.Id != acervoSolicitacaoItemId).All(a=> a.Situacao.EstaCancelado()))
-            {
-                var acervoSolicitacao = await repositorioAcervoSolicitacao.ObterPorId(acervoSolicitacaoItem.AcervoSolicitacaoId);
-                acervoSolicitacao.Situacao = SituacaoSolicitacao.CANCELADO;
-                await repositorioAcervoSolicitacao.Atualizar(acervoSolicitacao);
-            }
+            var acervoSolicitacao = await repositorioAcervoSolicitacao.ObterPorId(acervoSolicitacaoItem.AcervoSolicitacaoId);
+            var todosItensEstaoCancelados = itens.Where(w => w.Id != acervoSolicitacaoItemId).All(a => a.Situacao.EstaCancelado());
+            
+            await AtualizarSituacaoAtendimento(acervoSolicitacao,todosItensEstaoCancelados);
+            
             await servicoMensageria.Publicar(RotasRabbit.NotificarViaEmailCancelamentoAtendimentoItem, acervoSolicitacaoItemId, Guid.NewGuid(), null);
             
             return true;
@@ -468,7 +513,7 @@ namespace SME.CDEP.Aplicacao.Servicos
             
             acervoSolicitacao.Origem = Origem.Manual;
 
-            acervoSolicitacao.ResponsavelId = (await servicoUsuario.ObterUsuarioLogado()).Id;
+            var usuarioLogado = await servicoUsuario.ObterUsuarioLogado();
             
             acervoSolicitacao.Situacao = acervoSolicitacao.Itens.Any(a=> a.TipoAtendimento.EhAtendimentoPresencial()) 
                 ? SituacaoSolicitacao.AGUARDANDO_VISITA 
@@ -482,6 +527,7 @@ namespace SME.CDEP.Aplicacao.Servicos
                 foreach (var item in acervoSolicitacao.Itens)
                 {
                     item.AcervoSolicitacaoId = acervoSolicitacao.Id;
+                    item.ResponsavelId = usuarioLogado.Id;
                     
                     item.Situacao = item.TipoAtendimento.EhAtendimentoViaEmail()
                         ? SituacaoSolicitacaoItem.FINALIZADO_MANUALMENTE
@@ -534,7 +580,7 @@ namespace SME.CDEP.Aplicacao.Servicos
             
             acervoSolicitacao.DataSolicitacao = acervoSolicitacaoManualDto.DataSolicitacao;
 
-            acervoSolicitacao.ResponsavelId = (await servicoUsuario.ObterUsuarioLogado()).Id;
+            var usuarioLogado = await servicoUsuario.ObterUsuarioLogado();
             
             acervoSolicitacao.Situacao = acervoSolicitacaoManualDto.Itens.Any(a=> a.TipoAtendimento.EhAtendimentoPresencial()) 
                 ? SituacaoSolicitacao.AGUARDANDO_VISITA 
@@ -554,6 +600,8 @@ namespace SME.CDEP.Aplicacao.Servicos
                     item.Situacao =  item.TipoAtendimento.EhAtendimentoViaEmail()
                                      ? SituacaoSolicitacaoItem.FINALIZADO_MANUALMENTE
                                      : SituacaoSolicitacaoItem.AGUARDANDO_VISITA;
+
+                    item.ResponsavelId = usuarioLogado.Id;
                     
                     if (item.Id.EhMaiorQueZero())
                     {
