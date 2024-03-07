@@ -139,8 +139,8 @@ namespace SME.CDEP.TesteIntegracao
             eventos.Count().ShouldBe(0);
         }
         
-        [Fact(DisplayName = "Acervo Solicitação - Deve cancelar atendimento quando itens finalizados manualmente")]
-        public async Task Deve_cancelar_atendimento_quando_itens_finalizado_manualmente()
+        [Fact(DisplayName = "Acervo Solicitação - Não deve cancelar atendimento quando itens finalizados manualmente")]
+        public async Task Nao_deve_cancelar_atendimento_quando_itens_finalizado_manualmente()
         {
             await InserirDadosBasicosAleatorios();
 
@@ -161,18 +161,7 @@ namespace SME.CDEP.TesteIntegracao
             
             var servicoAcervoSolicitacao = GetServicoAcervoSolicitacao();
             
-            var retorno = await servicoAcervoSolicitacao.CancelarAtendimento(1);
-            
-            retorno.ShouldBeTrue();
-            var solicitacaoAlterada = ObterTodos<AcervoSolicitacao>().FirstOrDefault(f=> f.Id == 1);
-            solicitacaoAlterada.Id.ShouldBe(1);
-            solicitacaoAlterada.Situacao.ShouldBe(SituacaoSolicitacao.CANCELADO);
-            
-            var itens = ObterTodos<AcervoSolicitacaoItem>();
-            itens.All(a=> a.Situacao.EstaCancelado()).ShouldBeTrue();
-            
-            var eventos = ObterTodos<Evento>();
-            eventos.Count().ShouldBe(0);
+            await servicoAcervoSolicitacao.CancelarAtendimento(1).ShouldThrowAsync<NegocioException>();
         }
         
         [Fact(DisplayName = "Acervo Solicitação - Não deve cancelar atendimento com itens em situação finalizado automaticamente")]
@@ -200,8 +189,8 @@ namespace SME.CDEP.TesteIntegracao
             await servicoAcervoSolicitacao.CancelarAtendimento(1).ShouldThrowAsync<NegocioException>();
         }
         
-        [Fact(DisplayName = "Acervo Solicitação - Não deve cancelar atendimento com itens atendidos parcialmente com visita")]
-        public async Task Nao_deve_cancelar_atendimento_com_itens_em_atendidos_parcialmente_com_visita()
+        [Fact(DisplayName = "Acervo Solicitação - Deve cancelar atendimento com itens atendidos parcialmente com visita")]
+        public async Task Deve_cancelar_atendimento_com_itens_em_atendidos_parcialmente_com_visita()
         {
             await InserirDadosBasicosAleatorios();
 
@@ -224,7 +213,18 @@ namespace SME.CDEP.TesteIntegracao
             
             var servicoAcervoSolicitacao = GetServicoAcervoSolicitacao();
             
-            await servicoAcervoSolicitacao.CancelarAtendimento(1).ShouldThrowAsync<NegocioException>();
+            var retorno = await servicoAcervoSolicitacao.CancelarAtendimento(1);
+            
+            retorno.ShouldBeTrue();
+            var solicitacaoAlterada = ObterTodos<AcervoSolicitacao>().FirstOrDefault(f=> f.Id == 1);
+            solicitacaoAlterada.Id.ShouldBe(1);
+            solicitacaoAlterada.Situacao.ShouldBe(SituacaoSolicitacao.CANCELADO);
+            
+            var itens = ObterTodos<AcervoSolicitacaoItem>();
+            itens.All(a=> a.Situacao.EstaCancelado()).ShouldBeTrue();
+            
+            var eventos = ObterTodos<Evento>();
+            eventos.Count().ShouldBe(0);
         }
         
         [Fact(DisplayName = "Acervo Solicitação - Não deve cancelar atendimento com itens atendidos parcialmente aguardando atendimento")]

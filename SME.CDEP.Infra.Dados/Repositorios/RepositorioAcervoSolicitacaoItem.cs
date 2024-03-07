@@ -207,17 +207,23 @@ namespace SME.CDEP.Infra.Dados.Repositorios
         
         public Task<bool> PossuiItensFinalizadosAutomaticamente(long acervoSolicitacaoId)
         {
+            var situacoesItensFinalizados = new []
+            {
+                (int)SituacaoSolicitacaoItem.FINALIZADO_AUTOMATICAMENTE,
+                (int)SituacaoSolicitacaoItem.FINALIZADO_MANUALMENTE
+            };
+            
             var query = @"
              select 1
             from acervo_solicitacao_item
             where acervo_solicitacao_id = @acervoSolicitacaoId
             and not excluido
-            and situacao = @finalizadoAutomaticamente ";
+            and situacao = any(@situacoesItensFinalizados) ";
             
             return conexao.Obter().QueryFirstOrDefaultAsync<bool>(query, new
             {
                 acervoSolicitacaoId, 
-                finalizadoAutomaticamente = (int)SituacaoSolicitacaoItem.FINALIZADO_AUTOMATICAMENTE
+                situacoesItensFinalizados
             });
         }
 
