@@ -2,7 +2,7 @@
 
 namespace SME.CDEP.Aplicacao.DTOS
 {
-    public class AcervoSolicitacaoItemManualDto : DataVisitaEmprestimoDevolucaoTipoAcervoAtendimentoDTO
+    public class AcervoSolicitacaoItemManualDTO : DataVisitaEmprestimoDevolucaoTipoAcervoAtendimentoDTO
     {
         public long? Id { get; set; }
         

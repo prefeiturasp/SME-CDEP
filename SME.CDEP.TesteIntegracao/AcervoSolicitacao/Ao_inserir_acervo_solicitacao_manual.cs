@@ -34,7 +34,7 @@ namespace SME.CDEP.TesteIntegracao
             {
                 UsuarioId = 1,
                 DataSolicitacao = DateTimeExtension.HorarioBrasilia().Date.AddDays(-5),
-                Itens = new List<AcervoSolicitacaoItemManualDto>()
+                Itens = new List<AcervoSolicitacaoItemManualDTO>()
                 {
                     new ()
                     {
@@ -121,7 +121,7 @@ namespace SME.CDEP.TesteIntegracao
             {
                 UsuarioId = 1,
                 DataSolicitacao = DateTimeExtension.HorarioBrasilia().Date.AddDays(-5),
-                Itens = new List<AcervoSolicitacaoItemManualDto>()
+                Itens = new List<AcervoSolicitacaoItemManualDTO>()
                 {
                     new ()
                     {
@@ -200,7 +200,7 @@ namespace SME.CDEP.TesteIntegracao
             {
                 UsuarioId = 1,
                 DataSolicitacao = DateTimeExtension.HorarioBrasilia().Date.AddDays(-5),
-                Itens = new List<AcervoSolicitacaoItemManualDto>()
+                Itens = new List<AcervoSolicitacaoItemManualDTO>()
                 {
                     new ()
                     {
@@ -280,7 +280,7 @@ namespace SME.CDEP.TesteIntegracao
             {
                 UsuarioId = 1,
                 DataSolicitacao = DateTimeExtension.HorarioBrasilia().Date.AddDays(-5),
-                Itens = new List<AcervoSolicitacaoItemManualDto>()
+                Itens = new List<AcervoSolicitacaoItemManualDTO>()
                 {
                     new ()
                     {
@@ -319,7 +319,7 @@ namespace SME.CDEP.TesteIntegracao
             {
                 UsuarioId = 1,
                 DataSolicitacao = DateTimeExtension.HorarioBrasilia().Date.AddDays(-5),
-                Itens = new List<AcervoSolicitacaoItemManualDto>()
+                Itens = new List<AcervoSolicitacaoItemManualDTO>()
                 {
                     new ()
                     {
@@ -358,7 +358,7 @@ namespace SME.CDEP.TesteIntegracao
             {
                 UsuarioId = 1,
                 DataSolicitacao = DateTimeExtension.HorarioBrasilia().Date.AddDays(-5),
-                Itens = new List<AcervoSolicitacaoItemManualDto>()
+                Itens = new List<AcervoSolicitacaoItemManualDTO>()
                 {
                     new ()
                     {
@@ -404,7 +404,7 @@ namespace SME.CDEP.TesteIntegracao
             {
                 UsuarioId = 1,
                 DataSolicitacao = DateTimeExtension.HorarioBrasilia().Date.AddDays(-5),
-                Itens = new List<AcervoSolicitacaoItemManualDto>()
+                Itens = new List<AcervoSolicitacaoItemManualDTO>()
                 {
                     new ()
                     {
@@ -452,7 +452,7 @@ namespace SME.CDEP.TesteIntegracao
             {
                 UsuarioId = 1,
                 DataSolicitacao = DateTimeExtension.HorarioBrasilia().Date.AddDays(-5),
-                Itens = new List<AcervoSolicitacaoItemManualDto>()
+                Itens = new List<AcervoSolicitacaoItemManualDTO>()
                 {
                     new ()
                     {

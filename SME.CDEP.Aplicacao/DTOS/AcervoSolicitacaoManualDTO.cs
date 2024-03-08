@@ -12,6 +12,6 @@ namespace SME.CDEP.Aplicacao.DTOS
         [Required(ErrorMessage = "É necessário informar a data da solicitação para realizar a solicitação manual de acervos")]
         public DateTime DataSolicitacao { get; set; }
 
-        public IEnumerable<AcervoSolicitacaoItemManualDto> Itens { get; set; } = Enumerable.Empty<AcervoSolicitacaoItemManualDto>();
+        public IEnumerable<AcervoSolicitacaoItemManualDTO> Itens { get; set; } = Enumerable.Empty<AcervoSolicitacaoItemManualDTO>();
     }
 }

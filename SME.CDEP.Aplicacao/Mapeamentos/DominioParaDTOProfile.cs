@@ -232,9 +232,9 @@ namespace SME.CDEP.Aplicacao.Mapeamentos
                 .ReverseMap();
             
             CreateMap<AcervoSolicitacao,AcervoSolicitacaoManualDTO>().ReverseMap();
-            CreateMap<AcervoSolicitacaoItem,AcervoSolicitacaoItemManualDto>().ReverseMap();
+            CreateMap<AcervoSolicitacaoItem,AcervoSolicitacaoItemManualDTO>().ReverseMap();
             
-            CreateMap<AcervoSolicitacaoItemManualDto,AcervoSolicitacaoItem>().ReverseMap();
+            CreateMap<AcervoSolicitacaoItemManualDTO,AcervoSolicitacaoItem>().ReverseMap();
             
             CreateMap<DiaMesDTO,EventoCadastroDTO>().ReverseMap();
             
