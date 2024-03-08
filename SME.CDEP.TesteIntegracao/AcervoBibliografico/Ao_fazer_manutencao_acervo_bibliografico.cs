@@ -65,7 +65,7 @@ namespace SME.CDEP.TesteIntegracao
             
             var servicoAcervobibliografico = GetServicoAcervoBibliografico();
             
-            var acervoBibliograficoCompleto = AcervoBibliograficoMock.Instance.GerarAcervoBibliografico().Generate();
+            var acervoBibliograficoCompleto = AcervoBibliograficoMock.Instance.Gerar().Generate();
             
             var acervoAtual = ObterTodos<Acervo>().FirstOrDefault(w=> w.Id == 3);
             
@@ -143,7 +143,7 @@ namespace SME.CDEP.TesteIntegracao
             
             var servicoAcervobibliografico = GetServicoAcervoBibliografico();
             
-            var acervoBibliograficoCompleto = AcervoBibliograficoMock.Instance.GerarAcervoBibliografico().Generate();
+            var acervoBibliograficoCompleto = AcervoBibliograficoMock.Instance.Gerar().Generate();
             
             var acervoAtual = ObterTodos<Acervo>().FirstOrDefault(w=> w.Id == 3);
             
@@ -172,7 +172,7 @@ namespace SME.CDEP.TesteIntegracao
             
             var servicoAcervobibliografico = GetServicoAcervoBibliografico();
             
-            var acervoBibliograficoCompleto = AcervoBibliograficoMock.Instance.GerarAcervoBibliografico().Generate();
+            var acervoBibliograficoCompleto = AcervoBibliograficoMock.Instance.Gerar().Generate();
             
             var acervoAtual = ObterTodos<Acervo>().FirstOrDefault(w=> w.Id == 3);
             
@@ -249,7 +249,7 @@ namespace SME.CDEP.TesteIntegracao
             
             var servicoAcervobibliografico = GetServicoAcervoBibliografico();
             
-            var acervoBibliograficoCompleto = AcervoBibliograficoMock.Instance.GerarAcervoBibliografico().Generate();
+            var acervoBibliograficoCompleto = AcervoBibliograficoMock.Instance.Gerar().Generate();
             
             var acervoAtual = ObterTodos<Acervo>().FirstOrDefault(w=> w.Id == 3);
             
@@ -277,7 +277,7 @@ namespace SME.CDEP.TesteIntegracao
             
             var servicoAcervobibliografico = GetServicoAcervoBibliografico();
             
-            var acervoBibliograficoCompleto = AcervoBibliograficoMock.Instance.GerarAcervoBibliografico().Generate();
+            var acervoBibliograficoCompleto = AcervoBibliograficoMock.Instance.Gerar().Generate();
             
             var acervoAtual = ObterTodos<Acervo>().FirstOrDefault(w=> w.Id == 3);
             
@@ -306,7 +306,7 @@ namespace SME.CDEP.TesteIntegracao
             
             var servicoAcervobibliografico = GetServicoAcervoBibliografico();
             
-            var acervoBibliograficoCompleto = AcervoBibliograficoMock.Instance.GerarAcervoBibliografico().Generate();
+            var acervoBibliograficoCompleto = AcervoBibliograficoMock.Instance.Gerar().Generate();
             
             var acervoAtual = ObterTodos<Acervo>().FirstOrDefault(w=> w.Id == 3);
             
@@ -378,7 +378,7 @@ namespace SME.CDEP.TesteIntegracao
             
             var servicoAcervobibliografico = GetServicoAcervoBibliografico();
             
-            var acervoBibliograficoCompleto = AcervoBibliograficoMock.Instance.GerarAcervoBibliografico().Generate();
+            var acervoBibliograficoCompleto = AcervoBibliograficoMock.Instance.Gerar().Generate();
             
             var acervoBibliograficoCadastroDto = mapper.Map<AcervoBibliograficoCadastroDTO>(acervoBibliograficoCompleto);
             acervoBibliograficoCadastroDto.CreditosAutoresIds = new long[] { 1, 2, 3 };
@@ -447,7 +447,7 @@ namespace SME.CDEP.TesteIntegracao
             
             var servicoAcervobibliografico = GetServicoAcervoBibliografico();
             
-            var acervoBibliograficoCompleto = AcervoBibliograficoMock.Instance.GerarAcervoBibliografico().Generate();
+            var acervoBibliograficoCompleto = AcervoBibliograficoMock.Instance.Gerar().Generate();
             
             var acervoBibliograficoCadastroDto = mapper.Map<AcervoBibliograficoCadastroDTO>(acervoBibliograficoCompleto);
             acervoBibliograficoCadastroDto.CreditosAutoresIds = new long[] { 4,5 };
@@ -516,7 +516,7 @@ namespace SME.CDEP.TesteIntegracao
             
             var servicoAcervobibliografico = GetServicoAcervoBibliografico();
             
-            var acervoBibliograficoCompleto = AcervoBibliograficoMock.Instance.GerarAcervoBibliografico().Generate();
+            var acervoBibliograficoCompleto = AcervoBibliograficoMock.Instance.Gerar().Generate();
             
             var acervoBibliograficoCadastroDto = mapper.Map<AcervoBibliograficoCadastroDTO>(acervoBibliograficoCompleto);
             acervoBibliograficoCadastroDto.CreditosAutoresIds = new long[] { 4,5 };
@@ -541,7 +541,7 @@ namespace SME.CDEP.TesteIntegracao
             
             var servicoAcervobibliografico = GetServicoAcervoBibliografico();
             
-            var acervoBibliograficoCompleto = AcervoBibliograficoMock.Instance.GerarAcervoBibliografico().Generate();
+            var acervoBibliograficoCompleto = AcervoBibliograficoMock.Instance.Gerar().Generate();
             
             var acervoBibliograficoCadastroDto = mapper.Map<AcervoBibliograficoCadastroDTO>(acervoBibliograficoCompleto);
             acervoBibliograficoCadastroDto.CreditosAutoresIds = new long[] { 4,5 };
@@ -566,7 +566,7 @@ namespace SME.CDEP.TesteIntegracao
         
             var servicoAcervobibliografico = GetServicoAcervoBibliografico();
         
-            var acervoBibliograficoCompleto = AcervoBibliograficoMock.Instance.GerarAcervoBibliografico().Generate();
+            var acervoBibliograficoCompleto = AcervoBibliograficoMock.Instance.Gerar().Generate();
         
             var acervoBibliograficoCadastroDto = mapper.Map<AcervoBibliograficoCadastroDTO>(acervoBibliograficoCompleto);
             acervoBibliograficoCadastroDto.CreditosAutoresIds = new long[] { 4,5 };

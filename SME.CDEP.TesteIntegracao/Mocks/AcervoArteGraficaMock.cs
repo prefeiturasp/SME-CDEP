@@ -27,7 +27,7 @@ public class AcervoArteGraficaMock : AcervoMock
         faker.RuleFor(x => x.Tecnica, f => f.Lorem.Sentence().Limite(100));
         faker.RuleFor(x => x.SuporteId, f => random.Next(1,5));
         faker.RuleFor(x => x.Quantidade, f => random.Next(15,55));
-        faker.RuleFor(x => x.Acervo, f => GerarAcervo(TipoAcervo.ArtesGraficas).Generate());
+        faker.RuleFor(x => x.Acervo, f => Gerar(TipoAcervo.ArtesGraficas).Generate());
         return faker;
     }
 }

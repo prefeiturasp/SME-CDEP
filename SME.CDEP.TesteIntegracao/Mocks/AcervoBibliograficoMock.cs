@@ -11,7 +11,7 @@ public class AcervoBibliograficoMock : AcervoMock
     private static AcervoBibliograficoMock _instance;
     public static AcervoBibliograficoMock Instance => _instance ??= new();
     
-    public Faker<AcervoBibliografico> GerarAcervoBibliografico()
+    public Faker<AcervoBibliografico> Gerar()
     {
         var random = new Random();
         var faker = new Faker<AcervoBibliografico>("pt_BR");
@@ -28,7 +28,7 @@ public class AcervoBibliograficoMock : AcervoMock
         faker.RuleFor(x => x.LocalizacaoPHA, f => f.Lorem.Sentence().Limite(50));
         faker.RuleFor(x => x.NotasGerais, f => f.Lorem.Text().Limite(500));
         faker.RuleFor(x => x.Isbn, f => f.Lorem.Sentence().Limite(50));
-        faker.RuleFor(x => x.Acervo, f => GerarAcervo(TipoAcervo.Bibliografico).Generate());
+        faker.RuleFor(x => x.Acervo, f => Gerar(TipoAcervo.Bibliografico).Generate());
         return faker;
     }
 }

@@ -540,7 +540,7 @@ namespace SME.CDEP.TesteIntegracao
             var servicoAcervo = GetServicoAcervo();
             var random = new Random();
             
-            var acervoInserir = AcervoMock.Instance.GerarAcervo(TipoAcervo.Bibliografico).Generate();
+            var acervoInserir = AcervoMock.Instance.Gerar(TipoAcervo.Bibliografico).Generate();
             acervoInserir.CreditosAutoresIds = new long []{1,2,3,4,5};
             acervoInserir.CoAutores = new List<CoAutor>() { new () { CreditoAutorId = random.Next(1,5), TipoAutoria = faker.Lorem.Word().Limite(15)}}.ToList();
             acervoInserir.Ano = "[1995]";
@@ -572,7 +572,7 @@ namespace SME.CDEP.TesteIntegracao
             await InserirDadosBasicosAleatorios();
             var servicoAcervo = GetServicoAcervo();
             
-            var acervoInserir = AcervoMock.Instance.GerarAcervo(TipoAcervo.Bibliografico).Generate();
+            var acervoInserir = AcervoMock.Instance.Gerar(TipoAcervo.Bibliografico).Generate();
             acervoInserir.CreditosAutoresIds = new long []{1,2,3,4,5};
             acervoInserir.CoAutores = Enumerable.Empty<CoAutor>();
             acervoInserir.Ano = "[1995]";
@@ -602,7 +602,7 @@ namespace SME.CDEP.TesteIntegracao
             await InserirAcervo();
             var servicoAcervo = GetServicoAcervo();
             
-            var acervoInserir = AcervoMock.Instance.GerarAcervo(TipoAcervo.Bibliografico).Generate();
+            var acervoInserir = AcervoMock.Instance.Gerar(TipoAcervo.Bibliografico).Generate();
             acervoInserir.CreditosAutoresIds = new long []{1,2,3,4,5};
             acervoInserir.CoAutores = new List<CoAutor>() { new () { CreditoAutorId = new Random().Next(1,5), TipoAutoria = faker.Lorem.Word().Limite(15)}}.ToList();
             acervoInserir.Ano = "[1995]";
@@ -619,7 +619,7 @@ namespace SME.CDEP.TesteIntegracao
             await InserirAcervo(TipoAcervo.DocumentacaoHistorica);
             var servicoAcervo = GetServicoAcervo();
             
-            var acervoInserir = AcervoMock.Instance.GerarAcervo(TipoAcervo.Bibliografico).Generate();
+            var acervoInserir = AcervoMock.Instance.Gerar(TipoAcervo.Bibliografico).Generate();
             acervoInserir.CreditosAutoresIds = new long []{1,2,3,4,5};
             acervoInserir.CoAutores = new List<CoAutor>() { new () { CreditoAutorId = new Random().Next(1,5), TipoAutoria = faker.Lorem.Word().Limite(15)}}.ToList();
             acervoInserir.Ano = "[1995]";
@@ -660,7 +660,7 @@ namespace SME.CDEP.TesteIntegracao
             var servicoAcervo = GetServicoAcervo();
             var random = new Random();
             
-            var acervoInserir = AcervoMock.Instance.GerarAcervo(TipoAcervo.Bibliografico).Generate();
+            var acervoInserir = AcervoMock.Instance.Gerar(TipoAcervo.Bibliografico).Generate();
             acervoInserir.CreditosAutoresIds = new long []{1,2,3,4,5};
             acervoInserir.CoAutores = new List<CoAutor>() { new () { CreditoAutorId = random.Next(1,5), TipoAutoria = faker.Lorem.Word().Limite(15)}}.ToList();
             acervoInserir.Ano = "[195-]";
@@ -693,7 +693,7 @@ namespace SME.CDEP.TesteIntegracao
             var servicoAcervo = GetServicoAcervo();
             var random = new Random();
             
-            var acervoInserir = AcervoMock.Instance.GerarAcervo(TipoAcervo.Bibliografico).Generate();
+            var acervoInserir = AcervoMock.Instance.Gerar(TipoAcervo.Bibliografico).Generate();
             acervoInserir.CreditosAutoresIds = new long []{1,2,3,4,5};
             acervoInserir.CoAutores = new List<CoAutor>() { new () { CreditoAutorId = random.Next(1,5), TipoAutoria = faker.Lorem.Word().Limite(15)}}.ToList();
             acervoInserir.Ano = "[195-?]";
@@ -726,7 +726,7 @@ namespace SME.CDEP.TesteIntegracao
             var servicoAcervo = GetServicoAcervo();
             var random = new Random();
             
-            var acervoInserir = AcervoMock.Instance.GerarAcervo(TipoAcervo.Bibliografico).Generate();
+            var acervoInserir = AcervoMock.Instance.Gerar(TipoAcervo.Bibliografico).Generate();
             acervoInserir.CreditosAutoresIds = new long []{1,2,3,4,5};
             acervoInserir.CoAutores = new List<CoAutor>() { new () { CreditoAutorId = random.Next(1,5), TipoAutoria = faker.Lorem.Word().Limite(15)}}.ToList();
             acervoInserir.Ano = "[19--]";
@@ -759,7 +759,7 @@ namespace SME.CDEP.TesteIntegracao
             var servicoAcervo = GetServicoAcervo();
             var random = new Random();
             
-            var acervoInserir = AcervoMock.Instance.GerarAcervo(TipoAcervo.Bibliografico).Generate();
+            var acervoInserir = AcervoMock.Instance.Gerar(TipoAcervo.Bibliografico).Generate();
             acervoInserir.CreditosAutoresIds = new long []{1,2,3,4,5};
             acervoInserir.CoAutores = new List<CoAutor>() { new () { CreditoAutorId = random.Next(1,5), TipoAutoria = faker.Lorem.Word().Limite(15)}}.ToList();
             acervoInserir.Ano = "[19--?]";
@@ -792,7 +792,7 @@ namespace SME.CDEP.TesteIntegracao
             var servicoAcervo = GetServicoAcervo();
             var random = new Random();
             
-            var acervoInserir = AcervoMock.Instance.GerarAcervo(TipoAcervo.Bibliografico).Generate();
+            var acervoInserir = AcervoMock.Instance.Gerar(TipoAcervo.Bibliografico).Generate();
             acervoInserir.CreditosAutoresIds = new long []{1,2,3,4,5};
             acervoInserir.CoAutores = new List<CoAutor>() { new () { CreditoAutorId = random.Next(1,5), TipoAutoria = faker.Lorem.Word().Limite(15)}}.ToList();
             acervoInserir.Ano = "[1990]";
@@ -825,7 +825,7 @@ namespace SME.CDEP.TesteIntegracao
             var servicoAcervo = GetServicoAcervo();
             var random = new Random();
             
-            var acervoInserir = AcervoMock.Instance.GerarAcervo(TipoAcervo.Bibliografico).Generate();
+            var acervoInserir = AcervoMock.Instance.Gerar(TipoAcervo.Bibliografico).Generate();
             acervoInserir.CreditosAutoresIds = new long []{1,2,3,4,5};
             acervoInserir.CoAutores = new List<CoAutor>() { new () { CreditoAutorId = random.Next(1,5), TipoAutoria = faker.Lorem.Word().Limite(15)}}.ToList();
             acervoInserir.Ano = "[1995]";
