@@ -14,7 +14,7 @@ public class AcervoSolicitacaoMock : AuditoriaMock
         var random = new Random();
         var faker = new Faker<AcervoSolicitacao>("pt_BR");
             
-        faker.RuleFor(x => x.UsuarioId, f => random.Next(1,5));
+        faker.RuleFor(x => x.UsuarioId, f => 1);
         faker.RuleFor(x => x.Situacao, f => SituacaoSolicitacao.AGUARDANDO_ATENDIMENTO);
         faker.RuleFor(x => x.Origem, f => Origem.Portal);
         faker.RuleFor(x => x.DataSolicitacao, f => DateTimeExtension.HorarioBrasilia());

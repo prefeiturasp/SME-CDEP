@@ -204,7 +204,7 @@ public class RegistradorDeDependencia
         _serviceCollection.TryAddScoped<IRepositorioAcervoSolicitacaoItem, RepositorioAcervoSolicitacaoItem>();
         _serviceCollection.TryAddScoped<IRepositorioEvento, RepositorioEvento>();
         _serviceCollection.TryAddScoped<IRepositorioEventoFixo, RepositorioEventoFixo>();
-        _serviceCollection.TryAddScoped<IRepositorioEventoFixo, RepositorioEventoFixo>();
+        _serviceCollection.TryAddScoped<IRepositorioAcervoEmprestimo, RepositorioAcervoEmprestimo>();
     }
 
     protected virtual void RegistrarServicos()
