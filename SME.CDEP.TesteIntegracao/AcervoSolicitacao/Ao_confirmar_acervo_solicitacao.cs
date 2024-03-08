@@ -29,7 +29,7 @@ namespace SME.CDEP.TesteIntegracao
             var retorno = await servicoAcervoSolicitacao.ConfirmarAtendimento(new AcervoSolicitacaoConfirmarDTO()
             {
                 Id = 1,
-                Itens = new List<AcervoSolicitacaoItemConfirmarDto>()
+                Itens = new List<AcervoSolicitacaoItemConfirmarDTO>()
                 {
                     new()
                     {
@@ -92,7 +92,7 @@ namespace SME.CDEP.TesteIntegracao
             var retorno = await servicoAcervoSolicitacao.ConfirmarAtendimento(new AcervoSolicitacaoConfirmarDTO()
             {
                 Id = 1,
-                Itens = new List<AcervoSolicitacaoItemConfirmarDto>()
+                Itens = new List<AcervoSolicitacaoItemConfirmarDTO>()
                 {
                     new()
                     {
@@ -153,7 +153,7 @@ namespace SME.CDEP.TesteIntegracao
             var retorno = await servicoAcervoSolicitacao.ConfirmarAtendimento(new AcervoSolicitacaoConfirmarDTO()
             {
                 Id = 1,
-                Itens = new List<AcervoSolicitacaoItemConfirmarDto>()
+                Itens = new List<AcervoSolicitacaoItemConfirmarDTO>()
                 {
                     new()
                     {
@@ -216,7 +216,7 @@ namespace SME.CDEP.TesteIntegracao
             var retorno = await servicoAcervoSolicitacao.ConfirmarAtendimento(new AcervoSolicitacaoConfirmarDTO()
             {
                 Id = 1,
-                Itens = new List<AcervoSolicitacaoItemConfirmarDto>()
+                Itens = new List<AcervoSolicitacaoItemConfirmarDTO>()
                 {
                     new()
                     {
@@ -278,7 +278,7 @@ namespace SME.CDEP.TesteIntegracao
             var retorno = await servicoAcervoSolicitacao.ConfirmarAtendimento(new AcervoSolicitacaoConfirmarDTO()
             {
                 Id = 1,
-                Itens = new List<AcervoSolicitacaoItemConfirmarDto>()
+                Itens = new List<AcervoSolicitacaoItemConfirmarDTO>()
                 {
                     new()
                     {
@@ -335,7 +335,7 @@ namespace SME.CDEP.TesteIntegracao
             var retorno = await servicoAcervoSolicitacao.ConfirmarAtendimento(new AcervoSolicitacaoConfirmarDTO()
             {
                 Id = 1,
-                Itens = new List<AcervoSolicitacaoItemConfirmarDto>()
+                Itens = new List<AcervoSolicitacaoItemConfirmarDTO>()
                 {
                     new()
                     {
@@ -391,7 +391,7 @@ namespace SME.CDEP.TesteIntegracao
             await servicoAcervoSolicitacao.ConfirmarAtendimento(new AcervoSolicitacaoConfirmarDTO()
             {
                 Id = 1,
-                Itens = new List<AcervoSolicitacaoItemConfirmarDto>()
+                Itens = new List<AcervoSolicitacaoItemConfirmarDTO>()
                 {
                     new()
                     {
@@ -410,7 +410,7 @@ namespace SME.CDEP.TesteIntegracao
             var retorno = await servicoAcervoSolicitacao.ConfirmarAtendimento(new AcervoSolicitacaoConfirmarDTO()
             {
                 Id = 1,
-                Itens = new List<AcervoSolicitacaoItemConfirmarDto>()
+                Itens = new List<AcervoSolicitacaoItemConfirmarDTO>()
                 {
                     new()
                     {
@@ -491,7 +491,7 @@ namespace SME.CDEP.TesteIntegracao
             var acervoArteGraficaCadastroDto = new AcervoSolicitacaoConfirmarDTO()
             {
                 Id = 1,
-                Itens = new List<AcervoSolicitacaoItemConfirmarDto>()
+                Itens = new List<AcervoSolicitacaoItemConfirmarDTO>()
                 {
                     new()
                     {
@@ -528,7 +528,7 @@ namespace SME.CDEP.TesteIntegracao
             var acervoArteGraficaCadastroDto = new AcervoSolicitacaoConfirmarDTO()
             {
                 Id = 1,
-                Itens = new List<AcervoSolicitacaoItemConfirmarDto>()
+                Itens = new List<AcervoSolicitacaoItemConfirmarDTO>()
                 {
                     new()
                     {
@@ -566,7 +566,7 @@ namespace SME.CDEP.TesteIntegracao
             var acervoArteGraficaCadastroDto = new AcervoSolicitacaoConfirmarDTO()
             {
                 Id = 101515,
-                Itens = new List<AcervoSolicitacaoItemConfirmarDto>()
+                Itens = new List<AcervoSolicitacaoItemConfirmarDTO>()
                 {
                     new()
                     {
@@ -621,7 +621,7 @@ namespace SME.CDEP.TesteIntegracao
 
             var acervoArteGraficaCadastroDto = new AcervoSolicitacaoConfirmarDTO()
             {
-                Itens = new List<AcervoSolicitacaoItemConfirmarDto>()
+                Itens = new List<AcervoSolicitacaoItemConfirmarDTO>()
                 {
                     new()
                     {
@@ -677,7 +677,7 @@ namespace SME.CDEP.TesteIntegracao
 
             var acervoArteGraficaCadastroDto = new AcervoSolicitacaoConfirmarDTO()
             {
-                Itens = new List<AcervoSolicitacaoItemConfirmarDto>()
+                Itens = new List<AcervoSolicitacaoItemConfirmarDTO>()
                 {
                     new()
                     {
@@ -725,7 +725,7 @@ namespace SME.CDEP.TesteIntegracao
             var retorno = await servicoAcervoSolicitacao.ConfirmarAtendimento(new AcervoSolicitacaoConfirmarDTO()
             {
                 Id = 1,
-                Itens = new List<AcervoSolicitacaoItemConfirmarDto>()
+                Itens = new List<AcervoSolicitacaoItemConfirmarDTO>()
                 {
                     new()
                     {

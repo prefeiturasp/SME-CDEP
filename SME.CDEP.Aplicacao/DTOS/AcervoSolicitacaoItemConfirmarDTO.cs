@@ -2,7 +2,7 @@
 
 namespace SME.CDEP.Aplicacao.DTOS;
 
-public class AcervoSolicitacaoItemConfirmarDto : DataVisitaEmprestimoDevolucaoTipoAcervoAtendimentoDTO
+public class AcervoSolicitacaoItemConfirmarDTO : DataVisitaEmprestimoDevolucaoTipoAcervoAtendimentoDTO
 {
     [Required(ErrorMessage = "É necessário informar o identificador do item do acervo")]
     public long Id { get; set; }

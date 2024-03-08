@@ -9,5 +9,5 @@ public class AcervoSolicitacaoConfirmarDTO
     public long Id { get; set; }
     
     [Required(ErrorMessage = "É necessário informar os itens do atendimento da solicitação")]
-    public IEnumerable<AcervoSolicitacaoItemConfirmarDto> Itens { get; set; } = Enumerable.Empty<AcervoSolicitacaoItemConfirmarDto>();
+    public IEnumerable<AcervoSolicitacaoItemConfirmarDTO> Itens { get; set; } = Enumerable.Empty<AcervoSolicitacaoItemConfirmarDTO>();
 }
