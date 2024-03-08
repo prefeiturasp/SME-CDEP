@@ -1,4 +1,5 @@
-﻿using SME.CDEP.Infra.Dominio.Enumerados;
+﻿using SME.CDEP.Dominio.Entidades;
+using SME.CDEP.Infra.Dominio.Enumerados;
 
 namespace SME.CDEP.Aplicacao.DTOS
 {
@@ -12,5 +13,6 @@ namespace SME.CDEP.Aplicacao.DTOS
         public string Situacao { get; set; }
         public SituacaoSolicitacao SituacaoId { get; set; }
         public IEnumerable<AcervoSolicitacaoItemDetalheResumidoDTO> Itens { get; set; } = Enumerable.Empty<AcervoSolicitacaoItemDetalheResumidoDTO>();
+        public int LimiteDiasEmprestimoAcervo { get; set; }
     }
 }

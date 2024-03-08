@@ -235,6 +235,7 @@ namespace SME.CDEP.Infra.Dados.Repositorios
             var query = @"
             select id, 
                    titulo,
+                   tipo,
                    coalesce(codigo, codigo_novo) as codigo
             from acervo
             where (lower(codigo) = @codigo or lower(codigo_novo) = @codigo) 

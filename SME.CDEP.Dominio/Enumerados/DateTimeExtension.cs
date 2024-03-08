@@ -63,5 +63,35 @@ namespace SME.CDEP.Infra.Dominio.Enumerados
             int diferenca = (((int)DayOfWeek.Sunday - (int)data.DayOfWeek - 7) % 7);
             return data.AddDays(diferenca);
         }
+        
+        public static bool EhMaiorOuIgualQue(this DateTime? dataAvaliada, DateTime? dataReferencia)
+        {
+            if (!dataAvaliada.HasValue)
+                return false;
+            
+            if (!dataReferencia.HasValue)
+                return false;
+
+            return dataReferencia.Value.Date <= dataAvaliada.Value.Date;
+        }
+        
+        public static bool EhMenorQue(this DateTime? dataAvaliada, DateTime? dataReferencia)
+        {
+            if (!dataAvaliada.HasValue)
+                return false;
+            
+            if (!dataReferencia.HasValue)
+                return false;
+
+            return dataAvaliada.Value.Date < dataReferencia.Value.Date;
+        }
+        
+        public static bool EhDataFutura(this DateTime? dataAvaliada)
+        {
+            if (!dataAvaliada.HasValue)
+                return false;
+
+            return dataAvaliada.Value.Date > HorarioBrasilia().Date;
+        }
     }
 }

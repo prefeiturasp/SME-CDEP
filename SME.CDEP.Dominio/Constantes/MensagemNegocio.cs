@@ -57,4 +57,9 @@ public class MensagemNegocio
     public const string SOLICITANTE_NAO_POSSUI_EMAIL = "O solicitante '{0}' não possui e-mail cadastrado, verifique!";
     public const string EMAIL_INVALIDO = "O e-mail informado é inválido";
     public const string CANCELAR_SOLICITACAO_NAO_PERMITIDO_QUANDO_ITENS_ATENDIDOS_PARCIALMENTE = "Não é possível cancelar a solicitação de atendimento quando alguns itens foram atendidos parcialmente.";
+    public const string DATA_DO_EMPRESTIMO_E_OU_DA_DEVOLUCAO_INVALIDOS = "Os valores inseridos nos campos de 'Data do Empréstimo' e/ou 'Data da Devolução' são inválidos.";
+    public const string DATA_DO_EMPRESTIMO_E_DEVOLUCAO_EXCLUSIVO_PARA_ACERVOS_BIBLIOGRAFICOS = "Os campos 'Data do Empréstimo' e 'Data da Devolução' são exclusivos para acervos bibliográficos.";
+    public const string DATA_DA_DEVOLUCAO_MENOR_DATA_DO_EMPRESTIMO = "A 'Data da Devolução' não pode ser menor que a 'Data do Empréstimo'.";
+    public const string DATA_DO_EMPRESTIMO_NAO_PODE_SER_FUTURA = "A 'Data do Empréstimo' não pode ser futura.";
+    public const string DATA_DO_EMPRESTIMO_MENOR_QUE_DATA_VISITA = "A 'Data do Empréstimo' não pode ser menor que a 'Data de visita'.";
 }

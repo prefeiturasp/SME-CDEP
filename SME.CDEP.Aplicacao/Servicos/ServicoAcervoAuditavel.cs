@@ -485,14 +485,14 @@ namespace SME.CDEP.Aplicacao.Servicos
             return retorno.Valor;
         }
 
-        public async Task<IdNomeCodigoDTO> PesquisarAcervoPorCodigoTombo(FiltroCodigoTomboDTO filtro)
+        public async Task<IdNomeCodigoTipoDTO> PesquisarAcervoPorCodigoTombo(FiltroCodigoTomboDTO filtro)
         {
             var retorno = await repositorioAcervo.PesquisarAcervoPorCodigoTombo(filtro.CodigoTombo);
 
             if (retorno.EhNulo())
                 throw new NegocioException(MensagemNegocio.ACERVO_NAO_ENCONTRADO);
             
-            return mapper.Map<IdNomeCodigoDTO>(retorno);
+            return mapper.Map<IdNomeCodigoTipoDTO>(retorno);
         }
 
         public Paginacao Paginacao
