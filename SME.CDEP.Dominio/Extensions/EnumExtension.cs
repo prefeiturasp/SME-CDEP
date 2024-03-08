@@ -13,6 +13,16 @@ namespace SME.CDEP.Dominio.Extensions
         public static bool NaoEhAcervoDocumental(this TipoAcervo tipoAcervo)
         {
             return !EhAcervoDocumental(tipoAcervo); 
+        }
+        
+        public static bool EhAcervoBibliografico(this TipoAcervo tipoAcervo)
+        {
+            return tipoAcervo == TipoAcervo.Bibliografico; 
+        }
+        
+        public static bool NaoEhAcervoBibliografico(this TipoAcervo tipoAcervo)
+        {
+            return !EhAcervoBibliografico(tipoAcervo); 
         } 
         
         public static string ObterPlanilhaModelo(this TipoAcervo tipoAcervo)

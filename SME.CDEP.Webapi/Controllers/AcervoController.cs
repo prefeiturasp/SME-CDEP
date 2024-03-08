@@ -68,7 +68,7 @@ public class AcervoController: BaseController
     }
     
     [HttpGet("pesquisar")]
-    [ProducesResponseType(typeof(IdNomeCodigoDTO), 200)]
+    [ProducesResponseType(typeof(IdNomeCodigoTipoDTO), 200)]
     [ProducesResponseType(typeof(RetornoBaseDTO), 400)]
     [ProducesResponseType(typeof(RetornoBaseDTO), 403)]
     [ProducesResponseType(typeof(RetornoBaseDTO), 601)]
