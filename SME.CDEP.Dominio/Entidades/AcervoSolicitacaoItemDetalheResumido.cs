@@ -13,5 +13,8 @@ namespace SME.CDEP.Dominio.Entidades
         public TipoAtendimento TipoAtendimento { get; set; }
         public long AcervoId { get; set; }
         public string Responsavel { get; set; }
+        public DateTime? DataEmprestimo { get; set; }
+        public DateTime? Datadevolucao { get; set; }
+        public SituacaoEmprestimo? SituacaoEmprestimo { get; set; }
     }
 }

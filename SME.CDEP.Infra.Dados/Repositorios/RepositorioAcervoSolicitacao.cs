@@ -82,16 +82,16 @@ namespace SME.CDEP.Infra.Dados.Repositorios
         public async Task<AcervoSolicitacaoDetalhe> ObterDetalhesPorId(long acervoSolicitacaoId)
         {
 	        var query = @"
-           select 
+           SELECT 
 		     aso.id,
              aso.usuario_id as usuarioId,
              aso.data_solicitacao as dataSolicitacao,
              aso.situacao 
-		   from acervo_solicitacao aso		     
-		   where aso.id = @acervoSolicitacaoId
+		   FROM acervo_solicitacao aso		     
+		   WHERE aso.id = @acervoSolicitacaoId
 		      and not aso.excluido;
 		   
-		   select 
+		   SELECT DISTINCT ON (asi.id)
 		     asi.id,
              coalesce(a.codigo, a.codigo_novo) as codigo,
              a.tipo as tipoAcervo,
@@ -100,13 +100,18 @@ namespace SME.CDEP.Infra.Dados.Repositorios
              asi.situacao,
              asi.tipo_atendimento as tipoAtendimento,
              a.id as acervoId,
-             resp.nome as responsavel
-		   from acervo_solicitacao_item asi
-		     join acervo a on a.id = asi.acervo_id
-		     left join usuario resp on resp.id = asi.usuario_responsavel_id and not resp.excluido
-		   where not asi.excluido
+             resp.nome as responsavel,
+             ae.dt_emprestimo as DataEmprestimo, 
+             ae.dt_devolucao as Datadevolucao,
+             ae.situacao as situacaoEmprestimo
+		   FROM acervo_solicitacao_item asi
+		     JOIN acervo a on a.id = asi.acervo_id
+		     LEFT JOIN usuario resp on resp.id = asi.usuario_responsavel_id and not resp.excluido
+		     LEFT JOIN acervo_emprestimo ae on ae.acervo_solicitacao_item_id = asi.id and not ae.excluido 
+		   WHERE not asi.excluido
 		     and not a.excluido
-		     and asi.acervo_solicitacao_id = @acervoSolicitacaoId; ";
+		     and asi.acervo_solicitacao_id = @acervoSolicitacaoId
+		   ORDER BY asi.id, ae.id desc; ";
             
 	        var queryMultiple = await conexao.Obter().QueryMultipleAsync(query, new { acervoSolicitacaoId });
 

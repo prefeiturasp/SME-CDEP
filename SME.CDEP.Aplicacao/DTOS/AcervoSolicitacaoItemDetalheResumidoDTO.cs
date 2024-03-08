@@ -17,5 +17,6 @@ namespace SME.CDEP.Aplicacao.DTOS
         public TipoAcervo TipoAcervoId { get; set; }
         public DateTime? DataEmprestimo { get; set; }
         public DateTime? DataDevolucao { get; set; }
+        public SituacaoEmprestimo? SituacaoEmprestimo { get; set; }
     }
 }
