@@ -13,4 +13,5 @@ public class FiltroSolicitacaoDTO
     public string? Responsavel { get; set; }
     public SituacaoSolicitacaoItem? SituacaoItem { get; set; }
     public string? SolicitanteRf { get; set; }
+    public SituacaoEmprestimo? SituacaoEmprestimo { get; set; }
 }

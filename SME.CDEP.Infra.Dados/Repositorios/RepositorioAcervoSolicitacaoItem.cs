@@ -36,12 +36,13 @@ namespace SME.CDEP.Infra.Dados.Repositorios
         }
 
         public async Task<IEnumerable<AcervoSolicitacaoItemDetalhe>> ObterSolicitacoesPorFiltro(long? acervoSolicitacaoId, TipoAcervo? tipoAcervo, DateTime? dataSolicitacaoInicio,
-            DateTime? dataSolicitacaoFim, string? responsavel, SituacaoSolicitacaoItem? situacaoItem, DateTime? dataVisitaInicio, DateTime? dataVisitaFim, string? solicitanteRf)
+            DateTime? dataSolicitacaoFim, string? responsavel, SituacaoSolicitacaoItem? situacaoItem, DateTime? dataVisitaInicio, DateTime? dataVisitaFim, string? solicitanteRf,
+            SituacaoEmprestimo? situacaoEmprestimo)
         {
             var query = new StringBuilder();
             
             query.AppendLine(@"
-            select 
+            SELECT 
                  asi.id,
                  asi.acervo_solicitacao_id as AcervoSolicitacaoId,
                  a.tipo as tipoAcervo,
@@ -49,12 +50,14 @@ namespace SME.CDEP.Infra.Dados.Repositorios
                  asi.dt_visita as DataVisita, 
                  u.nome as solicitante,
                  asi.situacao,
-                 ur.nome as Responsavel
-            from acervo_solicitacao_item asi
-               join acervo_solicitacao aso on aso.id = asi.acervo_solicitacao_id
-               join acervo a on a.id = asi.acervo_id
-               join usuario u on u.id = aso.usuario_id
-               left join usuario ur on ur.id = asi.usuario_responsavel_id and not ur.excluido
+                 ur.nome as Responsavel,
+                 ae.situacao as SituacaoEmprestimo
+            FROM acervo_solicitacao_item asi
+               JOIN acervo_solicitacao aso on aso.id = asi.acervo_solicitacao_id
+               JOIN acervo a on a.id = asi.acervo_id
+               JOIN usuario u on u.id = aso.usuario_id
+               LEFT JOIN usuario ur on ur.id = asi.usuario_responsavel_id and not ur.excluido
+               LEFT JOIN acervo_emprestimo ae on ae.acervo_solicitacao_item_id = asi.id and not ae.excluido 
             where not asi.excluido
               and not aso.excluido
               and not a.excluido 
@@ -81,10 +84,13 @@ namespace SME.CDEP.Infra.Dados.Repositorios
             if (solicitanteRf.EstaPreenchido())
                 query.AppendLine(" and u.login = @solicitanteRf ");
             
+            if (situacaoEmprestimo.HasValue)
+                query.AppendLine(" and ae.situacao = @situacaoEmprestimo ");
+            
             query.AppendLine(" order by asi.criado_em desc ");
             
             return await conexao.Obter().QueryAsync<AcervoSolicitacaoItemDetalhe>(query.ToString(), 
-                new { acervoSolicitacaoId, tipoAcervo, situacaoItem, dataSolicitacaoInicio, dataSolicitacaoFim, dataVisitaInicio, dataVisitaFim, responsavel, solicitanteRf});
+                new { acervoSolicitacaoId, tipoAcervo, situacaoItem, dataSolicitacaoInicio, dataSolicitacaoFim, dataVisitaInicio, dataVisitaFim, responsavel, solicitanteRf, situacaoEmprestimo});
         }
 
         public Task<IEnumerable<AcervoSolicitacaoItem>> ObterItensEmSituacaoAguardandoAtendimentoOuVisitaOuFinalizadoManualmentePorSolicitacaoId(long acervoSolicitacaoId)

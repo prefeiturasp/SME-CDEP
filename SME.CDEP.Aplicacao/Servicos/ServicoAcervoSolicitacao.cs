@@ -201,8 +201,8 @@ namespace SME.CDEP.Aplicacao.Servicos
             var solicitacoes = mapper.Map<IEnumerable<SolicitacaoDTO>>(await repositorioAcervoSolicitacaoItem
                 .ObterSolicitacoesPorFiltro(filtroSolicitacaoDto.AcervoSolicitacaoId, filtroSolicitacaoDto.TipoAcervo, 
                     filtroSolicitacaoDto.DataSolicitacaoInicio, filtroSolicitacaoDto.DataSolicitacaoFim,filtroSolicitacaoDto.Responsavel, filtroSolicitacaoDto.SituacaoItem, 
-                    filtroSolicitacaoDto.DataVisitaInicio, filtroSolicitacaoDto.DataVisitaFim,filtroSolicitacaoDto.SolicitanteRf));
-            
+                    filtroSolicitacaoDto.DataVisitaInicio, filtroSolicitacaoDto.DataVisitaFim,filtroSolicitacaoDto.SolicitanteRf,filtroSolicitacaoDto.SituacaoEmprestimo));
+
             var totalRegistros = solicitacoes.Count();
             var paginacao = Paginacao;
             
@@ -707,6 +707,20 @@ namespace SME.CDEP.Aplicacao.Servicos
             {
                 tran.Dispose();
             }
+        }
+        
+        public Task<IEnumerable<SituacaoItemDTO>> ObterSituacoesEmprestimo()
+        {
+            var lista = Enum.GetValues(typeof(SituacaoEmprestimo))
+                .Cast<SituacaoEmprestimo>()
+                .OrderBy(O=> O)
+                .Select(v => new SituacaoItemDTO
+                {
+                    Id = (short)v,
+                    Nome = v.Descricao()
+                });
+
+            return Task.FromResult(lista);
         }
     }
 }
