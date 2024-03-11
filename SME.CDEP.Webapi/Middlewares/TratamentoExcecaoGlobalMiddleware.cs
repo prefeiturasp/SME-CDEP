@@ -29,12 +29,12 @@ namespace SME.CDEP.Webapi.Middlewares
                 if (nex.Mensagens.Any())
                 {
                     await servicoLogs.Enviar(string.Join(" - ", nex.Mensagens), observacao: nex.Message, rastreamento: nex.StackTrace);
-                    await TratarExcecao(context, nex.Mensagens);
+                    await TratarExcecao(context, nex.Mensagens, nex.StatusCode);
                 }
                 else
                 {
                     await servicoLogs.Enviar(nex.Message, observacao: nex.Message, rastreamento: nex.StackTrace);
-                    await TratarExcecao(context, new List<string>() {nex.Message});
+                    await TratarExcecao(context, new List<string>() {nex.Message}, nex.StatusCode);
                 }
             }
             catch (Exception ex)
