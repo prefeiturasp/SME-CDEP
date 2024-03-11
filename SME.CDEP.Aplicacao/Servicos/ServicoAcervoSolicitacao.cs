@@ -339,15 +339,10 @@ namespace SME.CDEP.Aplicacao.Servicos
                     }
                     else
                     {
-                        if (acervoSolicitacao.Situacao.EstaFinalizadoAtendimento())
-                            await InserirAcervoEmprestimo(item.Id, itemEmprestado.DataEmprestimo, itemEmprestado.DataDevolucao, SituacaoEmprestimo.EMPRESTADO_PRORROGACAO);
-                        else
-                        {
-                            itemEmprestado.DataEmprestimo = itemEmprestado.DataEmprestimo;
-                            itemEmprestado.DataDevolucao = itemEmprestado.DataDevolucao;
-                            itemEmprestado.Situacao = SituacaoEmprestimo.EMPRESTADO;
-                            await repositorioAcervoEmprestimo.Atualizar(itemEmprestado);
-                        }
+                        itemEmprestado.DataEmprestimo = itemEmprestado.DataEmprestimo;
+                        itemEmprestado.DataDevolucao = itemEmprestado.DataDevolucao;
+                        itemEmprestado.Situacao = SituacaoEmprestimo.EMPRESTADO;
+                        await repositorioAcervoEmprestimo.Atualizar(itemEmprestado);
                     }
                 }
                 tran.Commit();
