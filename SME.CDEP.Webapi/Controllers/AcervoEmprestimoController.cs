@@ -32,4 +32,15 @@ public class AcervoEmprestimoController: BaseController
     {
         return Ok(await servicoAcervoEmprestimo.ObterSituacoesEmprestimo());
     }
+    
+    [HttpPut("{acervoSolicitacaoItemId}/devolver")]
+    [ProducesResponseType(typeof(bool), 200)]
+    [ProducesResponseType(typeof(RetornoBaseDTO), 400)]
+    [ProducesResponseType(typeof(RetornoBaseDTO), 403)]
+    [ProducesResponseType(typeof(RetornoBaseDTO), 601)]
+    [Permissao(Permissao.OperacoesSolicitacoes_A, Policy = "Bearer")]
+    public async Task<IActionResult> DevolverItemEmprestado([FromRoute] long acervoSolicitacaoItemId, [FromServices] IServicoAcervoEmprestimo servicoAcervoEmprestimo)
+    {
+        return Ok(await servicoAcervoEmprestimo.DevolverItemEmprestado(acervoSolicitacaoItemId));
+    }
 }
