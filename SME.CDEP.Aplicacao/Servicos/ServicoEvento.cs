@@ -33,9 +33,10 @@ namespace SME.CDEP.Aplicacao.Servicos
         {
             var evento = mapper.Map<Evento>(eventoCadastroDto);
 
-            if (eventoCadastroDto.Tipo.EhVisita())
-                evento.Descricao = await ObterDetalhesDoAcervo(evento);
-            
+            evento.Descricao = eventoCadastroDto.Tipo.EhVisita() 
+                ? await ObterDetalhesDoAcervo(evento) 
+                : eventoCadastroDto.Tipo.EhFeriado() ? "Feriado" : "Suspensão";
+
             await Validar(evento);
             
             return await repositorioEvento.Inserir(evento);
