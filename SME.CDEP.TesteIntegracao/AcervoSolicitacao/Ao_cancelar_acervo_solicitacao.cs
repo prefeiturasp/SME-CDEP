@@ -43,6 +43,15 @@ namespace SME.CDEP.TesteIntegracao
                     Descricao = "Visita",
                     CriadoPor = "Sistema", CriadoEm = DateTimeExtension.HorarioBrasilia(), CriadoLogin = "Sistema"
                 });
+                
+                await InserirNaBase(new AcervoEmprestimo()
+                {
+                    AcervoSolicitacaoItemId = itemCount,
+                    DataEmprestimo = DateTimeExtension.HorarioBrasilia().AddDays(2).Date,
+                    DataDevolucao = DateTimeExtension.HorarioBrasilia().AddDays(7).Date,
+                    Situacao = SituacaoEmprestimo.EMPRESTADO,
+                    CriadoPor = "Sistema", CriadoEm = DateTimeExtension.HorarioBrasilia(), CriadoLogin = "Sistema"
+                });
 
                 itemCount++;
            }
@@ -64,6 +73,13 @@ namespace SME.CDEP.TesteIntegracao
             eventos.Count(a=> !a.Excluido).ShouldBe(0);
             eventos.Count(a=> a.Excluido).ShouldBe(3);
             eventos.Any(a=> a.Data.Date == DateTimeExtension.HorarioBrasilia().AddDays(15).Date).ShouldBeTrue();
+            
+            var acervosEmprestimos = ObterTodos<AcervoEmprestimo>();
+            acervosEmprestimos.Count().ShouldBe(6);
+            acervosEmprestimos.Any(a=> a.DataEmprestimo.Date == DateTimeExtension.HorarioBrasilia().AddDays(2).Date && a.Situacao.EstaEmprestado()).ShouldBeTrue();
+            acervosEmprestimos.Any(a=> a.DataDevolucao.Date == DateTimeExtension.HorarioBrasilia().AddDays(7).Date && a.Situacao.EstaEmprestado()).ShouldBeTrue();
+            acervosEmprestimos.Count(a=> a.Situacao.EstaEmprestado()).ShouldBe(3);
+            acervosEmprestimos.Count(a=> a.Situacao.EstaCancelado()).ShouldBe(3);
         }
         
         [Fact(DisplayName = "Acervo Solicitação - Deve cancelar atendimento quando itens cancelados")]
@@ -208,6 +224,19 @@ namespace SME.CDEP.TesteIntegracao
                 item.AcervoSolicitacaoId = acervoSolicitadoId;
                 item.Situacao = contador >= 2 ? SituacaoSolicitacaoItem.AGUARDANDO_VISITA : SituacaoSolicitacaoItem.AGUARDANDO_ATENDIMENTO;
                 await InserirNaBase(item);
+
+                if (contador >= 2)
+                {
+                    await InserirNaBase(new AcervoEmprestimo()
+                    {
+                        AcervoSolicitacaoItemId = contador,
+                        DataEmprestimo = DateTimeExtension.HorarioBrasilia().AddDays(2).Date,
+                        DataDevolucao = DateTimeExtension.HorarioBrasilia().AddDays(7).Date,
+                        Situacao = SituacaoEmprestimo.EMPRESTADO,
+                        CriadoPor = "Sistema", CriadoEm = DateTimeExtension.HorarioBrasilia(), CriadoLogin = "Sistema"
+                    });
+                }
+                
                 contador++;
             }
             
@@ -225,6 +254,13 @@ namespace SME.CDEP.TesteIntegracao
             
             var eventos = ObterTodos<Evento>();
             eventos.Count().ShouldBe(0);
+            
+            var acervosEmprestimos = ObterTodos<AcervoEmprestimo>();
+            acervosEmprestimos.Count().ShouldBe(4);
+            acervosEmprestimos.Any(a=> a.DataEmprestimo.Date == DateTimeExtension.HorarioBrasilia().AddDays(2).Date && a.Situacao.EstaEmprestado()).ShouldBeTrue();
+            acervosEmprestimos.Any(a=> a.DataDevolucao.Date == DateTimeExtension.HorarioBrasilia().AddDays(7).Date && a.Situacao.EstaEmprestado()).ShouldBeTrue();
+            acervosEmprestimos.Count(a=> a.Situacao.EstaEmprestado()).ShouldBe(2);
+            acervosEmprestimos.Count(a=> a.Situacao.EstaCancelado()).ShouldBe(2);
         }
         
         [Fact(DisplayName = "Acervo Solicitação - Não deve cancelar atendimento com itens atendidos parcialmente aguardando atendimento")]

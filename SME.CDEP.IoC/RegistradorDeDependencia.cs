@@ -253,6 +253,7 @@ public class RegistradorDeDependencia
         _serviceCollection.TryAddScoped<IServicoEvento, ServicoEvento>();
         _serviceCollection.TryAddScoped<IServicoMensageria, ServicoMensageria>();
         _serviceCollection.TryAddScoped<IServicoNotificacaoEmail, ServicoNotificacaoEmail>();
+        _serviceCollection.TryAddScoped<IServicoAcervoEmprestimo, ServicoAcervoEmprestimo>();
     }
     protected virtual void RegistrarHttpClients()
     {

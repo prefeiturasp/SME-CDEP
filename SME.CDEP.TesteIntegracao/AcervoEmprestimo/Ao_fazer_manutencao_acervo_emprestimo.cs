@@ -468,8 +468,8 @@ namespace SME.CDEP.TesteIntegracao
             }).ShouldThrowAsync<NegocioException>();
         }
         
-        [Fact(DisplayName = "Acervo Solicitação com empréstimo - Confirmar empréstimo e prorrogar empréstimo")]
-        public async Task Deve_confirmar_atendimento_e_prorrogar_emprestimo()
+        [Fact(DisplayName = "Acervo Solicitação empréstimo - Deve prorrogar empréstimo")]
+        public async Task Deve_prorrogar_emprestimo()
         {
             //Arrange
             await InserirDadosBasicosAleatorios();
@@ -491,33 +491,14 @@ namespace SME.CDEP.TesteIntegracao
                 await InserirAcervoEmprestimo(item.Id, dataVisita);
 
             //Act
-            var servicoAcervoSolicitacao = GetServicoAcervoSolicitacao();
+            var servicoAcervoEmprestimo = GetServicoAcervoEmprestimo();
             
-            var retorno = await servicoAcervoSolicitacao.ConfirmarAtendimento(new AcervoSolicitacaoConfirmarDTO()
+            var retorno = await servicoAcervoEmprestimo.ProrrogarEmprestimo(new AcervoEmprestimoProrrogacaoDTO()
             {
-                Id = 1,
-                Itens = new List<AcervoSolicitacaoItemConfirmarDTO>()
-                {
-                    new()
-                    {
-                        Id = 1,
-                        DataVisita = DateTimeExtension.HorarioBrasilia().Date,
-                        TipoAtendimento = TipoAtendimento.Presencial,
-                        DataEmprestimo = DateTimeExtension.HorarioBrasilia().Date,
-                        DataDevolucao = DateTimeExtension.HorarioBrasilia().AddDays(8).Date,
-                        TipoAcervo = TipoAcervo.Bibliografico
-                    },
-                    new()
-                    {
-                        Id = 2,
-                        DataVisita = DateTimeExtension.HorarioBrasilia().Date,
-                        TipoAtendimento = TipoAtendimento.Presencial,
-                        DataEmprestimo = DateTimeExtension.HorarioBrasilia().Date,
-                        DataDevolucao = DateTimeExtension.HorarioBrasilia().AddDays(7).Date,
-                        TipoAcervo = TipoAcervo.Bibliografico
-                    }
-                }
+                AcervoSolicitacaoItemId = 1,
+                DataDevolucao = DateTimeExtension.HorarioBrasilia().AddDays(10).Date
             });
+            retorno.ShouldBeTrue();
             
             //Assert
             var solicitacaoAlterada = ObterTodos<AcervoSolicitacao>().FirstOrDefault(f=> f.Id == 1);
@@ -541,21 +522,114 @@ namespace SME.CDEP.TesteIntegracao
             itemFinalizadoManualmente.Excluido.ShouldBeFalse();
             itemFinalizadoManualmente.Situacao.ShouldBe(SituacaoSolicitacaoItem.FINALIZADO_MANUALMENTE);
             
-            var eventos = ObterTodos<Evento>();
-            eventos.Count().ShouldBe(2);
-            eventos.All(a=> a.Data.Date == DateTimeExtension.HorarioBrasilia().Date).ShouldBeTrue();
-            
             var acervoEmprestimos = ObterTodos<AcervoEmprestimo>();
-            acervoEmprestimos.Count().ShouldBe(4);
-            
-            acervoEmprestimos.Any(a=> a.DataEmprestimo.Date == DateTimeExtension.HorarioBrasilia().Date).ShouldBeTrue();
-            acervoEmprestimos.Any(a=> a.DataDevolucao.Date == DateTimeExtension.HorarioBrasilia().AddDays(8).Date).ShouldBeTrue();
+            acervoEmprestimos.Count().ShouldBe(3);
             
             acervoEmprestimos.Any(a=> a.DataEmprestimo.Date == DateTimeExtension.HorarioBrasilia().Date).ShouldBeTrue();
             acervoEmprestimos.Any(a=> a.DataDevolucao.Date == DateTimeExtension.HorarioBrasilia().AddDays(7).Date).ShouldBeTrue();
             
-            acervoEmprestimos.Count(a=> a.Situacao.EstaEmprestado()).ShouldBe(5);
+            acervoEmprestimos.Any(a=> a.DataEmprestimo.Date == DateTimeExtension.HorarioBrasilia().Date).ShouldBeTrue();
+            acervoEmprestimos.Any(a=> a.DataDevolucao.Date == DateTimeExtension.HorarioBrasilia().AddDays(7).Date).ShouldBeTrue();
+            
+            acervoEmprestimos.Count(a=> a.Situacao.EstaEmprestado()).ShouldBe(2);
             acervoEmprestimos.Count(a=> a.Situacao.EmprestadoComProrrogacao()).ShouldBe(1);
+            acervoEmprestimos.Any(a=> a.Situacao.EmprestadoComProrrogacao() && a.DataDevolucao == DateTimeExtension.HorarioBrasilia().AddDays(10).Date).ShouldBeTrue();
+        }
+        
+        [Fact(DisplayName = "Acervo Solicitação empréstimo - Não deve prorrogar empréstimo quando o item da solicitação não for encontrado")]
+        public async Task Nao_deve_prorrogar_emprestimo_quando_item_da_solicitacao_nao_for_encontrado()
+        {
+            //Arrange
+            await InserirDadosBasicosAleatorios();
+
+            await InserirAcervosBibliograficos();
+
+            await InserirAcervosSolicitacoes(SituacaoSolicitacao.FINALIZADO_ATENDIMENTO);
+
+            var atendimentoPresencial = TipoAtendimento.Presencial;
+            var dataVisita = DateTimeExtension.HorarioBrasilia().Date;
+            await InserirAcervoSolicitacaoItem(atendimentoPresencial, dataVisita,1,2, SituacaoSolicitacaoItem.FINALIZADO_MANUALMENTE);
+            await InserirAcervoSolicitacaoItem(atendimentoPresencial, dataVisita,2,4, SituacaoSolicitacaoItem.FINALIZADO_MANUALMENTE);
+            await InserirAcervoSolicitacaoItem(atendimentoPresencial, dataVisita,3,3, SituacaoSolicitacaoItem.FINALIZADO_MANUALMENTE);
+            await InserirAcervoSolicitacaoItem(atendimentoPresencial, dataVisita,4,1, SituacaoSolicitacaoItem.FINALIZADO_MANUALMENTE);
+            
+            var itensDaSolicitacao = ObterTodos<AcervoSolicitacaoItem>().Where(w=> w.AcervoSolicitacaoId == 1);
+            
+            foreach (var item in itensDaSolicitacao)
+                await InserirAcervoEmprestimo(item.Id, dataVisita);
+
+            //Act
+            var servicoAcervoEmprestimo = GetServicoAcervoEmprestimo();
+            
+            await servicoAcervoEmprestimo.ProrrogarEmprestimo(new AcervoEmprestimoProrrogacaoDTO()
+            {
+                AcervoSolicitacaoItemId = 1000,
+                DataDevolucao = DateTimeExtension.HorarioBrasilia().AddDays(10).Date
+            }).ShouldThrowAsync<NegocioException>();
+        }
+        
+        [Fact(DisplayName = "Acervo Solicitação empréstimo - Não deve prorrogar empréstimo quando a data de devolução for no passado")]
+        public async Task Nao_deve_prorrogar_emprestimo_quando_a_data_da_devolucao_for_no_passado()
+        {
+            //Arrange
+            await InserirDadosBasicosAleatorios();
+
+            await InserirAcervosBibliograficos();
+
+            await InserirAcervosSolicitacoes(SituacaoSolicitacao.FINALIZADO_ATENDIMENTO);
+
+            var atendimentoPresencial = TipoAtendimento.Presencial;
+            var dataVisita = DateTimeExtension.HorarioBrasilia().Date;
+            await InserirAcervoSolicitacaoItem(atendimentoPresencial, dataVisita,1,2, SituacaoSolicitacaoItem.FINALIZADO_MANUALMENTE);
+            await InserirAcervoSolicitacaoItem(atendimentoPresencial, dataVisita,2,4, SituacaoSolicitacaoItem.FINALIZADO_MANUALMENTE);
+            await InserirAcervoSolicitacaoItem(atendimentoPresencial, dataVisita,3,3, SituacaoSolicitacaoItem.FINALIZADO_MANUALMENTE);
+            await InserirAcervoSolicitacaoItem(atendimentoPresencial, dataVisita,4,1, SituacaoSolicitacaoItem.FINALIZADO_MANUALMENTE);
+            
+            var itensDaSolicitacao = ObterTodos<AcervoSolicitacaoItem>().Where(w=> w.AcervoSolicitacaoId == 1);
+            
+            foreach (var item in itensDaSolicitacao)
+                await InserirAcervoEmprestimo(item.Id, dataVisita);
+
+            //Act
+            var servicoAcervoEmprestimo = GetServicoAcervoEmprestimo();
+            
+            await servicoAcervoEmprestimo.ProrrogarEmprestimo(new AcervoEmprestimoProrrogacaoDTO()
+            {
+                AcervoSolicitacaoItemId = 1000,
+                DataDevolucao = DateTime.MinValue
+            }).ShouldThrowAsync<NegocioException>();
+        }
+        
+        [Fact(DisplayName = "Acervo Solicitação empréstimo - Não deve prorrogar empréstimo quando a data de devolução for menor que a atual")]
+        public async Task Nao_deve_prorrogar_emprestimo_quando_a_data_da_devolucao_for_menor_que_a_atual()
+        {
+            //Arrange
+            await InserirDadosBasicosAleatorios();
+
+            await InserirAcervosBibliograficos();
+
+            await InserirAcervosSolicitacoes(SituacaoSolicitacao.FINALIZADO_ATENDIMENTO);
+
+            var atendimentoPresencial = TipoAtendimento.Presencial;
+            var dataVisita = DateTimeExtension.HorarioBrasilia().Date;
+            await InserirAcervoSolicitacaoItem(atendimentoPresencial, dataVisita,1,2, SituacaoSolicitacaoItem.FINALIZADO_MANUALMENTE);
+            await InserirAcervoSolicitacaoItem(atendimentoPresencial, dataVisita,2,4, SituacaoSolicitacaoItem.FINALIZADO_MANUALMENTE);
+            await InserirAcervoSolicitacaoItem(atendimentoPresencial, dataVisita,3,3, SituacaoSolicitacaoItem.FINALIZADO_MANUALMENTE);
+            await InserirAcervoSolicitacaoItem(atendimentoPresencial, dataVisita,4,1, SituacaoSolicitacaoItem.FINALIZADO_MANUALMENTE);
+            
+            var itensDaSolicitacao = ObterTodos<AcervoSolicitacaoItem>().Where(w=> w.AcervoSolicitacaoId == 1);
+            
+            foreach (var item in itensDaSolicitacao)
+                await InserirAcervoEmprestimo(item.Id, dataVisita);
+
+            //Act
+            var servicoAcervoEmprestimo = GetServicoAcervoEmprestimo();
+            
+            await servicoAcervoEmprestimo.ProrrogarEmprestimo(new AcervoEmprestimoProrrogacaoDTO()
+            {
+                AcervoSolicitacaoItemId = 1000,
+                DataDevolucao = DateTimeExtension.HorarioBrasilia().AddDays(6)
+            }).ShouldThrowAsync<NegocioException>();
         }
 
         private async Task InserirAcervoSolicitacaoItem(TipoAtendimento atendimentoPresencial, DateTime dataVisita, long acervoSolicitacaoId, int qtdeItens, SituacaoSolicitacaoItem situacaoSolicitacaoItem = SituacaoSolicitacaoItem.AGUARDANDO_ATENDIMENTO)
