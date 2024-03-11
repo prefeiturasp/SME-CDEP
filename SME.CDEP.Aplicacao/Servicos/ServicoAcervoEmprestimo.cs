@@ -43,7 +43,28 @@ namespace SME.CDEP.Aplicacao.Servicos
             return true;
         }
 
-       
+        public async Task<bool> DevolverItemEmprestado(long acervoSolicitacaoItemId)
+        {
+            var acervosEmprestimosAtuais = await repositorioAcervoEmprestimo.ObterUltimoEmprestimoPorAcervoSolicitacaoItemIds(new[] { acervoSolicitacaoItemId });
+
+            if (acervosEmprestimosAtuais.NaoPossuiElementos())
+                throw new NegocioException(MensagemNegocio.ACERVO_EMPRESTIMO_NAO_ENCONTRADO);
+
+            var acervoEmprestimoAtual = acervosEmprestimosAtuais.FirstOrDefault();
+            
+            var acervoEmprestimo = new AcervoEmprestimo()
+            {
+                AcervoSolicitacaoItemId = acervoEmprestimoAtual.AcervoSolicitacaoItemId,
+                DataEmprestimo = acervoEmprestimoAtual.DataEmprestimo,
+                DataDevolucao = DateTimeExtension.HorarioBrasilia().Date,
+                Situacao = SituacaoEmprestimo.DEVOLVIDO
+            };
+            await repositorioAcervoEmprestimo.Inserir(acervoEmprestimo);
+
+            return true;
+        }
+
+
         public Task<IEnumerable<SituacaoItemDTO>> ObterSituacoesEmprestimo()
         {
             var lista = Enum.GetValues(typeof(SituacaoEmprestimo))
