@@ -44,6 +44,15 @@ namespace SME.CDEP.TesteIntegracao
                     CriadoPor = "Sistema", CriadoEm = DateTimeExtension.HorarioBrasilia(), CriadoLogin = "Sistema"
                 });
                 
+                await InserirNaBase(new AcervoEmprestimo()
+                {
+                    AcervoSolicitacaoItemId = itemCount,
+                    DataEmprestimo = DateTimeExtension.HorarioBrasilia().AddDays(2).Date,
+                    DataDevolucao = DateTimeExtension.HorarioBrasilia().AddDays(7).Date,
+                    Situacao = SituacaoEmprestimo.EMPRESTADO,
+                    CriadoPor = "Sistema", CriadoEm = DateTimeExtension.HorarioBrasilia(), CriadoLogin = "Sistema"
+                });
+                
                 itemCount++;
            }
             
@@ -60,6 +69,13 @@ namespace SME.CDEP.TesteIntegracao
             eventos.Count().ShouldBe(3);
             eventos.Count(a=> !a.Excluido).ShouldBe(2);
             eventos.Count(a=> a.Excluido).ShouldBe(1);
+            
+            var acervosEmprestimos = ObterTodos<AcervoEmprestimo>();
+            acervosEmprestimos.Count().ShouldBe(4);
+            acervosEmprestimos.Any(a=> a.DataEmprestimo.Date == DateTimeExtension.HorarioBrasilia().AddDays(2).Date && a.Situacao.EstaEmprestado()).ShouldBeTrue();
+            acervosEmprestimos.Any(a=> a.DataDevolucao.Date == DateTimeExtension.HorarioBrasilia().AddDays(7).Date && a.Situacao.EstaEmprestado()).ShouldBeTrue();
+            acervosEmprestimos.Count(a=> a.Situacao.EstaEmprestado()).ShouldBe(3);
+            acervosEmprestimos.Count(a=> a.Situacao.EstaCancelado()).ShouldBe(1);
         }
         
         [Fact(DisplayName = "Acervo Solicitação Item - Deve cancelar um item em situação finalizado manualmente")]

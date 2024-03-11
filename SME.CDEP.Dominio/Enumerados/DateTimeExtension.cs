@@ -1,4 +1,5 @@
 ﻿using System;
+using SME.CDEP.Dominio.Extensions;
 
 namespace SME.CDEP.Infra.Dominio.Enumerados
 {
@@ -83,7 +84,7 @@ namespace SME.CDEP.Infra.Dominio.Enumerados
             if (!dataReferencia.HasValue)
                 return false;
 
-            return dataAvaliada.Value.Date < dataReferencia.Value.Date;
+            return dataAvaliada.Value.EhMenorQue(dataReferencia.Value);
         }
         
         public static bool EhDataFutura(this DateTime? dataAvaliada)
@@ -91,7 +92,17 @@ namespace SME.CDEP.Infra.Dominio.Enumerados
             if (!dataAvaliada.HasValue)
                 return false;
 
-            return dataAvaliada.Value.Date > HorarioBrasilia().Date;
+            return dataAvaliada.Value.EhDataFutura();
+        }
+        
+        public static bool EhDataFutura(this DateTime dataAvaliada)
+        {
+            return dataAvaliada.Date > HorarioBrasilia().Date;
+        }
+        
+        public static bool EhMenorQue(this DateTime dataAvaliada, DateTime dataReferencia)
+        {
+            return dataAvaliada.Date < dataReferencia.Date;
         }
     }
 }

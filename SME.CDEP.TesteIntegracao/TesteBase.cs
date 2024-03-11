@@ -255,6 +255,11 @@ namespace SME.CDEP.TesteIntegracao
             return ObterServicoAplicacao<IServicoEvento>();
         }
         
+        protected IServicoAcervoEmprestimo GetServicoAcervoEmprestimo()
+        {
+            return ObterServicoAplicacao<IServicoAcervoEmprestimo>();
+        }
+        
         public T ObterServicoAplicacao<T>()
             where T : IServicoAplicacao
         {
