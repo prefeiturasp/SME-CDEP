@@ -467,15 +467,105 @@ namespace SME.CDEP.TesteIntegracao
                 }
             }).ShouldThrowAsync<NegocioException>();
         }
-
-        private async Task InserirAcervoSolicitacaoItem(TipoAtendimento atendimentoPresencial, DateTime dataVisita, long acervoSolicitacaoId, int qtdeItens)
+        
+        [Fact(DisplayName = "Acervo Solicitação com empréstimo - Confirmar empréstimo e prorrogar empréstimo")]
+        public async Task Deve_confirmar_atendimento_e_prorrogar_emprestimo()
         {
-            await InserirVariosNaBase(AcervoSolicitacaoItemMock.Instance.Gerar(acervoSolicitacaoId,atendimentoPresencial, dataVisita).Generate(qtdeItens));
+            //Arrange
+            await InserirDadosBasicosAleatorios();
+
+            await InserirAcervosBibliograficos();
+
+            await InserirAcervosSolicitacoes(SituacaoSolicitacao.FINALIZADO_ATENDIMENTO);
+
+            var atendimentoPresencial = TipoAtendimento.Presencial;
+            var dataVisita = DateTimeExtension.HorarioBrasilia().Date;
+            await InserirAcervoSolicitacaoItem(atendimentoPresencial, dataVisita,1,2, SituacaoSolicitacaoItem.FINALIZADO_MANUALMENTE);
+            await InserirAcervoSolicitacaoItem(atendimentoPresencial, dataVisita,2,4, SituacaoSolicitacaoItem.FINALIZADO_MANUALMENTE);
+            await InserirAcervoSolicitacaoItem(atendimentoPresencial, dataVisita,3,3, SituacaoSolicitacaoItem.FINALIZADO_MANUALMENTE);
+            await InserirAcervoSolicitacaoItem(atendimentoPresencial, dataVisita,4,1, SituacaoSolicitacaoItem.FINALIZADO_MANUALMENTE);
+            
+            var itensDaSolicitacao = ObterTodos<AcervoSolicitacaoItem>().Where(w=> w.AcervoSolicitacaoId == 1);
+            
+            foreach (var item in itensDaSolicitacao)
+                await InserirAcervoEmprestimo(item.Id, dataVisita);
+
+            //Act
+            var servicoAcervoSolicitacao = GetServicoAcervoSolicitacao();
+            
+            var retorno = await servicoAcervoSolicitacao.ConfirmarAtendimento(new AcervoSolicitacaoConfirmarDTO()
+            {
+                Id = 1,
+                Itens = new List<AcervoSolicitacaoItemConfirmarDTO>()
+                {
+                    new()
+                    {
+                        Id = 1,
+                        DataVisita = DateTimeExtension.HorarioBrasilia().Date,
+                        TipoAtendimento = TipoAtendimento.Presencial,
+                        DataEmprestimo = DateTimeExtension.HorarioBrasilia().Date,
+                        DataDevolucao = DateTimeExtension.HorarioBrasilia().AddDays(8).Date,
+                        TipoAcervo = TipoAcervo.Bibliografico
+                    },
+                    new()
+                    {
+                        Id = 2,
+                        DataVisita = DateTimeExtension.HorarioBrasilia().Date,
+                        TipoAtendimento = TipoAtendimento.Presencial,
+                        DataEmprestimo = DateTimeExtension.HorarioBrasilia().Date,
+                        DataDevolucao = DateTimeExtension.HorarioBrasilia().AddDays(7).Date,
+                        TipoAcervo = TipoAcervo.Bibliografico
+                    }
+                }
+            });
+            
+            //Assert
+            var solicitacaoAlterada = ObterTodos<AcervoSolicitacao>().FirstOrDefault(f=> f.Id == 1);
+            solicitacaoAlterada.Id.ShouldBe(1);
+            solicitacaoAlterada.UsuarioId.ShouldBe(1);
+            solicitacaoAlterada.Situacao.ShouldBe(SituacaoSolicitacao.FINALIZADO_ATENDIMENTO);
+            solicitacaoAlterada.Excluido.ShouldBeFalse();
+            
+            var itensAlterados = ObterTodos<AcervoSolicitacaoItem>().Where(w=> w.AcervoSolicitacaoId == 1);
+            itensAlterados.Count().ShouldBe(2);
+            
+            var itemAguardandoVisita = itensAlterados.FirstOrDefault(w => w.Id == 1);
+            itemAguardandoVisita.DataVisita.Value.Date.ShouldBe(DateTimeExtension.HorarioBrasilia().Date);
+            itemAguardandoVisita.TipoAtendimento.ShouldBe(TipoAtendimento.Presencial);
+            itemAguardandoVisita.Excluido.ShouldBeFalse();
+            itemAguardandoVisita.Situacao.ShouldBe(SituacaoSolicitacaoItem.FINALIZADO_MANUALMENTE);
+            
+            var itemFinalizadoManualmente = itensAlterados.FirstOrDefault(w => w.Id == 2);
+            itemFinalizadoManualmente.DataVisita.Value.Date.ShouldBe(DateTimeExtension.HorarioBrasilia().Date);
+            itemFinalizadoManualmente.TipoAtendimento.ShouldBe(TipoAtendimento.Presencial);
+            itemFinalizadoManualmente.Excluido.ShouldBeFalse();
+            itemFinalizadoManualmente.Situacao.ShouldBe(SituacaoSolicitacaoItem.FINALIZADO_MANUALMENTE);
+            
+            var eventos = ObterTodos<Evento>();
+            eventos.Count().ShouldBe(2);
+            eventos.All(a=> a.Data.Date == DateTimeExtension.HorarioBrasilia().Date).ShouldBeTrue();
+            
+            var acervoEmprestimos = ObterTodos<AcervoEmprestimo>();
+            acervoEmprestimos.Count().ShouldBe(4);
+            
+            acervoEmprestimos.Any(a=> a.DataEmprestimo.Date == DateTimeExtension.HorarioBrasilia().Date).ShouldBeTrue();
+            acervoEmprestimos.Any(a=> a.DataDevolucao.Date == DateTimeExtension.HorarioBrasilia().AddDays(8).Date).ShouldBeTrue();
+            
+            acervoEmprestimos.Any(a=> a.DataEmprestimo.Date == DateTimeExtension.HorarioBrasilia().Date).ShouldBeTrue();
+            acervoEmprestimos.Any(a=> a.DataDevolucao.Date == DateTimeExtension.HorarioBrasilia().AddDays(7).Date).ShouldBeTrue();
+            
+            acervoEmprestimos.Count(a=> a.Situacao.EstaEmprestado()).ShouldBe(5);
+            acervoEmprestimos.Count(a=> a.Situacao.EmprestadoComProrrogacao()).ShouldBe(1);
         }
 
-        private async Task InserirAcervosSolicitacoes()
+        private async Task InserirAcervoSolicitacaoItem(TipoAtendimento atendimentoPresencial, DateTime dataVisita, long acervoSolicitacaoId, int qtdeItens, SituacaoSolicitacaoItem situacaoSolicitacaoItem = SituacaoSolicitacaoItem.AGUARDANDO_ATENDIMENTO)
         {
-            var inserindoSolicitacoes = AcervoSolicitacaoMock.Instance.Gerar().Generate(4);
+            await InserirVariosNaBase(AcervoSolicitacaoItemMock.Instance.Gerar(acervoSolicitacaoId,atendimentoPresencial, dataVisita, situacaoSolicitacaoItem).Generate(qtdeItens));
+        }
+
+        private async Task InserirAcervosSolicitacoes(SituacaoSolicitacao situacaoSolicitacao = SituacaoSolicitacao.AGUARDANDO_ATENDIMENTO)
+        {
+            var inserindoSolicitacoes = AcervoSolicitacaoMock.Instance.Gerar(situacaoSolicitacao).Generate(4);
             await InserirVariosNaBase(inserindoSolicitacoes);
         }
 

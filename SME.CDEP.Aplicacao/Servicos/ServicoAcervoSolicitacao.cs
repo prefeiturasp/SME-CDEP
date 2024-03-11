@@ -273,7 +273,7 @@ namespace SME.CDEP.Aplicacao.Servicos
             
             if (acervoSolicitacao.EhNulo())
                 throw new NegocioException(MensagemNegocio.SOLICITACAO_ATENDIMENTO_NAO_ENCONTRADA);
-
+            
             if (acervoSolicitacaoConfirmar.Itens.NaoPossuiElementos())
                 throw new NegocioException(MensagemNegocio.SOLICITACAO_ATENDIMENTO_ITEM_NAO_ENCONTRADA);
             
@@ -335,23 +335,19 @@ namespace SME.CDEP.Aplicacao.Servicos
                     {
                         //Insere somente quando tiver informações relativas ao empréstimo (pode ser alteração de data de visita apenas)
                         if (itemAlterado.DataEmprestimo.HasValue && itemAlterado.DataDevolucao.HasValue)
-                        {
-                            var acervoEmprestimo = new AcervoEmprestimo()
-                            {
-                                AcervoSolicitacaoItemId = item.Id,
-                                DataEmprestimo = itemAlterado.DataEmprestimo.Value,
-                                DataDevolucao = itemAlterado.DataDevolucao.Value,
-                                Situacao = SituacaoEmprestimo.EMPRESTADO
-                            };
-                            await repositorioAcervoEmprestimo.Inserir(acervoEmprestimo);
-                        }
+                            await InserirAcervoEmprestimo(item.Id, itemAlterado.DataEmprestimo.Value, itemAlterado.DataDevolucao.Value, SituacaoEmprestimo.EMPRESTADO);
                     }
                     else
                     {
-                        itemEmprestado.DataEmprestimo = itemEmprestado.DataEmprestimo;
-                        itemEmprestado.DataDevolucao = itemEmprestado.DataDevolucao;
-                        itemEmprestado.Situacao = acervoSolicitacao.Situacao.EstaFinalizadoAtendimento() ? SituacaoEmprestimo.EMPRESTADO_PRORROGACAO : SituacaoEmprestimo.EMPRESTADO;
-                        await repositorioAcervoEmprestimo.Atualizar(itemEmprestado);
+                        if (acervoSolicitacao.Situacao.EstaFinalizadoAtendimento())
+                            await InserirAcervoEmprestimo(item.Id, itemEmprestado.DataEmprestimo, itemEmprestado.DataDevolucao, SituacaoEmprestimo.EMPRESTADO_PRORROGACAO);
+                        else
+                        {
+                            itemEmprestado.DataEmprestimo = itemEmprestado.DataEmprestimo;
+                            itemEmprestado.DataDevolucao = itemEmprestado.DataDevolucao;
+                            itemEmprestado.Situacao = SituacaoEmprestimo.EMPRESTADO;
+                            await repositorioAcervoEmprestimo.Atualizar(itemEmprestado);
+                        }
                     }
                 }
                 tran.Commit();
@@ -379,6 +375,18 @@ namespace SME.CDEP.Aplicacao.Servicos
             {
                 tran.Dispose();
             }
+        }
+
+        private async Task InserirAcervoEmprestimo(long acervoSolicitacaoItemId, DateTime dataEmprestimo, DateTime dataDevolucao, SituacaoEmprestimo situacaoEmprestimo)
+        {
+            var acervoEmprestimo = new AcervoEmprestimo()
+            {
+                AcervoSolicitacaoItemId = acervoSolicitacaoItemId,
+                DataEmprestimo = dataEmprestimo,
+                DataDevolucao = dataDevolucao,
+                Situacao = situacaoEmprestimo
+            };
+            await repositorioAcervoEmprestimo.Inserir(acervoEmprestimo);
         }
 
         private async Task AtualizarSituacaoAtendimento(AcervoSolicitacao acervoSolicitacao, bool todosItensEstaoCancelados = false)
