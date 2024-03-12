@@ -18,7 +18,8 @@ namespace SME.CDEP.Infra.Dados.Repositorios
             select 
               a.tipo as tipoAcervo,
               a.titulo,
-              a.id as acervoId
+              a.id as acervoId,
+              true estaDisponivel /* aqui será pego do controle de saldo a ser realizado em futura estória */
             from acervo a 
             where a.id = any(@acervosIds)
                   and not a.excluido;

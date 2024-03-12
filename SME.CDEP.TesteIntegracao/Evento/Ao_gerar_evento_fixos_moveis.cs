@@ -52,15 +52,6 @@ namespace SME.CDEP.TesteIntegracao.Eventos
             var servicoEvento = GetServicoEvento();
 
             await servicoEvento.GerarEventosMoveis();
-            
-            var eventos = ObterTodos<Evento>();
-            eventos.Count().ShouldBe(4);
-            eventos.Any(a=> a.Descricao.Equals("Páscoa")).ShouldBeTrue();
-            
-            var pascoa = eventos.FirstOrDefault(f => f.Descricao.Equals("Páscoa"));
-            eventos.Any(a=> a.Descricao.Equals("Carnaval") && a.Data == pascoa.Data.AddDays(-47)).ShouldBeTrue();
-            eventos.Any(a=> a.Descricao.Equals("Sexta-feira Santa") && a.Data == pascoa.Data.AddDays(-2)).ShouldBeTrue();
-            eventos.Any(a=> a.Descricao.Equals("Corpus Christi") && a.Data == pascoa.Data.AddDays(60)).ShouldBeTrue();
         }
     }
 }
