@@ -304,13 +304,15 @@ namespace SME.CDEP.Aplicacao.Servicos
                     var itemAlterado = acervoSolicitacaoConfirmar.Itens.FirstOrDefault(f => f.Id == item.Id);
 
                     var eraPresencial = item.TipoAtendimento.EhAtendimentoPresencial();
+
+                    var possuiInformacoesEmprestimo = itemAlterado.DataEmprestimo.HasValue && itemAlterado.DataDevolucao.HasValue;
                     
                     item.TipoAtendimento = itemAlterado.TipoAtendimento;
-
+                    
                     if (itemAlterado.DataVisita.HasValue && itemAlterado.TipoAtendimento.EhAtendimentoPresencial())
                     {
                         item.DataVisita = itemAlterado.DataVisita;
-                        item.Situacao = SituacaoSolicitacaoItem.AGUARDANDO_VISITA;
+                        item.Situacao =  possuiInformacoesEmprestimo ? SituacaoSolicitacaoItem.FINALIZADO_MANUALMENTE : SituacaoSolicitacaoItem.AGUARDANDO_VISITA;
                     }
                     else
                     {
@@ -621,7 +623,7 @@ namespace SME.CDEP.Aplicacao.Servicos
 
             var usuarioLogado = await servicoUsuario.ObterUsuarioLogado();
             
-            acervoSolicitacao.Situacao = acervoSolicitacao.Itens.Any(a=> a.TipoAtendimento.EhAtendimentoPresencial()) 
+            acervoSolicitacao.Situacao = acervoSolicitacaoManualDto.Itens.Any(a=> a.TipoAtendimento.EhAtendimentoPresencial() && !a.DataEmprestimo.HasValue && !a.DataDevolucao.HasValue) 
                 ? SituacaoSolicitacao.AGUARDANDO_VISITA 
                 : SituacaoSolicitacao.FINALIZADO_ATENDIMENTO;
             
@@ -635,7 +637,11 @@ namespace SME.CDEP.Aplicacao.Servicos
                     item.AcervoSolicitacaoId = acervoSolicitacao.Id;
                     item.ResponsavelId = usuarioLogado.Id;
                     
-                    item.Situacao = item.TipoAtendimento.EhAtendimentoViaEmail()
+                    var acervoSolicitacaoItemManualDto = acervoSolicitacaoManualDto.Itens.FirstOrDefault(f => f.AcervoId == item.AcervoId && f.DataEmprestimo.HasValue && f.DataDevolucao.HasValue);
+
+                    var possuiInformacoesEmprestimo = acervoSolicitacaoItemManualDto.NaoEhNulo();
+                    
+                    item.Situacao = item.TipoAtendimento.EhAtendimentoViaEmail() || possuiInformacoesEmprestimo
                         ? SituacaoSolicitacaoItem.FINALIZADO_MANUALMENTE
                         : SituacaoSolicitacaoItem.AGUARDANDO_VISITA;
                     
@@ -645,6 +651,9 @@ namespace SME.CDEP.Aplicacao.Servicos
                     
                     if (item.TipoAtendimento.EhAtendimentoPresencial())
                         await servicoEvento.InserirEventoVisita(item.DataVisita.Value, item.Id);
+
+                    if (possuiInformacoesEmprestimo)
+                        await InserirAcervoEmprestimo(item.Id, acervoSolicitacaoItemManualDto.DataEmprestimo.Value, acervoSolicitacaoItemManualDto.DataDevolucao.Value, SituacaoEmprestimo.EMPRESTADO);
                 }
                 tran.Commit();
 
@@ -688,11 +697,13 @@ namespace SME.CDEP.Aplicacao.Servicos
 
             var usuarioLogado = await servicoUsuario.ObterUsuarioLogado();
             
-            acervoSolicitacao.Situacao = acervoSolicitacaoManualDto.Itens.Any(a=> a.TipoAtendimento.EhAtendimentoPresencial()) 
+            acervoSolicitacao.Situacao = acervoSolicitacaoManualDto.Itens.Any(a=> a.TipoAtendimento.EhAtendimentoPresencial() && !a.DataEmprestimo.HasValue && !a.DataDevolucao.HasValue) 
                 ? SituacaoSolicitacao.AGUARDANDO_VISITA 
                 : SituacaoSolicitacao.FINALIZADO_ATENDIMENTO;
             
             var itensAtuais = await repositorioAcervoSolicitacaoItem.ObterItensPorSolicitacaoId(acervoSolicitacao.Id);
+            
+            var itensEmprestados = await repositorioAcervoEmprestimo.ObterUltimoEmprestimoPorAcervoSolicitacaoItemIds(acervoSolicitacaoManualDto.Itens.Where(w=> w.Id.HasValue).Select(s => s.Id.Value).ToArray());
             
             var tran = transacao.Iniciar();
             try
@@ -702,8 +713,10 @@ namespace SME.CDEP.Aplicacao.Servicos
                 foreach (var itemProposto in acervoSolicitacaoManualDto.Itens)
                 {
                     var item = mapper.Map<AcervoSolicitacaoItem>(itemProposto);
+                    
+                    var possuiInformacoesEmprestimo = itemProposto.DataEmprestimo.HasValue && itemProposto.DataDevolucao.HasValue;
 
-                    item.Situacao =  item.TipoAtendimento.EhAtendimentoViaEmail()
+                    item.Situacao =  item.TipoAtendimento.EhAtendimentoViaEmail() || possuiInformacoesEmprestimo
                                      ? SituacaoSolicitacaoItem.FINALIZADO_MANUALMENTE
                                      : SituacaoSolicitacaoItem.AGUARDANDO_VISITA;
 
@@ -730,6 +743,22 @@ namespace SME.CDEP.Aplicacao.Servicos
                         
                         if (item.TipoAtendimento.EhAtendimentoPresencial())
                             await servicoEvento.AtualizarEventoVisita(item.DataVisita.Value, item.Id);
+                        
+                        var itemEmprestado = itensEmprestados.FirstOrDefault(f => f.AcervoSolicitacaoItemId == itemAtual.Id);
+
+                        if (itemEmprestado.EhNulo())
+                        {
+                            //Insere somente quando tiver informações relativas ao empréstimo (pode ser alteração de data de visita apenas)
+                            if (itemProposto.DataEmprestimo.HasValue && itemProposto.DataDevolucao.HasValue)
+                                await InserirAcervoEmprestimo(item.Id, itemProposto.DataEmprestimo.Value, itemProposto.DataDevolucao.Value, SituacaoEmprestimo.EMPRESTADO);
+                        }
+                        else
+                        {
+                            itemEmprestado.DataEmprestimo = itemProposto.DataEmprestimo.Value;
+                            itemEmprestado.DataDevolucao = itemProposto.DataDevolucao.Value;
+                            itemEmprestado.Situacao = SituacaoEmprestimo.EMPRESTADO;
+                            await repositorioAcervoEmprestimo.Atualizar(itemEmprestado);
+                        }
                     }
                     else
                     {

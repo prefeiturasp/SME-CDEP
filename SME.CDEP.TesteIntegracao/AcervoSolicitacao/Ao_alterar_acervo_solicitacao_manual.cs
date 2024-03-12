@@ -140,6 +140,8 @@ namespace SME.CDEP.TesteIntegracao
             eventos.Count(a=> a.Excluido).ShouldBe(1);
             eventos.Count(a=> !a.Excluido).ShouldBe(2);
             
+            var acervoEmprestimos = ObterTodos<AcervoEmprestimo>();
+            acervoEmprestimos.Count().ShouldBe(0);
         }
         
         [Fact(DisplayName = "Acervo Solicitação - Ao alterar solicitação de acervo manual com itens presenciais e via e-mail, com todos os itens novos")]
@@ -259,6 +261,9 @@ namespace SME.CDEP.TesteIntegracao
             eventos.Count(a=> !a.Excluido).ShouldBe(2);
             eventos.Any(a=> a.Data.Date == DateTimeExtension.HorarioBrasilia().AddDays(50).Date).ShouldBeTrue();
             eventos.Count(a=> a.Data.Date == DateTimeExtension.HorarioBrasilia().AddDays(50).Date).ShouldBe(2);
+            
+            var acervoEmprestimos = ObterTodos<AcervoEmprestimo>();
+            acervoEmprestimos.Count().ShouldBe(0);
         }
         
         [Fact(DisplayName = "Acervo Solicitação - Não deve alterar solicitação de acervo manual em dia de feriado")]
