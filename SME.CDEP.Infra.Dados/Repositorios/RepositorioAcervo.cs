@@ -194,8 +194,8 @@ namespace SME.CDEP.Infra.Dados.Repositorios
 	        var retorno  = await conexao.Obter().QueryAsync<PesquisaAcervo>(query, 
                 new
                 {
-                    tipoAcervo = (int)tipoAcervo, 
-                    textoLivre = textoLivre.NaoEhNulo() ? textoLivre.ToLower() : textoLivre,
+                    tipoAcervo = tipoAcervo.HasValue ? (int)tipoAcervo : (int?)null, 
+                    textoLivre = textoLivre.NaoEhNulo() ? textoLivre.ToLower() : null,
                     anoInicial,
                     anoFinal
                 });
