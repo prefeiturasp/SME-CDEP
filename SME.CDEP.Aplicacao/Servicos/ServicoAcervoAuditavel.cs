@@ -289,7 +289,10 @@ namespace SME.CDEP.Aplicacao.Servicos
                         EnderecoImagem = miniaturasDosAcervos.Any(f=> f.AcervoId == s.Key.AcervoId) 
                             ? $"{hostAplicacao}{Constantes.BUCKET_CDEP}/{miniaturasDosAcervos.FirstOrDefault(f=> f.AcervoId == s.Key.AcervoId).Thumbnail}"
                             : string.Empty,
-                        EnderecoImagemPadrao = $"{hostAplicacao}{Constantes.BUCKET_CDEP}/{imagensPadrao.FirstOrDefault(f=> f.TipoAcervo == s.Key.Tipo).NomeArquivoFisico}" 
+                        EnderecoImagemPadrao = $"{hostAplicacao}{Constantes.BUCKET_CDEP}/{imagensPadrao.FirstOrDefault(f=> f.TipoAcervo == s.Key.Tipo).NomeArquivoFisico}",
+                        EstaDisponivel = true,/* será tratada no controle de saldo em outra estória */
+                        SituacaoDisponibilidade = Constantes.ACERVO_DISPONIVEL, /* será tratada no controle de saldo em outra estória */
+                        TemControleDisponibilidade = s.Key.Tipo.EhAcervoBibliografico()
                     });
             
                 var totalRegistros = acervosAgrupandoCreditoAutor.Count();
@@ -399,12 +402,23 @@ namespace SME.CDEP.Aplicacao.Servicos
             {
                 case TipoAcervo.Bibliografico:
                     var retornoBibliografico = mapper.Map<AcervoBibliograficoDetalheDTO>(await repositorioAcervoBibliografico.ObterDetalhamentoPorCodigo(filtro.Codigo));
+                    
+                    if (retornoBibliografico.EhNulo())
+                        throw new NegocioException(MensagemNegocio.ACERVO_NAO_ENCONTRADO);
+                    
                     retornoBibliografico.EnderecoImagemPadrao = await ObterEnderecoImagemPadrao(TipoAcervo.Bibliografico);
+                    retornoBibliografico.TemControleDisponibilidade = true;
+                    retornoBibliografico.EstaDisponivel = true;/* será tratada no controle de saldo em outra estória */
+                    retornoBibliografico.SituacaoDisponibilidade = Constantes.ACERVO_DISPONIVEL; /* será tratada no controle de saldo em outra estória */
                     return retornoBibliografico;
                 
                 case TipoAcervo.DocumentacaoHistorica:
                 {
                     var retornoDocumental =  mapper.Map<AcervoDocumentalDetalheDTO>(await repositorioAcervoDocumental.ObterDetalhamentoPorCodigo(filtro.Codigo));
+                    
+                    if (retornoDocumental.EhNulo())
+                        throw new NegocioException(MensagemNegocio.ACERVO_NAO_ENCONTRADO);
+                    
                     retornoDocumental.Imagens = await AplicarEndereco(retornoDocumental.Imagens);
                     retornoDocumental.EnderecoImagemPadrao = retornoDocumental.Imagens.PossuiElementos() ? string.Empty : await ObterEnderecoImagemPadrao(TipoAcervo.DocumentacaoHistorica);
                     return retornoDocumental;
@@ -412,18 +426,30 @@ namespace SME.CDEP.Aplicacao.Servicos
                 case TipoAcervo.ArtesGraficas:
                 {
                     var retornoArteGrafica =  mapper.Map<AcervoArteGraficaDetalheDTO>(await repositorioAcervoArteGrafica.ObterDetalhamentoPorCodigo(filtro.Codigo));
+                    
+                    if (retornoArteGrafica.EhNulo())
+                        throw new NegocioException(MensagemNegocio.ACERVO_NAO_ENCONTRADO);
+                    
                     retornoArteGrafica.Imagens = await AplicarEndereco(retornoArteGrafica.Imagens);
                     retornoArteGrafica.EnderecoImagemPadrao = retornoArteGrafica.Imagens.PossuiElementos() ? string.Empty : await ObterEnderecoImagemPadrao(TipoAcervo.ArtesGraficas);
                     return retornoArteGrafica;
                 }
                 case TipoAcervo.Audiovisual:
                     var retornoAudiovisual = mapper.Map<AcervoAudiovisualDetalheDTO>(await repositorioAcervoAudiovisual.ObterDetalhamentoPorCodigo(filtro.Codigo));
+                    
+                    if (retornoAudiovisual.EhNulo())
+                        throw new NegocioException(MensagemNegocio.ACERVO_NAO_ENCONTRADO);
+                    
                     retornoAudiovisual.EnderecoImagemPadrao = await ObterEnderecoImagemPadrao(TipoAcervo.Audiovisual);
                     return retornoAudiovisual;
                 
                 case TipoAcervo.Fotografico:
                 {
                     var retornoFotografico =  mapper.Map<AcervoFotograficoDetalheDTO>(await repositorioAcervoFotografico.ObterDetalhamentoPorCodigo(filtro.Codigo));
+                    
+                    if (retornoFotografico.EhNulo())
+                        throw new NegocioException(MensagemNegocio.ACERVO_NAO_ENCONTRADO);
+                    
                     retornoFotografico.Imagens = await AplicarEndereco(retornoFotografico.Imagens);
                     retornoFotografico.EnderecoImagemPadrao = retornoFotografico.Imagens.PossuiElementos() ? string.Empty : await ObterEnderecoImagemPadrao(TipoAcervo.Fotografico);
                     return retornoFotografico;
@@ -431,6 +457,10 @@ namespace SME.CDEP.Aplicacao.Servicos
                 case TipoAcervo.Tridimensional:
                 {
                     var retornoTridimensional =  mapper.Map<AcervoTridimensionalDetalheDTO>(await repositorioAcervoTridimensional.ObterDetalhamentoPorCodigo(filtro.Codigo));
+                    
+                    if (retornoTridimensional.EhNulo())
+                        throw new NegocioException(MensagemNegocio.ACERVO_NAO_ENCONTRADO);
+                    
                     retornoTridimensional.Imagens = await AplicarEndereco(retornoTridimensional.Imagens);
                     retornoTridimensional.EnderecoImagemPadrao = retornoTridimensional.Imagens.PossuiElementos() ? string.Empty : await ObterEnderecoImagemPadrao(TipoAcervo.Tridimensional);
                     return retornoTridimensional;
