@@ -11,7 +11,6 @@ public class AcervoEmprestimoMock : AuditoriaMock
     
     public Faker<AcervoEmprestimo> Gerar(long acervoSolicitacaoItemId, DateTime  dataEmprestimo)
     {
-        var random = new Random();
         var faker = new Faker<AcervoEmprestimo>("pt_BR");
             
         faker.RuleFor(x => x.AcervoSolicitacaoItemId, f => acervoSolicitacaoItemId);
