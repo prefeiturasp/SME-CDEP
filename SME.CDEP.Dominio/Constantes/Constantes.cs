@@ -3,7 +3,7 @@
 public class Constantes
 {
     public const string ACERVO_DISPONIVEL = "Disponível";
-    public const string ACERVO_INDDISPONIVEL = "Indisponível";
+    public const string ACERVO_INDISPONIVEL = "Indisponível";
     public const string ACERVO_RESERVADO = "Acervo reservado pela solicitação '{0}'";
     public const string ACERVO_EMPRESTADO = "Acervo emprestado pela solicitação '{0}'";
     public const string VALIDAR_EMAIL = @"^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$";
