@@ -198,7 +198,7 @@ namespace SME.CDEP.Aplicacao.Mapeamentos
             CreateMap<AcervoTipoTituloAcervoIdCreditosAutores,AcervoTipoTituloAcervoIdCreditosAutoresDTO>()
                 .ForMember(dest => dest.TipoAcervo, opt => opt.MapFrom(o => o.TipoAcervo.Descricao()))
                 .ForMember(dest => dest.AutoresCreditos, opt => opt.MapFrom(o => o.AutoresCreditos.Select(s=> s.Nome).ToArray()))
-                .ForMember(dest => dest.SituacaoDisponibilidade, opt => opt.MapFrom(o => o.EstaDisponivel ? Constantes.ACERVO_DISPONIVEL : Constantes.ACERVO_INDDISPONIVEL))
+                .ForMember(dest => dest.SituacaoDisponibilidade, opt => opt.MapFrom(o => o.EstaDisponivel ? Constantes.ACERVO_DISPONIVEL : Constantes.ACERVO_INDISPONIVEL))
                 .ForMember(dest => dest.TemControleDisponibilidade, opt => opt.MapFrom(o => o.TipoAcervo.EhAcervoBibliografico()))
                 .ReverseMap();
             
@@ -236,6 +236,14 @@ namespace SME.CDEP.Aplicacao.Mapeamentos
             CreateMap<Acervo,IdNomeCodigoTipoDTO>()
                 .ForMember(dest => dest.Nome, opt => opt.MapFrom(o => o.Titulo))
                 .ForMember(dest => dest.Tipo, opt => opt.MapFrom(o => o.TipoAcervoId))
+                .ReverseMap();
+            
+            CreateMap<Acervo,IdNomeCodigoTipoParaEmprestimoDTO>()
+                .ForMember(dest => dest.Nome, opt => opt.MapFrom(o => o.Titulo))
+                .ForMember(dest => dest.Tipo, opt => opt.MapFrom(o => o.TipoAcervoId))
+                .ForMember(dest => dest.TemControleDisponibilidade, opt => opt.MapFrom(o => ((TipoAcervo)o.TipoAcervoId).EhAcervoBibliografico()))
+                .ForMember(dest => dest.EstaDisponivel, opt => opt.MapFrom(o => true))
+                .ForMember(dest => dest.SituacaoDisponibilidade, opt => opt.MapFrom(o => Constantes.ACERVO_DISPONIVEL))
                 .ReverseMap();
             
             CreateMap<AcervoSolicitacao,AcervoSolicitacaoManualDTO>().ReverseMap();
