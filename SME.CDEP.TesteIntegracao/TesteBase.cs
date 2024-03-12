@@ -796,5 +796,22 @@ namespace SME.CDEP.TesteIntegracao
                 }
             }
         }
+        protected void GerarArquivosSistema(List<Arquivo> arquivos)
+        {
+            arquivos.AddRange(AdicionarArquivoSistema("Bibliografico_sem_imagem.svg"));
+            arquivos.AddRange(AdicionarArquivoSistema("Documentacao_sem_imagem.svg"));
+            arquivos.AddRange(AdicionarArquivoSistema("Artesgraficas_sem_imagem.svg"));
+            arquivos.AddRange(AdicionarArquivoSistema("Audiovisual_sem_imagem.svg"));
+            arquivos.AddRange(AdicionarArquivoSistema("Fotografico_sem_imagem.svg"));
+            arquivos.AddRange(AdicionarArquivoSistema("Tridimensional_sem_Imagem.svg"));
+        }
+        
+        private IEnumerable<Arquivo> AdicionarArquivoSistema(string nomeDoArquivo)
+        {
+            var arquivosBibliograficosPadrao = ArquivoMock.Instance.GerarArquivo(TipoArquivo.Sistema).Generate(1);
+            arquivosBibliograficosPadrao.FirstOrDefault().Nome = nomeDoArquivo;
+            
+            return arquivosBibliograficosPadrao;
+        }
     }
 }
