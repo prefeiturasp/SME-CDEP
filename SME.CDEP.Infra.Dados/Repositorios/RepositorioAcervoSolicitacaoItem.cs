@@ -51,7 +51,8 @@ namespace SME.CDEP.Infra.Dados.Repositorios
                  u.nome as solicitante,
                  asi.situacao,
                  ur.nome as Responsavel,
-                 ae.situacao as SituacaoEmprestimo
+                 ae.situacao as SituacaoEmprestimo,
+                 a.titulo
             FROM acervo_solicitacao_item asi
                JOIN acervo_solicitacao aso on aso.id = asi.acervo_solicitacao_id
                JOIN acervo a on a.id = asi.acervo_id
