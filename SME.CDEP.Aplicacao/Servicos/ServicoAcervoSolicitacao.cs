@@ -339,8 +339,8 @@ namespace SME.CDEP.Aplicacao.Servicos
                     }
                     else
                     {
-                        itemEmprestado.DataEmprestimo = itemEmprestado.DataEmprestimo;
-                        itemEmprestado.DataDevolucao = itemEmprestado.DataDevolucao;
+                        itemEmprestado.DataEmprestimo = itemAlterado.DataEmprestimo.Value;
+                        itemEmprestado.DataDevolucao = itemAlterado.DataDevolucao.Value;
                         itemEmprestado.Situacao = SituacaoEmprestimo.EMPRESTADO;
                         await repositorioAcervoEmprestimo.Atualizar(itemEmprestado);
                     }
