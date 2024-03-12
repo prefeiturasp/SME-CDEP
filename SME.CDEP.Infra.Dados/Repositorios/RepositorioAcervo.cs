@@ -195,7 +195,7 @@ namespace SME.CDEP.Infra.Dados.Repositorios
                 new
                 {
                     tipoAcervo = (int)tipoAcervo, 
-                    textoLivre = textoLivre.NaoEhNulo() ? textoLivre.ToLower() : string.Empty,
+                    textoLivre = textoLivre.NaoEhNulo() ? textoLivre.ToLower() : textoLivre,
                     anoInicial,
                     anoFinal
                 });

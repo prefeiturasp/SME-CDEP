@@ -410,6 +410,7 @@ namespace SME.CDEP.Aplicacao.Servicos
                     retornoBibliografico.TemControleDisponibilidade = true;
                     retornoBibliografico.EstaDisponivel = true;/* será tratada no controle de saldo em outra estória */
                     retornoBibliografico.SituacaoDisponibilidade = Constantes.ACERVO_DISPONIVEL; /* será tratada no controle de saldo em outra estória */
+                    retornoBibliografico.TipoAcervoId = (int)TipoAcervo.Bibliografico; /* será tratada no controle de saldo em outra estória */
                     return retornoBibliografico;
                 
                 case TipoAcervo.DocumentacaoHistorica:
@@ -421,6 +422,7 @@ namespace SME.CDEP.Aplicacao.Servicos
                     
                     retornoDocumental.Imagens = await AplicarEndereco(retornoDocumental.Imagens);
                     retornoDocumental.EnderecoImagemPadrao = retornoDocumental.Imagens.PossuiElementos() ? string.Empty : await ObterEnderecoImagemPadrao(TipoAcervo.DocumentacaoHistorica);
+                    retornoDocumental.TipoAcervoId = (int)TipoAcervo.DocumentacaoHistorica;
                     return retornoDocumental;
                 }
                 case TipoAcervo.ArtesGraficas:
@@ -432,6 +434,7 @@ namespace SME.CDEP.Aplicacao.Servicos
                     
                     retornoArteGrafica.Imagens = await AplicarEndereco(retornoArteGrafica.Imagens);
                     retornoArteGrafica.EnderecoImagemPadrao = retornoArteGrafica.Imagens.PossuiElementos() ? string.Empty : await ObterEnderecoImagemPadrao(TipoAcervo.ArtesGraficas);
+                    retornoArteGrafica.TipoAcervoId = (int)TipoAcervo.ArtesGraficas;
                     return retornoArteGrafica;
                 }
                 case TipoAcervo.Audiovisual:
@@ -441,6 +444,7 @@ namespace SME.CDEP.Aplicacao.Servicos
                         throw new NegocioException(MensagemNegocio.ACERVO_NAO_ENCONTRADO);
                     
                     retornoAudiovisual.EnderecoImagemPadrao = await ObterEnderecoImagemPadrao(TipoAcervo.Audiovisual);
+                    retornoAudiovisual.TipoAcervoId = (int)TipoAcervo.Audiovisual;
                     return retornoAudiovisual;
                 
                 case TipoAcervo.Fotografico:
@@ -452,6 +456,7 @@ namespace SME.CDEP.Aplicacao.Servicos
                     
                     retornoFotografico.Imagens = await AplicarEndereco(retornoFotografico.Imagens);
                     retornoFotografico.EnderecoImagemPadrao = retornoFotografico.Imagens.PossuiElementos() ? string.Empty : await ObterEnderecoImagemPadrao(TipoAcervo.Fotografico);
+                    retornoFotografico.TipoAcervoId = (int)TipoAcervo.Fotografico;
                     return retornoFotografico;
                 }
                 case TipoAcervo.Tridimensional:
@@ -463,6 +468,7 @@ namespace SME.CDEP.Aplicacao.Servicos
                     
                     retornoTridimensional.Imagens = await AplicarEndereco(retornoTridimensional.Imagens);
                     retornoTridimensional.EnderecoImagemPadrao = retornoTridimensional.Imagens.PossuiElementos() ? string.Empty : await ObterEnderecoImagemPadrao(TipoAcervo.Tridimensional);
+                    retornoTridimensional.TipoAcervoId = (int)TipoAcervo.Tridimensional;
                     return retornoTridimensional;
                 }
                 default:

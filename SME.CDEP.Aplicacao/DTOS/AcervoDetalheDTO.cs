@@ -10,4 +10,5 @@ public class AcervoDetalheDTO
     public string SituacaoDisponibilidade { get; set; }
     public bool EstaDisponivel { get; set; }
     public bool TemControleDisponibilidade { get; set; }
+    public int TipoAcervoId { get; set; }
 }
