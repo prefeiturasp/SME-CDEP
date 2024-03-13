@@ -38,10 +38,10 @@ namespace SME.CDEP.Aplicacao
             if (detalhesAcervo.Any(a=> a.Email.NaoEstaPreenchido()))
                 throw new NegocioException(MensagemNegocio.SOLICITANTE_NAO_POSSUI_EMAIL);
             
-            if (detalhesAcervo.NaoPossuiElementos() || !detalhesAcervo.Any(w => w.Situacao.EstaAguardandoVisita()))
+            if (detalhesAcervo.NaoPossuiElementos() || !detalhesAcervo.Any(w => w.TipoAtendimento.EhAtendimentoPresencial()))
                 throw new NegocioException(MensagemNegocio.SOLICITACAO_ATENDIMENTO_NAO_CONTEM_ACERVOS);
 
-            detalhesAcervo = detalhesAcervo.Where(w => w.Situacao.EstaAguardandoVisita());
+            detalhesAcervo = detalhesAcervo.Where(w => w.TipoAtendimento.EhAtendimentoPresencial());
             
             var destinatario = detalhesAcervo.FirstOrDefault().Solicitante;
             

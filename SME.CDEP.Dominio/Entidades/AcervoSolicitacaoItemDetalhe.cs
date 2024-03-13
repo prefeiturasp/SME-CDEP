@@ -18,6 +18,7 @@ namespace SME.CDEP.Dominio.Entidades
         public string Email { get; set; }
         public SituacaoSolicitacaoItem Situacao { get; set; }
         public SituacaoEmprestimo? SituacaoEmprestimo { get; set; }
+        public TipoAtendimento? TipoAtendimento { get; set; }
         public string ObterDataVisitaOuTraco
         {
             get
