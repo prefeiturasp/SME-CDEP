@@ -22,7 +22,8 @@ namespace SME.CDEP.TesteIntegracao
             var servicoAcervo = GetServicoAcervo();
 
             var arquivos = ArquivoMock.Instance.GerarArquivo(TipoArquivo.AcervoArteGrafica).Generate(10);
-
+            GerarArquivosSistema(arquivos);
+            
             foreach (var arquivo in arquivos)
                 await InserirNaBase(arquivo);
             
@@ -35,7 +36,7 @@ namespace SME.CDEP.TesteIntegracao
             foreach (var arteGrafica in acervoArteGraficas)
             {
                 arteGrafica.Codigo = $"{arteGrafica.Codigo}{contador}";
-                arteGrafica.Arquivos = arquivosInseridos.Select(s => s.Id).ToArray();
+                arteGrafica.Arquivos = arquivosInseridos.Where(w=> w.Tipo.NaoEhTipoArquivoSistema()).Select(s => s.Id).ToArray();
                 await servicoAcervoArteGrafica.Inserir(arteGrafica);
                 contador++;
             }
@@ -70,7 +71,8 @@ namespace SME.CDEP.TesteIntegracao
             var servicoAcervo = GetServicoAcervo();
 
             var arquivos = ArquivoMock.Instance.GerarArquivo(TipoArquivo.AcervoArteGrafica).Generate(10);
-
+            GerarArquivosSistema(arquivos);
+            
             foreach (var arquivo in arquivos)
                 await InserirNaBase(arquivo);
             
@@ -83,7 +85,7 @@ namespace SME.CDEP.TesteIntegracao
             foreach (var arteGrafica in acervoArteGraficas)
             {
                 arteGrafica.Codigo = $"{arteGrafica.Codigo}{contador}";
-                arteGrafica.Arquivos = arquivosInseridos.Select(s => s.Id).ToArray();
+                arteGrafica.Arquivos = arquivosInseridos.Where(w=> w.Tipo.NaoEhTipoArquivoSistema()).Select(s => s.Id).ToArray();
                 await servicoAcervoArteGrafica.Inserir(arteGrafica);
                 contador++;
             }
@@ -119,7 +121,8 @@ namespace SME.CDEP.TesteIntegracao
             var servicoAcervo = GetServicoAcervo();
 
             var arquivos = ArquivoMock.Instance.GerarArquivo(TipoArquivo.AcervoArteGrafica).Generate(10);
-
+            GerarArquivosSistema(arquivos);
+            
             foreach (var arquivo in arquivos)
                 await InserirNaBase(arquivo);
             
@@ -134,7 +137,7 @@ namespace SME.CDEP.TesteIntegracao
                 arteGrafica.Codigo = $"{arteGrafica.Codigo}{contador}";
                 arteGrafica.DataAcervo = DateTimeExtension.HorarioBrasilia().Date.ToString("dd/MM/yyyy");
                 arteGrafica.Ano = DateTimeExtension.HorarioBrasilia().Year.ToString();
-                arteGrafica.Arquivos = arquivosInseridos.Select(s => s.Id).ToArray();
+                arteGrafica.Arquivos = arquivosInseridos.Where(w=> w.Tipo.NaoEhTipoArquivoSistema()).Select(s => s.Id).ToArray();
                 await servicoAcervoArteGrafica.Inserir(arteGrafica);
                 contador++;
             }
@@ -173,7 +176,8 @@ namespace SME.CDEP.TesteIntegracao
             var servicoAcervo = GetServicoAcervo();
 
             var arquivos = ArquivoMock.Instance.GerarArquivo(TipoArquivo.AcervoArteGrafica).Generate(10);
-
+            GerarArquivosSistema(arquivos);
+            
             foreach (var arquivo in arquivos)
                 await InserirNaBase(arquivo);
             
@@ -188,7 +192,7 @@ namespace SME.CDEP.TesteIntegracao
                 arteGrafica.Codigo = $"{arteGrafica.Codigo}{contador}";
                 arteGrafica.DataAcervo = DateTimeExtension.HorarioBrasilia().Date.ToString("dd/MM/yyyy");
                 arteGrafica.Ano = DateTimeExtension.HorarioBrasilia().Year.ToString();
-                arteGrafica.Arquivos = arquivosInseridos.Select(s => s.Id).ToArray();
+                arteGrafica.Arquivos = arquivosInseridos.Where(w=> w.Tipo.NaoEhTipoArquivoSistema()).Select(s => s.Id).ToArray();
                 await servicoAcervoArteGrafica.Inserir(arteGrafica);
                 contador++;
             }
@@ -227,7 +231,8 @@ namespace SME.CDEP.TesteIntegracao
             var servicoAcervo = GetServicoAcervo();
 
             var arquivos = ArquivoMock.Instance.GerarArquivo(TipoArquivo.AcervoArteGrafica).Generate(10);
-
+            GerarArquivosSistema(arquivos);
+            
             foreach (var arquivo in arquivos)
                 await InserirNaBase(arquivo);
 
@@ -242,7 +247,7 @@ namespace SME.CDEP.TesteIntegracao
                 arteGrafica.Codigo = $"{arteGrafica.Codigo}{contador}";
                 arteGrafica.DataAcervo = DateTimeExtension.HorarioBrasilia().Date.ToString("dd/MM/yyyy");
                 arteGrafica.PermiteUsoImagem = true;
-                arteGrafica.Arquivos = arquivosInseridos.Select(s => s.Id).ToArray();
+                arteGrafica.Arquivos = arquivosInseridos.Where(w=> w.Tipo.NaoEhTipoArquivoSistema()).Select(s => s.Id).ToArray();
                 arteGrafica.Ano = DateTimeExtension.HorarioBrasilia().AddYears(-3).Year.ToString();
                 await servicoAcervoArteGrafica.Inserir(arteGrafica);
                 contador++;
@@ -304,7 +309,9 @@ namespace SME.CDEP.TesteIntegracao
             };
             
             var pesquisa = await servicoAcervo.ObterPorTextoLivreETipoAcervo(filtro);
-            pesquisa.ShouldBeNull();
+            pesquisa.TotalRegistros.ShouldBe(0);
+            pesquisa.Items.Count().ShouldBe(0);
+            pesquisa.TotalPaginas.ShouldBe(0);
         }
         
         [Fact(DisplayName = "Acervo - Pesquisar acervos e não deve trazer imagens pois não permite uso de imagens")]
@@ -316,6 +323,7 @@ namespace SME.CDEP.TesteIntegracao
             var servicoAcervo = GetServicoAcervo();
 
             var arquivos = ArquivoMock.Instance.GerarArquivo(TipoArquivo.AcervoArteGrafica).Generate(10);
+            GerarArquivosSistema(arquivos);
 
             foreach (var arquivo in arquivos)
                 await InserirNaBase(arquivo);
@@ -332,7 +340,7 @@ namespace SME.CDEP.TesteIntegracao
                 arteGrafica.DataAcervo = DateTimeExtension.HorarioBrasilia().Date.ToString("dd/MM/yyyy");
                 arteGrafica.Ano = DateTimeExtension.HorarioBrasilia().AddYears(-3).Year.ToString();
                 arteGrafica.PermiteUsoImagem = false;
-                arteGrafica.Arquivos = arquivosInseridos.Select(s => s.Id).ToArray();
+                arteGrafica.Arquivos = arquivosInseridos.Where(w=> w.Tipo.NaoEhTipoArquivoSistema()).Select(s => s.Id).ToArray();
                 await servicoAcervoArteGrafica.Inserir(arteGrafica);
                 contador++;
             }
@@ -362,7 +370,7 @@ namespace SME.CDEP.TesteIntegracao
                 pesquisaAcervoDto.DataAcervo.ShouldBe(DateTimeExtension.HorarioBrasilia().Date.ToString("dd/MM/yyyy"));
             }
         }
-        
+
         [Fact(DisplayName = "Acervo - Pesquisar acervos por ano exato (inicial e final) - retornar acervos com anos exatos")]
         public async Task Pesquisar_acervo_por_ano_exato_inicial_e_final()
         {
@@ -372,7 +380,8 @@ namespace SME.CDEP.TesteIntegracao
             var servicoAcervo = GetServicoAcervo();
 
             var arquivos = ArquivoMock.Instance.GerarArquivo(TipoArquivo.AcervoArteGrafica).Generate(10);
-
+            GerarArquivosSistema(arquivos);
+            
             foreach (var arquivo in arquivos)
                 await InserirNaBase(arquivo);
 
@@ -387,7 +396,7 @@ namespace SME.CDEP.TesteIntegracao
                 arteGrafica.Codigo = $"{arteGrafica.Codigo}{contador}";
                 arteGrafica.DataAcervo = DateTimeExtension.HorarioBrasilia().Date.ToString("dd/MM/yyyy");
                 arteGrafica.PermiteUsoImagem = true;
-                arteGrafica.Arquivos = arquivosInseridos.Select(s => s.Id).ToArray();
+                arteGrafica.Arquivos = arquivosInseridos.Where(w=> w.Tipo.NaoEhTipoArquivoSistema()).Select(s => s.Id).ToArray();
 
                 arteGrafica.Ano = contador switch
                 {
@@ -412,7 +421,7 @@ namespace SME.CDEP.TesteIntegracao
             
             var pesquisa = await servicoAcervo.ObterPorTextoLivreETipoAcervo(filtro);
             pesquisa.ShouldNotBeNull();
-            pesquisa.TotalRegistros.ShouldBe(20);
+            pesquisa.TotalRegistros.ShouldBe(40);
         }
         
         [Fact(DisplayName = "Acervo - Pesquisar acervos por década possível e exata (inicial e final) - retornar acervos com ano exato e décadas certas e possíveis")]
@@ -424,7 +433,8 @@ namespace SME.CDEP.TesteIntegracao
             var servicoAcervo = GetServicoAcervo();
 
             var arquivos = ArquivoMock.Instance.GerarArquivo(TipoArquivo.AcervoArteGrafica).Generate(10);
-
+            GerarArquivosSistema(arquivos);
+            
             foreach (var arquivo in arquivos)
                 await InserirNaBase(arquivo);
 
@@ -439,7 +449,7 @@ namespace SME.CDEP.TesteIntegracao
                 arteGrafica.Codigo = $"{arteGrafica.Codigo}{contador}";
                 arteGrafica.DataAcervo = DateTimeExtension.HorarioBrasilia().Date.ToString("dd/MM/yyyy");
                 arteGrafica.PermiteUsoImagem = true;
-                arteGrafica.Arquivos = arquivosInseridos.Select(s => s.Id).ToArray();
+                arteGrafica.Arquivos = arquivosInseridos.Where(w=> w.Tipo.NaoEhTipoArquivoSistema()).Select(s => s.Id).ToArray();
 
                 arteGrafica.Ano = contador switch
                 {
@@ -476,7 +486,8 @@ namespace SME.CDEP.TesteIntegracao
             var servicoAcervo = GetServicoAcervo();
 
             var arquivos = ArquivoMock.Instance.GerarArquivo(TipoArquivo.AcervoArteGrafica).Generate(10);
-
+            GerarArquivosSistema(arquivos);
+            
             foreach (var arquivo in arquivos)
                 await InserirNaBase(arquivo);
 
@@ -491,7 +502,7 @@ namespace SME.CDEP.TesteIntegracao
                 arteGrafica.Codigo = $"{arteGrafica.Codigo}{contador}";
                 arteGrafica.DataAcervo = DateTimeExtension.HorarioBrasilia().Date.ToString("dd/MM/yyyy");
                 arteGrafica.PermiteUsoImagem = true;
-                arteGrafica.Arquivos = arquivosInseridos.Select(s => s.Id).ToArray();
+                arteGrafica.Arquivos = arquivosInseridos.Where(w=> w.Tipo.NaoEhTipoArquivoSistema()).Select(s => s.Id).ToArray();
 
                 arteGrafica.Ano = contador switch
                 {

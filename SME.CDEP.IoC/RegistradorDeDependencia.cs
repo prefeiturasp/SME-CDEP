@@ -148,6 +148,7 @@ public class RegistradorDeDependencia
             config.AddMap(new ParametroSistemaMap());
             config.AddMap(new EventoMap());
             config.AddMap(new EventoFixoMap());
+            config.AddMap(new AcervoEmprestimoMap());
             config.ForDommel();
         });
     }
@@ -203,6 +204,7 @@ public class RegistradorDeDependencia
         _serviceCollection.TryAddScoped<IRepositorioAcervoSolicitacaoItem, RepositorioAcervoSolicitacaoItem>();
         _serviceCollection.TryAddScoped<IRepositorioEvento, RepositorioEvento>();
         _serviceCollection.TryAddScoped<IRepositorioEventoFixo, RepositorioEventoFixo>();
+        _serviceCollection.TryAddScoped<IRepositorioAcervoEmprestimo, RepositorioAcervoEmprestimo>();
     }
 
     protected virtual void RegistrarServicos()
@@ -251,6 +253,7 @@ public class RegistradorDeDependencia
         _serviceCollection.TryAddScoped<IServicoEvento, ServicoEvento>();
         _serviceCollection.TryAddScoped<IServicoMensageria, ServicoMensageria>();
         _serviceCollection.TryAddScoped<IServicoNotificacaoEmail, ServicoNotificacaoEmail>();
+        _serviceCollection.TryAddScoped<IServicoAcervoEmprestimo, ServicoAcervoEmprestimo>();
     }
     protected virtual void RegistrarHttpClients()
     {

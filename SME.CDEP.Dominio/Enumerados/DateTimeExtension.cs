@@ -1,4 +1,5 @@
 ﻿using System;
+using SME.CDEP.Dominio.Extensions;
 
 namespace SME.CDEP.Infra.Dominio.Enumerados
 {
@@ -62,6 +63,46 @@ namespace SME.CDEP.Infra.Dominio.Enumerados
                 return data;
             int diferenca = (((int)DayOfWeek.Sunday - (int)data.DayOfWeek - 7) % 7);
             return data.AddDays(diferenca);
+        }
+        
+        public static bool EhMaiorOuIgualQue(this DateTime? dataAvaliada, DateTime? dataReferencia)
+        {
+            if (!dataAvaliada.HasValue)
+                return false;
+            
+            if (!dataReferencia.HasValue)
+                return false;
+
+            return dataReferencia.Value.Date <= dataAvaliada.Value.Date;
+        }
+        
+        public static bool EhMenorQue(this DateTime? dataAvaliada, DateTime? dataReferencia)
+        {
+            if (!dataAvaliada.HasValue)
+                return false;
+            
+            if (!dataReferencia.HasValue)
+                return false;
+
+            return dataAvaliada.Value.EhMenorQue(dataReferencia.Value);
+        }
+        
+        public static bool EhDataFutura(this DateTime? dataAvaliada)
+        {
+            if (!dataAvaliada.HasValue)
+                return false;
+
+            return dataAvaliada.Value.EhDataFutura();
+        }
+        
+        public static bool EhDataFutura(this DateTime dataAvaliada)
+        {
+            return dataAvaliada.Date > HorarioBrasilia().Date;
+        }
+        
+        public static bool EhMenorQue(this DateTime dataAvaliada, DateTime dataReferencia)
+        {
+            return dataAvaliada.Date < dataReferencia.Date;
         }
     }
 }

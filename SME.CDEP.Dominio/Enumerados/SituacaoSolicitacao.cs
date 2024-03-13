@@ -41,4 +41,9 @@ public static class SituacaoSolicitacaoExtension
     {
         return situacaoSolicitacao == SituacaoSolicitacao.ATENDIDO_PARCIALMENTE;
     }
+    
+    public static bool NaoEstaFinalizadoAtendimento(this SituacaoSolicitacao situacaoSolicitacao)
+    {
+        return !situacaoSolicitacao.EstaFinalizadoAtendimento();
+    }
 }

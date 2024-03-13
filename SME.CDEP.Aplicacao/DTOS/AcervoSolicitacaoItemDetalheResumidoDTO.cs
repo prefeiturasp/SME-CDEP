@@ -14,5 +14,12 @@ namespace SME.CDEP.Aplicacao.DTOS
         public TipoAtendimento? TipoAtendimento { get; set; }
         public long AcervoId { get; set; }
         public string Responsavel { get; set; }
+        public TipoAcervo TipoAcervoId { get; set; }
+        public DateTime? DataEmprestimo { get; set; }
+        public DateTime? DataDevolucao { get; set; }
+        public SituacaoEmprestimo? SituacaoEmprestimo { get; set; }
+        public string SituacaoDisponibilidade { get; set; }
+        public bool EstaDisponivel { get; set; }
+        public bool TemControleDisponibilidade { get; set; }
     }
 }

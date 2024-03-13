@@ -194,8 +194,8 @@ namespace SME.CDEP.Infra.Dados.Repositorios
 	        var retorno  = await conexao.Obter().QueryAsync<PesquisaAcervo>(query, 
                 new
                 {
-                    tipoAcervo, 
-                    textoLivre = textoLivre.NaoEhNulo() ? textoLivre.ToLower() : string.Empty,
+                    tipoAcervo = tipoAcervo.HasValue ? (int)tipoAcervo : (int?)null, 
+                    textoLivre = textoLivre.NaoEhNulo() ? textoLivre.ToLower() : null,
                     anoInicial,
                     anoFinal
                 });
@@ -235,6 +235,7 @@ namespace SME.CDEP.Infra.Dados.Repositorios
             var query = @"
             select id, 
                    titulo,
+                   tipo,
                    coalesce(codigo, codigo_novo) as codigo
             from acervo
             where (lower(codigo) = @codigo or lower(codigo_novo) = @codigo) 

@@ -22,7 +22,8 @@ namespace SME.CDEP.TesteIntegracao
             var servicoAcervo = GetServicoAcervo();
 
             var arquivos = ArquivoMock.Instance.GerarArquivo(TipoArquivo.AcervoArteGrafica).Generate(10);
-
+            GerarArquivosSistema(arquivos);
+            
             foreach (var arquivo in arquivos)
                 await InserirNaBase(arquivo);
             
@@ -35,7 +36,7 @@ namespace SME.CDEP.TesteIntegracao
             foreach (var arteGrafica in acervoArteGraficas)
             {
                 arteGrafica.Codigo = $"{arteGrafica.Codigo}{contador}";
-                arteGrafica.Arquivos = arquivosInseridos.Select(s => s.Id).ToArray();
+                arteGrafica.Arquivos = arquivosInseridos.Where(w=> w.Tipo.NaoEhTipoArquivoSistema()).Select(s => s.Id).ToArray();
                 await servicoAcervoArteGrafica.Inserir(arteGrafica);
                 contador++;
             }
@@ -77,7 +78,8 @@ namespace SME.CDEP.TesteIntegracao
             var servicoAcervo = GetServicoAcervo();
 
             var arquivos = ArquivoMock.Instance.GerarArquivo(TipoArquivo.AcervoArteGrafica).Generate(10);
-
+            GerarArquivosSistema(arquivos);
+            
             foreach (var arquivo in arquivos)
                 await InserirNaBase(arquivo);
             
@@ -90,7 +92,7 @@ namespace SME.CDEP.TesteIntegracao
             foreach (var arteGrafica in acervoArteGraficas)
             {
                 arteGrafica.Codigo = $"{arteGrafica.Codigo}{contador}";
-                arteGrafica.Arquivos = arquivosInseridos.Select(s => s.Id).ToArray();
+                arteGrafica.Arquivos = arquivosInseridos.Where(w=> w.Tipo.NaoEhTipoArquivoSistema()).Select(s => s.Id).ToArray();
                 arteGrafica.PermiteUsoImagem = false;
                 await servicoAcervoArteGrafica.Inserir(arteGrafica);
                 contador++;
