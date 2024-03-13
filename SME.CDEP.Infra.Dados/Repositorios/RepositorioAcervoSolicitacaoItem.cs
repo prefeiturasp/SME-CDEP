@@ -92,7 +92,7 @@ namespace SME.CDEP.Infra.Dados.Repositorios
                 query.AppendLine(" and u.login = @solicitanteRf ");
             
             if (situacaoEmprestimo.HasValue)
-                query.AppendLine(" and ae.situacao = @situacaoEmprestimo ");
+                query.AppendLine(" and situacao_emprestimo.situacao = @situacaoEmprestimo ");
             
             query.AppendLine(" order by asi.id desc ");
             
