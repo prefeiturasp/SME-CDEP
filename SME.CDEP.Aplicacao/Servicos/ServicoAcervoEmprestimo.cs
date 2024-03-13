@@ -56,7 +56,7 @@ namespace SME.CDEP.Aplicacao.Servicos
             {
                 AcervoSolicitacaoItemId = acervoEmprestimoAtual.AcervoSolicitacaoItemId,
                 DataEmprestimo = acervoEmprestimoAtual.DataEmprestimo,
-                DataDevolucao = DateTimeExtension.HorarioBrasilia().Date,
+                DataDevolucao = DateTimeExtension.HorarioBrasilia(),
                 Situacao = SituacaoEmprestimo.DEVOLVIDO
             };
             await repositorioAcervoEmprestimo.Inserir(acervoEmprestimo);
