@@ -94,7 +94,7 @@ namespace SME.CDEP.Infra.Dados.Repositorios
             if (situacaoEmprestimo.HasValue)
                 query.AppendLine(" and ae.situacao = @situacaoEmprestimo ");
             
-            query.AppendLine(" order by asi.criado_em desc ");
+            query.AppendLine(" order by asi.id desc ");
             
             return await conexao.Obter().QueryAsync<AcervoSolicitacaoItemDetalhe>(query.ToString(), 
                 new { acervoSolicitacaoId, tipoAcervo, situacaoItem, dataSolicitacaoInicio, dataSolicitacaoFim, dataVisitaInicio, dataVisitaFim, responsavel, solicitanteRf, situacaoEmprestimo});
