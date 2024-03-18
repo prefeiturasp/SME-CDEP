@@ -20,7 +20,7 @@ namespace SME.CDEP.TesteIntegracao
         {
             await InserirDadosBasicosAleatorios();
 
-            await InserirAcervoTridimensional(true);
+            await InserirAcervosBibliograficos();
 
             var servicoAcervoSolicitacao = GetServicoAcervoSolicitacao();
             
@@ -81,6 +81,7 @@ namespace SME.CDEP.TesteIntegracao
                         DataVisita = DateTimeExtension.HorarioBrasilia(),
                         DataEmprestimo = DateTimeExtension.HorarioBrasilia(),
                         DataDevolucao = DateTimeExtension.HorarioBrasilia().AddDays(20),
+                        TipoAcervo = TipoAcervo.Bibliografico
                     },
                     new ()
                     {

@@ -266,7 +266,7 @@ namespace SME.CDEP.Aplicacao.Servicos
                 if (acervosBibliograficos.Any(a=> a.DataDevolucao.EhMenorQue(a.DataEmprestimo)))
                     throw new NegocioException(MensagemNegocio.DATA_DA_DEVOLUCAO_MENOR_DATA_DO_EMPRESTIMO);
                 
-                if (acervosBibliograficos.Any(a=> a.DataEmprestimo.HasValue || a.DataDevolucao.HasValue))
+                if (acervosBibliograficos.Any(a=> (a.DataEmprestimo.HasValue || a.DataDevolucao.HasValue) && a.DataVisita.EhDataFutura()))
                     throw new NegocioException(MensagemNegocio.DATA_DA_DEVOLUCAO_E_DATA_FUTURA_EM_VISITA_FUTURA);
             }
             
