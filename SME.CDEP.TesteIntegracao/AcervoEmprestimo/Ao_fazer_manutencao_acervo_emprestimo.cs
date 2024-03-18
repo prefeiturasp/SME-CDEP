@@ -13,7 +13,7 @@ namespace SME.CDEP.TesteIntegracao
         public Ao_fazer_manutencao_acervo_emprestimo(CollectionFixture collectionFixture) : base(collectionFixture)
         {}
        
-        [Fact(DisplayName = "Acervo empréstimo - Deve inserir empréstimo de acervo")]
+        [Fact(DisplayName = "Acervo empréstimo - Deve inserir empréstimo de acervo - persistência")]
         public async Task Deve_inserir_emprestimo_de_acervo()
         {
             //Arrange
@@ -49,8 +49,8 @@ namespace SME.CDEP.TesteIntegracao
             }
         }
 
-        [Fact(DisplayName = "Acervo Solicitação com empréstimo - Confirmar empréstimo")]
-        public async Task Deve_confirmar_atendimento()
+        [Fact(DisplayName = "Acervo Solicitação com empréstimo - Confirmar atendimento/empréstimo")]
+        public async Task Deve_confirmar_atendimento_emprestimo()
         {
             //Arrange
             await InserirDadosBasicosAleatorios();
