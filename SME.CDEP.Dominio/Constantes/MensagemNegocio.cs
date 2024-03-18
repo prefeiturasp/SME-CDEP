@@ -64,4 +64,5 @@ public class MensagemNegocio
     public const string DATA_DO_EMPRESTIMO_NAO_PODE_SER_FUTURA = "A 'Data do empréstimo' não pode ser futura.";
     public const string DATA_DO_EMPRESTIMO_MENOR_QUE_DATA_VISITA = "A 'Data do empréstimo' não pode ser menor que a 'Data de visita'.";
     public const string DATA_DA_DEVOLUCAO_MENOR_DATA_DA_DEVOLUCAO_ANTERIOR = "Para prorrogar o empréstimo, escolha uma 'Data de devolução' posterior à atual.";
+    public const string DATA_DA_DEVOLUCAO_E_DATA_FUTURA_EM_VISITA_FUTURA = "A 'Data do empréstimo' e/ou 'Data da devolução' não pode(m) ser informada(s) com 'Data de visita' futura.";
 }

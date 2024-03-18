@@ -813,5 +813,18 @@ namespace SME.CDEP.TesteIntegracao
             
             return arquivosBibliograficosPadrao;
         }
+        
+        protected async Task InserirAcervosBibliograficos()
+        {
+            var acervoId = 1;
+            var inserindoAcervoBibliografico = AcervoBibliograficoMock.Instance.Gerar().Generate(10);
+            foreach (var acervoBibliografico in inserindoAcervoBibliografico)
+            {
+                await InserirNaBase(acervoBibliografico.Acervo);
+                acervoBibliografico.AcervoId = acervoId;
+                await InserirNaBase(acervoBibliografico);
+                acervoId++;
+            }
+        }
     }
 }
