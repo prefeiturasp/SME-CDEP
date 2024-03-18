@@ -344,9 +344,15 @@ namespace SME.CDEP.Aplicacao.Servicos
                     }
                     else
                     {
-                        itemEmprestado.DataEmprestimo = itemAlterado.DataEmprestimo.Value;
-                        itemEmprestado.DataDevolucao = itemAlterado.DataDevolucao.Value;
-                        itemEmprestado.Situacao = SituacaoEmprestimo.EMPRESTADO;
+                        if (!itemAlterado.DataEmprestimo.HasValue && !itemAlterado.DataDevolucao.HasValue)
+                            itemEmprestado.Situacao = SituacaoEmprestimo.CANCELADO;
+                        else
+                        {
+                            itemEmprestado.DataEmprestimo = itemAlterado.DataEmprestimo.Value;
+                            itemEmprestado.DataDevolucao = itemAlterado.DataDevolucao.Value;
+                            itemEmprestado.Situacao = SituacaoEmprestimo.EMPRESTADO;
+                        }
+                        
                         await repositorioAcervoEmprestimo.Atualizar(itemEmprestado);
                     }
                 }
