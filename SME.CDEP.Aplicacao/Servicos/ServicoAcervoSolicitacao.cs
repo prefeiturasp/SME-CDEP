@@ -265,6 +265,9 @@ namespace SME.CDEP.Aplicacao.Servicos
                 
                 if (acervosBibliograficos.Any(a=> a.DataDevolucao.EhMenorQue(a.DataEmprestimo)))
                     throw new NegocioException(MensagemNegocio.DATA_DA_DEVOLUCAO_MENOR_DATA_DO_EMPRESTIMO);
+                
+                if (acervosBibliograficos.Any(a=> a.DataEmprestimo.HasValue || a.DataDevolucao.HasValue))
+                    throw new NegocioException(MensagemNegocio.DATA_DA_DEVOLUCAO_E_DATA_FUTURA_EM_VISITA_FUTURA);
             }
             
             var ehAtendimentoPorItem = acervoSolicitacaoConfirmar.Itens.PossuiApenasUmItem(); 
@@ -608,15 +611,14 @@ namespace SME.CDEP.Aplicacao.Servicos
             if (usuario.EhNulo())
                 throw new NegocioException(MensagemNegocio.USUARIO_NAO_ENCONTRADO);
             
-            if (acervoSolicitacaoManualDto.Itens.Any(a=> a.TipoAtendimento.EhAtendimentoPresencial() && !a.DataVisita.HasValue))
-                throw new NegocioException(MensagemNegocio.ITENS_ACERVOS_PRESENCIAL_DEVEM_TER_DATA_ACERVO);
+            ValidarCamposDataVisitaEmprestimoDevolucao(acervoSolicitacaoManualDto);
             
             var datasDasVisitas = acervoSolicitacaoManualDto.Itens
                 .Where(w => w.TipoAtendimento.EhAtendimentoPresencial())
                 .Select(s => s.DataVisita.Value);
 
             await ValidarConflitosEventos(datasDasVisitas);
-
+            
             var acervoSolicitacao = mapper.Map<AcervoSolicitacao>(acervoSolicitacaoManualDto);
             
             acervoSolicitacao.Origem = Origem.Manual;
@@ -682,9 +684,8 @@ namespace SME.CDEP.Aplicacao.Servicos
             if (acervoSolicitacao.EhNulo())
                 throw new NegocioException(MensagemNegocio.SOLICITACAO_ATENDIMENTO_NAO_ENCONTRADA);
             
-            if (acervoSolicitacaoManualDto.Itens.Any(a=> a.TipoAtendimento.EhAtendimentoPresencial() && !a.DataVisita.HasValue))
-                throw new NegocioException(MensagemNegocio.ITENS_ACERVOS_PRESENCIAL_DEVEM_TER_DATA_ACERVO);
-            
+            ValidarCamposDataVisitaEmprestimoDevolucao(acervoSolicitacaoManualDto);
+
             var datasDasVisitas = acervoSolicitacaoManualDto.Itens
                 .Where(w => w.TipoAtendimento.EhAtendimentoPresencial())
                 .Select(s => s.DataVisita.Value);
@@ -785,6 +786,30 @@ namespace SME.CDEP.Aplicacao.Servicos
             finally
             {
                 tran.Dispose();
+            }
+        }
+
+        private static void ValidarCamposDataVisitaEmprestimoDevolucao(AcervoSolicitacaoManualDTO acervoSolicitacaoManualDto)
+        {
+            if (acervoSolicitacaoManualDto.Itens.Any(a=> a.TipoAtendimento.EhAtendimentoPresencial() && !a.DataVisita.HasValue))
+                throw new NegocioException(MensagemNegocio.ITENS_ACERVOS_PRESENCIAL_DEVEM_TER_DATA_ACERVO);
+
+            if (acervoSolicitacaoManualDto.Itens.Any(a=> a.TipoAcervo.EhAcervoBibliografico()))
+            {
+                if (acervoSolicitacaoManualDto.Itens.Any(a=> a.DataEmprestimo.HasValue && a.DataEmprestimo.Value.Date > DateTimeExtension.HorarioBrasilia().Date))
+                    throw new NegocioException(MensagemNegocio.DATA_DO_EMPRESTIMO_NAO_PODE_SER_FUTURA);
+                
+                if (acervoSolicitacaoManualDto.Itens.Any(a=> a.DataEmprestimo.HasValue && a.DataVisita.HasValue && a.DataEmprestimo.Value.Date < a.DataVisita.Value.Date))
+                    throw new NegocioException(MensagemNegocio.DATA_DO_EMPRESTIMO_MENOR_QUE_DATA_VISITA);
+                
+                if (acervoSolicitacaoManualDto.Itens.Any(a=> a.DataDevolucao.HasValue && a.DataEmprestimo.HasValue && a.DataDevolucao.Value.Date < a.DataEmprestimo.Value.Date))
+                    throw new NegocioException(MensagemNegocio.DATA_DA_DEVOLUCAO_MENOR_DATA_DO_EMPRESTIMO);
+                
+            }
+            else
+            {
+                if (acervoSolicitacaoManualDto.Itens.Any(a=> a.DataEmprestimo.HasValue || a.DataDevolucao.HasValue))
+                    throw new NegocioException(MensagemNegocio.DATA_DO_EMPRESTIMO_E_DEVOLUCAO_EXCLUSIVO_PARA_ACERVOS_BIBLIOGRAFICOS);
             }
         }
     }

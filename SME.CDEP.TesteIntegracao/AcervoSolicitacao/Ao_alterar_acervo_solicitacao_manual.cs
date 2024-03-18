@@ -1,5 +1,6 @@
 ﻿using Shouldly;
 using SME.CDEP.Aplicacao.DTOS;
+using SME.CDEP.Dominio.Constantes;
 using SME.CDEP.Dominio.Entidades;
 using SME.CDEP.Dominio.Excecoes;
 using SME.CDEP.Dominio.Extensions;
@@ -14,8 +15,8 @@ namespace SME.CDEP.TesteIntegracao
         public Ao_fazer_acervo_solicitacao_manual(CollectionFixture collectionFixture) : base(collectionFixture)
         {}
         
-        [Fact(DisplayName = "Acervo Solicitação - Ao alterar solicitação de acervo manual com itens presenciais e via e-mail, com um item novo")]
-        public async Task Ao_alterar_solicitacao_manual_com_itens_presenciais_e_via_email_com_um_item_novo()
+        [Fact(DisplayName = "Acervo Solicitação Manual - Deve alterar solicitação de acervo com itens presenciais e via e-mail, com um item novo")]
+        public async Task Deve_alterar_solicitacao_manual_com_itens_presenciais_e_via_email_com_um_item_novo()
         {
             await InserirDadosBasicosAleatorios();
 
@@ -140,8 +141,8 @@ namespace SME.CDEP.TesteIntegracao
             acervoEmprestimos.Count(a=> a.DataDevolucao.Date == DateTimeExtension.HorarioBrasilia().AddDays(20).Date && a.Situacao.EstaEmprestado()).ShouldBe(1);;
         }
         
-        [Fact(DisplayName = "Acervo Solicitação - Ao alterar solicitação de acervo manual com itens presenciais e via e-mail, com todos os itens novos")]
-        public async Task Ao_alterar_solicitacao_manual_com_itens_presenciais_e_via_email_com_todos_os_itens_novos()
+        [Fact(DisplayName = "Acervo Solicitação Manual - Deve alterar solicitação de acervo com itens presenciais e via e-mail, com todos os itens novos")]
+        public async Task Deve_alterar_solicitacao_manual_com_itens_presenciais_e_via_email_com_todos_os_itens_novos()
         {
             await InserirDadosBasicosAleatorios();
 
@@ -262,7 +263,7 @@ namespace SME.CDEP.TesteIntegracao
             acervoEmprestimos.Count().ShouldBe(0);
         }
         
-        [Fact(DisplayName = "Acervo Solicitação - Não deve alterar solicitação de acervo manual em dia de feriado")]
+        [Fact(DisplayName = "Acervo Solicitação Manual - Não deve alterar solicitação de acervo manual em dia de feriado")]
         public async Task Nao_deve_alterar_solicitacao_manual_em_dia_de_feriado()
         {
             await InserirDadosBasicosAleatorios();
@@ -343,10 +344,14 @@ namespace SME.CDEP.TesteIntegracao
                 }
             };
             
-            await servicoAcervoSolicitacao.Alterar(alteracaoAcervoSolicitacaoManual).ShouldThrowAsync<NegocioException>();
+            // act
+            var excecao = await Should.ThrowAsync<NegocioException>(() => servicoAcervoSolicitacao.Alterar(alteracaoAcervoSolicitacaoManual));
+
+            // assert
+            excecao.Message.Contains(MensagemNegocio.DATAS_DE_VISITAS_CONFLITANTES.Substring(0,75)).ShouldBeTrue();
         }
         
-        [Fact(DisplayName = "Acervo Solicitação - Não deve alterar solicitação de acervo manual em dia de suspensão")]
+        [Fact(DisplayName = "Acervo Solicitação Manual - Não deve alterar solicitação de acervo em dia de suspensão")]
         public async Task Nao_deve_alterar_solicitacao_manual_em_dia_de_suspensao()
         {
             await InserirDadosBasicosAleatorios();
@@ -427,7 +432,603 @@ namespace SME.CDEP.TesteIntegracao
                 }
             };
             
-            await servicoAcervoSolicitacao.Alterar(alteracaoAcervoSolicitacaoManual).ShouldThrowAsync<NegocioException>();
+            // act
+            var excecao = await Should.ThrowAsync<NegocioException>(() => servicoAcervoSolicitacao.Alterar(alteracaoAcervoSolicitacaoManual));
+
+            // assert
+            excecao.Message.Contains(MensagemNegocio.DATAS_DE_VISITAS_CONFLITANTES.Substring(0,75)).ShouldBeTrue();
+        }
+        
+        [Fact(DisplayName = "Acervo Solicitação Manual - Não deve inserir com data de empréstimo futura")]
+        public async Task Nao_deve_inserir_solicitacao_manual_com_data_de_emprestimo_futura()
+        {
+            await InserirDadosBasicosAleatorios();
+
+            await InserirAcervosBibliograficos();
+            
+            var servicoAcervoSolicitacao = GetServicoAcervoSolicitacao();
+            
+            var acervoSolicitacaoManual = new AcervoSolicitacaoManualDTO()
+            {
+                UsuarioId = 1,
+                DataSolicitacao = DateTimeExtension.HorarioBrasilia().Date.AddDays(-5),
+                Itens = new List<AcervoSolicitacaoItemManualDTO>()
+                {
+                    new ()
+                    {
+                        AcervoId = 1,
+                        TipoAtendimento = TipoAtendimento.Presencial,
+                        DataVisita = DateTimeExtension.HorarioBrasilia(),
+                        DataEmprestimo = DateTimeExtension.HorarioBrasilia().AddDays(4),
+                        DataDevolucao = DateTimeExtension.HorarioBrasilia().AddDays(10),
+                        TipoAcervo = TipoAcervo.Bibliografico,
+                    },
+                    new ()
+                    {
+                        AcervoId = 2,
+                        TipoAtendimento = TipoAtendimento.Presencial,
+                        DataVisita = DateTimeExtension.HorarioBrasilia(),
+                        DataEmprestimo = DateTimeExtension.HorarioBrasilia().AddDays(4),
+                        DataDevolucao = DateTimeExtension.HorarioBrasilia().AddDays(10),
+                        TipoAcervo = TipoAcervo.Bibliografico,
+                    },
+                    new ()
+                    {
+                        AcervoId = 3,
+                        TipoAtendimento = TipoAtendimento.Presencial,
+                        DataVisita = DateTimeExtension.HorarioBrasilia().AddDays(40),
+                        DataEmprestimo = DateTimeExtension.HorarioBrasilia().AddDays(4),
+                        DataDevolucao = DateTimeExtension.HorarioBrasilia().AddDays(10),
+                        TipoAcervo = TipoAcervo.Bibliografico,
+                    }
+                }
+            };
+            
+            // act
+            var excecao = await Should.ThrowAsync<NegocioException>(() => servicoAcervoSolicitacao.Inserir(acervoSolicitacaoManual));
+
+            // assert
+            excecao.Message.Contains(MensagemNegocio.DATA_DO_EMPRESTIMO_NAO_PODE_SER_FUTURA).ShouldBeTrue(); 
+        }
+        
+        [Fact(DisplayName = "Acervo Solicitação Manual - Não deve inserir com data de empréstimo menor que data de visita")]
+        public async Task Nao_deve_inserir_solicitacao_manual_com_data_de_emprestimo_menor_que_visita()
+        {
+            await InserirDadosBasicosAleatorios();
+
+            await InserirAcervosBibliograficos();
+            
+            var servicoAcervoSolicitacao = GetServicoAcervoSolicitacao();
+            
+            var acervoSolicitacaoManual = new AcervoSolicitacaoManualDTO()
+            {
+                UsuarioId = 1,
+                DataSolicitacao = DateTimeExtension.HorarioBrasilia().Date.AddDays(-5),
+                Itens = new List<AcervoSolicitacaoItemManualDTO>()
+                {
+                    new ()
+                    {
+                        AcervoId = 1,
+                        TipoAtendimento = TipoAtendimento.Presencial,
+                        DataVisita = DateTimeExtension.HorarioBrasilia(),
+                        DataEmprestimo = DateTimeExtension.HorarioBrasilia().AddDays(-4),
+                        DataDevolucao = DateTimeExtension.HorarioBrasilia().AddDays(10),
+                        TipoAcervo = TipoAcervo.Bibliografico,
+                    },
+                    new ()
+                    {
+                        AcervoId = 2,
+                        TipoAtendimento = TipoAtendimento.Presencial,
+                        DataVisita = DateTimeExtension.HorarioBrasilia(),
+                        DataEmprestimo = DateTimeExtension.HorarioBrasilia().AddDays(-4),
+                        DataDevolucao = DateTimeExtension.HorarioBrasilia().AddDays(10),
+                        TipoAcervo = TipoAcervo.Bibliografico,
+                    },
+                    new ()
+                    {
+                        AcervoId = 3,
+                        TipoAtendimento = TipoAtendimento.Presencial,
+                        DataVisita = DateTimeExtension.HorarioBrasilia().AddDays(40),
+                        DataEmprestimo = DateTimeExtension.HorarioBrasilia().AddDays(-4),
+                        DataDevolucao = DateTimeExtension.HorarioBrasilia().AddDays(10),
+                        TipoAcervo = TipoAcervo.Bibliografico,
+                    }
+                }
+            };
+            
+            // act
+            var excecao = await Should.ThrowAsync<NegocioException>(() => servicoAcervoSolicitacao.Inserir(acervoSolicitacaoManual));
+
+            // assert
+            excecao.Message.Contains(MensagemNegocio.DATA_DO_EMPRESTIMO_MENOR_QUE_DATA_VISITA).ShouldBeTrue(); 
+        }
+        
+        [Fact(DisplayName = "Acervo Solicitação Manual - Não deve inserir com data de devolução menor que data de empréstimo")]
+        public async Task Nao_deve_inserir_solicitacao_manual_com_data_de_devolucao_menor_que_data_emprestimo()
+        {
+            await InserirDadosBasicosAleatorios();
+
+            await InserirAcervosBibliograficos();
+            
+            var servicoAcervoSolicitacao = GetServicoAcervoSolicitacao();
+            
+            var acervoSolicitacaoManual = new AcervoSolicitacaoManualDTO()
+            {
+                UsuarioId = 1,
+                DataSolicitacao = DateTimeExtension.HorarioBrasilia().Date.AddDays(-5),
+                Itens = new List<AcervoSolicitacaoItemManualDTO>()
+                {
+                    new ()
+                    {
+                        AcervoId = 1,
+                        TipoAtendimento = TipoAtendimento.Presencial,
+                        DataVisita = DateTimeExtension.HorarioBrasilia(),
+                        DataEmprestimo = DateTimeExtension.HorarioBrasilia(),
+                        DataDevolucao = DateTimeExtension.HorarioBrasilia().AddDays(-1),
+                        TipoAcervo = TipoAcervo.Bibliografico,
+                    },
+                    new ()
+                    {
+                        AcervoId = 2,
+                        TipoAtendimento = TipoAtendimento.Presencial,
+                        DataVisita = DateTimeExtension.HorarioBrasilia(),
+                        DataEmprestimo = DateTimeExtension.HorarioBrasilia(),
+                        DataDevolucao = DateTimeExtension.HorarioBrasilia().AddDays(-5),
+                        TipoAcervo = TipoAcervo.Bibliografico,
+                    },
+                    new ()
+                    {
+                        AcervoId = 3,
+                        TipoAtendimento = TipoAtendimento.Presencial,
+                        DataVisita = DateTimeExtension.HorarioBrasilia(),
+                        DataEmprestimo = DateTimeExtension.HorarioBrasilia(),
+                        DataDevolucao = DateTimeExtension.HorarioBrasilia().AddDays(-2),
+                        TipoAcervo = TipoAcervo.Bibliografico,
+                    }
+                }
+            };
+            
+            // act
+            var excecao = await Should.ThrowAsync<NegocioException>(() => servicoAcervoSolicitacao.Inserir(acervoSolicitacaoManual));
+
+            // assert
+            excecao.Message.Contains(MensagemNegocio.DATA_DA_DEVOLUCAO_MENOR_DATA_DO_EMPRESTIMO).ShouldBeTrue(); 
+        }
+        
+        [Fact(DisplayName = "Acervo Solicitação Manual - Não deve inserir com data de empréstimo e devolução em acervos diferentes de bibliográficos")]
+        public async Task Nao_deve_inserir_solicitacao_manual_com_data_de_emprestimo_devolucao_em_acervos_diferentes_de_bibliograficos()
+        {
+            await InserirDadosBasicosAleatorios();
+
+            await InserirAcervoTridimensional();
+            
+            var servicoAcervoSolicitacao = GetServicoAcervoSolicitacao();
+            
+            var acervoSolicitacaoManual = new AcervoSolicitacaoManualDTO()
+            {
+                UsuarioId = 1,
+                DataSolicitacao = DateTimeExtension.HorarioBrasilia().Date.AddDays(-5),
+                Itens = new List<AcervoSolicitacaoItemManualDTO>()
+                {
+                    new ()
+                    {
+                        AcervoId = 1,
+                        TipoAtendimento = TipoAtendimento.Presencial,
+                        DataVisita = DateTimeExtension.HorarioBrasilia(),
+                        DataEmprestimo = DateTimeExtension.HorarioBrasilia(),
+                        DataDevolucao = DateTimeExtension.HorarioBrasilia().AddDays(-1),
+                        TipoAcervo = TipoAcervo.Tridimensional,
+                    },
+                    new ()
+                    {
+                        AcervoId = 2,
+                        TipoAtendimento = TipoAtendimento.Presencial,
+                        DataVisita = DateTimeExtension.HorarioBrasilia(),
+                        DataEmprestimo = DateTimeExtension.HorarioBrasilia(),
+                        DataDevolucao = DateTimeExtension.HorarioBrasilia().AddDays(-5),
+                        TipoAcervo = TipoAcervo.Tridimensional,
+                    },
+                    new ()
+                    {
+                        AcervoId = 3,
+                        TipoAtendimento = TipoAtendimento.Presencial,
+                        DataVisita = DateTimeExtension.HorarioBrasilia(),
+                        DataEmprestimo = DateTimeExtension.HorarioBrasilia(),
+                        DataDevolucao = DateTimeExtension.HorarioBrasilia().AddDays(-2),
+                        TipoAcervo = TipoAcervo.Tridimensional,
+                    }
+                }
+            };
+            
+            // act
+            var excecao = await Should.ThrowAsync<NegocioException>(() => servicoAcervoSolicitacao.Inserir(acervoSolicitacaoManual));
+
+            // assert
+            excecao.Message.Contains(MensagemNegocio.DATA_DO_EMPRESTIMO_E_DEVOLUCAO_EXCLUSIVO_PARA_ACERVOS_BIBLIOGRAFICOS).ShouldBeTrue(); 
+        }
+        
+        [Fact(DisplayName = "Acervo Solicitação Manual - Não deve alterar com data de empréstimo futura")]
+        public async Task Nao_deve_alterar_solicitacao_manual_com_data_de_emprestimo_futura()
+        {
+            await InserirDadosBasicosAleatorios();
+
+            await InserirAcervosBibliograficos();
+
+            var servicoAcervoSolicitacao = GetServicoAcervoSolicitacao();
+            
+            var acervoSolicitacaoManual = new AcervoSolicitacaoManualDTO()
+            {
+                UsuarioId = 1,
+                DataSolicitacao = DateTimeExtension.HorarioBrasilia().Date.AddDays(-5),
+                Itens = new List<AcervoSolicitacaoItemManualDTO>()
+                {
+                    new ()
+                    {
+                        AcervoId = 1,
+                        TipoAtendimento = TipoAtendimento.Presencial,
+                        DataVisita = DateTimeExtension.HorarioBrasilia(),
+                        DataEmprestimo = DateTimeExtension.HorarioBrasilia(),
+                        DataDevolucao = DateTimeExtension.HorarioBrasilia().AddDays(10),
+                        TipoAcervo = TipoAcervo.Bibliografico,
+                    },
+                    new ()
+                    {
+                        AcervoId = 2,
+                        TipoAtendimento = TipoAtendimento.Presencial,
+                        DataVisita = DateTimeExtension.HorarioBrasilia(),
+                        DataEmprestimo = DateTimeExtension.HorarioBrasilia(),
+                        DataDevolucao = DateTimeExtension.HorarioBrasilia().AddDays(10),
+                        TipoAcervo = TipoAcervo.Bibliografico,
+                    },
+                    new ()
+                    {
+                        AcervoId = 3,
+                        TipoAtendimento = TipoAtendimento.Presencial,
+                        DataVisita = DateTimeExtension.HorarioBrasilia(),
+                        DataEmprestimo = DateTimeExtension.HorarioBrasilia(),
+                        DataDevolucao = DateTimeExtension.HorarioBrasilia().AddDays(10),
+                        TipoAcervo = TipoAcervo.Bibliografico,
+                    }
+                }
+            };
+            
+            var retorno = await servicoAcervoSolicitacao.Inserir(acervoSolicitacaoManual);
+            retorno.ShouldBeGreaterThan(0);
+            
+            //Atualizando
+            var alteracaoAcervoSolicitacaoManual = new AcervoSolicitacaoManualDTO()
+            {
+                Id = 1,
+                UsuarioId = 1,
+                DataSolicitacao = DateTimeExtension.HorarioBrasilia().Date.AddDays(-10),
+                Itens = new List<AcervoSolicitacaoItemManualDTO>()
+                {
+                    new ()
+                    {
+                        Id = 1,
+                        AcervoId = 1,
+                        TipoAtendimento = TipoAtendimento.Presencial,
+                        DataVisita = DateTimeExtension.HorarioBrasilia(),
+                        DataEmprestimo = DateTimeExtension.HorarioBrasilia().AddDays(4),
+                        DataDevolucao = DateTimeExtension.HorarioBrasilia().AddDays(10),
+                        TipoAcervo = TipoAcervo.Bibliografico,
+                    },
+                    new ()
+                    {
+                        Id = 2,
+                        AcervoId = 2,
+                        TipoAtendimento = TipoAtendimento.Presencial,
+                        DataVisita = DateTimeExtension.HorarioBrasilia(),
+                        DataEmprestimo = DateTimeExtension.HorarioBrasilia().AddDays(4),
+                        DataDevolucao = DateTimeExtension.HorarioBrasilia().AddDays(10),
+                        TipoAcervo = TipoAcervo.Bibliografico,
+                    },
+                    new ()
+                    {
+                        Id = 3,
+                        AcervoId = 3,
+                        TipoAtendimento = TipoAtendimento.Presencial,
+                        DataVisita = DateTimeExtension.HorarioBrasilia().AddDays(40),
+                        DataEmprestimo = DateTimeExtension.HorarioBrasilia().AddDays(4),
+                        DataDevolucao = DateTimeExtension.HorarioBrasilia().AddDays(10),
+                        TipoAcervo = TipoAcervo.Bibliografico,
+                    }
+                }
+            };
+            
+            // act
+            var excecao = await Should.ThrowAsync<NegocioException>(() => servicoAcervoSolicitacao.Alterar(alteracaoAcervoSolicitacaoManual));
+
+            // assert
+            excecao.Message.Contains(MensagemNegocio.DATA_DO_EMPRESTIMO_NAO_PODE_SER_FUTURA).ShouldBeTrue(); 
+        }
+        
+        [Fact(DisplayName = "Acervo Solicitação Manual - Não deve alterar com data de empréstimo menor que data de visita")]
+        public async Task Nao_deve_alterar_solicitacao_manual_com_data_de_emprestimo_menor_que_visita()
+        {
+            await InserirDadosBasicosAleatorios();
+
+            await InserirAcervosBibliograficos();
+
+            var servicoAcervoSolicitacao = GetServicoAcervoSolicitacao();
+            
+            var acervoSolicitacaoManual = new AcervoSolicitacaoManualDTO()
+            {
+                UsuarioId = 1,
+                DataSolicitacao = DateTimeExtension.HorarioBrasilia().Date.AddDays(-5),
+                Itens = new List<AcervoSolicitacaoItemManualDTO>()
+                {
+                    new ()
+                    {
+                        AcervoId = 1,
+                        TipoAtendimento = TipoAtendimento.Presencial,
+                        DataVisita = DateTimeExtension.HorarioBrasilia(),
+                        DataEmprestimo = DateTimeExtension.HorarioBrasilia(),
+                        DataDevolucao = DateTimeExtension.HorarioBrasilia().AddDays(10),
+                        TipoAcervo = TipoAcervo.Bibliografico,
+                    },
+                    new ()
+                    {
+                        AcervoId = 2,
+                        TipoAtendimento = TipoAtendimento.Presencial,
+                        DataVisita = DateTimeExtension.HorarioBrasilia(),
+                        DataEmprestimo = DateTimeExtension.HorarioBrasilia(),
+                        DataDevolucao = DateTimeExtension.HorarioBrasilia().AddDays(10),
+                        TipoAcervo = TipoAcervo.Bibliografico,
+                    },
+                    new ()
+                    {
+                        AcervoId = 3,
+                        TipoAtendimento = TipoAtendimento.Presencial,
+                        DataVisita = DateTimeExtension.HorarioBrasilia(),
+                        DataEmprestimo = DateTimeExtension.HorarioBrasilia(),
+                        DataDevolucao = DateTimeExtension.HorarioBrasilia().AddDays(10),
+                        TipoAcervo = TipoAcervo.Bibliografico,
+                    }
+                }
+            };
+            
+            var retorno = await servicoAcervoSolicitacao.Inserir(acervoSolicitacaoManual);
+            retorno.ShouldBeGreaterThan(0);
+            
+            //Atualizando
+            var alteracaoAcervoSolicitacaoManual = new AcervoSolicitacaoManualDTO()
+            {
+                Id = 1,
+                UsuarioId = 1,
+                DataSolicitacao = DateTimeExtension.HorarioBrasilia().Date.AddDays(-10),
+                Itens = new List<AcervoSolicitacaoItemManualDTO>()
+                {
+                    new ()
+                    {
+                        Id = 1,
+                        AcervoId = 1,
+                        TipoAtendimento = TipoAtendimento.Presencial,
+                        DataVisita = DateTimeExtension.HorarioBrasilia(),
+                        DataEmprestimo = DateTimeExtension.HorarioBrasilia().AddDays(-4),
+                        DataDevolucao = DateTimeExtension.HorarioBrasilia().AddDays(10),
+                        TipoAcervo = TipoAcervo.Bibliografico,
+                    },
+                    new ()
+                    {
+                        Id = 2,
+                        AcervoId = 2,
+                        TipoAtendimento = TipoAtendimento.Presencial,
+                        DataVisita = DateTimeExtension.HorarioBrasilia(),
+                        DataEmprestimo = DateTimeExtension.HorarioBrasilia().AddDays(-4),
+                        DataDevolucao = DateTimeExtension.HorarioBrasilia().AddDays(10),
+                        TipoAcervo = TipoAcervo.Bibliografico,
+                    },
+                    new ()
+                    {
+                        Id = 3,
+                        AcervoId = 3,
+                        TipoAtendimento = TipoAtendimento.Presencial,
+                        DataVisita = DateTimeExtension.HorarioBrasilia().AddDays(40),
+                        DataEmprestimo = DateTimeExtension.HorarioBrasilia().AddDays(-4),
+                        DataDevolucao = DateTimeExtension.HorarioBrasilia().AddDays(10),
+                        TipoAcervo = TipoAcervo.Bibliografico,
+                    }
+                }
+            };
+            
+            // act
+            var excecao = await Should.ThrowAsync<NegocioException>(() => servicoAcervoSolicitacao.Alterar(alteracaoAcervoSolicitacaoManual));
+
+            // assert
+            excecao.Message.Contains(MensagemNegocio.DATA_DO_EMPRESTIMO_MENOR_QUE_DATA_VISITA).ShouldBeTrue(); 
+        }
+        
+        [Fact(DisplayName = "Acervo Solicitação Manual - Não deve alterar com data de devolução menor que data de empréstimo")]
+        public async Task Nao_deve_alterar_solicitacao_manual_com_data_de_devolucao_menor_que_data_emprestimo()
+        {
+            await InserirDadosBasicosAleatorios();
+
+            await InserirAcervosBibliograficos();
+
+            var servicoAcervoSolicitacao = GetServicoAcervoSolicitacao();
+            
+            var acervoSolicitacaoManual = new AcervoSolicitacaoManualDTO()
+            {
+                UsuarioId = 1,
+                DataSolicitacao = DateTimeExtension.HorarioBrasilia().Date.AddDays(-5),
+                Itens = new List<AcervoSolicitacaoItemManualDTO>()
+                {
+                    new ()
+                    {
+                        AcervoId = 1,
+                        TipoAtendimento = TipoAtendimento.Presencial,
+                        DataVisita = DateTimeExtension.HorarioBrasilia(),
+                        DataEmprestimo = DateTimeExtension.HorarioBrasilia(),
+                        DataDevolucao = DateTimeExtension.HorarioBrasilia().AddDays(10),
+                        TipoAcervo = TipoAcervo.Bibliografico,
+                    },
+                    new ()
+                    {
+                        AcervoId = 2,
+                        TipoAtendimento = TipoAtendimento.Presencial,
+                        DataVisita = DateTimeExtension.HorarioBrasilia(),
+                        DataEmprestimo = DateTimeExtension.HorarioBrasilia(),
+                        DataDevolucao = DateTimeExtension.HorarioBrasilia().AddDays(10),
+                        TipoAcervo = TipoAcervo.Bibliografico,
+                    },
+                    new ()
+                    {
+                        AcervoId = 3,
+                        TipoAtendimento = TipoAtendimento.Presencial,
+                        DataVisita = DateTimeExtension.HorarioBrasilia(),
+                        DataEmprestimo = DateTimeExtension.HorarioBrasilia(),
+                        DataDevolucao = DateTimeExtension.HorarioBrasilia().AddDays(10),
+                        TipoAcervo = TipoAcervo.Bibliografico,
+                    }
+                }
+            };
+            
+            var retorno = await servicoAcervoSolicitacao.Inserir(acervoSolicitacaoManual);
+            retorno.ShouldBeGreaterThan(0);
+            
+            //Atualizando
+            var alteracaoAcervoSolicitacaoManual = new AcervoSolicitacaoManualDTO()
+            {
+                Id = 1,
+                UsuarioId = 1,
+                DataSolicitacao = DateTimeExtension.HorarioBrasilia().Date.AddDays(-10),
+                Itens = new List<AcervoSolicitacaoItemManualDTO>()
+                {
+                    new ()
+                    {
+                        Id = 1,
+                        AcervoId = 1,
+                        TipoAtendimento = TipoAtendimento.Presencial,
+                        DataVisita = DateTimeExtension.HorarioBrasilia(),
+                        DataEmprestimo = DateTimeExtension.HorarioBrasilia(),
+                        DataDevolucao = DateTimeExtension.HorarioBrasilia().AddDays(-1),
+                        TipoAcervo = TipoAcervo.Bibliografico,
+                    },
+                    new ()
+                    {
+                        Id = 2,
+                        AcervoId = 2,
+                        TipoAtendimento = TipoAtendimento.Presencial,
+                        DataVisita = DateTimeExtension.HorarioBrasilia(),
+                        DataEmprestimo = DateTimeExtension.HorarioBrasilia(),
+                        DataDevolucao = DateTimeExtension.HorarioBrasilia().AddDays(-5),
+                        TipoAcervo = TipoAcervo.Bibliografico,
+                    },
+                    new ()
+                    {
+                        Id = 3,
+                        AcervoId = 3,
+                        TipoAtendimento = TipoAtendimento.Presencial,
+                        DataVisita = DateTimeExtension.HorarioBrasilia(),
+                        DataEmprestimo = DateTimeExtension.HorarioBrasilia(),
+                        DataDevolucao = DateTimeExtension.HorarioBrasilia().AddDays(-2),
+                        TipoAcervo = TipoAcervo.Bibliografico,
+                    }
+                }
+            };
+            
+            // act
+            var excecao = await Should.ThrowAsync<NegocioException>(() => servicoAcervoSolicitacao.Alterar(alteracaoAcervoSolicitacaoManual));
+
+            // assert
+            excecao.Message.Contains(MensagemNegocio.DATA_DA_DEVOLUCAO_MENOR_DATA_DO_EMPRESTIMO).ShouldBeTrue(); 
+        }
+        
+        [Fact(DisplayName = "Acervo Solicitação Manual - Não deve alterar com data de empréstimo e devolução em acervos diferentes de bibliográficos")]
+        public async Task Nao_deve_alterar_solicitacao_manual_com_data_de_emprestimo_devolucao_em_acervos_diferentes_de_bibliograficos()
+        {
+            await InserirDadosBasicosAleatorios();
+
+            await InserirAcervosBibliograficos();
+
+            var servicoAcervoSolicitacao = GetServicoAcervoSolicitacao();
+            
+            var acervoSolicitacaoManual = new AcervoSolicitacaoManualDTO()
+            {
+                UsuarioId = 1,
+                DataSolicitacao = DateTimeExtension.HorarioBrasilia().Date.AddDays(-5),
+                Itens = new List<AcervoSolicitacaoItemManualDTO>()
+                {
+                    new ()
+                    {
+                        AcervoId = 1,
+                        TipoAtendimento = TipoAtendimento.Presencial,
+                        DataVisita = DateTimeExtension.HorarioBrasilia(),
+                        DataEmprestimo = DateTimeExtension.HorarioBrasilia(),
+                        DataDevolucao = DateTimeExtension.HorarioBrasilia().AddDays(10),
+                        TipoAcervo = TipoAcervo.Bibliografico,
+                    },
+                    new ()
+                    {
+                        AcervoId = 2,
+                        TipoAtendimento = TipoAtendimento.Presencial,
+                        DataVisita = DateTimeExtension.HorarioBrasilia(),
+                        DataEmprestimo = DateTimeExtension.HorarioBrasilia(),
+                        DataDevolucao = DateTimeExtension.HorarioBrasilia().AddDays(10),
+                        TipoAcervo = TipoAcervo.Bibliografico,
+                    },
+                    new ()
+                    {
+                        AcervoId = 3,
+                        TipoAtendimento = TipoAtendimento.Presencial,
+                        DataVisita = DateTimeExtension.HorarioBrasilia(),
+                        DataEmprestimo = DateTimeExtension.HorarioBrasilia(),
+                        DataDevolucao = DateTimeExtension.HorarioBrasilia().AddDays(10),
+                        TipoAcervo = TipoAcervo.Bibliografico,
+                    }
+                }
+            };
+            
+            var retorno = await servicoAcervoSolicitacao.Inserir(acervoSolicitacaoManual);
+            retorno.ShouldBeGreaterThan(0);
+            
+            //Atualizando
+            var alteracaoAcervoSolicitacaoManual = new AcervoSolicitacaoManualDTO()
+            {
+                Id = 1,
+                UsuarioId = 1,
+                DataSolicitacao = DateTimeExtension.HorarioBrasilia().Date.AddDays(-10),
+                Itens = new List<AcervoSolicitacaoItemManualDTO>()
+                {
+                    new ()
+                    {
+                        Id = 1,
+                        AcervoId = 1,
+                        TipoAtendimento = TipoAtendimento.Presencial,
+                        DataVisita = DateTimeExtension.HorarioBrasilia(),
+                        DataEmprestimo = DateTimeExtension.HorarioBrasilia(),
+                        DataDevolucao = DateTimeExtension.HorarioBrasilia().AddDays(-1),
+                        TipoAcervo = TipoAcervo.Tridimensional,
+                    },
+                    new ()
+                    {
+                        Id = 2,
+                        AcervoId = 2,
+                        TipoAtendimento = TipoAtendimento.Presencial,
+                        DataVisita = DateTimeExtension.HorarioBrasilia(),
+                        DataEmprestimo = DateTimeExtension.HorarioBrasilia(),
+                        DataDevolucao = DateTimeExtension.HorarioBrasilia().AddDays(-5),
+                        TipoAcervo = TipoAcervo.Tridimensional,
+                    },
+                    new ()
+                    {
+                        Id = 3,
+                        AcervoId = 3,
+                        TipoAtendimento = TipoAtendimento.Presencial,
+                        DataVisita = DateTimeExtension.HorarioBrasilia(),
+                        DataEmprestimo = DateTimeExtension.HorarioBrasilia(),
+                        DataDevolucao = DateTimeExtension.HorarioBrasilia().AddDays(-2),
+                        TipoAcervo = TipoAcervo.Tridimensional,
+                    }
+                }
+            };
+            
+            // act
+            var excecao = await Should.ThrowAsync<NegocioException>(() => servicoAcervoSolicitacao.Alterar(alteracaoAcervoSolicitacaoManual));
+
+            // assert
+            excecao.Message.Contains(MensagemNegocio.DATA_DO_EMPRESTIMO_E_DEVOLUCAO_EXCLUSIVO_PARA_ACERVOS_BIBLIOGRAFICOS).ShouldBeTrue(); 
         }
     }
 }
