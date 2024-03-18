@@ -13,7 +13,7 @@ namespace SME.CDEP.TesteIntegracao
         public Ao_fazer_manutencao_acervo_emprestimo(CollectionFixture collectionFixture) : base(collectionFixture)
         {}
        
-        [Fact(DisplayName = "Acervo empréstimo - Deve inserir empréstimo de acervo")]
+        [Fact(DisplayName = "Acervo empréstimo - Deve inserir empréstimo de acervo - persistência")]
         public async Task Deve_inserir_emprestimo_de_acervo()
         {
             //Arrange
@@ -49,8 +49,8 @@ namespace SME.CDEP.TesteIntegracao
             }
         }
 
-        [Fact(DisplayName = "Acervo Solicitação com empréstimo - Confirmar empréstimo")]
-        public async Task Deve_confirmar_atendimento()
+        [Fact(DisplayName = "Acervo Solicitação com empréstimo - Confirmar atendimento/empréstimo")]
+        public async Task Deve_confirmar_atendimento_emprestimo()
         {
             //Arrange
             await InserirDadosBasicosAleatorios();
@@ -702,7 +702,7 @@ namespace SME.CDEP.TesteIntegracao
             await servicoAcervoEmprestimo.DevolverItemEmprestado(1000).ShouldThrowAsync<NegocioException>();
         }
         
-         [Fact(DisplayName = "Acervo Solicitação com empréstimo - Confirmar empréstimo após inserção manual")]
+        [Fact(DisplayName = "Acervo Solicitação com empréstimo - Confirmar empréstimo após inserção manual")]
         public async Task Deve_permitir_fazer_acervo_manual_com_emprestimo()
         {
             //Arrange
@@ -914,6 +914,58 @@ namespace SME.CDEP.TesteIntegracao
             acervoEmprestimos.Any(a=> a.DataEmprestimo.Date == DateTimeExtension.HorarioBrasilia().Date && a.Situacao.EstaEmprestado()).ShouldBeTrue();
             acervoEmprestimos.Any(a=> a.DataDevolucao.Date == DateTimeExtension.HorarioBrasilia().AddDays(18).Date && a.Situacao.EstaEmprestado()).ShouldBeTrue();
         }
+        
+        [Fact(DisplayName = "Acervo Solicitação empréstimo - Não deve permitir confirmar atendimento com data de empréstimo e devolução em data de visita futura")]
+        public async Task Nao_deve_permitir_confirmar_atendimento_com_data_de_emprestimo_e_devolucao_em_visita_futura()
+        {
+            //Arrange
+            await InserirDadosBasicosAleatorios();
+
+            await InserirAcervoTridimensional();
+
+            await InserirAcervosSolicitacoes();
+
+            var atendimentoPresencial = TipoAtendimento.Presencial;
+            var dataVisita = DateTimeExtension.HorarioBrasilia().Date;
+            await InserirAcervoSolicitacaoItem(atendimentoPresencial, dataVisita,1,2);
+            await InserirAcervoSolicitacaoItem(atendimentoPresencial, dataVisita,2,4);
+            await InserirAcervoSolicitacaoItem(atendimentoPresencial, dataVisita,3,3);
+            await InserirAcervoSolicitacaoItem(atendimentoPresencial, dataVisita,4,1);
+            
+            var itensDaSolicitacao = ObterTodos<AcervoSolicitacaoItem>().Where(w=> w.AcervoSolicitacaoId == 3);
+            
+            foreach (var item in itensDaSolicitacao)
+                await InserirAcervoEmprestimo(item.Id, dataVisita);
+
+            //Act
+            var servicoAcervoSolicitacao = GetServicoAcervoSolicitacao();
+            
+            await servicoAcervoSolicitacao.ConfirmarAtendimento(new AcervoSolicitacaoConfirmarDTO()
+            {
+                Id = 1,
+                Itens = new List<AcervoSolicitacaoItemConfirmarDTO>()
+                {
+                    new()
+                    {
+                        Id = 1,
+                        DataVisita = DateTimeExtension.HorarioBrasilia().AddDays(1).Date,
+                        TipoAtendimento = TipoAtendimento.Presencial,
+                        DataEmprestimo = DateTimeExtension.HorarioBrasilia().AddDays(2).Date,
+                        DataDevolucao = DateTimeExtension.HorarioBrasilia().AddDays(10).Date,
+                        TipoAcervo = TipoAcervo.Fotografico
+                    },
+                    new()
+                    {
+                        Id = 2,
+                        DataVisita = DateTimeExtension.HorarioBrasilia().AddDays(4).Date,
+                        TipoAtendimento = TipoAtendimento.Presencial,
+                        DataEmprestimo = DateTimeExtension.HorarioBrasilia().AddDays(3).Date,
+                        DataDevolucao = DateTimeExtension.HorarioBrasilia().AddDays(11).Date,
+                        TipoAcervo = TipoAcervo.Fotografico
+                    }
+                }
+            }).ShouldThrowAsync<NegocioException>();
+        }
 
         private async Task InserirAcervoSolicitacaoItem(TipoAtendimento atendimentoPresencial, DateTime dataVisita, long acervoSolicitacaoId, int qtdeItens, SituacaoSolicitacaoItem situacaoSolicitacaoItem = SituacaoSolicitacaoItem.AGUARDANDO_ATENDIMENTO)
         {
@@ -924,19 +976,6 @@ namespace SME.CDEP.TesteIntegracao
         {
             var inserindoSolicitacoes = AcervoSolicitacaoMock.Instance.Gerar(situacaoSolicitacao).Generate(4);
             await InserirVariosNaBase(inserindoSolicitacoes);
-        }
-
-        private async Task InserirAcervosBibliograficos()
-        {
-            var acervoId = 1;
-            var inserindoAcervoBibliografico = AcervoBibliograficoMock.Instance.Gerar().Generate(10);
-            foreach (var acervoBibliografico in inserindoAcervoBibliografico)
-            {
-                await InserirNaBase(acervoBibliografico.Acervo);
-                acervoBibliografico.AcervoId = acervoId;
-                await InserirNaBase(acervoBibliografico);
-                acervoId++;
-            }
         }
 
         private async Task InserirAcervoEmprestimo(long id, DateTime dataVisita)
