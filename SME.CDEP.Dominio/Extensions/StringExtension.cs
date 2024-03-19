@@ -231,5 +231,13 @@ namespace SME.CDEP.Dominio.Extensions
 
             return ehSeculoValido || ehDecadaValida || ehAnoValido;
         }
+        
+        public static string RemoverMascaraCPF(this string valor)
+        {
+            if (valor.NaoEstaPreenchido())
+                return valor;
+                
+            return valor.Replace(".","").Replace("-","");
+        }
     }
 }
