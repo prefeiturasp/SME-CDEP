@@ -10,6 +10,31 @@ namespace SME.CDEP.Dominio.Extensions
             return valor == (long)TipoAcervo.DocumentacaoHistorica; 
         }
         
+        public static bool EhAcervoTridimensional(this long valor)
+        {
+            return valor == (long)TipoAcervo.Tridimensional; 
+        }
+        
+        public static bool EhAcervoBibliografico(this long valor)
+        {
+            return valor == (long)TipoAcervo.Bibliografico; 
+        }
+        
+        public static bool EhAcervoArteGrafica(this long valor)
+        {
+            return valor == (long)TipoAcervo.ArtesGraficas; 
+        }
+        
+        public static bool EhAcervoFotografico(this long valor)
+        {
+            return valor == (long)TipoAcervo.Fotografico; 
+        }
+        
+        public static bool EhAcervoAudiovisual(this long valor)
+        {
+            return valor == (long)TipoAcervo.Audiovisual; 
+        }
+        
         public static bool NaoEhAcervoDocumental(this long valor)
         {
             return !EhAcervoDocumental(valor); 
