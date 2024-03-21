@@ -45,47 +45,89 @@ namespace SME.CDEP.Infra.Dados.Repositorios
             return conexao.Obter().QueryAsync<Evento>(query,new { data });
         }
 
-        public Task<IEnumerable<Evento>> ObterEventosTagPorMesAno(int mes, int ano)
+        public Task<IEnumerable<Evento>> ObterEventosTagPorMesAno(int mes, int ano, long[] tiposAcervosPermitidos)
         {
             var dataInicial = new DateTime(ano, mes, 1);
             var dataFinal = dataInicial.AddMonths(1).AddDays(-1);
+            var eventoSuspensaoFeriado = new int[] { (int)TipoEvento.FERIADO, (int)TipoEvento.SUSPENSAO };
+            var eventoTipoVisita = (int)TipoEvento.VISITA;
             
-            var query = @"select id,
-                                 data,
-                                 tipo,
-                                 descricao,
-                                 acervo_solicitacao_item_id,
-                                 justificativa                                 
-                          from evento 
-                          where data::date between @dataInicial::date and @dataFinal::date 
-                            and not excluido ";
+            var query = @"
+            ;with eventosFixosMoveis as 
+            (
+            	select id,
+            	         data,
+            	         tipo,
+            	         descricao,
+            	         acervo_solicitacao_item_id,
+            	         justificativa                                 
+            	  from evento 
+            	  where data::date between @dataInicial::date and @dataFinal::date 
+            	    and not excluido
+            	    and tipo = ANY(@eventoSuspensaoFeriado)
+            ),
+            eventosVisita as 
+            (
+            select distinct e.id,
+                     e.data,
+                     e.tipo,
+                     e.descricao,
+                     e.acervo_solicitacao_item_id,
+                     e.justificativa
+              from evento e 
+                join acervo_solicitacao_item asi on e.acervo_solicitacao_item_id = asi.id and not asi.excluido 
+                join acervo a on asi.acervo_id = a.id and not a.excluido and a.tipo = ANY(@tiposAcervosPermitidos) 
+              where e.data::date between @dataInicial::date and @dataFinal::date 
+                and not e.excluido 
+                and e.tipo = @eventoTipoVisita
+             )
+             select * from eventosFixosMoveis 
+             union all
+             select * from eventosVisita";
             
-            return conexao.Obter().QueryAsync<Evento>(query,new { dataInicial, dataFinal });
+            return conexao.Obter().QueryAsync<Evento>(query,new { dataInicial, dataFinal, tiposAcervosPermitidos, eventoSuspensaoFeriado, eventoTipoVisita });
         }
         
-        public Task<IEnumerable<EventoDetalhe>> ObterDetalhesDoDiaPorData(DateTime data)
+        public Task<IEnumerable<EventoDetalhe>> ObterDetalhesDoDiaPorData(DateTime data, long[] tiposAcervosPermitidos)
         {
-            var query = @"select e.id,
-                                 e.data,
-                                 e.tipo,
-                                 e.descricao,
-                                 aso.id as acervoSolicitacaoId,
-                                 e.justificativa,
-                                 a.titulo,
-                                 a.codigo, 
-                                 a.codigo_novo as codigoNovo,
-                                 u.nome as solicitante,
-                                 asi.situacao as SituacaoSolicitacaoItem
-                          from evento e
-                            left join acervo_solicitacao_item asi on e.acervo_solicitacao_item_id = asi.id and not asi.excluido 
-                            left join acervo a on asi.acervo_id = a.id and not a.excluido 
-                            left join acervo_solicitacao aso on aso.id = asi.acervo_solicitacao_id  and not aso.excluido  
-                            left join usuario u on u.id = aso.usuario_id  and not u.excluido                          
-                          where e.data::date = @data::date
-                            and not e.excluido 
-                          order by e.data";
+            var query = @"
+            WITH RankedEvents AS (
+              SELECT e.id,
+                     e.data,
+                     e.tipo,
+                     e.descricao,
+                     aso.id as acervoSolicitacaoId,
+                     e.justificativa,
+                     a.titulo,
+                     a.codigo, 
+                     a.codigo_novo as codigoNovo,
+                     u.nome as solicitante,
+                     asi.situacao as SituacaoSolicitacaoItem,
+                     ROW_NUMBER() OVER (PARTITION BY e.id ORDER BY e.data) AS RowNumber
+                FROM evento e
+                     LEFT JOIN acervo_solicitacao_item asi ON e.acervo_solicitacao_item_id = asi.id AND NOT asi.excluido 
+                     LEFT JOIN acervo a ON asi.acervo_id = a.id AND NOT a.excluido AND a.tipo = ANY(@tiposAcervosPermitidos) 
+                     LEFT JOIN acervo_solicitacao aso ON aso.id = asi.acervo_solicitacao_id  AND NOT aso.excluido  
+                     LEFT JOIN usuario u ON u.id = aso.usuario_id  AND NOT u.excluido                          
+               WHERE e.data::date = @data::date                            
+                 AND NOT e.excluido 
+            )
+            SELECT id,
+                   data,
+                   tipo,
+                   descricao,
+                   acervoSolicitacaoId,
+                   justificativa,
+                   titulo,
+                   codigo, 
+                   codigoNovo,
+                   solicitante,
+                   SituacaoSolicitacaoItem
+              FROM RankedEvents
+             WHERE RowNumber = 1
+             ORDER BY data ";
             
-            return conexao.Obter().QueryAsync<EventoDetalhe>(query,new { data });
+            return conexao.Obter().QueryAsync<EventoDetalhe>(query,new { data, tiposAcervosPermitidos });
         }
 
         public Task<IEnumerable<DateTime>> ObterEventosDeFeriadoESuspensaoPorDatas(DateTime[] datasDasVisitas)

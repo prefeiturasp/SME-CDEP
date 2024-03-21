@@ -18,15 +18,18 @@ namespace SME.CDEP.Aplicacao.Servicos
         private readonly IRepositorioAcervoSolicitacaoItem repositorioAcervoSolicitacaoItem;
         private readonly IMapper mapper;
         private readonly IServicoMensageria servicoMensageria;
+        private readonly IServicoAcervo servicoAcervo;
         
         public ServicoEvento(IRepositorioEvento repositorioEvento,IMapper mapper,IRepositorioEventoFixo repositorioEventoFixo, 
-            IRepositorioAcervoSolicitacaoItem repositorioAcervoSolicitacaoItem,IServicoMensageria servicoMensageria) 
+            IRepositorioAcervoSolicitacaoItem repositorioAcervoSolicitacaoItem,IServicoMensageria servicoMensageria,
+            IServicoAcervo servicoAcervo) 
         {
             this.repositorioEvento = repositorioEvento ?? throw new ArgumentNullException(nameof(repositorioEvento));
             this.mapper = mapper ?? throw new ArgumentNullException(nameof(mapper));
             this.repositorioEventoFixo = repositorioEventoFixo ?? throw new ArgumentNullException(nameof(repositorioEventoFixo));
             this.repositorioAcervoSolicitacaoItem = repositorioAcervoSolicitacaoItem ?? throw new ArgumentNullException(nameof(repositorioAcervoSolicitacaoItem));
             this.servicoMensageria = servicoMensageria ?? throw new ArgumentNullException(nameof(servicoMensageria));
+            this.servicoAcervo = servicoAcervo ?? throw new ArgumentNullException(nameof(servicoAcervo));
         }
 
         public async Task<long> Inserir(EventoCadastroDTO eventoCadastroDto)
@@ -148,7 +151,9 @@ namespace SME.CDEP.Aplicacao.Servicos
             var primeiroDiaMes = new DateTime(ano, mes, 1);
             var ultimoDiaMes = primeiroDiaMes.AddMonths(1).AddDays(-1);
 
-            var eventosTag = await repositorioEvento.ObterEventosTagPorMesAno(mes, ano);
+            var tiposAcervosPermitidos = servicoAcervo.ObterTiposAcervosPermitidosDoPerfilLogado();
+            
+            var eventosTag = await repositorioEvento.ObterEventosTagPorMesAno(mes, ano,tiposAcervosPermitidos);
             
             var percorrerSemanasAte = ultimoDiaMes.ObterSabado();
             
@@ -208,7 +213,8 @@ namespace SME.CDEP.Aplicacao.Servicos
 
         public async Task<IEnumerable<EventoDetalheDTO>> ObterDetalhesDoDiaPorDiaMes(DiaMesDTO diaMesDto)
         {
-            return mapper.Map<IEnumerable<EventoDetalheDTO>>(await repositorioEvento.ObterDetalhesDoDiaPorData(diaMesDto.Data));
+            var tiposAcervosPermitidos = servicoAcervo.ObterTiposAcervosPermitidosDoPerfilLogado();
+            return mapper.Map<IEnumerable<EventoDetalheDTO>>(await repositorioEvento.ObterDetalhesDoDiaPorData(diaMesDto.Data,tiposAcervosPermitidos));
         }
 
         public async Task InserirEventoVisita(DateTime dataVisita, long atendimentoItemId)
