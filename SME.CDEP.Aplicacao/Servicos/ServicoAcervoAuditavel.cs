@@ -546,7 +546,7 @@ namespace SME.CDEP.Aplicacao.Servicos
         {
             var perfilLogado = new Guid(contextoAplicacao.PerfilUsuario);
             
-            var tiposAcervosDisponiveis = ObterTiposDeAtendimentos().Select(s => s.Id);
+            var tiposAcervosDisponiveis = ObterTodosTipos().Select(s => s.Id);
             
             switch (true)
             {
@@ -571,7 +571,7 @@ namespace SME.CDEP.Aplicacao.Servicos
             }
         }
 
-        public IEnumerable<IdNomeDTO> ObterTiposDeAtendimentos()
+        public IEnumerable<IdNomeDTO> ObterTodosTipos()
         {
             return Enum.GetValues(typeof(TipoAcervo))
                 .Cast<TipoAcervo>()

@@ -2,7 +2,7 @@
 
 namespace SME.CDEP.Aplicacao.Servicos.Interface
 {
-    public interface IServicoAcervoTipos
+    public interface IServicoAcervoSolicitacaoTipo
     {
         IEnumerable<IdNomeDTO> ObterTiposDeAtendimentos();
     }
