@@ -74,14 +74,16 @@ namespace SME.CDEP.Infra.Dados.Repositorios
                                  a.titulo,
                                  a.codigo, 
                                  a.codigo_novo as codigoNovo,
-                                 u.nome as solicitante
+                                 u.nome as solicitante,
+                                 asi.situacao as SituacaoSolicitacaoItem
                           from evento e
                             left join acervo_solicitacao_item asi on e.acervo_solicitacao_item_id = asi.id and not asi.excluido 
                             left join acervo a on asi.acervo_id = a.id and not a.excluido 
                             left join acervo_solicitacao aso on aso.id = asi.acervo_solicitacao_id  and not aso.excluido  
                             left join usuario u on u.id = aso.usuario_id  and not u.excluido                          
                           where e.data::date = @data::date
-                            and not e.excluido ";
+                            and not e.excluido 
+                          order by e.data";
             
             return conexao.Obter().QueryAsync<EventoDetalhe>(query,new { data });
         }
