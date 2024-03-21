@@ -134,7 +134,7 @@ namespace SME.CDEP.Infra.Dados.Repositorios
             where aca.acervo_id in (select acervo_id from acervo_solicitacao_item a join acervo b on a.acervo_id = b.id where acervo_solicitacao_id = @acervoSolicitacaoId and b.tipo = ANY(@tiposAcervosPermitidos))
             and not ca.excluido; ";
             
-            var retorno = await conexao.Obter().QueryMultipleAsync(query, new { acervoSolicitacaoId });
+            var retorno = await conexao.Obter().QueryMultipleAsync(query, new { acervoSolicitacaoId, tiposAcervosPermitidos });
 
             if (retorno.EhNulo())
                 return default;
