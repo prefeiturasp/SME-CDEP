@@ -80,7 +80,7 @@ namespace SME.CDEP.Infra.Dados.Repositorios
             return conexao.Obter().ExecuteAsync(query, parametros);
         }
 
-        public async Task<AcervoSolicitacaoDetalhe> ObterDetalhesPorId(long acervoSolicitacaoId)
+        public async Task<AcervoSolicitacaoDetalhe> ObterDetalhesPorIdTiposPermitidos(long acervoSolicitacaoId, long[] tiposAcervosPermitidos)
         {
 	        var query = @"
            SELECT 
@@ -112,9 +112,10 @@ namespace SME.CDEP.Infra.Dados.Repositorios
 		   WHERE not asi.excluido
 		     and not a.excluido
 		     and asi.acervo_solicitacao_id = @acervoSolicitacaoId
+		     and a.tipo = ANY(tiposAcervosPermitidos)
 		   ORDER BY asi.id, ae.id desc; ";
             
-	        var queryMultiple = await conexao.Obter().QueryMultipleAsync(query, new { acervoSolicitacaoId });
+	        var queryMultiple = await conexao.Obter().QueryMultipleAsync(query, new { acervoSolicitacaoId, tiposAcervosPermitidos });
 
 	        var acervoSolicitacao = await queryMultiple.ReadFirstOrDefaultAsync<AcervoSolicitacaoDetalhe>();
 
