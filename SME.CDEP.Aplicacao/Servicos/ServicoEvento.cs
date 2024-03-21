@@ -208,7 +208,7 @@ namespace SME.CDEP.Aplicacao.Servicos
             if (eventosTag.NaoPossuiElementos())
                 return default;
             
-            return mapper.Map<IEnumerable<EventoTagDTO>>(eventosTag.Where(w=> w.Data == data));
+            return mapper.Map<IEnumerable<EventoTagDTO>>(eventosTag.Where(w=> w.Data.Date == data.Date));
         }
 
         public async Task<IEnumerable<EventoDetalheDTO>> ObterDetalhesDoDiaPorDiaMes(DiaMesDTO diaMesDto)
