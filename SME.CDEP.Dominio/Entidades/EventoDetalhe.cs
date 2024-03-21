@@ -15,6 +15,7 @@ namespace SME.CDEP.Dominio.Entidades
         public string Codigo { get; set; }
         public string CodigoNovo { get; set; }
         public string Solicitante { get; set; }
+        public SituacaoSolicitacaoItem SituacaoSolicitacaoItem { get; set; }
 
         public string CodigoTombo
         {

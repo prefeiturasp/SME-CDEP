@@ -26,7 +26,7 @@ namespace SME.CDEP.Dominio.Entidades
                 if (!DataVisita.HasValue)
                     return "-";
 
-                return DataVisita.Value.ToString("dd/MM/yyyy");
+                return DataVisita.Value.ToString("dd/MM HH:mm");
             }
         }
         

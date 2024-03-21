@@ -16,6 +16,8 @@ namespace SME.CDEP.TesteIntegracao
         [Fact(DisplayName = "Acervo Solicitação - Obter por Id")]
         public async Task Obter_por_id()
         {
+            CriarClaimUsuario(Dominio.Constantes.Constantes.PERFIL_ADMIN_GERAL_GUID);
+            
             await InserirDadosBasicosAleatorios();
 
             await InserirAcervoTridimensional();
@@ -129,6 +131,8 @@ namespace SME.CDEP.TesteIntegracao
         [Fact(DisplayName = "Acervo Solicitação - Remover")]
         public async Task Ao_remover()
         {
+            CriarClaimUsuario(Dominio.Constantes.Constantes.PERFIL_ADMIN_GERAL_GUID);
+            
             await InserirDadosBasicosAleatorios();
 
             await InserirAcervoTridimensional();
