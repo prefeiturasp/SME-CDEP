@@ -205,12 +205,16 @@ namespace SME.CDEP.Aplicacao.Mapeamentos
             CreateMap<AcervoSolicitacaoItemResumido,MinhaSolicitacaoDTO>()
                 .ForMember(dest => dest.Situacao, opt => opt.MapFrom(o => o.Situacao.Descricao()))
                 .ForMember(dest => dest.TipoAcervo, opt => opt.MapFrom(o => o.TipoAcervo.Descricao()))
+                .ForMember(dest => dest.DataCriacao, opt => opt.MapFrom(o => o.DataCriacao.ToString("dd/MM HH:mm")))
+                .ForMember(dest => dest.DataVisita, opt => opt.MapFrom(o => o.DataVisita.HasValue ? o.DataVisita.Value.ToString("dd/MM HH:mm") : string.Empty))
                 .ReverseMap();
             
             CreateMap<AcervoSolicitacaoItemDetalhe,SolicitacaoDTO>()
                 .ForMember(dest => dest.TipoAcervo, opt => opt.MapFrom(o => o.TipoAcervo.Descricao()))
                 .ForMember(dest => dest.Situacao, opt => opt.MapFrom(o => o.Situacao.Descricao()))
                 .ForMember(dest => dest.SituacaoEmprestimo, opt => opt.MapFrom(o => o.SituacaoEmprestimo.HasValue ? o.SituacaoEmprestimo.Descricao() : string.Empty))
+                .ForMember(dest => dest.DataCriacao, opt => opt.MapFrom(o => o.DataCriacao.ToString("dd/MM HH:mm")))
+                .ForMember(dest => dest.DataVisita, opt => opt.MapFrom(o => o.DataVisita.HasValue ? o.DataVisita.Value.ToString("dd/MM HH:mm") : string.Empty))
                 .ReverseMap();
             
             CreateMap<UsuarioExternoDTO,Usuario>()
@@ -221,6 +225,7 @@ namespace SME.CDEP.Aplicacao.Mapeamentos
             CreateMap<AcervoSolicitacaoDetalhe,AcervoSolicitacaoDetalheDTO>()
                 .ForMember(dest => dest.Situacao, opt => opt.MapFrom(o => o.Situacao.Descricao()))
                 .ForMember(dest => dest.SituacaoId, opt => opt.MapFrom(o => o.Situacao))
+                .ForMember(dest => dest.DataSolicitacao, opt => opt.MapFrom(o => o.DataSolicitacao.ToString("dd/MM HH:mm")))
                 .ReverseMap();
             
             CreateMap<AcervoSolicitacaoItemDetalheResumido,AcervoSolicitacaoItemDetalheResumidoDTO>()
@@ -231,6 +236,9 @@ namespace SME.CDEP.Aplicacao.Mapeamentos
                 .ForMember(dest => dest.TemControleDisponibilidade, opt => opt.MapFrom(o => o.TipoAcervo.EhAcervoBibliografico()))
                 .ForMember(dest => dest.EstaDisponivel, opt => opt.MapFrom(o => true))
                 .ForMember(dest => dest.SituacaoDisponibilidade, opt => opt.MapFrom(o => Constantes.ACERVO_DISPONIVEL))
+                .ForMember(dest => dest.DataVisitaFormatada, opt => opt.MapFrom(o => o.DataVisita.HasValue ? o.DataVisita.Value.ToString("dd/MM HH:mm") : string.Empty))
+                .ForMember(dest => dest.DataEmprestimoFormatada, opt => opt.MapFrom(o => o.DataEmprestimo.HasValue ? o.DataEmprestimo.Value.ToString("dd/MM HH:mm") : string.Empty))
+                .ForMember(dest => dest.DataDevolucaoFormatada, opt => opt.MapFrom(o => o.DataDevolucao.HasValue ? o.DataDevolucao.Value.ToString("dd/MM HH:mm") : string.Empty))
                 .ReverseMap();
             
             CreateMap<Acervo,IdNomeCodigoTipoDTO>()

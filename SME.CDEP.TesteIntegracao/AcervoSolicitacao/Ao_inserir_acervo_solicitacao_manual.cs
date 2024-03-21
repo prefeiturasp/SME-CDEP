@@ -267,8 +267,8 @@ namespace SME.CDEP.TesteIntegracao
             eventos.Any(a=> a.Data.Date == DateTimeExtension.HorarioBrasilia().AddDays(4).Date && a.Tipo.EhVisita()).ShouldBeTrue();
         }
         
-        [Fact(DisplayName = "Acervo Solicitação - Não deve fazer solicitação de acervo manual com data de visita passada em acervo presencial")]
-        public async Task Nao_deve_fazer_solicitacao_manual_com_data_de_visita_passada_em_acervo_presencial()
+        [Fact(DisplayName = "Acervo Solicitação - Deve fazer solicitação de acervo manual com data de visita passada em acervo presencial")]
+        public async Task Deve_fazer_solicitacao_manual_com_data_de_visita_passada_em_acervo_presencial()
         {
             await InserirDadosBasicosAleatorios();
 
@@ -303,7 +303,48 @@ namespace SME.CDEP.TesteIntegracao
                 }
             };
             
-            await servicoAcervoSolicitacao.Inserir(acervoSolicitacaoManual).ShouldThrowAsync<NegocioException>();
+            var retorno = await servicoAcervoSolicitacao.Inserir(acervoSolicitacaoManual);
+             retorno.ShouldBeGreaterThan(0);
+
+            var solicitacaoCadastrada = ObterTodos<AcervoSolicitacao>().LastOrDefault();
+            solicitacaoCadastrada.UsuarioId.ShouldBe(acervoSolicitacaoManual.UsuarioId);
+            solicitacaoCadastrada.DataSolicitacao.ShouldBe(acervoSolicitacaoManual.DataSolicitacao);
+            solicitacaoCadastrada.Origem.ShouldBe(Origem.Manual);
+            solicitacaoCadastrada.Situacao.ShouldBe(SituacaoSolicitacao.AGUARDANDO_VISITA);
+            solicitacaoCadastrada.Excluido.ShouldBeFalse();
+            
+            var itensCadastrados = ObterTodos<AcervoSolicitacaoItem>();
+
+            var primeiroAcervoPresencial = itensCadastrados.FirstOrDefault(f => f.AcervoId == 1);
+            primeiroAcervoPresencial.Situacao.ShouldBe(SituacaoSolicitacaoItem.AGUARDANDO_VISITA);
+            primeiroAcervoPresencial.TipoAtendimento.ShouldBe(TipoAtendimento.Presencial);
+            primeiroAcervoPresencial.DataVisita.Value.Date.ShouldBe(DateTimeExtension.HorarioBrasilia().AddDays(-8).Date);
+            primeiroAcervoPresencial.Excluido.ShouldBeFalse();
+            primeiroAcervoPresencial.ResponsavelId.ShouldNotBeNull();
+            
+            var segundoAcervoPresencial = itensCadastrados.FirstOrDefault(f => f.AcervoId == 2);
+            segundoAcervoPresencial.Situacao.ShouldBe(SituacaoSolicitacaoItem.AGUARDANDO_VISITA);
+            segundoAcervoPresencial.TipoAtendimento.ShouldBe(TipoAtendimento.Presencial);
+            segundoAcervoPresencial.DataVisita.Value.Date.ShouldBe(DateTimeExtension.HorarioBrasilia().AddDays(4).Date);
+            segundoAcervoPresencial.Excluido.ShouldBeFalse();
+            segundoAcervoPresencial.ResponsavelId.ShouldNotBeNull();
+            
+            var terceiroAcervoPresencial = itensCadastrados.FirstOrDefault(f => f.AcervoId == 3);
+            terceiroAcervoPresencial.Situacao.ShouldBe(SituacaoSolicitacaoItem.AGUARDANDO_VISITA);
+            terceiroAcervoPresencial.TipoAtendimento.ShouldBe(TipoAtendimento.Presencial);
+            terceiroAcervoPresencial.DataVisita.Value.Date.ShouldBe(DateTimeExtension.HorarioBrasilia().AddDays(40).Date);
+            terceiroAcervoPresencial.Excluido.ShouldBeFalse();
+            terceiroAcervoPresencial.ResponsavelId.ShouldNotBeNull();
+            
+            var eventos = ObterTodos<Evento>();
+            eventos.Count().ShouldBe(3);
+            eventos.Count(a=> a.Data.Date == DateTimeExtension.HorarioBrasilia().AddDays(40).Date && a.Tipo.EhVisita()).ShouldBe(1);
+            
+            eventos.Count(a=> a.Data.Date == DateTimeExtension.HorarioBrasilia().AddDays(-8).Date).ShouldBe(1);
+            eventos.Any(a=> a.Data.Date == DateTimeExtension.HorarioBrasilia().AddDays(-8).Date && a.Tipo.EhVisita()).ShouldBeTrue();
+            
+            eventos.Count(a=> a.Data.Date == DateTimeExtension.HorarioBrasilia().AddDays(4).Date).ShouldBe(1);
+            eventos.Any(a=> a.Data.Date == DateTimeExtension.HorarioBrasilia().AddDays(4).Date && a.Tipo.EhVisita()).ShouldBeTrue();
         }
         
         [Fact(DisplayName = "Acervo Solicitação - Não deve fazer solicitação de acervo manual com data de visita em tipo de atendimento e-mail")]
