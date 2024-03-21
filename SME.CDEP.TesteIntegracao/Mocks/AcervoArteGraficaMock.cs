@@ -10,7 +10,7 @@ public class AcervoArteGraficaMock : AcervoMock
     private static AcervoArteGraficaMock _instance;
     public static AcervoArteGraficaMock Instance => _instance ??= new();
     
-    public Faker<AcervoArteGrafica> GerarAcervoArteGrafica()
+    public Faker<AcervoArteGrafica> Gerar()
     {
         var random = new Random();
         var faker = new Faker<AcervoArteGrafica>("pt_BR");
