@@ -37,7 +37,7 @@ namespace SME.CDEP.Infra.Dados.Repositorios
 
         public async Task<IEnumerable<AcervoSolicitacaoItemDetalhe>> ObterSolicitacoesPorFiltro(long? acervoSolicitacaoId, TipoAcervo? tipoAcervo, DateTime? dataSolicitacaoInicio,
             DateTime? dataSolicitacaoFim, string? responsavel, SituacaoSolicitacaoItem? situacaoItem, DateTime? dataVisitaInicio, DateTime? dataVisitaFim, string? solicitanteRf,
-            SituacaoEmprestimo? situacaoEmprestimo)
+            SituacaoEmprestimo? situacaoEmprestimo, long[] tiposAcervosPermitidos)
         {
             var query = new StringBuilder();
             query.AppendLine(@"
@@ -68,7 +68,8 @@ namespace SME.CDEP.Infra.Dados.Repositorios
             where not asi.excluido
               and not aso.excluido
               and not a.excluido 
-              and not u.excluido ");
+              and not u.excluido 
+              and a.tipo = ANY(@tiposAcervosPermitidos) ");
 
             if (acervoSolicitacaoId.HasValue)
                 query.AppendLine(" and aso.id = @acervoSolicitacaoId ");
@@ -97,7 +98,8 @@ namespace SME.CDEP.Infra.Dados.Repositorios
             query.AppendLine(" order by asi.id desc ");
             
             return await conexao.Obter().QueryAsync<AcervoSolicitacaoItemDetalhe>(query.ToString(), 
-                new { acervoSolicitacaoId, tipoAcervo, situacaoItem, dataSolicitacaoInicio, dataSolicitacaoFim, dataVisitaInicio, dataVisitaFim, responsavel, solicitanteRf, situacaoEmprestimo});
+                new { acervoSolicitacaoId, tipoAcervo, situacaoItem, dataSolicitacaoInicio, dataSolicitacaoFim, 
+                    dataVisitaInicio, dataVisitaFim, responsavel, solicitanteRf, situacaoEmprestimo, tiposAcervosPermitidos});
         }
 
         public Task<IEnumerable<AcervoSolicitacaoItem>> ObterItensEmSituacaoAguardandoAtendimentoOuVisitaOuFinalizadoManualmentePorSolicitacaoId(long acervoSolicitacaoId)

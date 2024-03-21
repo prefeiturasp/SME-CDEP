@@ -338,6 +338,11 @@ namespace SME.CDEP.Aplicacao.Servicos
         {
             return mapper.Map<UsuarioDTO>(await ObterUsuarioLogadoContexto());
         }
+        
+        public Guid ObterPerfilUsuarioLogado()
+        {
+            return new Guid(contextoAplicacao.PerfilUsuario);
+        }
 
         public async Task<bool> AlterarTipoUsuario(string login, TipoUsuarioExternoDTO tipoUsuario)
         {

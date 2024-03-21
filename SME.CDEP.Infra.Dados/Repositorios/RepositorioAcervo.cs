@@ -105,7 +105,7 @@ namespace SME.CDEP.Infra.Dados.Repositorios
             return await conexao.Obter().QueryAsync<ArquivoCodigoNomeAcervoId>(query, new { acervosIds });
         }
 
-        public async Task<IEnumerable<AcervoSolicitacaoItemCompleto>> ObterAcervosSolicitacoesItensCompletoPorId(long acervoSolicitacaoId)
+        public async Task<IEnumerable<AcervoSolicitacaoItemCompleto>> ObterAcervosSolicitacoesItensCompletoPorId(long acervoSolicitacaoId, long[] tiposAcervosPermitidos)
         {
             var query = @"
             select 
@@ -123,17 +123,18 @@ namespace SME.CDEP.Infra.Dados.Repositorios
             where aso.id = @acervoSolicitacaoId 
                 and not a.excluido
                 and not aso.excluido
-                and not asi.excluido;
+                and not asi.excluido
+                and a.tipo = ANY(@tiposAcervosPermitidos);
                
             select 
               ca.nome,
               aca.acervo_id as AcervoId
             from acervo_credito_autor aca 
               join credito_autor ca on ca.id = aca.credito_autor_id
-            where aca.acervo_id in (select acervo_id from acervo_solicitacao_item where acervo_solicitacao_id = @acervoSolicitacaoId)
+            where aca.acervo_id in (select acervo_id from acervo_solicitacao_item a join acervo b on a.acervo_id = b.id where acervo_solicitacao_id = @acervoSolicitacaoId and b.tipo = ANY(@tiposAcervosPermitidos))
             and not ca.excluido; ";
             
-            var retorno = await conexao.Obter().QueryMultipleAsync(query, new { acervoSolicitacaoId });
+            var retorno = await conexao.Obter().QueryMultipleAsync(query, new { acervoSolicitacaoId, tiposAcervosPermitidos });
 
             if (retorno.EhNulo())
                 return default;
@@ -230,7 +231,7 @@ namespace SME.CDEP.Infra.Dados.Repositorios
             return string.Empty;
         }
 
-        public Task<Acervo> PesquisarAcervoPorCodigoTombo(string codigoTombo)
+        public Task<Acervo> PesquisarAcervoPorCodigoTombo(string codigoTombo, long[] tiposAcervosPermitidos)
         {
             var query = @"
             select id, 
@@ -238,10 +239,11 @@ namespace SME.CDEP.Infra.Dados.Repositorios
                    tipo,
                    coalesce(codigo, codigo_novo) as codigo
             from acervo
-            where (lower(codigo) = @codigo or lower(codigo_novo) = @codigo) 
+            where (lower(codigo) = @codigo or lower(codigo_novo) = @codigo)
+              and tipo = ANY(@tiposAcervosPermitidos)
               and not excluido ";
             
-            return conexao.Obter().QueryFirstOrDefaultAsync<Acervo>(query,new { codigo = codigoTombo.ToLower() });
+            return conexao.Obter().QueryFirstOrDefaultAsync<Acervo>(query,new { codigo = codigoTombo.ToLower(), tiposAcervosPermitidos });
         }
     }
 }
