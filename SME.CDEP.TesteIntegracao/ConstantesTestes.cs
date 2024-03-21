@@ -77,6 +77,10 @@ public class ConstantesTestes
     public const string USUARIO_LOGADO_CHAVE = "UsuarioLogado";
     public const string USUARIO_CLAIMS_CHAVE = "Claims";
     public const string USUARIO_CLAIM_TIPO_RF = "rf";
+    public const string PERFIL_USUARIO = "PerfilUsuario";
+    public const string NUMERO_PAGINA = "NumeroPagina";
+    public const string NUMERO_REGISTROS = "NumeroRegistros";
+    public const string ORDENACAO = "Ordenacao";
 
     public const string LOGIN_123456789 = "123456789";
     public const string NOME_123456789 = "Nome 123456789";

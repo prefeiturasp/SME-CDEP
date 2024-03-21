@@ -100,6 +100,11 @@ namespace SME.CDEP.Infra.Dominio.Enumerados
             return dataAvaliada.Date > HorarioBrasilia().Date;
         }
         
+        public static bool NaoEhDataFutura(this DateTime dataAvaliada)
+        {
+            return HorarioBrasilia().Date >= dataAvaliada.Date;
+        }
+        
         public static bool EhMenorQue(this DateTime dataAvaliada, DateTime dataReferencia)
         {
             return dataAvaliada.Date < dataReferencia.Date;

@@ -205,6 +205,8 @@ namespace SME.CDEP.Aplicacao.Servicos
 
         public async Task<RetornoPerfilUsuarioDTO> Autenticar(string login, string senha)
         {
+            login = login.RemoverMascaraCPF();
+            
             var retornoAutenticacao = await servicoAcessos.Autenticar(login, senha);
             
             if (retornoAutenticacao.Login.NaoEstaPreenchido())
@@ -335,6 +337,11 @@ namespace SME.CDEP.Aplicacao.Servicos
         public async Task<UsuarioDTO> ObterUsuarioLogado()
         {
             return mapper.Map<UsuarioDTO>(await ObterUsuarioLogadoContexto());
+        }
+        
+        public Guid ObterPerfilUsuarioLogado()
+        {
+            return new Guid(contextoAplicacao.PerfilUsuario);
         }
 
         public async Task<bool> AlterarTipoUsuario(string login, TipoUsuarioExternoDTO tipoUsuario)

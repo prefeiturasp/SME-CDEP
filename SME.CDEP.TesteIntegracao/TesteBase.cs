@@ -272,18 +272,29 @@ namespace SME.CDEP.TesteIntegracao
             
             contextoAplicacao.AdicionarVariaveis(ObterVariaveisPorPerfil());
         }
-
-        private Dictionary<string, object> ObterVariaveisPorPerfil()
+        
+        protected void CriarClaimUsuario(string perfil, string login = ConstantesTestes.LOGIN_123456789, string nomeUsuario = ConstantesTestes.SISTEMA,
+            string numeroPagina = "0", string numeroRegistros = "10", string ordenacao = "1")
         {
-            var rfLoginPerfil = ConstantesTestes.LOGIN_123456789;
+            var contextoAplicacao = ServiceProvider.GetService<IContextoAplicacao>();
             
+            contextoAplicacao.AdicionarVariaveis(ObterVariaveisPorPerfil(login, nomeUsuario, perfil,numeroPagina, numeroRegistros, ordenacao));
+        }
+
+        private Dictionary<string, object> ObterVariaveisPorPerfil(string login = ConstantesTestes.LOGIN_123456789, 
+            string nomeUsuario = ConstantesTestes.SISTEMA, string perfil = Dominio.Constantes.Constantes.PERFIL_ADMIN_GERAL_GUID,
+            string numeroPagina = "0", string numeroRegistros = "10", string ordenacao = "1")
+        {
             return new Dictionary<string, object>
             {
-                { ConstantesTestes.USUARIO_CHAVE, ConstantesTestes.SISTEMA },
-                { ConstantesTestes.USUARIO_LOGADO_CHAVE, ConstantesTestes.LOGIN_123456789 },
+                { ConstantesTestes.USUARIO_CHAVE,  nomeUsuario},
+                { ConstantesTestes.USUARIO_LOGADO_CHAVE, login },
+                { ConstantesTestes.PERFIL_USUARIO, perfil },
+                { ConstantesTestes.NUMERO_PAGINA, numeroPagina },
+                { ConstantesTestes.NUMERO_REGISTROS, numeroRegistros },
+                { ConstantesTestes.ORDENACAO, ordenacao },
                 {
-                    ConstantesTestes.USUARIO_CLAIMS_CHAVE,
-                    new Tuple<string, string>(rfLoginPerfil, ConstantesTestes.USUARIO_CLAIM_TIPO_RF)
+                    ConstantesTestes.USUARIO_CLAIMS_CHAVE,new Tuple<string, string>(login, ConstantesTestes.USUARIO_CLAIM_TIPO_RF)
                 }
             };
         }
@@ -825,6 +836,138 @@ namespace SME.CDEP.TesteIntegracao
                 await InserirNaBase(acervoBibliografico);
                 acervoId++;
             }
+        }
+        
+        protected async Task InserirAcervosBibliograficosEmMassa(int contadorAcervos, int quantidade)
+        {
+            var acervosBibliograficos = AcervoBibliograficoMock.Instance.Gerar().Generate(quantidade);
+            foreach (var item in acervosBibliograficos)
+            {
+                await InserirNaBase(item.Acervo);
+                item.AcervoId = contadorAcervos;
+                await InserirNaBase(item);
+                contadorAcervos++;
+            }
+        }
+        
+        protected async Task InserirAcervosArteGraficasEmMassa(int contadorAcervos, int quantidade)
+        {
+            var acervoArteGraficas = AcervoArteGraficaMock.Instance.Gerar().Generate(quantidade);
+            foreach (var item in acervoArteGraficas)
+            {
+                await InserirNaBase(item.Acervo);
+                item.AcervoId = contadorAcervos;
+                await InserirNaBase(item);
+                contadorAcervos++;
+            }
+        }
+        
+        protected async Task InserirAcervosTridimensionalEmMassa(int contadorAcervos, int quantidade)
+        {
+            var acervoTridimensionals = AcervoTridimensionalMock.Instance.Gerar().Generate(quantidade);
+            foreach (var item in acervoTridimensionals)
+            {
+                await InserirNaBase(item.Acervo);
+                item.AcervoId = contadorAcervos;
+                await InserirNaBase(item);
+                contadorAcervos++;
+            }
+        }
+        
+        protected async Task InserirAcervosFotograficoEmMassa(int contadorAcervos, int quantidade)
+        {
+            var acervoFotograficos = AcervoFotograficoMock.Instance.Gerar().Generate(quantidade);
+            foreach (var item in acervoFotograficos)
+            {
+                await InserirNaBase(item.Acervo);
+                item.AcervoId = contadorAcervos;
+                await InserirNaBase(item);
+                contadorAcervos++;
+            }
+        }
+        
+        protected async Task InserirAcervosDocumentalEmMassa(int contadorAcervos, int quantidade)
+        {
+            var acervoDocumentals = AcervoDocumentalMock.Instance.Gerar().Generate(quantidade);
+            foreach (var item in acervoDocumentals)
+            {
+                await InserirNaBase(item.Acervo);
+                item.AcervoId = contadorAcervos;
+                await InserirNaBase(item);
+                contadorAcervos++;
+            }
+        }
+        
+        protected async Task InserirAcervosAudiovisualEmMassa(int contadorAcervos, int quantidade)
+        {
+            var acervoAudiovisuals = AcervoAudiovisualMock.Instance.Gerar().Generate(quantidade);
+            foreach (var item in acervoAudiovisuals)
+            {
+                await InserirNaBase(item.Acervo);
+                item.AcervoId = contadorAcervos;
+                await InserirNaBase(item);
+                contadorAcervos++;
+            }
+        }
+        
+        protected async Task AcervoSolicitacaoEItem(int contadorSolicitacoes, long acervoId)
+        {
+            var acervoSolicitacao = AcervoSolicitacaoMock.Instance.Gerar(SituacaoSolicitacao.AGUARDANDO_ATENDIMENTO).Generate();
+            await InserirNaBase(acervoSolicitacao);
+
+            var acervoSolicitacaoItem = AcervoSolicitacaoItemMock.Instance.Gerar(
+                contadorSolicitacoes, 
+                TipoAtendimento.Presencial,
+                DateTimeExtension.HorarioBrasilia().Date.AddDays(2),
+                SituacaoSolicitacaoItem.AGUARDANDO_VISITA).Generate();
+
+            acervoSolicitacaoItem.AcervoId = acervoId;
+                
+            await InserirNaBase(acervoSolicitacaoItem);
+            contadorSolicitacoes++;
+        }
+        
+        protected async Task InserirAcervos()
+        {
+            var contadorAcervos = 1;
+            var quantidadePorTipo = 10;
+
+            var inserirAcervos = new List<Func<Task>>()
+            {
+                () => InserirAcervosBibliograficosEmMassa(contadorAcervos, quantidadePorTipo),
+                () => InserirAcervosArteGraficasEmMassa(contadorAcervos + quantidadePorTipo, quantidadePorTipo),
+                () => InserirAcervosTridimensionalEmMassa(contadorAcervos + 2 * quantidadePorTipo, quantidadePorTipo),
+                () => InserirAcervosFotograficoEmMassa(contadorAcervos + 3 * quantidadePorTipo, quantidadePorTipo),
+                () => InserirAcervosDocumentalEmMassa(contadorAcervos + 4 * quantidadePorTipo, quantidadePorTipo),
+                () => InserirAcervosAudiovisualEmMassa(contadorAcervos + 5 * quantidadePorTipo, quantidadePorTipo)
+            };
+
+            foreach (var inserirAcervo in inserirAcervos)
+                await inserirAcervo();
+        }
+        
+        protected async Task InserirAtendimentos()
+        {
+            var contadorSolicitacoes = 1;
+
+            var inserirAtendimentos = new List<Func<Task>>()
+            {
+                () => AcervoSolicitacaoEItem(contadorSolicitacoes++, 1),
+                () => AcervoSolicitacaoEItem(contadorSolicitacoes++, 12),
+                () => AcervoSolicitacaoEItem(contadorSolicitacoes++, 23),
+                () => AcervoSolicitacaoEItem(contadorSolicitacoes++, 33),
+                () => AcervoSolicitacaoEItem(contadorSolicitacoes++, 44),
+                () => AcervoSolicitacaoEItem(contadorSolicitacoes++, 54),
+            };
+
+            foreach (var inserirAtendimento in inserirAtendimentos)
+                await inserirAtendimento();
+        }
+        
+        protected async Task InserirAcervosEAtendimentos()
+        {
+            InserirAcervos();
+            InserirAtendimentos();
         }
     }
 }

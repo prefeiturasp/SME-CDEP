@@ -19,9 +19,6 @@ namespace SME.CDEP.Dominio.Entidades
             if (TipoAtendimento.EhInvalido())
                 throw new NegocioException(MensagemNegocio.TIPO_ATENDIMENTO_INVALIDO);
             
-            if (TipoAtendimento.EhAtendimentoPresencial() && DataVisita.Value < DateTimeExtension.HorarioBrasilia().Date )
-                throw new NegocioException(MensagemNegocio.ITENS_ACERVOS_PRESENCIAL_NAO_DEVEM_TER_DATA_ACERVO_PASSADAS);
-            
             if (TipoAtendimento.EhAtendimentoViaEmail() && DataVisita.HasValue )
                 throw new NegocioException(MensagemNegocio.ITENS_ACERVOS_EMAIL_NAO_DEVEM_TER_DATA_ACERVO);
         }

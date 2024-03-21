@@ -29,7 +29,10 @@ namespace SME.CDEP.Aplicacao.Servicos
             var acervoEmprestimoAtual = acervosEmprestimosAtuais.FirstOrDefault();
             
             if (acervoEmprestimoProrrogacaoDTO.DataDevolucao.EhMenorQue(acervoEmprestimoAtual.DataDevolucao))
-                throw new NegocioException(MensagemNegocio.DATA_DA_DEVOLUCAO_MENOR_DATA_DA_DEVOLUCAO_ANTERIOR);
+                throw new NegocioException(MensagemNegocio.DATA_DA_DEVOLUCAO_MENOR_DATA_DA_DEVOLUCAO_ANTERIOR_OU_FUTURA);
+            
+            if (acervoEmprestimoProrrogacaoDTO.DataDevolucao.NaoEhDataFutura())
+                throw new NegocioException(MensagemNegocio.DATA_DA_DEVOLUCAO_MENOR_DATA_DA_DEVOLUCAO_ANTERIOR_OU_FUTURA);
             
             var acervoEmprestimo = new AcervoEmprestimo()
             {
