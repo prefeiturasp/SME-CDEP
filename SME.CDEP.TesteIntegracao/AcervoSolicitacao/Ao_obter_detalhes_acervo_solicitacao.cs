@@ -28,6 +28,8 @@ namespace SME.CDEP.TesteIntegracao
         [Fact(DisplayName = "Acervo Solicitação - Obter Detalhes por Id")]
         public async Task Obter_detalhes_por_id()
         {
+            CriarClaimUsuario(Dominio.Constantes.Constantes.PERFIL_ADMIN_GERAL_GUID);
+
             await InserirDadosBasicosAleatorios();
 
             await InserirAcervoTridimensional();

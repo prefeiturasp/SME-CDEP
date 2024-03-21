@@ -515,7 +515,7 @@ namespace SME.CDEP.TesteIntegracao
         }
         
         [Fact(DisplayName = "Acervo Solicitação - Não deve confirmar atendimento com data de visita passada nos itens que são do tipo presenciais")]
-        public async Task Nao_deve_confirmar_atendimento_em_itens_com_data_de_visita_passada_nos_itens_tipo_presenciais()
+        public async Task Deve_confirmar_atendimento_em_itens_com_data_de_visita_passada_nos_itens_tipo_presenciais()
         {
             await InserirDadosBasicosAleatorios();
 
@@ -548,8 +548,37 @@ namespace SME.CDEP.TesteIntegracao
                     }
                 }
             };
+            var retorno = await servicoAcervoSolicitacao.ConfirmarAtendimento(acervoArteGraficaCadastroDto);
+             retorno.ShouldBeTrue();
+             
+            var solicitacaoAlterada = ObterTodos<AcervoSolicitacao>().FirstOrDefault(f=> f.Id == 1);
+            solicitacaoAlterada.Id.ShouldBe(1);
+            solicitacaoAlterada.UsuarioId.ShouldBe(1);
+            solicitacaoAlterada.Situacao.ShouldBe(SituacaoSolicitacao.AGUARDANDO_VISITA);
+            solicitacaoAlterada.Excluido.ShouldBeFalse();
             
-            await servicoAcervoSolicitacao.ConfirmarAtendimento(acervoArteGraficaCadastroDto).ShouldThrowAsync<NegocioException>();
+            var itensAlterados = ObterTodos<AcervoSolicitacaoItem>().Where(w=> w.AcervoSolicitacaoId == 1);
+            itensAlterados.Count().ShouldBe(3);
+            
+            var itensAlteradosPresenciais = itensAlterados.Where(w => w.TipoAtendimento.HasValue && w.TipoAtendimento.Value.EhAtendimentoPresencial());
+            itensAlteradosPresenciais.FirstOrDefault().DataVisita.Value.Date.ShouldBe(DateTimeExtension.HorarioBrasilia().AddDays(-1).Date);
+            itensAlteradosPresenciais.FirstOrDefault().TipoAtendimento.ShouldBe(TipoAtendimento.Presencial);
+            itensAlteradosPresenciais.FirstOrDefault().Excluido.ShouldBeFalse();
+            
+            var itensAlteradosEmail = itensAlterados.Where(w => w.TipoAtendimento.HasValue && w.TipoAtendimento.Value.EhAtendimentoViaEmail());
+            itensAlteradosEmail.FirstOrDefault().DataVisita.ShouldBeNull();
+            itensAlteradosEmail.FirstOrDefault().TipoAtendimento.ShouldBe(TipoAtendimento.Email);
+            itensAlteradosEmail.FirstOrDefault().Excluido.ShouldBeFalse();
+            
+            var itensImutavel = itensAlterados.Where(w => w.TipoAtendimento.EhNulo());
+            itensImutavel.LastOrDefault().DataVisita.ShouldBeNull();
+            itensImutavel.LastOrDefault().TipoAtendimento.ShouldBeNull();
+            itensImutavel.FirstOrDefault().Excluido.ShouldBeFalse();
+            
+            var eventos = ObterTodos<Evento>();
+            eventos.Count().ShouldBe(1);
+            eventos.Count(a=> !a.Excluido).ShouldBe(1);
+            eventos.Any(a=> a.Data.Date == DateTimeExtension.HorarioBrasilia().AddDays(-1).Date).ShouldBeTrue();
         }
         
         [Fact(DisplayName = "Acervo Solicitação - Não deve confirmar atendimento quando não for localizada")]
