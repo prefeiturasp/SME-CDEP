@@ -230,7 +230,7 @@ namespace SME.CDEP.Infra.Dados.Repositorios
             return string.Empty;
         }
 
-        public Task<Acervo> PesquisarAcervoPorCodigoTombo(string codigoTombo)
+        public Task<Acervo> PesquisarAcervoPorCodigoTombo(string codigoTombo, long[] tiposAcervosPermitidos)
         {
             var query = @"
             select id, 
@@ -238,10 +238,11 @@ namespace SME.CDEP.Infra.Dados.Repositorios
                    tipo,
                    coalesce(codigo, codigo_novo) as codigo
             from acervo
-            where (lower(codigo) = @codigo or lower(codigo_novo) = @codigo) 
+            where (lower(codigo) = @codigo or lower(codigo_novo) = @codigo)
+              and tipo = ANY(@tiposAcervosPermitidos)
               and not excluido ";
             
-            return conexao.Obter().QueryFirstOrDefaultAsync<Acervo>(query,new { codigo = codigoTombo.ToLower() });
+            return conexao.Obter().QueryFirstOrDefaultAsync<Acervo>(query,new { codigo = codigoTombo.ToLower(), tiposAcervosPermitidos });
         }
     }
 }

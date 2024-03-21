@@ -19,7 +19,7 @@ public class AcervoController: BaseController
     [ProducesResponseType(typeof(RetornoBaseDTO), 601)]
     public IActionResult ObterTiposDeAcervos([FromServices]IServicoAcervo servicoAcervo)
     {
-        return Ok(servicoAcervo.ObterTodosTipos());
+        return Ok(servicoAcervo.ObterTiposDeAtendimentos());
     }
     
     [HttpGet]

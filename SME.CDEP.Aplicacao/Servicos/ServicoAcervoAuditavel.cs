@@ -4,6 +4,7 @@ using AutoMapper;
 using Microsoft.Extensions.Configuration;
 using SME.CDEP.Aplicacao.DTOS;
 using SME.CDEP.Aplicacao.Enumerados;
+using SME.CDEP.Aplicacao.Extensions;
 using SME.CDEP.Aplicacao.Servicos.Interface;
 using SME.CDEP.Dominio.Constantes;
 using SME.CDEP.Dominio.Contexto;
@@ -237,17 +238,6 @@ namespace SME.CDEP.Aplicacao.Servicos
         public async Task<AcervoDTO> ObterPorId(long acervoId)
         {
             return mapper.Map<AcervoDTO>(await repositorioAcervo.ObterPorId(acervoId));
-        }
-
-        public IEnumerable<IdNomeDTO> ObterTodosTipos()
-        {
-            return Enum.GetValues(typeof(TipoAcervo))
-                .Cast<TipoAcervo>()
-                .Select(v => new IdNomeDTO
-                {
-                    Id = (int)v,
-                    Nome = v.ObterAtributo<DisplayAttribute>().Description,
-                });
         }
         
         public async Task<bool> Excluir(long entidaId)
@@ -523,7 +513,9 @@ namespace SME.CDEP.Aplicacao.Servicos
 
         public async Task<IdNomeCodigoTipoParaEmprestimoDTO> PesquisarAcervoPorCodigoTombo(FiltroCodigoTomboDTO filtro)
         {
-            var retorno = await repositorioAcervo.PesquisarAcervoPorCodigoTombo(filtro.CodigoTombo);
+            var tiposAcervosPermitidos = ObterTiposAcervosPermitidosDoPerfilLogado();
+            
+            var retorno = await repositorioAcervo.PesquisarAcervoPorCodigoTombo(filtro.CodigoTombo,tiposAcervosPermitidos);
 
             if (retorno.EhNulo())
                 throw new NegocioException(MensagemNegocio.ACERVO_NAO_ENCONTRADO);
@@ -548,6 +540,46 @@ namespace SME.CDEP.Aplicacao.Servicos
 
                 return new Paginacao(numeroPagina, numeroRegistros == 0 ? 10 : numeroRegistros,ordenacao);
             }
+        }
+
+        public long[] ObterTiposAcervosPermitidosDoPerfilLogado()
+        {
+            var perfilLogado = new Guid(contextoAplicacao.PerfilUsuario);
+            
+            var tiposAcervosDisponiveis = ObterTiposDeAtendimentos().Select(s => s.Id);
+            
+            switch (true)
+            {
+                case var _ when perfilLogado.EhPerfilAdminGeral() || perfilLogado.EhPerfilBasico() :
+                    return tiposAcervosDisponiveis.ToArray();
+                
+                case var _ when perfilLogado.EhPerfilAdminBiblioteca():
+                    return tiposAcervosDisponiveis.Where(w => w == (long)TipoAcervo.Bibliografico).ToArray();
+                
+                case var _ when perfilLogado.EhPerfilAdminMemoria():
+                    return tiposAcervosDisponiveis.Where(w => w == (long)TipoAcervo.DocumentacaoHistorica).ToArray();
+                
+                case var _ when perfilLogado.EhPerfilAdminMemorial():
+                    return tiposAcervosDisponiveis
+                        .Where(w => w == (long)TipoAcervo.ArtesGraficas
+                                    || w == (long)TipoAcervo.Fotografico
+                                    || w == (long)TipoAcervo.Tridimensional
+                                    || w == (long)TipoAcervo.Audiovisual).ToArray();
+                
+                default:
+                    return Array.Empty<long>();
+            }
+        }
+
+        public IEnumerable<IdNomeDTO> ObterTiposDeAtendimentos()
+        {
+            return Enum.GetValues(typeof(TipoAcervo))
+                .Cast<TipoAcervo>()
+                .Select(v => new IdNomeDTO
+                {
+                    Id = (int)v,
+                    Nome = v.ObterAtributo<DisplayAttribute>().Description,
+                });
         }
     }
 }  

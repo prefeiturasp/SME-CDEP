@@ -10,7 +10,7 @@ namespace SME.CDEP.Infra.Dados.Repositorios.Interfaces
         Task<IEnumerable<AcervoSolicitacaoItemResumido>> ObterMinhasSolicitacoes(long usuarioId);
         Task<IEnumerable<AcervoSolicitacaoItemDetalhe>> ObterSolicitacoesPorFiltro(long? acervoSolicitacaoId, TipoAcervo? tipoAcervo, 
             DateTime? dataSolicitacaoInicio, DateTime? dataSolicitacaoFim, string? responsavel, SituacaoSolicitacaoItem? situacaoItem, DateTime? dataVisitaInicio, 
-            DateTime? dataVisitaFim, string? filtroSolicitacaoDto, SituacaoEmprestimo? situacaoEmprestimo);
+            DateTime? dataVisitaFim, string? filtroSolicitacaoDto, SituacaoEmprestimo? situacaoEmprestimo, long[] tiposAcervosPermitidos);
         Task<IEnumerable<AcervoSolicitacaoItem>> ObterItensEmSituacaoAguardandoAtendimentoOuVisitaOuFinalizadoManualmentePorSolicitacaoId(long acervoSolicitacaoId);
         Task<bool> PossuiItensEmSituacaoAguardandoAtendimentoOuAguardandoVisitaComDataFutura(long acervoSolicitacaoId);
         Task<bool> PossuiItensEmSituacaoFinalizadoAutomaticamenteOuCancelado(long acervoSolicitacaoItemId);
