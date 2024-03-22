@@ -2,6 +2,7 @@
 
 public class MensagemNegocio
 {
+    public const string VOCE_NAO_PODE_ALTERAR_EMPRESTIMOS_ACERVOS = "Você não pode alterar empréstimos de acervos";
     public const string ACERVO_EMPRESTIMO_NAO_ENCONTRADO = "Acervo empréstimo não encontrado";
     public const string SITUACAO_NAO_MAPEADA = "Não foi possível mapear a situação do atendimento conforme as situações dos itens, verifique!";
     public const string PARAMETRO_NAO_ENCONTRADO_TIPO_X = "Parâmetro não encontrado - Tipo:'{0}'";
