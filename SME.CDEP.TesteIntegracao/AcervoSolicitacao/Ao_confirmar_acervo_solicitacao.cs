@@ -19,33 +19,28 @@ namespace SME.CDEP.TesteIntegracao
         public async Task Deve_confirmar_atendimento()
         {
             await InserirDadosBasicosAleatorios();
-
+        
             await InserirAcervoTridimensional();
-
+        
             await InserirAcervoSolicitacao(10);
             
             var servicoAcervoSolicitacao = GetServicoAcervoSolicitacao();
             
-            var retorno = await servicoAcervoSolicitacao.ConfirmarAtendimento(new AcervoSolicitacaoConfirmarDTO()
+            await servicoAcervoSolicitacao.ConfirmarAtendimento(new AcervoSolicitacaoConfirmarDTO()
             {
                 Id = 1,
-                Itens = new List<AcervoSolicitacaoItemConfirmarDTO>()
-                {
-                    new()
-                    {
-                        Id = 1,
-                        DataVisita = DateTimeExtension.HorarioBrasilia().Date,
-                        TipoAtendimento = TipoAtendimento.Presencial
-                    },
-                    new()
-                    {
-                        Id = 2,
-                        TipoAtendimento = TipoAtendimento.Email
-                    }
-                }
+                ItemId = 1,
+                DataVisita = DateTimeExtension.HorarioBrasilia().Date,
+                TipoAtendimento = TipoAtendimento.Presencial
+            });
+                
+            await servicoAcervoSolicitacao.ConfirmarAtendimento(new AcervoSolicitacaoConfirmarDTO()
+            {
+                Id = 1,
+                ItemId = 2,
+                TipoAtendimento = TipoAtendimento.Email
             });
             
-            retorno.ShouldBeTrue();
             var solicitacaoAlterada = ObterTodos<AcervoSolicitacao>().FirstOrDefault(f=> f.Id == 1);
             solicitacaoAlterada.Id.ShouldBe(1);
             solicitacaoAlterada.UsuarioId.ShouldBe(1);
@@ -82,32 +77,27 @@ namespace SME.CDEP.TesteIntegracao
         public async Task Deve_confirmar_e_alterar_a_situação_do_atendimento_para_finalizado_quando_todos_os_itens_estiverem_finalizados_manualmente()
         {
             await InserirDadosBasicosAleatorios();
-
+        
             await InserirAcervoTridimensional();
-
+        
             await InserirAcervoSolicitacao(10);
             
             var servicoAcervoSolicitacao = GetServicoAcervoSolicitacao();
             
-            var retorno = await servicoAcervoSolicitacao.ConfirmarAtendimento(new AcervoSolicitacaoConfirmarDTO()
+            await servicoAcervoSolicitacao.ConfirmarAtendimento(new AcervoSolicitacaoConfirmarDTO()
             {
                 Id = 1,
-                Itens = new List<AcervoSolicitacaoItemConfirmarDTO>()
-                {
-                    new()
-                    {
-                        Id = 1,
-                        TipoAtendimento = TipoAtendimento.Email
-                    },
-                    new()
-                    {
-                        Id = 2,
-                        TipoAtendimento = TipoAtendimento.Email
-                    }
-                }
+                ItemId = 1,
+                TipoAtendimento = TipoAtendimento.Email
+            });
+                
+            await servicoAcervoSolicitacao.ConfirmarAtendimento(new AcervoSolicitacaoConfirmarDTO()
+            {
+                Id = 1,
+                ItemId = 2,
+                TipoAtendimento = TipoAtendimento.Email
             });
             
-            retorno.ShouldBeTrue();
             var solicitacaoAlterada = ObterTodos<AcervoSolicitacao>().FirstOrDefault(f=> f.Id == 1);
             solicitacaoAlterada.Id.ShouldBe(1);
             solicitacaoAlterada.UsuarioId.ShouldBe(1);
@@ -143,34 +133,29 @@ namespace SME.CDEP.TesteIntegracao
         public async Task Deve_confirmar_e_alterar_a_situação_do_atendimento_para_finalizado_quando_todos_os_itens_estiverem_aguardando_visita()
         {
             await InserirDadosBasicosAleatorios();
-
+        
             await InserirAcervoTridimensional();
-
+        
             await InserirAcervoSolicitacao(10);
             
             var servicoAcervoSolicitacao = GetServicoAcervoSolicitacao();
             
-            var retorno = await servicoAcervoSolicitacao.ConfirmarAtendimento(new AcervoSolicitacaoConfirmarDTO()
+            await servicoAcervoSolicitacao.ConfirmarAtendimento(new AcervoSolicitacaoConfirmarDTO()
             {
                 Id = 1,
-                Itens = new List<AcervoSolicitacaoItemConfirmarDTO>()
-                {
-                    new()
-                    {
-                        Id = 1,
-                        TipoAtendimento = TipoAtendimento.Presencial,
-                        DataVisita = DateTimeExtension.HorarioBrasilia().Date.AddDays(4).Date
-                    },
-                    new()
-                    {
-                        Id = 2,
-                        TipoAtendimento = TipoAtendimento.Presencial,
-                        DataVisita = DateTimeExtension.HorarioBrasilia().Date.AddDays(8).Date
-                    }
-                }
+                ItemId = 1,
+                TipoAtendimento = TipoAtendimento.Presencial,
+                DataVisita = DateTimeExtension.HorarioBrasilia().Date.AddDays(4).Date
+            });
+                
+            await servicoAcervoSolicitacao.ConfirmarAtendimento(new AcervoSolicitacaoConfirmarDTO()
+            {
+                Id = 1,
+                ItemId = 2,
+                TipoAtendimento = TipoAtendimento.Presencial,
+                DataVisita = DateTimeExtension.HorarioBrasilia().Date.AddDays(8).Date
             });
             
-            retorno.ShouldBeTrue();
             var solicitacaoAlterada = ObterTodos<AcervoSolicitacao>().FirstOrDefault(f=> f.Id == 1);
             solicitacaoAlterada.Id.ShouldBe(1);
             solicitacaoAlterada.UsuarioId.ShouldBe(1);
@@ -206,33 +191,28 @@ namespace SME.CDEP.TesteIntegracao
         public async Task Deve_confirmar_e_alterar_a_situação_do_atendimento_para_aguardando_visita_quando_itens_forem_aguardando_visita_e_finalizados_manualmente()
         {
             await InserirDadosBasicosAleatorios();
-
+        
             await InserirAcervoTridimensional();
-
+        
             await InserirAcervoSolicitacao(10);
             
             var servicoAcervoSolicitacao = GetServicoAcervoSolicitacao();
             
-            var retorno = await servicoAcervoSolicitacao.ConfirmarAtendimento(new AcervoSolicitacaoConfirmarDTO()
+            await servicoAcervoSolicitacao.ConfirmarAtendimento(new AcervoSolicitacaoConfirmarDTO()
             {
                 Id = 1,
-                Itens = new List<AcervoSolicitacaoItemConfirmarDTO>()
-                {
-                    new()
-                    {
-                        Id = 1,
-                        TipoAtendimento = TipoAtendimento.Presencial,
-                        DataVisita = DateTimeExtension.HorarioBrasilia().Date.AddDays(4).Date
-                    },
-                    new()
-                    {
-                        Id = 2,
-                        TipoAtendimento = TipoAtendimento.Email
-                    }
-                }
+                ItemId = 1,
+                TipoAtendimento = TipoAtendimento.Presencial,
+                DataVisita = DateTimeExtension.HorarioBrasilia().Date.AddDays(4).Date
+            });
+                
+            await servicoAcervoSolicitacao.ConfirmarAtendimento(new AcervoSolicitacaoConfirmarDTO()
+            {
+                Id = 1,
+                ItemId = 2,
+                TipoAtendimento = TipoAtendimento.Email
             });
             
-            retorno.ShouldBeTrue();
             var solicitacaoAlterada = ObterTodos<AcervoSolicitacao>().FirstOrDefault(f=> f.Id == 1);
             solicitacaoAlterada.Id.ShouldBe(1);
             solicitacaoAlterada.UsuarioId.ShouldBe(1);
@@ -268,9 +248,9 @@ namespace SME.CDEP.TesteIntegracao
         public async Task Deve_confirmar_e_alterar_a_situação_do_atendimento_para_atendido_parcialmente_quando_itens_forem_aguardando_visita_e_aguardando_atendimento()
         {
             await InserirDadosBasicosAleatorios();
-
+        
             await InserirAcervoTridimensional();
-
+        
             await InserirAcervoSolicitacao(10);
             
             var servicoAcervoSolicitacao = GetServicoAcervoSolicitacao();
@@ -278,15 +258,9 @@ namespace SME.CDEP.TesteIntegracao
             var retorno = await servicoAcervoSolicitacao.ConfirmarAtendimento(new AcervoSolicitacaoConfirmarDTO()
             {
                 Id = 1,
-                Itens = new List<AcervoSolicitacaoItemConfirmarDTO>()
-                {
-                    new()
-                    {
-                        Id = 1,
-                        TipoAtendimento = TipoAtendimento.Presencial,
-                        DataVisita = DateTimeExtension.HorarioBrasilia().Date.AddDays(4).Date
-                    }
-                }
+                ItemId = 1,
+                TipoAtendimento = TipoAtendimento.Presencial,
+                DataVisita = DateTimeExtension.HorarioBrasilia().Date.AddDays(4).Date
             });
             
             retorno.ShouldBeTrue();
@@ -325,9 +299,9 @@ namespace SME.CDEP.TesteIntegracao
         public async Task Deve_confirmar_e_alterar_a_situação_do_atendimento_para_atendido_parcialmente_quando_itens_forem_finalizados_manualmente_e_aguardando_atendimento()
         {
             await InserirDadosBasicosAleatorios();
-
+        
             await InserirAcervoTridimensional();
-
+        
             await InserirAcervoSolicitacao(10);
             
             var servicoAcervoSolicitacao = GetServicoAcervoSolicitacao();
@@ -335,14 +309,8 @@ namespace SME.CDEP.TesteIntegracao
             var retorno = await servicoAcervoSolicitacao.ConfirmarAtendimento(new AcervoSolicitacaoConfirmarDTO()
             {
                 Id = 1,
-                Itens = new List<AcervoSolicitacaoItemConfirmarDTO>()
-                {
-                    new()
-                    {
-                        Id = 1,
-                        TipoAtendimento = TipoAtendimento.Email
-                    }
-                }
+                ItemId = 1,
+                TipoAtendimento = TipoAtendimento.Email
             });
             
             retorno.ShouldBeTrue();
@@ -381,9 +349,9 @@ namespace SME.CDEP.TesteIntegracao
         public async Task Deve_confirmar_atendimento_editando_confirmacao()
         {
             await InserirDadosBasicosAleatorios();
-
+        
             await InserirAcervoTridimensional();
-
+        
             await InserirAcervoSolicitacao(10);
             
             var servicoAcervoSolicitacao = GetServicoAcervoSolicitacao();
@@ -391,42 +359,33 @@ namespace SME.CDEP.TesteIntegracao
             await servicoAcervoSolicitacao.ConfirmarAtendimento(new AcervoSolicitacaoConfirmarDTO()
             {
                 Id = 1,
-                Itens = new List<AcervoSolicitacaoItemConfirmarDTO>()
-                {
-                    new()
-                    {
-                        Id = 1,
-                        DataVisita = DateTimeExtension.HorarioBrasilia().Date,
-                        TipoAtendimento = TipoAtendimento.Presencial
-                    },
-                    new()
-                    {
-                        Id = 2,
-                        TipoAtendimento = TipoAtendimento.Email
-                    }
-                }
+                ItemId = 1,
+                DataVisita = DateTimeExtension.HorarioBrasilia().Date,
+                TipoAtendimento = TipoAtendimento.Presencial
             });
             
-            var retorno = await servicoAcervoSolicitacao.ConfirmarAtendimento(new AcervoSolicitacaoConfirmarDTO()
+            await servicoAcervoSolicitacao.ConfirmarAtendimento(new AcervoSolicitacaoConfirmarDTO()
             {
                 Id = 1,
-                Itens = new List<AcervoSolicitacaoItemConfirmarDTO>()
-                {
-                    new()
-                    {
-                        Id = 1,
-                        TipoAtendimento = TipoAtendimento.Email
-                    },
-                    new()
-                    {
-                        Id = 2,
-                        DataVisita = DateTimeExtension.HorarioBrasilia().AddDays(10).Date,
-                        TipoAtendimento = TipoAtendimento.Presencial
-                    }
-                }
+                ItemId = 2,
+                TipoAtendimento = TipoAtendimento.Email
             });
             
-            retorno.ShouldBeTrue();
+            await servicoAcervoSolicitacao.ConfirmarAtendimento(new AcervoSolicitacaoConfirmarDTO()
+            {
+                Id = 1,
+                ItemId = 1,
+                TipoAtendimento = TipoAtendimento.Email
+            });
+                
+            await servicoAcervoSolicitacao.ConfirmarAtendimento(new AcervoSolicitacaoConfirmarDTO()
+            {
+                Id = 1,
+                ItemId = 2,
+                DataVisita = DateTimeExtension.HorarioBrasilia().AddDays(10).Date,
+                TipoAtendimento = TipoAtendimento.Presencial
+            });
+            
             var solicitacaoAlterada = ObterTodos<AcervoSolicitacao>().FirstOrDefault(f=> f.Id == 1);
             solicitacaoAlterada.Id.ShouldBe(1);
             solicitacaoAlterada.UsuarioId.ShouldBe(1);
@@ -462,95 +421,65 @@ namespace SME.CDEP.TesteIntegracao
         public async Task Nao_deve_confirmar_atendimento_sem_itens()
         {
             await InserirDadosBasicosAleatorios();
-
+        
             await InserirAcervoTridimensional();
-
+        
             await InserirAcervoSolicitacao(10);
             
             var servicoAcervoSolicitacao = GetServicoAcervoSolicitacao();
             
-            var acervoArteGraficaCadastroDto = new AcervoSolicitacaoConfirmarDTO()
+            await servicoAcervoSolicitacao.ConfirmarAtendimento(new AcervoSolicitacaoConfirmarDTO()
             {
                 Id = 1
-            };
-            
-            await servicoAcervoSolicitacao.ConfirmarAtendimento(acervoArteGraficaCadastroDto).ShouldThrowAsync<NegocioException>();
+            }).ShouldThrowAsync<NegocioException>();
         }
         
-        [Fact(DisplayName = "Acervo Solicitação - Não deve confirmar atendimento sem data nos itens que são tipo presenciais")]
-        public async Task Nao_deve_confirmar_atendimento_em_itens_sem_data_de_visita_tipo_presencial()
+        [Fact(DisplayName = "Acervo Solicitação - Não deve confirmar atendimento sem data no item que é tipo presencial")]
+        public async Task Nao_deve_confirmar_atendimento_em_item_sem_data_de_visita_tipo_presencial()
         {
             await InserirDadosBasicosAleatorios();
-
+        
             await InserirAcervoTridimensional();
-
+        
             await InserirAcervoSolicitacao(10);
             
             var servicoAcervoSolicitacao = GetServicoAcervoSolicitacao();
-
-            var acervoArteGraficaCadastroDto = new AcervoSolicitacaoConfirmarDTO()
+        
+            await servicoAcervoSolicitacao.ConfirmarAtendimento(new AcervoSolicitacaoConfirmarDTO()
             {
                 Id = 1,
-                Itens = new List<AcervoSolicitacaoItemConfirmarDTO>()
-                {
-                    new()
-                    {
-                        Id = 1,
-                        TipoAtendimento = TipoAtendimento.Presencial
-                    },
-                    new()
-                    {
-                        Id = 2,
-                        TipoAtendimento = TipoAtendimento.Email
-                    },
-                    new()
-                    {
-                        Id = 3,
-                        TipoAtendimento = TipoAtendimento.Email
-                    }
-                }
-            };
-            
-            await servicoAcervoSolicitacao.ConfirmarAtendimento(acervoArteGraficaCadastroDto).ShouldThrowAsync<NegocioException>();
+                ItemId = 1,
+                TipoAtendimento = TipoAtendimento.Presencial
+            }).ShouldThrowAsync<NegocioException>();
         }
         
-        [Fact(DisplayName = "Acervo Solicitação - Não deve confirmar atendimento com data de visita passada nos itens que são do tipo presenciais")]
+        [Fact(DisplayName = "Acervo Solicitação - Deve confirmar atendimento com data de visita passada nos itens que são do tipo presenciais")]
         public async Task Deve_confirmar_atendimento_em_itens_com_data_de_visita_passada_nos_itens_tipo_presenciais()
         {
             await InserirDadosBasicosAleatorios();
-
+        
             await InserirAcervoTridimensional();
-
+        
             await InserirAcervoSolicitacao(10);
             
             var servicoAcervoSolicitacao = GetServicoAcervoSolicitacao();
-
-            var acervoArteGraficaCadastroDto = new AcervoSolicitacaoConfirmarDTO()
+        
+            await servicoAcervoSolicitacao.ConfirmarAtendimento(new AcervoSolicitacaoConfirmarDTO()
             {
                 Id = 1,
-                Itens = new List<AcervoSolicitacaoItemConfirmarDTO>()
-                {
-                    new()
-                    {
-                        Id = 1,
-                        DataVisita = DateTimeExtension.HorarioBrasilia().AddDays(-1),
-                        TipoAtendimento = TipoAtendimento.Presencial
-                    },
-                    new()
-                    {
-                        Id = 2,
-                        TipoAtendimento = TipoAtendimento.Email
-                    },
-                    new()
-                    {
-                        Id = 3,
-                        TipoAtendimento = TipoAtendimento.Email
-                    }
-                }
-            };
-            var retorno = await servicoAcervoSolicitacao.ConfirmarAtendimento(acervoArteGraficaCadastroDto);
-             retorno.ShouldBeTrue();
-             
+                ItemId = 1,
+                DataVisita = DateTimeExtension.HorarioBrasilia().AddDays(-1),
+                TipoAtendimento = TipoAtendimento.Presencial
+            });
+            
+            await servicoAcervoSolicitacao.ConfirmarAtendimento(new AcervoSolicitacaoConfirmarDTO()
+            {
+                Id = 1,
+                ItemId = 2,
+                TipoAtendimento = TipoAtendimento.Email
+            });
+            
+            
             var solicitacaoAlterada = ObterTodos<AcervoSolicitacao>().FirstOrDefault(f=> f.Id == 1);
             solicitacaoAlterada.Id.ShouldBe(1);
             solicitacaoAlterada.UsuarioId.ShouldBe(1);
@@ -585,51 +514,48 @@ namespace SME.CDEP.TesteIntegracao
         public async Task Nao_deve_confirmar_atendimento_quando_nao_for_localizada()
         {
             await InserirDadosBasicosAleatorios();
-
+        
             await InserirAcervoTridimensional();
-
+        
             await InserirAcervoSolicitacao(10);
             
             var servicoAcervoSolicitacao = GetServicoAcervoSolicitacao();
-
-            var acervoArteGraficaCadastroDto = new AcervoSolicitacaoConfirmarDTO()
+        
+            await servicoAcervoSolicitacao.ConfirmarAtendimento(new AcervoSolicitacaoConfirmarDTO()
             {
                 Id = 101515,
-                Itens = new List<AcervoSolicitacaoItemConfirmarDTO>()
-                {
-                    new()
-                    {
-                        Id = 1,
-                        DataVisita = DateTimeExtension.HorarioBrasilia().Date,
-                        TipoAtendimento = TipoAtendimento.Presencial
-                    },
-                    new()
-                    {
-                        Id = 2,
-                        DataVisita = DateTimeExtension.HorarioBrasilia().Date,
-                        TipoAtendimento = TipoAtendimento.Email
-                    },
-                    new()
-                    {
-                        Id = 3,
-                        DataVisita = DateTimeExtension.HorarioBrasilia().Date,
-                        TipoAtendimento = TipoAtendimento.Email
-                    }
-                }
-            };
+                ItemId = 1,
+                DataVisita = DateTimeExtension.HorarioBrasilia().Date,
+                TipoAtendimento = TipoAtendimento.Presencial
+            }).ShouldThrowAsync<NegocioException>();
             
-            await servicoAcervoSolicitacao.ConfirmarAtendimento(acervoArteGraficaCadastroDto).ShouldThrowAsync<NegocioException>();
+
+            await servicoAcervoSolicitacao.ConfirmarAtendimento(new AcervoSolicitacaoConfirmarDTO()
+            {
+                Id = 101515,
+                ItemId = 2,
+                DataVisita = DateTimeExtension.HorarioBrasilia().Date,
+                TipoAtendimento = TipoAtendimento.Email
+            }).ShouldThrowAsync<NegocioException>();
+                
+            await servicoAcervoSolicitacao.ConfirmarAtendimento(new AcervoSolicitacaoConfirmarDTO()
+            {
+                Id = 101515,
+                ItemId = 3,
+                DataVisita = DateTimeExtension.HorarioBrasilia().Date,
+                TipoAtendimento = TipoAtendimento.Email
+            }).ShouldThrowAsync<NegocioException>();
         }
         
         [Fact(DisplayName = "Acervo Solicitação - Não deve confirmar atendimento quando a data da visita for em dia de feriado")]
         public async Task Nao_deve_confirmar_atendimento_quando_data_visita_for_em_dia_de_feriado()
         {
             await InserirDadosBasicosAleatorios();
-
+        
             await InserirAcervoTridimensional();
-
+        
             await InserirAcervoSolicitacao(10);
-
+        
             await InserirNaBase(new Evento()
             {
                 Data = DateTimeExtension.HorarioBrasilia().Date,
@@ -647,44 +573,25 @@ namespace SME.CDEP.TesteIntegracao
             });
             
             var servicoAcervoSolicitacao = GetServicoAcervoSolicitacao();
-
-            var acervoArteGraficaCadastroDto = new AcervoSolicitacaoConfirmarDTO()
+        
+            await servicoAcervoSolicitacao.ConfirmarAtendimento(new AcervoSolicitacaoConfirmarDTO()
             {
-                Itens = new List<AcervoSolicitacaoItemConfirmarDTO>()
-                {
-                    new()
-                    {
-                        Id = 1,
-                        DataVisita = DateTimeExtension.HorarioBrasilia().Date,
-                        TipoAtendimento = TipoAtendimento.Presencial
-                    },
-                    new()
-                    {
-                        Id = 2,
-                        DataVisita = DateTimeExtension.HorarioBrasilia().AddDays(5).Date,
-                        TipoAtendimento = TipoAtendimento.Presencial
-                    },
-                    new()
-                    {
-                        Id = 3,
-                        DataVisita = DateTimeExtension.HorarioBrasilia().AddDays(10).Date,
-                        TipoAtendimento = TipoAtendimento.Presencial
-                    }
-                }
-            };
-            
-            await servicoAcervoSolicitacao.ConfirmarAtendimento(acervoArteGraficaCadastroDto).ShouldThrowAsync<NegocioException>();
+                Id = 1,
+                ItemId = 1,
+                DataVisita = DateTimeExtension.HorarioBrasilia().Date,
+                TipoAtendimento = TipoAtendimento.Presencial
+            }).ShouldThrowAsync<NegocioException>();
         }
         
         [Fact(DisplayName = "Acervo Solicitação - Não deve confirmar atendimento quando a data da visita for em dia de suspensão")]
         public async Task Nao_deve_confirmar_atendimento_quando_data_visita_for_em_dia_de_suspensao()
         {
             await InserirDadosBasicosAleatorios();
-
+        
             await InserirAcervoTridimensional();
-
+        
             await InserirAcervoSolicitacao(10);
-
+        
             await InserirNaBase(new Evento()
             {
                 Data = DateTimeExtension.HorarioBrasilia().Date,
@@ -703,42 +610,23 @@ namespace SME.CDEP.TesteIntegracao
             });
             
             var servicoAcervoSolicitacao = GetServicoAcervoSolicitacao();
-
-            var acervoArteGraficaCadastroDto = new AcervoSolicitacaoConfirmarDTO()
+        
+            await servicoAcervoSolicitacao.ConfirmarAtendimento(new AcervoSolicitacaoConfirmarDTO()
             {
-                Itens = new List<AcervoSolicitacaoItemConfirmarDTO>()
-                {
-                    new()
-                    {
-                        Id = 1,
-                        DataVisita = DateTimeExtension.HorarioBrasilia().Date,
-                        TipoAtendimento = TipoAtendimento.Presencial
-                    },
-                    new()
-                    {
-                        Id = 2,
-                        DataVisita = DateTimeExtension.HorarioBrasilia().AddDays(5).Date,
-                        TipoAtendimento = TipoAtendimento.Presencial
-                    },
-                    new()
-                    {
-                        Id = 3,
-                        DataVisita = DateTimeExtension.HorarioBrasilia().AddDays(10).Date,
-                        TipoAtendimento = TipoAtendimento.Presencial
-                    }
-                }
-            };
-            
-            await servicoAcervoSolicitacao.ConfirmarAtendimento(acervoArteGraficaCadastroDto).ShouldThrowAsync<NegocioException>();
+                Id = 1,
+                ItemId = 1,
+                DataVisita = DateTimeExtension.HorarioBrasilia().Date,
+                TipoAtendimento = TipoAtendimento.Presencial
+            }).ShouldThrowAsync<NegocioException>();
         }
         
         [Fact(DisplayName = "Acervo Solicitação - Deve confirmar atendimento sem suspensão e feriado")]
         public async Task Deve_confirmar_atendimento_sem_suspensao_e_feriado()
         {
             await InserirDadosBasicosAleatorios();
-
+        
             await InserirAcervoTridimensional();
-
+        
             await InserirAcervoSolicitacao(10);
             
             await InserirNaBase(new Evento()
@@ -751,27 +639,22 @@ namespace SME.CDEP.TesteIntegracao
             
             var servicoAcervoSolicitacao = GetServicoAcervoSolicitacao();
             
-            var retorno = await servicoAcervoSolicitacao.ConfirmarAtendimento(new AcervoSolicitacaoConfirmarDTO()
+            await servicoAcervoSolicitacao.ConfirmarAtendimento(new AcervoSolicitacaoConfirmarDTO()
             {
                 Id = 1,
-                Itens = new List<AcervoSolicitacaoItemConfirmarDTO>()
-                {
-                    new()
-                    {
-                        Id = 1,
-                        DataVisita = DateTimeExtension.HorarioBrasilia().AddDays(5).Date,
-                        TipoAtendimento = TipoAtendimento.Presencial
-                    },
-                    new()
-                    {
-                        Id = 2,
-                        DataVisita = DateTimeExtension.HorarioBrasilia().AddDays(10).Date,
-                        TipoAtendimento = TipoAtendimento.Presencial
-                    }
-                }
+                ItemId = 1,
+                DataVisita = DateTimeExtension.HorarioBrasilia().AddDays(5).Date,
+                TipoAtendimento = TipoAtendimento.Presencial
+            });
+                
+            await servicoAcervoSolicitacao.ConfirmarAtendimento(new AcervoSolicitacaoConfirmarDTO()
+            {
+                Id = 1,
+                ItemId = 2,
+                DataVisita = DateTimeExtension.HorarioBrasilia().AddDays(10).Date,
+                TipoAtendimento = TipoAtendimento.Presencial
             });
             
-            retorno.ShouldBeTrue();
             var solicitacaoAlterada = ObterTodos<AcervoSolicitacao>().FirstOrDefault(f=> f.Id == 1);
             solicitacaoAlterada.Id.ShouldBe(1);
             solicitacaoAlterada.UsuarioId.ShouldBe(1);

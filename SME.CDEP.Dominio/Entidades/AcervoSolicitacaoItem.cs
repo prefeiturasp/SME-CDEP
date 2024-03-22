@@ -1,7 +1,4 @@
-﻿using System.ComponentModel.DataAnnotations;
-using SME.CDEP.Dominio.Constantes;
-using SME.CDEP.Dominio.Excecoes;
-using SME.CDEP.Infra.Dominio.Enumerados;
+﻿using SME.CDEP.Infra.Dominio.Enumerados;
 
 namespace SME.CDEP.Dominio.Entidades
 {
@@ -13,14 +10,5 @@ namespace SME.CDEP.Dominio.Entidades
         public SituacaoSolicitacaoItem Situacao { get; set; }
         public TipoAtendimento? TipoAtendimento { get; set; }
         public long? ResponsavelId { get; set; }
-
-        public void Validar()
-        {
-            if (TipoAtendimento.EhInvalido())
-                throw new NegocioException(MensagemNegocio.TIPO_ATENDIMENTO_INVALIDO);
-            
-            if (TipoAtendimento.EhAtendimentoViaEmail() && DataVisita.HasValue )
-                throw new NegocioException(MensagemNegocio.ITENS_ACERVOS_EMAIL_NAO_DEVEM_TER_DATA_ACERVO);
-        }
     }
 }
