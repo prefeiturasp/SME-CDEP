@@ -136,7 +136,7 @@ namespace SME.CDEP.TesteIntegracao
             acervoEmprestimos.All(a=> a.Situacao.EstaEmprestado()).ShouldBeTrue();
         }
         
-        [Fact(DisplayName = "Acervo Solicitação com empréstimo - Não deve registrar empréstimo em alteração de data de visita")]
+        [Fact(DisplayName = "Acervo Solicitação com empréstimo - Deve registrar empréstimo em alteração de data de visita")]
         public async Task Deve_confirmar_atendimento_mas_nao_deve_registrar_emprestimo_em_alteracao_de_data_de_visita()
         {
             //Arrange
@@ -914,115 +914,27 @@ namespace SME.CDEP.TesteIntegracao
             //Act
             var servicoAcervoSolicitacao = GetServicoAcervoSolicitacao();
             
-            // await servicoAcervoSolicitacao.ConfirmarAtendimento(new AcervoSolicitacaoConfirmarDTO()
-            // {
-            //     Id = 1,
-            //     Itens = new List<AcervoSolicitacaoItemConfirmarDTO>()
-            //     {
-            //         new()
-            //         {
-            //             Id = 1,
-            //             DataVisita = DateTimeExtension.HorarioBrasilia().AddDays(1).Date,
-            //             TipoAtendimento = TipoAtendimento.Presencial,
-            //             DataEmprestimo = DateTimeExtension.HorarioBrasilia().AddDays(2).Date,
-            //             DataDevolucao = DateTimeExtension.HorarioBrasilia().AddDays(10).Date,
-            //             TipoAcervo = TipoAcervo.Fotografico
-            //         },
-            //         new()
-            //         {
-            //             Id = 2,
-            //             DataVisita = DateTimeExtension.HorarioBrasilia().AddDays(4).Date,
-            //             TipoAtendimento = TipoAtendimento.Presencial,
-            //             DataEmprestimo = DateTimeExtension.HorarioBrasilia().AddDays(3).Date,
-            //             DataDevolucao = DateTimeExtension.HorarioBrasilia().AddDays(11).Date,
-            //             TipoAcervo = TipoAcervo.Fotografico
-            //         }
-            //     }
-            // }).ShouldThrowAsync<NegocioException>();
-        }
-        
-         [Fact(DisplayName = "Acervo Solicitação com empréstimo - Deve cancelar item emprestado quando remover as informações de empréstimo em acervo já emprestado")]
-        public async Task Deve_cancelar_item_emprestado_quando_remover_as_informacoes_de_emprestimo_em_acervo_ja_emprestado()
-        {
-            //Arrange
-            await InserirDadosBasicosAleatorios();
-
-            await InserirAcervosBibliograficos();
-
-            await InserirAcervosSolicitacoes();
-
-            var atendimentoPresencial = TipoAtendimento.Presencial;
-            var dataVisita = DateTimeExtension.HorarioBrasilia().Date;
-            await InserirAcervoSolicitacaoItem(atendimentoPresencial, dataVisita,1,2);
-            await InserirAcervoSolicitacaoItem(atendimentoPresencial, dataVisita,2,4);
-            await InserirAcervoSolicitacaoItem(atendimentoPresencial, dataVisita,3,3);
-            await InserirAcervoSolicitacaoItem(atendimentoPresencial, dataVisita,4,1);
+            await servicoAcervoSolicitacao.ConfirmarAtendimento(new AcervoSolicitacaoConfirmarDTO()
+            {
+                Id = 1,
+                ItemId = 1, 
+                DataVisita = DateTimeExtension.HorarioBrasilia().AddDays(1).Date,
+                TipoAtendimento = TipoAtendimento.Presencial,
+                DataEmprestimo = DateTimeExtension.HorarioBrasilia().AddDays(2).Date,
+                DataDevolucao = DateTimeExtension.HorarioBrasilia().AddDays(10).Date,
+                TipoAcervo = TipoAcervo.Fotografico
+            }).ShouldThrowAsync<NegocioException>();
             
-            var itensDaSolicitacao = ObterTodos<AcervoSolicitacaoItem>().Where(w=> w.AcervoSolicitacaoId == 1);
-            
-            foreach (var item in itensDaSolicitacao)
-                await InserirAcervoEmprestimo(item.Id, dataVisita);
-
-            //Act
-            var servicoAcervoSolicitacao = GetServicoAcervoSolicitacao();
-            
-            // var retorno = await servicoAcervoSolicitacao.ConfirmarAtendimento(new AcervoSolicitacaoConfirmarDTO()
-            // {
-            //     Id = 1,
-            //     Itens = new List<AcervoSolicitacaoItemConfirmarDTO>()
-            //     {
-            //         new()
-            //         {
-            //             Id = 1,
-            //             DataVisita = DateTimeExtension.HorarioBrasilia().Date,
-            //             TipoAtendimento = TipoAtendimento.Presencial,
-            //             TipoAcervo = TipoAcervo.Bibliografico
-            //         },
-            //         new()
-            //         {
-            //             Id = 2,
-            //             DataVisita = DateTimeExtension.HorarioBrasilia().Date,
-            //             TipoAtendimento = TipoAtendimento.Presencial,
-            //             DataEmprestimo = DateTimeExtension.HorarioBrasilia().Date,
-            //             DataDevolucao = DateTimeExtension.HorarioBrasilia().AddDays(7).Date,
-            //             TipoAcervo = TipoAcervo.Bibliografico
-            //         }
-            //     }
-            // });
-            //
-            // //Assert
-            // var solicitacaoAlterada = ObterTodos<AcervoSolicitacao>().FirstOrDefault(f=> f.Id == 1);
-            // solicitacaoAlterada.Id.ShouldBe(1);
-            // solicitacaoAlterada.UsuarioId.ShouldBe(1);
-            // solicitacaoAlterada.Situacao.ShouldBe(SituacaoSolicitacao.AGUARDANDO_VISITA);
-            // solicitacaoAlterada.Excluido.ShouldBeFalse();
-            //
-            // var itensAlterados = ObterTodos<AcervoSolicitacaoItem>().Where(w=> w.AcervoSolicitacaoId == 1);
-            // itensAlterados.Count().ShouldBe(2);
-            //
-            // var itemAguardandoVisita = itensAlterados.FirstOrDefault(w => w.Id == 1);
-            // itemAguardandoVisita.DataVisita.Value.Date.ShouldBe(DateTimeExtension.HorarioBrasilia().Date);
-            // itemAguardandoVisita.TipoAtendimento.ShouldBe(TipoAtendimento.Presencial);
-            // itemAguardandoVisita.Excluido.ShouldBeFalse();
-            // itemAguardandoVisita.Situacao.ShouldBe(SituacaoSolicitacaoItem.AGUARDANDO_VISITA);
-            //
-            // var itemFinalizadoManualmente = itensAlterados.FirstOrDefault(w => w.Id == 2);
-            // itemFinalizadoManualmente.DataVisita.Value.Date.ShouldBe(DateTimeExtension.HorarioBrasilia().Date);
-            // itemFinalizadoManualmente.TipoAtendimento.ShouldBe(TipoAtendimento.Presencial);
-            // itemFinalizadoManualmente.Excluido.ShouldBeFalse();
-            // itemFinalizadoManualmente.Situacao.ShouldBe(SituacaoSolicitacaoItem.FINALIZADO_MANUALMENTE);
-            //
-            // var eventos = ObterTodos<Evento>();
-            // eventos.Count(a=> a.Data.Date == DateTimeExtension.HorarioBrasilia().Date && !a.Excluido).ShouldBe(2);
-            //
-            // var acervoEmprestimos = ObterTodos<AcervoEmprestimo>();
-            // acervoEmprestimos.Count().ShouldBe(2);
-            //
-            // acervoEmprestimos.Count(a=> a.DataEmprestimo.Date == DateTimeExtension.HorarioBrasilia().Date).ShouldBe(2);
-            // acervoEmprestimos.Count(a=> a.DataDevolucao.Date == DateTimeExtension.HorarioBrasilia().AddDays(7).Date).ShouldBe(2);
-            //
-            // acervoEmprestimos.Count(a=> a.Situacao.EstaEmprestado()).ShouldBe(1);
-            // acervoEmprestimos.Count(a=> a.Situacao.EstaCancelado()).ShouldBe(1);
+            await servicoAcervoSolicitacao.ConfirmarAtendimento(new AcervoSolicitacaoConfirmarDTO()
+            {
+                Id = 1,
+                ItemId = 2,
+                DataVisita = DateTimeExtension.HorarioBrasilia().AddDays(4).Date,
+                TipoAtendimento = TipoAtendimento.Presencial,
+                DataEmprestimo = DateTimeExtension.HorarioBrasilia().AddDays(3).Date,
+                DataDevolucao = DateTimeExtension.HorarioBrasilia().AddDays(11).Date,
+                TipoAcervo = TipoAcervo.Fotografico
+            }).ShouldThrowAsync<NegocioException>();
         }
 
         private async Task InserirAcervoSolicitacaoItem(TipoAtendimento atendimentoPresencial, DateTime dataVisita, long acervoSolicitacaoId, int qtdeItens, SituacaoSolicitacaoItem situacaoSolicitacaoItem = SituacaoSolicitacaoItem.AGUARDANDO_ATENDIMENTO)

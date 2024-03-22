@@ -254,6 +254,98 @@ namespace SME.CDEP.Aplicacao.Servicos
         
         public async Task<bool> ConfirmarAtendimento(AcervoSolicitacaoConfirmarDTO acervoSolicitacaoConfirmar)
         {
+            ValidacoesParaConfirmarAtendimentoPortal(acervoSolicitacaoConfirmar);
+
+            var acervoSolicitacao = await repositorioAcervoSolicitacao.ObterPorId(acervoSolicitacaoConfirmar.Id);
+            
+            if (acervoSolicitacao.EhNulo())
+                throw new NegocioException(MensagemNegocio.SOLICITACAO_ATENDIMENTO_NAO_ENCONTRADA);
+            
+            var itensDaSolicitacaoAtual = await repositorioAcervoSolicitacaoItem
+                .ObterItensEmSituacaoAguardandoAtendimentoOuVisitaOuFinalizadoManualmentePorSolicitacaoId(acervoSolicitacaoConfirmar.Id);
+
+            if (acervoSolicitacaoConfirmar.TipoAtendimento.EhAtendimentoPresencial() )
+                await ValidarConflitosEventos(new List<DateTime>() { acervoSolicitacaoConfirmar.DataVisita.Value });
+            
+            var itemDaSolicitacaoAtual = itensDaSolicitacaoAtual.FirstOrDefault(w => w.Id == acervoSolicitacaoConfirmar.ItemId);
+            
+            var tran = transacao.Iniciar();
+            try
+            {
+                var eraPresencial = itemDaSolicitacaoAtual.TipoAtendimento.EhAtendimentoPresencial();
+                
+                var possuiInformacoesEmprestimo = acervoSolicitacaoConfirmar.DataEmprestimo.HasValue && acervoSolicitacaoConfirmar.DataDevolucao.HasValue;
+
+                itemDaSolicitacaoAtual.TipoAtendimento = acervoSolicitacaoConfirmar.TipoAtendimento;
+                
+                if (acervoSolicitacaoConfirmar.DataVisita.HasValue && acervoSolicitacaoConfirmar.TipoAtendimento.EhAtendimentoPresencial())
+                {
+                    itemDaSolicitacaoAtual.DataVisita = acervoSolicitacaoConfirmar.DataVisita;
+                    itemDaSolicitacaoAtual.Situacao =   possuiInformacoesEmprestimo ? SituacaoSolicitacaoItem.FINALIZADO_MANUALMENTE : SituacaoSolicitacaoItem.AGUARDANDO_VISITA;
+                }
+                else
+                {
+                    itemDaSolicitacaoAtual.Situacao = SituacaoSolicitacaoItem.FINALIZADO_MANUALMENTE;
+                    itemDaSolicitacaoAtual.DataVisita = null;
+                }
+                
+                itemDaSolicitacaoAtual.ResponsavelId = (await servicoUsuario.ObterUsuarioLogado()).Id;
+                
+                await repositorioAcervoSolicitacaoItem.Atualizar(itemDaSolicitacaoAtual);
+
+                if (eraPresencial && itemDaSolicitacaoAtual.TipoAtendimento.EhAtendimentoViaEmail())
+                    await servicoEvento.ExcluirEventoPorAcervoSolicitacaoItem(itemDaSolicitacaoAtual.Id);
+                
+                if (itemDaSolicitacaoAtual.TipoAtendimento.EhAtendimentoPresencial())
+                    await servicoEvento.AtualizarEventoVisita(itemDaSolicitacaoAtual.DataVisita.Value, itemDaSolicitacaoAtual.Id);
+                
+                var itemEmprestado = await repositorioAcervoEmprestimo.ObterUltimoEmprestimoPorAcervoSolicitacaoItemIds(new []{ acervoSolicitacaoConfirmar.ItemId });
+
+                if (itemEmprestado.NaoPossuiElementos())
+                {
+                    //Insere somente quando tiver informações relativas ao empréstimo (pode ser alteração de data de visita apenas)
+                    if (acervoSolicitacaoConfirmar.DataEmprestimo.HasValue && acervoSolicitacaoConfirmar.DataDevolucao.HasValue)
+                        await InserirAcervoEmprestimo(itemDaSolicitacaoAtual.Id, acervoSolicitacaoConfirmar.DataEmprestimo.Value, acervoSolicitacaoConfirmar.DataDevolucao.Value, SituacaoEmprestimo.EMPRESTADO);
+                }
+                else
+                {
+                    var itemEmprestadoAlterado = itemEmprestado.FirstOrDefault();
+                    itemEmprestadoAlterado.DataEmprestimo = acervoSolicitacaoConfirmar.DataEmprestimo.Value;
+                    itemEmprestadoAlterado.DataDevolucao = acervoSolicitacaoConfirmar.DataDevolucao.Value;
+                    itemEmprestadoAlterado.Situacao = SituacaoEmprestimo.EMPRESTADO;
+                    
+                    await repositorioAcervoEmprestimo.Atualizar(itemEmprestadoAlterado);
+                }
+                    
+                tran.Commit();
+                
+                await AtualizarSituacaoAtendimento(acervoSolicitacao);
+
+                if (itemDaSolicitacaoAtual.TipoAtendimento.EhAtendimentoPresencial())
+                {
+                    var confirmarAtendimento = new ConfirmarAtendimentoDTO()
+                    {
+                        Id = acervoSolicitacao.Id,
+                        ItemId = itemDaSolicitacaoAtual.Id
+                    };
+                    await servicoMensageria.Publicar(RotasRabbit.NotificarViaEmailConfirmacaoAtendimentoPresencial, confirmarAtendimento, null);
+                }
+                
+                return true;
+            }
+            catch
+            {
+                tran.Rollback();
+                throw;
+            }
+            finally
+            {
+                tran.Dispose();
+            }
+        }
+
+        private static void ValidacoesParaConfirmarAtendimentoPortal(AcervoSolicitacaoConfirmarDTO acervoSolicitacaoConfirmar)
+        {
             if (acervoSolicitacaoConfirmar.DataEmprestimo.HasValue && acervoSolicitacaoConfirmar.DataDevolucao.HasValue && acervoSolicitacaoConfirmar.TipoAcervo.NaoEhAcervoBibliografico())
                 throw new NegocioException(MensagemNegocio.DATA_DO_EMPRESTIMO_E_DEVOLUCAO_EXCLUSIVO_PARA_ACERVOS_BIBLIOGRAFICOS);
 
@@ -287,101 +379,6 @@ namespace SME.CDEP.Aplicacao.Servicos
             
             if (acervoSolicitacaoConfirmar.TipoAtendimento.EhAtendimentoViaEmail() && acervoSolicitacaoConfirmar.DataVisita.HasValue )
                 throw new NegocioException(MensagemNegocio.ITENS_ACERVOS_EMAIL_NAO_DEVEM_TER_DATA_ACERVO);
-            
-            var acervoSolicitacao = await repositorioAcervoSolicitacao.ObterPorId(acervoSolicitacaoConfirmar.Id);
-            
-            if (acervoSolicitacao.EhNulo())
-                throw new NegocioException(MensagemNegocio.SOLICITACAO_ATENDIMENTO_NAO_ENCONTRADA);
-            
-            var itensDaSolicitacaoAtual = await repositorioAcervoSolicitacaoItem
-                .ObterItensEmSituacaoAguardandoAtendimentoOuVisitaOuFinalizadoManualmentePorSolicitacaoId(acervoSolicitacaoConfirmar.Id);
-
-            if (acervoSolicitacaoConfirmar.TipoAtendimento.EhAtendimentoPresencial() )
-                await ValidarConflitosEventos(new List<DateTime>() { acervoSolicitacaoConfirmar.DataVisita.Value });
-            
-            var usuarioLogado = await servicoUsuario.ObterUsuarioLogado();
-            
-            var itensEmprestados = await repositorioAcervoEmprestimo.ObterUltimoEmprestimoPorAcervoSolicitacaoItemIds(new []{ acervoSolicitacaoConfirmar.ItemId });
-
-            var itemDaSolicitacaoAtual = itensDaSolicitacaoAtual.FirstOrDefault(w => w.Id == acervoSolicitacaoConfirmar.ItemId);
-            
-            var tran = transacao.Iniciar();
-            try
-            {
-                var eraPresencial = itemDaSolicitacaoAtual.TipoAtendimento.EhAtendimentoPresencial();
-                
-                var possuiInformacoesEmprestimo = acervoSolicitacaoConfirmar.DataEmprestimo.HasValue && acervoSolicitacaoConfirmar.DataDevolucao.HasValue;
-
-                itemDaSolicitacaoAtual.TipoAtendimento = acervoSolicitacaoConfirmar.TipoAtendimento;
-                
-                if (acervoSolicitacaoConfirmar.DataVisita.HasValue && acervoSolicitacaoConfirmar.TipoAtendimento.EhAtendimentoPresencial())
-                {
-                    itemDaSolicitacaoAtual.DataVisita = acervoSolicitacaoConfirmar.DataVisita;
-                    itemDaSolicitacaoAtual.Situacao =   possuiInformacoesEmprestimo ? SituacaoSolicitacaoItem.FINALIZADO_MANUALMENTE : SituacaoSolicitacaoItem.AGUARDANDO_VISITA;
-                }
-                else
-                {
-                    itemDaSolicitacaoAtual.Situacao = SituacaoSolicitacaoItem.FINALIZADO_MANUALMENTE;
-                    itemDaSolicitacaoAtual.DataVisita = null;
-                }
-
-                itemDaSolicitacaoAtual.ResponsavelId = usuarioLogado.Id;
-                
-                await repositorioAcervoSolicitacaoItem.Atualizar(itemDaSolicitacaoAtual);
-
-                if (eraPresencial && itemDaSolicitacaoAtual.TipoAtendimento.EhAtendimentoViaEmail())
-                    await servicoEvento.ExcluirEventoPorAcervoSolicitacaoItem(itemDaSolicitacaoAtual.Id);
-                
-                if (itemDaSolicitacaoAtual.TipoAtendimento.EhAtendimentoPresencial())
-                    await servicoEvento.AtualizarEventoVisita(itemDaSolicitacaoAtual.DataVisita.Value, itemDaSolicitacaoAtual.Id);
-                
-                var itemEmprestado = itensEmprestados.FirstOrDefault(f => f.AcervoSolicitacaoItemId == acervoSolicitacaoConfirmar.ItemId);
-
-                if (itemEmprestado.EhNulo())
-                {
-                    //Insere somente quando tiver informações relativas ao empréstimo (pode ser alteração de data de visita apenas)
-                    if (acervoSolicitacaoConfirmar.DataEmprestimo.HasValue && acervoSolicitacaoConfirmar.DataDevolucao.HasValue)
-                        await InserirAcervoEmprestimo(itemDaSolicitacaoAtual.Id, acervoSolicitacaoConfirmar.DataEmprestimo.Value, acervoSolicitacaoConfirmar.DataDevolucao.Value, SituacaoEmprestimo.EMPRESTADO);
-                }
-                else
-                {
-                    if (!acervoSolicitacaoConfirmar.DataEmprestimo.HasValue && !acervoSolicitacaoConfirmar.DataDevolucao.HasValue)
-                        itemEmprestado.Situacao = SituacaoEmprestimo.CANCELADO;
-                    else
-                    {
-                        itemEmprestado.DataEmprestimo = acervoSolicitacaoConfirmar.DataEmprestimo.Value;
-                        itemEmprestado.DataDevolucao = acervoSolicitacaoConfirmar.DataDevolucao.Value;
-                        itemEmprestado.Situacao = SituacaoEmprestimo.EMPRESTADO;
-                    }
-                    
-                    await repositorioAcervoEmprestimo.Atualizar(itemEmprestado);
-                }
-                    
-                tran.Commit();
-                
-                await AtualizarSituacaoAtendimento(acervoSolicitacao);
-
-                if (itemDaSolicitacaoAtual.TipoAtendimento.EhAtendimentoPresencial())
-                {
-                    var confirmarAtendimento = new ConfirmarAtendimentoDTO()
-                    {
-                        Id = acervoSolicitacao.Id,
-                        ItemId = itemDaSolicitacaoAtual.Id
-                    };
-                    await servicoMensageria.Publicar(RotasRabbit.NotificarViaEmailConfirmacaoAtendimentoPresencial, confirmarAtendimento, null);
-                }
-                
-                return true;
-            }
-            catch
-            {
-                tran.Rollback();
-                throw;
-            }
-            finally
-            {
-                tran.Dispose();
-            }
         }
 
         private async Task InserirAcervoEmprestimo(long acervoSolicitacaoItemId, DateTime dataEmprestimo, DateTime dataDevolucao, SituacaoEmprestimo situacaoEmprestimo)
