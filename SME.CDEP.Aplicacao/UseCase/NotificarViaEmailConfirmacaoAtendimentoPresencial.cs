@@ -33,7 +33,8 @@ namespace SME.CDEP.Aplicacao
             if (confirmarAtendimentoDto.EhNulo() || confirmarAtendimentoDto.Id < 0)
                 throw new NegocioException(MensagemNegocio.PARAMETROS_INVALIDOS);
 
-            var detalhesAcervo = await repositorioAcervoSolicitacaoItem.ObterDetalhamentoDosItensPorSolicitacaoOuItem(confirmarAtendimentoDto.Id,confirmarAtendimentoDto.Itens.ToArray());
+            var detalhesAcervo = await repositorioAcervoSolicitacaoItem
+                .ObterDetalhamentoDosItensPorSolicitacaoOuItem(confirmarAtendimentoDto.Id,confirmarAtendimentoDto.ItemId);
             
             if (detalhesAcervo.Any(a=> a.Email.NaoEstaPreenchido()))
                 throw new NegocioException(MensagemNegocio.SOLICITANTE_NAO_POSSUI_EMAIL);
