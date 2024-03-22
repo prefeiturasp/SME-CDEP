@@ -301,22 +301,12 @@ namespace SME.CDEP.Aplicacao.Servicos
                 
                 var itemEmprestado = await repositorioAcervoEmprestimo.ObterUltimoEmprestimoPorAcervoSolicitacaoItemIds(new []{ acervoSolicitacaoConfirmar.ItemId });
 
-                if (itemEmprestado.NaoPossuiElementos())
-                {
-                    //Insere somente quando tiver informações relativas ao empréstimo (pode ser alteração de data de visita apenas)
-                    if (acervoSolicitacaoConfirmar.DataEmprestimo.HasValue && acervoSolicitacaoConfirmar.DataDevolucao.HasValue)
-                        await InserirAcervoEmprestimo(itemDaSolicitacaoAtual.Id, acervoSolicitacaoConfirmar.DataEmprestimo.Value, acervoSolicitacaoConfirmar.DataDevolucao.Value, SituacaoEmprestimo.EMPRESTADO);
-                }
-                else
-                {
-                    var itemEmprestadoAlterado = itemEmprestado.FirstOrDefault();
-                    itemEmprestadoAlterado.DataEmprestimo = acervoSolicitacaoConfirmar.DataEmprestimo.Value;
-                    itemEmprestadoAlterado.DataDevolucao = acervoSolicitacaoConfirmar.DataDevolucao.Value;
-                    itemEmprestadoAlterado.Situacao = SituacaoEmprestimo.EMPRESTADO;
+                if (itemEmprestado.PossuiElementos())
+                    throw new NegocioException(MensagemNegocio.VOCE_NAO_PODE_ALTERAR_EMPRESTIMOS_ACERVOS);
                     
-                    await repositorioAcervoEmprestimo.Atualizar(itemEmprestadoAlterado);
-                }
-                    
+                if (acervoSolicitacaoConfirmar.DataEmprestimo.HasValue && acervoSolicitacaoConfirmar.DataDevolucao.HasValue)
+                    await InserirAcervoEmprestimo(itemDaSolicitacaoAtual.Id, acervoSolicitacaoConfirmar.DataEmprestimo.Value, acervoSolicitacaoConfirmar.DataDevolucao.Value, SituacaoEmprestimo.EMPRESTADO);
+                
                 tran.Commit();
                 
                 await AtualizarSituacaoAtendimento(acervoSolicitacao);

@@ -936,6 +936,43 @@ namespace SME.CDEP.TesteIntegracao
                 TipoAcervo = TipoAcervo.Fotografico
             }).ShouldThrowAsync<NegocioException>();
         }
+        
+        [Fact(DisplayName = "Acervo Solicitação empréstimo - Não deve permitir confirmar atendimento alterando data de empréstimo e devolução")]
+        public async Task Nao_deve_permitir_confirmar_atendimento_alterando_data_de_emprestimo_e_devolucao()
+        {
+            //Arrange
+            await InserirDadosBasicosAleatorios();
+
+            await InserirAcervosBibliograficos();
+
+            await InserirAcervosSolicitacoes();
+
+            var atendimentoPresencial = TipoAtendimento.Presencial;
+            var dataVisita = DateTimeExtension.HorarioBrasilia().Date;
+            await InserirAcervoSolicitacaoItem(atendimentoPresencial, dataVisita,1,2);
+            await InserirAcervoSolicitacaoItem(atendimentoPresencial, dataVisita,2,4);
+            await InserirAcervoSolicitacaoItem(atendimentoPresencial, dataVisita,3,3);
+            await InserirAcervoSolicitacaoItem(atendimentoPresencial, dataVisita,4,1);
+            
+            var itensDaSolicitacao = ObterTodos<AcervoSolicitacaoItem>().Where(w=> w.AcervoSolicitacaoId == 1);
+            
+            foreach (var item in itensDaSolicitacao)
+                await InserirAcervoEmprestimo(item.Id, dataVisita);
+
+            //Act
+            var servicoAcervoSolicitacao = GetServicoAcervoSolicitacao();
+            
+            await servicoAcervoSolicitacao.ConfirmarAtendimento(new AcervoSolicitacaoConfirmarDTO()
+            {
+                Id = 1,
+                ItemId = 1, 
+                DataVisita = DateTimeExtension.HorarioBrasilia().Date,
+                TipoAtendimento = TipoAtendimento.Presencial,
+                DataEmprestimo = DateTimeExtension.HorarioBrasilia().Date,
+                DataDevolucao = DateTimeExtension.HorarioBrasilia().AddDays(10).Date,
+                TipoAcervo = TipoAcervo.Bibliografico
+            }).ShouldThrowAsync<NegocioException>();
+        }
 
         private async Task InserirAcervoSolicitacaoItem(TipoAtendimento atendimentoPresencial, DateTime dataVisita, long acervoSolicitacaoId, int qtdeItens, SituacaoSolicitacaoItem situacaoSolicitacaoItem = SituacaoSolicitacaoItem.AGUARDANDO_ATENDIMENTO)
         {
