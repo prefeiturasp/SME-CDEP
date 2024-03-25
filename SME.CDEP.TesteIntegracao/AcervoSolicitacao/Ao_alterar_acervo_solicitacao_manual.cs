@@ -21,6 +21,7 @@ namespace SME.CDEP.TesteIntegracao
             await InserirDadosBasicosAleatorios();
 
             await InserirAcervosBibliograficos();
+            await InserirAcervosTridimensionais(11);
 
             var servicoAcervoSolicitacao = GetServicoAcervoSolicitacao();
             
@@ -32,20 +33,23 @@ namespace SME.CDEP.TesteIntegracao
                 {
                     new ()
                     {
+                        AcervoId = 11,
+                        TipoAtendimento = TipoAtendimento.Email,
+                        TipoAcervo = TipoAcervo.Tridimensional
+                    },
+                    new ()
+                    {
                         AcervoId = 1,
-                        TipoAtendimento = TipoAtendimento.Email
+                        TipoAtendimento = TipoAtendimento.Presencial,
+                        DataVisita = DateTimeExtension.HorarioBrasilia().AddDays(4),
+                        TipoAcervo = TipoAcervo.Bibliografico
                     },
                     new ()
                     {
                         AcervoId = 2,
                         TipoAtendimento = TipoAtendimento.Presencial,
-                        DataVisita = DateTimeExtension.HorarioBrasilia().AddDays(4)
-                    },
-                    new ()
-                    {
-                        AcervoId = 3,
-                        TipoAtendimento = TipoAtendimento.Presencial,
-                        DataVisita = DateTimeExtension.HorarioBrasilia().AddDays(40)
+                        DataVisita = DateTimeExtension.HorarioBrasilia().AddDays(40),
+                        TipoAcervo = TipoAcervo.Bibliografico
                     }
                 }
             };
@@ -64,19 +68,22 @@ namespace SME.CDEP.TesteIntegracao
                     new ()
                     {
                         Id = 1,
-                        AcervoId = 1,
-                        TipoAtendimento = TipoAtendimento.Email
+                        AcervoId = 11,
+                        TipoAtendimento = TipoAtendimento.Email,
+                        TipoAcervo = TipoAcervo.Tridimensional
                     },
                     new ()
                     {
                         Id = 2,
-                        AcervoId = 2,
-                        TipoAtendimento = TipoAtendimento.Email
+                        AcervoId = 1,
+                        TipoAtendimento = TipoAtendimento.Presencial,
+                        DataVisita = DateTimeExtension.HorarioBrasilia().AddDays(4),
+                        TipoAcervo = TipoAcervo.Bibliografico
                     },
                     new ()
                     {
                         Id = 3,
-                        AcervoId = 3,
+                        AcervoId = 2,
                         TipoAtendimento = TipoAtendimento.Presencial,
                         DataVisita = DateTimeExtension.HorarioBrasilia(),
                         DataEmprestimo = DateTimeExtension.HorarioBrasilia(),
@@ -85,8 +92,9 @@ namespace SME.CDEP.TesteIntegracao
                     },
                     new ()
                     {
-                        AcervoId = 4,
-                        TipoAtendimento = TipoAtendimento.Email
+                        AcervoId = 3,
+                        TipoAtendimento = TipoAtendimento.Email,
+                        TipoAcervo = TipoAcervo.Tridimensional
                     }
                 }
             };
@@ -98,32 +106,33 @@ namespace SME.CDEP.TesteIntegracao
             solicitacaoCadastrada.UsuarioId.ShouldBe(alteracaoAcervoSolicitacaoManual.UsuarioId);
             solicitacaoCadastrada.DataSolicitacao.ShouldBe(alteracaoAcervoSolicitacaoManual.DataSolicitacao);
             solicitacaoCadastrada.Origem.ShouldBe(Origem.Manual);
-            solicitacaoCadastrada.Situacao.ShouldBe(SituacaoSolicitacao.FINALIZADO_ATENDIMENTO);
+            solicitacaoCadastrada.Situacao.ShouldBe(SituacaoSolicitacao.AGUARDANDO_VISITA);
             solicitacaoCadastrada.Excluido.ShouldBeFalse();
             
             var itensCadastrados = ObterTodos<AcervoSolicitacaoItem>();
 
-            var primeiroItemEmail = itensCadastrados.FirstOrDefault(f => f.AcervoId == 1);
+            var primeiroItemEmail = itensCadastrados.FirstOrDefault(f => f.AcervoId == 11);
             primeiroItemEmail.Situacao.ShouldBe(SituacaoSolicitacaoItem.FINALIZADO_MANUALMENTE);
             primeiroItemEmail.TipoAtendimento.ShouldBe(TipoAtendimento.Email);
             primeiroItemEmail.DataVisita.ShouldBeNull();
             primeiroItemEmail.Excluido.ShouldBeFalse();
             primeiroItemEmail.ResponsavelId.ShouldNotBeNull();
             
-            var segundoItemEmail = itensCadastrados.FirstOrDefault(f => f.AcervoId == 2);
-            segundoItemEmail.Situacao.ShouldBe(SituacaoSolicitacaoItem.FINALIZADO_MANUALMENTE);
-            segundoItemEmail.TipoAtendimento.ShouldBe(TipoAtendimento.Email);
+            var segundoItemEmail = itensCadastrados.FirstOrDefault(f => f.AcervoId == 1);
+            segundoItemEmail.Situacao.ShouldBe(SituacaoSolicitacaoItem.AGUARDANDO_VISITA);
+            segundoItemEmail.TipoAtendimento.ShouldBe(TipoAtendimento.Presencial);
+            segundoItemEmail.DataVisita.Value.Date.ShouldBe(DateTimeExtension.HorarioBrasilia().AddDays(4).Date);
             segundoItemEmail.Excluido.ShouldBeFalse();
             segundoItemEmail.ResponsavelId.ShouldNotBeNull();
             
-            var terceiroItemPresencial = itensCadastrados.FirstOrDefault(f => f.AcervoId == 3);
+            var terceiroItemPresencial = itensCadastrados.FirstOrDefault(f => f.AcervoId == 2);
             terceiroItemPresencial.Situacao.ShouldBe(SituacaoSolicitacaoItem.FINALIZADO_MANUALMENTE);
             terceiroItemPresencial.TipoAtendimento.ShouldBe(TipoAtendimento.Presencial);
             terceiroItemPresencial.DataVisita.Value.Date.ShouldBe(DateTimeExtension.HorarioBrasilia().Date);
             terceiroItemPresencial.Excluido.ShouldBeFalse();
             terceiroItemPresencial.ResponsavelId.ShouldNotBeNull();
             
-            var quartoItemEmail = itensCadastrados.FirstOrDefault(f => f.AcervoId == 4);
+            var quartoItemEmail = itensCadastrados.FirstOrDefault(f => f.AcervoId == 3);
             quartoItemEmail.Situacao.ShouldBe(SituacaoSolicitacaoItem.FINALIZADO_MANUALMENTE);
             quartoItemEmail.TipoAtendimento.ShouldBe(TipoAtendimento.Email);
             quartoItemEmail.Excluido.ShouldBeFalse();
@@ -132,8 +141,9 @@ namespace SME.CDEP.TesteIntegracao
             var eventos = ObterTodos<Evento>();
             eventos.Count().ShouldBe(2);
             eventos.Count(a=> a.Data.Date == DateTimeExtension.HorarioBrasilia().Date).ShouldBe(1);
+            eventos.Count(a=> a.Data.Date == DateTimeExtension.HorarioBrasilia().Date.AddDays(4)).ShouldBe(1);
             eventos.Count(a=> a.Excluido).ShouldBe(1);
-            eventos.Count(a=> !a.Excluido).ShouldBe(1);
+            eventos.Count(a=> !a.Excluido).ShouldBe(1);fdsdfsfsfsf
             
             var acervoEmprestimos = ObterTodos<AcervoEmprestimo>();
             acervoEmprestimos.Count().ShouldBe(1);
@@ -240,14 +250,14 @@ namespace SME.CDEP.TesteIntegracao
             
             var itensCadastrados = ObterTodos<AcervoSolicitacaoItem>();
 
-            var primeiroItemEmail = itensCadastrados.FirstOrDefault(f => f.AcervoId == 4);
+            var primeiroItemEmail = itensCadastrados.FirstOrDefault(f => f.AcervoId == 12);
             primeiroItemEmail.Situacao.ShouldBe(SituacaoSolicitacaoItem.FINALIZADO_MANUALMENTE);
             primeiroItemEmail.TipoAtendimento.ShouldBe(TipoAtendimento.Email);
             primeiroItemEmail.DataVisita.ShouldBeNull();
             primeiroItemEmail.Excluido.ShouldBeFalse();
             primeiroItemEmail.ResponsavelId.ShouldNotBeNull();
             
-            var segundoItemEmail = itensCadastrados.FirstOrDefault(f => f.AcervoId == 5);
+            var segundoItemEmail = itensCadastrados.FirstOrDefault(f => f.AcervoId == 13);
             segundoItemEmail.Situacao.ShouldBe(SituacaoSolicitacaoItem.FINALIZADO_MANUALMENTE);
             segundoItemEmail.TipoAtendimento.ShouldBe(TipoAtendimento.Email);
             segundoItemEmail.Excluido.ShouldBeFalse();
