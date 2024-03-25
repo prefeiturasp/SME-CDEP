@@ -1,4 +1,6 @@
-﻿namespace SME.CDEP.Dominio.Entidades
+﻿using SME.CDEP.Infra.Dominio.Enumerados;
+
+namespace SME.CDEP.Dominio.Entidades
 {
     public class AcervoBibliografico : EntidadeBase
     {
@@ -17,5 +19,11 @@
         public string LocalizacaoPHA { get; set; }
         public string? NotasGerais { get; set; }
         public string? Isbn { get; set; }
+        public SituacaoSaldo SituacaoSaldo { get; set; }
+
+        public void DefinirSituacaoSaldo(SituacaoSaldo situacaoSaldo)
+        {
+            SituacaoSaldo = situacaoSaldo;
+        }
     }
 }

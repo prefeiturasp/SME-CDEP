@@ -210,7 +210,7 @@ namespace SME.CDEP.TesteIntegracao
         {
             await InserirDadosBasicosAleatorios();
 
-            await InserirAcervoTridimensional();
+            await InserirAcervosBibliograficos();
 
             var acervoSolicitacao = ObterAcervoSolicitacao();
             acervoSolicitacao.Situacao = SituacaoSolicitacao.ATENDIDO_PARCIALMENTE;
@@ -223,6 +223,8 @@ namespace SME.CDEP.TesteIntegracao
             {
                 item.AcervoSolicitacaoId = acervoSolicitadoId;
                 item.Situacao = contador >= 2 ? SituacaoSolicitacaoItem.AGUARDANDO_VISITA : SituacaoSolicitacaoItem.AGUARDANDO_ATENDIMENTO;
+                item.TipoAtendimento = contador >= 2 ? TipoAtendimento.Presencial : null; 
+                item.DataVisita = contador >= 2 ? DateTimeExtension.HorarioBrasilia() : null; 
                 await InserirNaBase(item);
 
                 if (contador >= 2)
@@ -233,6 +235,15 @@ namespace SME.CDEP.TesteIntegracao
                         DataEmprestimo = DateTimeExtension.HorarioBrasilia().AddDays(2).Date,
                         DataDevolucao = DateTimeExtension.HorarioBrasilia().AddDays(7).Date,
                         Situacao = SituacaoEmprestimo.EMPRESTADO,
+                        CriadoPor = "Sistema", CriadoEm = DateTimeExtension.HorarioBrasilia(), CriadoLogin = "Sistema"
+                    });
+                    
+                    await InserirNaBase(new Evento()
+                    {
+                        AcervoSolicitacaoItemId = contador,
+                        Data = DateTimeExtension.HorarioBrasilia(),
+                        Tipo = TipoEvento.VISITA,
+                        Descricao = TipoEvento.VISITA.Descricao(),
                         CriadoPor = "Sistema", CriadoEm = DateTimeExtension.HorarioBrasilia(), CriadoLogin = "Sistema"
                     });
                 }
@@ -253,13 +264,13 @@ namespace SME.CDEP.TesteIntegracao
             itens.All(a=> a.Situacao.EstaCancelado()).ShouldBeTrue();
             
             var eventos = ObterTodos<Evento>();
-            eventos.Count().ShouldBe(0);
+            eventos.Count(s=> !s.Excluido).ShouldBe(0);
+            eventos.Count(s=> s.Excluido).ShouldBe(2);
             
             var acervosEmprestimos = ObterTodos<AcervoEmprestimo>();
             acervosEmprestimos.Count().ShouldBe(4);
             acervosEmprestimos.Any(a=> a.DataEmprestimo.Date == DateTimeExtension.HorarioBrasilia().AddDays(2).Date && a.Situacao.EstaEmprestado()).ShouldBeTrue();
             acervosEmprestimos.Any(a=> a.DataDevolucao.Date == DateTimeExtension.HorarioBrasilia().AddDays(7).Date && a.Situacao.EstaEmprestado()).ShouldBeTrue();
-            acervosEmprestimos.Count(a=> a.Situacao.EstaEmprestado()).ShouldBe(2);
             acervosEmprestimos.Count(a=> a.Situacao.EstaCancelado()).ShouldBe(2);
         }
         

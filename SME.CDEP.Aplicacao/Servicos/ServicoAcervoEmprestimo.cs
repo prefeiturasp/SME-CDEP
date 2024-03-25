@@ -21,13 +21,11 @@ namespace SME.CDEP.Aplicacao.Servicos
        
         public async Task<bool> ProrrogarEmprestimo(AcervoEmprestimoProrrogacaoDTO acervoEmprestimoProrrogacaoDTO)
         {
-            var acervosEmprestimosAtuais = await repositorioAcervoEmprestimo.ObterUltimoEmprestimoPorAcervoSolicitacaoItemIds(new[] { acervoEmprestimoProrrogacaoDTO.AcervoSolicitacaoItemId });
+            var acervoEmprestimoAtual = await repositorioAcervoEmprestimo.ObterUltimoEmprestimoPorAcervoSolicitacaoItemId(acervoEmprestimoProrrogacaoDTO.AcervoSolicitacaoItemId );
 
-            if (acervosEmprestimosAtuais.NaoPossuiElementos())
+            if (acervoEmprestimoAtual.EhNulo())
                 throw new NegocioException(MensagemNegocio.ACERVO_EMPRESTIMO_NAO_ENCONTRADO);
 
-            var acervoEmprestimoAtual = acervosEmprestimosAtuais.FirstOrDefault();
-            
             if (acervoEmprestimoProrrogacaoDTO.DataDevolucao.EhMenorQue(acervoEmprestimoAtual.DataDevolucao))
                 throw new NegocioException(MensagemNegocio.DATA_DA_DEVOLUCAO_MENOR_DATA_DA_DEVOLUCAO_ANTERIOR_OU_FUTURA);
             
@@ -48,13 +46,11 @@ namespace SME.CDEP.Aplicacao.Servicos
 
         public async Task<bool> DevolverItemEmprestado(long acervoSolicitacaoItemId)
         {
-            var acervosEmprestimosAtuais = await repositorioAcervoEmprestimo.ObterUltimoEmprestimoPorAcervoSolicitacaoItemIds(new[] { acervoSolicitacaoItemId });
+            var acervoEmprestimoAtual = await repositorioAcervoEmprestimo.ObterUltimoEmprestimoPorAcervoSolicitacaoItemId(acervoSolicitacaoItemId);
 
-            if (acervosEmprestimosAtuais.NaoPossuiElementos())
+            if (acervoEmprestimoAtual.EhNulo())
                 throw new NegocioException(MensagemNegocio.ACERVO_EMPRESTIMO_NAO_ENCONTRADO);
 
-            var acervoEmprestimoAtual = acervosEmprestimosAtuais.FirstOrDefault();
-            
             var acervoEmprestimo = new AcervoEmprestimo()
             {
                 AcervoSolicitacaoItemId = acervoEmprestimoAtual.AcervoSolicitacaoItemId,

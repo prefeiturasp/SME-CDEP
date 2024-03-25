@@ -147,7 +147,8 @@ namespace SME.CDEP.TesteIntegracao
         {
             await InserirDadosBasicosAleatorios();
 
-            await InserirAcervoTridimensional(true);
+            await InserirAcervosBibliograficos();
+            await InserirAcervosTridimensionais(11);
             
             await InserirNaBase(new Evento()
             {
@@ -167,20 +168,23 @@ namespace SME.CDEP.TesteIntegracao
                 {
                     new ()
                     {
-                        AcervoId = 1,
-                        TipoAtendimento = TipoAtendimento.Email
+                        AcervoId = 11,
+                        TipoAtendimento = TipoAtendimento.Email,
+                        TipoAcervo = TipoAcervo.Bibliografico
                     },
                     new ()
                     {
                         AcervoId = 2,
                         TipoAtendimento = TipoAtendimento.Presencial,
-                        DataVisita = DateTimeExtension.HorarioBrasilia().AddDays(4)
+                        DataVisita = DateTimeExtension.HorarioBrasilia().AddDays(4),
+                        TipoAcervo = TipoAcervo.Bibliografico
                     },
                     new ()
                     {
                         AcervoId = 3,
                         TipoAtendimento = TipoAtendimento.Presencial,
-                        DataVisita = DateTimeExtension.HorarioBrasilia().AddDays(40)
+                        DataVisita = DateTimeExtension.HorarioBrasilia().AddDays(40),
+                        TipoAcervo = TipoAcervo.Bibliografico
                     }
                 }
             };
@@ -204,19 +208,22 @@ namespace SME.CDEP.TesteIntegracao
                 {
                     new ()
                     {
-                        AcervoId = 4,
-                        TipoAtendimento = TipoAtendimento.Email
+                        AcervoId = 12,
+                        TipoAtendimento = TipoAtendimento.Email,
+                        TipoAcervo = TipoAcervo.Tridimensional
                     },
                     new ()
                     {
-                        AcervoId = 5,
-                        TipoAtendimento = TipoAtendimento.Email
+                        AcervoId = 13,
+                        TipoAtendimento = TipoAtendimento.Email,
+                        TipoAcervo = TipoAcervo.Tridimensional
                     },
                     new ()
                     {
                         AcervoId = 6,
                         TipoAtendimento = TipoAtendimento.Presencial,
-                        DataVisita = DateTimeExtension.HorarioBrasilia().AddDays(50)
+                        DataVisita = DateTimeExtension.HorarioBrasilia().AddDays(50),
+                        TipoAcervo = TipoAcervo.Bibliografico
                     }
                 }
             };
