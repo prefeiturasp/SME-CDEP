@@ -547,28 +547,32 @@ namespace SME.CDEP.Aplicacao.Servicos
             var perfilLogado = new Guid(contextoAplicacao.PerfilUsuario);
             
             var tiposAcervosDisponiveis = ObterTodosTipos().Select(s => s.Id);
-            
-            switch (true)
+
+            return perfilLogado switch
             {
-                case var _ when perfilLogado.EhPerfilAdminGeral() || perfilLogado.EhPerfilBasico() :
-                    return tiposAcervosDisponiveis.ToArray();
+                _ when perfilLogado.EhPerfilAdminGeral() || perfilLogado.EhPerfilBasico() 
+                    => tiposAcervosDisponiveis.ToArray(),
                 
-                case var _ when perfilLogado.EhPerfilAdminBiblioteca():
-                    return tiposAcervosDisponiveis.Where(w => w == (long)TipoAcervo.Bibliografico).ToArray();
+                _ when perfilLogado.EhPerfilAdminBiblioteca() 
+                    => tiposAcervosDisponiveis
+                        .Where(w => w == (long)TipoAcervo.Bibliografico)
+                        .ToArray(),
                 
-                case var _ when perfilLogado.EhPerfilAdminMemoria():
-                    return tiposAcervosDisponiveis.Where(w => w == (long)TipoAcervo.DocumentacaoHistorica).ToArray();
+                _ when perfilLogado.EhPerfilAdminMemoria() 
+                    => tiposAcervosDisponiveis
+                        .Where(w => w == (long)TipoAcervo.DocumentacaoHistorica)
+                        .ToArray(),
                 
-                case var _ when perfilLogado.EhPerfilAdminMemorial():
-                    return tiposAcervosDisponiveis
-                        .Where(w => w == (long)TipoAcervo.ArtesGraficas
-                                    || w == (long)TipoAcervo.Fotografico
-                                    || w == (long)TipoAcervo.Tridimensional
-                                    || w == (long)TipoAcervo.Audiovisual).ToArray();
+                _ when perfilLogado.EhPerfilAdminMemorial() 
+                    => tiposAcervosDisponiveis
+                    .Where(w=> w == (long)TipoAcervo.ArtesGraficas 
+                                 || w == (long)TipoAcervo.Fotografico 
+                                 || w == (long)TipoAcervo.Tridimensional 
+                                 || w == (long)TipoAcervo.Audiovisual)
+                    .ToArray(),
                 
-                default:
-                    return Array.Empty<long>();
-            }
+                _ => Array.Empty<long>()
+            };
         }
 
         public IEnumerable<IdNomeDTO> ObterTodosTipos()
