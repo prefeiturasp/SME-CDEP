@@ -3,5 +3,5 @@
 public class ConfirmarAtendimentoDTO
 {
     public long Id { get; set; }
-    public IEnumerable<long> Itens { get; set; } = Enumerable.Empty<long>();
+    public long ItemId { get; set; }
 }

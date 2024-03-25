@@ -14,7 +14,7 @@ namespace SME.CDEP.Dominio.Entidades
         public long AcervoId { get; set; }
         public string Responsavel { get; set; }
         public DateTime? DataEmprestimo { get; set; }
-        public DateTime? Datadevolucao { get; set; }
+        public DateTime? DataDevolucao { get; set; }
         public SituacaoEmprestimo? SituacaoEmprestimo { get; set; }
     }
 }
