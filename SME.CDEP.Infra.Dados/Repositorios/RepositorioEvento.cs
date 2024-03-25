@@ -92,7 +92,7 @@ namespace SME.CDEP.Infra.Dados.Repositorios
         {
             var eventoSuspensaoFeriado = new int[] { (int)TipoEvento.FERIADO, (int)TipoEvento.SUSPENSAO };
             var eventoTipoVisita = (int)TipoEvento.VISITA;
-            
+
             var query = @"            
             ;with eventosFixosMoveis as 
             (
@@ -133,10 +133,14 @@ namespace SME.CDEP.Infra.Dados.Repositorios
                 where e.data::date between @data::date and @data::date 
                    and not e.excluido 
                    and e.tipo = @eventoTipoVisita
+            ),
+            juncao as 
+            (
+                select * from eventosFixosMoveis 
+                union all
+                select * from eventosVisita
             )
-            select * from eventosFixosMoveis 
-            union all
-            select * from eventosVisita";
+            select * from juncao order by data ";
             
             return conexao.Obter().QueryAsync<EventoDetalhe>(query,new { data, tiposAcervosPermitidos, eventoSuspensaoFeriado, eventoTipoVisita });
         }
