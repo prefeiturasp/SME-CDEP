@@ -225,7 +225,7 @@ namespace SME.CDEP.Aplicacao.Mapeamentos
             CreateMap<AcervoSolicitacaoDetalhe,AcervoSolicitacaoDetalheDTO>()
                 .ForMember(dest => dest.Situacao, opt => opt.MapFrom(o => o.Situacao.Descricao()))
                 .ForMember(dest => dest.SituacaoId, opt => opt.MapFrom(o => o.Situacao))
-                .ForMember(dest => dest.DataSolicitacao, opt => opt.MapFrom(o => o.DataSolicitacao.ToString("dd/MM HH:mm")))
+                .ForMember(dest => dest.DataSolicitacaoFormatado, opt => opt.MapFrom(o => o.DataSolicitacao.ToString("dd/MM HH:mm")))
                 .ReverseMap();
             
             CreateMap<AcervoSolicitacaoItemDetalheResumido,AcervoSolicitacaoItemDetalheResumidoDTO>()
