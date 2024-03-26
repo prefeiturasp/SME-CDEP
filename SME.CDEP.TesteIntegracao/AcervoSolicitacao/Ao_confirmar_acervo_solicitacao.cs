@@ -516,7 +516,8 @@ namespace SME.CDEP.TesteIntegracao
             {
                 Id = 1,
                 ItemId = 1,
-                TipoAtendimento = TipoAtendimento.Presencial
+                TipoAtendimento = TipoAtendimento.Presencial,
+                TipoAcervo = TipoAcervo.Tridimensional
             }).ShouldThrowAsync<NegocioException>();
         }
         
@@ -536,14 +537,16 @@ namespace SME.CDEP.TesteIntegracao
                 Id = 1,
                 ItemId = 1,
                 DataVisita = DateTimeExtension.HorarioBrasilia().AddDays(-1),
-                TipoAtendimento = TipoAtendimento.Presencial
+                TipoAtendimento = TipoAtendimento.Presencial,
+                TipoAcervo = TipoAcervo.Tridimensional
             });
             
             await servicoAcervoSolicitacao.ConfirmarAtendimento(new AcervoSolicitacaoConfirmarDTO()
             {
                 Id = 1,
                 ItemId = 2,
-                TipoAtendimento = TipoAtendimento.Email
+                TipoAtendimento = TipoAtendimento.Email,
+                TipoAcervo = TipoAcervo.Tridimensional
             });
             
             
@@ -593,7 +596,8 @@ namespace SME.CDEP.TesteIntegracao
                 Id = 101515,
                 ItemId = 1,
                 DataVisita = DateTimeExtension.HorarioBrasilia().Date,
-                TipoAtendimento = TipoAtendimento.Presencial
+                TipoAtendimento = TipoAtendimento.Presencial,
+                TipoAcervo = TipoAcervo.Tridimensional
             }).ShouldThrowAsync<NegocioException>();
             
 
@@ -602,7 +606,8 @@ namespace SME.CDEP.TesteIntegracao
                 Id = 101515,
                 ItemId = 2,
                 DataVisita = DateTimeExtension.HorarioBrasilia().Date,
-                TipoAtendimento = TipoAtendimento.Email
+                TipoAtendimento = TipoAtendimento.Email,
+                TipoAcervo = TipoAcervo.Tridimensional
             }).ShouldThrowAsync<NegocioException>();
                 
             await servicoAcervoSolicitacao.ConfirmarAtendimento(new AcervoSolicitacaoConfirmarDTO()
@@ -610,7 +615,8 @@ namespace SME.CDEP.TesteIntegracao
                 Id = 101515,
                 ItemId = 3,
                 DataVisita = DateTimeExtension.HorarioBrasilia().Date,
-                TipoAtendimento = TipoAtendimento.Email
+                TipoAtendimento = TipoAtendimento.Email,
+                TipoAcervo = TipoAcervo.Tridimensional
             }).ShouldThrowAsync<NegocioException>();
         }
         
@@ -646,7 +652,8 @@ namespace SME.CDEP.TesteIntegracao
                 Id = 1,
                 ItemId = 1,
                 DataVisita = DateTimeExtension.HorarioBrasilia().Date,
-                TipoAtendimento = TipoAtendimento.Presencial
+                TipoAtendimento = TipoAtendimento.Presencial,
+                TipoAcervo = TipoAcervo.Tridimensional
             }).ShouldThrowAsync<NegocioException>();
         }
         
@@ -683,7 +690,8 @@ namespace SME.CDEP.TesteIntegracao
                 Id = 1,
                 ItemId = 1,
                 DataVisita = DateTimeExtension.HorarioBrasilia().Date,
-                TipoAtendimento = TipoAtendimento.Presencial
+                TipoAtendimento = TipoAtendimento.Presencial,
+                TipoAcervo = TipoAcervo.Tridimensional
             }).ShouldThrowAsync<NegocioException>();
         }
         
@@ -711,7 +719,8 @@ namespace SME.CDEP.TesteIntegracao
                 Id = 1,
                 ItemId = 1,
                 DataVisita = DateTimeExtension.HorarioBrasilia().AddDays(5).Date,
-                TipoAtendimento = TipoAtendimento.Presencial
+                TipoAtendimento = TipoAtendimento.Presencial,
+                TipoAcervo = TipoAcervo.Tridimensional
             });
                 
             await servicoAcervoSolicitacao.ConfirmarAtendimento(new AcervoSolicitacaoConfirmarDTO()
@@ -719,7 +728,8 @@ namespace SME.CDEP.TesteIntegracao
                 Id = 1,
                 ItemId = 2,
                 DataVisita = DateTimeExtension.HorarioBrasilia().AddDays(10).Date,
-                TipoAtendimento = TipoAtendimento.Presencial
+                TipoAtendimento = TipoAtendimento.Presencial,
+                TipoAcervo = TipoAcervo.Tridimensional
             });
             
             var solicitacaoAlterada = ObterTodos<AcervoSolicitacao>().FirstOrDefault(f=> f.Id == 1);
