@@ -119,7 +119,7 @@ namespace SME.CDEP.Infra.Dados.Repositorios
                        e.data,
                        e.tipo,
                        e.descricao,
-                       e.acervo_solicitacao_item_id as acervoSolicitacaoId,
+                       asi.acervo_solicitacao_id as acervoSolicitacaoId,
                        e.justificativa,
                        a.titulo,
                        a.codigo, 
