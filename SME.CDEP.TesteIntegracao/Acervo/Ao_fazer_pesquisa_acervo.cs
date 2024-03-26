@@ -1,5 +1,6 @@
 ﻿using Shouldly;
 using SME.CDEP.Aplicacao.DTOS;
+using SME.CDEP.Aplicacao.Servicos.Interface;
 using SME.CDEP.Dominio.Entidades;
 using SME.CDEP.Dominio.Extensions;
 using SME.CDEP.Infra.Dominio.Enumerados;
@@ -10,16 +11,19 @@ namespace SME.CDEP.TesteIntegracao
 {
     public class Ao_fazer_pesquisa_acervo : TesteBase
     {
+        private readonly IServicoAcervoArteGrafica servicoAcervoArteGrafica;
+        private readonly IServicoAcervo servicoAcervo;
+        
         public Ao_fazer_pesquisa_acervo(CollectionFixture collectionFixture) : base(collectionFixture)
-        {}
+        {
+            servicoAcervoArteGrafica = GetServicoAcervoArteGrafica();
+            servicoAcervo = GetServicoAcervo();
+        }
 
         [Fact(DisplayName = "Acervo - Pesquisar acervos por texto")]
         public async Task Pesquisar_acervo_por_texto()
         {
             await InserirDadosBasicosAleatorios();
-
-            var servicoAcervoArteGrafica = GetServicoAcervoArteGrafica();
-            var servicoAcervo = GetServicoAcervo();
 
             var arquivos = ArquivoMock.Instance.GerarArquivo(TipoArquivo.AcervoArteGrafica).Generate(10);
             GerarArquivosSistema(arquivos);
@@ -482,8 +486,7 @@ namespace SME.CDEP.TesteIntegracao
         {
             await InserirDadosBasicosAleatorios();
 
-            var servicoAcervoArteGrafica = GetServicoAcervoArteGrafica();
-            var servicoAcervo = GetServicoAcervo();
+            
 
             var arquivos = ArquivoMock.Instance.GerarArquivo(TipoArquivo.AcervoArteGrafica).Generate(10);
             GerarArquivosSistema(arquivos);
@@ -528,6 +531,42 @@ namespace SME.CDEP.TesteIntegracao
             var pesquisa = await servicoAcervo.ObterPorTextoLivreETipoAcervo(filtro);
             pesquisa.ShouldNotBeNull();
             pesquisa.TotalRegistros.ShouldBe(60);
+        }
+        
+        [Fact(DisplayName = "Acervo - Pesquisar acervos disponíveis")]
+        public async Task Pesquisar_acervo_disponiveis()
+        {
+            await InserirDadosBasicosAleatorios();
+
+            await InserirAcervosBibliograficos();
+
+            await GerarArquivosSistema();
+
+            var filtro = new FiltroTextoLivreTipoAcervoDTO();
+            
+            var pesquisa = await servicoAcervo.ObterPorTextoLivreETipoAcervo(filtro);
+            pesquisa.ShouldNotBeNull();
+            pesquisa.TotalRegistros.ShouldBe(10);
+            pesquisa.Items.Any(a=> a.EstaDisponivel).ShouldBeTrue();
+        }
+        
+        [Theory(DisplayName = "Acervo - Pesquisar acervos indisponíveis")]
+        [InlineData(SituacaoSaldo.RESERVADO)]
+        [InlineData(SituacaoSaldo.EMPRESTADO)]
+        public async Task Pesquisar_acervo_indisponiveis(SituacaoSaldo situacaoSaldo)
+        {
+            await InserirDadosBasicosAleatorios();
+
+            await InserirAcervosBibliograficos(situacaoSaldo);
+
+            await GerarArquivosSistema();
+
+            var filtro = new FiltroTextoLivreTipoAcervoDTO();
+            
+            var pesquisa = await servicoAcervo.ObterPorTextoLivreETipoAcervo(filtro);
+            pesquisa.ShouldNotBeNull();
+            pesquisa.TotalRegistros.ShouldBe(10);
+            pesquisa.Items.Any(a=> a.EstaDisponivel).ShouldBeFalse();
         }
     }
 }

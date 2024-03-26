@@ -817,6 +817,16 @@ namespace SME.CDEP.TesteIntegracao
             arquivos.AddRange(AdicionarArquivoSistema("Tridimensional_sem_Imagem.svg"));
         }
         
+        protected async Task GerarArquivosSistema()
+        {
+            await InserirVariosNaBase(AdicionarArquivoSistema("Bibliografico_sem_imagem.svg"));
+            await InserirVariosNaBase(AdicionarArquivoSistema("Documentacao_sem_imagem.svg"));
+            await InserirVariosNaBase(AdicionarArquivoSistema("Artesgraficas_sem_imagem.svg"));
+            await InserirVariosNaBase(AdicionarArquivoSistema("Audiovisual_sem_imagem.svg"));
+            await InserirVariosNaBase(AdicionarArquivoSistema("Fotografico_sem_imagem.svg"));
+            await InserirVariosNaBase(AdicionarArquivoSistema("Tridimensional_sem_Imagem.svg"));
+        }
+        
         private IEnumerable<Arquivo> AdicionarArquivoSistema(string nomeDoArquivo)
         {
             var arquivosBibliograficosPadrao = ArquivoMock.Instance.GerarArquivo(TipoArquivo.Sistema).Generate(1);
@@ -825,7 +835,7 @@ namespace SME.CDEP.TesteIntegracao
             return arquivosBibliograficosPadrao;
         }
         
-        protected async Task InserirAcervosBibliograficos()
+        protected async Task InserirAcervosBibliograficos(SituacaoSaldo situacaoSaldo = SituacaoSaldo.DISPONIVEL)
         {
             var acervoId = 1;
             var inserindoAcervoBibliografico = AcervoBibliograficoMock.Instance.Gerar().Generate(10);
@@ -833,6 +843,7 @@ namespace SME.CDEP.TesteIntegracao
             {
                 await InserirNaBase(acervoBibliografico.Acervo);
                 acervoBibliografico.AcervoId = acervoId;
+                acervoBibliografico.DefinirSituacaoSaldo(situacaoSaldo);
                 await InserirNaBase(acervoBibliografico);
                 acervoId++;
             }
