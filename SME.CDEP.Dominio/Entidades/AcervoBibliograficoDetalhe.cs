@@ -1,4 +1,5 @@
 ﻿using SME.CDEP.Dominio.Extensions;
+using SME.CDEP.Infra.Dominio.Enumerados;
 
 namespace SME.CDEP.Dominio.Entidades;
 
@@ -25,6 +26,7 @@ public class AcervoBibliograficoDetalhe
     public string Codigo { get; set; }
     public string Autores { get; set; }
     public string Assuntos { get; set; }
+    public SituacaoSaldo SituacaoSaldo { get; set; }
     public string Dimensoes
     {
         get

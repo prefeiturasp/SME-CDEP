@@ -263,7 +263,7 @@ namespace SME.CDEP.Aplicacao.Servicos
                 var hostAplicacao = configuration["UrlFrontEnd"];
             
                 var acervosAgrupandoCreditoAutor = acervos
-                    .GroupBy(g => new { g.AcervoId,g.Codigo, g.Titulo, g.Tipo, g.Descricao, g.TipoAcervoTag, g.DataAcervo, g.Ano })
+                    .GroupBy(g => new { g.AcervoId,g.Codigo, g.Titulo, g.Tipo, g.Descricao, g.TipoAcervoTag, g.DataAcervo, g.Ano, g.SituacaoSaldo })
                     .Select(s => new PesquisaAcervoDTO
                     {
                         AcervoId = s.Key.AcervoId,
@@ -280,8 +280,8 @@ namespace SME.CDEP.Aplicacao.Servicos
                             ? $"{hostAplicacao}{Constantes.BUCKET_CDEP}/{miniaturasDosAcervos.FirstOrDefault(f=> f.AcervoId == s.Key.AcervoId).Thumbnail}"
                             : string.Empty,
                         EnderecoImagemPadrao = $"{hostAplicacao}{Constantes.BUCKET_CDEP}/{imagensPadrao.FirstOrDefault(f=> f.TipoAcervo == s.Key.Tipo).NomeArquivoFisico}",
-                        EstaDisponivel = true,/* será tratada no controle de saldo em outra estória */
-                        SituacaoDisponibilidade = Constantes.ACERVO_DISPONIVEL, /* será tratada no controle de saldo em outra estória */
+                        EstaDisponivel = s.Key.SituacaoSaldo.EstaDisponivel(),
+                        SituacaoDisponibilidade = s.Key.SituacaoSaldo.EstaDisponivel() ? Constantes.ACERVO_DISPONIVEL : Constantes.ACERVO_INDISPONIVEL,
                         TemControleDisponibilidade = s.Key.Tipo.EhAcervoBibliografico()
                     });
             
@@ -398,9 +398,9 @@ namespace SME.CDEP.Aplicacao.Servicos
                     
                     retornoBibliografico.EnderecoImagemPadrao = await ObterEnderecoImagemPadrao(TipoAcervo.Bibliografico);
                     retornoBibliografico.TemControleDisponibilidade = true;
-                    retornoBibliografico.EstaDisponivel = true;/* será tratada no controle de saldo em outra estória */
-                    retornoBibliografico.SituacaoDisponibilidade = Constantes.ACERVO_DISPONIVEL; /* será tratada no controle de saldo em outra estória */
-                    retornoBibliografico.TipoAcervoId = (int)TipoAcervo.Bibliografico; /* será tratada no controle de saldo em outra estória */
+                    retornoBibliografico.EstaDisponivel = retornoBibliografico.EstaDisponivel;
+                    retornoBibliografico.SituacaoDisponibilidade = retornoBibliografico.EstaDisponivel ? Constantes.ACERVO_DISPONIVEL : Constantes.ACERVO_INDISPONIVEL; 
+                    retornoBibliografico.TipoAcervoId = (int)TipoAcervo.Bibliografico;
                     return retornoBibliografico;
                 
                 case TipoAcervo.DocumentacaoHistorica:
@@ -519,6 +519,14 @@ namespace SME.CDEP.Aplicacao.Servicos
 
             if (retorno.EhNulo())
                 throw new NegocioException(MensagemNegocio.ACERVO_NAO_ENCONTRADO);
+
+            if (retorno.TipoAcervoId.EhAcervoBibliografico())
+            {
+                var acervoBibliografico = await repositorioAcervoBibliografico.ObterPorAcervoId(retorno.Id);
+
+                if (acervoBibliografico.SituacaoSaldo.EstaIndisponivel())
+                    throw new NegocioException(MensagemNegocio.ACERVO_INDISPONIVEL);
+            }
             
             return mapper.Map<IdNomeCodigoTipoParaEmprestimoDTO>(retorno);
         }

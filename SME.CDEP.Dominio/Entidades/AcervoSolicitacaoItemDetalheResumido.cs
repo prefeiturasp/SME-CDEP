@@ -16,5 +16,16 @@ namespace SME.CDEP.Dominio.Entidades
         public DateTime? DataEmprestimo { get; set; }
         public DateTime? DataDevolucao { get; set; }
         public SituacaoEmprestimo? SituacaoEmprestimo { get; set; }
+        public SituacaoSaldo SituacaoSaldo { get; set; }
+        public long acervoSolicitacaoId { get; set; }
+
+        public string SituacaoSaldoDescricao()
+        {
+            return SituacaoSaldo.EstaDisponivel() 
+                ? Constantes.Constantes.ACERVO_DISPONIVEL 
+                : SituacaoSaldo.EstaReservado() 
+                    ? $"Acervo reservado pela solicitação '{acervoSolicitacaoId}'" 
+                    : $"Acervo emprestado pela solicitação '{acervoSolicitacaoId}'";
+        }
     }
 }

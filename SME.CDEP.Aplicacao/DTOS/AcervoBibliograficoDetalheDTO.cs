@@ -16,4 +16,5 @@ public class AcervoBibliograficoDetalheDTO : AcervoDetalheDTO
     public string Localizacao { get; set; }
     public string NotasGerais { get; set; }
     public string Isbn { get; set; }
+    public bool EstaDisponivel { get; set; }
 }

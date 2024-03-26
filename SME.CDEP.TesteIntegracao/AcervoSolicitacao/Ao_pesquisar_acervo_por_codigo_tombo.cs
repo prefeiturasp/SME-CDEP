@@ -200,6 +200,38 @@ namespace SME.CDEP.TesteIntegracao
             await NaoDeveRetornarCodigoTombo(filtro);
         }
         
+        [Theory(DisplayName = "Acervo - Não deve retornar acervo disponível com perfil Admin Geral")]
+        [InlineData(SituacaoSaldo.RESERVADO)]
+        [InlineData(SituacaoSaldo.EMPRESTADO)]
+        public async Task Nao_deve_retornar_acervo_disponivel_com_perfil_admin_geral(SituacaoSaldo situacaoSaldo)
+        {
+            CriarClaimUsuario(Dominio.Constantes.Constantes.PERFIL_ADMIN_GERAL_GUID);
+            
+            await InserirDadosBasicosAleatorios();
+
+            await InserirAcervos(situacaoSaldo);
+
+            var acervos = ObterTodos<Acervo>();
+
+            var filtro = new FiltroCodigoTomboDTO() { CodigoTombo = acervos.FirstOrDefault(f => f.TipoAcervoId.EhAcervoDocumental()).Codigo };
+            await DeveRetornarCodigoTombo(filtro);
+
+            filtro = new FiltroCodigoTomboDTO() { CodigoTombo = acervos.FirstOrDefault(f => f.TipoAcervoId.EhAcervoTridimensional()).Codigo };
+            await DeveRetornarCodigoTombo(filtro);
+            
+            filtro = new FiltroCodigoTomboDTO() { CodigoTombo = acervos.FirstOrDefault(f => f.TipoAcervoId.EhAcervoBibliografico()).Codigo };
+            await NaoDeveRetornarCodigoTombo(filtro);
+            
+            filtro = new FiltroCodigoTomboDTO() { CodigoTombo = acervos.FirstOrDefault(f => f.TipoAcervoId.EhAcervoArteGrafica()).Codigo };
+            await DeveRetornarCodigoTombo(filtro);
+            
+            filtro = new FiltroCodigoTomboDTO() { CodigoTombo = acervos.FirstOrDefault(f => f.TipoAcervoId.EhAcervoFotografico()).Codigo };
+            await DeveRetornarCodigoTombo(filtro);
+            
+            filtro = new FiltroCodigoTomboDTO() { CodigoTombo = acervos.FirstOrDefault(f => f.TipoAcervoId.EhAcervoAudiovisual()).Codigo };
+            await DeveRetornarCodigoTombo(filtro);
+        }
+        
         private async Task DeveRetornarCodigoTombo(FiltroCodigoTomboDTO filtro)
         {
             var retorno = await _servicoAcervo.PesquisarAcervoPorCodigoTombo(filtro);
@@ -211,6 +243,12 @@ namespace SME.CDEP.TesteIntegracao
         {
             var excecao = await Should.ThrowAsync<NegocioException>(() => _servicoAcervo.PesquisarAcervoPorCodigoTombo(filtro));
             excecao.Message.Equals(MensagemNegocio.ACERVO_NAO_ENCONTRADO);
+        }
+        
+        private async Task NaoDeveRetornarAcervoDisponivel(FiltroCodigoTomboDTO filtro)
+        {
+            var excecao = await Should.ThrowAsync<NegocioException>(() => _servicoAcervo.PesquisarAcervoPorCodigoTombo(filtro));
+            excecao.Message.Equals(MensagemNegocio.ACERVO_INDISPONIVEL);
         }
     }
 }

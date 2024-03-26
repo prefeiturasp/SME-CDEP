@@ -1,5 +1,6 @@
 ﻿using Shouldly;
 using SME.CDEP.Aplicacao.DTOS;
+using SME.CDEP.Aplicacao.Servicos.Interface;
 using SME.CDEP.Dominio.Entidades;
 using SME.CDEP.Dominio.Extensions;
 using SME.CDEP.Infra.Dominio.Enumerados;
@@ -10,16 +11,19 @@ namespace SME.CDEP.TesteIntegracao
 {
     public class Ao_detalhar_acervo : TesteBase
     {
+        private readonly IServicoAcervoArteGrafica servicoAcervoArteGrafica;
+        private readonly IServicoAcervo servicoAcervo;
+        
         public Ao_detalhar_acervo(CollectionFixture collectionFixture) : base(collectionFixture)
-        {}
+        {
+            servicoAcervoArteGrafica = GetServicoAcervoArteGrafica();
+            servicoAcervo = GetServicoAcervo();
+        }
 
         [Fact(DisplayName = "Acervo - Detalhar acervos com imagens")]
         public async Task Detalhar_acervo_exibindo_imagens_permite_uso_de_imagens()
         {
             await InserirDadosBasicosAleatorios();
-
-            var servicoAcervoArteGrafica = GetServicoAcervoArteGrafica();
-            var servicoAcervo = GetServicoAcervo();
 
             var arquivos = ArquivoMock.Instance.GerarArquivo(TipoArquivo.AcervoArteGrafica).Generate(10);
             GerarArquivosSistema(arquivos);
@@ -74,9 +78,6 @@ namespace SME.CDEP.TesteIntegracao
         {
             await InserirDadosBasicosAleatorios();
 
-            var servicoAcervoArteGrafica = GetServicoAcervoArteGrafica();
-            var servicoAcervo = GetServicoAcervo();
-
             var arquivos = ArquivoMock.Instance.GerarArquivo(TipoArquivo.AcervoArteGrafica).Generate(10);
             GerarArquivosSistema(arquivos);
             
@@ -124,6 +125,58 @@ namespace SME.CDEP.TesteIntegracao
             detalhamentoDoAcervoArteGrafica.Dimensoes.EstaPreenchido().ShouldBeTrue();
             detalhamentoDoAcervoArteGrafica.Quantidade.ShouldBeGreaterThan(0);
             detalhamentoDoAcervoArteGrafica.Imagens.Any().ShouldBeFalse();
+        }
+        
+        [Theory(DisplayName = "Acervo - Detalhar acervos indisponíveis (emprestado e reservado)")]
+        [InlineData(SituacaoSaldo.RESERVADO)]
+        [InlineData(SituacaoSaldo.EMPRESTADO)]
+        public async Task Detalhar_acervo_indisponiveis_emprestado_e_reservado(SituacaoSaldo situacaoSaldo)
+        {
+            await InserirDadosBasicosAleatorios();
+
+            await InserirAcervosBibliograficos(situacaoSaldo);
+
+            await GerarArquivosSistema();
+
+            var acervosInseridos = ObterTodos<Acervo>();
+            
+            var filtro = new FiltroDetalharAcervoDTO()
+            {
+                Codigo = acervosInseridos.FirstOrDefault().Codigo,
+                Tipo = TipoAcervo.Bibliografico
+            };
+            
+            var detalhamentoDoAcervo = await servicoAcervo.ObterDetalhamentoPorTipoAcervoECodigo(filtro);
+            detalhamentoDoAcervo.ShouldNotBeNull();
+            var detalhamentoDoAcervoArteGrafica = (AcervoBibliograficoDetalheDTO)detalhamentoDoAcervo;
+
+            detalhamentoDoAcervoArteGrafica.Codigo.ShouldBe(filtro.Codigo);
+            detalhamentoDoAcervoArteGrafica.EstaDisponivel.ShouldBeFalse();
+        }
+        
+        [Fact(DisplayName = "Acervo - Detalhar acervos disponíveis")]
+        public async Task Detalhar_acervo_disponiveis()
+        {
+            await InserirDadosBasicosAleatorios();
+
+            await InserirAcervosBibliograficos();
+
+            await GerarArquivosSistema();
+
+            var acervosInseridos = ObterTodos<Acervo>();
+            
+            var filtro = new FiltroDetalharAcervoDTO()
+            {
+                Codigo = acervosInseridos.FirstOrDefault().Codigo,
+                Tipo = TipoAcervo.Bibliografico
+            };
+            
+            var detalhamentoDoAcervo = await servicoAcervo.ObterDetalhamentoPorTipoAcervoECodigo(filtro);
+            detalhamentoDoAcervo.ShouldNotBeNull();
+            var detalhamentoDoAcervoArteGrafica = (AcervoBibliograficoDetalheDTO)detalhamentoDoAcervo;
+
+            detalhamentoDoAcervoArteGrafica.Codigo.ShouldBe(filtro.Codigo);
+            detalhamentoDoAcervoArteGrafica.EstaDisponivel.ShouldBeTrue();
         }
     }
 }
