@@ -850,13 +850,14 @@ namespace SME.CDEP.TesteIntegracao
             }
         }
         
-        protected async Task InserirAcervosBibliograficosEmMassa(int contadorAcervos, int quantidade)
+        protected async Task InserirAcervosBibliograficosEmMassa(int contadorAcervos, int quantidade, SituacaoSaldo situacaoSaldo = SituacaoSaldo.DISPONIVEL)
         {
             var acervosBibliograficos = AcervoBibliograficoMock.Instance.Gerar().Generate(quantidade);
             foreach (var item in acervosBibliograficos)
             {
                 await InserirNaBase(item.Acervo);
                 item.AcervoId = contadorAcervos;
+                item.SituacaoSaldo = situacaoSaldo;
                 await InserirNaBase(item);
                 contadorAcervos++;
             }
@@ -939,14 +940,14 @@ namespace SME.CDEP.TesteIntegracao
             contadorSolicitacoes++;
         }
         
-        protected async Task InserirAcervos()
+        protected async Task InserirAcervos(SituacaoSaldo situacaoSaldo = SituacaoSaldo.DISPONIVEL)
         {
             var contadorAcervos = 1;
             var quantidadePorTipo = 10;
 
             var inserirAcervos = new List<Func<Task>>()
             {
-                () => InserirAcervosBibliograficosEmMassa(contadorAcervos, quantidadePorTipo),
+                () => InserirAcervosBibliograficosEmMassa(contadorAcervos, quantidadePorTipo, situacaoSaldo),
                 () => InserirAcervosArteGraficasEmMassa(contadorAcervos + quantidadePorTipo, quantidadePorTipo),
                 () => InserirAcervosTridimensionalEmMassa(contadorAcervos + 2 * quantidadePorTipo, quantidadePorTipo),
                 () => InserirAcervosFotograficoEmMassa(contadorAcervos + 3 * quantidadePorTipo, quantidadePorTipo),

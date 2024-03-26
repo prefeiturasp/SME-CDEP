@@ -12,6 +12,7 @@ namespace SME.CDEP.Dominio.Entidades
         public string Assunto { get; set; }
         public string Descricao { get; set; }
         public string Ano { get; set; }
+        public SituacaoSaldo SituacaoSaldo { get; set; }
 
         public TipoAcervoTag TipoAcervoTag
         {

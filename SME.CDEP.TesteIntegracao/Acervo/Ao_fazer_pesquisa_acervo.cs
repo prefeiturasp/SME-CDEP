@@ -58,7 +58,7 @@ namespace SME.CDEP.TesteIntegracao
                 pesquisaAcervoDto.Titulo.ShouldNotBeEmpty();   
                 pesquisaAcervoDto.CreditoAutoria.ShouldNotBeNull();   
                 pesquisaAcervoDto.EnderecoImagem.EstaPreenchido().ShouldBeTrue();   
-                pesquisaAcervoDto.TipoAcervoTag.ShouldBe(TipoAcervoTag.MemoriaEducacaoMunicipal);   
+                pesquisaAcervoDto.TipoAcervoTag.ShouldBe(TipoAcervoTag.MemoriaEducacaoMunicipal);  
             }
         }
         

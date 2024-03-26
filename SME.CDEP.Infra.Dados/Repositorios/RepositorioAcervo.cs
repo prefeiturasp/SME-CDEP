@@ -211,7 +211,8 @@ namespace SME.CDEP.Infra.Dados.Repositorios
                                      ast.nome as assunto,
                                      a.descricao,
                                      a.data_acervo dataAcervo,
-                                     a.ano
+                                     a.ano,
+                                     coalesce(ab.situacao_saldo,0) as situacaoSaldo
                             from acervo a
                                 join acervosIds aid on aid.acervoId = a.id
                                 left join acervo_credito_autor aca on aca.acervo_id = a.id
