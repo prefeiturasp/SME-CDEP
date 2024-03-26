@@ -22,6 +22,7 @@ namespace SME.CDEP.Infra.Dados.Mapeamentos
             Map(c => c.NotasGerais).ToColumn("notas_gerais");
             Map(c => c.Isbn).ToColumn("isbn");
             Map(c => c.Excluido).Ignore();
+            Map(c => c.SituacaoSaldo).ToColumn("situacao_saldo");
         }
     }
 }

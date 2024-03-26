@@ -18,7 +18,8 @@ namespace SME.CDEP.TesteIntegracao
         {
             await InserirDadosBasicosAleatorios();
 
-            await InserirAcervoTridimensional(false);
+            await InserirAcervosBibliograficos();
+            await InserirAcervosTridimensionais(11);
             
             await InserirNaBase(new Evento()
             {
@@ -38,20 +39,23 @@ namespace SME.CDEP.TesteIntegracao
                 {
                     new ()
                     {
+                        AcervoId = 11,
+                        TipoAtendimento = TipoAtendimento.Email,
+                        TipoAcervo = TipoAcervo.Tridimensional
+                    },
+                    new ()
+                    {
                         AcervoId = 1,
-                        TipoAtendimento = TipoAtendimento.Email
+                        TipoAtendimento = TipoAtendimento.Presencial,
+                        DataVisita = DateTimeExtension.HorarioBrasilia().AddDays(4),
+                        TipoAcervo = TipoAcervo.Bibliografico
                     },
                     new ()
                     {
                         AcervoId = 2,
                         TipoAtendimento = TipoAtendimento.Presencial,
-                        DataVisita = DateTimeExtension.HorarioBrasilia().AddDays(4)
-                    },
-                    new ()
-                    {
-                        AcervoId = 3,
-                        TipoAtendimento = TipoAtendimento.Presencial,
-                        DataVisita = DateTimeExtension.HorarioBrasilia().AddDays(40)
+                        DataVisita = DateTimeExtension.HorarioBrasilia().AddDays(40),
+                        TipoAcervo = TipoAcervo.Bibliografico
                     }
                 }
             };
@@ -68,21 +72,21 @@ namespace SME.CDEP.TesteIntegracao
             
             var itensCadastrados = ObterTodos<AcervoSolicitacaoItem>();
 
-            var itemEmail = itensCadastrados.FirstOrDefault(f => f.AcervoId == 1);
+            var itemEmail = itensCadastrados.FirstOrDefault(f => f.AcervoId == 11);
             itemEmail.Situacao.ShouldBe(SituacaoSolicitacaoItem.FINALIZADO_MANUALMENTE);
             itemEmail.TipoAtendimento.ShouldBe(TipoAtendimento.Email);
             itemEmail.DataVisita.ShouldBeNull();
             itemEmail.Excluido.ShouldBeFalse();
             itemEmail.ResponsavelId.ShouldNotBeNull();
             
-            var primeiroPresencial = itensCadastrados.FirstOrDefault(f => f.AcervoId == 2);
+            var primeiroPresencial = itensCadastrados.FirstOrDefault(f => f.AcervoId == 1);
             primeiroPresencial.Situacao.ShouldBe(SituacaoSolicitacaoItem.AGUARDANDO_VISITA);
             primeiroPresencial.TipoAtendimento.ShouldBe(TipoAtendimento.Presencial);
             primeiroPresencial.DataVisita.Value.Date.ShouldBe(DateTimeExtension.HorarioBrasilia().AddDays(4).Date);
             primeiroPresencial.Excluido.ShouldBeFalse();
             primeiroPresencial.ResponsavelId.ShouldNotBeNull();
             
-            var segundoPresencial = itensCadastrados.FirstOrDefault(f => f.AcervoId == 3);
+            var segundoPresencial = itensCadastrados.FirstOrDefault(f => f.AcervoId == 2);
             segundoPresencial.Situacao.ShouldBe(SituacaoSolicitacaoItem.AGUARDANDO_VISITA);
             segundoPresencial.TipoAtendimento.ShouldBe(TipoAtendimento.Presencial);
             segundoPresencial.DataVisita.Value.Date.ShouldBe(DateTimeExtension.HorarioBrasilia().AddDays(40).Date);
@@ -184,7 +188,8 @@ namespace SME.CDEP.TesteIntegracao
         {
             await InserirDadosBasicosAleatorios();
 
-            await InserirAcervoTridimensional(false);
+            await InserirAcervosBibliograficos();
+            await InserirAcervosTridimensionais(11);
             
             await InserirNaBase(new Evento()
             {
@@ -216,7 +221,7 @@ namespace SME.CDEP.TesteIntegracao
                     },
                     new ()
                     {
-                        AcervoId = 3,
+                        AcervoId = 11,
                         TipoAtendimento = TipoAtendimento.Presencial,
                         DataVisita = DateTimeExtension.HorarioBrasilia().AddDays(40)
                     }
@@ -249,7 +254,7 @@ namespace SME.CDEP.TesteIntegracao
             segundoAcervoPresencial.Excluido.ShouldBeFalse();
             segundoAcervoPresencial.ResponsavelId.ShouldNotBeNull();
             
-            var terceiroAcervoPresencial = itensCadastrados.FirstOrDefault(f => f.AcervoId == 3);
+            var terceiroAcervoPresencial = itensCadastrados.FirstOrDefault(f => f.AcervoId == 11);
             terceiroAcervoPresencial.Situacao.ShouldBe(SituacaoSolicitacaoItem.AGUARDANDO_VISITA);
             terceiroAcervoPresencial.TipoAtendimento.ShouldBe(TipoAtendimento.Presencial);
             terceiroAcervoPresencial.DataVisita.Value.Date.ShouldBe(DateTimeExtension.HorarioBrasilia().AddDays(40).Date);
@@ -272,7 +277,8 @@ namespace SME.CDEP.TesteIntegracao
         {
             await InserirDadosBasicosAleatorios();
 
-            await InserirAcervoTridimensional(true);
+            await InserirAcervosBibliograficos();
+            await InserirAcervosTridimensionais(11);
 
             var servicoAcervoSolicitacao = GetServicoAcervoSolicitacao();
             
@@ -296,7 +302,7 @@ namespace SME.CDEP.TesteIntegracao
                     },
                     new ()
                     {
-                        AcervoId = 3,
+                        AcervoId = 11,
                         TipoAtendimento = TipoAtendimento.Presencial,
                         DataVisita = DateTimeExtension.HorarioBrasilia().AddDays(40)
                     }
@@ -329,7 +335,7 @@ namespace SME.CDEP.TesteIntegracao
             segundoAcervoPresencial.Excluido.ShouldBeFalse();
             segundoAcervoPresencial.ResponsavelId.ShouldNotBeNull();
             
-            var terceiroAcervoPresencial = itensCadastrados.FirstOrDefault(f => f.AcervoId == 3);
+            var terceiroAcervoPresencial = itensCadastrados.FirstOrDefault(f => f.AcervoId == 11);
             terceiroAcervoPresencial.Situacao.ShouldBe(SituacaoSolicitacaoItem.AGUARDANDO_VISITA);
             terceiroAcervoPresencial.TipoAtendimento.ShouldBe(TipoAtendimento.Presencial);
             terceiroAcervoPresencial.DataVisita.Value.Date.ShouldBe(DateTimeExtension.HorarioBrasilia().AddDays(40).Date);

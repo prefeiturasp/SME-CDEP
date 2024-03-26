@@ -838,6 +838,18 @@ namespace SME.CDEP.TesteIntegracao
             }
         }
         
+        protected async Task InserirAcervosTridimensionais(long acervoId = 1)
+        {
+            var acervoTridimensionals = AcervoTridimensionalMock.Instance.Gerar().Generate(10);
+            foreach (var acervoTridimensional in acervoTridimensionals)
+            {
+                await InserirNaBase(acervoTridimensional.Acervo);
+                acervoTridimensional.AcervoId = acervoId;
+                await InserirNaBase(acervoTridimensional);
+                acervoId++;
+            }
+        }
+        
         protected async Task InserirAcervosBibliograficosEmMassa(int contadorAcervos, int quantidade)
         {
             var acervosBibliograficos = AcervoBibliograficoMock.Instance.Gerar().Generate(quantidade);

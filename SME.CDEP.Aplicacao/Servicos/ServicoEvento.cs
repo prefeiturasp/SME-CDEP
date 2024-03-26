@@ -19,10 +19,11 @@ namespace SME.CDEP.Aplicacao.Servicos
         private readonly IMapper mapper;
         private readonly IServicoMensageria servicoMensageria;
         private readonly IServicoAcervo servicoAcervo;
+        private readonly IServicoAcervoBibliografico servicoAcervoBibliografico;
         
         public ServicoEvento(IRepositorioEvento repositorioEvento,IMapper mapper,IRepositorioEventoFixo repositorioEventoFixo, 
             IRepositorioAcervoSolicitacaoItem repositorioAcervoSolicitacaoItem,IServicoMensageria servicoMensageria,
-            IServicoAcervo servicoAcervo) 
+            IServicoAcervo servicoAcervo,IServicoAcervoBibliografico servicoAcervoBibliografico) 
         {
             this.repositorioEvento = repositorioEvento ?? throw new ArgumentNullException(nameof(repositorioEvento));
             this.mapper = mapper ?? throw new ArgumentNullException(nameof(mapper));
@@ -30,6 +31,7 @@ namespace SME.CDEP.Aplicacao.Servicos
             this.repositorioAcervoSolicitacaoItem = repositorioAcervoSolicitacaoItem ?? throw new ArgumentNullException(nameof(repositorioAcervoSolicitacaoItem));
             this.servicoMensageria = servicoMensageria ?? throw new ArgumentNullException(nameof(servicoMensageria));
             this.servicoAcervo = servicoAcervo ?? throw new ArgumentNullException(nameof(servicoAcervo));
+            this.servicoAcervoBibliografico = servicoAcervoBibliografico ?? throw new ArgumentNullException(nameof(servicoAcervoBibliografico));
         }
 
         public async Task<long> Inserir(EventoCadastroDTO eventoCadastroDto)
