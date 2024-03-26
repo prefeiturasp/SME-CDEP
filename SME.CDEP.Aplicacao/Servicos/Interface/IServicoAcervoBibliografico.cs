@@ -1,5 +1,6 @@
 ﻿
 using SME.CDEP.Aplicacao.DTOS;
+using SME.CDEP.Infra.Dominio.Enumerados;
 
 namespace SME.CDEP.Aplicacao.Servicos.Interface
 {
@@ -10,5 +11,6 @@ namespace SME.CDEP.Aplicacao.Servicos.Interface
         Task<AcervoBibliograficoDTO> Alterar(AcervoBibliograficoAlteracaoDTO acervoBibliograficoAlteracaoDto);
         Task<AcervoBibliograficoDTO> ObterPorId(long id);
         Task<bool> Excluir(long id);
+        Task<bool> AlterarSituacaoSaldo(SituacaoSaldo situacaoSaldo, long id);
     }
 }

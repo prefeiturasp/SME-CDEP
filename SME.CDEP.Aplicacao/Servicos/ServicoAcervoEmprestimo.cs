@@ -11,23 +11,27 @@ namespace SME.CDEP.Aplicacao.Servicos
 {
     public class ServicoAcervoEmprestimo : IServicoAcervoEmprestimo
     {
-       
         private readonly IRepositorioAcervoEmprestimo repositorioAcervoEmprestimo;
+        private readonly IServicoAcervoBibliografico servicoAcervoBibliografico;
+        private readonly IRepositorioAcervoSolicitacaoItem repositorioAcervoSolicitacaoItem;
+        private readonly IRepositorioAcervo repositorioAcervo;
         
-        public ServicoAcervoEmprestimo(IRepositorioAcervoEmprestimo repositorioAcervoEmprestimo) 
+        public ServicoAcervoEmprestimo(IRepositorioAcervoEmprestimo repositorioAcervoEmprestimo,IServicoAcervoBibliografico servicoAcervoBibliografico,
+            IRepositorioAcervoSolicitacaoItem repositorioAcervoSolicitacaoItem,IRepositorioAcervo repositorioAcervo) 
         {
             this.repositorioAcervoEmprestimo = repositorioAcervoEmprestimo ?? throw new ArgumentNullException(nameof(repositorioAcervoEmprestimo));
+            this.servicoAcervoBibliografico = servicoAcervoBibliografico ?? throw new ArgumentNullException(nameof(servicoAcervoBibliografico));
+            this.repositorioAcervoSolicitacaoItem = repositorioAcervoSolicitacaoItem ?? throw new ArgumentNullException(nameof(repositorioAcervoSolicitacaoItem));
+            this.repositorioAcervo = repositorioAcervo ?? throw new ArgumentNullException(nameof(repositorioAcervo));
         }
        
         public async Task<bool> ProrrogarEmprestimo(AcervoEmprestimoProrrogacaoDTO acervoEmprestimoProrrogacaoDTO)
         {
-            var acervosEmprestimosAtuais = await repositorioAcervoEmprestimo.ObterUltimoEmprestimoPorAcervoSolicitacaoItemIds(new[] { acervoEmprestimoProrrogacaoDTO.AcervoSolicitacaoItemId });
+            var acervoEmprestimoAtual = await repositorioAcervoEmprestimo.ObterUltimoEmprestimoPorAcervoSolicitacaoItemId(acervoEmprestimoProrrogacaoDTO.AcervoSolicitacaoItemId );
 
-            if (acervosEmprestimosAtuais.NaoPossuiElementos())
+            if (acervoEmprestimoAtual.EhNulo())
                 throw new NegocioException(MensagemNegocio.ACERVO_EMPRESTIMO_NAO_ENCONTRADO);
 
-            var acervoEmprestimoAtual = acervosEmprestimosAtuais.FirstOrDefault();
-            
             if (acervoEmprestimoProrrogacaoDTO.DataDevolucao.EhMenorQue(acervoEmprestimoAtual.DataDevolucao))
                 throw new NegocioException(MensagemNegocio.DATA_DA_DEVOLUCAO_MENOR_DATA_DA_DEVOLUCAO_ANTERIOR_OU_FUTURA);
             
@@ -48,13 +52,16 @@ namespace SME.CDEP.Aplicacao.Servicos
 
         public async Task<bool> DevolverItemEmprestado(long acervoSolicitacaoItemId)
         {
-            var acervosEmprestimosAtuais = await repositorioAcervoEmprestimo.ObterUltimoEmprestimoPorAcervoSolicitacaoItemIds(new[] { acervoSolicitacaoItemId });
+            var acervoSolicitacaoItem = await repositorioAcervoSolicitacaoItem.ObterPorId(acervoSolicitacaoItemId);
+            
+            if (acervoSolicitacaoItem.EhNulo())
+                throw new NegocioException(MensagemNegocio.SOLICITACAO_ATENDIMENTO_ITEM_NAO_ENCONTRADA);
+            
+            var acervoEmprestimoAtual = await repositorioAcervoEmprestimo.ObterUltimoEmprestimoPorAcervoSolicitacaoItemId(acervoSolicitacaoItemId);
 
-            if (acervosEmprestimosAtuais.NaoPossuiElementos())
+            if (acervoEmprestimoAtual.EhNulo())
                 throw new NegocioException(MensagemNegocio.ACERVO_EMPRESTIMO_NAO_ENCONTRADO);
 
-            var acervoEmprestimoAtual = acervosEmprestimosAtuais.FirstOrDefault();
-            
             var acervoEmprestimo = new AcervoEmprestimo()
             {
                 AcervoSolicitacaoItemId = acervoEmprestimoAtual.AcervoSolicitacaoItemId,
@@ -63,6 +70,11 @@ namespace SME.CDEP.Aplicacao.Servicos
                 Situacao = SituacaoEmprestimo.DEVOLVIDO
             };
             await repositorioAcervoEmprestimo.Inserir(acervoEmprestimo);
+            
+            var acervos = await repositorioAcervo.ObterAcervosPorIds(new []{ acervoSolicitacaoItem.AcervoId });
+            
+            if (acervos.Any(a=> a.TipoAcervoId.EhAcervoBibliografico()))
+                await servicoAcervoBibliografico.AlterarSituacaoSaldo(SituacaoSaldo.DISPONIVEL,acervoSolicitacaoItem.AcervoId);
 
             return true;
         }

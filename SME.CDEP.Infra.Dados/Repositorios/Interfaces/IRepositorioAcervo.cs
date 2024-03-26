@@ -12,5 +12,6 @@ namespace SME.CDEP.Infra.Dados.Repositorios.Interfaces
         Task<IEnumerable<AcervoSolicitacaoItemCompleto>> ObterAcervosSolicitacoesItensCompletoPorId(long acervoSolicitacaoId, long[] tiposAcervosPermitidos);
         Task<IEnumerable<ArquivoCodigoNomeAcervoId>> ObterArquivosPorAcervoId(long[] acervosIds);
         Task<Acervo> PesquisarAcervoPorCodigoTombo(string codigoTombo, long[] tiposAcervosPermitidos);
+        Task<IEnumerable<Acervo>> ObterAcervosPorIds(long[] ids);
     }
 }

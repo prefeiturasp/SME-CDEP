@@ -1,6 +1,7 @@
 ﻿using Bogus;
 using Shouldly;
 using SME.CDEP.Aplicacao.DTOS;
+using SME.CDEP.Aplicacao.Servicos.Interface;
 using SME.CDEP.Dominio.Entidades;
 using SME.CDEP.Dominio.Excecoes;
 using SME.CDEP.Dominio.Extensions;
@@ -13,15 +14,18 @@ namespace SME.CDEP.TesteIntegracao
 {
     public class Ao_fazer_manutencao_acervo_bibliografico : TesteBase
     {
+        private readonly IServicoAcervoBibliografico servicoAcervoBibliografico;
+
         public Ao_fazer_manutencao_acervo_bibliografico(CollectionFixture collectionFixture) : base(collectionFixture)
-        {}
+        {
+            servicoAcervoBibliografico = GetServicoAcervoBibliografico();
+        }
         
         [Fact(DisplayName = "Acervo bibliografico - Obter por Id")]
         public async Task Obter_por_id()
         {
             await InserirDadosBasicosAleatorios();
             await InserirAcervoBibliografico();
-            var servicoAcervoBibliografico = GetServicoAcervoBibliografico();
 
             var acervoBibliograficoDto = await servicoAcervoBibliografico.ObterPorId(5);
             acervoBibliograficoDto.ShouldNotBeNull();
@@ -35,7 +39,6 @@ namespace SME.CDEP.TesteIntegracao
         {
             await InserirDadosBasicosAleatorios();
             await InserirAcervoBibliografico(false);
-            var servicoAcervoBibliografico = GetServicoAcervoBibliografico();
 
             var acervo = await servicoAcervoBibliografico.ObterPorId(5);
             acervo.ShouldNotBeNull();
@@ -48,7 +51,6 @@ namespace SME.CDEP.TesteIntegracao
         {
             await InserirDadosBasicosAleatorios();
             await InserirAcervoBibliografico();
-            var servicoAcervoBibliografico = GetServicoAcervoBibliografico();
 
             var acervoBibliograficoDtos = await servicoAcervoBibliografico.ObterTodos();
             acervoBibliograficoDtos.ShouldNotBeNull();
@@ -62,8 +64,6 @@ namespace SME.CDEP.TesteIntegracao
             await InserirAcervoBibliografico();
 
             var mapper = GetServicoMapper();
-            
-            var servicoAcervobibliografico = GetServicoAcervoBibliografico();
             
             var acervoBibliograficoCompleto = AcervoBibliograficoMock.Instance.Gerar().Generate();
             
@@ -80,7 +80,7 @@ namespace SME.CDEP.TesteIntegracao
             acervoBibliograficoAlteracaoDto.AcervoId = acervoAtual.Id;
             acervoBibliograficoAlteracaoDto.Ano = DateTimeExtension.HorarioBrasilia().Year.ToString();
             
-            await servicoAcervobibliografico.Alterar(acervoBibliograficoAlteracaoDto);
+            await servicoAcervoBibliografico.Alterar(acervoBibliograficoAlteracaoDto);
 
             var acervoAlterado = (ObterTodos<Acervo>()).FirstOrDefault(f=> f.Id == 3);
             acervoAlterado.Titulo.Equals(acervoBibliograficoAlteracaoDto.Titulo).ShouldBeTrue();
@@ -141,8 +141,6 @@ namespace SME.CDEP.TesteIntegracao
 
             var mapper = GetServicoMapper();
             
-            var servicoAcervobibliografico = GetServicoAcervoBibliografico();
-            
             var acervoBibliograficoCompleto = AcervoBibliograficoMock.Instance.Gerar().Generate();
             
             var acervoAtual = ObterTodos<Acervo>().FirstOrDefault(w=> w.Id == 3);
@@ -158,7 +156,7 @@ namespace SME.CDEP.TesteIntegracao
             acervoBibliograficoAlteracaoDto.AcervoId = acervoAtual.Id;
             acervoBibliograficoAlteracaoDto.Ano = DateTimeExtension.HorarioBrasilia().AddYears(1).Year.ToString();
             
-            await servicoAcervobibliografico.Alterar(acervoBibliograficoAlteracaoDto).ShouldThrowAsync<NegocioException>();
+            await servicoAcervoBibliografico.Alterar(acervoBibliograficoAlteracaoDto).ShouldThrowAsync<NegocioException>();
         }
         
         [Fact(DisplayName = "Acervo bibliografico - Atualizar - CoAutores: removendo 3 e adicionando 1 novo e Código")]
@@ -169,8 +167,6 @@ namespace SME.CDEP.TesteIntegracao
             await InserirAcervoBibliografico();
 
             var mapper = GetServicoMapper();
-            
-            var servicoAcervobibliografico = GetServicoAcervoBibliografico();
             
             var acervoBibliograficoCompleto = AcervoBibliograficoMock.Instance.Gerar().Generate();
             
@@ -187,7 +183,7 @@ namespace SME.CDEP.TesteIntegracao
             acervoBibliograficoAlteracaoDto.AcervoId = acervoAtual.Id;
             acervoBibliograficoAlteracaoDto.Ano = DateTimeExtension.HorarioBrasilia().Year.ToString();
             
-            await servicoAcervobibliografico.Alterar(acervoBibliograficoAlteracaoDto);
+            await servicoAcervoBibliografico.Alterar(acervoBibliograficoAlteracaoDto);
 
             var acervoAlterado = (ObterTodos<Acervo>()).FirstOrDefault(f=> f.Id == 3);
             acervoAlterado.Titulo.Equals(acervoBibliograficoAlteracaoDto.Titulo).ShouldBeTrue();
@@ -247,8 +243,6 @@ namespace SME.CDEP.TesteIntegracao
 
             var mapper = GetServicoMapper();
             
-            var servicoAcervobibliografico = GetServicoAcervoBibliografico();
-            
             var acervoBibliograficoCompleto = AcervoBibliograficoMock.Instance.Gerar().Generate();
             
             var acervoAtual = ObterTodos<Acervo>().FirstOrDefault(w=> w.Id == 3);
@@ -263,7 +257,7 @@ namespace SME.CDEP.TesteIntegracao
             acervoBibliograficoAlteracaoDto.AcervoId = acervoAtual.Id;
             acervoBibliograficoAlteracaoDto.Ano = DateTimeExtension.HorarioBrasilia().Year.ToString();
             
-            await servicoAcervobibliografico.Alterar(acervoBibliograficoAlteracaoDto).ShouldThrowAsync<NegocioException>();
+            await servicoAcervoBibliografico.Alterar(acervoBibliograficoAlteracaoDto).ShouldThrowAsync<NegocioException>();
         }
         
         [Fact(DisplayName = "Acervo bibliografico - Não deve atualizar com Código duplicado")]
@@ -274,8 +268,6 @@ namespace SME.CDEP.TesteIntegracao
             await InserirAcervoBibliografico();
 
             var mapper = GetServicoMapper();
-            
-            var servicoAcervobibliografico = GetServicoAcervoBibliografico();
             
             var acervoBibliograficoCompleto = AcervoBibliograficoMock.Instance.Gerar().Generate();
             
@@ -292,7 +284,7 @@ namespace SME.CDEP.TesteIntegracao
             acervoBibliograficoAlteracaoDto.AcervoId = acervoAtual.Id;
             acervoBibliograficoAlteracaoDto.Ano = DateTimeExtension.HorarioBrasilia().Year.ToString();
             
-            await servicoAcervobibliografico.Alterar(acervoBibliograficoAlteracaoDto).ShouldThrowAsync<NegocioException>();
+            await servicoAcervoBibliografico.Alterar(acervoBibliograficoAlteracaoDto).ShouldThrowAsync<NegocioException>();
         }
         
         [Fact(DisplayName = "Acervo bibliografico - Atualizar removendo todos os CoAutores")]
@@ -303,8 +295,6 @@ namespace SME.CDEP.TesteIntegracao
             await InserirAcervoBibliografico();
 
             var mapper = GetServicoMapper();
-            
-            var servicoAcervobibliografico = GetServicoAcervoBibliografico();
             
             var acervoBibliograficoCompleto = AcervoBibliograficoMock.Instance.Gerar().Generate();
             
@@ -321,7 +311,7 @@ namespace SME.CDEP.TesteIntegracao
             acervoBibliograficoAlteracaoDto.AcervoId = acervoAtual.Id;
             acervoBibliograficoAlteracaoDto.Ano = DateTimeExtension.HorarioBrasilia().Year.ToString();
             
-            await servicoAcervobibliografico.Alterar(acervoBibliograficoAlteracaoDto);
+            await servicoAcervoBibliografico.Alterar(acervoBibliograficoAlteracaoDto);
 
             var acervoAlterado = (ObterTodos<Acervo>()).FirstOrDefault(f=> f.Id == 3);
             acervoAlterado.Titulo.Equals(acervoBibliograficoAlteracaoDto.Titulo).ShouldBeTrue();
@@ -376,8 +366,6 @@ namespace SME.CDEP.TesteIntegracao
 
             var mapper = GetServicoMapper();
             
-            var servicoAcervobibliografico = GetServicoAcervoBibliografico();
-            
             var acervoBibliograficoCompleto = AcervoBibliograficoMock.Instance.Gerar().Generate();
             
             var acervoBibliograficoCadastroDto = mapper.Map<AcervoBibliograficoCadastroDTO>(acervoBibliograficoCompleto);
@@ -389,7 +377,7 @@ namespace SME.CDEP.TesteIntegracao
             acervoBibliograficoCadastroDto.SubTitulo = acervoBibliograficoCompleto.Acervo.SubTitulo;
             acervoBibliograficoCadastroDto.Ano = DateTimeExtension.HorarioBrasilia().Year.ToString();
             
-            await servicoAcervobibliografico.Inserir(acervoBibliograficoCadastroDto);
+            await servicoAcervoBibliografico.Inserir(acervoBibliograficoCadastroDto);
 
             var acervoInserido = ObterTodos<Acervo>().OrderBy(o=> o.Id).LastOrDefault();
             acervoInserido.Titulo.Equals(acervoBibliograficoCadastroDto.Titulo).ShouldBeTrue();
@@ -445,8 +433,6 @@ namespace SME.CDEP.TesteIntegracao
 
             var mapper = GetServicoMapper();
             
-            var servicoAcervobibliografico = GetServicoAcervoBibliografico();
-            
             var acervoBibliograficoCompleto = AcervoBibliograficoMock.Instance.Gerar().Generate();
             
             var acervoBibliograficoCadastroDto = mapper.Map<AcervoBibliograficoCadastroDTO>(acervoBibliograficoCompleto);
@@ -458,7 +444,7 @@ namespace SME.CDEP.TesteIntegracao
             acervoBibliograficoCadastroDto.SubTitulo = acervoBibliograficoCompleto.Acervo.SubTitulo;
             acervoBibliograficoCadastroDto.Ano = DateTimeExtension.HorarioBrasilia().Year.ToString();
             
-            await servicoAcervobibliografico.Inserir(acervoBibliograficoCadastroDto);
+            await servicoAcervoBibliografico.Inserir(acervoBibliograficoCadastroDto);
 
             var acervoInserido = ObterTodos<Acervo>().OrderBy(o=> o.Id).LastOrDefault();
             acervoInserido.Titulo.Equals(acervoBibliograficoCadastroDto.Titulo).ShouldBeTrue();
@@ -514,8 +500,6 @@ namespace SME.CDEP.TesteIntegracao
 
             var mapper = GetServicoMapper();
             
-            var servicoAcervobibliografico = GetServicoAcervoBibliografico();
-            
             var acervoBibliograficoCompleto = AcervoBibliograficoMock.Instance.Gerar().Generate();
             
             var acervoBibliograficoCadastroDto = mapper.Map<AcervoBibliograficoCadastroDTO>(acervoBibliograficoCompleto);
@@ -527,7 +511,7 @@ namespace SME.CDEP.TesteIntegracao
             acervoBibliograficoCadastroDto.SubTitulo = acervoBibliograficoCompleto.Acervo.SubTitulo;
             acervoBibliograficoCadastroDto.Ano = DateTimeExtension.HorarioBrasilia().Year.ToString();
             
-            await servicoAcervobibliografico.Inserir(acervoBibliograficoCadastroDto).ShouldThrowAsync<NegocioException>();
+            await servicoAcervoBibliografico.Inserir(acervoBibliograficoCadastroDto).ShouldThrowAsync<NegocioException>();
         }
         
         [Fact(DisplayName = "Acervo bibliografico - Não deve inserir com ano futuro")]
@@ -538,8 +522,6 @@ namespace SME.CDEP.TesteIntegracao
             await InserirAcervoBibliografico();
 
             var mapper = GetServicoMapper();
-            
-            var servicoAcervobibliografico = GetServicoAcervoBibliografico();
             
             var acervoBibliograficoCompleto = AcervoBibliograficoMock.Instance.Gerar().Generate();
             
@@ -552,7 +534,7 @@ namespace SME.CDEP.TesteIntegracao
             acervoBibliograficoCadastroDto.SubTitulo = acervoBibliograficoCompleto.Acervo.SubTitulo;
             acervoBibliograficoCadastroDto.Ano = faker.Date.Future().Year.ToString();
             
-            await servicoAcervobibliografico.Inserir(acervoBibliograficoCadastroDto).ShouldThrowAsync<NegocioException>();
+            await servicoAcervoBibliografico.Inserir(acervoBibliograficoCadastroDto).ShouldThrowAsync<NegocioException>();
         }
         
         [Fact(DisplayName = "Acervo bibliografico - Não deve inserir sem código")]
@@ -564,8 +546,6 @@ namespace SME.CDEP.TesteIntegracao
 
             var mapper = GetServicoMapper();
         
-            var servicoAcervobibliografico = GetServicoAcervoBibliografico();
-        
             var acervoBibliograficoCompleto = AcervoBibliograficoMock.Instance.Gerar().Generate();
         
             var acervoBibliograficoCadastroDto = mapper.Map<AcervoBibliograficoCadastroDTO>(acervoBibliograficoCompleto);
@@ -576,7 +556,7 @@ namespace SME.CDEP.TesteIntegracao
             acervoBibliograficoCadastroDto.SubTitulo = acervoBibliograficoCompleto.Acervo.SubTitulo;
             acervoBibliograficoCadastroDto.Ano = DateTimeExtension.HorarioBrasilia().Year.ToString();
             
-            await servicoAcervobibliografico.Inserir(acervoBibliograficoCadastroDto).ShouldThrowAsync<NegocioException>();
+            await servicoAcervoBibliografico.Inserir(acervoBibliograficoCadastroDto).ShouldThrowAsync<NegocioException>();
         }
         
         [Fact(DisplayName = "Acervo bibliografico - Tratar o retorno de dimensões")]
@@ -602,6 +582,21 @@ namespace SME.CDEP.TesteIntegracao
             
             detalhe = new AcervoBibliograficoDetalhe();
             detalhe.Dimensoes.ShouldBe(string.Empty);
+        }
+        
+        [Theory(DisplayName = "Acervo bibliografico - Deve alterar situacao para reservado/emprestado/disponível")]
+        [InlineData(SituacaoSaldo.RESERVADO)]
+        [InlineData(SituacaoSaldo.DISPONIVEL)]
+        [InlineData(SituacaoSaldo.EMPRESTADO)]
+        public async Task Deve_alterar_situacao_saldo(SituacaoSaldo situacaoSaldo)
+        {
+            await InserirDadosBasicosAleatorios();
+
+            await InserirAcervoBibliografico();
+
+            await servicoAcervoBibliografico.AlterarSituacaoSaldo(situacaoSaldo,4);
+            var acervosBibliograficos = ObterTodos<AcervoBibliografico>();
+            acervosBibliograficos.FirstOrDefault(f=> f.Id == 4).SituacaoSaldo.ShouldBe(situacaoSaldo);
         }
         
         private async Task InserirAcervoBibliografico(bool inserirCoAutor = true)

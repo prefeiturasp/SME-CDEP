@@ -134,6 +134,9 @@ namespace SME.CDEP.TesteIntegracao
             acervoEmprestimos.Any(a=> a.DataDevolucao.Date == DateTimeExtension.HorarioBrasilia().AddDays(7).Date).ShouldBeTrue();
             
             acervoEmprestimos.All(a=> a.Situacao.EstaEmprestado()).ShouldBeTrue();
+
+            var acervosBibliograficos = ObterTodos<AcervoBibliografico>();
+            acervosBibliograficos.FirstOrDefault(f=> f.AcervoId == 1).SituacaoSaldo.ShouldBe(SituacaoSaldo.EMPRESTADO);
         }
         
         [Fact(DisplayName = "Acervo Solicitação com empréstimo - Deve registrar empréstimo em alteração de data de visita")]
@@ -202,6 +205,9 @@ namespace SME.CDEP.TesteIntegracao
             
             var acervoEmprestimos = ObterTodos<AcervoEmprestimo>();
             acervoEmprestimos.Count().ShouldBe(0);
+            
+            var acervosBibliograficos = ObterTodos<AcervoBibliografico>();
+            acervosBibliograficos.FirstOrDefault(f=> f.AcervoId == 1).SituacaoSaldo.ShouldBe(SituacaoSaldo.RESERVADO);
         }
         
         [Fact(DisplayName = "Acervo Solicitação com empréstimo - Não deve confirmar empréstimo com acervos diferentes de bibliográficos")]
@@ -646,6 +652,9 @@ namespace SME.CDEP.TesteIntegracao
             acervoEmprestimos.Count(a=> a.Situacao.EstaEmprestado()).ShouldBe(2);
             acervoEmprestimos.Count(a=> a.Situacao.EstaDevolvido()).ShouldBe(1);
             acervoEmprestimos.Any(a=> a.Situacao.EstaDevolvido() && a.DataDevolucao.Date == DateTimeExtension.HorarioBrasilia().Date).ShouldBeTrue();
+            
+            var acervosBibliograficos = ObterTodos<AcervoBibliografico>();
+            acervosBibliograficos.FirstOrDefault(f=> f.AcervoId == 1).SituacaoSaldo.ShouldBe(SituacaoSaldo.DISPONIVEL);
         }
         
         [Fact(DisplayName = "Acervo Solicitação empréstimo - Não deve permitir devolver item emprestado com item inválido")]
@@ -759,6 +768,10 @@ namespace SME.CDEP.TesteIntegracao
 
             acervoEmprestimos.Any(a=> a.DataEmprestimo.Date == DateTimeExtension.HorarioBrasilia().Date && a.Situacao.EstaEmprestado()).ShouldBeTrue();
             acervoEmprestimos.Any(a=> a.DataDevolucao.Date == DateTimeExtension.HorarioBrasilia().AddDays(8).Date && a.Situacao.EstaEmprestado()).ShouldBeTrue();
+            
+            var acervosBibliograficos = ObterTodos<AcervoBibliografico>();
+            acervosBibliograficos.FirstOrDefault(f=> f.AcervoId == 2).SituacaoSaldo.ShouldBe(SituacaoSaldo.EMPRESTADO);
+            acervosBibliograficos.FirstOrDefault(f=> f.AcervoId == 3).SituacaoSaldo.ShouldBe(SituacaoSaldo.EMPRESTADO);
         }
 
         [Fact(DisplayName = "Acervo Solicitação com empréstimo - Confirmar empréstimo após alteração manual")]
@@ -887,6 +900,11 @@ namespace SME.CDEP.TesteIntegracao
 
             acervoEmprestimos.Any(a=> a.DataEmprestimo.Date == DateTimeExtension.HorarioBrasilia().Date && a.Situacao.EstaEmprestado()).ShouldBeTrue();
             acervoEmprestimos.Any(a=> a.DataDevolucao.Date == DateTimeExtension.HorarioBrasilia().AddDays(18).Date && a.Situacao.EstaEmprestado()).ShouldBeTrue();
+            
+            var acervosBibliograficos = ObterTodos<AcervoBibliografico>();
+            acervosBibliograficos.FirstOrDefault(f=> f.AcervoId == 1).SituacaoSaldo.ShouldBe(SituacaoSaldo.EMPRESTADO);
+            acervosBibliograficos.FirstOrDefault(f=> f.AcervoId == 2).SituacaoSaldo.ShouldBe(SituacaoSaldo.EMPRESTADO);
+            acervosBibliograficos.FirstOrDefault(f=> f.AcervoId == 3).SituacaoSaldo.ShouldBe(SituacaoSaldo.EMPRESTADO);
         }
         
         [Fact(DisplayName = "Acervo Solicitação empréstimo - Não deve permitir confirmar atendimento com data de empréstimo e devolução em data de visita futura")]

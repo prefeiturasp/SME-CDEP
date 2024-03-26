@@ -15,8 +15,8 @@ namespace SME.CDEP.TesteIntegracao
         {}
        
        
-        [Fact(DisplayName = "Acervo Solicitação - Confirmar")]
-        public async Task Deve_confirmar_atendimento()
+        [Fact(DisplayName = "Acervo Solicitação - Confirmar acervos tridimensionais")]
+        public async Task Deve_confirmar_atendimento_tridimensional()
         {
             await InserirDadosBasicosAleatorios();
         
@@ -31,14 +31,16 @@ namespace SME.CDEP.TesteIntegracao
                 Id = 1,
                 ItemId = 1,
                 DataVisita = DateTimeExtension.HorarioBrasilia().Date,
-                TipoAtendimento = TipoAtendimento.Presencial
+                TipoAtendimento = TipoAtendimento.Presencial,
+                TipoAcervo = TipoAcervo.Tridimensional
             });
                 
             await servicoAcervoSolicitacao.ConfirmarAtendimento(new AcervoSolicitacaoConfirmarDTO()
             {
                 Id = 1,
                 ItemId = 2,
-                TipoAtendimento = TipoAtendimento.Email
+                TipoAtendimento = TipoAtendimento.Email,
+                TipoAcervo = TipoAcervo.Tridimensional
             });
             
             var solicitacaoAlterada = ObterTodos<AcervoSolicitacao>().FirstOrDefault(f=> f.Id == 1);
@@ -71,6 +73,64 @@ namespace SME.CDEP.TesteIntegracao
             var eventos = ObterTodos<Evento>();
             eventos.Count().ShouldBe(1);
             eventos.Any(a=> a.Data.Date == DateTimeExtension.HorarioBrasilia().Date).ShouldBeTrue();
+            
+            var acervosBibliograficos = ObterTodos<AcervoBibliografico>();
+            acervosBibliograficos.Count().ShouldBe(0);
+        }
+        
+        [Fact(DisplayName = "Acervo Solicitação - Confirmar acervos bibliograficos")]
+        public async Task Deve_confirmar_atendimento_acervos_bibliograficos()
+        {
+            await InserirDadosBasicosAleatorios();
+        
+            await InserirAcervosBibliograficos();
+        
+            await InserirAcervoSolicitacao(10);
+            
+            var servicoAcervoSolicitacao = GetServicoAcervoSolicitacao();
+            
+            await servicoAcervoSolicitacao.ConfirmarAtendimento(new AcervoSolicitacaoConfirmarDTO()
+            {
+                Id = 1,
+                ItemId = 1,
+                DataVisita = DateTimeExtension.HorarioBrasilia().Date,
+                TipoAtendimento = TipoAtendimento.Presencial,
+                TipoAcervo = TipoAcervo.Bibliografico
+            });
+            
+            var solicitacaoAlterada = ObterTodos<AcervoSolicitacao>().FirstOrDefault(f=> f.Id == 1);
+            solicitacaoAlterada.Id.ShouldBe(1);
+            solicitacaoAlterada.UsuarioId.ShouldBe(1);
+            solicitacaoAlterada.Situacao.ShouldBe(SituacaoSolicitacao.ATENDIDO_PARCIALMENTE);
+            solicitacaoAlterada.Excluido.ShouldBeFalse();
+            
+            var itensAlterados = ObterTodos<AcervoSolicitacaoItem>().Where(w=> w.AcervoSolicitacaoId == 1);
+            itensAlterados.Count().ShouldBe(3);
+            
+            var itemAguardandoVisita = itensAlterados.FirstOrDefault(w => w.Id == 1);
+            itemAguardandoVisita.DataVisita.Value.Date.ShouldBe(DateTimeExtension.HorarioBrasilia().Date);
+            itemAguardandoVisita.TipoAtendimento.ShouldBe(TipoAtendimento.Presencial);
+            itemAguardandoVisita.Excluido.ShouldBeFalse();
+            itemAguardandoVisita.Situacao.ShouldBe(SituacaoSolicitacaoItem.AGUARDANDO_VISITA);
+            
+            var itemFinalizadoManualmente = itensAlterados.FirstOrDefault(w => w.Id == 2);
+            itemFinalizadoManualmente.DataVisita.ShouldBeNull();
+            itemFinalizadoManualmente.TipoAtendimento.ShouldBeNull();
+            itemFinalizadoManualmente.Excluido.ShouldBeFalse();
+            itemFinalizadoManualmente.Situacao.ShouldBe(SituacaoSolicitacaoItem.AGUARDANDO_ATENDIMENTO);
+            
+            var itemFinalizadoAutomaticamente = itensAlterados.FirstOrDefault(w => w.Id == 3);
+            itemFinalizadoAutomaticamente.DataVisita.ShouldBeNull();
+            itemFinalizadoAutomaticamente.TipoAtendimento.ShouldBeNull();
+            itemFinalizadoAutomaticamente.Excluido.ShouldBeFalse();
+            itemFinalizadoAutomaticamente.Situacao.ShouldBe(SituacaoSolicitacaoItem.FINALIZADO_AUTOMATICAMENTE);
+            
+            var eventos = ObterTodos<Evento>();
+            eventos.Count().ShouldBe(1);
+            eventos.Any(a=> a.Data.Date == DateTimeExtension.HorarioBrasilia().Date).ShouldBeTrue();
+            
+            var acervosBibliograficos = ObterTodos<AcervoBibliografico>();
+            acervosBibliograficos.FirstOrDefault(f=> f.AcervoId == 1).SituacaoSaldo.ShouldBe(SituacaoSaldo.RESERVADO);
         }
         
         [Fact(DisplayName = "Acervo Solicitação - Confirmar o atendimento como finalizado apenas quando todos os itens forem finalizados manualmente")]
@@ -345,8 +405,8 @@ namespace SME.CDEP.TesteIntegracao
             eventos.Count().ShouldBe(0);
         }
         
-        [Fact(DisplayName = "Acervo Solicitação - Confirmar editando tipo de atendimento e data de visita")]
-        public async Task Deve_confirmar_atendimento_editando_confirmacao()
+        [Fact(DisplayName = "Acervo Solicitação - Confirmar acervos tridimensionais editando tipo de atendimento e data de visita")]
+        public async Task Deve_confirmar_acervos_tridimensionais_atendimento_editando_confirmacao()
         {
             await InserirDadosBasicosAleatorios();
         
@@ -361,21 +421,24 @@ namespace SME.CDEP.TesteIntegracao
                 Id = 1,
                 ItemId = 1,
                 DataVisita = DateTimeExtension.HorarioBrasilia().Date,
-                TipoAtendimento = TipoAtendimento.Presencial
+                TipoAtendimento = TipoAtendimento.Presencial,
+                TipoAcervo = TipoAcervo.Tridimensional
             });
             
             await servicoAcervoSolicitacao.ConfirmarAtendimento(new AcervoSolicitacaoConfirmarDTO()
             {
                 Id = 1,
                 ItemId = 2,
-                TipoAtendimento = TipoAtendimento.Email
+                TipoAtendimento = TipoAtendimento.Email,
+                TipoAcervo = TipoAcervo.Tridimensional
             });
             
             await servicoAcervoSolicitacao.ConfirmarAtendimento(new AcervoSolicitacaoConfirmarDTO()
             {
                 Id = 1,
                 ItemId = 1,
-                TipoAtendimento = TipoAtendimento.Email
+                TipoAtendimento = TipoAtendimento.Email,
+                TipoAcervo = TipoAcervo.Tridimensional
             });
                 
             await servicoAcervoSolicitacao.ConfirmarAtendimento(new AcervoSolicitacaoConfirmarDTO()
@@ -383,7 +446,8 @@ namespace SME.CDEP.TesteIntegracao
                 Id = 1,
                 ItemId = 2,
                 DataVisita = DateTimeExtension.HorarioBrasilia().AddDays(10).Date,
-                TipoAtendimento = TipoAtendimento.Presencial
+                TipoAtendimento = TipoAtendimento.Presencial,
+                TipoAcervo = TipoAcervo.Tridimensional
             });
             
             var solicitacaoAlterada = ObterTodos<AcervoSolicitacao>().FirstOrDefault(f=> f.Id == 1);
@@ -415,6 +479,9 @@ namespace SME.CDEP.TesteIntegracao
             eventos.Count(a=> a.Excluido).ShouldBe(1);
             eventos.Count(a=> !a.Excluido).ShouldBe(1);
             eventos.Any(a=> a.Data.Date == DateTimeExtension.HorarioBrasilia().AddDays(10).Date).ShouldBeTrue();
+            
+            var acervosBibliograficos = ObterTodos<AcervoBibliografico>();
+            acervosBibliograficos.Count().ShouldBe(0);
         }
         
         [Fact(DisplayName = "Acervo Solicitação - Não deve confirmar o atendimento sem itens")]
@@ -449,7 +516,8 @@ namespace SME.CDEP.TesteIntegracao
             {
                 Id = 1,
                 ItemId = 1,
-                TipoAtendimento = TipoAtendimento.Presencial
+                TipoAtendimento = TipoAtendimento.Presencial,
+                TipoAcervo = TipoAcervo.Tridimensional
             }).ShouldThrowAsync<NegocioException>();
         }
         
@@ -469,14 +537,16 @@ namespace SME.CDEP.TesteIntegracao
                 Id = 1,
                 ItemId = 1,
                 DataVisita = DateTimeExtension.HorarioBrasilia().AddDays(-1),
-                TipoAtendimento = TipoAtendimento.Presencial
+                TipoAtendimento = TipoAtendimento.Presencial,
+                TipoAcervo = TipoAcervo.Tridimensional
             });
             
             await servicoAcervoSolicitacao.ConfirmarAtendimento(new AcervoSolicitacaoConfirmarDTO()
             {
                 Id = 1,
                 ItemId = 2,
-                TipoAtendimento = TipoAtendimento.Email
+                TipoAtendimento = TipoAtendimento.Email,
+                TipoAcervo = TipoAcervo.Tridimensional
             });
             
             
@@ -526,7 +596,8 @@ namespace SME.CDEP.TesteIntegracao
                 Id = 101515,
                 ItemId = 1,
                 DataVisita = DateTimeExtension.HorarioBrasilia().Date,
-                TipoAtendimento = TipoAtendimento.Presencial
+                TipoAtendimento = TipoAtendimento.Presencial,
+                TipoAcervo = TipoAcervo.Tridimensional
             }).ShouldThrowAsync<NegocioException>();
             
 
@@ -535,7 +606,8 @@ namespace SME.CDEP.TesteIntegracao
                 Id = 101515,
                 ItemId = 2,
                 DataVisita = DateTimeExtension.HorarioBrasilia().Date,
-                TipoAtendimento = TipoAtendimento.Email
+                TipoAtendimento = TipoAtendimento.Email,
+                TipoAcervo = TipoAcervo.Tridimensional
             }).ShouldThrowAsync<NegocioException>();
                 
             await servicoAcervoSolicitacao.ConfirmarAtendimento(new AcervoSolicitacaoConfirmarDTO()
@@ -543,7 +615,8 @@ namespace SME.CDEP.TesteIntegracao
                 Id = 101515,
                 ItemId = 3,
                 DataVisita = DateTimeExtension.HorarioBrasilia().Date,
-                TipoAtendimento = TipoAtendimento.Email
+                TipoAtendimento = TipoAtendimento.Email,
+                TipoAcervo = TipoAcervo.Tridimensional
             }).ShouldThrowAsync<NegocioException>();
         }
         
@@ -579,7 +652,8 @@ namespace SME.CDEP.TesteIntegracao
                 Id = 1,
                 ItemId = 1,
                 DataVisita = DateTimeExtension.HorarioBrasilia().Date,
-                TipoAtendimento = TipoAtendimento.Presencial
+                TipoAtendimento = TipoAtendimento.Presencial,
+                TipoAcervo = TipoAcervo.Tridimensional
             }).ShouldThrowAsync<NegocioException>();
         }
         
@@ -616,7 +690,8 @@ namespace SME.CDEP.TesteIntegracao
                 Id = 1,
                 ItemId = 1,
                 DataVisita = DateTimeExtension.HorarioBrasilia().Date,
-                TipoAtendimento = TipoAtendimento.Presencial
+                TipoAtendimento = TipoAtendimento.Presencial,
+                TipoAcervo = TipoAcervo.Tridimensional
             }).ShouldThrowAsync<NegocioException>();
         }
         
@@ -644,7 +719,8 @@ namespace SME.CDEP.TesteIntegracao
                 Id = 1,
                 ItemId = 1,
                 DataVisita = DateTimeExtension.HorarioBrasilia().AddDays(5).Date,
-                TipoAtendimento = TipoAtendimento.Presencial
+                TipoAtendimento = TipoAtendimento.Presencial,
+                TipoAcervo = TipoAcervo.Tridimensional
             });
                 
             await servicoAcervoSolicitacao.ConfirmarAtendimento(new AcervoSolicitacaoConfirmarDTO()
@@ -652,7 +728,8 @@ namespace SME.CDEP.TesteIntegracao
                 Id = 1,
                 ItemId = 2,
                 DataVisita = DateTimeExtension.HorarioBrasilia().AddDays(10).Date,
-                TipoAtendimento = TipoAtendimento.Presencial
+                TipoAtendimento = TipoAtendimento.Presencial,
+                TipoAcervo = TipoAcervo.Tridimensional
             });
             
             var solicitacaoAlterada = ObterTodos<AcervoSolicitacao>().FirstOrDefault(f=> f.Id == 1);

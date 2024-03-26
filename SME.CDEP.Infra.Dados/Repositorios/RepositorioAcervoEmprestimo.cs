@@ -32,5 +32,28 @@ namespace SME.CDEP.Infra.Dados.Repositorios
             
             return await conexao.Obter().QueryAsync<AcervoEmprestimo>(query, new { acervoSolicitacaoItemIds });
         }
+        
+        public async Task<AcervoEmprestimo> ObterUltimoEmprestimoPorAcervoSolicitacaoItemId(long acervoSolicitacaoItemId)
+        {
+            var query = @"
+            SELECT DISTINCT ON (acervo_solicitacao_item_id)
+                   id,
+                   acervo_solicitacao_item_id,
+                   dt_emprestimo,
+                   dt_devolucao,
+                   situacao,
+                   criado_em,
+                   criado_por,
+                   criado_login,
+                   alterado_em,
+                   alterado_por,
+                   alterado_login
+            FROM acervo_emprestimo
+            WHERE NOT excluido
+            AND acervo_solicitacao_item_id = @acervoSolicitacaoItemId 
+            ORDER BY acervo_solicitacao_item_id, id DESC;";
+            
+            return await conexao.Obter().QueryFirstOrDefaultAsync<AcervoEmprestimo>(query, new { acervoSolicitacaoItemId });
+        }
     }
 }

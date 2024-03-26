@@ -1,4 +1,5 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using SME.CDEP.Infra.Dominio.Enumerados;
 
 namespace SME.CDEP.Aplicacao.DTOS;
 
@@ -32,4 +33,5 @@ public class AcervoBibliograficoCadastroDTO : AcervoCadastroDTO
     
     public string? NotasGerais { get; set; }
     public string? Isbn { get; set; }
+    public SituacaoSaldo? SituacaoSaldo { get; set; } = Infra.Dominio.Enumerados.SituacaoSaldo.DISPONIVEL;
 }
