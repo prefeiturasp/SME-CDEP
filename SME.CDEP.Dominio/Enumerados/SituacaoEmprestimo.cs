@@ -14,10 +14,7 @@ public enum SituacaoEmprestimo
     EMPRESTADO_PRORROGACAO = 3,
     
     [Display(Description = "Devolvido")]
-    DEVOLVIDO = 4,
-    
-    [Display(Description = "Cancelado")]
-    CANCELADO = 5
+    DEVOLVIDO = 4
 }
 
 public static class SituacaoEmprestimoExtension
@@ -40,10 +37,5 @@ public static class SituacaoEmprestimoExtension
     public static bool EstaDevolvido(this SituacaoEmprestimo SituacaoEmprestimo)
     {
         return SituacaoEmprestimo == SituacaoEmprestimo.DEVOLVIDO;
-    }
-    
-    public static bool EstaCancelado(this SituacaoEmprestimo SituacaoEmprestimo)
-    {
-        return SituacaoEmprestimo == SituacaoEmprestimo.CANCELADO;
     }
 }

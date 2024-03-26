@@ -497,8 +497,6 @@ namespace SME.CDEP.Aplicacao.Servicos
             
             var itens = await repositorioAcervoSolicitacaoItem.ObterItensPorSolicitacaoId(acervoSolicitacaoId);
 
-            var acervosEmprestimosAtuais = await repositorioAcervoEmprestimo.ObterUltimoEmprestimoPorAcervoSolicitacaoItemIds(itens.Select(s=> s.Id).ToArray());
-
             var acervos = await repositorioAcervo.ObterAcervosPorIds(itens.Select(s => s.AcervoId).ToArray());
                 
             var tran = transacao.Iniciar();
@@ -512,8 +510,6 @@ namespace SME.CDEP.Aplicacao.Servicos
                     item.Situacao = SituacaoSolicitacaoItem.CANCELADO;
                     await repositorioAcervoSolicitacaoItem.Atualizar(item);
 
-                    var acervoEmprestimoBase = acervosEmprestimosAtuais.FirstOrDefault(f => f.AcervoSolicitacaoItemId == item.Id);
-
                     if (item.TipoAtendimento.NaoEhNulo() && item.TipoAtendimento.EhAtendimentoPresencial())
                     {
                         await servicoEvento.ExcluirEventoPorAcervoSolicitacaoItem(item.Id);
@@ -521,19 +517,7 @@ namespace SME.CDEP.Aplicacao.Servicos
                         var ehAcervoBibliografico = acervos.Any(f => f.Id == item.AcervoId && f.TipoAcervoId.EhAcervoBibliografico());
                         
                         if (ehAcervoBibliografico)
-                            await servicoAcervoBibliografico.AlterarSituacaoSaldo(SituacaoSaldo.DISPONIVEL,item.AcervoId);        
-                        
-                        if (acervoEmprestimoBase.NaoEhNulo())
-                        {
-                            var acervoEmprestimo = new AcervoEmprestimo()
-                            {
-                                AcervoSolicitacaoItemId = item.Id,
-                                DataEmprestimo = acervosEmprestimosAtuais.FirstOrDefault().DataEmprestimo,
-                                DataDevolucao = acervosEmprestimosAtuais.FirstOrDefault().DataDevolucao,
-                                Situacao = SituacaoEmprestimo.CANCELADO
-                            };
-                            await repositorioAcervoEmprestimo.Inserir(acervoEmprestimo);
-                        }
+                            await servicoAcervoBibliografico.AlterarSituacaoSaldo(SituacaoSaldo.DISPONIVEL,item.AcervoId);  
                     }
                 }
                 
@@ -567,8 +551,6 @@ namespace SME.CDEP.Aplicacao.Servicos
             var acervoSolicitacao = await repositorioAcervoSolicitacao.ObterPorId(acervoSolicitacaoItem.AcervoSolicitacaoId);
             var todosItensEstaoCancelados = itens.Where(w => w.Id != acervoSolicitacaoItemId).All(a => a.Situacao.EstaCancelado());
             
-            var acervoEmprestimoAtual = await repositorioAcervoEmprestimo.ObterUltimoEmprestimoPorAcervoSolicitacaoItemId(acervoSolicitacaoItemId);
-            
             var acervos = await repositorioAcervo.ObterAcervosPorIds(new []{ acervoSolicitacaoItem.AcervoId });
             
             var tran = transacao.Iniciar();
@@ -586,18 +568,6 @@ namespace SME.CDEP.Aplicacao.Servicos
                 await AtualizarSituacaoAtendimento(acervoSolicitacao,todosItensEstaoCancelados);
                 
                 await servicoMensageria.Publicar(RotasRabbit.NotificarViaEmailCancelamentoAtendimentoItem, acervoSolicitacaoItemId, Guid.NewGuid(), null);
-
-                if (acervoEmprestimoAtual.NaoEhNulo())
-                {
-                    var acervoEmprestimo = new AcervoEmprestimo()
-                    {
-                        AcervoSolicitacaoItemId = acervoSolicitacaoItemId,
-                        DataEmprestimo = acervoEmprestimoAtual.DataEmprestimo,
-                        DataDevolucao = acervoEmprestimoAtual.DataDevolucao,
-                        Situacao = SituacaoEmprestimo.CANCELADO
-                    };
-                    await repositorioAcervoEmprestimo.Inserir(acervoEmprestimo);    
-                }
                 
                 tran.Commit();
 

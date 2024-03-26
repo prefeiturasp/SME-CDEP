@@ -84,7 +84,6 @@ namespace SME.CDEP.TesteIntegracao
             acervosEmprestimos.Any(a=> a.DataEmprestimo.Date == DateTimeExtension.HorarioBrasilia().AddDays(2).Date && a.Situacao.EstaEmprestado()).ShouldBeTrue();
             acervosEmprestimos.Any(a=> a.DataDevolucao.Date == DateTimeExtension.HorarioBrasilia().AddDays(7).Date && a.Situacao.EstaEmprestado()).ShouldBeTrue();
             acervosEmprestimos.Count(a=> a.Situacao.EstaEmprestado()).ShouldBe(3);
-            acervosEmprestimos.Count(a=> a.Situacao.EstaCancelado()).ShouldBe(3);
         }
         
         [Fact(DisplayName = "Acervo Solicitação - Deve cancelar atendimento quando itens bibliograficos aguardando visita")]
@@ -156,7 +155,6 @@ namespace SME.CDEP.TesteIntegracao
             acervosEmprestimos.Any(a=> a.DataEmprestimo.Date == DateTimeExtension.HorarioBrasilia().AddDays(2).Date && a.Situacao.EstaEmprestado()).ShouldBeTrue();
             acervosEmprestimos.Any(a=> a.DataDevolucao.Date == DateTimeExtension.HorarioBrasilia().AddDays(7).Date && a.Situacao.EstaEmprestado()).ShouldBeTrue();
             acervosEmprestimos.Count(a=> a.Situacao.EstaEmprestado()).ShouldBe(3);
-            acervosEmprestimos.Count(a=> a.Situacao.EstaCancelado()).ShouldBe(3);
             
             var acervosBibliograficos = ObterTodos<AcervoBibliografico>();
             acervosBibliograficos.FirstOrDefault(f=> f.Id == 1).SituacaoSaldo.ShouldBe(SituacaoSaldo.DISPONIVEL);
@@ -343,7 +341,6 @@ namespace SME.CDEP.TesteIntegracao
             acervosEmprestimos.Count().ShouldBe(4);
             acervosEmprestimos.Any(a=> a.DataEmprestimo.Date == DateTimeExtension.HorarioBrasilia().AddDays(2).Date && a.Situacao.EstaEmprestado()).ShouldBeTrue();
             acervosEmprestimos.Any(a=> a.DataDevolucao.Date == DateTimeExtension.HorarioBrasilia().AddDays(7).Date && a.Situacao.EstaEmprestado()).ShouldBeTrue();
-            acervosEmprestimos.Count(a=> a.Situacao.EstaCancelado()).ShouldBe(2);
         }
         
         [Fact(DisplayName = "Acervo Solicitação - Não deve cancelar atendimento com itens atendidos parcialmente aguardando atendimento")]

@@ -171,7 +171,8 @@ namespace SME.CDEP.Infra.Dados.Repositorios
 		                          ab.notas_gerais as notasGerais,
                                   ab.isbn,           
                                   a.codigo,
-                                  sc.nome serieColecao
+                                  sc.nome serieColecao,
+                                  ab.situacao_saldo as situacaoSaldo
                         from acervo_bibliografico ab
                         join acervo a on a.id = ab.acervo_id 
                         join idioma i on i.id = ab.idioma_id 
