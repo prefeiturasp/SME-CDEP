@@ -275,7 +275,7 @@ namespace SME.CDEP.Infra.Dados.Repositorios
                 new
                 {
                     acervoSolicitacaoId,
-                    acervoSolicitacaoItensId = acervoSolicitacaoItemId, 
+                    acervoSolicitacaoItemId, 
                     finalizadoAutomaticamente = (int)SituacaoSolicitacaoItem.FINALIZADO_AUTOMATICAMENTE
                 });
         }
