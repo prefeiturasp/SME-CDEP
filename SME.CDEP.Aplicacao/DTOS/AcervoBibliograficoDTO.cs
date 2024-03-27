@@ -30,4 +30,5 @@ public class AcervoBibliograficoDTO
     public AuditoriaDTO Auditoria { get; set; }
     public long[] CreditosAutoresIds { get; set; }
     public CoAutorDTO[]? CoAutores { get; set; }
+    public SituacaoSaldo SituacaoSaldo { get; set; }
 }

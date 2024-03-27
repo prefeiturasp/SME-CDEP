@@ -1,4 +1,6 @@
-﻿namespace SME.CDEP.Dominio.Entidades;
+﻿using SME.CDEP.Infra.Dominio.Enumerados;
+
+namespace SME.CDEP.Dominio.Entidades;
 
 public class AcervoBibliograficoCompleto : EntidadeBaseAuditavel
 {
@@ -24,4 +26,5 @@ public class AcervoBibliograficoCompleto : EntidadeBaseAuditavel
     public long[] CreditosAutoresIds { get; set; }
     public CoAutor[]? CoAutores { get; set; }
     public long[] AssuntosIds { get; set; }
+    public SituacaoSaldo SituacaoSaldo { get; set; }
 }
