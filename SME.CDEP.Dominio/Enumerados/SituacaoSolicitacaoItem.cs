@@ -41,7 +41,7 @@ public static class SituacaoSolicitacaoItemExtension
         return situacaoSolicitacaoItem != SituacaoSolicitacaoItem.CANCELADO;
     }
     
-    public static bool PodeFinalizarAtendimento(this SituacaoSolicitacaoItem situacaoSolicitacaoItem)
+    public static bool NaoPodeFinalizarAtendimentoItem(this SituacaoSolicitacaoItem situacaoSolicitacaoItem)
     {
         return situacaoSolicitacaoItem == SituacaoSolicitacaoItem.AGUARDANDO_VISITA 
                || situacaoSolicitacaoItem == SituacaoSolicitacaoItem.FINALIZADO_AUTOMATICAMENTE
@@ -70,4 +70,10 @@ public static class SituacaoSolicitacaoItemExtension
     {
         return situacaoSolicitacaoItem == SituacaoSolicitacaoItem.FINALIZADO_MANUALMENTE;
     }
+    
+    public static bool EstaEmSituacaoAguardandoVisitaEAguardandoAtendimento(this SituacaoSolicitacaoItem situacaoSolicitacaoItem)
+    {
+        return situacaoSolicitacaoItem == SituacaoSolicitacaoItem.AGUARDANDO_ATENDIMENTO 
+               || situacaoSolicitacaoItem == SituacaoSolicitacaoItem.AGUARDANDO_VISITA;
+    } 
 }
