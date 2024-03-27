@@ -4,8 +4,6 @@ public class Constantes
 {
     public const string ACERVO_DISPONIVEL = "Disponível";
     public const string ACERVO_INDISPONIVEL = "Indisponível";
-    public const string ACERVO_RESERVADO = "Acervo reservado pela solicitação '{0}'";
-    public const string ACERVO_EMPRESTADO = "Acervo emprestado pela solicitação '{0}'";
     public const string VALIDAR_EMAIL = @"^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$";
     public const string USUARIO_NAO_ENCONTRADO = "Usuário sem cadastro no CDEP, para que o atendimento seja realizado, é necessário que o usuário se cadastre primeiro.";
     public const string USUARIO_RESPONSAVEL_NAO_LOCALIZADO = "O usuário responsável informado não foi encontrado";
