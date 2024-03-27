@@ -95,6 +95,14 @@ namespace SME.CDEP.Infra.Dominio.Enumerados
             return dataAvaliada.Value.EhDataFutura();
         }
         
+        public static bool NaoEhDataFutura(this DateTime? dataAvaliada)
+        {
+            if (!dataAvaliada.HasValue)
+                return false;
+
+            return !dataAvaliada.Value.EhDataFutura();
+        }
+        
         public static bool EhDataFutura(this DateTime dataAvaliada)
         {
             return dataAvaliada.Date > HorarioBrasilia().Date;

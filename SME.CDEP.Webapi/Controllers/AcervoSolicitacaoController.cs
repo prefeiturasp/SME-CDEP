@@ -135,6 +135,17 @@ public class AcervoSolicitacaoController: BaseController
         return Ok(await servicoAcervoSolicitacao.FinalizarAtendimento(acervoSolicitacaoId));
     }
     
+    [HttpPut("{acervoSolicitacaoItemId}/finalizar-atendimento-item")]
+    [ProducesResponseType(typeof(bool), 200)]
+    [ProducesResponseType(typeof(RetornoBaseDTO), 400)]
+    [ProducesResponseType(typeof(RetornoBaseDTO), 403)]
+    [ProducesResponseType(typeof(RetornoBaseDTO), 601)]
+    [Permissao(Permissao.OperacoesSolicitacoes_A, Policy = "Bearer")]
+    public async Task<IActionResult> FinalizarAtendimentoItem([FromRoute] long acervoSolicitacaoItemId, [FromServices] IServicoAcervoSolicitacao servicoAcervoSolicitacao)
+    {
+        return Ok(await servicoAcervoSolicitacao.FinalizarAtendimentoItem(acervoSolicitacaoItemId));
+    }
+    
     [HttpPut("{acervoSolicitacaoId}/cancelar-atendimento")]
     [ProducesResponseType(typeof(bool), 200)]
     [ProducesResponseType(typeof(RetornoBaseDTO), 400)]

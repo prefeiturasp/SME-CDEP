@@ -2,6 +2,7 @@
 using AutoMapper;
 using Microsoft.AspNetCore.Authentication;
 using SME.CDEP.Aplicacao.DTOS;
+using SME.CDEP.Aplicacao.Extensions;
 using SME.CDEP.Aplicacao.Servicos.Interface;
 using SME.CDEP.Dominio.Constantes;
 using SME.CDEP.Dominio.Contexto;
@@ -223,6 +224,8 @@ namespace SME.CDEP.Aplicacao.Servicos
 
         public async Task<AcervoSolicitacaoDetalheDTO> ObterDetalhesParaAtendimentoSolicitadoesPorId(long acervoSolicitacaoId)
         {
+            var perfilLogado = new Guid(contextoAplicacao.PerfilUsuario);
+            
             var tiposAcervosPermitidos = servicoAcervo.ObterTiposAcervosPermitidosDoPerfilLogado();
             
             var acervoSolicitacao = mapper.Map<AcervoSolicitacaoDetalheDTO>(await repositorioAcervoSolicitacao.ObterDetalhesPorIdTiposPermitidos(acervoSolicitacaoId, tiposAcervosPermitidos));
@@ -231,6 +234,8 @@ namespace SME.CDEP.Aplicacao.Servicos
                 throw new NegocioException(MensagemNegocio.SOLICITACAO_ATENDIMENTO_NAO_ENCONTRADA);
 
             acervoSolicitacao.DadosSolicitante = mapper.Map<DadosSolicitanteDTO>(await servicoUsuario.ObterDadosSolicitantePorUsuarioId(acervoSolicitacao.UsuarioId));
+            acervoSolicitacao.PodeFinalizar = perfilLogado.EhPerfilAdminGeral();
+            acervoSolicitacao.PodeCancelar = perfilLogado.EhPerfilAdminGeral();
 
             if (acervoSolicitacao.Itens.Any(a=> a.TipoAcervoId.EhAcervoBibliografico()))
             {
@@ -464,6 +469,33 @@ namespace SME.CDEP.Aplicacao.Servicos
             {
                 tran.Dispose();
             }
+        }
+        
+        public async Task<bool> FinalizarAtendimentoItem(long acervoSolicitacaoItemId)
+        {
+            var acervoSolicitacaoItem = await repositorioAcervoSolicitacaoItem.ObterPorId(acervoSolicitacaoItemId);
+            
+            if (acervoSolicitacaoItem.EhNulo())
+                throw new NegocioException(MensagemNegocio.SOLICITACAO_ATENDIMENTO_ITEM_NAO_ENCONTRADA);
+
+            var podeFinalizarItem = acervoSolicitacaoItem.TipoAtendimento.EhAtendimentoPresencial() && acervoSolicitacaoItem.DataVisita.NaoEhDataFutura(); 
+            
+            if (!podeFinalizarItem)
+                throw new NegocioException(MensagemNegocio.PERMITIDO_FINALIZAR_ATENDIMENTO_AGUARDANDO_VISITA_ATE_O_DIA_DE_HOJE);
+            
+            acervoSolicitacaoItem.Situacao = SituacaoSolicitacaoItem.FINALIZADO_MANUALMENTE;
+            await repositorioAcervoSolicitacaoItem.Atualizar(acervoSolicitacaoItem);
+
+           var itens = await repositorioAcervoSolicitacaoItem.ObterItensPorSolicitacaoId(acervoSolicitacaoItem.AcervoSolicitacaoId);
+           
+           if (!itens.Any(a=> a.Situacao.EstaEmSituacaoAguardandoVisitaEAguardandoAtendimento()))
+           {
+               var acervoSolicitacao = await repositorioAcervoSolicitacao.ObterPorId(acervoSolicitacaoItem.AcervoSolicitacaoId);
+               acervoSolicitacao.Situacao = SituacaoSolicitacao.FINALIZADO_ATENDIMENTO;
+               await repositorioAcervoSolicitacao.Atualizar(acervoSolicitacao);
+           }
+           
+           return true;
         }
 
         public async Task<bool> CancelarAtendimento(long acervoSolicitacaoId)
