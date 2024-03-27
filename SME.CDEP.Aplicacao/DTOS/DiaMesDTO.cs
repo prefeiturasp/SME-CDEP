@@ -15,6 +15,8 @@ namespace SME.CDEP.Aplicacao.DTOS
         public int Mes { get; set; }
 
         public int? Ano { get; set; } = DateTimeExtension.HorarioBrasilia().Year;
+        public int Minuto { get; set; }
+        public int Hora { get; set; }
         
         public DateTime Data
         {
@@ -26,7 +28,7 @@ namespace SME.CDEP.Aplicacao.DTOS
                 if (!Mes.EhMesValido())
                     throw new NegocioException(MensagemNegocio.MES_INVALIDO);
 
-                return new DateTime(Ano.Value, Mes, Dia);
+                return new DateTime(Ano.Value, Mes, Dia, Hora, Minuto,0);
             }
         }
     }
