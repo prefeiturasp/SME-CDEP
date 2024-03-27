@@ -67,4 +67,6 @@ public class MensagemNegocio
     public const string DATA_DA_DEVOLUCAO_MENOR_DATA_DA_DEVOLUCAO_ANTERIOR_OU_FUTURA = "Para prorrogar o empréstimo, escolha uma 'Data de devolução' posterior à atual ou futura.";
     public const string DATA_DA_DEVOLUCAO_E_DATA_FUTURA_EM_VISITA_FUTURA = "A 'Data do empréstimo' e/ou 'Data da devolução' não pode(m) ser informada(s) com 'Data de visita' futura.";
     public const string ACERVO_INDISPONIVEL = "Acervo indisponível";
+    public const string ACERVO_RESERVADO = "Acervo reservado pela solicitação '{0}'";
+    public const string ACERVO_EMPRESTADO = "Acervo emprestado pela solicitação '{0}'";
 }
