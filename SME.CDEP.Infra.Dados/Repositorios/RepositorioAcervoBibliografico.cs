@@ -82,7 +82,8 @@ namespace SME.CDEP.Infra.Dados.Repositorios
                                    ab.idioma_id as IdiomaId,
                                    ab.material_id as MaterialId,
                                    ab.editora_id as EditoraId,
-                                   ab.serie_colecao_id as SerieColecaoId          
+                                   ab.serie_colecao_id as SerieColecaoId,
+                                   ab.situacao_saldo as situacaoSaldo
                         from acervo_bibliografico ab
                             join acervo a on a.id = ab.acervo_id 
                             join idioma i on i.id = ab.idioma_id                          
