@@ -1,4 +1,5 @@
 ﻿using Shouldly;
+using SME.CDEP.Aplicacao.Servicos.Interface;
 using SME.CDEP.Dominio.Entidades;
 using SME.CDEP.Dominio.Excecoes;
 using SME.CDEP.Infra.Dominio.Enumerados;
@@ -9,12 +10,18 @@ namespace SME.CDEP.TesteIntegracao
 {
     public class Ao_cancelar_acervo_solicitacao : TesteBase
     {
+        private readonly IServicoAcervoSolicitacao servicoAcervoSolicitacao;
+        
         public Ao_cancelar_acervo_solicitacao(CollectionFixture collectionFixture) : base(collectionFixture)
-        {}
-       
-        [Fact(DisplayName = "Acervo Solicitação - Deve cancelar atendimento quando itens aguardando visita")]
-        public async Task Deve_cancelar_atendimento_quando_itens_aguardando_visita()
         {
+            servicoAcervoSolicitacao = GetServicoAcervoSolicitacao();
+        }
+       
+        [Fact(DisplayName = "Acervo Solicitação - Deve cancelar atendimento quando itens aguardando visita com perfil Admin Geral")]
+        public async Task Deve_cancelar_atendimento_quando_itens_aguardando_visita_com_perfil_admin_geral()
+        {
+            CriarClaimUsuario(Dominio.Constantes.Constantes.PERFIL_ADMIN_GERAL_GUID);
+            
             await InserirDadosBasicosAleatorios();
 
             await InserirAcervoTridimensional();
@@ -56,8 +63,6 @@ namespace SME.CDEP.TesteIntegracao
                 itemCount++;
            }
            
-            var servicoAcervoSolicitacao = GetServicoAcervoSolicitacao();
-            
             var retorno = await servicoAcervoSolicitacao.CancelarAtendimento(1);
             
             retorno.ShouldBeTrue();
@@ -82,9 +87,11 @@ namespace SME.CDEP.TesteIntegracao
             acervosEmprestimos.Count(a=> a.Situacao.EstaCancelado()).ShouldBe(3);
         }
         
-        [Fact(DisplayName = "Acervo Solicitação - Deve cancelar atendimento quando itens cancelados")]
-        public async Task Deve_cancelar_atendimento_quando_itens_cancelados()
+        [Fact(DisplayName = "Acervo Solicitação - Deve cancelar atendimento quando itens cancelados com perfil Admin Geral")]
+        public async Task Deve_cancelar_atendimento_quando_itens_cancelados_com_perfil_admin_geral()
         {
+            CriarClaimUsuario(Dominio.Constantes.Constantes.PERFIL_ADMIN_GERAL_GUID);
+            
             await InserirDadosBasicosAleatorios();
 
             await InserirAcervoTridimensional();
@@ -102,8 +109,6 @@ namespace SME.CDEP.TesteIntegracao
                 await InserirNaBase(item);
             }
             
-            var servicoAcervoSolicitacao = GetServicoAcervoSolicitacao();
-            
             var retorno = await servicoAcervoSolicitacao.CancelarAtendimento(1);
             
             retorno.ShouldBeTrue();
@@ -118,9 +123,11 @@ namespace SME.CDEP.TesteIntegracao
             eventos.Count().ShouldBe(0);
         }
         
-        [Fact(DisplayName = "Acervo Solicitação - Deve cancelar atendimento quando itens aguardando atendimento")]
-        public async Task Deve_cancelar_atendimento_quando_itens_aguardando_atendimento()
+        [Fact(DisplayName = "Acervo Solicitação - Deve cancelar atendimento quando itens aguardando atendimento com perfil Admin Geral")]
+        public async Task Deve_cancelar_atendimento_quando_itens_aguardando_atendimento_com_perfil_admin_geral()
         {
+            CriarClaimUsuario(Dominio.Constantes.Constantes.PERFIL_ADMIN_GERAL_GUID);
+            
             await InserirDadosBasicosAleatorios();
 
             await InserirAcervoTridimensional();
@@ -139,8 +146,6 @@ namespace SME.CDEP.TesteIntegracao
                 await InserirNaBase(item);
             }
             
-            var servicoAcervoSolicitacao = GetServicoAcervoSolicitacao();
-            
             var retorno = await servicoAcervoSolicitacao.CancelarAtendimento(1);
             
             retorno.ShouldBeTrue();
@@ -155,9 +160,11 @@ namespace SME.CDEP.TesteIntegracao
             eventos.Count().ShouldBe(0);
         }
         
-        [Fact(DisplayName = "Acervo Solicitação - Não deve cancelar atendimento quando itens finalizados manualmente")]
-        public async Task Nao_deve_cancelar_atendimento_quando_itens_finalizado_manualmente()
+        [Fact(DisplayName = "Acervo Solicitação - Não deve cancelar atendimento quando itens finalizados manualmente com perfil Admin Geral")]
+        public async Task Nao_deve_cancelar_atendimento_quando_itens_finalizado_manualmente_com_perfil_admin_geral()
         {
+            CriarClaimUsuario(Dominio.Constantes.Constantes.PERFIL_ADMIN_GERAL_GUID);
+            
             await InserirDadosBasicosAleatorios();
 
             await InserirAcervoTridimensional();
@@ -175,14 +182,14 @@ namespace SME.CDEP.TesteIntegracao
                 await InserirNaBase(item);
             }
             
-            var servicoAcervoSolicitacao = GetServicoAcervoSolicitacao();
-            
             await servicoAcervoSolicitacao.CancelarAtendimento(1).ShouldThrowAsync<NegocioException>();
         }
         
-        [Fact(DisplayName = "Acervo Solicitação - Não deve cancelar atendimento com itens em situação finalizado automaticamente")]
-        public async Task Nao_deve_cancelar_atendimento_com_itens_em_situacao_finalizado_automaticamente()
+        [Fact(DisplayName = "Acervo Solicitação - Não deve cancelar atendimento com itens em situação finalizado automaticamente com Admin Geral")]
+        public async Task Nao_deve_cancelar_atendimento_com_itens_em_situacao_finalizado_automaticamente_com_perfil_admin_geral()
         {
+            CriarClaimUsuario(Dominio.Constantes.Constantes.PERFIL_ADMIN_GERAL_GUID);
+            
             await InserirDadosBasicosAleatorios();
 
             await InserirAcervoTridimensional();
@@ -200,14 +207,14 @@ namespace SME.CDEP.TesteIntegracao
                 await InserirNaBase(item);
             }
             
-            var servicoAcervoSolicitacao = GetServicoAcervoSolicitacao();
-            
             await servicoAcervoSolicitacao.CancelarAtendimento(1).ShouldThrowAsync<NegocioException>();
         }
         
-        [Fact(DisplayName = "Acervo Solicitação - Deve cancelar atendimento com itens atendidos parcialmente com visita")]
-        public async Task Deve_cancelar_atendimento_com_itens_em_atendidos_parcialmente_com_visita()
+        [Fact(DisplayName = "Acervo Solicitação - Deve cancelar atendimento com itens atendidos parcialmente com visita com perfil Admin Geral")]
+        public async Task Deve_cancelar_atendimento_com_itens_em_atendidos_parcialmente_com_visita_com_perfil_admin_geral()
         {
+            CriarClaimUsuario(Dominio.Constantes.Constantes.PERFIL_ADMIN_GERAL_GUID);
+            
             await InserirDadosBasicosAleatorios();
 
             await InserirAcervoTridimensional();
@@ -240,8 +247,6 @@ namespace SME.CDEP.TesteIntegracao
                 contador++;
             }
             
-            var servicoAcervoSolicitacao = GetServicoAcervoSolicitacao();
-            
             var retorno = await servicoAcervoSolicitacao.CancelarAtendimento(1);
             
             retorno.ShouldBeTrue();
@@ -263,9 +268,11 @@ namespace SME.CDEP.TesteIntegracao
             acervosEmprestimos.Count(a=> a.Situacao.EstaCancelado()).ShouldBe(2);
         }
         
-        [Fact(DisplayName = "Acervo Solicitação - Não deve cancelar atendimento com itens atendidos parcialmente aguardando atendimento")]
-        public async Task Nao_deve_cancelar_atendimento_com_itens_em_atendidos_parcialmente_finalizado_manualmente_aguardando_atendimento()
+        [Fact(DisplayName = "Acervo Solicitação - Não deve cancelar atendimento com itens atendidos parcialmente aguardando atendimento com perfil Admin Geral")]
+        public async Task Nao_deve_cancelar_atendimento_com_itens_em_atendidos_parcialmente_finalizado_manualmente_aguardando_atendimento_com_perfil_admin_geral()
         {
+            CriarClaimUsuario(Dominio.Constantes.Constantes.PERFIL_ADMIN_GERAL_GUID);
+            
             await InserirDadosBasicosAleatorios();
 
             await InserirAcervoTridimensional();
@@ -285,9 +292,36 @@ namespace SME.CDEP.TesteIntegracao
                 contador++;
             }
             
-            var servicoAcervoSolicitacao = GetServicoAcervoSolicitacao();
-            
             await servicoAcervoSolicitacao.CancelarAtendimento(1).ShouldThrowAsync<NegocioException>();
+        }
+        
+         [Fact(DisplayName = "Acervo Solicitação - Deve cancelar atendimento com itens atendidos parcialmente com visita com perfil não Admin Geral")]
+        public async Task Deve_cancelar_os_itens_somente_do_perfil_e_manter_atendimento_nao_cancelado_com_perfil_nao_admin_geral()
+        {
+            CriarClaimUsuario(Dominio.Constantes.Constantes.PERFIL_ADMIN_MEMORIAL_GUID);
+            
+            await InserirDadosBasicosAleatorios();
+
+            await InserirAcervosBibliograficosEmMassa(1, 2);
+            await InserirAcervosArteGraficasEmMassa(3, 1);
+
+            await InserirNaBase(AcervoSolicitacaoMock.Instance.Gerar(SituacaoSolicitacao.ATENDIDO_PARCIALMENTE).Generate());
+
+            await InserirNaBase(ObterAcervoSolicitacaoItem(1,1));
+            await InserirNaBase(ObterAcervoSolicitacaoItem(1,2));
+            await InserirNaBase(ObterAcervoSolicitacaoItem(1,3, TipoAtendimento.Presencial, DateTime.Now, SituacaoSolicitacaoItem.AGUARDANDO_VISITA));
+            
+            var retorno = await servicoAcervoSolicitacao.CancelarAtendimento(1);
+            
+            retorno.ShouldBeTrue();
+            var solicitacaoAlterada = ObterTodos<AcervoSolicitacao>().FirstOrDefault(f=> f.Id == 1);
+            solicitacaoAlterada.Id.ShouldBe(1);
+            solicitacaoAlterada.Situacao.ShouldBe(SituacaoSolicitacao.ATENDIDO_PARCIALMENTE);
+            
+            var itens = ObterTodos<AcervoSolicitacaoItem>();
+            itens.Any(a=> a.AcervoId == 1 && a.Situacao.EstaAguardandoAtendimento()).ShouldBeTrue();
+            itens.Any(a=> a.AcervoId == 2 && a.Situacao.EstaAguardandoAtendimento()).ShouldBeTrue();
+            itens.Any(a=> a.AcervoId == 3 && a.Situacao.EstaCancelado()).ShouldBeTrue();
         }
     }
 }

@@ -70,4 +70,9 @@ public static class SituacaoSolicitacaoItemExtension
     {
         return situacaoSolicitacaoItem == SituacaoSolicitacaoItem.FINALIZADO_MANUALMENTE;
     }
+    
+    public static bool EstaFinalizadoAutomaticamente(this SituacaoSolicitacaoItem situacaoSolicitacaoItem)
+    {
+        return situacaoSolicitacaoItem == SituacaoSolicitacaoItem.FINALIZADO_AUTOMATICAMENTE;
+    }
 }

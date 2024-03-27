@@ -15,5 +15,7 @@ namespace SME.CDEP.Aplicacao.DTOS
         public SituacaoSolicitacao SituacaoId { get; set; }
         public IEnumerable<AcervoSolicitacaoItemDetalheResumidoDTO> Itens { get; set; } = Enumerable.Empty<AcervoSolicitacaoItemDetalheResumidoDTO>();
         public int LimiteDiasEmprestimoAcervo { get; set; }
+        public bool PodeFinalizar { get; set; }
+        public bool PodeCancelar { get; set; }
     }
 }

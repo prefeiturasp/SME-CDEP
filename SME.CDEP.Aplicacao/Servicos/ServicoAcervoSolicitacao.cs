@@ -2,6 +2,7 @@
 using AutoMapper;
 using Microsoft.AspNetCore.Authentication;
 using SME.CDEP.Aplicacao.DTOS;
+using SME.CDEP.Aplicacao.Extensions;
 using SME.CDEP.Aplicacao.Servicos.Interface;
 using SME.CDEP.Dominio.Constantes;
 using SME.CDEP.Dominio.Contexto;
@@ -227,17 +228,31 @@ namespace SME.CDEP.Aplicacao.Servicos
             
             var acervoSolicitacao = mapper.Map<AcervoSolicitacaoDetalheDTO>(await repositorioAcervoSolicitacao.ObterDetalhesPorIdTiposPermitidos(acervoSolicitacaoId, tiposAcervosPermitidos));
 
+            acervoSolicitacao.Itens = acervoSolicitacao.Itens
+                .Where(w => tiposAcervosPermitidos.Contains((long)w.TipoAcervoId));
+                
+            var naoPodeFinalizar = acervoSolicitacao.Itens.Any(a =>
+                (a.TipoAtendimento.EhAtendimentoPresencial() && a.DataVisita.EhDataFutura()) 
+                || a.SituacaoId.EstaAguardandoAtendimento());
+
+            var naoPodeCancelar = acervoSolicitacao.Itens.Any(a =>
+                (a.TipoAtendimento.EhAtendimentoPresencial() && a.DataVisita.EhDataPassada()) 
+                || a.SituacaoId.EstaFinalizadoManualmente()
+                || a.SituacaoId.EstaFinalizadoAutomaticamente());
+            
             if (acervoSolicitacao.EhNulo())
                 throw new NegocioException(MensagemNegocio.SOLICITACAO_ATENDIMENTO_NAO_ENCONTRADA);
 
             acervoSolicitacao.DadosSolicitante = mapper.Map<DadosSolicitanteDTO>(await servicoUsuario.ObterDadosSolicitantePorUsuarioId(acervoSolicitacao.UsuarioId));
+            acervoSolicitacao.PodeFinalizar = !naoPodeFinalizar;
+            acervoSolicitacao.PodeCancelar = !naoPodeCancelar;
 
             if (acervoSolicitacao.Itens.Any(a=> a.TipoAcervoId.EhAcervoBibliografico()))
             {
                 var limiteDiasEmprestimoAcervo = await repositorioParametroSistema.ObterParametroPorTipoEAno(TipoParametroSistema.LimiteDiasEmprestimoAcervo,DateTimeExtension.HorarioBrasilia().Year);
                 acervoSolicitacao.LimiteDiasEmprestimoAcervo = int.Parse(limiteDiasEmprestimoAcervo.Valor);
             }
-
+                
             return acervoSolicitacao;
         }
 
@@ -427,26 +442,32 @@ namespace SME.CDEP.Aplicacao.Servicos
 
         public async Task<bool> FinalizarAtendimento(long acervoSolicitacaoId)
         {
+            var tiposAcervosPermitidos = servicoAcervo.ObterTiposAcervosPermitidosDoPerfilLogado();
+            
+            var perfilLogado = new Guid(contextoAplicacao.PerfilUsuario);
+            
             var acervoSolicitacao = await repositorioAcervoSolicitacao.ObterPorId(acervoSolicitacaoId);
             
             if (acervoSolicitacao.EhNulo())
                 throw new NegocioException(MensagemNegocio.SOLICITACAO_ATENDIMENTO_NAO_ENCONTRADA);
             
-            if (acervoSolicitacao.Situacao.FoiAtendidaParcialmente())
-                throw new NegocioException(MensagemNegocio.CANCELAR_SOLICITACAO_NAO_PERMITIDO_QUANDO_ITENS_ATENDIDOS_PARCIALMENTE);
-
-            if (await repositorioAcervoSolicitacaoItem.PossuiItensEmSituacaoAguardandoAtendimentoOuAguardandoVisitaComDataFutura(acervoSolicitacaoId))
+            var possuiItensPendentes = await repositorioAcervoSolicitacaoItem.PossuiItensEmSituacaoAguardandoAtendimentoOuAguardandoVisitaComDataFutura(acervoSolicitacaoId);
+            
+            if (perfilLogado.EhPerfilAdminGeral() && possuiItensPendentes)
                 throw new NegocioException(MensagemNegocio.NÃO_PODE_FINALIZAR_QUANDO_AGUARDANDO_VISITA_DATA_FUTURA_OU_AGUARDANDO_ATENDIMENTO);
-
-            var itens = await repositorioAcervoSolicitacaoItem.ObterItensEmSituacaoAguardandoVisitaPorSolicitacaoId(acervoSolicitacaoId);
+            
+            var itensParaFinalizar = await repositorioAcervoSolicitacaoItem.ObterItensEmSituacaoAguardandoVisitaPorSolicitacaoId(acervoSolicitacaoId, tiposAcervosPermitidos);
             
             var tran = transacao.Iniciar();
             try
             {
-                acervoSolicitacao.Situacao = SituacaoSolicitacao.FINALIZADO_ATENDIMENTO;
-                await repositorioAcervoSolicitacao.Atualizar(acervoSolicitacao);
+                if (!possuiItensPendentes)
+                {
+                    acervoSolicitacao.Situacao = SituacaoSolicitacao.FINALIZADO_ATENDIMENTO; 
+                    await repositorioAcervoSolicitacao.Atualizar(acervoSolicitacao);
+                }
 
-                foreach (var item in itens)
+                foreach (var item in itensParaFinalizar)
                 {
                     item.Situacao = SituacaoSolicitacaoItem.FINALIZADO_MANUALMENTE;
                     await repositorioAcervoSolicitacaoItem.Atualizar(item);
@@ -468,15 +489,20 @@ namespace SME.CDEP.Aplicacao.Servicos
 
         public async Task<bool> CancelarAtendimento(long acervoSolicitacaoId)
         {
+            var tiposAcervosPermitidos = servicoAcervo.ObterTiposAcervosPermitidosDoPerfilLogado();
+	
+            var perfilLogado = new Guid(contextoAplicacao.PerfilUsuario);
+            
             var acervoSolicitacao = await repositorioAcervoSolicitacao.ObterPorId(acervoSolicitacaoId);
             
             if (acervoSolicitacao.EhNulo())
                 throw new NegocioException(MensagemNegocio.SOLICITACAO_ATENDIMENTO_NAO_ENCONTRADA);
-            
-            if (await repositorioAcervoSolicitacaoItem.PossuiItensFinalizadosAutomaticamente(acervoSolicitacaoId))
+
+            var possuiItensFinalizadosAutomaticamente = await repositorioAcervoSolicitacaoItem.PossuiItensFinalizadosAutomaticamente(acervoSolicitacaoId); 
+            if (perfilLogado.EhPerfilAdminGeral() && possuiItensFinalizadosAutomaticamente)
                 throw new NegocioException(MensagemNegocio.NAO_PODE_CANCELAR_ATENDIMENTO_COM_ITEM_FINALIZADO_AUTOMATICAMENTE_MANUALMENTE);
             
-            var itens = await repositorioAcervoSolicitacaoItem.ObterItensPorSolicitacaoId(acervoSolicitacaoId);
+            var itens = await repositorioAcervoSolicitacaoItem.ObterItensPorSolicitacaoId(acervoSolicitacaoId, tiposAcervosPermitidos);
 
             var acervosEmprestimosAtuais = await repositorioAcervoEmprestimo.ObterUltimoEmprestimoPorAcervoSolicitacaoItemIds(itens.Select(s=> s.Id).ToArray());
                 
@@ -488,8 +514,11 @@ namespace SME.CDEP.Aplicacao.Servicos
 
                 foreach (var item in itens)
                 {
-                    item.Situacao = SituacaoSolicitacaoItem.CANCELADO;
-                    await repositorioAcervoSolicitacaoItem.Atualizar(item);
+                    if (!possuiItensFinalizadosAutomaticamente)
+                    {
+                        item.Situacao = SituacaoSolicitacaoItem.CANCELADO;
+                        await repositorioAcervoSolicitacaoItem.Atualizar(item);
+                    }
 
                     if (item.TipoAtendimento.EhAtendimentoPresencial())
                         await servicoEvento.ExcluirEventoPorAcervoSolicitacaoItem(item.Id);

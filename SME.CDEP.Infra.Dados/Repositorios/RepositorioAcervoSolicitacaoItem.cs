@@ -130,45 +130,59 @@ namespace SME.CDEP.Infra.Dados.Repositorios
             return conexao.Obter().QueryAsync<AcervoSolicitacaoItem>(query, new { acervoSolicitacaoId, situacoesItensAguardandoAtendimentoEVisitaOuFinalizadoManualmente });
         }
         
-        public Task<IEnumerable<AcervoSolicitacaoItem>> ObterItensEmSituacaoAguardandoVisitaPorSolicitacaoId(long acervoSolicitacaoId)
+        public Task<IEnumerable<AcervoSolicitacaoItem>> ObterItensEmSituacaoAguardandoVisitaPorSolicitacaoId(long acervoSolicitacaoId, long[] tiposAcervosPermitidos)
         {
             var query = @"
-             select id,
-               acervo_solicitacao_id,
-               acervo_id,
-               situacao,
-               dt_visita,
-               criado_em,
-               criado_por,
-               criado_login,
-               tipo_atendimento,
-               usuario_responsavel_id
-            from acervo_solicitacao_item
-            where acervo_solicitacao_id = @acervoSolicitacaoId
-              and situacao = @situacaoAguardandoVisita 
-              and not excluido";
+             select asi.id,
+               asi.acervo_solicitacao_id,
+               asi.acervo_id,
+               asi.situacao,
+               asi.dt_visita,
+               asi.criado_em,
+               asi.criado_por,
+               asi.criado_login,
+               asi.tipo_atendimento,
+               asi.usuario_responsavel_id
+            from acervo_solicitacao_item asi
+            join acervo a on a.id = asi.acervo_id
+            where asi.acervo_solicitacao_id = @acervoSolicitacaoId
+              and asi.situacao = @situacaoAguardandoVisita
+              and a.tipo = any(@tiposAcervosPermitidos)
+              and not asi.excluido
+              and not a.excluido";
             
-            return conexao.Obter().QueryAsync<AcervoSolicitacaoItem>(query, new { acervoSolicitacaoId, situacaoAguardandoVisita = (int)SituacaoSolicitacaoItem.AGUARDANDO_VISITA });
+            return conexao.Obter().QueryAsync<AcervoSolicitacaoItem>(query, 
+                new
+                {
+                    acervoSolicitacaoId, 
+                    situacaoAguardandoVisita = (int)SituacaoSolicitacaoItem.AGUARDANDO_VISITA, 
+                    tiposAcervosPermitidos
+                });
         }
         
-        public Task<IEnumerable<AcervoSolicitacaoItem>> ObterItensPorSolicitacaoId(long acervoSolicitacaoId)
+        public Task<IEnumerable<AcervoSolicitacaoItem>> ObterItensPorSolicitacaoId(long acervoSolicitacaoId, long[] tiposAcervosPermitidos)
         {
             var query = @"
-             select id,
-               acervo_solicitacao_id,
-               acervo_id,
-               situacao,
-               dt_visita,
-               criado_em,
-               criado_por,
-               criado_login,
-               tipo_atendimento,
-               usuario_responsavel_id
-            from acervo_solicitacao_item
-            where acervo_solicitacao_id = @acervoSolicitacaoId 
-              and not excluido";
+             select asi.id,
+               asi.acervo_solicitacao_id,
+               asi.acervo_id,
+               asi.situacao,
+               asi.dt_visita,
+               asi.criado_em,
+               asi.criado_por,
+               asi.criado_login,
+               asi.tipo_atendimento,
+               asi.usuario_responsavel_id
+            from acervo_solicitacao_item asi
+            join acervo a on a.id = asi.acervo_id
+            where asi.acervo_solicitacao_id = @acervoSolicitacaoId 
+              and not asi.excluido
+              and not a.excluido";
+
+            if (tiposAcervosPermitidos.NaoEhNulo())
+                query += " and a.tipo = ANY(@tiposAcervosPermitidos)";
             
-            return conexao.Obter().QueryAsync<AcervoSolicitacaoItem>(query, new { acervoSolicitacaoId });
+            return conexao.Obter().QueryAsync<AcervoSolicitacaoItem>(query, new { acervoSolicitacaoId, tiposAcervosPermitidos });
         }
 
         public Task<Acervo> ObterAcervoPorAcervoSolicitacaoItemId(long acervoSolicitacaoItemId)
