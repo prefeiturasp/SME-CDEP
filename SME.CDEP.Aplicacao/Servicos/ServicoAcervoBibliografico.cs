@@ -25,13 +25,15 @@ namespace SME.CDEP.Aplicacao.Servicos
             IMapper mapper,
             ITransacao transacao,
             IRepositorioAcervoBibliografico repositorioAcervoBibliografico,
-            IRepositorioAssunto repositorioAssunto)
+            IRepositorioAssunto repositorioAssunto,
+            IServicoAcervo servicoAcervo)
         {
             this.repositorioAcervoBibliograficoAssunto = repositorioAcervoBibliograficoAssunto ?? throw new ArgumentNullException(nameof(repositorioAcervoBibliograficoAssunto));
             this.mapper = mapper ?? throw new ArgumentNullException(nameof(mapper));
             this.transacao = transacao ?? throw new ArgumentNullException(nameof(transacao));
             this.repositorioAcervoBibliografico = repositorioAcervoBibliografico ?? throw new ArgumentNullException(nameof(repositorioAcervoBibliografico));
             this.repositorioAssunto = repositorioAssunto ?? throw new ArgumentNullException(nameof(repositorioAssunto));
+            this.servicoAcervo = servicoAcervo ?? throw new ArgumentNullException(nameof(servicoAcervo));
         }
 
         public async Task<long> Inserir(AcervoBibliograficoCadastroDTO acervoBibliograficoCadastroDto)
