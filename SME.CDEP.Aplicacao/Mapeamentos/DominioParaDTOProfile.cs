@@ -202,6 +202,7 @@ namespace SME.CDEP.Aplicacao.Mapeamentos
                 .ForMember(dest => dest.SituacaoDisponibilidade, opt => opt.MapFrom(o => o.SituacaoSaldo.EstaDisponivel() ? Constantes.ACERVO_DISPONIVEL : Constantes.ACERVO_INDISPONIVEL))
                 .ForMember(dest => dest.TemControleDisponibilidade, opt => opt.MapFrom(o => o.TipoAcervo.EhAcervoBibliografico()))
                 .ForMember(dest => dest.EstaDisponivel, opt => opt.MapFrom(o => o.SituacaoSaldo.EstaDisponivel()))
+                .ForMember(dest => dest.TipoAcervoId, opt => opt.MapFrom(o => o.TipoAcervo))
                 .ReverseMap();
             
             CreateMap<AcervoSolicitacaoItemResumido,MinhaSolicitacaoDTO>()
