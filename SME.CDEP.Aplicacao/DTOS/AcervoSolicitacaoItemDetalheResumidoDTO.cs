@@ -25,5 +25,6 @@ namespace SME.CDEP.Aplicacao.DTOS
         public bool EstaDisponivel { get; set; }
         public bool TemControleDisponibilidade { get; set; }
         public SituacaoSaldo SituacaoSaldo { get; set; }
+        public bool PodeEditar { get; set; }
     }
 }

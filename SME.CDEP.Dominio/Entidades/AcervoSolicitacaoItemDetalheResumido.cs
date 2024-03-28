@@ -1,4 +1,5 @@
 ﻿using SME.CDEP.Dominio.Constantes;
+using SME.CDEP.Dominio.Extensions;
 using SME.CDEP.Infra.Dominio.Enumerados;
 
 namespace SME.CDEP.Dominio.Entidades
@@ -29,6 +30,18 @@ namespace SME.CDEP.Dominio.Entidades
                 SituacaoSaldo.EMPRESTADO => string.Format(MensagemNegocio.ACERVO_EMPRESTADO, acervoSolicitacaoId),
                 SituacaoSaldo.INDISPONIVEL_PARA_RESERVA_EMPRESTIMO => MensagemNegocio.ACERVO_INDISPONIVEL,
             };
+        }
+        
+        public bool PodeEditar()
+        {
+            if (TipoAcervo.EhAcervoBibliografico())
+            {
+                return Situacao.EstaAguardandoVisita()
+                       || (Situacao.EstaAguardandoAtendimento() && SituacaoSaldo.EstaDisponivel())
+                       || Situacao.EstaFinalizadoManualmente();
+            }
+            
+            return Situacao.EstaAguardandoAtendimento()|| Situacao.EstaAguardandoVisita();
         }
     }
 }
