@@ -8,5 +8,11 @@ namespace SME.CDEP.Dominio.Entidades
         public DateTime DataEmprestimo { get; set; }
         public DateTime DataDevolucao { get; set; }
         public SituacaoEmprestimo Situacao { get; set; }
+
+        public void DefinirDevoluvaoEmAtraso()
+        {
+            Id = 0;
+            Situacao = SituacaoEmprestimo.DEVOLUCAO_EM_ATRASO;
+        }
     }
 }
