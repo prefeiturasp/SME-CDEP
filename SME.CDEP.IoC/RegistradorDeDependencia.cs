@@ -62,6 +62,8 @@ public class RegistradorDeDependencia
         _serviceCollection.TryAddScoped<INotificarViaEmailCancelamentoAtendimento, NotificarViaEmailCancelamentoAtendimento>();
         _serviceCollection.TryAddScoped<INotificarViaEmailCancelamentoAtendimentoItem, NotificarViaEmailCancelamentoAtendimentoItem>();
         _serviceCollection.TryAddScoped<INotificarViaEmailConfirmacaoAtendimentoPresencial, NotificarViaEmailConfirmacaoAtendimentoPresencial>();
+        
+        _serviceCollection.TryAddScoped<IExecutarAtualizacaoSituacaoParaEmprestimoComDevolucaoEmAtrasoUseCase, ExecutarAtualizacaoSituacaoParaEmprestimoComDevolucaoEmAtrasoUseCase>();
     }
 
     protected virtual void RegistrarRabbit()

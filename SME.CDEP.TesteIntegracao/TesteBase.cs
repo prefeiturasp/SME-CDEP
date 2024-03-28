@@ -266,6 +266,11 @@ namespace SME.CDEP.TesteIntegracao
             return ServiceProvider.GetService<T>() ?? throw new Exception($"Serviço {typeof(T).Name} não registrado!");
         }
         
+        public T ObterCasoDeUso<T>()
+        {
+            return ServiceProvider.GetService<T>() ?? throw new Exception($"Caso de Uso {typeof(T).Name} não registrado!");
+        }
+        
         protected void CriarClaimUsuario()
         {
             var contextoAplicacao = ServiceProvider.GetService<IContextoAplicacao>();

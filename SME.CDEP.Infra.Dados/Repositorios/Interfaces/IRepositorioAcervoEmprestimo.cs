@@ -7,5 +7,6 @@ namespace SME.CDEP.Infra.Dados.Repositorios.Interfaces
     {
         Task<IEnumerable<AcervoEmprestimo>> ObterUltimoEmprestimoPorAcervoSolicitacaoItemIds(long[] acervoSolicitacaoItemIds);
         Task<AcervoEmprestimo> ObterUltimoEmprestimoPorAcervoSolicitacaoItemId(long acervoSolicitacaoItemId);
+        Task<IEnumerable<AcervoEmprestimo>> ObterItensEmprestadosAtrasados();
     }
 }
