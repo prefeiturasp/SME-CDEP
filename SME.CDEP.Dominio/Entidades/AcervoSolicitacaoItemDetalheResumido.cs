@@ -29,6 +29,7 @@ namespace SME.CDEP.Dominio.Entidades
                 SituacaoSaldo.RESERVADO => string.Format(MensagemNegocio.ACERVO_RESERVADO, acervoSolicitacaoId),
                 SituacaoSaldo.EMPRESTADO => string.Format(MensagemNegocio.ACERVO_EMPRESTADO, acervoSolicitacaoId),
                 SituacaoSaldo.INDISPONIVEL_PARA_RESERVA_EMPRESTIMO => MensagemNegocio.ACERVO_INDISPONIVEL,
+                _ => string.Empty
             };
         }
         
