@@ -20,6 +20,11 @@ namespace SME.CDEP.Dominio.Extensions
             return valor == (long)TipoAcervo.Bibliografico; 
         }
         
+        public static bool NaoEhAcervoBibliografico(this long valor)
+        {
+            return !EhAcervoBibliografico(valor); 
+        }
+        
         public static bool EhAcervoArteGrafica(this long valor)
         {
             return valor == (long)TipoAcervo.ArtesGraficas; 

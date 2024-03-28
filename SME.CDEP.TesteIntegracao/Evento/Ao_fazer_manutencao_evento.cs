@@ -11,13 +11,16 @@ namespace SME.CDEP.TesteIntegracao.Eventos
 {
     public class Ao_fazer_manutencao_evento : TesteBase
     {
+        private readonly IServicoEvento servicoEvento;
+
         public Ao_fazer_manutencao_evento(CollectionFixture collectionFixture) : base(collectionFixture)
-        {}
+        {
+            servicoEvento = GetServicoEvento();
+        }
         
         [Fact(DisplayName = "Evento - Inserir visita")]
         public async Task Inserir_visita()
         {
-            var servicoEvento = GetServicoEvento();
             var eventoDto = EventoCadastroDTO.GerarEventoDTO(TipoEvento.VISITA).Generate(); 
 
             var eventoId = await servicoEvento.Inserir(eventoDto);
@@ -41,7 +44,6 @@ namespace SME.CDEP.TesteIntegracao.Eventos
 
             await InserirAcervoSolicitacao(10);
             
-            var servicoEvento = GetServicoEvento();
             var eventoDto = EventoCadastroDTO.GerarEventoDTO(TipoEvento.VISITA).Generate();
             eventoDto.AcervoSolicitacaoItemId = 1;
             
@@ -60,7 +62,6 @@ namespace SME.CDEP.TesteIntegracao.Eventos
         [Fact(DisplayName = "Evento - Inserir feriado")]
         public async Task Inserir_feriado()
         {
-            var servicoEvento = GetServicoEvento();
             var eventoDto = EventoCadastroDTO.GerarEventoDTO(TipoEvento.FERIADO).Generate(); 
 
             var eventoId = await servicoEvento.Inserir(eventoDto);
@@ -78,7 +79,6 @@ namespace SME.CDEP.TesteIntegracao.Eventos
         [Fact(DisplayName = "Evento - Inserir suspensão")]
         public async Task Inserir_suspensao()
         {
-            var servicoEvento = GetServicoEvento();
             var eventoDto = EventoCadastroDTO.GerarEventoDTO(TipoEvento.SUSPENSAO).Generate(); 
 
             var eventoId = await servicoEvento.Inserir(eventoDto);
@@ -96,17 +96,30 @@ namespace SME.CDEP.TesteIntegracao.Eventos
         [Fact(DisplayName = "Evento - Obter todos")]
         public async Task ObterTodosEventos()
         {
-            IServicoEvento servicoEvento = await CadastrarVarios(TipoEvento.VISITA);
+            await CadastrarVariosEventos(TipoEvento.VISITA);
 
             var eventoDtos = await servicoEvento.ObterTodos();
             eventoDtos.ShouldNotBeNull();
             eventoDtos.Count().ShouldBe(10);
         }
 
+        private async Task CadastrarVariosEventos(TipoEvento tipoEvento)
+        {
+            var eventos = EventoMock.Instance.GerarEvento(tipoEvento).Generate(10);
+
+            var contador = 1;
+
+            foreach (var eventoDto in eventos)
+            {
+                eventoDto.Data.AddDays(contador);
+                await InserirNaBase(eventoDto);
+            }
+        }
+
         [Fact(DisplayName = "Evento - Obter por id")]
         public async Task ObterEventoPorId()
         {
-            IServicoEvento servicoEvento = await CadastrarVarios(TipoEvento.SUSPENSAO);
+            await CadastrarVariosEventos(TipoEvento.SUSPENSAO);
 
             var usuario = await servicoEvento.ObterPorId(1);
             usuario.ShouldNotBeNull();
@@ -117,7 +130,7 @@ namespace SME.CDEP.TesteIntegracao.Eventos
         public async Task Atualizar()
         {
             CriarClaimUsuario();
-            IServicoEvento servicoEvento = await CadastrarVarios(TipoEvento.FERIADO);
+            await CadastrarVariosEventos(TipoEvento.FERIADO);
 
             var evento = await servicoEvento.ObterPorId(1);
 
@@ -150,7 +163,7 @@ namespace SME.CDEP.TesteIntegracao.Eventos
         public async Task Obter_eventos_tag()
         {
             CriarClaimUsuario();
-            IServicoEvento servicoEvento = await CadastrarVarios(TipoEvento.FERIADO);
+            await CadastrarVariosEventos(TipoEvento.FERIADO);
 
             var eventos = ObterTodos<Dominio.Entidades.Evento>();
 
@@ -169,7 +182,7 @@ namespace SME.CDEP.TesteIntegracao.Eventos
         public async Task Excluir()
         {
             CriarClaimUsuario();
-            IServicoEvento servicoEvento = await CadastrarVarios(TipoEvento.FERIADO);
+            await CadastrarVariosEventos(TipoEvento.FERIADO);
 
             var retorno = await servicoEvento.ExcluirLogicamente(1);
             retorno.ShouldBeTrue();
@@ -186,8 +199,8 @@ namespace SME.CDEP.TesteIntegracao.Eventos
         [Fact(DisplayName = "Evento - Obter calendário de eventos do mês de janeiro de 2024")]
         public async Task Calendario_de_eventos_do_mes_janeiro_2024()
         {
-            var servicoEvento = GetServicoEvento();
-
+            CriarClaimUsuario(Dominio.Constantes.Constantes.PERFIL_ADMIN_GERAL_GUID);
+            
             var retorno = await servicoEvento.ObterCalendarioDeEventosPorMes(1, 2024);
             retorno.ShouldNotBeNull();
             
@@ -215,8 +228,8 @@ namespace SME.CDEP.TesteIntegracao.Eventos
         [Fact(DisplayName = "Evento - Obter calendário de eventos do mês de fevereiro de 2024")]
         public async Task Calendario_de_eventos_do_mes_fevereiro_2024()
         {
-            var servicoEvento = GetServicoEvento();
-
+            CriarClaimUsuario(Dominio.Constantes.Constantes.PERFIL_ADMIN_GERAL_GUID);
+            
             var retorno = await servicoEvento.ObterCalendarioDeEventosPorMes(2, 2024);
             retorno.ShouldNotBeNull();
             
@@ -244,8 +257,8 @@ namespace SME.CDEP.TesteIntegracao.Eventos
         [Fact(DisplayName = "Evento - Obter calendário de eventos do mês de setembro de 2024")]
         public async Task Calendario_de_eventos_do_mes_setembro_2024()
         {
-            var servicoEvento = GetServicoEvento();
-
+            CriarClaimUsuario(Dominio.Constantes.Constantes.PERFIL_ADMIN_GERAL_GUID);
+            
             var retorno = await servicoEvento.ObterCalendarioDeEventosPorMes(9, 2024);
             retorno.ShouldNotBeNull();
             
@@ -273,8 +286,8 @@ namespace SME.CDEP.TesteIntegracao.Eventos
         [Fact(DisplayName = "Evento - Obter calendário de eventos do mês de agosto de 2025")]
         public async Task Calendario_de_eventos_do_mes_agosto_2025()
         {
-            var servicoEvento = GetServicoEvento();
-
+            CriarClaimUsuario(Dominio.Constantes.Constantes.PERFIL_ADMIN_GERAL_GUID);
+            
             var retorno = await servicoEvento.ObterCalendarioDeEventosPorMes(8, 2025);
             retorno.ShouldNotBeNull();
             
@@ -306,8 +319,8 @@ namespace SME.CDEP.TesteIntegracao.Eventos
         [Fact(DisplayName = "Evento - Obter calendário de eventos do mês de fevereiro de 2025")]
         public async Task Calendario_de_eventos_do_mes_fevereiro_2025()
         {
-            var servicoEvento = GetServicoEvento();
-
+            CriarClaimUsuario(Dominio.Constantes.Constantes.PERFIL_ADMIN_GERAL_GUID);
+            
             var retorno = await servicoEvento.ObterCalendarioDeEventosPorMes(2, 2025);
             retorno.ShouldNotBeNull();
             
@@ -335,8 +348,8 @@ namespace SME.CDEP.TesteIntegracao.Eventos
         [Fact(DisplayName = "Evento - Obter calendário de eventos do mês de junho de 2025")]
         public async Task Calendario_de_eventos_do_mes_junho_2025()
         {
-            var servicoEvento = GetServicoEvento();
-
+            CriarClaimUsuario(Dominio.Constantes.Constantes.PERFIL_ADMIN_GERAL_GUID);
+            
             var retorno = await servicoEvento.ObterCalendarioDeEventosPorMes(6, 2025);
             retorno.ShouldNotBeNull();
             
@@ -359,23 +372,6 @@ namespace SME.CDEP.TesteIntegracao.Eventos
             var diasQuintaSemana = retorno.Semanas.FirstOrDefault(a => a.Numero == 5);
             diasQuintaSemana.Dias.FirstOrDefault().Dia.ShouldBe(29);
             diasQuintaSemana.Dias.LastOrDefault().Dia.ShouldBe(5);
-        }
-
-        private async Task<IServicoEvento> CadastrarVarios(TipoEvento tipoEvento)
-        {
-            var servicoEvento = GetServicoEvento();
-
-            var eventos = EventoMock.Instance.GerarEvento(tipoEvento).Generate(10);
-
-            var contador = 1;
-
-            foreach (var eventoDto in eventos)
-            {
-                eventoDto.Data.AddDays(contador);
-                await InserirNaBase(eventoDto);
-            }
-
-            return servicoEvento;
         }
     }
 }

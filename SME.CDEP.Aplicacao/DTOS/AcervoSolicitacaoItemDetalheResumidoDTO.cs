@@ -24,6 +24,7 @@ namespace SME.CDEP.Aplicacao.DTOS
         public string SituacaoDisponibilidade { get; set; }
         public bool EstaDisponivel { get; set; }
         public bool TemControleDisponibilidade { get; set; }
+        public bool PodeFinalizarItem { get; set; }
         public SituacaoSaldo SituacaoSaldo { get; set; }
         public bool PodeEditar { get; set; }
     }

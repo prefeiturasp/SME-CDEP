@@ -998,5 +998,20 @@ namespace SME.CDEP.TesteIntegracao
             InserirAcervos();
             InserirAtendimentos();
         }
+        
+        protected static AcervoSolicitacaoItem ObterAcervoSolicitacaoItem(long acervoSolicitacaoId, long acervoId, TipoAtendimento? tipoAtendimento = null, DateTime? DataVisita = null, SituacaoSolicitacaoItem situacao = SituacaoSolicitacaoItem.AGUARDANDO_ATENDIMENTO)
+        {
+            return new AcervoSolicitacaoItem()
+            {
+                AcervoId = acervoId, 
+                AcervoSolicitacaoId = acervoSolicitacaoId, 
+                TipoAtendimento = tipoAtendimento,
+                DataVisita = DataVisita,
+                Situacao = situacao,
+                CriadoLogin = "Sistema", 
+                CriadoPor = "Sistema", 
+                CriadoEm = DateTimeExtension.HorarioBrasilia()
+            };
+        }
     }
 }

@@ -13,6 +13,8 @@ namespace SME.CDEP.Aplicacao.DTOS
             Dia = data.Day;
             Mes = data.Month;
             Ano = data.Year;
+            Hora = data.Hour;
+            Minuto = data.Minute;
             Tipo = tipoEvento;
             Descricao = descricao;
         }
@@ -22,6 +24,8 @@ namespace SME.CDEP.Aplicacao.DTOS
             Dia = data.Day;
             Mes = data.Month;
             Ano = data.Year;
+            Hora = data.Hour;
+            Minuto = data.Minute;
             Tipo = tipoEvento;
             Descricao = descricao;
             AcervoSolicitacaoItemId = atendimentoItemId;
