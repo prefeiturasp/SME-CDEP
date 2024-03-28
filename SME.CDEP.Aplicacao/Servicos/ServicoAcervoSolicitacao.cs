@@ -234,8 +234,15 @@ namespace SME.CDEP.Aplicacao.Servicos
                 throw new NegocioException(MensagemNegocio.SOLICITACAO_ATENDIMENTO_NAO_ENCONTRADA);
 
             acervoSolicitacao.DadosSolicitante = mapper.Map<DadosSolicitanteDTO>(await servicoUsuario.ObterDadosSolicitantePorUsuarioId(acervoSolicitacao.UsuarioId));
-            acervoSolicitacao.PodeFinalizar = perfilLogado.EhPerfilAdminGeral();
-            acervoSolicitacao.PodeCancelar = perfilLogado.EhPerfilAdminGeral();
+            acervoSolicitacao.PodeFinalizar = perfilLogado.EhPerfilAdminGeral()
+                                              && !acervoSolicitacao.Itens.Any(a =>
+                                                  a.SituacaoId.EstaAguardandoAtendimento()
+                                                  || (a.SituacaoId.EstaAguardandoVisita() && a.DataVisita.HasValue && a.DataVisita.EhDataFutura()));
+            
+            acervoSolicitacao.PodeCancelar = perfilLogado.EhPerfilAdminGeral() 
+                                             && !acervoSolicitacao.Itens.Any(a=> 
+                                                 a.SituacaoId == SituacaoSolicitacaoItem.FINALIZADO_MANUALMENTE 
+                                                 || a.SituacaoId == SituacaoSolicitacaoItem.FINALIZADO_AUTOMATICAMENTE);
 
             if (acervoSolicitacao.Itens.Any(a=> a.TipoAcervoId.EhAcervoBibliografico()))
             {

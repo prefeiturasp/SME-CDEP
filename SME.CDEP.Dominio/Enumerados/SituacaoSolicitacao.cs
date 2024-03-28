@@ -16,7 +16,7 @@ public enum SituacaoSolicitacao
     
     [Display(Description = "Cancelado")]
     CANCELADO = 4,
-    
+        
     [Display(Description = "Atendido parcialmente")]
     ATENDIDO_PARCIALMENTE = 5
 }
@@ -42,8 +42,8 @@ public static class SituacaoSolicitacaoExtension
         return situacaoSolicitacao == SituacaoSolicitacao.ATENDIDO_PARCIALMENTE;
     }
     
-    public static bool NaoEstaFinalizadoAtendimento(this SituacaoSolicitacao situacaoSolicitacao)
+    public static bool EstaFinalizadoAtendimentoOuCancelado(this SituacaoSolicitacao situacaoSolicitacao)
     {
-        return !situacaoSolicitacao.EstaFinalizadoAtendimento();
+        return situacaoSolicitacao == SituacaoSolicitacao.FINALIZADO_ATENDIMENTO || situacaoSolicitacao == SituacaoSolicitacao.CANCELADO;
     }
 }
