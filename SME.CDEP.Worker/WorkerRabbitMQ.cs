@@ -31,7 +31,7 @@ namespace SME.CDEP.Worker
             Comandos.Add(RotasRabbit.NotificarViaEmailCancelamentoAtendimentoItem, new ComandoRabbit("Notifica usuário solicitate do acervo sobre o cancelamento do item do atendimento", typeof(INotificarViaEmailCancelamentoAtendimentoItem), true));
             Comandos.Add(RotasRabbit.NotificarViaEmailConfirmacaoAtendimentoPresencial, new ComandoRabbit("Notifica usuário solicitate do acervo sobre a confirmação de atendimentos presenciais", typeof(INotificarViaEmailConfirmacaoAtendimentoPresencial), true));
             
-            Comandos.Add(RotasRabbit.ExecutarAtualizacaoSituacaoParaEmprestimoComDevolucaoEmAtraso, new ComandoRabbit("Atualizar situação para empréstimo com devolução em atraso", typeof(IExecutarAtualizacaoSituacaoParaEmprestimoComDevolucaoEmAtraso), true));
+            Comandos.Add(RotasRabbit.ExecutarAtualizacaoSituacaoParaEmprestimoComDevolucaoEmAtraso, new ComandoRabbit("Atualizar situação para empréstimo com devolução em atraso", typeof(IExecutarAtualizacaoSituacaoParaEmprestimoComDevolucaoEmAtrasoUseCase), true));
         }
     }
 }

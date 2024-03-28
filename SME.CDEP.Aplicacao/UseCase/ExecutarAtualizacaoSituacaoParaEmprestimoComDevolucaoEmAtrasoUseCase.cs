@@ -3,11 +3,11 @@ using SME.CDEP.Infra.Servicos.Rabbit.Dto;
 
 namespace SME.CDEP.Aplicacao
 {
-    public class ExecutarAtualizacaoSituacaoParaEmprestimoComDevolucaoEmAtraso : IExecutarAtualizacaoSituacaoParaEmprestimoComDevolucaoEmAtraso
+    public class ExecutarAtualizacaoSituacaoParaEmprestimoComDevolucaoEmAtrasoUseCase : IExecutarAtualizacaoSituacaoParaEmprestimoComDevolucaoEmAtrasoUseCase
     {
         private IRepositorioAcervoEmprestimo repositorioAcervoEmprestimo;
         
-        public ExecutarAtualizacaoSituacaoParaEmprestimoComDevolucaoEmAtraso(IRepositorioAcervoEmprestimo repositorioAcervoEmprestimo)
+        public ExecutarAtualizacaoSituacaoParaEmprestimoComDevolucaoEmAtrasoUseCase(IRepositorioAcervoEmprestimo repositorioAcervoEmprestimo)
         {
             this.repositorioAcervoEmprestimo = repositorioAcervoEmprestimo ?? throw new ArgumentNullException(nameof(repositorioAcervoEmprestimo));
         }
