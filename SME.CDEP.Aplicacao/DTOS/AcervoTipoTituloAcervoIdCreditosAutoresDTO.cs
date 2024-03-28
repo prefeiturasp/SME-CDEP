@@ -11,4 +11,5 @@ public class AcervoTipoTituloAcervoIdCreditosAutoresDTO
     public bool  EstaDisponivel { get; set; }
     public bool TemControleDisponibilidade { get; set; }
     public string[] AutoresCreditos { get; set; }
+    public TipoAcervo TipoAcervoId { get; set; }
 }
