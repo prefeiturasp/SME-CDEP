@@ -239,7 +239,7 @@ namespace SME.CDEP.Aplicacao.Mapeamentos
                 .ForMember(dest => dest.DataVisitaFormatada, opt => opt.MapFrom(o => o.DataVisita.HasValue ? o.DataVisita.Value.ToString("dd/MM HH:mm") : string.Empty))
                 .ForMember(dest => dest.DataEmprestimoFormatada, opt => opt.MapFrom(o => o.DataEmprestimo.HasValue ? o.DataEmprestimo.Value.ToString("dd/MM HH:mm") : string.Empty))
                 .ForMember(dest => dest.DataDevolucaoFormatada, opt => opt.MapFrom(o => o.DataDevolucao.HasValue ? o.DataDevolucao.Value.ToString("dd/MM HH:mm") : string.Empty))
-                .ForMember(dest => dest.PodeFinalizarItem, opt => opt.MapFrom(o => o.DataVisita.HasValue && o.TipoAcervo.NaoEhAcervoBibliografico() && o.DataVisita.NaoEhDataFutura()))
+                .ForMember(dest => dest.PodeFinalizarItem, opt => opt.MapFrom(o => o.TipoAtendimento.EhAtendimentoPresencial() && o.DataVisita.HasValue && o.TipoAcervo.NaoEhAcervoBibliografico() && o.DataVisita.NaoEhDataFutura()))
                 .ReverseMap();
             
             CreateMap<Acervo,IdNomeCodigoTipoDTO>()

@@ -234,8 +234,15 @@ namespace SME.CDEP.Aplicacao.Servicos
                 throw new NegocioException(MensagemNegocio.SOLICITACAO_ATENDIMENTO_NAO_ENCONTRADA);
 
             acervoSolicitacao.DadosSolicitante = mapper.Map<DadosSolicitanteDTO>(await servicoUsuario.ObterDadosSolicitantePorUsuarioId(acervoSolicitacao.UsuarioId));
-            acervoSolicitacao.PodeFinalizar = perfilLogado.EhPerfilAdminGeral();
-            acervoSolicitacao.PodeCancelar = perfilLogado.EhPerfilAdminGeral();
+            acervoSolicitacao.PodeFinalizar = perfilLogado.EhPerfilAdminGeral()
+                                              && !acervoSolicitacao.Itens.Any(a =>
+                                                  a.SituacaoId.EstaAguardandoAtendimento()
+                                                  || (a.SituacaoId.EstaAguardandoVisita() && a.DataVisita.HasValue && a.DataVisita.EhDataFutura()));
+            
+            acervoSolicitacao.PodeCancelar = perfilLogado.EhPerfilAdminGeral() 
+                                             && !acervoSolicitacao.Itens.Any(a=> 
+                                                 a.SituacaoId == SituacaoSolicitacaoItem.FINALIZADO_MANUALMENTE 
+                                                 || a.SituacaoId == SituacaoSolicitacaoItem.FINALIZADO_AUTOMATICAMENTE);
 
             if (acervoSolicitacao.Itens.Any(a=> a.TipoAcervoId.EhAcervoBibliografico()))
             {
@@ -478,7 +485,15 @@ namespace SME.CDEP.Aplicacao.Servicos
             if (acervoSolicitacaoItem.EhNulo())
                 throw new NegocioException(MensagemNegocio.SOLICITACAO_ATENDIMENTO_ITEM_NAO_ENCONTRADA);
 
-            var podeFinalizarItem = acervoSolicitacaoItem.TipoAtendimento.EhAtendimentoPresencial() && acervoSolicitacaoItem.DataVisita.NaoEhDataFutura(); 
+            var acervo = await repositorioAcervo.ObterPorId(acervoSolicitacaoItem.AcervoId);
+            
+            if (acervo.EhNulo())
+                throw new NegocioException(MensagemNegocio.ACERVO_NAO_ENCONTRADO);
+            
+            var podeFinalizarItem = acervoSolicitacaoItem.TipoAtendimento.EhAtendimentoPresencial()
+                                    && acervoSolicitacaoItem.DataVisita.HasValue
+                                    && acervo.TipoAcervoId.NaoEhAcervoBibliografico()
+                                    && acervoSolicitacaoItem.DataVisita.NaoEhDataFutura();
             
             if (!podeFinalizarItem)
                 throw new NegocioException(MensagemNegocio.PERMITIDO_FINALIZAR_ATENDIMENTO_AGUARDANDO_VISITA_ATE_O_DIA_DE_HOJE);
