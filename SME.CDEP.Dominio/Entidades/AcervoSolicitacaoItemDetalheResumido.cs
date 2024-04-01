@@ -19,7 +19,7 @@ namespace SME.CDEP.Dominio.Entidades
         public DateTime? DataDevolucao { get; set; }
         public SituacaoEmprestimo? SituacaoEmprestimo { get; set; }
         public SituacaoSaldo SituacaoSaldo { get; set; }
-        public long acervoSolicitacaoId { get; set; }
+        public long? acervoSolicitacaoId { get; set; }
 
         public string SituacaoSaldoDescricao()
         {

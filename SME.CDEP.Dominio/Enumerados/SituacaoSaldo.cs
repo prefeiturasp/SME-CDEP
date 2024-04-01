@@ -1,4 +1,5 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using SME.CDEP.Dominio.Extensions;
 
 namespace SME.CDEP.Infra.Dominio.Enumerados;
 
@@ -22,6 +23,14 @@ public static class SituacaoSaldoExtension
     public static bool EstaDisponivel(this SituacaoSaldo situacaoSaldo)
     {
        return situacaoSaldo == SituacaoSaldo.DISPONIVEL;
+    }
+    
+    public static bool EstaDisponivel(this SituacaoSaldo? situacaoSaldo)
+    {
+        if (situacaoSaldo.EhNulo())
+            return false;
+        
+        return situacaoSaldo == SituacaoSaldo.DISPONIVEL;
     }
     
     public static bool EstaReservado(this SituacaoSaldo situacaoSaldo)

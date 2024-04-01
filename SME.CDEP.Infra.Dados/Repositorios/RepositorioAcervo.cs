@@ -137,7 +137,7 @@ namespace SME.CDEP.Infra.Dados.Repositorios
         public async Task<IEnumerable<AcervoSolicitacaoItemCompleto>> ObterAcervosSolicitacoesItensCompletoPorId(long acervoSolicitacaoId, long[] tiposAcervosPermitidos)
         {
             var query = @"
-            select 
+            SELECT DISTINCT ON (asi.id)
               asi.id,  
               a.tipo as tipoAcervo,
               a.titulo,
@@ -145,15 +145,21 @@ namespace SME.CDEP.Infra.Dados.Repositorios
               asi.situacao as situacaoItem,
               asi.tipo_atendimento as tipoAtendimento,
               asi.dt_visita as DataVisita,
-              aso.situacao
-            from acervo a 
-            join acervo_solicitacao_item asi on asi.acervo_id = a.id
-            join acervo_solicitacao aso on aso.id = asi.acervo_solicitacao_id
-            where aso.id = @acervoSolicitacaoId 
+              aso.situacao,
+              ae.situacao as situacaoEmprestimo,
+              ab.situacao_saldo as situacaoSaldo,
+              asi.acervo_solicitacao_id as acervoSolicitacaoId
+            FROM acervo a 
+            JOIN acervo_solicitacao_item asi on asi.acervo_id = a.id
+            JOIN acervo_solicitacao aso on aso.id = asi.acervo_solicitacao_id
+            LEFT JOIN acervo_emprestimo ae on ae.acervo_solicitacao_item_id = asi.id and not ae.excluido 
+		    LEFT JOIN acervo_bibliografico ab on ab.acervo_id = a.id 
+            WHERE aso.id = @acervoSolicitacaoId 
                 and not a.excluido
                 and not aso.excluido
                 and not asi.excluido
-                and a.tipo = ANY(@tiposAcervosPermitidos);
+                and a.tipo = ANY(@tiposAcervosPermitidos)
+            ORDER BY asi.id, ae.id desc;
                
             select 
               ca.nome,

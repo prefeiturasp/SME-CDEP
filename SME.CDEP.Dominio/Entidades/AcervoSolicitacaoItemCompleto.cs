@@ -1,4 +1,5 @@
-﻿using SME.CDEP.Infra.Dominio.Enumerados;
+﻿using SME.CDEP.Dominio.Constantes;
+using SME.CDEP.Infra.Dominio.Enumerados;
 
 namespace SME.CDEP.Dominio.Entidades
 {
@@ -14,6 +15,25 @@ namespace SME.CDEP.Dominio.Entidades
         public TipoAtendimento? TipoAtendimento  { get; set; }
         public DateTime? DataVisita  { get; set; }
         public SituacaoSolicitacao Situacao { get; set; }
+        public SituacaoSaldo SituacaoSaldo { get; set; }
+        public long? AcervoSolicitacaoId { get; set; }
+        
+        public SituacaoEmprestimo? SituacaoEmprestimo { get; set; }
+        public long acervoSolicitacaoId { get; set; }
+        public bool TemControleDisponibilidade { get; set; }
+        public string SituacaoDisponibilidade { get; set; }
+
+        public string SituacaoSaldoDescricao()
+        {
+            return SituacaoSaldo switch
+            {
+                SituacaoSaldo.DISPONIVEL => Dominio.Constantes.Constantes.ACERVO_DISPONIVEL,
+                SituacaoSaldo.RESERVADO => string.Format(MensagemNegocio.ACERVO_RESERVADO, acervoSolicitacaoId),
+                SituacaoSaldo.EMPRESTADO => string.Format(MensagemNegocio.ACERVO_EMPRESTADO, acervoSolicitacaoId),
+                SituacaoSaldo.INDISPONIVEL_PARA_RESERVA_EMPRESTIMO => MensagemNegocio.ACERVO_INDISPONIVEL,
+                _ => string.Empty
+            };
+        }
     }
     
     public class CreditoAutorNomeAcervoId 
