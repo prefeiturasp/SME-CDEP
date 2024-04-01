@@ -207,12 +207,12 @@ namespace SME.CDEP.Infra.Dados.Repositorios
         private string IncluirFiltroPorAno(int? anoInicial, int? anoFinal)
         {
             if (anoInicial.HasValue && anoFinal.HasValue)
-                return " and a.ano_inicio between @anoInicial and @anoFinal or a.ano_fim between @anoInicial and @anoFinal ";
+                return " and (a.ano_inicio between @anoInicial and @anoFinal or a.ano_fim between @anoInicial and @anoFinal) ";
             
             if (anoInicial.HasValue)
-                return " and @anoInicial between a.ano_inicio and a.ano_fim";
+                return " and (@anoInicial between a.ano_inicio and a.ano_fim) ";
                 
-            return anoFinal.HasValue ? " and @anoFinal between a.ano_inicio and a.ano_fim " : string.Empty;
+            return anoFinal.HasValue ? " and (@anoFinal between a.ano_inicio and a.ano_fim) " : string.Empty;
         }
         
         private string IncluirFiltroPorTextoLivre(string? textoLivre)
@@ -225,10 +225,7 @@ namespace SME.CDEP.Infra.Dados.Repositorios
 
         private string IncluirFiltroPorTipoAcervo(TipoAcervo? tipoAcervo)
         {
-            if (tipoAcervo.NaoEhNulo())
-                return "and a.tipo = @tipoAcervo ";
-
-            return string.Empty;
+            return tipoAcervo.NaoEhNulo() ? "and a.tipo = @tipoAcervo " : string.Empty;
         }
 
         public Task<Acervo> PesquisarAcervoPorCodigoTombo(string codigoTombo, long[] tiposAcervosPermitidos)
