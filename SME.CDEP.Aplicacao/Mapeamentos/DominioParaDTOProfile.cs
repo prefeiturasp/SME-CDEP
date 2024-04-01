@@ -183,14 +183,21 @@ namespace SME.CDEP.Aplicacao.Mapeamentos
                 .ForMember(dest => dest.Tipo, opt => opt.MapFrom(o => o.TipoUsuario.Descricao()))
                 .ForMember(dest => dest.TipoId, opt => opt.MapFrom(o => o.TipoUsuario))
                 .ReverseMap();
-            
-            CreateMap<AcervoSolicitacaoItemCompleto,AcervoSolicitacaoItemRetornoCadastroDTO>()
-                .ForMember(dest => dest.AutoresCreditos, opt => opt.MapFrom(o => o.AutoresCreditos.Select(s=> s.Nome).ToArray()))
+
+            CreateMap<AcervoSolicitacaoItemCompleto, AcervoSolicitacaoItemRetornoCadastroDTO>()
+                .ForMember(dest => dest.AutoresCreditos,
+                    opt => opt.MapFrom(o => o.AutoresCreditos.Select(s => s.Nome).ToArray()))
                 .ForMember(dest => dest.SituacaoId, opt => opt.MapFrom(o => o.SituacaoItem))
                 .ForMember(dest => dest.Situacao, opt => opt.MapFrom(o => o.SituacaoItem.Descricao()))
                 .ForMember(dest => dest.TipoAcervo, opt => opt.MapFrom(o => o.TipoAcervo.Descricao()))
                 .ForMember(dest => dest.TipoAtendimento, opt => opt.MapFrom(o => o.TipoAtendimento.Descricao()))
-                .ForMember(dest => dest.AlteraDataVisita, opt => opt.MapFrom(o => o.SituacaoItem.EstaAguardandoVisita() && o.TipoAtendimento.EhAtendimentoPresencial() && o.SituacaoItem.NaoEstaCancelado()))
+                .ForMember(dest => dest.AlteraDataVisita,
+                    opt => opt.MapFrom(o =>
+                        o.SituacaoItem.EstaAguardandoVisita() && o.TipoAtendimento.EhAtendimentoPresencial() &&
+                        o.SituacaoItem.NaoEstaCancelado()))
+                .ForMember(dest => dest.TemControleDisponibilidade, opt => opt.MapFrom(o => o.TipoAcervo.EhAcervoBibliografico()))
+                .ForMember(dest => dest.EstaDisponivel, opt => opt.MapFrom(o => o.SituacaoSaldo.EstaDisponivel()))
+                .ForMember(dest => dest.SituacaoDisponibilidade, opt => opt.MapFrom(o => o.SituacaoSaldoDescricao()))
                 .ReverseMap();
             
             CreateMap<ArquivoCodigoNomeDTO,ArquivoCodigoNomeAcervoId>().ReverseMap();

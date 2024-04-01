@@ -1,4 +1,7 @@
-﻿namespace SME.CDEP.Aplicacao.DTOS;
+﻿using SME.CDEP.Dominio.Constantes;
+using SME.CDEP.Infra.Dominio.Enumerados;
+
+namespace SME.CDEP.Aplicacao.DTOS;
 
 public class AcervoSolicitacaoItemRetornoCadastroDTO  
 {
@@ -13,4 +16,10 @@ public class AcervoSolicitacaoItemRetornoCadastroDTO
     public DateTime? DataVisita { get; set; }
     public IEnumerable<ArquivoCodigoNomeDTO> Arquivos { get; set; }
     public bool AlteraDataVisita { get; set; }
+    public SituacaoEmprestimo? SituacaoEmprestimo { get; set; }
+    public SituacaoSaldo SituacaoSaldo { get; set; }
+    public long acervoSolicitacaoId { get; set; }
+    public bool TemControleDisponibilidade { get; set; }
+    public string SituacaoDisponibilidade { get; set; }
+    public bool EstaDisponivel { get; set; }
 }

@@ -1,4 +1,5 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using SME.CDEP.Dominio.Extensions;
 
 namespace SME.CDEP.Infra.Dominio.Enumerados;
 
