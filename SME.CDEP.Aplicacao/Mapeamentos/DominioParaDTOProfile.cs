@@ -176,6 +176,7 @@ namespace SME.CDEP.Aplicacao.Mapeamentos
             CreateMap<AcervoBibliograficoDetalhe, AcervoBibliograficoDetalheDTO>()
                 .ForMember(dest => dest.CreditosAutores, opt => opt.MapFrom(o => o.Autores))
                 .ForMember(dest => dest.Localizacao, opt => opt.MapFrom(o => $"{o.Localizacaocdd} - {o.Localizacaopha}"))
+                .ForMember(dest => dest.EstaDisponivel, opt => opt.MapFrom(o => o.SituacaoSaldo.EstaDisponivel()))
                 .ReverseMap(); 
 
             CreateMap<Usuario,DadosSolicitanteDTO>()
@@ -198,8 +199,10 @@ namespace SME.CDEP.Aplicacao.Mapeamentos
             CreateMap<AcervoTipoTituloAcervoIdCreditosAutores,AcervoTipoTituloAcervoIdCreditosAutoresDTO>()
                 .ForMember(dest => dest.TipoAcervo, opt => opt.MapFrom(o => o.TipoAcervo.Descricao()))
                 .ForMember(dest => dest.AutoresCreditos, opt => opt.MapFrom(o => o.AutoresCreditos.Select(s=> s.Nome).ToArray()))
-                .ForMember(dest => dest.SituacaoDisponibilidade, opt => opt.MapFrom(o => o.EstaDisponivel ? Constantes.ACERVO_DISPONIVEL : Constantes.ACERVO_INDISPONIVEL))
+                .ForMember(dest => dest.SituacaoDisponibilidade, opt => opt.MapFrom(o => o.SituacaoSaldo.EstaDisponivel() ? Constantes.ACERVO_DISPONIVEL : Constantes.ACERVO_INDISPONIVEL))
                 .ForMember(dest => dest.TemControleDisponibilidade, opt => opt.MapFrom(o => o.TipoAcervo.EhAcervoBibliografico()))
+                .ForMember(dest => dest.EstaDisponivel, opt => opt.MapFrom(o => o.SituacaoSaldo.EstaDisponivel()))
+                .ForMember(dest => dest.TipoAcervoId, opt => opt.MapFrom(o => o.TipoAcervo))
                 .ReverseMap();
             
             CreateMap<AcervoSolicitacaoItemResumido,MinhaSolicitacaoDTO>()
@@ -234,8 +237,8 @@ namespace SME.CDEP.Aplicacao.Mapeamentos
                 .ForMember(dest => dest.TipoAcervoId, opt => opt.MapFrom(o => o.TipoAcervo))
                 .ForMember(dest => dest.SituacaoId, opt => opt.MapFrom(o => o.Situacao))
                 .ForMember(dest => dest.TemControleDisponibilidade, opt => opt.MapFrom(o => o.TipoAcervo.EhAcervoBibliografico()))
-                .ForMember(dest => dest.EstaDisponivel, opt => opt.MapFrom(o => true))
-                .ForMember(dest => dest.SituacaoDisponibilidade, opt => opt.MapFrom(o => Constantes.ACERVO_DISPONIVEL))
+                .ForMember(dest => dest.EstaDisponivel, opt => opt.MapFrom(o => o.SituacaoSaldo.EstaDisponivel()))
+                .ForMember(dest => dest.SituacaoDisponibilidade, opt => opt.MapFrom(o => o.SituacaoSaldoDescricao()))
                 .ForMember(dest => dest.DataVisitaFormatada, opt => opt.MapFrom(o => o.DataVisita.HasValue ? o.DataVisita.Value.ToString("dd/MM HH:mm") : string.Empty))
                 .ForMember(dest => dest.DataEmprestimoFormatada, opt => opt.MapFrom(o => o.DataEmprestimo.HasValue ? o.DataEmprestimo.Value.ToString("dd/MM HH:mm") : string.Empty))
                 .ForMember(dest => dest.DataDevolucaoFormatada, opt => opt.MapFrom(o => o.DataDevolucao.HasValue ? o.DataDevolucao.Value.ToString("dd/MM HH:mm") : string.Empty))

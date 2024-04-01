@@ -266,6 +266,11 @@ namespace SME.CDEP.TesteIntegracao
             return ServiceProvider.GetService<T>() ?? throw new Exception($"Serviço {typeof(T).Name} não registrado!");
         }
         
+        public T ObterCasoDeUso<T>()
+        {
+            return ServiceProvider.GetService<T>() ?? throw new Exception($"Caso de Uso {typeof(T).Name} não registrado!");
+        }
+        
         protected void CriarClaimUsuario()
         {
             var contextoAplicacao = ServiceProvider.GetService<IContextoAplicacao>();
@@ -817,6 +822,16 @@ namespace SME.CDEP.TesteIntegracao
             arquivos.AddRange(AdicionarArquivoSistema("Tridimensional_sem_Imagem.svg"));
         }
         
+        protected async Task GerarArquivosSistema()
+        {
+            await InserirVariosNaBase(AdicionarArquivoSistema("Bibliografico_sem_imagem.svg"));
+            await InserirVariosNaBase(AdicionarArquivoSistema("Documentacao_sem_imagem.svg"));
+            await InserirVariosNaBase(AdicionarArquivoSistema("Artesgraficas_sem_imagem.svg"));
+            await InserirVariosNaBase(AdicionarArquivoSistema("Audiovisual_sem_imagem.svg"));
+            await InserirVariosNaBase(AdicionarArquivoSistema("Fotografico_sem_imagem.svg"));
+            await InserirVariosNaBase(AdicionarArquivoSistema("Tridimensional_sem_Imagem.svg"));
+        }
+        
         private IEnumerable<Arquivo> AdicionarArquivoSistema(string nomeDoArquivo)
         {
             var arquivosBibliograficosPadrao = ArquivoMock.Instance.GerarArquivo(TipoArquivo.Sistema).Generate(1);
@@ -825,7 +840,7 @@ namespace SME.CDEP.TesteIntegracao
             return arquivosBibliograficosPadrao;
         }
         
-        protected async Task InserirAcervosBibliograficos()
+        protected async Task InserirAcervosBibliograficos(SituacaoSaldo situacaoSaldo = SituacaoSaldo.DISPONIVEL)
         {
             var acervoId = 1;
             var inserindoAcervoBibliografico = AcervoBibliograficoMock.Instance.Gerar().Generate(10);
@@ -833,18 +848,32 @@ namespace SME.CDEP.TesteIntegracao
             {
                 await InserirNaBase(acervoBibliografico.Acervo);
                 acervoBibliografico.AcervoId = acervoId;
+                acervoBibliografico.DefinirSituacaoSaldo(situacaoSaldo);
                 await InserirNaBase(acervoBibliografico);
                 acervoId++;
             }
         }
         
-        protected async Task InserirAcervosBibliograficosEmMassa(int contadorAcervos, int quantidade)
+        protected async Task InserirAcervosTridimensionais(long acervoId = 1)
+        {
+            var acervoTridimensionals = AcervoTridimensionalMock.Instance.Gerar().Generate(10);
+            foreach (var acervoTridimensional in acervoTridimensionals)
+            {
+                await InserirNaBase(acervoTridimensional.Acervo);
+                acervoTridimensional.AcervoId = acervoId;
+                await InserirNaBase(acervoTridimensional);
+                acervoId++;
+            }
+        }
+        
+        protected async Task InserirAcervosBibliograficosEmMassa(int contadorAcervos, int quantidade, SituacaoSaldo situacaoSaldo = SituacaoSaldo.DISPONIVEL)
         {
             var acervosBibliograficos = AcervoBibliograficoMock.Instance.Gerar().Generate(quantidade);
             foreach (var item in acervosBibliograficos)
             {
                 await InserirNaBase(item.Acervo);
                 item.AcervoId = contadorAcervos;
+                item.SituacaoSaldo = situacaoSaldo;
                 await InserirNaBase(item);
                 contadorAcervos++;
             }
@@ -927,14 +956,14 @@ namespace SME.CDEP.TesteIntegracao
             contadorSolicitacoes++;
         }
         
-        protected async Task InserirAcervos()
+        protected async Task InserirAcervos(SituacaoSaldo situacaoSaldo = SituacaoSaldo.DISPONIVEL)
         {
             var contadorAcervos = 1;
             var quantidadePorTipo = 10;
 
             var inserirAcervos = new List<Func<Task>>()
             {
-                () => InserirAcervosBibliograficosEmMassa(contadorAcervos, quantidadePorTipo),
+                () => InserirAcervosBibliograficosEmMassa(contadorAcervos, quantidadePorTipo, situacaoSaldo),
                 () => InserirAcervosArteGraficasEmMassa(contadorAcervos + quantidadePorTipo, quantidadePorTipo),
                 () => InserirAcervosTridimensionalEmMassa(contadorAcervos + 2 * quantidadePorTipo, quantidadePorTipo),
                 () => InserirAcervosFotograficoEmMassa(contadorAcervos + 3 * quantidadePorTipo, quantidadePorTipo),

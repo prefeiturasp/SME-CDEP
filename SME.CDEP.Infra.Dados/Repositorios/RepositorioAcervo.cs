@@ -104,6 +104,35 @@ namespace SME.CDEP.Infra.Dados.Repositorios
             
             return await conexao.Obter().QueryAsync<ArquivoCodigoNomeAcervoId>(query, new { acervosIds });
         }
+        
+        public async Task<IEnumerable<Acervo>> ObterAcervosPorIds(long[] ids)
+        {
+            var query = @"
+             select 
+                id,
+                tipo,
+                titulo,
+                codigo,
+                excluido,
+                criado_em,
+                criado_por,
+                alterado_em,
+                alterado_por,
+                criado_login,
+                alterado_login,
+                codigo_novo,
+                subtitulo,
+                descricao,
+                ano,
+                data_acervo,
+                ano_inicio,
+                ano_fim
+            from acervo
+            where id = any(@ids)
+                and not excluido; ";
+            
+            return await conexao.Obter().QueryAsync<Acervo>(query, new { ids });
+        }
 
         public async Task<IEnumerable<AcervoSolicitacaoItemCompleto>> ObterAcervosSolicitacoesItensCompletoPorId(long acervoSolicitacaoId, long[] tiposAcervosPermitidos)
         {
@@ -182,7 +211,8 @@ namespace SME.CDEP.Infra.Dados.Repositorios
                                      ast.nome as assunto,
                                      a.descricao,
                                      a.data_acervo dataAcervo,
-                                     a.ano
+                                     a.ano,
+                                     coalesce(ab.situacao_saldo,0) as situacaoSaldo
                             from acervo a
                                 join acervosIds aid on aid.acervoId = a.id
                                 left join acervo_credito_autor aca on aca.acervo_id = a.id

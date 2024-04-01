@@ -19,8 +19,9 @@ namespace SME.CDEP.Infra.Dados.Repositorios
               a.tipo as tipoAcervo,
               a.titulo,
               a.id as acervoId,
-              true estaDisponivel /* aqui será pego do controle de saldo a ser realizado em futura estória */
+              coalesce(ab.situacao_saldo,0) as situacaoSaldo 
             from acervo a 
+            left join acervo_bibliografico ab on a.id = ab.acervo_id 
             where a.id = any(@acervosIds)
                   and not a.excluido;
 
@@ -104,11 +105,14 @@ namespace SME.CDEP.Infra.Dados.Repositorios
              resp.nome as responsavel,
              ae.dt_emprestimo as DataEmprestimo, 
              ae.dt_devolucao as Datadevolucao,
-             ae.situacao as situacaoEmprestimo
+             ae.situacao as situacaoEmprestimo,
+             ab.situacao_saldo as situacaoSaldo,
+             asi.acervo_solicitacao_id as acervoSolicitacaoId
 		   FROM acervo_solicitacao_item asi
 		     JOIN acervo a on a.id = asi.acervo_id
 		     LEFT JOIN usuario resp on resp.id = asi.usuario_responsavel_id and not resp.excluido
 		     LEFT JOIN acervo_emprestimo ae on ae.acervo_solicitacao_item_id = asi.id and not ae.excluido 
+		     LEFT JOIN acervo_bibliografico ab on ab.acervo_id = a.id              
 		   WHERE not asi.excluido
 		     and not a.excluido
 		     and asi.acervo_solicitacao_id = @acervoSolicitacaoId

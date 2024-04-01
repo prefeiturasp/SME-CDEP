@@ -53,7 +53,7 @@ namespace SME.CDEP.Infra.Dados.Repositorios
             return retorno;
         }
         
-        public async Task<AcervoBibliograficoCompleto> ObterPorId(long id)
+        public async Task<AcervoBibliograficoCompleto> ObterAcervoBibliograficoCompletoPorId(long id)
         {
             var query =  @"select  a.id as AcervoId,
                                    a.titulo,
@@ -82,7 +82,8 @@ namespace SME.CDEP.Infra.Dados.Repositorios
                                    ab.idioma_id as IdiomaId,
                                    ab.material_id as MaterialId,
                                    ab.editora_id as EditoraId,
-                                   ab.serie_colecao_id as SerieColecaoId          
+                                   ab.serie_colecao_id as SerieColecaoId,
+                                   ab.situacao_saldo as situacaoSaldo
                         from acervo_bibliografico ab
                             join acervo a on a.id = ab.acervo_id 
                             join idioma i on i.id = ab.idioma_id                          
@@ -171,7 +172,8 @@ namespace SME.CDEP.Infra.Dados.Repositorios
 		                          ab.notas_gerais as notasGerais,
                                   ab.isbn,           
                                   a.codigo,
-                                  sc.nome serieColecao
+                                  sc.nome serieColecao,
+                                  ab.situacao_saldo as situacaoSaldo
                         from acervo_bibliografico ab
                         join acervo a on a.id = ab.acervo_id 
                         join idioma i on i.id = ab.idioma_id 
@@ -181,6 +183,32 @@ namespace SME.CDEP.Infra.Dados.Repositorios
                         where not a.excluido  
                         and a.codigo = @codigo ";
             return conexao.Obter().QueryFirstOrDefault<AcervoBibliograficoDetalhe>(query, new { codigo });
+        }
+        
+        public async Task<AcervoBibliografico> ObterPorAcervoId(long acervoId)
+        {
+            var query = @"
+            SELECT 
+               id,
+               acervo_id,
+               material_id,
+               editora_id,
+               edicao,
+               numero_pagina,
+               largura,
+               altura,
+               serie_colecao_id,
+               volume,
+               idioma_id,
+               localizacao_cdd,
+               localizacao_pha,
+               notas_gerais,
+               isbn,
+               situacao_saldo
+            FROM acervo_bibliografico
+            WHERE acervo_id = @acervoId ";
+            
+            return conexao.Obter().QueryFirstOrDefault<AcervoBibliografico>(query, new { acervoId });
         }
     }
 }
