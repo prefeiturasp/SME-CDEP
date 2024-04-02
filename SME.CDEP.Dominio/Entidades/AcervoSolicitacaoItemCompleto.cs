@@ -19,7 +19,6 @@ namespace SME.CDEP.Dominio.Entidades
         public long? AcervoSolicitacaoId { get; set; }
         
         public SituacaoEmprestimo? SituacaoEmprestimo { get; set; }
-        public long acervoSolicitacaoId { get; set; }
         public bool TemControleDisponibilidade { get; set; }
         public string SituacaoDisponibilidade { get; set; }
 
@@ -28,8 +27,8 @@ namespace SME.CDEP.Dominio.Entidades
             return SituacaoSaldo switch
             {
                 SituacaoSaldo.DISPONIVEL => Dominio.Constantes.Constantes.ACERVO_DISPONIVEL,
-                SituacaoSaldo.RESERVADO => string.Format(MensagemNegocio.ACERVO_RESERVADO, acervoSolicitacaoId),
-                SituacaoSaldo.EMPRESTADO => string.Format(MensagemNegocio.ACERVO_EMPRESTADO, acervoSolicitacaoId),
+                SituacaoSaldo.RESERVADO => string.Format(MensagemNegocio.ACERVO_RESERVADO, AcervoSolicitacaoId),
+                SituacaoSaldo.EMPRESTADO => string.Format(MensagemNegocio.ACERVO_EMPRESTADO, AcervoSolicitacaoId),
                 SituacaoSaldo.INDISPONIVEL_PARA_RESERVA_EMPRESTIMO => MensagemNegocio.ACERVO_INDISPONIVEL,
                 _ => string.Empty
             };
