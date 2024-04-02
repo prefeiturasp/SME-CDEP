@@ -82,7 +82,7 @@ namespace SME.CDEP.Infra.Dados.Repositorios
                       alterado_login
                FROM acervo_emprestimo
                WHERE NOT excluido
-               AND dt_devolucao::date < @dataAtual::date            
+               AND dt_devolucao::date < @dataAtual            
                ORDER BY acervo_solicitacao_item_id, id DESC
             )
             SELECT * 
