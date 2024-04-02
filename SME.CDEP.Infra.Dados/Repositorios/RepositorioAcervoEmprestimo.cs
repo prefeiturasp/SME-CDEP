@@ -82,14 +82,14 @@ namespace SME.CDEP.Infra.Dados.Repositorios
                       alterado_login
                FROM acervo_emprestimo
                WHERE NOT excluido
-               AND dt_devolucao::date < @dataAtual            
+               AND dt_devolucao::date < @dataAtual::date            
                ORDER BY acervo_solicitacao_item_id, id DESC
             )
             SELECT * 
             FROM acervosEmAtraso
             WHERE situacao = ANY(@situacoesEmprestadoOuProrrogado)";
             
-            return await conexao.Obter().QueryAsync<AcervoEmprestimo>(query, new { situacoesEmprestadoOuProrrogado, dataAtual = DateTimeExtension.HorarioBrasilia().Date });
+            return await conexao.Obter().QueryAsync<AcervoEmprestimo>(query, new { situacoesEmprestadoOuProrrogado, dataAtual = DateTimeExtension.HorarioBrasilia() });
         }
     }
 }
