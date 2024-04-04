@@ -4,6 +4,7 @@ using SME.CDEP.Dominio.Constantes;
 using SME.CDEP.Dominio.Entidades;
 using SME.CDEP.Dominio.Excecoes;
 using SME.CDEP.Dominio.Extensions;
+using SME.CDEP.Infra;
 using SME.CDEP.Infra.Dados.Repositorios.Interfaces;
 using SME.CDEP.Infra.Dominio.Enumerados;
 
@@ -15,14 +16,19 @@ namespace SME.CDEP.Aplicacao.Servicos
         private readonly IServicoAcervoBibliografico servicoAcervoBibliografico;
         private readonly IRepositorioAcervoSolicitacaoItem repositorioAcervoSolicitacaoItem;
         private readonly IRepositorioAcervo repositorioAcervo;
+        private readonly IRepositorioParametroSistema repositorioParametroSistema;
+        private readonly IServicoMensageria servicoMensageria;
         
         public ServicoAcervoEmprestimo(IRepositorioAcervoEmprestimo repositorioAcervoEmprestimo,IServicoAcervoBibliografico servicoAcervoBibliografico,
-            IRepositorioAcervoSolicitacaoItem repositorioAcervoSolicitacaoItem,IRepositorioAcervo repositorioAcervo) 
+            IRepositorioAcervoSolicitacaoItem repositorioAcervoSolicitacaoItem,IRepositorioAcervo repositorioAcervo,IRepositorioParametroSistema repositorioParametroSistema,
+            IServicoMensageria servicoMensageria) 
         {
             this.repositorioAcervoEmprestimo = repositorioAcervoEmprestimo ?? throw new ArgumentNullException(nameof(repositorioAcervoEmprestimo));
             this.servicoAcervoBibliografico = servicoAcervoBibliografico ?? throw new ArgumentNullException(nameof(servicoAcervoBibliografico));
             this.repositorioAcervoSolicitacaoItem = repositorioAcervoSolicitacaoItem ?? throw new ArgumentNullException(nameof(repositorioAcervoSolicitacaoItem));
             this.repositorioAcervo = repositorioAcervo ?? throw new ArgumentNullException(nameof(repositorioAcervo));
+            this.repositorioParametroSistema = repositorioParametroSistema ?? throw new ArgumentNullException(nameof(repositorioParametroSistema));
+            this.servicoMensageria = servicoMensageria ?? throw new ArgumentNullException(nameof(servicoMensageria));
         }
        
         public async Task<bool> ProrrogarEmprestimo(AcervoEmprestimoProrrogacaoDTO acervoEmprestimoProrrogacaoDTO)
@@ -53,11 +59,13 @@ namespace SME.CDEP.Aplicacao.Servicos
         public async Task<bool> DevolverItemEmprestado(long acervoSolicitacaoItemId)
         {
             var acervoSolicitacaoItem = await repositorioAcervoSolicitacaoItem.ObterPorId(acervoSolicitacaoItemId);
-            
+
             if (acervoSolicitacaoItem.EhNulo())
                 throw new NegocioException(MensagemNegocio.SOLICITACAO_ATENDIMENTO_ITEM_NAO_ENCONTRADA);
-            
-            var acervoEmprestimoAtual = await repositorioAcervoEmprestimo.ObterUltimoEmprestimoPorAcervoSolicitacaoItemId(acervoSolicitacaoItemId);
+
+            var acervoEmprestimoAtual =
+                await repositorioAcervoEmprestimo.ObterUltimoEmprestimoPorAcervoSolicitacaoItemId(
+                    acervoSolicitacaoItemId);
 
             if (acervoEmprestimoAtual.EhNulo())
                 throw new NegocioException(MensagemNegocio.ACERVO_EMPRESTIMO_NAO_ENCONTRADO);
@@ -70,15 +78,15 @@ namespace SME.CDEP.Aplicacao.Servicos
                 Situacao = SituacaoEmprestimo.DEVOLVIDO
             };
             await repositorioAcervoEmprestimo.Inserir(acervoEmprestimo);
-            
-            var acervos = await repositorioAcervo.ObterAcervosPorIds(new []{ acervoSolicitacaoItem.AcervoId });
-            
-            if (acervos.Any(a=> a.TipoAcervoId.EhAcervoBibliografico()))
-                await servicoAcervoBibliografico.AlterarSituacaoSaldo(SituacaoSaldo.DISPONIVEL,acervoSolicitacaoItem.AcervoId);
+
+            var acervos = await repositorioAcervo.ObterAcervosPorIds(new[] { acervoSolicitacaoItem.AcervoId });
+
+            if (acervos.Any(a => a.TipoAcervoId.EhAcervoBibliografico()))
+                await servicoAcervoBibliografico.AlterarSituacaoSaldo(SituacaoSaldo.DISPONIVEL,
+                    acervoSolicitacaoItem.AcervoId);
 
             return true;
         }
-
 
         public Task<IEnumerable<SituacaoItemDTO>> ObterSituacoesEmprestimo()
         {
@@ -92,6 +100,21 @@ namespace SME.CDEP.Aplicacao.Servicos
                 });
 
             return Task.FromResult(lista);
+        }
+
+        public async Task NotificarVencimentoEmprestimo()
+        {
+            var qtdeDiasNotificacoVencimentoEmprestimo = await repositorioParametroSistema.ObterParametroPorTipoEAno(
+                TipoParametroSistema.NotificarQtdeDiasAntesDoVencimentoEmprestimo,
+                DateTimeExtension.HorarioBrasilia().Year);
+
+            var dataDevolucaoNotificada = DateTimeExtension.HorarioBrasilia().AddDays(-int.Parse(qtdeDiasNotificacoVencimentoEmprestimo.Valor));
+            
+            var acervosNotificarAntesVencimentoEmprestimo = await repositorioAcervoEmprestimo.
+                ObterDetalhamentoDosItensANotificarAntesVencimentoEmprestimo(dataDevolucaoNotificada);
+
+            foreach (var acervoEmprestimoAntesVencimentoDevolucao in acervosNotificarAntesVencimentoEmprestimo)
+                await servicoMensageria.Publicar(RotasRabbit.NotificacaoVencimentoEmprestimoUsuario, acervoEmprestimoAntesVencimentoDevolucao, Guid.NewGuid());
         }
     }
 }

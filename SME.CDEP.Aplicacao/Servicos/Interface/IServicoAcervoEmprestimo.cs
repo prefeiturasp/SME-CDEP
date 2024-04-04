@@ -7,5 +7,6 @@ namespace SME.CDEP.Aplicacao.Servicos.Interface
         Task<IEnumerable<SituacaoItemDTO>> ObterSituacoesEmprestimo();
         Task<bool> ProrrogarEmprestimo(AcervoEmprestimoProrrogacaoDTO acervoEmprestimoProrrogacaoDTO);
         Task<bool> DevolverItemEmprestado(long acervoSolicitacaoItemId);
+        Task NotificarVencimentoEmprestimo();
     }
 }

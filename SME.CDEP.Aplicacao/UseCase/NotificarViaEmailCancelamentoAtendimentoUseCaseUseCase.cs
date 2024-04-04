@@ -1,6 +1,5 @@
 
 using System.Text;
-using SME.CDEP.Aplicacao.DTOS;
 using SME.CDEP.Aplicacao.Servicos.Interface;
 using SME.CDEP.Dominio.Constantes;
 using SME.CDEP.Dominio.Entidades;
@@ -12,13 +11,13 @@ using SME.CDEP.Infra.Servicos.Rabbit.Dto;
 
 namespace SME.CDEP.Aplicacao
 {
-    public class NotificarViaEmailConfirmacaoAtendimentoPresencial : INotificarViaEmailConfirmacaoAtendimentoPresencial
+    public class NotificarViaEmailCancelamentoAtendimentoUseCaseUseCase : INotificarViaEmailCancelamentoAtendimentoUseCase
     {
-         private IRepositorioAcervoSolicitacaoItem repositorioAcervoSolicitacaoItem;
+        private IRepositorioAcervoSolicitacaoItem repositorioAcervoSolicitacaoItem;
         private IServicoNotificacaoEmail servicoNotificacaoEmail;
         private IRepositorioParametroSistema repositorioParametroSistema;
         
-        public NotificarViaEmailConfirmacaoAtendimentoPresencial(IRepositorioAcervoSolicitacaoItem repositorioAcervoSolicitacaoItem,
+        public NotificarViaEmailCancelamentoAtendimentoUseCaseUseCase(IRepositorioAcervoSolicitacaoItem repositorioAcervoSolicitacaoItem,
             IServicoNotificacaoEmail servicoNotificacaoEmail,IRepositorioParametroSistema repositorioParametroSistema)
         {
             this.repositorioAcervoSolicitacaoItem = repositorioAcervoSolicitacaoItem ?? throw new ArgumentNullException(nameof(repositorioAcervoSolicitacaoItem));
@@ -28,47 +27,41 @@ namespace SME.CDEP.Aplicacao
 
         public async Task<bool> Executar(MensagemRabbit param)
         {
-            var confirmarAtendimentoDto = param.ObterObjetoMensagem<ConfirmarAtendimentoDTO>();
-            
-            if (confirmarAtendimentoDto.EhNulo() || confirmarAtendimentoDto.Id < 0)
+            if (param.Mensagem.EhNulo())
                 throw new NegocioException(MensagemNegocio.PARAMETROS_INVALIDOS);
 
-            var detalhesAcervo = await repositorioAcervoSolicitacaoItem
-                .ObterDetalhamentoDosItensPorSolicitacaoOuItem(confirmarAtendimentoDto.Id,confirmarAtendimentoDto.ItemId);
+            long acervoSolicitacaoId = 0;
             
+            if (!long.TryParse(param.Mensagem.ToString(),out acervoSolicitacaoId))
+                throw new NegocioException(MensagemNegocio.PARAMETROS_INVALIDOS);
+
+            var detalhesAcervo = await repositorioAcervoSolicitacaoItem.ObterDetalhamentoDosItensPorSolicitacaoOuItem(acervoSolicitacaoId, null);
+
             if (detalhesAcervo.Any(a=> a.Email.NaoEstaPreenchido()))
                 throw new NegocioException(MensagemNegocio.SOLICITANTE_NAO_POSSUI_EMAIL);
             
-            if (detalhesAcervo.NaoPossuiElementos() || !detalhesAcervo.Any(w => w.TipoAtendimento.EhAtendimentoPresencial()))
+            if (detalhesAcervo.NaoPossuiElementos())
                 throw new NegocioException(MensagemNegocio.SOLICITACAO_ATENDIMENTO_NAO_CONTEM_ACERVOS);
-
-            detalhesAcervo = detalhesAcervo.Where(w => w.TipoAtendimento.EhAtendimentoPresencial());
             
             var destinatario = detalhesAcervo.FirstOrDefault().Solicitante;
             
             var anoAtual = DateTimeExtension.HorarioBrasilia().Year;
 
-            var modeloEmail = (await repositorioParametroSistema.ObterParametroPorTipoEAno(TipoParametroSistema.ModeloEmailConfirmacaoSolicitacao, anoAtual)).Valor;
+            var modeloEmail = (await repositorioParametroSistema.ObterParametroPorTipoEAno(TipoParametroSistema.ModeloEmailCancelamentoSolicitacao, anoAtual)).Valor;
 
             var enderecoContatoCDEP = (await repositorioParametroSistema.ObterParametroPorTipoEAno(TipoParametroSistema.EnderecoContatoCDEPConfirmacaoCancelamentoVisita, anoAtual)).Valor;
-            
-            var enderecoSedeCDEPVisita = (await repositorioParametroSistema.ObterParametroPorTipoEAno(TipoParametroSistema.EnderecoSedeCDEPVisita, anoAtual)).Valor;
-            
-            var horarioFuncionamento = (await repositorioParametroSistema.ObterParametroPorTipoEAno(TipoParametroSistema.HorarioFuncionamentoSedeCDEPVisita, anoAtual)).Valor;
             
             var textoEmail = modeloEmail
                 .Replace("#NOME", destinatario)
                 .Replace("#CONTEUDO_TABELA", GerarConteudoTabela(detalhesAcervo))
-                .Replace("#LINK_FORMULARIO_CDEP", enderecoContatoCDEP)
-                .Replace("#ENDERECO_SEDE_CDEP_VISITA", enderecoSedeCDEPVisita)
-                .Replace("#HORARIO_FUNCIONAMENTO_SEDE_CDEP", horarioFuncionamento);
-            
-            await servicoNotificacaoEmail.Enviar(destinatario, detalhesAcervo.FirstOrDefault().Email, "CDEP - Confirmação de Atendimento", textoEmail);
+                .Replace("#LINK_FORMULARIO_CDEP", enderecoContatoCDEP);
+
+            await servicoNotificacaoEmail.Enviar(destinatario, detalhesAcervo.FirstOrDefault().Email, "CDEP - Atendimento cancelado", textoEmail);
             
             return true;
         }
         
-        private string GerarConteudoTabela(IEnumerable<AcervoSolicitacaoItemDetalhe> detalhes)
+        private string GerarConteudoTabela(IEnumerable<AcervoSolicitacaoItemDetalhe> detalhesAcervo)
         {
             var conteudo = new StringBuilder();
 
@@ -85,8 +78,8 @@ namespace SME.CDEP.Aplicacao
                 </tr>
             </thead>
             <tbody>");
-
-            foreach (var detalhe in detalhes)
+            
+            foreach (var detalhe in detalhesAcervo)
             {
                 conteudo.AppendLine($@"
                 <tr>
