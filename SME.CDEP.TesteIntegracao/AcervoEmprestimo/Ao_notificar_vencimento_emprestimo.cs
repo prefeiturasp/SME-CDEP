@@ -95,7 +95,7 @@ namespace SME.CDEP.TesteIntegracao
             var acervoBase = (ObterTodos<Acervo>()).FirstOrDefault();
             var acervoEmprestimoBase = (ObterTodos<AcervoEmprestimo>()).FirstOrDefault();
 
-            var acervoEmprestimoAntesVencimentoDevolucao = new AcervoEmprestimoAntesVencimentoDevolucao()
+            var acervoEmprestimoAntesVencimentoDevolucao = new AcervoEmprestimoDevolucao()
             {
                 DataDevolucao = dataDevolucao,
                 Codigo = acervoBase.Codigo,

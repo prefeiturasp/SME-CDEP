@@ -1,8 +1,6 @@
-﻿using SME.CDEP.Infra.Dominio.Enumerados;
-
-namespace SME.CDEP.Dominio.Entidades
+﻿namespace SME.CDEP.Dominio.Entidades
 {
-    public class AcervoEmprestimoAntesVencimentoDevolucao
+    public class AcervoEmprestimoDevolucao
     {
         public long AcervoSolicitacaoId { get; set; }
         public long AcervoSolicitacaoItemId { get; set; }

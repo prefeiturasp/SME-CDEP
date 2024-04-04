@@ -10,12 +10,12 @@ using SME.CDEP.Infra.Servicos.Rabbit.Dto;
 
 namespace SME.CDEP.Aplicacao
 {
-    public class NotificacaoVencimentoEmprestimoUsuarioUseCase : NotificacaoEmailBaseUseCase, INotificacaoVencimentoEmprestimoUsuarioUseCase
+    public class NotificacaoDevolucaoEmprestimoAtrasadoUsuarioUseCase : NotificacaoEmailBaseUseCase, INotificacaoDevolucaoEmprestimoAtrasadoUsuarioUseCase
     {
-        private IRepositorioParametroSistema repositorioParametroSistema;
-        private IServicoNotificacaoEmail servicoNotificacaoEmail;
+        private readonly IRepositorioParametroSistema repositorioParametroSistema;
+        private readonly IServicoNotificacaoEmail servicoNotificacaoEmail;
 
-        public NotificacaoVencimentoEmprestimoUsuarioUseCase(IRepositorioParametroSistema repositorioParametroSistema,
+        public NotificacaoDevolucaoEmprestimoAtrasadoUsuarioUseCase(IRepositorioParametroSistema repositorioParametroSistema,
             IServicoNotificacaoEmail servicoNotificacaoEmail)
             : base(repositorioParametroSistema, servicoNotificacaoEmail)
         {}
@@ -24,17 +24,17 @@ namespace SME.CDEP.Aplicacao
         {
             await CarregarParametros();
             
-            var acervoEmprestimoAntesVencimentoDevolucao = param.ObterObjetoMensagem<AcervoEmprestimoDevolucao>();
+            var acervoEmAtrasoDevolucaoEmprestimo = param.ObterObjetoMensagem<AcervoEmprestimoDevolucao>();
             
-            if (acervoEmprestimoAntesVencimentoDevolucao.EhNulo())
+            if (acervoEmAtrasoDevolucaoEmprestimo.EhNulo())
                 throw new NegocioException(MensagemNegocio.PARAMETROS_INVALIDOS);
 
-            var conteudoEmail = await MontarDadosNoTemplateEmail(acervoEmprestimoAntesVencimentoDevolucao.Solicitante,
-                GerarConteudoTabela(acervoEmprestimoAntesVencimentoDevolucao), TipoParametroSistema.ModeloEmailAvisoDevolucaoEmprestimo);
+            var conteudoEmail = await MontarDadosNoTemplateEmail(acervoEmAtrasoDevolucaoEmprestimo.Solicitante,
+                GerarConteudoTabela(acervoEmAtrasoDevolucaoEmprestimo), TipoParametroSistema.ModeloEmailAvisoAtrasoDevolucaoEmprestimo);
 
-            await EnviarEmail(acervoEmprestimoAntesVencimentoDevolucao.Solicitante,
-                acervoEmprestimoAntesVencimentoDevolucao.Email,
-                "CDEP - Aviso de vencimento do empréstimo", conteudoEmail);
+            await EnviarEmail(acervoEmAtrasoDevolucaoEmprestimo.Solicitante,
+                acervoEmAtrasoDevolucaoEmprestimo.Email,
+                "CDEP - Aviso de devolução de empréstimo em atraso", conteudoEmail);
             
             return true;
         }

@@ -34,7 +34,10 @@ namespace SME.CDEP.Worker
             Comandos.Add(RotasRabbit.ExecutarAtualizacaoSituacaoParaEmprestimoComDevolucaoEmAtraso, new ComandoRabbit("Atualizar situação para empréstimo com devolução em atraso", typeof(IExecutarAtualizacaoSituacaoParaEmprestimoComDevolucaoEmAtrasoUseCase), true));
             
             Comandos.Add(RotasRabbit.NotificacaoVencimentoEmprestimo, new ComandoRabbit("Notificação de vencimento de empréstimo", typeof(INotificacaoVencimentoEmprestimoUseCase), true));
-            Comandos.Add(RotasRabbit.NotificacaoVencimentoEmprestimoUsuario, new ComandoRabbit("Notificação usuário sobre o vencimento de empréstimo está próximo", typeof(INotificacaoVencimentoEmprestimoUsuarioUseCase), true));
+            Comandos.Add(RotasRabbit.NotificacaoVencimentoEmprestimoUsuario, new ComandoRabbit("Notificação usuário sobre o vencimento de empréstimo", typeof(INotificacaoVencimentoEmprestimoUsuarioUseCase), true));
+            
+            Comandos.Add(RotasRabbit.NotificacaoDevolucaoEmprestimoAtrasado, new ComandoRabbit("Notificação de empréstimo atrasado", typeof(INotificacaoDevolucaoEmprestimoAtrasadoUseCase), true));
+            Comandos.Add(RotasRabbit.NotificacaoDevolucaoEmprestimoAtrasadoUsuario, new ComandoRabbit("Notificação usuário sobre o empréstimo atrasado", typeof(INotificacaoDevolucaoEmprestimoAtrasadoUsuarioUseCase), true));
         }
     }
 }

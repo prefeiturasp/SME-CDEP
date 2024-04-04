@@ -19,5 +19,7 @@
         LimiteDiasEmprestimoAcervo = 15,
         NotificarQtdeDiasAntesDoVencimentoEmprestimo = 16,
         ModeloEmailAvisoDevolucaoEmprestimo = 17,
+        NotificarQtdeDiasAtrasoDevolucaoEmprestimo = 18,
+        ModeloEmailAvisoAtrasoDevolucaoEmprestimo = 19,
     }
 }

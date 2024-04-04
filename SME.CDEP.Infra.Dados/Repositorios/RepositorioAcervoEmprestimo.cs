@@ -92,7 +92,7 @@ namespace SME.CDEP.Infra.Dados.Repositorios
             return await conexao.Obter().QueryAsync<AcervoEmprestimo>(query, new { situacoesEmprestadoOuProrrogado, dataAtual = DateTimeExtension.HorarioBrasilia() });
         }
         
-        public async Task<IEnumerable<AcervoEmprestimoAntesVencimentoDevolucao>> ObterDetalhamentoDosItensANotificarAntesVencimentoEmprestimo(DateTime dataDevolucaoNotificada)
+        public async Task<IEnumerable<AcervoEmprestimoDevolucao>> ObterDetalhamentoDosItensANotificarSobreVencimentoEmprestimoPorDataDevolucao(DateTime dataDevolucaoNotificada)
         {
             var query = @"
             ;with ultimaMovimentacaoAcervos as
@@ -129,7 +129,7 @@ namespace SME.CDEP.Infra.Dados.Repositorios
             WHERE ae.situacao <> @situacaoDevolvido
               and ae.dt_devolucao::date = @dataDevolucaoNotificada::date "; 
             
-            return await conexao.Obter().QueryAsync<AcervoEmprestimoAntesVencimentoDevolucao>(query, new { situacaoDevolvido = (int)SituacaoEmprestimo.DEVOLVIDO, dataDevolucaoNotificada });
+            return await conexao.Obter().QueryAsync<AcervoEmprestimoDevolucao>(query, new { situacaoDevolvido = (int)SituacaoEmprestimo.DEVOLVIDO, dataDevolucaoNotificada });
         }
     }
 }

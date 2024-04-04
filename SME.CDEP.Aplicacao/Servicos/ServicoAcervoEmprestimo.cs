@@ -108,13 +108,28 @@ namespace SME.CDEP.Aplicacao.Servicos
                 TipoParametroSistema.NotificarQtdeDiasAntesDoVencimentoEmprestimo,
                 DateTimeExtension.HorarioBrasilia().Year);
 
-            var dataDevolucaoNotificada = DateTimeExtension.HorarioBrasilia().AddDays(-int.Parse(qtdeDiasNotificacoVencimentoEmprestimo.Valor));
+            var dataDevolucaoNotificada = DateTimeExtension.HorarioBrasilia().AddDays(int.Parse(qtdeDiasNotificacoVencimentoEmprestimo.Valor));
             
             var acervosNotificarAntesVencimentoEmprestimo = await repositorioAcervoEmprestimo.
-                ObterDetalhamentoDosItensANotificarAntesVencimentoEmprestimo(dataDevolucaoNotificada);
+                ObterDetalhamentoDosItensANotificarSobreVencimentoEmprestimoPorDataDevolucao(dataDevolucaoNotificada);
 
             foreach (var acervoEmprestimoAntesVencimentoDevolucao in acervosNotificarAntesVencimentoEmprestimo)
                 await servicoMensageria.Publicar(RotasRabbit.NotificacaoVencimentoEmprestimoUsuario, acervoEmprestimoAntesVencimentoDevolucao, Guid.NewGuid());
+        }
+
+        public async Task NotificarDevolucaoEmprestimoAtrasado()
+        {
+            var qtdeDiasAtrasoDevolucaoEmprestimo = await repositorioParametroSistema.ObterParametroPorTipoEAno(
+                TipoParametroSistema.NotificarQtdeDiasAtrasoDevolucaoEmprestimo,
+                DateTimeExtension.HorarioBrasilia().Year);
+
+            var dataDevolucaoNotificada = DateTimeExtension.HorarioBrasilia().AddDays(-int.Parse(qtdeDiasAtrasoDevolucaoEmprestimo.Valor));
+            
+            var acervosEmprestimoDevolucoes = await repositorioAcervoEmprestimo.
+                ObterDetalhamentoDosItensANotificarSobreVencimentoEmprestimoPorDataDevolucao(dataDevolucaoNotificada);
+
+            foreach (var acervoEmprestimoAntesVencimentoDevolucao in acervosEmprestimoDevolucoes)
+                await servicoMensageria.Publicar(RotasRabbit.NotificacaoDevolucaoEmprestimoAtrasadoUsuario, acervoEmprestimoAntesVencimentoDevolucao, Guid.NewGuid());
         }
     }
 }
