@@ -16,6 +16,8 @@
         ModeloEmailConfirmacaoSolicitacao = 12,
         EnderecoSedeCDEPVisita = 13,
         HorarioFuncionamentoSedeCDEPVisita = 14,
-        LimiteDiasEmprestimoAcervo = 15
+        LimiteDiasEmprestimoAcervo = 15,
+        NotificarQtdeDiasAntesDoVencimentoEmprestimo = 16,
+        ModeloEmailAvisoDevolucaoEmprestimo = 17,
     }
 }

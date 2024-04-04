@@ -8,5 +8,7 @@ namespace SME.CDEP.Infra
         public const string NotificarViaEmailCancelamentoAtendimentoItem = "cdep.enviar.email.cancelamento.atendimento.item";
         public const string NotificarViaEmailConfirmacaoAtendimentoPresencial = "cdep.enviar.email.confirmacao.atendimento.presencial";
         public const string ExecutarAtualizacaoSituacaoParaEmprestimoComDevolucaoEmAtraso = "cdep.emprestimo.situacao.devolucao.atraso";
+        public const string NotificacaoVencimentoEmprestimo = "cdep.emprestimo.situacao.vencimento.aviso";
+        public const string NotificacaoVencimentoEmprestimoUsuario = "cdep.emprestimo.situacao.vencimento.aviso.usuario";
     }
 }

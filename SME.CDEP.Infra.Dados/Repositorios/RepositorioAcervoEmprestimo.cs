@@ -91,5 +91,45 @@ namespace SME.CDEP.Infra.Dados.Repositorios
             
             return await conexao.Obter().QueryAsync<AcervoEmprestimo>(query, new { situacoesEmprestadoOuProrrogado, dataAtual = DateTimeExtension.HorarioBrasilia() });
         }
+        
+        public async Task<IEnumerable<AcervoEmprestimoAntesVencimentoDevolucao>> ObterDetalhamentoDosItensANotificarAntesVencimentoEmprestimo(DateTime dataDevolucaoNotificada)
+        {
+            var query = @"
+            ;with ultimaMovimentacaoAcervos as
+            (
+               SELECT DISTINCT ON (acervo_solicitacao_item_id)
+                       id,
+                       acervo_solicitacao_item_id,
+                       dt_emprestimo,
+                       dt_devolucao,
+                       situacao,
+                       criado_em,
+                       criado_por,
+                       criado_login,
+                       alterado_em,
+                       alterado_por,
+                       alterado_login
+               FROM acervo_emprestimo
+               WHERE NOT excluido        
+               ORDER BY acervo_solicitacao_item_id, id desc
+            )
+               SELECT asi.Id as acervoSolicitacaoItemId, 
+                        aso.id as acervoSolicitacaoId,
+                        u.nome as solicitante,
+                        a.titulo,
+                        a.codigo,
+                        u.email,      
+                        ae.dt_emprestimo as dataEmprestimo,
+                        ae.dt_devolucao as dataDevolucao
+             FROM ultimaMovimentacaoAcervos ae
+                join acervo_solicitacao_item asi on asi.id = ae.acervo_solicitacao_item_id
+                join acervo_solicitacao aso on aso.id = asi.acervo_solicitacao_id 
+                join usuario u on u.id = aso.usuario_id 
+                join acervo a on a.id = asi.acervo_id
+            WHERE ae.situacao <> @situacaoDevolvido
+              and ae.dt_devolucao::date = @dataDevolucaoNotificada::date "; 
+            
+            return await conexao.Obter().QueryAsync<AcervoEmprestimoAntesVencimentoDevolucao>(query, new { situacaoDevolvido = (int)SituacaoEmprestimo.DEVOLVIDO, dataDevolucaoNotificada });
+        }
     }
 }

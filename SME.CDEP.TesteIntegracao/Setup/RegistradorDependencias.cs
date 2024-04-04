@@ -104,9 +104,11 @@ namespace SME.CDEP.TesteIntegracao.Setup
             _serviceCollection.TryAddScoped<IServicoAcervoSolicitacao, ServicoAcervoSolicitacao>();
             _serviceCollection.TryAddScoped<IServicoEvento, ServicoEvento>();
             _serviceCollection.TryAddScoped<IServicoMensageria, ServicoMensageria>();
-            _serviceCollection.TryAddScoped<IServicoNotificacaoEmail, ServicoNotificacaoEmail>();
+            _serviceCollection.TryAddScoped<IServicoNotificacaoEmail, ServicoNotificacaoEmailFake>();
             _serviceCollection.TryAddScoped<IServicoAcervoEmprestimo, ServicoAcervoEmprestimo>();
             _serviceCollection.TryAddScoped<IExecutarAtualizacaoSituacaoParaEmprestimoComDevolucaoEmAtrasoUseCase, ExecutarAtualizacaoSituacaoParaEmprestimoComDevolucaoEmAtrasoUseCase>();
+            _serviceCollection.TryAddScoped<INotificacaoVencimentoEmprestimoUseCase, NotificacaoVencimentoEmprestimoUseCase>();
+            _serviceCollection.TryAddScoped<INotificacaoVencimentoEmprestimoUsuarioUseCase, NotificacaoVencimentoEmprestimoUsuarioUseCase>();
         }
         protected override void RegistrarHttpClients()
         {}
