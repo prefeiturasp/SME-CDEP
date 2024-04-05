@@ -32,6 +32,8 @@ namespace SME.CDEP.Aplicacao
             var conteudoEmail = await MontarDadosNoTemplateEmail(acervoEmprestimoAntesVencimentoDevolucao.Solicitante,
                 GerarConteudoTabela(acervoEmprestimoAntesVencimentoDevolucao), TipoParametroSistema.ModeloEmailAvisoDevolucaoEmprestimo);
 
+            conteudoEmail = conteudoEmail.Replace("#DATA_DEVOLUCAO_PROGRAMADA", acervoEmprestimoAntesVencimentoDevolucao.DataDevolucao.ToString("dd/MM"));
+            
             await EnviarEmail(acervoEmprestimoAntesVencimentoDevolucao.Solicitante,
                 acervoEmprestimoAntesVencimentoDevolucao.Email,
                 "CDEP - Aviso de vencimento do empréstimo", conteudoEmail);

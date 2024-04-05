@@ -39,7 +39,7 @@ select 'TemplateAvisoDevolucaoEmprestimo',
 </head>
 <body>
     <p><strong>Olá, #NOME</strong></p>
-    <p>O prazo para devolução dos acervos abaixo vence em um dia, não esqueça de fazer a devolução na data combinada.</p>
+    <p>O prazo para devolução dos acervos abaixo vence no dia #DATA_DEVOLUCAO_PROGRAMADA, não esqueça de fazer a devolução na data combinada.</p>
     #CONTEUDO_TABELA
     <p>Para verificar a possibilidade de estender o prazo de devolução, entre em contato com a equipe do CDEP por meio do formulário de contato disponível no endereço:</p>
     <p><a href="#LINK_FORMULARIO_CDEP">Formulário de Contato do CDEP</a></p>
