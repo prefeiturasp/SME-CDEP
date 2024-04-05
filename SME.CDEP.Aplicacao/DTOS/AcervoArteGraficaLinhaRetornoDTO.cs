@@ -9,7 +9,6 @@ public class AcervoArteGraficaLinhaRetornoDTO : AcervoLinhaRetornoDTO
     public LinhaConteudoAjustarRetornoDTO CreditosAutoresIds { get; set; }
     public LinhaConteudoAjustarRetornoDTO Localizacao { get; set; }
     public LinhaConteudoAjustarRetornoDTO Procedencia { get; set; }
-    public LinhaConteudoAjustarRetornoDTO DataAcervo { get; set; }
     public LinhaConteudoAjustarRetornoDTO CopiaDigital { get; set; }
     public LinhaConteudoAjustarRetornoDTO PermiteUsoImagem { get; set; }
     public LinhaConteudoAjustarRetornoDTO ConservacaoId { get; set; }

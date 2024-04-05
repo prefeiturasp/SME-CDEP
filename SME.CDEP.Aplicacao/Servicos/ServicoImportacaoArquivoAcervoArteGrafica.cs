@@ -156,7 +156,6 @@ namespace SME.CDEP.Aplicacao.Servicos
                 Localizacao = ObterConteudoTexto(linha.Localizacao),
                 Procedencia = ObterConteudoTexto(linha.Procedencia),
                 Ano = ObterConteudoTexto(linha.Ano),
-                DataAcervo = ObterConteudoTexto(linha.Data),
                 CopiaDigital = ObterConteudoSimNao(linha.CopiaDigital),
                 PermiteUsoImagem = ObterConteudoSimNao(linha.PermiteUsoImagem),
                 ConservacaoId = ObterConservacaoIdOuNuloPorValorDoCampo(linha.EstadoConservacao.Conteudo),
@@ -182,7 +181,6 @@ namespace SME.CDEP.Aplicacao.Servicos
                 Localizacao = ObterConteudoMensagemStatus(s.Localizacao),
                 Procedencia = ObterConteudoMensagemStatus(s.Procedencia),
                 Ano = ObterConteudoMensagemStatus(s.Ano),
-                DataAcervo = ObterConteudoMensagemStatus(s.Data),
                 CopiaDigital = ObterConteudoMensagemStatus(s.CopiaDigital),
                 PermiteUsoImagem = ObterConteudoMensagemStatus(s.PermiteUsoImagem),
                 ConservacaoId = ObterConteudoMensagemStatus(s.EstadoConservacao),
@@ -222,9 +220,6 @@ namespace SME.CDEP.Aplicacao.Servicos
             
             if (acervoArteGraficaLinhaDto.Ano.PossuiErro)
                 mensagemErro.Add(acervoArteGraficaLinhaDto.Ano.Mensagem);
-            
-            if (acervoArteGraficaLinhaDto.Data.PossuiErro)
-                mensagemErro.Add(acervoArteGraficaLinhaDto.Data.Mensagem);
                     
             if (acervoArteGraficaLinhaDto.CopiaDigital.PossuiErro)
                 mensagemErro.Add(acervoArteGraficaLinhaDto.CopiaDigital.Mensagem);
@@ -278,7 +273,6 @@ namespace SME.CDEP.Aplicacao.Servicos
                         Localizacao = acervoArteGraficaLinha.Localizacao.Conteudo,
                         Procedencia = acervoArteGraficaLinha.Procedencia.Conteudo,
                         Ano = acervoArteGraficaLinha.Ano.Conteudo,
-                        DataAcervo = acervoArteGraficaLinha.Data.Conteudo,
                         CopiaDigital = ObterCopiaDigitalPorValorDoCampo(acervoArteGraficaLinha.CopiaDigital.Conteudo),
                         PermiteUsoImagem = ObterAutorizaUsoDeImagemPorValorDoCampo(acervoArteGraficaLinha.PermiteUsoImagem.Conteudo),
                         ConservacaoId = ObterConservacaoIdPorValorDoCampo(acervoArteGraficaLinha.EstadoConservacao.Conteudo),
@@ -321,7 +315,6 @@ namespace SME.CDEP.Aplicacao.Servicos
                     ValidarPreenchimentoLimiteCaracteres(linha.Procedencia,Constantes.PROCEDENCIA);
                     
                     ValidarPreenchimentoLimiteCaracteres(linha.Ano,Constantes.ANO);
-                    ValidarPreenchimentoLimiteCaracteres(linha.Data,Constantes.DATA);
                     
                     ValidarPreenchimentoLimiteCaracteres(linha.CopiaDigital,Constantes.COPIA_DIGITAL);
                     ValidarPreenchimentoLimiteCaracteres(linha.PermiteUsoImagem,Constantes.AUTORIZACAO_USO_DE_IMAGEM);
@@ -361,7 +354,6 @@ namespace SME.CDEP.Aplicacao.Servicos
                    || linha.Localizacao.PossuiErro 
                    || linha.Procedencia.PossuiErro
                    || linha.Ano.PossuiErro
-                   || linha.Data.PossuiErro
                    || linha.CopiaDigital.PossuiErro 
                    || linha.PermiteUsoImagem.PossuiErro 
                    || linha.EstadoConservacao.PossuiErro
@@ -430,12 +422,6 @@ namespace SME.CDEP.Aplicacao.Servicos
                             Conteudo = planilha.ObterValorDaCelula(numeroLinha, Constantes.ACERVO_ARTE_GRAFICA_CAMPO_ANO),
                             LimiteCaracteres = Constantes.CARACTERES_PERMITIDOS_7,
                             EhCampoObrigatorio = true,
-                        },
-                        Data = new LinhaConteudoAjustarDTO()
-                        {
-                            Conteudo = planilha.ObterValorDaCelula(numeroLinha, Constantes.ACERVO_ARTE_GRAFICA_CAMPO_DATA),
-                            LimiteCaracteres = Constantes.CARACTERES_PERMITIDOS_50,
-                            EhCampoObrigatorio = true
                         },
                         CopiaDigital = new LinhaConteudoAjustarDTO()
                         {
@@ -530,9 +516,6 @@ namespace SME.CDEP.Aplicacao.Servicos
             
             ValidarTituloDaColuna(planilha, numeroLinha, Constantes.NOME_DA_COLUNA_ANO, 
                 Constantes.ACERVO_ARTE_GRAFICA_CAMPO_ANO, Constantes.ARTE_GRAFICA);
-            
-            ValidarTituloDaColuna(planilha, numeroLinha, Constantes.NOME_DA_COLUNA_DATA, 
-                Constantes.ACERVO_ARTE_GRAFICA_CAMPO_DATA, Constantes.ARTE_GRAFICA);
             
             ValidarTituloDaColuna(planilha, numeroLinha, Constantes.NOME_DA_COLUNA_COPIA_DIGITAL,
                 Constantes.ACERVO_ARTE_GRAFICA_CAMPO_COPIA_DIGITAL, Constantes.ARTE_GRAFICA);
