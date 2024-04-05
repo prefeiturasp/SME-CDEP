@@ -32,7 +32,7 @@ namespace SME.CDEP.Aplicacao
             var conteudoEmail = await MontarDadosNoTemplateEmail(acervoEmAtrasoDevolucaoEmprestimo.Solicitante,
                 GerarConteudoTabela(acervoEmAtrasoDevolucaoEmprestimo), TipoParametroSistema.ModeloEmailAvisoAtrasoDevolucaoEmprestimo);
             
-            conteudoEmail.Replace("#DATA_DEVOLUCAO_PROGRAMADA", acervoEmAtrasoDevolucaoEmprestimo.DataDevolucao.ToString("dd/MM"));
+            conteudoEmail = conteudoEmail.Replace("#DATA_DEVOLUCAO_PROGRAMADA", acervoEmAtrasoDevolucaoEmprestimo.DataDevolucao.ToString("dd/MM"));
 
             await EnviarEmail(acervoEmAtrasoDevolucaoEmprestimo.Solicitante,
                 acervoEmAtrasoDevolucaoEmprestimo.Email,
