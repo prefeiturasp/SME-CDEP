@@ -56,13 +56,6 @@ public static class AcervoArteGraficaLinhaMock
                 EhCampoObrigatorio = true
             });
             
-            faker.RuleFor(x => x.Data, f => new LinhaConteudoAjustarDTO()
-            {
-                Conteudo = f.Date.Recent().Year.ToString(),
-                LimiteCaracteres = ConstantesTestes.CARACTERES_PERMITIDOS_50,
-                EhCampoObrigatorio = true
-            });
-            
             faker.RuleFor(x => x.CopiaDigital, f => new LinhaConteudoAjustarDTO()
             {
                 Conteudo = ConstantesTestes.OPCAO_SIM,

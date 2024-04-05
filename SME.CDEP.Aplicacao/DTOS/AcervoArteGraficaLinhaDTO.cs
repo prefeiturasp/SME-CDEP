@@ -10,7 +10,6 @@ public class AcervoArteGraficaLinhaDTO: AcervoLinhaDTO
     public LinhaConteudoAjustarDTO Credito { get; set; }
     public LinhaConteudoAjustarDTO Localizacao { get; set; }
     public LinhaConteudoAjustarDTO Procedencia { get; set; }
-    public LinhaConteudoAjustarDTO Data { get; set; }
     public LinhaConteudoAjustarDTO CopiaDigital { get; set; }
     public LinhaConteudoAjustarDTO PermiteUsoImagem { get; set; }
     public LinhaConteudoAjustarDTO EstadoConservacao { get; set; }
@@ -36,7 +35,6 @@ public class AcervoArteGraficaLinhaDTO: AcervoLinhaDTO
         Credito.DefinirComoSucesso();
         Localizacao.DefinirComoSucesso();
         Procedencia.DefinirComoSucesso();
-        Data.DefinirComoSucesso();
         CopiaDigital.DefinirComoSucesso();
         PermiteUsoImagem.DefinirComoSucesso();
         EstadoConservacao.DefinirComoSucesso();
