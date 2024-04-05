@@ -59,11 +59,20 @@ public class RegistradorDeDependencia
         _serviceCollection.TryAddScoped<IExecutarCriacaoDeEventosTipoFeriadoAnoAtualUseCase, ExecutarCriacaoDeEventosTipoFeriadoAnoAtualUseCase>();
         _serviceCollection.TryAddScoped<IExecutarCriacaoDeEventosTipoFeriadoAnoAtualPorDataUseCase, ExecutarCriacaoDeEventosTipoFeriadoAnoAtualPorDataUseCase>();
         
-        _serviceCollection.TryAddScoped<INotificarViaEmailCancelamentoAtendimento, NotificarViaEmailCancelamentoAtendimento>();
-        _serviceCollection.TryAddScoped<INotificarViaEmailCancelamentoAtendimentoItem, NotificarViaEmailCancelamentoAtendimentoItem>();
-        _serviceCollection.TryAddScoped<INotificarViaEmailConfirmacaoAtendimentoPresencial, NotificarViaEmailConfirmacaoAtendimentoPresencial>();
+        _serviceCollection.TryAddScoped<INotificarViaEmailCancelamentoAtendimentoUseCase, NotificarViaEmailCancelamentoAtendimentoUseCaseUseCase>();
+        _serviceCollection.TryAddScoped<INotificarViaEmailCancelamentoAtendimentoItemUseCase, NotificarViaEmailCancelamentoAtendimentoItemUseCaseUseCase>();
+        _serviceCollection.TryAddScoped<INotificarViaEmailConfirmacaoAtendimentoPresencialUseCase, NotificarViaEmailConfirmacaoAtendimentoPresencialUseCaseUseCase>();
         
         _serviceCollection.TryAddScoped<IExecutarAtualizacaoSituacaoParaEmprestimoComDevolucaoEmAtrasoUseCase, ExecutarAtualizacaoSituacaoParaEmprestimoComDevolucaoEmAtrasoUseCase>();
+        
+        _serviceCollection.TryAddScoped<INotificacaoVencimentoEmprestimoUseCase, NotificacaoVencimentoEmprestimoUseCase>();
+        _serviceCollection.TryAddScoped<INotificacaoVencimentoEmprestimoUsuarioUseCase, NotificacaoVencimentoEmprestimoUsuarioUseCase>();
+        
+        _serviceCollection.TryAddScoped<INotificacaoDevolucaoEmprestimoAtrasadoUseCase, NotificacaoDevolucaoEmprestimoAtrasadoUseCase>();
+        _serviceCollection.TryAddScoped<INotificacaoDevolucaoEmprestimoAtrasadoUsuarioUseCase, NotificacaoDevolucaoEmprestimoAtrasadoUsuarioUseCase>();
+        
+        _serviceCollection.TryAddScoped<INotificacaoDevolucaoEmprestimoAtrasadoProlongadoUseCase, NotificacaoDevolucaoEmprestimoAtrasadoProlongadoUseCase>();
+        _serviceCollection.TryAddScoped<INotificacaoDevolucaoEmprestimoAtrasadoProlongadoUsuarioUseCase, NotificacaoDevolucaoEmprestimoAtrasadoProlongadoUsuarioUseCase>();
     }
 
     protected virtual void RegistrarRabbit()

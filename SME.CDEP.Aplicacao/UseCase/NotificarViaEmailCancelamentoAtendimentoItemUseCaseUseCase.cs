@@ -11,13 +11,13 @@ using SME.CDEP.Infra.Servicos.Rabbit.Dto;
 
 namespace SME.CDEP.Aplicacao
 {
-    public class NotificarViaEmailCancelamentoAtendimentoItem : INotificarViaEmailCancelamentoAtendimentoItem
+    public class NotificarViaEmailCancelamentoAtendimentoItemUseCaseUseCase : INotificarViaEmailCancelamentoAtendimentoItemUseCase
     {
         private IRepositorioAcervoSolicitacaoItem repositorioAcervoSolicitacaoItem;
         private IServicoNotificacaoEmail servicoNotificacaoEmail;
         private IRepositorioParametroSistema repositorioParametroSistema;
         
-        public NotificarViaEmailCancelamentoAtendimentoItem(IRepositorioAcervoSolicitacaoItem repositorioAcervoSolicitacaoItem,
+        public NotificarViaEmailCancelamentoAtendimentoItemUseCaseUseCase(IRepositorioAcervoSolicitacaoItem repositorioAcervoSolicitacaoItem,
             IServicoNotificacaoEmail servicoNotificacaoEmail,IRepositorioParametroSistema repositorioParametroSistema)
         {
             this.repositorioAcervoSolicitacaoItem = repositorioAcervoSolicitacaoItem ?? throw new ArgumentNullException(nameof(repositorioAcervoSolicitacaoItem));
