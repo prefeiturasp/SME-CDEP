@@ -10,12 +10,12 @@ using SME.CDEP.Infra.Servicos.Rabbit.Dto;
 
 namespace SME.CDEP.Aplicacao
 {
-    public class NotificacaoDevolucaoEmprestimoAtrasadoUsuarioUseCase : NotificacaoEmailBaseUseCase, INotificacaoDevolucaoEmprestimoAtrasadoUsuarioUseCase
+    public class NotificacaoDevolucaoEmprestimoAtrasadoProlongadoUsuarioUseCase: NotificacaoEmailBaseUseCase, INotificacaoDevolucaoEmprestimoAtrasadoProlongadoUsuarioUseCase
     {
         private readonly IRepositorioParametroSistema repositorioParametroSistema;
         private readonly IServicoNotificacaoEmail servicoNotificacaoEmail;
 
-        public NotificacaoDevolucaoEmprestimoAtrasadoUsuarioUseCase(IRepositorioParametroSistema repositorioParametroSistema,
+        public NotificacaoDevolucaoEmprestimoAtrasadoProlongadoUsuarioUseCase(IRepositorioParametroSistema repositorioParametroSistema,
             IServicoNotificacaoEmail servicoNotificacaoEmail)
             : base(repositorioParametroSistema, servicoNotificacaoEmail)
         {}
@@ -30,13 +30,13 @@ namespace SME.CDEP.Aplicacao
                 throw new NegocioException(MensagemNegocio.PARAMETROS_INVALIDOS);
 
             var conteudoEmail = await MontarDadosNoTemplateEmail(acervoEmAtrasoDevolucaoEmprestimo.Solicitante,
-                GerarConteudoTabela(acervoEmAtrasoDevolucaoEmprestimo), TipoParametroSistema.ModeloEmailAvisoAtrasoDevolucaoEmprestimo);
-            
-            conteudoEmail.Replace("#DATA_DEVOLUCAO_PROGRAMADA", acervoEmAtrasoDevolucaoEmprestimo.DataDevolucao.ToString("dd/MM"));
+                GerarConteudoTabela(acervoEmAtrasoDevolucaoEmprestimo), TipoParametroSistema.ModeloEmailAvisoAtrasoProlongadoDevolucaoEmprestimo);
+
+            conteudoEmail = conteudoEmail.Replace("#DATA_DEVOLUCAO_PROGRAMADA", acervoEmAtrasoDevolucaoEmprestimo.DataDevolucao.ToString("dd/MM"));
 
             await EnviarEmail(acervoEmAtrasoDevolucaoEmprestimo.Solicitante,
                 acervoEmAtrasoDevolucaoEmprestimo.Email,
-                "CDEP - Aviso de devolução de empréstimo em atraso", conteudoEmail);
+                "CDEP - Aviso de devolução de empréstimo em atraso prolongado", conteudoEmail);
             
             return true;
         }
@@ -72,4 +72,4 @@ namespace SME.CDEP.Aplicacao
             return conteudo.ToString();
         }
     }
-}
+} 

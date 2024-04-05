@@ -104,14 +104,11 @@ namespace SME.CDEP.Aplicacao.Servicos
 
         public async Task NotificarVencimentoEmprestimo()
         {
-            var qtdeDiasNotificacoVencimentoEmprestimo = await repositorioParametroSistema.ObterParametroPorTipoEAno(
-                TipoParametroSistema.NotificarQtdeDiasAntesDoVencimentoEmprestimo,
-                DateTimeExtension.HorarioBrasilia().Year);
+            var qtdeDiasNotificacoVencimentoEmprestimo = await ObterParametroPorTipoEAno(TipoParametroSistema.QtdeDiasAntesDoVencimentoEmprestimo);
 
             var dataDevolucaoNotificada = DateTimeExtension.HorarioBrasilia().AddDays(int.Parse(qtdeDiasNotificacoVencimentoEmprestimo.Valor));
             
-            var acervosNotificarAntesVencimentoEmprestimo = await repositorioAcervoEmprestimo.
-                ObterDetalhamentoDosItensANotificarSobreVencimentoEmprestimoPorDataDevolucao(dataDevolucaoNotificada);
+            var acervosNotificarAntesVencimentoEmprestimo = await ObterDetalhamentoDosItensANotificarSobreVencimentoEmprestimoPorDataDevolucao(dataDevolucaoNotificada);
 
             foreach (var acervoEmprestimoAntesVencimentoDevolucao in acervosNotificarAntesVencimentoEmprestimo)
                 await servicoMensageria.Publicar(RotasRabbit.NotificacaoVencimentoEmprestimoUsuario, acervoEmprestimoAntesVencimentoDevolucao, Guid.NewGuid());
@@ -119,17 +116,37 @@ namespace SME.CDEP.Aplicacao.Servicos
 
         public async Task NotificarDevolucaoEmprestimoAtrasado()
         {
-            var qtdeDiasAtrasoDevolucaoEmprestimo = await repositorioParametroSistema.ObterParametroPorTipoEAno(
-                TipoParametroSistema.NotificarQtdeDiasAtrasoDevolucaoEmprestimo,
-                DateTimeExtension.HorarioBrasilia().Year);
+            var qtdeDiasAtrasoDevolucaoEmprestimo = await ObterParametroPorTipoEAno(TipoParametroSistema.QtdeDiasAtrasoDevolucaoEmprestimo);
 
             var dataDevolucaoNotificada = DateTimeExtension.HorarioBrasilia().AddDays(-int.Parse(qtdeDiasAtrasoDevolucaoEmprestimo.Valor));
             
-            var acervosEmprestimoDevolucoes = await repositorioAcervoEmprestimo.
-                ObterDetalhamentoDosItensANotificarSobreVencimentoEmprestimoPorDataDevolucao(dataDevolucaoNotificada);
+            var acervosEmprestimoDevolucoes = await ObterDetalhamentoDosItensANotificarSobreVencimentoEmprestimoPorDataDevolucao(dataDevolucaoNotificada);
 
             foreach (var acervoEmprestimoAntesVencimentoDevolucao in acervosEmprestimoDevolucoes)
                 await servicoMensageria.Publicar(RotasRabbit.NotificacaoDevolucaoEmprestimoAtrasadoUsuario, acervoEmprestimoAntesVencimentoDevolucao, Guid.NewGuid());
+        }
+
+        public async Task NotificarDevolucaoEmprestimoAtrasadoProlongado()
+        {
+            var qtdeDiasAtrasoProlongadoDevolucaoEmprestimo = await ObterParametroPorTipoEAno(TipoParametroSistema.QtdeDiasAtrasoProlongadoDevolucaoEmprestimo);
+
+            var dataDevolucaoNotificada = DateTimeExtension.HorarioBrasilia().AddDays(-int.Parse(qtdeDiasAtrasoProlongadoDevolucaoEmprestimo.Valor));
+            
+            var acervosEmprestimoDevolucoes = await ObterDetalhamentoDosItensANotificarSobreVencimentoEmprestimoPorDataDevolucao(dataDevolucaoNotificada);
+
+            foreach (var acervoEmprestimoAntesVencimentoDevolucao in acervosEmprestimoDevolucoes)
+                await servicoMensageria.Publicar(RotasRabbit.NotificacaoDevolucaoEmprestimoAtrasoProlongadoUsuario, acervoEmprestimoAntesVencimentoDevolucao, Guid.NewGuid());
+        }
+
+        private async Task<IEnumerable<AcervoEmprestimoDevolucao>> ObterDetalhamentoDosItensANotificarSobreVencimentoEmprestimoPorDataDevolucao(DateTime dataDevolucaoNotificada)
+        {
+            return await repositorioAcervoEmprestimo.
+                ObterDetalhamentoDosItensANotificarSobreVencimentoEmprestimoPorDataDevolucao(dataDevolucaoNotificada);
+        }
+
+        private async Task<ParametroSistema> ObterParametroPorTipoEAno(TipoParametroSistema tipoParametroSistema)
+        {
+            return await repositorioParametroSistema.ObterParametroPorTipoEAno(tipoParametroSistema, DateTimeExtension.HorarioBrasilia().Year);
         }
     }
 }
