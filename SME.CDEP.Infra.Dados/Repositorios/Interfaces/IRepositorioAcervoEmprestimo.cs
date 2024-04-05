@@ -1,4 +1,5 @@
-﻿using SME.CDEP.Dominio.Entidades;
+﻿using System.Collections;
+using SME.CDEP.Dominio.Entidades;
 using SME.CDEP.Dominio.Repositorios;
 
 namespace SME.CDEP.Infra.Dados.Repositorios.Interfaces
@@ -8,6 +9,6 @@ namespace SME.CDEP.Infra.Dados.Repositorios.Interfaces
         Task<IEnumerable<AcervoEmprestimo>> ObterUltimoEmprestimoPorAcervoSolicitacaoItemIds(long[] acervoSolicitacaoItemIds);
         Task<AcervoEmprestimo> ObterUltimoEmprestimoPorAcervoSolicitacaoItemId(long acervoSolicitacaoItemId);
         Task<IEnumerable<AcervoEmprestimo>> ObterItensEmprestadosAtrasados();
-        Task<IEnumerable<AcervoEmprestimoAntesVencimentoDevolucao>> ObterDetalhamentoDosItensANotificarAntesVencimentoEmprestimo(DateTime dataDevolucaoNotificada);
+        Task<IEnumerable<AcervoEmprestimoDevolucao>> ObterDetalhamentoDosItensANotificarSobreVencimentoEmprestimoPorDataDevolucao(DateTime dataDevolucaoNotificada);
     }
 }

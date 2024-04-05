@@ -9,26 +9,26 @@ using Xunit;
 
 namespace SME.CDEP.TesteIntegracao
 {
-    public class Ao_notificar_vencimento_emprestimo : TesteBase
+    public class Ao_notificar_devolucao_emprestimo_atrasado : TesteBase
     {
-        public Ao_notificar_vencimento_emprestimo(CollectionFixture collectionFixture) : base(collectionFixture)
+        public Ao_notificar_devolucao_emprestimo_atrasado(CollectionFixture collectionFixture) : base(collectionFixture)
         {}
         
-        [Fact(DisplayName = "Acervo Emprestimo - Notificar vencimento de empréstimo")]
-        public async Task Deve_notificar_vencimento_de_emprestimo()
+        [Fact(DisplayName = "Acervo Emprestimo - Notificar devolução de empréstimo em atraso")]
+        public async Task Deve_notificar_devolucao_de_emprestimo_em_atraso()
         {
             await InserirDadosBasicosAleatorios();
 
             await InserirAcervosBibliograficos();
             
-            var notificarQtdeDiasAntesDoVencimentoEmprestimo = ParametroSistemaMock.Instance.GerarParametroSistema(TipoParametroSistema.NotificarQtdeDiasAntesDoVencimentoEmprestimo, "1");
+            var notificarQtdeDiasAntesDoVencimentoEmprestimo = ParametroSistemaMock.Instance.GerarParametroSistema(TipoParametroSistema.NotificarQtdeDiasAtrasoDevolucaoEmprestimo, "1");
             await InserirNaBase(notificarQtdeDiasAntesDoVencimentoEmprestimo);
             
             var acervosSolicitacoes = ObterAcervosSolicitacoes();
 
             var contadorSolicitacoes = 1;
             var contadorSolicitacoesItens = 1;
-            var dataDevolucao = DateTimeExtension.HorarioBrasilia().AddDays(int.Parse(notificarQtdeDiasAntesDoVencimentoEmprestimo.Valor));
+            var dataDevolucao = DateTimeExtension.HorarioBrasilia().AddDays(-int.Parse(notificarQtdeDiasAntesDoVencimentoEmprestimo.Valor));
             foreach (var acervoSolicitacao in acervosSolicitacoes)
             {
                 await InserirNaBase(acervoSolicitacao);
@@ -47,22 +47,22 @@ namespace SME.CDEP.TesteIntegracao
                 contadorSolicitacoes++;
             }
             
-            var casoDeUso = ObterCasoDeUso<INotificacaoVencimentoEmprestimoUseCase>();
+            var casoDeUso = ObterCasoDeUso<INotificacaoDevolucaoEmprestimoAtrasadoUseCase>();
             
             await casoDeUso.Executar(new MensagemRabbit());
         }
         
-        [Fact(DisplayName = "Acervo Emprestimo - Notificar usuarios sobre o vencimento de empréstimo")]
-        public async Task Deve_notificar_usuario_vencimento_de_emprestimo()
+        [Fact(DisplayName = "Acervo Emprestimo - Notificar usuarios sobre o devolução de empréstimo atrasado")]
+        public async Task Deve_notificar_usuario_sobre_devolucao_de_emprestimo_atrasado()
         {
             await InserirDadosBasicosAleatorios();
 
             await InserirAcervosBibliograficos();
             
-            var notificarQtdeDiasAntesDoVencimentoEmprestimo = ParametroSistemaMock.Instance.GerarParametroSistema(TipoParametroSistema.NotificarQtdeDiasAntesDoVencimentoEmprestimo, "1");
+            var notificarQtdeDiasAntesDoVencimentoEmprestimo = ParametroSistemaMock.Instance.GerarParametroSistema(TipoParametroSistema.NotificarQtdeDiasAtrasoDevolucaoEmprestimo, "1");
             await InserirNaBase(notificarQtdeDiasAntesDoVencimentoEmprestimo);
             
-            await InserirNaBase(ParametroSistemaMock.Instance.GerarParametroSistema(TipoParametroSistema.ModeloEmailAvisoDevolucaoEmprestimo, ""));
+            await InserirNaBase(ParametroSistemaMock.Instance.GerarParametroSistema(TipoParametroSistema.ModeloEmailAvisoAtrasoDevolucaoEmprestimo, ""));
             await InserirNaBase(ParametroSistemaMock.Instance.GerarParametroSistema(TipoParametroSistema.EnderecoContatoCDEPConfirmacaoCancelamentoVisita, ""));
             await InserirNaBase(ParametroSistemaMock.Instance.GerarParametroSistema(TipoParametroSistema.EnderecoSedeCDEPVisita, ""));
             await InserirNaBase(ParametroSistemaMock.Instance.GerarParametroSistema(TipoParametroSistema.HorarioFuncionamentoSedeCDEPVisita, ""));
@@ -71,7 +71,7 @@ namespace SME.CDEP.TesteIntegracao
 
             var contadorSolicitacoes = 1;
             var contadorSolicitacoesItens = 1;
-            var dataDevolucao = DateTimeExtension.HorarioBrasilia().AddDays(int.Parse(notificarQtdeDiasAntesDoVencimentoEmprestimo.Valor));
+            var dataDevolucao = DateTimeExtension.HorarioBrasilia().AddDays(-int.Parse(notificarQtdeDiasAntesDoVencimentoEmprestimo.Valor));
             foreach (var acervoSolicitacao in acervosSolicitacoes)
             {
                 await InserirNaBase(acervoSolicitacao);
@@ -90,7 +90,7 @@ namespace SME.CDEP.TesteIntegracao
                 contadorSolicitacoes++;
             }
             
-            var casoDeUso = ObterCasoDeUso<INotificacaoVencimentoEmprestimoUsuarioUseCase>();
+            var casoDeUso = ObterCasoDeUso<INotificacaoDevolucaoEmprestimoAtrasadoUsuarioUseCase>();
 
             var acervoBase = (ObterTodos<Acervo>()).FirstOrDefault();
             var acervoEmprestimoBase = (ObterTodos<AcervoEmprestimo>()).FirstOrDefault();
