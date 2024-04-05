@@ -7,7 +7,6 @@ public class AcervoTridimensionalLinhaDTO: AcervoLinhaDTO
     public LinhaConteudoAjustarDTO Titulo { get; set; }
     public LinhaConteudoAjustarDTO Codigo { get; set; }
     public LinhaConteudoAjustarDTO Procedencia { get; set; }
-    public LinhaConteudoAjustarDTO Data { get; set; }
     public LinhaConteudoAjustarDTO EstadoConservacao { get; set; }
     public LinhaConteudoAjustarDTO Quantidade { get; set; }
     public LinhaConteudoAjustarDTO Descricao { get; set; }
@@ -26,7 +25,6 @@ public class AcervoTridimensionalLinhaDTO: AcervoLinhaDTO
         Titulo.DefinirComoSucesso();
         Codigo.DefinirComoSucesso();
         Procedencia.DefinirComoSucesso();
-        Data.DefinirComoSucesso();
         EstadoConservacao.DefinirComoSucesso();
         Descricao.DefinirComoSucesso();
         Quantidade.DefinirComoSucesso();
