@@ -17,9 +17,11 @@
         EnderecoSedeCDEPVisita = 13,
         HorarioFuncionamentoSedeCDEPVisita = 14,
         LimiteDiasEmprestimoAcervo = 15,
-        NotificarQtdeDiasAntesDoVencimentoEmprestimo = 16,
+        QtdeDiasAntesDoVencimentoEmprestimo = 16,
         ModeloEmailAvisoDevolucaoEmprestimo = 17,
-        NotificarQtdeDiasAtrasoDevolucaoEmprestimo = 18,
+        QtdeDiasAtrasoDevolucaoEmprestimo = 18,
         ModeloEmailAvisoAtrasoDevolucaoEmprestimo = 19,
+        QtdeDiasAtrasoProlongadoDevolucaoEmprestimo = 20,
+        ModeloEmailAvisoAtrasoProlongadoDevolucaoEmprestimo = 21,
     }
 }

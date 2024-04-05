@@ -16,5 +16,8 @@ namespace SME.CDEP.Infra
         
         public const string NotificacaoDevolucaoEmprestimoAtrasado = "cdep.emprestimo.situacao.atrasado.aviso";
         public const string NotificacaoDevolucaoEmprestimoAtrasadoUsuario = "cdep.emprestimo.situacao.atrasado.aviso.usuario";
+        
+        public const string NotificacaoDevolucaoEmprestimoAtrasoProlongado = "cdep.emprestimo.situacao.atraso.prolongado.aviso";
+        public const string NotificacaoDevolucaoEmprestimoAtrasoProlongadoUsuario = "cdep.emprestimo.situacao.atraso.prolongado.aviso.usuario";
     }
 }

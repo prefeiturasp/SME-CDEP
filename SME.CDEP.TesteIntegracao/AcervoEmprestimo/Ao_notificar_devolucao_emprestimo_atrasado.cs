@@ -21,7 +21,7 @@ namespace SME.CDEP.TesteIntegracao
 
             await InserirAcervosBibliograficos();
             
-            var notificarQtdeDiasAntesDoVencimentoEmprestimo = ParametroSistemaMock.Instance.GerarParametroSistema(TipoParametroSistema.NotificarQtdeDiasAtrasoDevolucaoEmprestimo, "1");
+            var notificarQtdeDiasAntesDoVencimentoEmprestimo = ParametroSistemaMock.Instance.GerarParametroSistema(TipoParametroSistema.QtdeDiasAtrasoDevolucaoEmprestimo, "1");
             await InserirNaBase(notificarQtdeDiasAntesDoVencimentoEmprestimo);
             
             var acervosSolicitacoes = ObterAcervosSolicitacoes();
@@ -59,7 +59,7 @@ namespace SME.CDEP.TesteIntegracao
 
             await InserirAcervosBibliograficos();
             
-            var notificarQtdeDiasAntesDoVencimentoEmprestimo = ParametroSistemaMock.Instance.GerarParametroSistema(TipoParametroSistema.NotificarQtdeDiasAtrasoDevolucaoEmprestimo, "1");
+            var notificarQtdeDiasAntesDoVencimentoEmprestimo = ParametroSistemaMock.Instance.GerarParametroSistema(TipoParametroSistema.QtdeDiasAtrasoDevolucaoEmprestimo, "1");
             await InserirNaBase(notificarQtdeDiasAntesDoVencimentoEmprestimo);
             
             await InserirNaBase(ParametroSistemaMock.Instance.GerarParametroSistema(TipoParametroSistema.ModeloEmailAvisoAtrasoDevolucaoEmprestimo, ""));
