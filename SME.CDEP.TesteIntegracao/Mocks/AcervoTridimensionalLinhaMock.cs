@@ -44,13 +44,6 @@ public static class AcervoTridimensionalLinhaMock
                 EhCampoObrigatorio = true
             });
             
-            faker.RuleFor(x => x.Data, f => new LinhaConteudoAjustarDTO()
-            {
-                Conteudo = f.Date.Recent().Year.ToString(),
-                LimiteCaracteres = ConstantesTestes.CARACTERES_PERMITIDOS_50,
-                EhCampoObrigatorio = true
-            });
-            
             faker.RuleFor(x => x.EstadoConservacao, f => new LinhaConteudoAjustarDTO()
             {
                 Conteudo = ConstantesTestes.OTIMO,

@@ -142,7 +142,6 @@ namespace SME.CDEP.Aplicacao.Servicos
                 Codigo = ObterSufixo(ObterConteudoTexto(linha.Codigo),Constantes.SIGLA_ACERVO_TRIDIMENSIONAL),
                 Procedencia = ObterConteudoTexto(linha.Procedencia),
                 Ano = ObterConteudoTexto(linha.Ano),
-                DataAcervo = ObterConteudoTexto(linha.Data),
                 ConservacaoId = ObterConservacaoIdOuNuloPorValorDoCampo(linha.EstadoConservacao.Conteudo),
                 Quantidade = ObterConteudoLongoOuNulo(linha.Quantidade),
                 Descricao = ObterConteudoTexto(linha.Descricao),
@@ -161,7 +160,6 @@ namespace SME.CDEP.Aplicacao.Servicos
                 Codigo = ObterConteudoMensagemStatus(s.Codigo),
                 Procedencia = ObterConteudoMensagemStatus(s.Procedencia),
                 Ano = ObterConteudoMensagemStatus(s.Ano),
-                DataAcervo = ObterConteudoMensagemStatus(s.Data),
                 ConservacaoId = ObterConteudoMensagemStatus(s.EstadoConservacao),
                 Quantidade = ObterConteudoMensagemStatus(s.Quantidade),
                 Descricao = ObterConteudoMensagemStatus(s.Descricao),
@@ -192,9 +190,6 @@ namespace SME.CDEP.Aplicacao.Servicos
             if (acervoTridimensionalLinhaDTO.Ano.PossuiErro)
                 mensagemErro.Add(acervoTridimensionalLinhaDTO.Ano.Mensagem);
             
-	        if (acervoTridimensionalLinhaDTO.Data.PossuiErro)
-		        mensagemErro.Add(acervoTridimensionalLinhaDTO.Data.Mensagem);
-			        
 	        if (acervoTridimensionalLinhaDTO.EstadoConservacao.PossuiErro)
 		        mensagemErro.Add(acervoTridimensionalLinhaDTO.EstadoConservacao.Mensagem);
 	        
@@ -231,7 +226,6 @@ namespace SME.CDEP.Aplicacao.Servicos
                         Codigo = acervoTridimensionalLinha.Codigo.Conteudo,
                         Procedencia = acervoTridimensionalLinha.Procedencia.Conteudo,
                         Ano = acervoTridimensionalLinha.Ano.Conteudo,
-                        DataAcervo = acervoTridimensionalLinha.Data.Conteudo,
                         ConservacaoId = ObterConservacaoIdPorValorDoCampo(acervoTridimensionalLinha.EstadoConservacao.Conteudo),
                         Quantidade = acervoTridimensionalLinha.Quantidade.Conteudo.ConverterParaInteiro(),
                         Descricao = acervoTridimensionalLinha.Descricao.Conteudo,
@@ -263,8 +257,6 @@ namespace SME.CDEP.Aplicacao.Servicos
                     ValidarPreenchimentoLimiteCaracteres(linha.Procedencia,Constantes.PROCEDENCIA);
                     ValidarPreenchimentoLimiteCaracteres(linha.Ano,Constantes.ANO);
                     
-                    ValidarPreenchimentoLimiteCaracteres(linha.Data,Constantes.DATA);
-                    
                     ValidarPreenchimentoLimiteCaracteres(linha.EstadoConservacao,Constantes.ESTADO_CONSERVACAO);
                     ValidarConteudoCampoComDominio(linha.EstadoConservacao, Conservacoes, Constantes.ESTADO_CONSERVACAO);
                     
@@ -292,7 +284,6 @@ namespace SME.CDEP.Aplicacao.Servicos
                    || linha.Codigo.PossuiErro 
                    || linha.Procedencia.PossuiErro
                    || linha.Ano.PossuiErro
-                   || linha.Data.PossuiErro
                    || linha.EstadoConservacao.PossuiErro
                    || linha.Quantidade.PossuiErro
                    || linha.Descricao.PossuiErro
@@ -350,12 +341,6 @@ namespace SME.CDEP.Aplicacao.Servicos
                             Conteudo = planilha.ObterValorDaCelula(numeroLinha, Constantes.ACERVO_TRIDIMENSIONAL_CAMPO_ANO),
                             LimiteCaracteres = Constantes.CARACTERES_PERMITIDOS_7,
                             EhCampoObrigatorio = true,
-                        },
-                        Data = new LinhaConteudoAjustarDTO()
-                        {
-                            Conteudo = planilha.ObterValorDaCelula(numeroLinha, Constantes.ACERVO_TRIDIMENSIONAL_CAMPO_DATA),
-                            LimiteCaracteres = Constantes.CARACTERES_PERMITIDOS_50,
-                            EhCampoObrigatorio = true
                         },
                         EstadoConservacao = new LinhaConteudoAjustarDTO()
                         {
@@ -418,9 +403,6 @@ namespace SME.CDEP.Aplicacao.Servicos
            
             ValidarTituloDaColuna(planilha, numeroLinha, Constantes.NOME_DA_COLUNA_ANO, 
                 Constantes.ACERVO_TRIDIMENSIONAL_CAMPO_ANO, Constantes.TRIDIMENSIONAL);
-            
-            ValidarTituloDaColuna(planilha, numeroLinha, Constantes.NOME_DA_COLUNA_DATA, 
-                Constantes.ACERVO_TRIDIMENSIONAL_CAMPO_DATA, Constantes.TRIDIMENSIONAL);
             
             ValidarTituloDaColuna(planilha, numeroLinha, Constantes.NOME_DA_COLUNA_ESTADO_DE_CONSERVACAO, 
                 Constantes.ACERVO_TRIDIMENSIONAL_CAMPO_ESTADO_CONSERVACAO, Constantes.TRIDIMENSIONAL);
