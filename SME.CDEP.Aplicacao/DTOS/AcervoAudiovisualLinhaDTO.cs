@@ -9,7 +9,6 @@ public class AcervoAudiovisualLinhaDTO: AcervoLinhaDTO
     public LinhaConteudoAjustarDTO Credito { get; set; }
     public LinhaConteudoAjustarDTO Localizacao { get; set; }
     public LinhaConteudoAjustarDTO Procedencia { get; set; }
-    public LinhaConteudoAjustarDTO Data { get; set; }
     public LinhaConteudoAjustarDTO Copia { get; set; }
     public LinhaConteudoAjustarDTO PermiteUsoImagem { get; set; }
     public LinhaConteudoAjustarDTO EstadoConservacao { get; set; }
@@ -33,7 +32,6 @@ public class AcervoAudiovisualLinhaDTO: AcervoLinhaDTO
         Credito.DefinirComoSucesso();
         Localizacao.DefinirComoSucesso();
         Procedencia.DefinirComoSucesso();
-        Data.DefinirComoSucesso();
         Copia.DefinirComoSucesso();
         PermiteUsoImagem.DefinirComoSucesso();
         EstadoConservacao.DefinirComoSucesso();

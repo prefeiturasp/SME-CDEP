@@ -13,7 +13,6 @@ public class AcervoAudiovisualDTO
     public string Codigo { get; set; }
     public string? Localizacao { get; set; }
     public string? Procedencia { get; set; }
-    public string DataAcervo { get; set; }
     public string? Copia { get; set; }
     public bool? PermiteUsoImagem { get; set; }
     public long? ConservacaoId { get; set; }
