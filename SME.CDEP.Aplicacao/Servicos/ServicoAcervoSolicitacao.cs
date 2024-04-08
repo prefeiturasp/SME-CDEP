@@ -95,6 +95,8 @@ namespace SME.CDEP.Aplicacao.Servicos
                         : SituacaoSolicitacaoItem.AGUARDANDO_ATENDIMENTO;
                     
                     await repositorioAcervoSolicitacaoItem.Inserir(acervoSolicitacaoItem);
+                    
+                    await servicoAcervoBibliografico.AlterarSituacaoSaldo(SituacaoSaldo.RESERVADO,item.AcervoId);
                 }
                 tran.Commit();
 
