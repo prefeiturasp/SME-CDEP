@@ -130,7 +130,12 @@ namespace SME.CDEP.Aplicacao.Servicos
         public async Task<AcervoSolicitacaoRetornoCadastroDTO> ObterPorId(long acervoSolicitacaoId)
         {
             var tiposAcervosPermitidos = servicoAcervo.ObterTiposAcervosPermitidosDoPerfilLogado();
-                
+
+            return await ObterAcervosSolicitacoesPorIdTiposPermitidos(acervoSolicitacaoId, tiposAcervosPermitidos);
+        }
+
+        private async Task<AcervoSolicitacaoRetornoCadastroDTO> ObterAcervosSolicitacoesPorIdTiposPermitidos(long acervoSolicitacaoId, long[] tiposAcervosPermitidos)
+        {
             var acervosItensCompletos = await repositorioAcervo.ObterAcervosSolicitacoesItensCompletoPorId(acervoSolicitacaoId, tiposAcervosPermitidos);
 
             var acervoItensRetorno = mapper.Map<IEnumerable<AcervoSolicitacaoItemRetornoCadastroDTO>>(acervosItensCompletos);
@@ -145,6 +150,15 @@ namespace SME.CDEP.Aplicacao.Servicos
                 PodeCancelarSolicitacao = acervosItensCompletos.Any(a=> a.SituacaoItem.PodeCancelarAtendimento()),
                 Itens = acervoItensRetorno
             };
+        }
+
+        public async Task<AcervoSolicitacaoRetornoCadastroDTO> ObterMinhaSolicitacaoPorId(long acervoSolicitacaoId)
+        {
+            var tiposAcervosPermitidos = Enum.GetValues(typeof(TipoAcervo))
+                .Cast<TipoAcervo>()
+                .Select(v => (long)v).ToArray();
+                
+            return await ObterAcervosSolicitacoesPorIdTiposPermitidos(acervoSolicitacaoId, tiposAcervosPermitidos);
         }
         
         public async Task<bool> Excluir(long acervoSolicitacaoId)
