@@ -387,7 +387,7 @@ namespace SME.CDEP.Aplicacao.Servicos
                 if (acervoSolicitacaoConfirmar.DataEmprestimo.EhMenorQue(acervoSolicitacaoConfirmar.DataVisita))
                     throw new NegocioException(MensagemNegocio.DATA_DO_EMPRESTIMO_MENOR_QUE_DATA_VISITA);
                 
-                if (acervoSolicitacaoConfirmar.DataDevolucao.EhMenorQue(acervoSolicitacaoConfirmar.DataEmprestimo))
+                if (acervoSolicitacaoConfirmar.DataDevolucao.EhMenorIgualQue(acervoSolicitacaoConfirmar.DataEmprestimo))
                     throw new NegocioException(MensagemNegocio.DATA_DA_DEVOLUCAO_MENOR_DATA_DO_EMPRESTIMO);
                 
                 if ((acervoSolicitacaoConfirmar.DataEmprestimo.HasValue || acervoSolicitacaoConfirmar.DataDevolucao.HasValue) 
