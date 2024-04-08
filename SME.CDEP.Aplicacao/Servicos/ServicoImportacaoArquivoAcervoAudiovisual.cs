@@ -154,7 +154,6 @@ namespace SME.CDEP.Aplicacao.Servicos
                 Localizacao = ObterConteudoTexto(linha.Localizacao),
                 Procedencia = ObterConteudoTexto(linha.Procedencia),
                 Ano = ObterConteudoTexto(linha.Ano),
-                DataAcervo = ObterConteudoTexto(linha.Data),
                 Copia = ObterConteudoTexto(linha.Copia),
                 PermiteUsoImagem = ObterConteudoSimNao(linha.PermiteUsoImagem),
                 ConservacaoId = ObterConservacaoIdOuNuloPorValorDoCampo(linha.EstadoConservacao.Conteudo),
@@ -179,7 +178,6 @@ namespace SME.CDEP.Aplicacao.Servicos
                 Localizacao = ObterConteudoMensagemStatus(s.Localizacao),
                 Procedencia = ObterConteudoMensagemStatus(s.Procedencia),
                 Ano = ObterConteudoMensagemStatus(s.Ano),
-                DataAcervo = ObterConteudoMensagemStatus(s.Data),
                 Copia = ObterConteudoMensagemStatus(s.Copia),
                 PermiteUsoImagem = ObterConteudoMensagemStatus(s.PermiteUsoImagem),
                 ConservacaoId = ObterConteudoMensagemStatus(s.EstadoConservacao),
@@ -219,9 +217,6 @@ namespace SME.CDEP.Aplicacao.Servicos
             if (acervoAudiovisualLinhaDTO.Ano.PossuiErro)
                 mensagemErro.Add(acervoAudiovisualLinhaDTO.Ano.Mensagem);
             
-            if (acervoAudiovisualLinhaDTO.Data.PossuiErro)
-                mensagemErro.Add(acervoAudiovisualLinhaDTO.Data.Mensagem);
-                    
             if (acervoAudiovisualLinhaDTO.Copia.PossuiErro)
                 mensagemErro.Add(acervoAudiovisualLinhaDTO.Copia.Mensagem);
                     
@@ -271,7 +266,6 @@ namespace SME.CDEP.Aplicacao.Servicos
                         Localizacao = acervoAudiovisualLinha.Localizacao.Conteudo,
                         Procedencia = acervoAudiovisualLinha.Procedencia.Conteudo,
                         Ano = acervoAudiovisualLinha.Ano.Conteudo,
-                        DataAcervo = acervoAudiovisualLinha.Data.Conteudo,
                         Copia = acervoAudiovisualLinha.Copia.Conteudo,
                         PermiteUsoImagem = ObterAutorizaUsoDeImagemPorValorDoCampo(acervoAudiovisualLinha.PermiteUsoImagem.Conteudo),
                         ConservacaoId = acervoAudiovisualLinha.EstadoConservacao.Conteudo.EstaPreenchido() ? ObterConservacaoIdPorValorDoCampo(acervoAudiovisualLinha.EstadoConservacao.Conteudo) : null,
@@ -313,7 +307,6 @@ namespace SME.CDEP.Aplicacao.Servicos
                     ValidarPreenchimentoLimiteCaracteres(linha.Procedencia,Constantes.PROCEDENCIA);
                     
                     ValidarPreenchimentoLimiteCaracteres(linha.Ano,Constantes.ANO);
-                    ValidarPreenchimentoLimiteCaracteres(linha.Data,Constantes.DATA);
                     
                     ValidarPreenchimentoLimiteCaracteres(linha.Copia,Constantes.COPIA);
                     ValidarPreenchimentoLimiteCaracteres(linha.PermiteUsoImagem,Constantes.AUTORIZACAO_USO_DE_IMAGEM);
@@ -352,7 +345,6 @@ namespace SME.CDEP.Aplicacao.Servicos
                    || linha.Localizacao.PossuiErro 
                    || linha.Procedencia.PossuiErro
                    || linha.Ano.PossuiErro
-                   || linha.Data.PossuiErro
                    || linha.Copia.PossuiErro 
                    || linha.PermiteUsoImagem.PossuiErro 
                    || linha.EstadoConservacao.PossuiErro
@@ -418,12 +410,6 @@ namespace SME.CDEP.Aplicacao.Servicos
                         {
                             Conteudo = planilha.ObterValorDaCelula(numeroLinha, Constantes.ACERVO_AUDIOVISUAL_CAMPO_ANO),
                             LimiteCaracteres = Constantes.CARACTERES_PERMITIDOS_7,
-                            EhCampoObrigatorio = true
-                        },
-                        Data = new LinhaConteudoAjustarDTO()
-                        {
-                            Conteudo = planilha.ObterValorDaCelula(numeroLinha, Constantes.ACERVO_AUDIOVISUAL_CAMPO_DATA),
-                            LimiteCaracteres = Constantes.CARACTERES_PERMITIDOS_50,
                             EhCampoObrigatorio = true
                         },
                         Copia = new LinhaConteudoAjustarDTO()
@@ -502,9 +488,6 @@ namespace SME.CDEP.Aplicacao.Servicos
             
             ValidarTituloDaColuna(planilha, numeroLinha, Constantes.NOME_DA_COLUNA_ANO, 
                 Constantes.ACERVO_AUDIOVISUAL_CAMPO_ANO, Constantes.AUDIOVISUAL);
-            
-            ValidarTituloDaColuna(planilha, numeroLinha, Constantes.NOME_DA_COLUNA_DATA, 
-                Constantes.ACERVO_AUDIOVISUAL_CAMPO_DATA, Constantes.AUDIOVISUAL);
             
             ValidarTituloDaColuna(planilha, numeroLinha, Constantes.NOME_DA_COLUNA_COPIA, 
                 Constantes.ACERVO_AUDIOVISUAL_CAMPO_COPIA, Constantes.AUDIOVISUAL);

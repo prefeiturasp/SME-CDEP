@@ -53,13 +53,6 @@ public static class AcervoAudiovisualLinhaMock
                 EhCampoObrigatorio = true
             });
             
-            faker.RuleFor(x => x.Data, f => new LinhaConteudoAjustarDTO()
-            {
-                Conteudo = f.Date.Recent().Year.ToString(),
-                LimiteCaracteres = ConstantesTestes.CARACTERES_PERMITIDOS_50,
-                EhCampoObrigatorio = true
-            });
-            
             faker.RuleFor(x => x.Copia, f => new LinhaConteudoAjustarDTO()
             {
                 Conteudo = f.Lorem.Text().Limite(100),
