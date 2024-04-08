@@ -87,6 +87,17 @@ namespace SME.CDEP.Infra.Dominio.Enumerados
             return dataAvaliada.Value.EhMenorQue(dataReferencia.Value);
         }
         
+        public static bool EhMenorIgualQue(this DateTime? dataAvaliada, DateTime? dataReferencia)
+        {
+            if (!dataAvaliada.HasValue)
+                return false;
+            
+            if (!dataReferencia.HasValue)
+                return false;
+
+            return dataAvaliada.Value.EhMenorIgualQue(dataReferencia.Value);
+        }
+        
         public static bool EhDataFutura(this DateTime? dataAvaliada)
         {
             if (!dataAvaliada.HasValue)
@@ -116,6 +127,11 @@ namespace SME.CDEP.Infra.Dominio.Enumerados
         public static bool EhMenorQue(this DateTime dataAvaliada, DateTime dataReferencia)
         {
             return dataAvaliada.Date < dataReferencia.Date;
+        }
+        
+        public static bool EhMenorIgualQue(this DateTime dataAvaliada, DateTime dataReferencia)
+        {
+            return dataAvaliada.Date <= dataReferencia.Date;
         }
     }
 }
