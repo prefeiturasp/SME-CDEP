@@ -38,7 +38,7 @@ namespace SME.CDEP.Dominio.Entidades
             if (TipoAcervo.EhAcervoBibliografico())
             {
                 return Situacao.EstaAguardandoVisita()
-                       || (Situacao.EstaAguardandoAtendimento() && SituacaoSaldo.EstaDisponivel())
+                       || (Situacao.EstaAguardandoAtendimento() && SituacaoSaldo.NaoEstaEmprestado())
                        || Situacao.EstaFinalizadoManualmente();
             }
             
