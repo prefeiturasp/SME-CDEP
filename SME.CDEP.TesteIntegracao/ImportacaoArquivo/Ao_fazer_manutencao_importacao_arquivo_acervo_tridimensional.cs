@@ -30,7 +30,7 @@ namespace SME.CDEP.TesteIntegracao
             acervoTridimensionalLinhas[4].Descricao.Conteudo = string.Empty;
             acervoTridimensionalLinhas[7].Quantidade.Conteudo = faker.Lorem.Paragraph();
             acervoTridimensionalLinhas[8].Codigo.Conteudo = string.Empty;
-            var linhasComErros = new[] { 3, 5, 6, 8, 9 };
+            var linhasComErros = new[] { 3, 5, 8, 9 };
             
             await servicoImportacaoArquivo.CarregarDominios();
             servicoImportacaoArquivo.ValidarPreenchimentoValorFormatoQtdeCaracteres(acervoTridimensionalLinhas);
@@ -107,7 +107,7 @@ namespace SME.CDEP.TesteIntegracao
             acervoTridimensionalLinhas[7].Quantidade.Conteudo = faker.Lorem.Paragraph();
             acervoTridimensionalLinhas[8].Codigo.Conteudo = string.Empty;
             acervoTridimensionalLinhas[8].EstadoConservacao.Conteudo = "Desconhecido";
-            var linhasComErros = new[] { 3, 5, 6, 8, 9 };
+            var linhasComErros = new[] { 3, 5, 8, 9 };
             
             await servicoImportacaoArquivo.CarregarDominios();
             servicoImportacaoArquivo.ValidarPreenchimentoValorFormatoQtdeCaracteres(acervoTridimensionalLinhas);
@@ -480,8 +480,8 @@ namespace SME.CDEP.TesteIntegracao
             
             var retorno = await servicoImportacaoArquivo.ObterImportacaoPendente();
             retorno.ShouldNotBeNull();
-            retorno.Sucesso.Count().ShouldBe(8);
-            retorno.Erros.Count().ShouldBe(2);
+            retorno.Sucesso.Count().ShouldBe(9);
+            retorno.Erros.Count().ShouldBe(1);
         
             foreach (var linhaInserida in linhasInseridas.Where(w=> !w.PossuiErros))
             {
