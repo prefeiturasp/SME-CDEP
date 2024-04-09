@@ -27,9 +27,7 @@ public class AcervoBibliograficoCadastroDTO : AcervoCadastroDTO
     [MaxLength(50, ErrorMessage = "A localizção CDD do acervo bibliográfico não pode conter mais que 50 caracteres")]
     public string LocalizacaoCDD { get; set; }
     
-    [Required(ErrorMessage = "É necessário informar a localizção PHA do acervo bibliográfico")]
-    [MaxLength(50, ErrorMessage = "A localizção PHA do acervo bibliográfico não pode conter mais que 50 caracteres")]
-    public string LocalizacaoPHA { get; set; }
+    public string? LocalizacaoPHA { get; set; }
     
     public string? NotasGerais { get; set; }
     public string? Isbn { get; set; }

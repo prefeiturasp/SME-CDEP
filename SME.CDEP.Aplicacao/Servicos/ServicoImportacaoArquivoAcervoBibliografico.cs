@@ -563,8 +563,7 @@ namespace SME.CDEP.Aplicacao.Servicos
                         LocalizacaoPHA = new LinhaConteudoAjustarDTO()
                         {
                             Conteudo = planilha.ObterValorDaCelula(numeroLinha, Constantes.ACERVO_BIBLIOGRAFICO_CAMPO_LOCALIZACAO_PHA),
-                            LimiteCaracteres = Constantes.CARACTERES_PERMITIDOS_50,
-                            EhCampoObrigatorio = true
+                            LimiteCaracteres = Constantes.CARACTERES_PERMITIDOS_50
                         },
                         NotasGerais = new LinhaConteudoAjustarDTO()
                         {
