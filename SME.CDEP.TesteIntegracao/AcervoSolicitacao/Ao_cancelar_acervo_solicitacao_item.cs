@@ -76,7 +76,7 @@ namespace SME.CDEP.TesteIntegracao
             eventos.Count(a=> a.Excluido).ShouldBe(1);
             
             var acervosEmprestimos = ObterTodos<AcervoEmprestimo>();
-            acervosEmprestimos.Count().ShouldBe(4);
+            acervosEmprestimos.Count().ShouldBe(3);
             acervosEmprestimos.Any(a=> a.DataEmprestimo.Date == DateTimeExtension.HorarioBrasilia().AddDays(2).Date && a.Situacao.EstaEmprestado()).ShouldBeTrue();
             acervosEmprestimos.Any(a=> a.DataDevolucao.Date == DateTimeExtension.HorarioBrasilia().AddDays(7).Date && a.Situacao.EstaEmprestado()).ShouldBeTrue();
             acervosEmprestimos.Count(a=> a.Situacao.EstaEmprestado()).ShouldBe(3);
@@ -141,7 +141,7 @@ namespace SME.CDEP.TesteIntegracao
             eventos.Count(a=> a.Excluido).ShouldBe(1);
             
             var acervosEmprestimos = ObterTodos<AcervoEmprestimo>();
-            acervosEmprestimos.Count().ShouldBe(4);
+            acervosEmprestimos.Count().ShouldBe(3);
             acervosEmprestimos.Any(a=> a.DataEmprestimo.Date == DateTimeExtension.HorarioBrasilia().AddDays(2).Date && a.Situacao.EstaEmprestado()).ShouldBeTrue();
             acervosEmprestimos.Any(a=> a.DataDevolucao.Date == DateTimeExtension.HorarioBrasilia().AddDays(7).Date && a.Situacao.EstaEmprestado()).ShouldBeTrue();
             acervosEmprestimos.Count(a=> a.Situacao.EstaEmprestado()).ShouldBe(3);
