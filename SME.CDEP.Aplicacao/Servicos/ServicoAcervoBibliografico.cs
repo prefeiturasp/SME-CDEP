@@ -169,13 +169,10 @@ namespace SME.CDEP.Aplicacao.Servicos
         public async Task<bool> AlterarSituacaoSaldo(SituacaoSaldo situacaoSaldo, long id)
         {
             var acervoBibliografico = await repositorioAcervoBibliografico.ObterPorAcervoId(id);
-            if (acervoBibliografico.EhNulo())
-                throw new NegocioException(string.Format(MensagemNegocio.ACERVO_NAO_ENCONTRADO));
-
-            acervoBibliografico.DefinirSituacaoSaldo(situacaoSaldo);
+            if (acervoBibliografico.EhNulo()) return false;
             
+            acervoBibliografico.DefinirSituacaoSaldo(situacaoSaldo);
             await repositorioAcervoBibliografico.Atualizar(acervoBibliografico);
-
             return true;
         }
     }
