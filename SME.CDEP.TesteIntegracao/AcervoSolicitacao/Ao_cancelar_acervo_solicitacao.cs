@@ -80,7 +80,7 @@ namespace SME.CDEP.TesteIntegracao
             eventos.Any(a=> a.Data.Date == DateTimeExtension.HorarioBrasilia().AddDays(15).Date).ShouldBeTrue();
             
             var acervosEmprestimos = ObterTodos<AcervoEmprestimo>();
-            acervosEmprestimos.Count().ShouldBe(6);
+            acervosEmprestimos.Count().ShouldBe(3);
             acervosEmprestimos.Any(a=> a.DataEmprestimo.Date == DateTimeExtension.HorarioBrasilia().AddDays(2).Date && a.Situacao.EstaEmprestado()).ShouldBeTrue();
             acervosEmprestimos.Any(a=> a.DataDevolucao.Date == DateTimeExtension.HorarioBrasilia().AddDays(7).Date && a.Situacao.EstaEmprestado()).ShouldBeTrue();
             acervosEmprestimos.Count(a=> a.Situacao.EstaEmprestado()).ShouldBe(3);
@@ -151,9 +151,9 @@ namespace SME.CDEP.TesteIntegracao
             eventos.Any(a=> a.Data.Date == DateTimeExtension.HorarioBrasilia().AddDays(15).Date).ShouldBeTrue();
             
             var acervosEmprestimos = ObterTodos<AcervoEmprestimo>();
-            acervosEmprestimos.Count().ShouldBe(6);
-            acervosEmprestimos.Any(a=> a.DataEmprestimo.Date == DateTimeExtension.HorarioBrasilia().AddDays(2).Date && a.Situacao.EstaEmprestado()).ShouldBeTrue();
-            acervosEmprestimos.Any(a=> a.DataDevolucao.Date == DateTimeExtension.HorarioBrasilia().AddDays(7).Date && a.Situacao.EstaEmprestado()).ShouldBeTrue();
+            acervosEmprestimos.Count().ShouldBe(3);
+            acervosEmprestimos.All(a=> a.DataEmprestimo.Date == DateTimeExtension.HorarioBrasilia().AddDays(2).Date && a.Situacao.EstaEmprestado()).ShouldBeTrue();
+            acervosEmprestimos.All(a=> a.DataDevolucao.Date == DateTimeExtension.HorarioBrasilia().AddDays(7).Date && a.Situacao.EstaEmprestado()).ShouldBeTrue();
             acervosEmprestimos.Count(a=> a.Situacao.EstaEmprestado()).ShouldBe(3);
             
             var acervosBibliograficos = ObterTodos<AcervoBibliografico>();
@@ -338,9 +338,14 @@ namespace SME.CDEP.TesteIntegracao
             eventos.Count(s=> s.Excluido).ShouldBe(2);
             
             var acervosEmprestimos = ObterTodos<AcervoEmprestimo>();
-            acervosEmprestimos.Count().ShouldBe(4);
-            acervosEmprestimos.Any(a=> a.DataEmprestimo.Date == DateTimeExtension.HorarioBrasilia().AddDays(2).Date && a.Situacao.EstaEmprestado()).ShouldBeTrue();
-            acervosEmprestimos.Any(a=> a.DataDevolucao.Date == DateTimeExtension.HorarioBrasilia().AddDays(7).Date && a.Situacao.EstaEmprestado()).ShouldBeTrue();
+            acervosEmprestimos.Count().ShouldBe(2);
+            acervosEmprestimos.Count(a=> a.DataEmprestimo.Date == DateTimeExtension.HorarioBrasilia().AddDays(2).Date && a.Situacao.EstaEmprestado() && a.AcervoSolicitacaoItemId == 2).ShouldBe(1);
+            acervosEmprestimos.Count(a=> a.DataDevolucao.Date == DateTimeExtension.HorarioBrasilia().AddDays(7).Date && a.Situacao.EstaEmprestado() && a.AcervoSolicitacaoItemId == 3).ShouldBe(1);
+
+            var acervosBibliograficos = ObterTodos<AcervoBibliografico>();
+            acervosBibliograficos.FirstOrDefault(f=> f.AcervoId == 1).SituacaoSaldo.EstaDisponivel().ShouldBeTrue();
+            acervosBibliograficos.FirstOrDefault(f=> f.AcervoId == 2).SituacaoSaldo.EstaDisponivel().ShouldBeTrue();
+            acervosBibliograficos.FirstOrDefault(f=> f.AcervoId == 3).SituacaoSaldo.EstaDisponivel().ShouldBeTrue();
         }
         
         [Fact(DisplayName = "Acervo Solicitação - Não deve cancelar atendimento com itens atendidos parcialmente aguardando atendimento")]
