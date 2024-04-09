@@ -16,7 +16,7 @@ namespace SME.CDEP.Dominio.Entidades
         public string? Volume { get; set; }
         public long IdiomaId { get; set; }
         public string LocalizacaoCDD { get; set; }
-        public string LocalizacaoPHA { get; set; }
+        public string? LocalizacaoPHA { get; set; }
         public string? NotasGerais { get; set; }
         public string? Isbn { get; set; }
         public SituacaoSaldo SituacaoSaldo { get; set; }
