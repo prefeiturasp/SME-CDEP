@@ -44,4 +44,9 @@ public static class SituacaoSaldoExtension
     {
         return situacaoSaldo.EstaReservado() || situacaoSaldo.EstaEmprestado() || situacaoSaldo.EstaIndisponivelParaReservaEmprestimo();
     }
+    
+    public static bool NaoEstaEmprestado(this SituacaoSaldo situacaoSaldo)
+    {
+        return !situacaoSaldo.EstaEmprestado();
+    }
 }
