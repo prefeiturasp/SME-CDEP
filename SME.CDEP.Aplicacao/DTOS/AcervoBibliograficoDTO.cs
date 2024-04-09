@@ -24,7 +24,7 @@ public class AcervoBibliograficoDTO
     public string? Volume { get; set; }
     public long? IdiomaId { get; set; }
     public string LocalizacaoCDD { get; set; }
-    public string LocalizacaoPHA { get; set; }
+    public string? LocalizacaoPHA { get; set; }
     public string? NotasGerais { get; set; }
     public string? Isbn { get; set; }
     public AuditoriaDTO Auditoria { get; set; }
