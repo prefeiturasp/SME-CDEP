@@ -14,12 +14,12 @@ namespace SME.CDEP.Infra.Dados.Repositorios
 
         public async Task<IEnumerable<AcervoTipoTituloAcervoIdCreditosAutores>> ObterItensDoAcervoPorAcervosIds(long[] acervosIds)
         {
-            var query = @"
+            var query = $@"
             select 
               a.tipo as tipoAcervo,
               a.titulo,
               a.id as acervoId,
-              coalesce(ab.situacao_saldo,1) as situacaoSaldo 
+              coalesce(ab.situacao_saldo,{(int)SituacaoSaldo.DISPONIVEL}) as situacaoSaldo 
             from acervo a 
             left join acervo_bibliografico ab on a.id = ab.acervo_id 
             where a.id = any(@acervosIds)
