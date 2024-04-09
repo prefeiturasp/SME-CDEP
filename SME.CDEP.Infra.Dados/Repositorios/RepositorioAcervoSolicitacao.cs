@@ -19,7 +19,7 @@ namespace SME.CDEP.Infra.Dados.Repositorios
               a.tipo as tipoAcervo,
               a.titulo,
               a.id as acervoId,
-              coalesce(ab.situacao_saldo,0) as situacaoSaldo 
+              coalesce(ab.situacao_saldo,1) as situacaoSaldo 
             from acervo a 
             left join acervo_bibliografico ab on a.id = ab.acervo_id 
             where a.id = any(@acervosIds)
