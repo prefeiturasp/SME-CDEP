@@ -239,5 +239,13 @@ namespace SME.CDEP.Dominio.Extensions
                 
             return valor.Replace(".","").Replace("-","");
         }
+        
+        public static string RemoverEspacos(this string valor)
+        {
+            if (valor.NaoEstaPreenchido())
+                return valor;
+                
+            return valor.Trim();
+        }
     }
 }
