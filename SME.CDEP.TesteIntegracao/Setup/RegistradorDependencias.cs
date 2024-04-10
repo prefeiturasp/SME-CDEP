@@ -114,7 +114,7 @@ namespace SME.CDEP.TesteIntegracao.Setup
             _serviceCollection.TryAddScoped<INotificacaoDevolucaoEmprestimoAtrasadoUseCase, NotificacaoDevolucaoEmprestimoAtrasadoUseCase>();
             _serviceCollection.TryAddScoped<INotificacaoDevolucaoEmprestimoAtrasadoUsuarioUseCase, NotificacaoDevolucaoEmprestimoAtrasadoUsuarioUseCase>();
             
-            _serviceCollection.TryAddScoped<INotificacaoDevolucaoEmprestimoAtrasadoProlongadoUseCase, NotificacaoDevolucaoEmprestimoAtrasadoProlongadoUseCase>();
+            _serviceCollection.TryAddScoped<INotificacaoDevolucaoEmprestimoAtrasoProlongadoUseCase, NotificacaoDevolucaoEmprestimoAtrasoProlongadoUseCase>();
             _serviceCollection.TryAddScoped<INotificacaoDevolucaoEmprestimoAtrasadoProlongadoUsuarioUseCase, NotificacaoDevolucaoEmprestimoAtrasadoProlongadoUsuarioUseCase>();
         }
         protected override void RegistrarHttpClients()

@@ -47,7 +47,7 @@ namespace SME.CDEP.TesteIntegracao
                 contadorSolicitacoes++;
             }
 
-            var casoDeUso = ObterCasoDeUso<INotificacaoDevolucaoEmprestimoAtrasadoProlongadoUseCase>();
+            var casoDeUso = ObterCasoDeUso<INotificacaoDevolucaoEmprestimoAtrasoProlongadoUseCase>();
             
             await casoDeUso.Executar(new MensagemRabbit());
         }
