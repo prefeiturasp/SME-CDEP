@@ -205,7 +205,7 @@ namespace SME.CDEP.Aplicacao.Servicos
 
         public async Task<RetornoPerfilUsuarioDTO> Autenticar(string login, string senha)
         {
-            login = login.RemoverMascaraCPF();
+            login = login.RemoverMascaraCPF().RemoverEspacos();
             
             var retornoAutenticacao = await servicoAcessos.Autenticar(login, senha);
             
