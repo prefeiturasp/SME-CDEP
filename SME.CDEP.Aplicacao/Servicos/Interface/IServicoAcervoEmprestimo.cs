@@ -9,6 +9,6 @@ namespace SME.CDEP.Aplicacao.Servicos.Interface
         Task<bool> DevolverItemEmprestado(long acervoSolicitacaoItemId);
         Task NotificarVencimentoEmprestimo();
         Task NotificarDevolucaoEmprestimoAtrasado();
-        Task NotificarDevolucaoEmprestimoAtrasadoProlongado();
+        Task NotificarDevolucaoEmprestimoAtrasoProlongado();
     }
 }
