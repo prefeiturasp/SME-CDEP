@@ -126,7 +126,7 @@ namespace SME.CDEP.Aplicacao.Servicos
                 await servicoMensageria.Publicar(RotasRabbit.NotificacaoDevolucaoEmprestimoAtrasadoUsuario, acervoEmprestimoAntesVencimentoDevolucao, Guid.NewGuid());
         }
 
-        public async Task NotificarDevolucaoEmprestimoAtrasadoProlongado()
+        public async Task NotificarDevolucaoEmprestimoAtrasoProlongado()
         {
             var qtdeDiasAtrasoProlongadoDevolucaoEmprestimo = await ObterParametroPorTipoEAno(TipoParametroSistema.QtdeDiasAtrasoProlongadoDevolucaoEmprestimo);
 

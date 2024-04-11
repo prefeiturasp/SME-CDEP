@@ -71,7 +71,7 @@ public class RegistradorDeDependencia
         _serviceCollection.TryAddScoped<INotificacaoDevolucaoEmprestimoAtrasadoUseCase, NotificacaoDevolucaoEmprestimoAtrasadoUseCase>();
         _serviceCollection.TryAddScoped<INotificacaoDevolucaoEmprestimoAtrasadoUsuarioUseCase, NotificacaoDevolucaoEmprestimoAtrasadoUsuarioUseCase>();
         
-        _serviceCollection.TryAddScoped<INotificacaoDevolucaoEmprestimoAtrasadoProlongadoUseCase, NotificacaoDevolucaoEmprestimoAtrasadoProlongadoUseCase>();
+        _serviceCollection.TryAddScoped<INotificacaoDevolucaoEmprestimoAtrasoProlongadoUseCase, NotificacaoDevolucaoEmprestimoAtrasoProlongadoUseCase>();
         _serviceCollection.TryAddScoped<INotificacaoDevolucaoEmprestimoAtrasadoProlongadoUsuarioUseCase, NotificacaoDevolucaoEmprestimoAtrasadoProlongadoUsuarioUseCase>();
     }
 
