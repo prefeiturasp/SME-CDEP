@@ -21,7 +21,7 @@ namespace SME.CDEP.Infra.Servicos.ServicoArmazenamento
             return $"{EnderecoCompletoPadrao()}/{BucketTemp}/";
         }
         
-        private string EnderecoCompletoPadrao()
+        public string EnderecoCompletoPadrao()
         {
             return $"{TipoRequisicao}://{EndPoint}";
         }
