@@ -519,7 +519,7 @@ namespace SME.CDEP.Aplicacao.Servicos
                         Edicao = new LinhaConteudoAjustarDTO()
                         {
                             Conteudo = planilha.ObterValorDaCelula(numeroLinha, Constantes.ACERVO_BIBLIOGRAFICO_CAMPO_EDICAO),
-                            LimiteCaracteres = Constantes.CARACTERES_PERMITIDOS_15,
+                            LimiteCaracteres = Constantes.CARACTERES_PERMITIDOS_30,
                         },
                         NumeroPaginas = new LinhaConteudoAjustarDTO()
                         {
