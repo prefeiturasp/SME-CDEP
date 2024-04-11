@@ -10,5 +10,20 @@ namespace SME.CDEP.Infra.Servicos.ServicoArmazenamento
         public string AccessKey { get; set; }
         public string SecretKey { get; set; }
         public string TipoRequisicao { get; set; }
+
+        public string EnderecoCompletoBucketArquivos()
+        {
+            return $"{EnderecoCompletoPadrao()}/{BucketArquivos}/";
+        }
+        
+        public string EnderecoCompletoBucketTemp()
+        {
+            return $"{EnderecoCompletoPadrao()}/{BucketTemp}/";
+        }
+        
+        private string EnderecoCompletoPadrao()
+        {
+            return $"{TipoRequisicao}://{EndPoint}";
+        }
     }
 }
