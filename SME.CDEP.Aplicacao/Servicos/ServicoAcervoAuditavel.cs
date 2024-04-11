@@ -2,6 +2,7 @@
 using System.Text.RegularExpressions;
 using AutoMapper;
 using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.Options;
 using SME.CDEP.Aplicacao.DTOS;
 using SME.CDEP.Aplicacao.Enumerados;
 using SME.CDEP.Aplicacao.Extensions;
@@ -13,6 +14,7 @@ using SME.CDEP.Dominio.Excecoes;
 using SME.CDEP.Dominio.Extensions;
 using SME.CDEP.Infra.Dados.Repositorios.Interfaces;
 using SME.CDEP.Infra.Dominio.Enumerados;
+using SME.CDEP.Infra.Servicos.ServicoArmazenamento;
 using Exception = System.Exception;
 
 namespace SME.CDEP.Aplicacao.Servicos
@@ -32,6 +34,7 @@ namespace SME.CDEP.Aplicacao.Servicos
         private readonly IRepositorioAcervoFotografico repositorioAcervoFotografico;
         private readonly IRepositorioAcervoTridimensional repositorioAcervoTridimensional;
         private readonly IRepositorioParametroSistema repositorioParametroSistema;
+        private readonly ConfiguracaoArmazenamentoOptions configuracaoArmazenamentoOptions;
         
         public ServicoAcervoAuditavel(IRepositorioAcervo repositorioAcervo, IMapper mapper, 
             IContextoAplicacao contextoAplicacao, IRepositorioAcervoCreditoAutor repositorioAcervoCreditoAutor,
@@ -42,7 +45,8 @@ namespace SME.CDEP.Aplicacao.Servicos
             IRepositorioAcervoAudiovisual repositorioAcervoAudiovisual,
             IRepositorioAcervoFotografico repositorioAcervoFotografico,
             IRepositorioAcervoTridimensional repositorioAcervoTridimensional,
-            IRepositorioParametroSistema repositorioParametroSistema)
+            IRepositorioParametroSistema repositorioParametroSistema,
+            IOptions<ConfiguracaoArmazenamentoOptions> configuracaoArmazenamentoOptions)
         {
             this.repositorioAcervo = repositorioAcervo ?? throw new ArgumentNullException(nameof(repositorioAcervo));
             this.mapper = mapper ?? throw new ArgumentNullException(nameof(mapper));
@@ -57,6 +61,7 @@ namespace SME.CDEP.Aplicacao.Servicos
             this.repositorioAcervoFotografico = repositorioAcervoFotografico ?? throw new ArgumentNullException(nameof(repositorioAcervoFotografico));
             this.repositorioAcervoTridimensional = repositorioAcervoTridimensional ?? throw new ArgumentNullException(nameof(repositorioAcervoTridimensional));
             this.repositorioParametroSistema = repositorioParametroSistema ?? throw new ArgumentNullException(nameof(repositorioParametroSistema));
+            this.configuracaoArmazenamentoOptions = configuracaoArmazenamentoOptions?.Value ?? throw new ArgumentNullException(nameof(configuracaoArmazenamentoOptions));
         }
         
         public async Task<long> Inserir(Acervo acervo)
@@ -259,9 +264,7 @@ namespace SME.CDEP.Aplicacao.Servicos
                 var miniaturasDosAcervos = await repositorioArquivo.ObterAcervoCodigoNomeArquivoPorAcervoId(acervosIds);
 
                 var imagensPadrao = await ObterImagensPadrao();
-
-                var hostAplicacao = configuration["UrlFrontEnd"];
-            
+                
                 var acervosAgrupandoCreditoAutor = acervos
                     .GroupBy(g => new { g.AcervoId,g.Codigo, g.Titulo, g.Tipo, g.Descricao, g.TipoAcervoTag, g.DataAcervo, g.Ano, g.SituacaoSaldo })
                     .Select(s => new PesquisaAcervoDTO
@@ -277,9 +280,9 @@ namespace SME.CDEP.Aplicacao.Servicos
                         CreditoAutoria = s.Any(w=> w.CreditoAutoria.NaoEhNulo() ) ? string.Join(", ", s.Select(ca=> ca.CreditoAutoria).Distinct()) : string.Empty,
                         Assunto = s.Any(w=> w.Assunto.NaoEhNulo() ) ? string.Join(", ", s.Select(ca=> ca.Assunto).Distinct()) : string.Empty,
                         EnderecoImagem = miniaturasDosAcervos.Any(f=> f.AcervoId == s.Key.AcervoId) 
-                            ? $"{hostAplicacao}{Constantes.BUCKET_CDEP}/{miniaturasDosAcervos.FirstOrDefault(f=> f.AcervoId == s.Key.AcervoId).Thumbnail}"
+                            ? $"{configuracaoArmazenamentoOptions.EnderecoCompletoBucketArquivos()}{miniaturasDosAcervos.FirstOrDefault(f=> f.AcervoId == s.Key.AcervoId).Thumbnail}"
                             : string.Empty,
-                        EnderecoImagemPadrao = $"{hostAplicacao}{Constantes.BUCKET_CDEP}/{imagensPadrao.FirstOrDefault(f=> f.TipoAcervo == s.Key.Tipo).NomeArquivoFisico}",
+                        EnderecoImagemPadrao = $"{configuracaoArmazenamentoOptions.EnderecoCompletoBucketArquivos()}{imagensPadrao.FirstOrDefault(f=> f.TipoAcervo == s.Key.Tipo).NomeArquivoFisico}",
                         EstaDisponivel = s.Key.SituacaoSaldo.EstaDisponivel(),
                         SituacaoDisponibilidade = s.Key.SituacaoSaldo.EstaDisponivel() ? Constantes.ACERVO_DISPONIVEL : Constantes.ACERVO_INDISPONIVEL,
                         TemControleDisponibilidade = s.Key.Tipo.EhAcervoBibliografico()
@@ -468,21 +471,17 @@ namespace SME.CDEP.Aplicacao.Servicos
         
         private async Task<string> ObterEnderecoImagemPadrao(TipoAcervo tipoAcervo)
         {
-            var hostAplicacao = configuration["UrlFrontEnd"];
-
            var nomeImagemPadrao = await repositorioArquivo.ObterArquivoPorNomeTipoArquivo(ObterNomesDasImagensPadrao(tipoAcervo), TipoArquivo.Sistema);
                 
-           return $"{hostAplicacao}{Constantes.BUCKET_CDEP}/{nomeImagemPadrao.NomeArquivoFisico}";
+           return $"{configuracaoArmazenamentoOptions.EnderecoCompletoBucketArquivos()}{nomeImagemPadrao.NomeArquivoFisico}";
         }
 
         private async Task<ImagemDTO[]> AplicarEndereco(ImagemDTO[] imagens)
         {
-            var hostAplicacao = configuration["UrlFrontEnd"];
-            
             foreach (var imagem in imagens)
             {
-                imagem.Original = $"{hostAplicacao}{Constantes.BUCKET_CDEP}/{imagem.Original}";
-                imagem.Thumbnail = $"{hostAplicacao}{Constantes.BUCKET_CDEP}/{imagem.Thumbnail}";
+                imagem.Original = $"{configuracaoArmazenamentoOptions.EnderecoCompletoBucketArquivos()}/{imagem.Original}";
+                imagem.Thumbnail = $"{configuracaoArmazenamentoOptions.EnderecoCompletoBucketArquivos()}/{imagem.Thumbnail}";
             }
 
             return imagens;
@@ -490,12 +489,10 @@ namespace SME.CDEP.Aplicacao.Servicos
         
         private AcervoDetalheDTO AplicarEndereco(AcervoArteGraficaDetalheDTO acervo)
         {
-            var hostAplicacao = configuration["UrlFrontEnd"];
-            
             foreach (var acervoImagem in acervo.Imagens)
             {
-                acervoImagem.Original = $"{hostAplicacao}{Constantes.BUCKET_CDEP}/{acervoImagem.Original}";
-                acervoImagem.Thumbnail = $"{hostAplicacao}{Constantes.BUCKET_CDEP}/{acervoImagem.Thumbnail}";
+                acervoImagem.Original = $"{configuracaoArmazenamentoOptions.EnderecoCompletoBucketArquivos()}/{acervoImagem.Original}";
+                acervoImagem.Thumbnail = $"{configuracaoArmazenamentoOptions.EnderecoCompletoBucketArquivos()}/{acervoImagem.Thumbnail}";
             }
 
             return acervo;
