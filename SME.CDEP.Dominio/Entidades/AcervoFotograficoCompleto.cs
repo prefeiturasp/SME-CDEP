@@ -12,7 +12,7 @@ public class AcervoFotograficoCompleto: EntidadeBaseAuditavel
     public string Codigo { get; set; }
     public string Localizacao { get; set; }
     public string Procedencia { get; set; }
-    public int Ano { get; set; }
+    public string Ano { get; set; }
     public string DataAcervo { get; set; }
     public bool? CopiaDigital { get; set; }
     public bool? PermiteUsoImagem { get; set; }
