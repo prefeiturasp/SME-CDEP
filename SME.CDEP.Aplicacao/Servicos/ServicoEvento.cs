@@ -40,7 +40,7 @@ namespace SME.CDEP.Aplicacao.Servicos
 
             evento.Descricao = eventoCadastroDto.Tipo.EhVisita() 
                 ? await ObterDetalhesDoAcervo(evento) 
-                : eventoCadastroDto.Tipo.EhFeriado() ? "Feriado" : "Suspensão";
+                : eventoCadastroDto.Tipo.EhFeriado() ? eventoCadastroDto.Descricao : "Suspensão";
 
             await Validar(evento);
             
@@ -216,7 +216,7 @@ namespace SME.CDEP.Aplicacao.Servicos
         public async Task<IEnumerable<EventoDetalheDTO>> ObterDetalhesDoDiaPorDiaMes(DiaMesDTO diaMesDto)
         {
             var tiposAcervosPermitidos = servicoAcervo.ObterTiposAcervosPermitidosDoPerfilLogado();
-            return mapper.Map<IEnumerable<EventoDetalheDTO>>(await repositorioEvento.ObterDetalhesDoDiaPorData(diaMesDto.Data,tiposAcervosPermitidos));
+            return mapper.Map<IEnumerable<EventoDetalheDTO>>(await repositorioEvento.ObterDetalhesDoDiaPorData(diaMesDto.Data, tiposAcervosPermitidos));
         }
 
         public async Task InserirEventoVisita(DateTime dataVisita, long atendimentoItemId)

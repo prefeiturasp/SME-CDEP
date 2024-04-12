@@ -19,11 +19,11 @@ namespace SME.CDEP.Infra.Dominio.Enumerados
         {
             if (enumValue.EhNulo())
                 return string.Empty;
-                    
-            return enumValue.ObterAtributo<DisplayAttribute>().Description;
+            
+            return Convert.ToInt32(enumValue) == 0 ? string.Empty : enumValue.ObterAtributo<DisplayAttribute>().Description;
         }
         
         public static string Nome(this Enum enumValue)
-            => enumValue.ObterAtributo<DisplayAttribute>().Name;
+            => Convert.ToInt32(enumValue) == 0 ? string.Empty : enumValue.ObterAtributo<DisplayAttribute>().Name;
     }
 }
