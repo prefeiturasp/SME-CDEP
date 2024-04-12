@@ -41,6 +41,7 @@ namespace SME.CDEP.Aplicacao.Servicos
         private readonly IMapper mapper;
 
         protected List<IdNomeTipoDTO> CreditosAutores { get; set; }
+        protected List<IdNomeTipoDTO> CoAutores { get; set; }
 
         public ServicoImportacaoArquivoBase(IRepositorioImportacaoArquivo repositorioImportacaoArquivo, IServicoMaterial servicoMaterial,
             IServicoEditora servicoEditora,IServicoSerieColecao servicoSerieColecao,IServicoIdioma servicoIdioma, IServicoAssunto servicoAssunto,
@@ -66,6 +67,7 @@ namespace SME.CDEP.Aplicacao.Servicos
             Idiomas = new List<IdNomeDTO>();
             Assuntos = new List<IdNomeDTO>();
             CreditosAutores = new List<IdNomeTipoDTO>();
+            CoAutores = new List<IdNomeTipoDTO>();
             AcessoDocumentos = new List<IdNomeDTO>();
             Formatos = new List<IdNomeTipoDTO>();
             Suportes = new List<IdNomeTipoDTO>();
@@ -728,6 +730,11 @@ namespace SME.CDEP.Aplicacao.Servicos
         protected async Task ObterCreditosAutoresPorTipo(TipoCreditoAutoria tipoCreditoAutoria)
         {
             CreditosAutores = CreditosAutores.Where(w=> w.Tipo == (int)tipoCreditoAutoria).ToList();
+        }
+        
+        protected async Task ObterCoAutores(TipoCreditoAutoria tipoCreditoAutoria)
+        {
+            CoAutores = CreditosAutores.Where(w=> w.Tipo == (int)tipoCreditoAutoria).ToList();
         }
         
         protected async Task ObterFormatosPorTipo(TipoFormato tipoFormato)
