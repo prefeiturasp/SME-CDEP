@@ -79,9 +79,9 @@ namespace SME.CDEP.Aplicacao.Servicos
             
             await ObterMateriaisPorTipo(TipoMaterial.BIBLIOGRAFICO);
                 
-            await ObterCreditosAutoresPorTipo(TipoCreditoAutoria.Autoria);
-            
             await ObterCoAutores(TipoCreditoAutoria.Coautor);
+            
+            await ObterCreditosAutoresPorTipo(TipoCreditoAutoria.Autoria);
         }
 
         public async Task<ImportacaoArquivoRetornoDTO<AcervoLinhaErroDTO<AcervoBibliograficoDTO,AcervoBibliograficoLinhaRetornoDTO>,AcervoLinhaRetornoSucessoDTO>> ImportarArquivo(IFormFile file)
