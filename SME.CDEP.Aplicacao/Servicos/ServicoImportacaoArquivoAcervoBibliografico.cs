@@ -357,7 +357,8 @@ namespace SME.CDEP.Aplicacao.Servicos
 
         public void ValidarPreenchimentoValorFormatoQtdeCaracteres(IEnumerable<AcervoBibliograficoLinhaDTO> linhas)
         {
-            var autores = CreditosAutores.Where(w => w.Tipo == (int)TipoCreditoAutoria.Autoria).Select(s=> mapper.Map<IdNomeDTO>(s));
+            var autores = CreditosAutores.Select(s=> mapper.Map<IdNomeDTO>(s));
+            var coAutores = CoAutores.Select(s=> mapper.Map<IdNomeDTO>(s));
             var materiaisBibliograficos = Materiais.Where(w => w.Tipo == (int)TipoMaterial.BIBLIOGRAFICO).Select(s=> mapper.Map<IdNomeDTO>(s));
             
             foreach (var linha in linhas)
@@ -374,7 +375,7 @@ namespace SME.CDEP.Aplicacao.Servicos
                     ValidarConteudoCampoListaComDominio(linha.Autor, autores, Constantes.AUTOR);
 
                     ValidarPreenchimentoLimiteCaracteres(linha.CoAutor,Constantes.CO_AUTOR);
-                    ValidarConteudoCampoListaComDominio(linha.CoAutor, autores, Constantes.CO_AUTOR);
+                    ValidarConteudoCampoListaComDominio(linha.CoAutor, coAutores, Constantes.CO_AUTOR);
 
                     ValidarPreenchimentoLimiteCaracteres(linha.TipoAutoria,Constantes.TIPO_AUTORIA);
                     
