@@ -80,6 +80,8 @@ namespace SME.CDEP.Aplicacao.Servicos
             await ObterMateriaisPorTipo(TipoMaterial.BIBLIOGRAFICO);
                 
             await ObterCreditosAutoresPorTipo(TipoCreditoAutoria.Autoria);
+            
+            await ObterCoAutores(TipoCreditoAutoria.Coautor);
         }
 
         public async Task<ImportacaoArquivoRetornoDTO<AcervoLinhaErroDTO<AcervoBibliograficoDTO,AcervoBibliograficoLinhaRetornoDTO>,AcervoLinhaRetornoSucessoDTO>> ImportarArquivo(IFormFile file)
@@ -345,9 +347,9 @@ namespace SME.CDEP.Aplicacao.Servicos
             
             var coAutoresCompletos = coAutoresEmTextoAutoNumerados.Select(coAutorAutoNumerado => new CoAutorDTO
             {
-                CreditoAutorId = CreditosAutores.FirstOrDefault(f=> f.Nome.RemoverAcentuacao().SaoIguais(coAutorAutoNumerado.Nome.RemoverAcentuacao()))?.Id,
+                CreditoAutorId = CoAutores.FirstOrDefault(f=> f.Nome.RemoverAcentuacao().SaoIguais(coAutorAutoNumerado.Nome.RemoverAcentuacao()))?.Id,
                 TipoAutoria = tiposAutoriaEmTextoAutoNumerados.FirstOrDefault(f => f.Id.SaoIguais(coAutorAutoNumerado.Id))?.Nome,
-                CreditoAutorNome = CreditosAutores.FirstOrDefault(f=> f.Nome.RemoverAcentuacao().SaoIguais(coAutorAutoNumerado.Nome.RemoverAcentuacao()))?.Nome,
+                CreditoAutorNome = CoAutores.FirstOrDefault(f=> f.Nome.RemoverAcentuacao().SaoIguais(coAutorAutoNumerado.Nome.RemoverAcentuacao()))?.Nome,
             }).ToArray();
 
             return coAutoresCompletos;
