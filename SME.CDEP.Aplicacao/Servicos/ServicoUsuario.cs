@@ -366,12 +366,12 @@ namespace SME.CDEP.Aplicacao.Servicos
             return await ObterDadosSolicitantePorLogin((await ObterUsuarioLogado()).Login);
         }
 
-        private async Task<DadosSolicitanteDTO> ObterDadosSolicitantePorLogin(string login)
+        private async Task<DadosSolicitanteDTO> ObterDadosSolicitantePorLogin(string login, bool incluirComplemento = true)
         {
             var usuario = await repositorioUsuario.ObterPorLogin(login);
 
             if (usuario.EhNulo())
-                throw new NegocioException(Constantes.USUARIO_NAO_ENCONTRADO); 
+                throw new NegocioException(incluirComplemento ? Constantes.USUARIO_SEM_CADASTRO_CDEP : Constantes.USUARIO_NAO_ENCONTRADO); 
             
             var dadosSolicitante = mapper.Map<DadosSolicitanteDTO>(usuario);
             
@@ -409,7 +409,7 @@ namespace SME.CDEP.Aplicacao.Servicos
         
         public async Task<DadosSolicitanteDTO> ObterDadosSolicitantePorRfOuCpf(string rfOuCpf)
         {
-            return await ObterDadosSolicitantePorLogin(rfOuCpf);
+            return await ObterDadosSolicitantePorLogin(rfOuCpf, false);
         }
     }
 }
