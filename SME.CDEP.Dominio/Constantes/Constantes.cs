@@ -5,8 +5,8 @@ public class Constantes
     public const string ACERVO_DISPONIVEL = "Disponível";
     public const string ACERVO_INDISPONIVEL = "Indisponível";
     public const string VALIDAR_EMAIL = @"^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$";
-    public const string USUARIO_NAO_ENCONTRADO = "Usuário sem cadastro no CDEP, para que o atendimento seja realizado, é necessário que o usuário se cadastre primeiro.";
-    public const string USUARIO_RESPONSAVEL_NAO_LOCALIZADO = "O usuário responsável informado não foi encontrado";
+    public const string USUARIO_SEM_CADASTRO_CDEP = "Usuário sem cadastro no CDEP, para que o atendimento seja realizado, é necessário que o usuário se cadastre primeiro.";
+    public const string USUARIO_NAO_ENCONTRADO = "Usuário não encontrado.";
     public const string TRIDIMENSIONAL = "Tridimensional";
     public const string FOTOGRAFICO = "Fotográfico";
     public const string DOCUMENTAL = "Documental";
