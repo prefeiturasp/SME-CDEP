@@ -242,7 +242,7 @@ namespace SME.CDEP.Infra.Dados.Repositorios
             });
         }
 
-        public Task<bool> AtendimentoPossuiSituacaoAguardandoVisitaEItemSituacaoFinalizadoAutomaticamenteOuCancelado(long acervoSolicitacaoItemId)
+        public Task<bool> AtendimentoPossuiItemSituacaoFinalizadoAutomaticamenteOuCancelado(long acervoSolicitacaoItemId)
         {
             var situacoesItensConfirmadas = new []
             {
@@ -257,9 +257,9 @@ namespace SME.CDEP.Infra.Dados.Repositorios
             where i.id = @acervoSolicitacaoItemId
              and not i.excluido
              and not a.excluido
-             and (a.situacao <> @situacaoAguardandoVisita or i.situacao = any(@situacoesItensConfirmadas)) ";
+             and i.situacao = any(@situacoesItensConfirmadas) ";
             
-            return conexao.Obter().QueryFirstOrDefaultAsync<bool>(query, new { acervoSolicitacaoItemId, situacaoAguardandoVisita = (int)SituacaoSolicitacao.AGUARDANDO_VISITA, situacoesItensConfirmadas });
+            return conexao.Obter().QueryFirstOrDefaultAsync<bool>(query, new { acervoSolicitacaoItemId, situacoesItensConfirmadas });
         }
         
         public Task<IEnumerable<AcervoSolicitacaoItemDetalhe>> ObterDetalhamentoDosItensPorSolicitacaoOuItem(long? acervoSolicitacaoId,long? acervoSolicitacaoItemId)
