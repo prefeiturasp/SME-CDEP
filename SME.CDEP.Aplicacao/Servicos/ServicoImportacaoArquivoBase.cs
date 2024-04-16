@@ -80,7 +80,7 @@ namespace SME.CDEP.Aplicacao.Servicos
             Conservacoes = new List<IdNomeDTO>();
         }
 
-        protected async Task InicializarParametrosEDominios()
+        protected async Task CarregarTodosOsDominios()
         {
             LimiteAcervosImportadosViaPanilha = long.Parse((await repositorioParametroSistema
                 .ObterParametroPorTipoEAno(TipoParametroSistema.LimiteAcervosImportadosViaPanilha, DateTimeExtension.HorarioBrasilia().Year)).Valor);
@@ -634,8 +634,11 @@ namespace SME.CDEP.Aplicacao.Servicos
             }
         }
         
-        protected void ValidarQtdeLinhasImportadas(int totalLinhas)
+        protected async Task ValidarQtdeLinhasImportadas(int totalLinhas)
         {
+            LimiteAcervosImportadosViaPanilha = long.Parse((await repositorioParametroSistema
+                .ObterParametroPorTipoEAno(TipoParametroSistema.LimiteAcervosImportadosViaPanilha, DateTimeExtension.HorarioBrasilia().Year)).Valor);
+            
             if (totalLinhas <= Constantes.INICIO_LINHA_TITULO)
                 throw new NegocioException(MensagemNegocio.PLANILHA_VAZIA);
             

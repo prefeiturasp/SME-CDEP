@@ -57,7 +57,7 @@ namespace SME.CDEP.Aplicacao.Servicos
 
         public async Task CarregarParametros()
         {
-            await InicializarParametrosEDominios();
+            await CarregarTodosOsDominios();
             
             await ObterCreditosAutoresPorTipo(TipoCreditoAutoria.Credito);
             
@@ -112,7 +112,7 @@ namespace SME.CDEP.Aplicacao.Servicos
         private async Task<ImportacaoArquivoRetornoDTO<AcervoLinhaErroDTO<AcervoArteGraficaDTO,AcervoArteGraficaLinhaRetornoDTO>,AcervoLinhaRetornoSucessoDTO>> ObterRetornoImportacaoAcervo(ImportacaoArquivo arquivoImportado, IEnumerable<AcervoArteGraficaLinhaDTO> acervosArtesGraficasLinhas, bool estaImportandoArquivo = true)
         {
             if (!estaImportandoArquivo)
-                await InicializarParametrosEDominios();
+                await CarregarTodosOsDominios();
             
             await ObterCreditosAutoresPorTipo(TipoCreditoAutoria.Credito);
             
@@ -380,7 +380,7 @@ namespace SME.CDEP.Aplicacao.Servicos
 
                 var totalLinhas = planilha.Rows().Count();
 
-                ValidarQtdeLinhasImportadas(totalLinhas);
+                await ValidarQtdeLinhasImportadas(totalLinhas);
 
                 ValidarOrdemColunas(planilha, Constantes.INICIO_LINHA_TITULO);
 

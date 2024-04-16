@@ -72,9 +72,9 @@ namespace SME.CDEP.Aplicacao.Servicos
             return await ObterRetornoImportacaoAcervo(arquivoImportado, JsonConvert.DeserializeObject<IEnumerable<AcervoTridimensionalLinhaDTO>>(arquivoImportado.Conteudo), false);
         }
 
-        public async Task CarregarParametros()
+        public async Task CarregarDominiosTridimensionais()
         {
-            await InicializarParametrosEDominios();
+            await CarregarTodosOsDominios();
         }
 
         public async Task<ImportacaoArquivoRetornoDTO<AcervoLinhaErroDTO<AcervoTridimensionalDTO,AcervoTridimensionalLinhaRetornoDTO>,AcervoLinhaRetornoSucessoDTO>> ImportarArquivo(IFormFile file)
@@ -85,7 +85,7 @@ namespace SME.CDEP.Aplicacao.Servicos
         
             var importacaoArquivo = ObterImportacaoArquivoParaSalvar(file.FileName, TipoAcervo.Tridimensional, JsonConvert.SerializeObject(acervosTridimensionalLinhas));
             
-            await CarregarParametros();
+            await CarregarTodosOsDominios();
             
             var importacaoArquivoId = await PersistirImportacao(importacaoArquivo);
            
@@ -103,7 +103,7 @@ namespace SME.CDEP.Aplicacao.Servicos
         
         private async Task<ImportacaoArquivoRetornoDTO<AcervoLinhaErroDTO<AcervoTridimensionalDTO,AcervoTridimensionalLinhaRetornoDTO>,AcervoLinhaRetornoSucessoDTO>> ObterRetornoImportacaoAcervo(ImportacaoArquivo arquivoImportado, IEnumerable<AcervoTridimensionalLinhaDTO> acervosTridimensionalLinhas, bool estaImportandoArquivo = true)
         {
-            await base.InicializarParametrosEDominios();
+            await base.CarregarTodosOsDominios();
             
             var acervoTridimensionalRetorno = new ImportacaoArquivoRetornoDTO<AcervoLinhaErroDTO<AcervoTridimensionalDTO,AcervoTridimensionalLinhaRetornoDTO>,AcervoLinhaRetornoSucessoDTO>()
             {
@@ -309,7 +309,7 @@ namespace SME.CDEP.Aplicacao.Servicos
         
                 var totalLinhas = planilha.Rows().Count();
                 
-                ValidarQtdeLinhasImportadas(totalLinhas);
+                await ValidarQtdeLinhasImportadas(totalLinhas);
         
                 ValidarOrdemColunas(planilha, Constantes.INICIO_LINHA_TITULO);
                 

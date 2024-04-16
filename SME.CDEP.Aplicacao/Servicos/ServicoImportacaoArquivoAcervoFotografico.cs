@@ -74,9 +74,9 @@ namespace SME.CDEP.Aplicacao.Servicos
             return await ObterRetornoImportacaoAcervo(arquivoImportado, JsonConvert.DeserializeObject<IEnumerable<AcervoFotograficoLinhaDTO>>(arquivoImportado.Conteudo), false);
         }
 
-        public async Task CarregarParametros()
+        public async Task CarregarDominiosFotograficos()
         {
-            await InicializarParametrosEDominios();
+            await CarregarTodosOsDominios();
             
             await ObterCreditosAutoresPorTipo(TipoCreditoAutoria.Credito);
                 
@@ -93,7 +93,7 @@ namespace SME.CDEP.Aplicacao.Servicos
         
             var importacaoArquivo = ObterImportacaoArquivoParaSalvar(file.FileName, TipoAcervo.Fotografico, JsonConvert.SerializeObject(acervosFotograficoLinhas));
             
-            await CarregarParametros();
+            await CarregarDominiosFotograficos();
             
             var importacaoArquivoId = await PersistirImportacao(importacaoArquivo);
            
@@ -112,7 +112,7 @@ namespace SME.CDEP.Aplicacao.Servicos
         private async Task<ImportacaoArquivoRetornoDTO<AcervoLinhaErroDTO<AcervoFotograficoDTO,AcervoFotograficoLinhaRetornoDTO>,AcervoLinhaRetornoSucessoDTO>> ObterRetornoImportacaoAcervo(ImportacaoArquivo arquivoImportado, IEnumerable<AcervoFotograficoLinhaDTO> acervosFotograficoLinhas, bool estaImportandoArquivo = true)
         {
             if (!estaImportandoArquivo)
-                await base.InicializarParametrosEDominios();
+                await CarregarTodosOsDominios();
                 
             await ObterCreditosAutoresPorTipo(TipoCreditoAutoria.Credito);
                 
@@ -403,7 +403,7 @@ namespace SME.CDEP.Aplicacao.Servicos
         
                 var totalLinhas = planilha.Rows().Count();
                 
-                ValidarQtdeLinhasImportadas(totalLinhas);
+                await ValidarQtdeLinhasImportadas(totalLinhas);
                 
                 ValidarOrdemColunas(planilha, Constantes.INICIO_LINHA_TITULO);
         
