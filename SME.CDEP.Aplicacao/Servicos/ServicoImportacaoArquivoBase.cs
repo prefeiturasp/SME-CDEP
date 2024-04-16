@@ -646,7 +646,7 @@ namespace SME.CDEP.Aplicacao.Servicos
             
             var qtdeLinhasComAcervos = totalLinhas - 1;
             if (qtdeLinhasComAcervos > LimiteAcervosImportadosViaPanilha)
-                throw new NegocioException(MensagemNegocio.LIMITE_ACERVOS_IMPORTADOS_VIA_PLANILHA);
+                throw new NegocioException(string.Format(MensagemNegocio.LIMITE_ACERVOS_IMPORTADOS_VIA_PLANILHA,LimiteAcervosImportadosViaPanilha));
         }
     }
 }
