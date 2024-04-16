@@ -20,9 +20,10 @@ namespace SME.CDEP.Aplicacao.Servicos
         public ServicoImportacaoArquivoAcervoTridimensional(IRepositorioImportacaoArquivo repositorioImportacaoArquivo, IServicoMaterial servicoMaterial,
             IServicoEditora servicoEditora,IServicoSerieColecao servicoSerieColecao,IServicoIdioma servicoIdioma, IServicoAssunto servicoAssunto,
             IServicoCreditoAutor servicoCreditoAutor,IServicoConservacao servicoConservacao, IServicoAcessoDocumento servicoAcessoDocumento,
-            IServicoCromia servicoCromia, IServicoSuporte servicoSuporte, IServicoFormato servicoFormato,IServicoAcervoTridimensional servicoAcervoTridimensional, IMapper mapper)
+            IServicoCromia servicoCromia, IServicoSuporte servicoSuporte, IServicoFormato servicoFormato,IServicoAcervoTridimensional servicoAcervoTridimensional, 
+            IMapper mapper,IRepositorioParametroSistema repositorioParametroSistema)
             : base(repositorioImportacaoArquivo, servicoMaterial, servicoEditora,servicoSerieColecao, servicoIdioma, servicoAssunto, servicoCreditoAutor,
-                servicoConservacao,servicoAcessoDocumento,servicoCromia,servicoSuporte,servicoFormato, mapper)
+                servicoConservacao,servicoAcessoDocumento,servicoCromia,servicoSuporte,servicoFormato, mapper,repositorioParametroSistema)
         {
             this.servicoAcervoTridimensional = servicoAcervoTridimensional ?? throw new ArgumentNullException(nameof(servicoAcervoTridimensional));
         }
@@ -308,8 +309,7 @@ namespace SME.CDEP.Aplicacao.Servicos
         
                 var totalLinhas = planilha.Rows().Count();
                 
-                if (totalLinhas <= Constantes.INICIO_LINHA_TITULO)
-                    throw new NegocioException(MensagemNegocio.PLANILHA_VAZIA);
+                ValidarQtdeLinhasImportadas(totalLinhas);
         
                 ValidarOrdemColunas(planilha, Constantes.INICIO_LINHA_TITULO);
                 
