@@ -80,5 +80,10 @@ public static class SituacaoSolicitacaoItemExtension
     {
         return situacaoSolicitacaoItem == SituacaoSolicitacaoItem.AGUARDANDO_ATENDIMENTO 
                || situacaoSolicitacaoItem == SituacaoSolicitacaoItem.AGUARDANDO_VISITA;
+    }
+    
+    public static bool NaoEstaAguardandoAtendimento(this SituacaoSolicitacaoItem situacaoSolicitacaoItem)
+    {
+        return !situacaoSolicitacaoItem.EstaAguardandoAtendimento();
     } 
 }

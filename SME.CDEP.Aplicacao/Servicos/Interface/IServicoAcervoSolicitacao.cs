@@ -23,5 +23,6 @@ namespace SME.CDEP.Aplicacao.Servicos.Interface
         Task<long> Alterar(AcervoSolicitacaoManualDTO acervoSolicitacaoManualDto);
         Task<bool> FinalizarAtendimentoItem(long acervoSolicitacaoItemId);
         Task<AcervoSolicitacaoRetornoCadastroDTO> ObterMinhaSolicitacaoPorId(long acervoSolicitacaoId);
+        bool PodeFinalizar(Guid perfilLogado, AcervoSolicitacaoDetalheDTO acervoSolicitacao);
     }
 }
