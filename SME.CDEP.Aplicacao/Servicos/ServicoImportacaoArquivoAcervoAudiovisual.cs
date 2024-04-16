@@ -74,9 +74,9 @@ namespace SME.CDEP.Aplicacao.Servicos
             return await ObterRetornoImportacaoAcervo(arquivoImportado, JsonConvert.DeserializeObject<IEnumerable<AcervoAudiovisualLinhaDTO>>(arquivoImportado.Conteudo), false);
         }
 
-        public async Task CarregarDominios()
+        public async Task CarregarDominiosAudiovisuais()
         {
-            await ObterDominios();
+            await CarregarTodosOsDominios();
             
             await ObterSuportesPorTipo(TipoSuporte.VIDEO);
             
@@ -91,7 +91,7 @@ namespace SME.CDEP.Aplicacao.Servicos
         
             var importacaoArquivo = ObterImportacaoArquivoParaSalvar(file.FileName, TipoAcervo.Audiovisual, JsonConvert.SerializeObject(acervosAudiovisualLinhas));
 
-            await CarregarDominios();
+            await CarregarDominiosAudiovisuais();
             
             var importacaoArquivoId = await PersistirImportacao(importacaoArquivo);
            
@@ -110,7 +110,7 @@ namespace SME.CDEP.Aplicacao.Servicos
         private async Task<ImportacaoArquivoRetornoDTO<AcervoLinhaErroDTO<AcervoAudiovisualDTO,AcervoAudiovisualLinhaRetornoDTO>,AcervoLinhaRetornoSucessoDTO>> ObterRetornoImportacaoAcervo(ImportacaoArquivo arquivoImportado, IEnumerable<AcervoAudiovisualLinhaDTO> acervosAudiovisualLinhas, bool estaImportandoArquivo = true)
         {
             if (!estaImportandoArquivo)
-                await ObterDominios();
+                await CarregarTodosOsDominios();
             
             await ObterSuportesPorTipo(TipoSuporte.VIDEO);
             
@@ -370,7 +370,7 @@ namespace SME.CDEP.Aplicacao.Servicos
         
                 var totalLinhas = planilha.Rows().Count();
                 
-                ValidarQtdeLinhasImportadas(totalLinhas);
+                await ValidarQtdeLinhasImportadas(totalLinhas);
                 
                 ValidarOrdemColunas(planilha, Constantes.INICIO_LINHA_TITULO);
         

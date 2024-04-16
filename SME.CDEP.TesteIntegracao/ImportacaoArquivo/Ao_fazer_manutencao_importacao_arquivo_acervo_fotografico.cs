@@ -38,7 +38,7 @@ namespace SME.CDEP.TesteIntegracao
             acervoFotograficoLinhas[8].Codigo.Conteudo = string.Empty;
             var linhasComErros = new[] { 3, 5, 6, 8, 9 };
             
-            await servicoImportacaoArquivo.CarregarDominios();
+            await servicoImportacaoArquivo.CarregarDominiosFotograficos();
             servicoImportacaoArquivo.ValidarPreenchimentoValorFormatoQtdeCaracteres(acervoFotograficoLinhas);
 
             foreach (var linha in acervoFotograficoLinhas)
@@ -140,7 +140,7 @@ namespace SME.CDEP.TesteIntegracao
             acervoFotograficoLinhas[8].Credito.Conteudo = "Desconhecido 1 | Desconhecido 2";
             var linhasComErros = new[] { 3, 5, 6, 8, 9 };
             
-            await servicoImportacaoArquivo.CarregarDominios();
+            await servicoImportacaoArquivo.CarregarDominiosFotograficos();
             servicoImportacaoArquivo.ValidarPreenchimentoValorFormatoQtdeCaracteres(acervoFotograficoLinhas);
 
             foreach (var linha in acervoFotograficoLinhas)
@@ -247,7 +247,7 @@ namespace SME.CDEP.TesteIntegracao
                 CriadoEm = DateTimeExtension.HorarioBrasilia().Date, CriadoPor = ConstantesTestes.SISTEMA, CriadoLogin = ConstantesTestes.LOGIN_123456789
             });
             
-            await servicoImportacaoArquivo.CarregarDominios();
+            await servicoImportacaoArquivo.CarregarDominiosFotograficos();
             await servicoImportacaoArquivo.PersistenciaAcervo(acervoFotograficoLinhas);
         
             var acervos = ObterTodos<Acervo>();
@@ -337,7 +337,7 @@ namespace SME.CDEP.TesteIntegracao
                 CriadoEm = DateTimeExtension.HorarioBrasilia().Date, CriadoPor = ConstantesTestes.SISTEMA, CriadoLogin = ConstantesTestes.LOGIN_123456789
             });
             
-            await servicoImportacaoArquivo.CarregarDominios();
+            await servicoImportacaoArquivo.CarregarDominiosFotograficos();
             servicoImportacaoArquivo.ValidarPreenchimentoValorFormatoQtdeCaracteres(acervoFotograficoLinhas);
             await servicoImportacaoArquivo.PersistenciaAcervo(acervoFotograficoLinhas);
             await servicoImportacaoArquivo.AtualizarImportacao(1, JsonConvert.SerializeObject(acervoFotograficoLinhas), acervoFotograficoLinhas.Any(a=> a.PossuiErros) ? ImportacaoStatus.Erros : ImportacaoStatus.Sucesso);
@@ -486,7 +486,7 @@ namespace SME.CDEP.TesteIntegracao
                 CriadoEm = DateTimeExtension.HorarioBrasilia().Date, CriadoPor = ConstantesTestes.SISTEMA, CriadoLogin = ConstantesTestes.LOGIN_123456789
             });
             
-            await servicoImportacaoArquivo.CarregarDominios();
+            await servicoImportacaoArquivo.CarregarDominiosFotograficos();
             servicoImportacaoArquivo.ValidarPreenchimentoValorFormatoQtdeCaracteres(acervoFotograficoLinhas);
             await servicoImportacaoArquivo.PersistenciaAcervo(acervoFotograficoLinhas);
             await servicoImportacaoArquivo.AtualizarImportacao(1, JsonConvert.SerializeObject(acervoFotograficoLinhas), acervoFotograficoLinhas.Any(a=> a.PossuiErros) ? ImportacaoStatus.Erros : ImportacaoStatus.Sucesso);

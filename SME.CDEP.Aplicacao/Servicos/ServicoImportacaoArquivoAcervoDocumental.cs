@@ -6,7 +6,6 @@ using SME.CDEP.Aplicacao.DTOS;
 using SME.CDEP.Aplicacao.Servicos.Interface;
 using SME.CDEP.Dominio.Constantes;
 using SME.CDEP.Dominio.Entidades;
-using SME.CDEP.Dominio.Excecoes;
 using SME.CDEP.Dominio.Extensions;
 using SME.CDEP.Infra.Dados.Repositorios.Interfaces;
 using SME.CDEP.Infra.Dominio.Enumerados;
@@ -74,9 +73,9 @@ namespace SME.CDEP.Aplicacao.Servicos
             return await ObterRetornoImportacaoAcervo(arquivoImportado, JsonConvert.DeserializeObject<IEnumerable<AcervoDocumentalLinhaDTO>>(arquivoImportado.Conteudo), false);
         }
 
-        public async Task CarregarDominios()
+        public async Task CarregarDominiosDocumentais()
         {
-            await ObterDominios();
+            await CarregarTodosOsDominios();
             
             await ObterCreditosAutoresPorTipo(TipoCreditoAutoria.Autoria);
                 
@@ -91,7 +90,7 @@ namespace SME.CDEP.Aplicacao.Servicos
 
             var importacaoArquivo = ObterImportacaoArquivoParaSalvar(file.FileName, TipoAcervo.DocumentacaoHistorica, JsonConvert.SerializeObject(acervosDocumentalLinhas));
             
-            await CarregarDominios();
+            await CarregarDominiosDocumentais();
             
             var importacaoArquivoId = await PersistirImportacao(importacaoArquivo);
 
@@ -110,7 +109,7 @@ namespace SME.CDEP.Aplicacao.Servicos
         private async Task<ImportacaoArquivoRetornoDTO<AcervoLinhaErroDTO<AcervoDocumentalDTO,AcervoDocumentalLinhaRetornoDTO>,AcervoLinhaRetornoSucessoDTO>> ObterRetornoImportacaoAcervo(ImportacaoArquivo arquivoImportado, IEnumerable<AcervoDocumentalLinhaDTO> acervosDocumentalLinhas, bool estaImportandoArquivo = true)
         {
             if (!estaImportandoArquivo)
-                await ObterDominios();
+                await CarregarTodosOsDominios();
             
             await ObterCreditosAutoresPorTipo(TipoCreditoAutoria.Autoria);
                 
@@ -401,7 +400,7 @@ namespace SME.CDEP.Aplicacao.Servicos
 
                 var totalLinhas = planilha.Rows().Count();
                 
-                ValidarQtdeLinhasImportadas(totalLinhas);
+                await ValidarQtdeLinhasImportadas(totalLinhas);
                 
                 ValidarOrdemColunas(planilha, Constantes.INICIO_LINHA_TITULO);
 

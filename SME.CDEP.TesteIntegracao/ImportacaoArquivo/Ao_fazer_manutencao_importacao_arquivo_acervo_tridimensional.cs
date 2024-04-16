@@ -32,7 +32,7 @@ namespace SME.CDEP.TesteIntegracao
             acervoTridimensionalLinhas[8].Codigo.Conteudo = string.Empty;
             var linhasComErros = new[] { 3, 5, 8, 9 };
             
-            await servicoImportacaoArquivo.CarregarDominios();
+            await servicoImportacaoArquivo.CarregarDominiosTridimensionais();
             servicoImportacaoArquivo.ValidarPreenchimentoValorFormatoQtdeCaracteres(acervoTridimensionalLinhas);
 
             foreach (var linha in acervoTridimensionalLinhas)
@@ -109,7 +109,7 @@ namespace SME.CDEP.TesteIntegracao
             acervoTridimensionalLinhas[8].EstadoConservacao.Conteudo = "Desconhecido";
             var linhasComErros = new[] { 3, 5, 8, 9 };
             
-            await servicoImportacaoArquivo.CarregarDominios();
+            await servicoImportacaoArquivo.CarregarDominiosTridimensionais();
             servicoImportacaoArquivo.ValidarPreenchimentoValorFormatoQtdeCaracteres(acervoTridimensionalLinhas);
 
             foreach (var linha in acervoTridimensionalLinhas)
@@ -193,7 +193,7 @@ namespace SME.CDEP.TesteIntegracao
                 CriadoEm = DateTimeExtension.HorarioBrasilia().Date, CriadoPor = ConstantesTestes.SISTEMA, CriadoLogin = ConstantesTestes.LOGIN_123456789
             });
             
-            await servicoImportacaoArquivo.CarregarDominios();
+            await servicoImportacaoArquivo.CarregarDominiosTridimensionais();
             await servicoImportacaoArquivo.PersistenciaAcervo(acervoTridimensionalLinhas);
         
             var acervos = ObterTodos<Acervo>();
@@ -256,7 +256,7 @@ namespace SME.CDEP.TesteIntegracao
                 CriadoEm = DateTimeExtension.HorarioBrasilia().Date, CriadoPor = ConstantesTestes.SISTEMA, CriadoLogin = ConstantesTestes.LOGIN_123456789
             });
             
-            await servicoImportacaoArquivo.CarregarDominios();
+            await servicoImportacaoArquivo.CarregarDominiosTridimensionais();
             servicoImportacaoArquivo.ValidarPreenchimentoValorFormatoQtdeCaracteres(acervoTridimensionalLinhas);
             await servicoImportacaoArquivo.PersistenciaAcervo(acervoTridimensionalLinhas);
             await servicoImportacaoArquivo.AtualizarImportacao(1, JsonConvert.SerializeObject(acervoTridimensionalLinhas), acervoTridimensionalLinhas.Any(a=> a.PossuiErros) ? ImportacaoStatus.Erros : ImportacaoStatus.Sucesso);
@@ -368,7 +368,7 @@ namespace SME.CDEP.TesteIntegracao
                 CriadoEm = DateTimeExtension.HorarioBrasilia().Date, CriadoPor = ConstantesTestes.SISTEMA, CriadoLogin = ConstantesTestes.LOGIN_123456789
             });
             
-            await servicoImportacaoArquivo.CarregarDominios();
+            await servicoImportacaoArquivo.CarregarDominiosTridimensionais();
             servicoImportacaoArquivo.ValidarPreenchimentoValorFormatoQtdeCaracteres(acervoTridimensionalLinhas);
             await servicoImportacaoArquivo.PersistenciaAcervo(acervoTridimensionalLinhas);
             await servicoImportacaoArquivo.AtualizarImportacao(1, JsonConvert.SerializeObject(acervoTridimensionalLinhas), acervoTridimensionalLinhas.Any(a=> a.PossuiErros) ? ImportacaoStatus.Erros : ImportacaoStatus.Sucesso);

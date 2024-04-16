@@ -78,18 +78,13 @@ namespace SME.CDEP.Aplicacao.Servicos
             Suportes = new List<IdNomeTipoDTO>();
             Cromias = new List<IdNomeDTO>();
             Conservacoes = new List<IdNomeDTO>();
-            Inicializar().ConfigureAwait(false);
-            
         }
 
-        private async Task Inicializar()
+        protected async Task CarregarTodosOsDominios()
         {
             LimiteAcervosImportadosViaPanilha = long.Parse((await repositorioParametroSistema
                 .ObterParametroPorTipoEAno(TipoParametroSistema.LimiteAcervosImportadosViaPanilha, DateTimeExtension.HorarioBrasilia().Year)).Valor);
-        }
-
-        protected async Task ObterDominios()
-        {
+            
             Suportes = (await servicoSuporte.ObterTodos()).Select(s=> mapper.Map<IdNomeTipoDTO>(s)).ToList();
             Cromias = (await servicoCromia.ObterTodos()).Select(s => mapper.Map<IdNomeDTO>(s)).ToList();
             Conservacoes = (await servicoConservacao.ObterTodos()).Select(s=> mapper.Map<IdNomeDTO>(s)).ToList();
@@ -639,8 +634,11 @@ namespace SME.CDEP.Aplicacao.Servicos
             }
         }
         
-        protected void ValidarQtdeLinhasImportadas(int totalLinhas)
+        protected async Task ValidarQtdeLinhasImportadas(int totalLinhas)
         {
+            LimiteAcervosImportadosViaPanilha = long.Parse((await repositorioParametroSistema
+                .ObterParametroPorTipoEAno(TipoParametroSistema.LimiteAcervosImportadosViaPanilha, DateTimeExtension.HorarioBrasilia().Year)).Valor);
+            
             if (totalLinhas <= Constantes.INICIO_LINHA_TITULO)
                 throw new NegocioException(MensagemNegocio.PLANILHA_VAZIA);
             
