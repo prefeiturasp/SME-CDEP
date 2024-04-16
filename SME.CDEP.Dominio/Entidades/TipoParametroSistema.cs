@@ -23,5 +23,6 @@
         ModeloEmailAvisoAtrasoDevolucaoEmprestimo = 19,
         QtdeDiasAtrasoProlongadoDevolucaoEmprestimo = 20,
         ModeloEmailAvisoAtrasoProlongadoDevolucaoEmprestimo = 21,
+        LimiteAcervosImportadosViaPanilha = 22,
     }
 }

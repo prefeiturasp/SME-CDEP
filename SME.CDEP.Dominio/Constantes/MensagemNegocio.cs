@@ -70,4 +70,5 @@ public class MensagemNegocio
     public const string ACERVO_INDISPONIVEL = "Acervo indisponível";
     public const string ACERVO_RESERVADO = "Acervo reservado pela solicitação '{0}'";
     public const string ACERVO_EMPRESTADO = "Acervo emprestado pela solicitação '{0}'";
+    public const string LIMITE_ACERVOS_IMPORTADOS_VIA_PLANILHA = "O limite de acervos importados por planilha não pode ser superior a '{0}' linhas";
 }
