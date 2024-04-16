@@ -74,7 +74,7 @@ namespace SME.CDEP.Aplicacao.Servicos
             return await ObterRetornoImportacaoAcervo(arquivoImportado, JsonConvert.DeserializeObject<IEnumerable<AcervoAudiovisualLinhaDTO>>(arquivoImportado.Conteudo), false);
         }
 
-        public async Task CarregarParametros()
+        public async Task CarregarDominiosAudiovisuais()
         {
             await CarregarTodosOsDominios();
             
@@ -91,7 +91,7 @@ namespace SME.CDEP.Aplicacao.Servicos
         
             var importacaoArquivo = ObterImportacaoArquivoParaSalvar(file.FileName, TipoAcervo.Audiovisual, JsonConvert.SerializeObject(acervosAudiovisualLinhas));
 
-            await CarregarParametros();
+            await CarregarDominiosAudiovisuais();
             
             var importacaoArquivoId = await PersistirImportacao(importacaoArquivo);
            
