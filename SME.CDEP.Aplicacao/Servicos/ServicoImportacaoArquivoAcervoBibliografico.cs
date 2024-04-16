@@ -76,7 +76,7 @@ namespace SME.CDEP.Aplicacao.Servicos
 
         public async Task CarregarDominios()
         {
-            await ObterDominios();
+            await InicializarParametrosEDominios();
             
             await ObterMateriaisPorTipo(TipoMaterial.BIBLIOGRAFICO);
                 
@@ -112,7 +112,7 @@ namespace SME.CDEP.Aplicacao.Servicos
         private async Task<ImportacaoArquivoRetornoDTO<AcervoLinhaErroDTO<AcervoBibliograficoDTO,AcervoBibliograficoLinhaRetornoDTO>,AcervoLinhaRetornoSucessoDTO>> ObterRetornoImportacaoAcervo(ImportacaoArquivo arquivoImportado, IEnumerable<AcervoBibliograficoLinhaDTO> acervosBibliograficosLinhas, bool estaImportandoArquivo = true)
         {
             if (!estaImportandoArquivo)
-                await ObterDominios();
+                await InicializarParametrosEDominios();
                 
             await ObterMateriaisPorTipo(TipoMaterial.BIBLIOGRAFICO);
                 

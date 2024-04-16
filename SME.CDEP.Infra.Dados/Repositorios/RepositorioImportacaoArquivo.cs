@@ -28,10 +28,10 @@ namespace SME.CDEP.Infra.Dados.Repositorios
             var importacao = await conexao.Obter().QueryFirstOrDefaultAsync<ImportacaoArquivo>(query, new { tipoAcervo});
 
             if (importacao.EhNulo())
-	            return default;
+	            return null!;
 
             if (importacao.Status == ImportacaoStatus.Sucesso)
-	            return default;
+	            return null!;
 
             return importacao;
         }
