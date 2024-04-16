@@ -673,6 +673,8 @@ namespace SME.CDEP.Aplicacao.Servicos
             acervoSolicitacaoItem.DataVisita = alterarDataVisitaAcervoSolicitacaoItemDto.DataVisita;
             await repositorioAcervoSolicitacaoItem.Atualizar(acervoSolicitacaoItem);
             
+            await servicoEvento.AtualizarEventoVisita(acervoSolicitacaoItem.DataVisita.Value, acervoSolicitacaoItem.Id);
+            
             return true;
         }
         public async Task<long> Inserir(AcervoSolicitacaoManualDTO acervoSolicitacaoManualDto)
