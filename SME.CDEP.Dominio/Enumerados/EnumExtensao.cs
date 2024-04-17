@@ -17,13 +17,10 @@ namespace SME.CDEP.Infra.Dominio.Enumerados
 
         public static string Descricao(this Enum? enumValue)
         {
-            if (enumValue.EhNulo())
+            if (enumValue.EhNulo() && !Enum.IsDefined(enumValue.GetType(), enumValue))
                 return string.Empty;
             
-            return Convert.ToInt32(enumValue) == 0 ? string.Empty : enumValue.ObterAtributo<DisplayAttribute>().Description;
+            return enumValue.ObterAtributo<DisplayAttribute>().Description;
         }
-        
-        public static string Nome(this Enum enumValue)
-            => Convert.ToInt32(enumValue) == 0 ? string.Empty : enumValue.ObterAtributo<DisplayAttribute>().Name;
     }
 }
