@@ -2,6 +2,7 @@
 
 public class Constantes
 {
+    public const string INSTITUICAO_NAO_IDENTIFICADA = "Não identificada";
     public const string ACERVO_DISPONIVEL = "Disponível";
     public const string ACERVO_INDISPONIVEL = "Indisponível";
     public const string VALIDAR_EMAIL = @"^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$";
