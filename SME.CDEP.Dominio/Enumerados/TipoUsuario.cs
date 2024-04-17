@@ -18,7 +18,10 @@ public enum TipoUsuario
     PROFESSOR = 3,
     
     [Display(Description = "Usuário Externo - População Geral")]
-    POPULACAO_GERAL = 4
+    POPULACAO_GERAL = 4,
+    
+    [Display(Description = "Usuário Externo - Não identificado")]
+    NAO_IDENTIFICADO = 5
     
 }
 public static class TipoUsuarioExtension
