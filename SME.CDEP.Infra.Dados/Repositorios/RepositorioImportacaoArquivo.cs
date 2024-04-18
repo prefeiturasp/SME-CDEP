@@ -16,10 +16,10 @@ namespace SME.CDEP.Infra.Dados.Repositorios
         {
             var query = @"select ia.id,
 								  ia.nome,
-								  ia.tipo_acervo as TipoAcervo,
-								  ia.status as StatusArquivo,
+								  ia.tipo_acervo,
+								  ia.status,
 								  ia.conteudo,
-								  ia.criado_em criadoEm
+								  ia.criado_em
 						from importacao_arquivo ia
 						where not ia.excluido 
 						and ia.tipo_acervo = @tipoAcervo
