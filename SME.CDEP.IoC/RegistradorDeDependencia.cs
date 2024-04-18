@@ -79,6 +79,7 @@ public class RegistradorDeDependencia
         _serviceCollection.TryAddScoped<IExecutarImportacaoArquivoAcervoArteGraficaUseCase, ExecutarImportacaoArquivoAcervoArteGraficaUseCase>();
         _serviceCollection.TryAddScoped<IExecutarImportacaoArquivoAcervoAudiovisualUseCase, ExecutarImportacaoArquivoAcervoAudiovisualUseCase>();
         _serviceCollection.TryAddScoped<IExecutarImportacaoArquivoAcervoFotograficoUseCase, ExecutarImportacaoArquivoAcervoFotograficoUseCase>();
+        _serviceCollection.TryAddScoped<IExecutarImportacaoArquivoAcervoTridimensionalUseCase, ExecutarImportacaoArquivoAcervoTridimensionalUseCase>();
     }
 
     protected virtual void RegistrarRabbit()
