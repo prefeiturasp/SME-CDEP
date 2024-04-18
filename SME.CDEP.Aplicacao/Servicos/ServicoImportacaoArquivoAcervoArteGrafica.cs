@@ -80,7 +80,7 @@ namespace SME.CDEP.Aplicacao.Servicos
             
             var importacaoArquivoId = await PersistirImportacao(importacaoArquivo);
            
-            await servicoMensageria.Publicar(RotasRabbit.ExecutarImportacaoArquivoAcervoDocumental, importacaoArquivoId, Guid.NewGuid());
+            await servicoMensageria.Publicar(RotasRabbit.ExecutarImportacaoArquivoAcervoArteGrafica, importacaoArquivoId, Guid.NewGuid());
 
             return new ImportacaoArquivoRetornoDTO<AcervoLinhaErroDTO<AcervoArteGraficaDTO,AcervoArteGraficaLinhaRetornoDTO>,AcervoLinhaRetornoSucessoDTO>()
             {
