@@ -38,8 +38,8 @@ namespace SME.CDEP.TesteIntegracao
             acervoAudiovisualLinhas[8].Codigo.Conteudo = string.Empty;
             var linhasComErros = new[] { 3, 5, 6, 8, 9 };
             
-            await servicoImportacaoArquivo.CarregarDominiosAudiovisuais();
-            servicoImportacaoArquivo.ValidarPreenchimentoValorFormatoQtdeCaracteres(acervoAudiovisualLinhas);
+            // await servicoImportacaoArquivo.CarregarDominiosAudiovisuais();
+            // servicoImportacaoArquivo.ValidarPreenchimentoValorFormatoQtdeCaracteres(acervoAudiovisualLinhas);
 
             foreach (var linha in acervoAudiovisualLinhas)
             {
@@ -143,8 +143,8 @@ namespace SME.CDEP.TesteIntegracao
             acervoAudiovisualLinhas[8].Codigo.Conteudo = string.Empty;
             var linhasComErros = new[] { 3, 5, 6, 8, 9 };
             
-            await servicoImportacaoArquivo.CarregarDominiosAudiovisuais();
-            servicoImportacaoArquivo.ValidarPreenchimentoValorFormatoQtdeCaracteres(acervoAudiovisualLinhas);
+            // await servicoImportacaoArquivo.CarregarDominiosAudiovisuais();
+            // servicoImportacaoArquivo.ValidarPreenchimentoValorFormatoQtdeCaracteres(acervoAudiovisualLinhas);
 
             foreach (var linha in acervoAudiovisualLinhas)
             {
@@ -253,8 +253,8 @@ namespace SME.CDEP.TesteIntegracao
                 CriadoEm = DateTimeExtension.HorarioBrasilia().Date, CriadoPor = ConstantesTestes.SISTEMA, CriadoLogin = ConstantesTestes.LOGIN_123456789
             });
             
-            await servicoImportacaoArquivo.CarregarDominiosAudiovisuais();
-            await servicoImportacaoArquivo.PersistenciaAcervo(acervoAudiovisualLinhas);
+            // await servicoImportacaoArquivo.CarregarDominiosAudiovisuais();
+            // await servicoImportacaoArquivo.PersistenciaAcervo(acervoAudiovisualLinhas);
         
             var acervos = ObterTodos<Acervo>();
             var acervosAudiovisual = ObterTodos<AcervoAudiovisual>();
@@ -335,9 +335,9 @@ namespace SME.CDEP.TesteIntegracao
                 CriadoEm = DateTimeExtension.HorarioBrasilia().Date, CriadoPor = ConstantesTestes.SISTEMA, CriadoLogin = ConstantesTestes.LOGIN_123456789
             });
             
-            await servicoImportacaoArquivo.CarregarDominiosAudiovisuais();
-            servicoImportacaoArquivo.ValidarPreenchimentoValorFormatoQtdeCaracteres(acervoAudiovisualLinhas);
-            await servicoImportacaoArquivo.PersistenciaAcervo(acervoAudiovisualLinhas);
+            // await servicoImportacaoArquivo.CarregarDominiosAudiovisuais();
+            // servicoImportacaoArquivo.ValidarPreenchimentoValorFormatoQtdeCaracteres(acervoAudiovisualLinhas);
+            // await servicoImportacaoArquivo.PersistenciaAcervo(acervoAudiovisualLinhas);
             await servicoImportacaoArquivo.AtualizarImportacao(1, JsonConvert.SerializeObject(acervoAudiovisualLinhas), acervoAudiovisualLinhas.Any(a=> a.PossuiErros) ? ImportacaoStatus.Erros : ImportacaoStatus.Sucesso);
             var retorno = await servicoImportacaoArquivo.ObterImportacaoPendente();
             

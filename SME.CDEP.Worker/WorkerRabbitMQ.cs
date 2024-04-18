@@ -45,6 +45,7 @@ namespace SME.CDEP.Worker
             Comandos.Add(RotasRabbit.ExecutarImportacaoArquivoAcervoBibliografico, new ComandoRabbit("Realiza a importação de acervos bibliográficos por planilha", typeof(IExecutarImportacaoArquivoAcervoBibliograficoUseCase), true));
             Comandos.Add(RotasRabbit.ExecutarImportacaoArquivoAcervoDocumental, new ComandoRabbit("Realiza a importação de acervos documental por planilha", typeof(IExecutarImportacaoArquivoAcervoDocumentalUseCase), true));
             Comandos.Add(RotasRabbit.ExecutarImportacaoArquivoAcervoArteGrafica, new ComandoRabbit("Realiza a importação de acervos artes gráficas por planilha", typeof(IExecutarImportacaoArquivoAcervoArteGraficaUseCase), true));
+            Comandos.Add(RotasRabbit.ExecutarImportacaoArquivoAcervoAudiovisual, new ComandoRabbit("Realiza a importação de acervos audiovisual por planilha", typeof(IExecutarImportacaoArquivoAcervoAudiovisualUseCase), true));
         }
     }
 }
