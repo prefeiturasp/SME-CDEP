@@ -30,9 +30,6 @@ namespace SME.CDEP.Infra.Dados.Repositorios
             if (importacao.EhNulo())
 	            return default;
 
-            if (importacao.Status == ImportacaoStatus.Sucesso)
-	            return default;
-
             return importacao;
         }
 
