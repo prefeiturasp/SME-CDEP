@@ -41,6 +41,8 @@ namespace SME.CDEP.Worker
             
             Comandos.Add(RotasRabbit.NotificacaoDevolucaoEmprestimoAtrasoProlongado, new ComandoRabbit("Notificação de empréstimo com atraso prolongado", typeof(INotificacaoDevolucaoEmprestimoAtrasoProlongadoUseCase), true));
             Comandos.Add(RotasRabbit.NotificacaoDevolucaoEmprestimoAtrasoProlongadoUsuario, new ComandoRabbit("Notificação usuário sobre o empréstimo em atraso prolongado", typeof(INotificacaoDevolucaoEmprestimoAtrasadoProlongadoUsuarioUseCase), true));
+            
+            Comandos.Add(RotasRabbit.ExecutarImportacaoArquivoAcervoBibliograficoUseCase, new ComandoRabbit("Notificação usuário sobre o empréstimo em atraso prolongado", typeof(IExecutarImportacaoArquivoAcervoBibliograficoUseCase), true));
         }
     }
 }

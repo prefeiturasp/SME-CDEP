@@ -81,6 +81,10 @@ namespace SME.CDEP.Aplicacao.Servicos
         {
             if (idNomeExcluidoAuditavelDTO.Nome is null || idNomeExcluidoAuditavelDTO.Nome.Trim().Length == 0)
                 throw new NegocioException(string.Format(MensagemNegocio.CAMPO_NAO_INFORMADO,"Nome"));
+
+            var qtdeCaracteres = idNomeExcluidoAuditavelDTO.Nome.Trim().Length;
+            if (qtdeCaracteres > Constantes.QTDE_CARACTERES_270)
+                throw new NegocioException(string.Format(MensagemNegocio.CAMPO_ULTRAPASSOU_LIMITE_CARACTERES_X,qtdeCaracteres));
         }
     }
 }
