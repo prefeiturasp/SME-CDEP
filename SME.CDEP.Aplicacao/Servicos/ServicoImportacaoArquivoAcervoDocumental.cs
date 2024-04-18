@@ -7,6 +7,7 @@ using SME.CDEP.Aplicacao.Servicos.Interface;
 using SME.CDEP.Dominio.Constantes;
 using SME.CDEP.Dominio.Entidades;
 using SME.CDEP.Dominio.Extensions;
+using SME.CDEP.Infra;
 using SME.CDEP.Infra.Dados.Repositorios.Interfaces;
 using SME.CDEP.Infra.Dominio.Enumerados;
 
@@ -16,15 +17,17 @@ namespace SME.CDEP.Aplicacao.Servicos
     {
         private readonly IServicoAcervoDocumental servicoAcervoDocumental;
         private readonly IMapper mapper;
+        private readonly IServicoMensageria servicoMensageria;
         
         public ServicoImportacaoArquivoAcervoDocumental(IRepositorioImportacaoArquivo repositorioImportacaoArquivo, IServicoMaterial servicoMaterial,
             IServicoEditora servicoEditora,IServicoSerieColecao servicoSerieColecao,IServicoIdioma servicoIdioma, IServicoAssunto servicoAssunto,
             IServicoCreditoAutor servicoCreditoAutor,IServicoConservacao servicoConservacao, IServicoAcessoDocumento servicoAcessoDocumento,
             IServicoCromia servicoCromia, IServicoSuporte servicoSuporte,IServicoFormato servicoFormato,IServicoAcervoDocumental servicoAcervoDocumental, 
-            IMapper mapper,IRepositorioParametroSistema repositorioParametroSistema)
+            IMapper mapper,IRepositorioParametroSistema repositorioParametroSistema, IServicoMensageria servicoMensageria)
             : base(repositorioImportacaoArquivo, servicoMaterial, servicoEditora,servicoSerieColecao, servicoIdioma, servicoAssunto, servicoCreditoAutor,
                 servicoConservacao,servicoAcessoDocumento,servicoCromia,servicoSuporte,servicoFormato, mapper,repositorioParametroSistema)
         {
+            this.servicoMensageria = servicoMensageria ?? throw new ArgumentNullException(nameof(servicoMensageria));
             this.servicoAcervoDocumental = servicoAcervoDocumental ?? throw new ArgumentNullException(nameof(servicoAcervoDocumental));
             this.mapper = mapper ?? throw new ArgumentNullException(nameof(mapper));
         }
@@ -90,18 +93,31 @@ namespace SME.CDEP.Aplicacao.Servicos
 
             var importacaoArquivo = ObterImportacaoArquivoParaSalvar(file.FileName, TipoAcervo.DocumentacaoHistorica, JsonConvert.SerializeObject(acervosDocumentalLinhas));
             
-            await CarregarDominiosDocumentais();
-            
             var importacaoArquivoId = await PersistirImportacao(importacaoArquivo);
+            
+            await servicoMensageria.Publicar(RotasRabbit.ExecutarImportacaoArquivoAcervoBibliograficoUseCase, importacaoArquivoId, Guid.NewGuid());
 
-            ValidarPreenchimentoValorFormatoQtdeCaracteres(acervosDocumentalLinhas);
+            return new ImportacaoArquivoRetornoDTO<AcervoLinhaErroDTO<AcervoDocumentalDTO,AcervoDocumentalLinhaRetornoDTO>,AcervoLinhaRetornoSucessoDTO>()
+            {
+                Id = importacaoArquivoId,
+                Nome = importacaoArquivo.Nome,
+                TipoAcervo = importacaoArquivo.TipoAcervo,
+                DataImportacao = DateTimeExtension.HorarioBrasilia(),
+                Status = ImportacaoStatus.Pendente
+            };
             
-            await PersistenciaAcervo(acervosDocumentalLinhas);
-            await AtualizarImportacao(importacaoArquivoId, JsonConvert.SerializeObject(acervosDocumentalLinhas), acervosDocumentalLinhas.Any(a=> a.PossuiErros) ? ImportacaoStatus.Erros : ImportacaoStatus.Sucesso);
+            // await CarregarDominiosDocumentais();
             
-            var arquivoImportado = await repositorioImportacaoArquivo.ObterPorId(importacaoArquivoId);
             
-            return await ObterRetornoImportacaoAcervo(arquivoImportado, acervosDocumentalLinhas);
+            //
+            // ValidarPreenchimentoValorFormatoQtdeCaracteres(acervosDocumentalLinhas);
+            //
+            // await PersistenciaAcervo(acervosDocumentalLinhas);
+            // await AtualizarImportacao(importacaoArquivoId, JsonConvert.SerializeObject(acervosDocumentalLinhas), acervosDocumentalLinhas.Any(a=> a.PossuiErros) ? ImportacaoStatus.Erros : ImportacaoStatus.Sucesso);
+            //
+            // var arquivoImportado = await repositorioImportacaoArquivo.ObterPorId(importacaoArquivoId);
+            //
+            // return await ObterRetornoImportacaoAcervo(arquivoImportado, acervosDocumentalLinhas);
         }
 
         private async Task<ImportacaoArquivoRetornoDTO<AcervoLinhaErroDTO<AcervoDocumentalDTO,AcervoDocumentalLinhaRetornoDTO>,AcervoLinhaRetornoSucessoDTO>> ObterRetornoImportacaoAcervo(ImportacaoArquivo arquivoImportado, IEnumerable<AcervoDocumentalLinhaDTO> acervosDocumentalLinhas, bool estaImportandoArquivo = true)
