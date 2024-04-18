@@ -3,6 +3,7 @@
 public class MensagemNegocio
 {
     public const string VOCE_NAO_PODE_ALTERAR_EMPRESTIMOS_ACERVOS = "Você não pode alterar empréstimos de acervos";
+    public const string CAMPO_ULTRAPASSOU_LIMITE_CARACTERES_X = "O campo atingiu o limite máximo de caracteres permitidos. Limite do campo: '{0}.";
     public const string ACERVO_EMPRESTIMO_NAO_ENCONTRADO = "Acervo empréstimo não encontrado";
     public const string SITUACAO_NAO_MAPEADA = "Não foi possível mapear a situação do atendimento conforme as situações dos itens, verifique!";
     public const string PARAMETRO_NAO_ENCONTRADO_TIPO_X = "Parâmetro não encontrado - Tipo:'{0}'";
@@ -71,4 +72,5 @@ public class MensagemNegocio
     public const string ACERVO_RESERVADO = "Acervo reservado pela solicitação '{0}'";
     public const string ACERVO_EMPRESTADO = "Acervo emprestado pela solicitação '{0}'";
     public const string LIMITE_ACERVOS_IMPORTADOS_VIA_PLANILHA = "O limite de acervos importados por planilha não pode ser superior a '{0}' linhas";
+    public const string IMPORTACAO_NAO_LOCALIZADA = "Importação não localizada";
 }
