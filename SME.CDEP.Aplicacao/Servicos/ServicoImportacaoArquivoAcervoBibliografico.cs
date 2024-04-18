@@ -342,7 +342,7 @@ namespace SME.CDEP.Aplicacao.Servicos
                         TipoAutoria = new LinhaConteudoAjustarDTO()
                         {
                             Conteudo = planilha.ObterValorDaCelula(numeroLinha, Constantes.ACERVO_BIBLIOGRAFICO_CAMPO_TIPO_DE_AUTORIA),
-                            LimiteCaracteres = Constantes.CARACTERES_PERMITIDOS_15
+                            LimiteCaracteres = Constantes.CARACTERES_PERMITIDOS_30
                         },
                         Editora = new LinhaConteudoAjustarDTO()
                         {
