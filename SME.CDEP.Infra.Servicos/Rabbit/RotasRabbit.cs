@@ -25,5 +25,6 @@ namespace SME.CDEP.Infra
         public const string ExecutarImportacaoArquivoAcervoArteGrafica = "cdep.importacao.arquivo.acervo.arte.grafica";
         public const string ExecutarImportacaoArquivoAcervoAudiovisual = "cdep.importacao.arquivo.acervo.audiovisual";
         public const string ExecutarImportacaoArquivoAcervoFotografico = "cdep.importacao.arquivo.acervo.fotografico";
+        public const string ExecutarImportacaoArquivoAcervoTridimensional  = "cdep.importacao.arquivo.acervo.tridimensional";
     }
 }
