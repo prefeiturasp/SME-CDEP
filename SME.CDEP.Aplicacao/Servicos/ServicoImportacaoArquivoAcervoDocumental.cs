@@ -15,21 +15,17 @@ namespace SME.CDEP.Aplicacao.Servicos
 {
     public class ServicoImportacaoArquivoAcervoDocumental : ServicoImportacaoArquivoBase, IServicoImportacaoArquivoAcervoDocumental 
     {
-        private readonly IServicoAcervoDocumental servicoAcervoDocumental;
-        private readonly IMapper mapper;
         private readonly IServicoMensageria servicoMensageria;
         
         public ServicoImportacaoArquivoAcervoDocumental(IRepositorioImportacaoArquivo repositorioImportacaoArquivo, IServicoMaterial servicoMaterial,
             IServicoEditora servicoEditora,IServicoSerieColecao servicoSerieColecao,IServicoIdioma servicoIdioma, IServicoAssunto servicoAssunto,
             IServicoCreditoAutor servicoCreditoAutor,IServicoConservacao servicoConservacao, IServicoAcessoDocumento servicoAcessoDocumento,
-            IServicoCromia servicoCromia, IServicoSuporte servicoSuporte,IServicoFormato servicoFormato,IServicoAcervoDocumental servicoAcervoDocumental, 
+            IServicoCromia servicoCromia, IServicoSuporte servicoSuporte,IServicoFormato servicoFormato, 
             IMapper mapper,IRepositorioParametroSistema repositorioParametroSistema, IServicoMensageria servicoMensageria)
             : base(repositorioImportacaoArquivo, servicoMaterial, servicoEditora,servicoSerieColecao, servicoIdioma, servicoAssunto, servicoCreditoAutor,
                 servicoConservacao,servicoAcessoDocumento,servicoCromia,servicoSuporte,servicoFormato, mapper,repositorioParametroSistema)
         {
             this.servicoMensageria = servicoMensageria ?? throw new ArgumentNullException(nameof(servicoMensageria));
-            this.servicoAcervoDocumental = servicoAcervoDocumental ?? throw new ArgumentNullException(nameof(servicoAcervoDocumental));
-            this.mapper = mapper ?? throw new ArgumentNullException(nameof(mapper));
         }
 
         public async Task<bool> RemoverLinhaDoArquivo(long id, LinhaDTO linhaDoArquivo)
@@ -81,7 +77,7 @@ namespace SME.CDEP.Aplicacao.Servicos
             
             var importacaoArquivoId = await PersistirImportacao(importacaoArquivo);
             
-            await servicoMensageria.Publicar(RotasRabbit.ExecutarImportacaoArquivoAcervoDocumentalUseCase, importacaoArquivoId, Guid.NewGuid());
+            await servicoMensageria.Publicar(RotasRabbit.ExecutarImportacaoArquivoAcervoDocumental, importacaoArquivoId, Guid.NewGuid());
 
             return new ImportacaoArquivoRetornoDTO<AcervoLinhaErroDTO<AcervoDocumentalDTO,AcervoDocumentalLinhaRetornoDTO>,AcervoLinhaRetornoSucessoDTO>()
             {
