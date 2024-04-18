@@ -21,5 +21,6 @@ namespace SME.CDEP.Infra
         public const string NotificacaoDevolucaoEmprestimoAtrasoProlongadoUsuario = "cdep.emprestimo.situacao.atraso.prolongado.aviso.usuario";
         
         public const string ExecutarImportacaoArquivoAcervoBibliograficoUseCase = "cdep.importacao.arquivo.acervo.bibliografico";
+        public const string ExecutarImportacaoArquivoAcervoDocumentalUseCase = "cdep.importacao.arquivo.acervo.documental";
     }
 }
