@@ -96,8 +96,6 @@ namespace SME.CDEP.Aplicacao.Servicos
 
             ValidarPreenchimentoValorFormatoQtdeCaracteres(acervosDocumentalLinhas);
             
-            await AtualizarImportacao(importacaoArquivoId, JsonConvert.SerializeObject(acervosDocumentalLinhas),ImportacaoStatus.ValidadoPreenchimentoValorFormatoQtdeCaracteres);
-            
             await PersistenciaAcervo(acervosDocumentalLinhas);
             await AtualizarImportacao(importacaoArquivoId, JsonConvert.SerializeObject(acervosDocumentalLinhas), acervosDocumentalLinhas.Any(a=> a.PossuiErros) ? ImportacaoStatus.Erros : ImportacaoStatus.Sucesso);
             
