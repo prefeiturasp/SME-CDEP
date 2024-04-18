@@ -75,6 +75,7 @@ public class RegistradorDeDependencia
         _serviceCollection.TryAddScoped<INotificacaoDevolucaoEmprestimoAtrasadoProlongadoUsuarioUseCase, NotificacaoDevolucaoEmprestimoAtrasadoProlongadoUsuarioUseCase>();
         
         _serviceCollection.TryAddScoped<IExecutarImportacaoArquivoAcervoBibliograficoUseCase, ExecutarImportacaoArquivoAcervoBibliograficoUseCase>();
+        _serviceCollection.TryAddScoped<IExecutarImportacaoArquivoAcervoDocumentalUseCase, ExecutarImportacaoArquivoAcervoDocumentalUseCase>();
     }
 
     protected virtual void RegistrarRabbit()

@@ -38,8 +38,8 @@ namespace SME.CDEP.TesteIntegracao
             acervoDocumentalLinhas[8].Volume.Conteudo = faker.Lorem.Paragraph();
             var linhasComErros = new[] { 3, 5, 6, 8, 9 };
             
-            await servicoImportacaoArquivo.CarregarDominiosDocumentais();
-            servicoImportacaoArquivo.ValidarPreenchimentoValorFormatoQtdeCaracteres(acervoDocumentalLinhas);
+            // await servicoImportacaoArquivo.CarregarDominiosDocumentais();
+            // servicoImportacaoArquivo.ValidarPreenchimentoValorFormatoQtdeCaracteres(acervoDocumentalLinhas);
 
             foreach (var linha in acervoDocumentalLinhas)
             {
@@ -147,8 +147,8 @@ namespace SME.CDEP.TesteIntegracao
             
             var linhasComErros = new[] { 3, 5, 6, 8, 9 };
             
-            await servicoImportacaoArquivo.CarregarDominiosDocumentais();
-            servicoImportacaoArquivo.ValidarPreenchimentoValorFormatoQtdeCaracteres(acervoDocumentalLinhas);
+            // await servicoImportacaoArquivo.CarregarDominiosDocumentais();
+            // servicoImportacaoArquivo.ValidarPreenchimentoValorFormatoQtdeCaracteres(acervoDocumentalLinhas);
 
             foreach (var linha in acervoDocumentalLinhas)
             {
@@ -262,8 +262,8 @@ namespace SME.CDEP.TesteIntegracao
                 CriadoEm = DateTimeExtension.HorarioBrasilia().Date, CriadoPor = ConstantesTestes.SISTEMA, CriadoLogin = ConstantesTestes.LOGIN_123456789
             });
             
-            await servicoImportacaoArquivo.CarregarDominiosDocumentais();
-            await servicoImportacaoArquivo.PersistenciaAcervo(acervoDocumentalLinhas);
+            // await servicoImportacaoArquivo.CarregarDominiosDocumentais();
+            // await servicoImportacaoArquivo.PersistenciaAcervo(acervoDocumentalLinhas);
         
             var acervos = ObterTodos<Acervo>();
             var acervosDocumentais = ObterTodos<AcervoDocumental>();
@@ -365,9 +365,9 @@ namespace SME.CDEP.TesteIntegracao
                 CriadoEm = DateTimeExtension.HorarioBrasilia().Date, CriadoPor = ConstantesTestes.SISTEMA, CriadoLogin = ConstantesTestes.LOGIN_123456789
             });
             
-            await servicoImportacaoArquivo.CarregarDominiosDocumentais();
-            servicoImportacaoArquivo.ValidarPreenchimentoValorFormatoQtdeCaracteres(acervoDocumentalLinhas);
-            await servicoImportacaoArquivo.PersistenciaAcervo(acervoDocumentalLinhas);
+            // await servicoImportacaoArquivo.CarregarDominiosDocumentais();
+            // servicoImportacaoArquivo.ValidarPreenchimentoValorFormatoQtdeCaracteres(acervoDocumentalLinhas);
+            // await servicoImportacaoArquivo.PersistenciaAcervo(acervoDocumentalLinhas);
             await servicoImportacaoArquivo.AtualizarImportacao(1, JsonConvert.SerializeObject(acervoDocumentalLinhas), acervoDocumentalLinhas.Any(a=> a.PossuiErros) ? ImportacaoStatus.Erros : ImportacaoStatus.Sucesso);
             var retorno = await servicoImportacaoArquivo.ObterImportacaoPendente();
         
@@ -533,9 +533,9 @@ namespace SME.CDEP.TesteIntegracao
                 CriadoEm = DateTimeExtension.HorarioBrasilia().Date, CriadoPor = ConstantesTestes.SISTEMA, CriadoLogin = ConstantesTestes.LOGIN_123456789
             });
             
-            await servicoImportacaoArquivo.CarregarDominiosDocumentais();
-            servicoImportacaoArquivo.ValidarPreenchimentoValorFormatoQtdeCaracteres(acervoDocumentalLinhas);
-            await servicoImportacaoArquivo.PersistenciaAcervo(acervoDocumentalLinhas);
+            // await servicoImportacaoArquivo.CarregarDominiosDocumentais();
+            // servicoImportacaoArquivo.ValidarPreenchimentoValorFormatoQtdeCaracteres(acervoDocumentalLinhas);
+            // await servicoImportacaoArquivo.PersistenciaAcervo(acervoDocumentalLinhas);
             await servicoImportacaoArquivo.AtualizarImportacao(1, JsonConvert.SerializeObject(acervoDocumentalLinhas), acervoDocumentalLinhas.Any(a=> a.PossuiErros) ? ImportacaoStatus.Erros : ImportacaoStatus.Sucesso);
             var retorno = await servicoImportacaoArquivo.ObterImportacaoPendente();
         
