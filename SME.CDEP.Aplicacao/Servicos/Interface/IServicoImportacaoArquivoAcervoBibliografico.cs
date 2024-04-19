@@ -8,7 +8,7 @@ namespace SME.CDEP.Aplicacao.Servicos.Interface
     {
         Task<ImportacaoArquivoRetornoDTO<AcervoLinhaErroDTO<AcervoBibliograficoDTO,AcervoBibliograficoLinhaRetornoDTO>,AcervoLinhaRetornoSucessoDTO>> ImportarArquivo(IFormFile file);
         CoAutorDTO[] ObterCoAutoresTipoAutoria(string coautores, string tiposAutoria);
-        void DefinirCreditosAutores(List<IdNomeTipoDTO> creditosAutores);
+        void DefinirCoAutores(List<IdNomeTipoDTO> coAutores);
         Task<ImportacaoArquivoRetornoDTO<AcervoLinhaErroDTO<AcervoBibliograficoDTO,AcervoBibliograficoLinhaRetornoDTO>,AcervoLinhaRetornoSucessoDTO>> ObterImportacaoPendente();
         Task<bool> RemoverLinhaDoArquivo(long id, LinhaDTO linhaDoArquivo);
         Task<bool> AtualizarLinhaParaSucesso(long id, LinhaDTO linhaDoArquivo);

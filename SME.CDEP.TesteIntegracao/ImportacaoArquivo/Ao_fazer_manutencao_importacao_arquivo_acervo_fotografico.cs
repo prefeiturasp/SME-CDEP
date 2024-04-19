@@ -1,5 +1,6 @@
 ﻿using Newtonsoft.Json;
 using Shouldly;
+using SME.CDEP.Aplicacao;
 using SME.CDEP.Aplicacao.DTOS;
 using SME.CDEP.Dominio.Entidades;
 using SME.CDEP.Dominio.Excecoes;
@@ -21,7 +22,10 @@ namespace SME.CDEP.TesteIntegracao
         {
             await InserirDadosBasicos();
             
-            var servicoImportacaoArquivo = GetServicoImportacaoArquivoAcervoFotografico();
+            var notificarQtdeDiasAntesDoVencimentoEmprestimo = ParametroSistemaMock.Instance.GerarParametroSistema(TipoParametroSistema.LimiteAcervosImportadosViaPanilha, "1");
+            await InserirNaBase(notificarQtdeDiasAntesDoVencimentoEmprestimo);
+
+            var casoDeUso = ObterCasoDeUso<IImportacaoArquivoAcervoFotograficoAuxiliar>();
 
             var acervoFotograficoLinhas = AcervoFotograficoLinhaMock.GerarAcervoFotograficoLinhaDTO().Generate(10);
             var creditos = acervoFotograficoLinhas
@@ -38,8 +42,8 @@ namespace SME.CDEP.TesteIntegracao
             acervoFotograficoLinhas[8].Codigo.Conteudo = string.Empty;
             var linhasComErros = new[] { 3, 5, 6, 8, 9 };
             
-            // await servicoImportacaoArquivo.CarregarDominiosFotograficos();
-            // servicoImportacaoArquivo.ValidarPreenchimentoValorFormatoQtdeCaracteres(acervoFotograficoLinhas);
+            await casoDeUso.CarregarDominiosFotograficos();
+            casoDeUso.ValidarPreenchimentoValorFormatoQtdeCaracteres(acervoFotograficoLinhas);
 
             foreach (var linha in acervoFotograficoLinhas)
             {
@@ -122,7 +126,10 @@ namespace SME.CDEP.TesteIntegracao
         {
             await InserirDadosBasicos();
             
-            var servicoImportacaoArquivo = GetServicoImportacaoArquivoAcervoFotografico();
+            var notificarQtdeDiasAntesDoVencimentoEmprestimo = ParametroSistemaMock.Instance.GerarParametroSistema(TipoParametroSistema.LimiteAcervosImportadosViaPanilha, "1");
+            await InserirNaBase(notificarQtdeDiasAntesDoVencimentoEmprestimo);
+
+            var casoDeUso = ObterCasoDeUso<IImportacaoArquivoAcervoFotograficoAuxiliar>();
 
             var acervoFotograficoLinhas = AcervoFotograficoLinhaMock.GerarAcervoFotograficoLinhaDTO().Generate(10);
             var creditos = acervoFotograficoLinhas
@@ -140,8 +147,8 @@ namespace SME.CDEP.TesteIntegracao
             acervoFotograficoLinhas[8].Credito.Conteudo = "Desconhecido 1 | Desconhecido 2";
             var linhasComErros = new[] { 3, 5, 6, 8, 9 };
             
-            // await servicoImportacaoArquivo.CarregarDominiosFotograficos();
-            // servicoImportacaoArquivo.ValidarPreenchimentoValorFormatoQtdeCaracteres(acervoFotograficoLinhas);
+            await casoDeUso.CarregarDominiosFotograficos();
+            casoDeUso.ValidarPreenchimentoValorFormatoQtdeCaracteres(acervoFotograficoLinhas);
 
             foreach (var linha in acervoFotograficoLinhas)
             {
@@ -227,7 +234,10 @@ namespace SME.CDEP.TesteIntegracao
         {
             await InserirDadosBasicos();
 
-            var servicoImportacaoArquivo = GetServicoImportacaoArquivoAcervoFotografico();
+            var notificarQtdeDiasAntesDoVencimentoEmprestimo = ParametroSistemaMock.Instance.GerarParametroSistema(TipoParametroSistema.LimiteAcervosImportadosViaPanilha, "1");
+            await InserirNaBase(notificarQtdeDiasAntesDoVencimentoEmprestimo);
+
+            var casoDeUso = ObterCasoDeUso<IImportacaoArquivoAcervoFotograficoAuxiliar>();
         
             var acervoFotograficoLinhas = AcervoFotograficoLinhaMock.GerarAcervoFotograficoLinhaDTO().Generate(10);
             
@@ -247,8 +257,8 @@ namespace SME.CDEP.TesteIntegracao
                 CriadoEm = DateTimeExtension.HorarioBrasilia().Date, CriadoPor = ConstantesTestes.SISTEMA, CriadoLogin = ConstantesTestes.LOGIN_123456789
             });
             
-            // await servicoImportacaoArquivo.CarregarDominiosFotograficos();
-            // await servicoImportacaoArquivo.PersistenciaAcervo(acervoFotograficoLinhas);
+            await casoDeUso.CarregarDominiosFotograficos();
+            await casoDeUso.PersistenciaAcervo(acervoFotograficoLinhas);
         
             var acervos = ObterTodos<Acervo>();
             var acervosFotografico = ObterTodos<AcervoFotografico>();
@@ -312,6 +322,11 @@ namespace SME.CDEP.TesteIntegracao
         {
             await InserirDadosBasicos();
 
+            var notificarQtdeDiasAntesDoVencimentoEmprestimo = ParametroSistemaMock.Instance.GerarParametroSistema(TipoParametroSistema.LimiteAcervosImportadosViaPanilha, "1");
+            await InserirNaBase(notificarQtdeDiasAntesDoVencimentoEmprestimo);
+
+            var casoDeUso = ObterCasoDeUso<IImportacaoArquivoAcervoFotograficoAuxiliar>();
+            
             var servicoImportacaoArquivo = GetServicoImportacaoArquivoAcervoFotografico();
         
             var acervoFotograficoLinhas = AcervoFotograficoLinhaMock.GerarAcervoFotograficoLinhaDTO().Generate(10);
@@ -337,9 +352,9 @@ namespace SME.CDEP.TesteIntegracao
                 CriadoEm = DateTimeExtension.HorarioBrasilia().Date, CriadoPor = ConstantesTestes.SISTEMA, CriadoLogin = ConstantesTestes.LOGIN_123456789
             });
             
-            // await servicoImportacaoArquivo.CarregarDominiosFotograficos();
-            // servicoImportacaoArquivo.ValidarPreenchimentoValorFormatoQtdeCaracteres(acervoFotograficoLinhas);
-            // await servicoImportacaoArquivo.PersistenciaAcervo(acervoFotograficoLinhas);
+            await casoDeUso.CarregarDominiosFotograficos();
+            casoDeUso.ValidarPreenchimentoValorFormatoQtdeCaracteres(acervoFotograficoLinhas);
+            await casoDeUso.PersistenciaAcervo(acervoFotograficoLinhas);
             await servicoImportacaoArquivo.AtualizarImportacao(1, JsonConvert.SerializeObject(acervoFotograficoLinhas), acervoFotograficoLinhas.Any(a=> a.PossuiErros) ? ImportacaoStatus.Erros : ImportacaoStatus.Sucesso);
             var retorno = await servicoImportacaoArquivo.ObterImportacaoPendente();
         
@@ -461,6 +476,11 @@ namespace SME.CDEP.TesteIntegracao
         {
             await InserirDadosBasicos();
 
+            var notificarQtdeDiasAntesDoVencimentoEmprestimo = ParametroSistemaMock.Instance.GerarParametroSistema(TipoParametroSistema.LimiteAcervosImportadosViaPanilha, "1");
+            await InserirNaBase(notificarQtdeDiasAntesDoVencimentoEmprestimo);
+
+            var casoDeUso = ObterCasoDeUso<IImportacaoArquivoAcervoFotograficoAuxiliar>();
+            
             var servicoImportacaoArquivo = GetServicoImportacaoArquivoAcervoFotografico();
         
             var acervoFotograficoLinhas = AcervoFotograficoLinhaMock.GerarAcervoFotograficoLinhaDTO().Generate(10);
@@ -486,9 +506,9 @@ namespace SME.CDEP.TesteIntegracao
                 CriadoEm = DateTimeExtension.HorarioBrasilia().Date, CriadoPor = ConstantesTestes.SISTEMA, CriadoLogin = ConstantesTestes.LOGIN_123456789
             });
             
-            // await servicoImportacaoArquivo.CarregarDominiosFotograficos();
-            // servicoImportacaoArquivo.ValidarPreenchimentoValorFormatoQtdeCaracteres(acervoFotograficoLinhas);
-            // await servicoImportacaoArquivo.PersistenciaAcervo(acervoFotograficoLinhas);
+            await casoDeUso.CarregarDominiosFotograficos();
+            casoDeUso.ValidarPreenchimentoValorFormatoQtdeCaracteres(acervoFotograficoLinhas);
+            await casoDeUso.PersistenciaAcervo(acervoFotograficoLinhas);
             await servicoImportacaoArquivo.AtualizarImportacao(1, JsonConvert.SerializeObject(acervoFotograficoLinhas), acervoFotograficoLinhas.Any(a=> a.PossuiErros) ? ImportacaoStatus.Erros : ImportacaoStatus.Sucesso);
             var retorno = await servicoImportacaoArquivo.ObterImportacaoPendente();
         
@@ -608,6 +628,9 @@ namespace SME.CDEP.TesteIntegracao
         [Fact(DisplayName = "Importação Arquivo Acervo Fotografico - Obter importação pendente com Erros")]
         public async Task Obter_importacao_pendente_com_erros()
         {
+            var notificarQtdeDiasAntesDoVencimentoEmprestimo = ParametroSistemaMock.Instance.GerarParametroSistema(TipoParametroSistema.LimiteAcervosImportadosViaPanilha, "1");
+            await InserirNaBase(notificarQtdeDiasAntesDoVencimentoEmprestimo);
+            
             var servicoImportacaoArquivo = GetServicoImportacaoArquivoAcervoFotografico();
         
             var linhasInseridas = AcervoFotograficoLinhaMock.GerarAcervoFotograficoLinhaDTO().Generate(10);
@@ -861,6 +884,9 @@ namespace SME.CDEP.TesteIntegracao
         [Fact(DisplayName = "Importação Arquivo Acervo Fotográfico - Validação de RetornoObjeto")]
         public async Task Validacao_retorno_objeto()
         {
+            var notificarQtdeDiasAntesDoVencimentoEmprestimo = ParametroSistemaMock.Instance.GerarParametroSistema(TipoParametroSistema.LimiteAcervosImportadosViaPanilha, "1");
+            await InserirNaBase(notificarQtdeDiasAntesDoVencimentoEmprestimo);
+            
             var servicoImportacaoArquivo = GetServicoImportacaoArquivoAcervoFotografico();
 
             var linhasInseridas = AcervoFotograficoLinhaMock.GerarAcervoFotograficoLinhaDTO().Generate(10);

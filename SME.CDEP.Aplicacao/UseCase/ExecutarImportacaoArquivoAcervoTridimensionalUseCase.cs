@@ -11,7 +11,7 @@ using SME.CDEP.Infra.Servicos.Rabbit.Dto;
 
 namespace SME.CDEP.Aplicacao.Servicos
 {
-    public class ExecutarImportacaoArquivoAcervoTridimensionalUseCase : ServicoImportacaoArquivoBase, IExecutarImportacaoArquivoAcervoTridimensionalUseCase
+    public class ExecutarImportacaoArquivoAcervoTridimensionalUseCase : ServicoImportacaoArquivoBase, IExecutarImportacaoArquivoAcervoTridimensionalUseCase, IImportacaoArquivoAcervoTridimensionalAuxiliar
     {
         private readonly IServicoAcervoTridimensional servicoAcervoTridimensional;
         private readonly IMapper mapper;
@@ -53,6 +53,11 @@ namespace SME.CDEP.Aplicacao.Servicos
             await AtualizarImportacao(importacaoArquivoId, JsonConvert.SerializeObject(acervoTridimensionalLinhaDtos), acervoTridimensionalLinhaDtos.Any(a=> a.PossuiErros) ? ImportacaoStatus.Erros : ImportacaoStatus.Sucesso);
 
             return true;
+        }
+
+        public async Task CarregarDominiosTridimensionais()
+        {
+            await CarregarTodosOsDominios();
         }
 
         public async Task PersistenciaAcervo(IEnumerable<AcervoTridimensionalLinhaDTO> acervosTridimensionalsLinhas)

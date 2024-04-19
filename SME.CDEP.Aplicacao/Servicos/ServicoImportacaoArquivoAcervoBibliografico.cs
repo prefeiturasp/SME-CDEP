@@ -28,9 +28,9 @@ namespace SME.CDEP.Aplicacao.Servicos
             this.servicoMensageria = servicoMensageria ?? throw new ArgumentNullException(nameof(servicoMensageria));
         }
 
-        public void DefinirCreditosAutores(List<IdNomeTipoDTO> creditosAutores)
+        public void DefinirCoAutores(List<IdNomeTipoDTO> coAutores)
         {
-            CreditosAutores = creditosAutores;
+            CoAutores = coAutores;
         }
         
         public async Task<bool> RemoverLinhaDoArquivo(long id, LinhaDTO linhaDoArquivo)
