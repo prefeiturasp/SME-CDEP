@@ -11,7 +11,7 @@ using SME.CDEP.Infra.Servicos.Rabbit.Dto;
 
 namespace SME.CDEP.Aplicacao.Servicos
 {
-    public class ExecutarImportacaoArquivoAcervoAudiovisualUseCase : ServicoImportacaoArquivoBase, IExecutarImportacaoArquivoAcervoAudiovisualUseCase
+    public class ExecutarImportacaoArquivoAcervoAudiovisualUseCase : ServicoImportacaoArquivoBase, IExecutarImportacaoArquivoAcervoAudiovisualUseCase,IImportacaoArquivoAcervoAudiovisualAuxiliar
     {
         private readonly IServicoAcervoAudiovisual servicoAcervoAudiovisual;
         private readonly IMapper mapper;

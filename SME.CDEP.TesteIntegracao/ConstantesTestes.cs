@@ -7,7 +7,6 @@ public class ConstantesTestes
     public const string OPCAO_SIM = "sim";
     public const string OPCAO_NAO = "não";
     
-    public const string FORMATO_DOUBLE = "double";
     public const string FORMATO_INTEIRO = "int";
     
     public const string EDITORA_A = "Editora A";
