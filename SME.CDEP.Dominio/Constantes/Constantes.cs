@@ -2,11 +2,13 @@
 
 public class Constantes
 {
+    public const string INSTITUICAO_NAO_IDENTIFICADA = "Não identificada";
+    public const int QTDE_CARACTERES_270 = 270;
     public const string ACERVO_DISPONIVEL = "Disponível";
     public const string ACERVO_INDISPONIVEL = "Indisponível";
     public const string VALIDAR_EMAIL = @"^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$";
-    public const string USUARIO_NAO_ENCONTRADO = "Usuário sem cadastro no CDEP, para que o atendimento seja realizado, é necessário que o usuário se cadastre primeiro.";
-    public const string USUARIO_RESPONSAVEL_NAO_LOCALIZADO = "O usuário responsável informado não foi encontrado";
+    public const string USUARIO_SEM_CADASTRO_CDEP = "Usuário sem cadastro no CDEP, para que o atendimento seja realizado, é necessário que o usuário se cadastre primeiro.";
+    public const string USUARIO_NAO_ENCONTRADO = "Usuário não encontrado.";
     public const string TRIDIMENSIONAL = "Tridimensional";
     public const string FOTOGRAFICO = "Fotográfico";
     public const string DOCUMENTAL = "Documental";
@@ -249,7 +251,6 @@ public class Constantes
     public const string CONTENT_TYPE_EXCEL = "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet";
     public const string CONTENT_TYPE_JPEG = "image/jpeg";
     public const string CONTENT_TYPE_TIFF = "image/tiff";
-    public const string BUCKET_CDEP = "cdep";
     public const string PLANILHA_ACERVO_BIBLIOGRAFICO = "planilha_acervo_bibliografico.xlsx";
     public const string PLANILHA_ACERVO_DOCUMENTAL = "planilha_acervo_documental.xlsx";
     public const string PLANILHA_ACERVO_ARTE_GRAFICA = "planilha_acervo_arte_grafica.xlsx";
@@ -289,8 +290,10 @@ public class Constantes
     
     public const int CARACTERES_PERMITIDOS_500 = 500;
     public const int CARACTERES_PERMITIDOS_200 = 200;
+    public const int CARACTERES_PERMITIDOS_270 = 270;
     public const int CARACTERES_PERMITIDOS_100 = 100;
     public const int CARACTERES_PERMITIDOS_50 = 50;
+    public const int CARACTERES_PERMITIDOS_30 = 30;
     public const int CARACTERES_PERMITIDOS_15 = 15;
     public const int CARACTERES_PERMITIDOS_7 = 7;
     public const int CARACTERES_PERMITIDOS_4 = 4;

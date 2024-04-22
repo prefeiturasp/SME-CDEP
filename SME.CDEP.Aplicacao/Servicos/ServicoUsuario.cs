@@ -231,7 +231,12 @@ namespace SME.CDEP.Aplicacao.Servicos
             {
                 await repositorioUsuario.Inserir(new Usuario()
                 {
-                    Login = retorno.Login, Nome = retorno.Nome, UltimoLogin = DateTimeExtension.HorarioBrasilia(),Email = retorno.Email
+                    Login = retorno.Login, 
+                    Nome = retorno.Nome, 
+                    UltimoLogin = DateTimeExtension.HorarioBrasilia(),
+                    Email = retorno.Email,
+                    TipoUsuario = TipoUsuario.NAO_IDENTIFICADO,
+                    Instituicao = Constantes.INSTITUICAO_NAO_IDENTIFICADA
                 });
             }
         }
@@ -366,13 +371,13 @@ namespace SME.CDEP.Aplicacao.Servicos
             return await ObterDadosSolicitantePorLogin((await ObterUsuarioLogado()).Login);
         }
 
-        private async Task<DadosSolicitanteDTO> ObterDadosSolicitantePorLogin(string login)
+        private async Task<DadosSolicitanteDTO> ObterDadosSolicitantePorLogin(string login, bool incluirComplemento = true)
         {
             var usuario = await repositorioUsuario.ObterPorLogin(login);
 
             if (usuario.EhNulo())
-                throw new NegocioException(Constantes.USUARIO_NAO_ENCONTRADO); 
-            
+                throw new NegocioException(incluirComplemento ? Constantes.USUARIO_SEM_CADASTRO_CDEP : Constantes.USUARIO_NAO_ENCONTRADO);
+
             var dadosSolicitante = mapper.Map<DadosSolicitanteDTO>(usuario);
             
             dadosSolicitante.ObterEnderecoCompleto(usuario.Numero, usuario.Complemento, 
@@ -409,7 +414,7 @@ namespace SME.CDEP.Aplicacao.Servicos
         
         public async Task<DadosSolicitanteDTO> ObterDadosSolicitantePorRfOuCpf(string rfOuCpf)
         {
-            return await ObterDadosSolicitantePorLogin(rfOuCpf);
+            return await ObterDadosSolicitantePorLogin(rfOuCpf, false);
         }
     }
 }

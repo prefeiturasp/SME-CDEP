@@ -3,6 +3,7 @@
 public class MensagemNegocio
 {
     public const string VOCE_NAO_PODE_ALTERAR_EMPRESTIMOS_ACERVOS = "Você não pode alterar empréstimos de acervos";
+    public const string CAMPO_ULTRAPASSOU_LIMITE_CARACTERES_X = "O campo atingiu o limite máximo de caracteres permitidos. Limite do campo: '{0}.";
     public const string ACERVO_EMPRESTIMO_NAO_ENCONTRADO = "Acervo empréstimo não encontrado";
     public const string SITUACAO_NAO_MAPEADA = "Não foi possível mapear a situação do atendimento conforme as situações dos itens, verifique!";
     public const string PARAMETRO_NAO_ENCONTRADO_TIPO_X = "Parâmetro não encontrado - Tipo:'{0}'";
@@ -55,7 +56,7 @@ public class MensagemNegocio
     public const string PLANILHA_VAZIA = "A planilha importada está vazia";
     public const string NAO_PERMITIDO_ANO_FUTURO = "O campo ano não admite anos futuros. Apenas anos atuais e anteriores são permitidos.";
     public const string TOKEN_INVALIDO = "Token inválido";
-    public const string CAMPO_X_ESPERADO_NUMERICO_E_COM_CASAS_DECIMAIS = "É esperado que o campo '{0}' seja um numérico com duas casas decimais separados por vírgula";
+    public const string CAMPO_X_ESPERADO_NUMERICO_E_COM_CASAS_DECIMAIS = "É esperado que o campo '{0}' seja numérico, com até 6 caracteres e esteja formatado como '123,45'.";
     public const string SOLICITANTE_NAO_POSSUI_EMAIL = "O solicitante '{0}' não possui e-mail cadastrado, verifique!";
     public const string EMAIL_INVALIDO = "O e-mail informado é inválido";
     public const string CANCELAR_SOLICITACAO_NAO_PERMITIDO_QUANDO_ITENS_ATENDIDOS_PARCIALMENTE = "Não é possível cancelar a solicitação de atendimento quando alguns itens foram atendidos parcialmente.";
@@ -70,4 +71,6 @@ public class MensagemNegocio
     public const string ACERVO_INDISPONIVEL = "Acervo indisponível";
     public const string ACERVO_RESERVADO = "Acervo reservado pela solicitação '{0}'";
     public const string ACERVO_EMPRESTADO = "Acervo emprestado pela solicitação '{0}'";
+    public const string LIMITE_ACERVOS_IMPORTADOS_VIA_PLANILHA = "O limite de acervos importados por planilha não pode ser superior a '{0}' linhas";
+    public const string IMPORTACAO_NAO_LOCALIZADA = "Importação não localizada";
 }

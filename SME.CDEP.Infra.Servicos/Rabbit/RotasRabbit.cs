@@ -19,5 +19,12 @@ namespace SME.CDEP.Infra
         
         public const string NotificacaoDevolucaoEmprestimoAtrasoProlongado = "cdep.emprestimo.situacao.atraso.prolongado.aviso";
         public const string NotificacaoDevolucaoEmprestimoAtrasoProlongadoUsuario = "cdep.emprestimo.situacao.atraso.prolongado.aviso.usuario";
+        
+        public const string ExecutarImportacaoArquivoAcervoBibliografico = "cdep.importacao.arquivo.acervo.bibliografico";
+        public const string ExecutarImportacaoArquivoAcervoDocumental = "cdep.importacao.arquivo.acervo.documental";
+        public const string ExecutarImportacaoArquivoAcervoArteGrafica = "cdep.importacao.arquivo.acervo.arte.grafica";
+        public const string ExecutarImportacaoArquivoAcervoAudiovisual = "cdep.importacao.arquivo.acervo.audiovisual";
+        public const string ExecutarImportacaoArquivoAcervoFotografico = "cdep.importacao.arquivo.acervo.fotografico";
+        public const string ExecutarImportacaoArquivoAcervoTridimensional  = "cdep.importacao.arquivo.acervo.tridimensional";
     }
 }

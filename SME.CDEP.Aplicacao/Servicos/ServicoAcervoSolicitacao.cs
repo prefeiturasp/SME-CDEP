@@ -251,10 +251,7 @@ namespace SME.CDEP.Aplicacao.Servicos
                 throw new NegocioException(MensagemNegocio.SOLICITACAO_ATENDIMENTO_NAO_ENCONTRADA);
 
             acervoSolicitacao.DadosSolicitante = mapper.Map<DadosSolicitanteDTO>(await servicoUsuario.ObterDadosSolicitantePorUsuarioId(acervoSolicitacao.UsuarioId));
-            acervoSolicitacao.PodeFinalizar = perfilLogado.EhPerfilAdminGeral() && acervoSolicitacao.SituacaoId.NaoEstaFinalizadoAtendimentoOuCancelado()
-                                              && !acervoSolicitacao.Itens.Any(a =>
-                                                  a.SituacaoId.EstaAguardandoAtendimento()
-                                                  || (a.SituacaoId.EstaAguardandoVisita() && a.DataVisita.HasValue && a.DataVisita.EhDataFutura()));
+            acervoSolicitacao.PodeFinalizar = PodeFinalizar(perfilLogado, acervoSolicitacao);
             
             acervoSolicitacao.PodeCancelar = perfilLogado.EhPerfilAdminGeral() && acervoSolicitacao.SituacaoId.NaoEstaFinalizadoAtendimentoOuCancelado()
                                              && !acervoSolicitacao.Itens.Any(a=> 
@@ -268,6 +265,19 @@ namespace SME.CDEP.Aplicacao.Servicos
             }
 
             return acervoSolicitacao;
+        }
+
+        public bool PodeFinalizar(Guid perfilLogado, AcervoSolicitacaoDetalheDTO acervoSolicitacao)
+        {
+            return perfilLogado.EhPerfilAdminGeral() 
+                   && acervoSolicitacao.SituacaoId.NaoEstaFinalizadoAtendimentoOuCancelado()
+                   && !acervoSolicitacao.Itens.Any(a =>
+                       a.SituacaoId.EstaAguardandoAtendimento()
+                       || (a.SituacaoId.EstaAguardandoVisita() 
+                           && a.DataVisita.HasValue 
+                           && a.DataVisita.EhDataFutura())
+                       || (a.TipoAcervoId.EhAcervoBibliografico() && a.SituacaoId.EstaEmSituacaoAguardandoVisitaEAguardandoAtendimento())
+                       );
         }
 
         public IEnumerable<IdNomeDTO> ObterTiposDeAtendimentos()
@@ -657,11 +667,13 @@ namespace SME.CDEP.Aplicacao.Servicos
             if (acervoSolicitacaoItem.EhNulo())
                 throw new NegocioException(MensagemNegocio.SOLICITACAO_ATENDIMENTO_ITEM_NAO_ENCONTRADA);
             
-            if (await repositorioAcervoSolicitacaoItem.AtendimentoPossuiSituacaoAguardandoVisitaEItemSituacaoFinalizadoAutomaticamenteOuCancelado(alterarDataVisitaAcervoSolicitacaoItemDto.Id))
+            if (await repositorioAcervoSolicitacaoItem.AtendimentoPossuiItemSituacaoFinalizadoAutomaticamenteOuCancelado(alterarDataVisitaAcervoSolicitacaoItemDto.Id))
                 throw new NegocioException(MensagemNegocio.ATENDIMENTO_NAO_ESTA_AGUARDANDO_VISITA);
 
             acervoSolicitacaoItem.DataVisita = alterarDataVisitaAcervoSolicitacaoItemDto.DataVisita;
             await repositorioAcervoSolicitacaoItem.Atualizar(acervoSolicitacaoItem);
+            
+            await servicoEvento.AtualizarEventoVisita(acervoSolicitacaoItem.DataVisita.Value, acervoSolicitacaoItem.Id);
             
             return true;
         }

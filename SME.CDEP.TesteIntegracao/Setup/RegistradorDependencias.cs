@@ -116,6 +116,24 @@ namespace SME.CDEP.TesteIntegracao.Setup
             
             _serviceCollection.TryAddScoped<INotificacaoDevolucaoEmprestimoAtrasoProlongadoUseCase, NotificacaoDevolucaoEmprestimoAtrasoProlongadoUseCase>();
             _serviceCollection.TryAddScoped<INotificacaoDevolucaoEmprestimoAtrasadoProlongadoUsuarioUseCase, NotificacaoDevolucaoEmprestimoAtrasadoProlongadoUsuarioUseCase>();
+            
+            _serviceCollection.TryAddScoped<IExecutarImportacaoArquivoAcervoArteGraficaUseCase, ExecutarImportacaoArquivoAcervoArteGraficaUseCase>();
+            _serviceCollection.TryAddScoped<IImportacaoArquivoAcervoArteGraficaAuxiliar, ExecutarImportacaoArquivoAcervoArteGraficaUseCase>();
+            
+            _serviceCollection.TryAddScoped<IExecutarImportacaoArquivoAcervoBibliograficoUseCase, ExecutarImportacaoArquivoAcervoBibliograficoUseCase>();
+            _serviceCollection.TryAddScoped<IImportacaoArquivoAcervoBibliograficoAuxiliar, ExecutarImportacaoArquivoAcervoBibliograficoUseCase>();
+            
+            _serviceCollection.TryAddScoped<IExecutarImportacaoArquivoAcervoAudiovisualUseCase, ExecutarImportacaoArquivoAcervoAudiovisualUseCase>();
+            _serviceCollection.TryAddScoped<IImportacaoArquivoAcervoAudiovisualAuxiliar, ExecutarImportacaoArquivoAcervoAudiovisualUseCase>();
+            
+            _serviceCollection.TryAddScoped<IExecutarImportacaoArquivoAcervoFotograficoUseCase, ExecutarImportacaoArquivoAcervoFotograficoUseCase>();
+            _serviceCollection.TryAddScoped<IImportacaoArquivoAcervoFotograficoAuxiliar, ExecutarImportacaoArquivoAcervoFotograficoUseCase>();
+            
+            _serviceCollection.TryAddScoped<IExecutarImportacaoArquivoAcervoTridimensionalUseCase, ExecutarImportacaoArquivoAcervoTridimensionalUseCase>();
+            _serviceCollection.TryAddScoped<IImportacaoArquivoAcervoTridimensionalAuxiliar, ExecutarImportacaoArquivoAcervoTridimensionalUseCase>();
+            
+            _serviceCollection.TryAddScoped<IExecutarImportacaoArquivoAcervoDocumentalUseCase, ExecutarImportacaoArquivoAcervoDocumentalUseCase>();
+            _serviceCollection.TryAddScoped<IImportacaoArquivoAcervoDocumentalAuxiliar, ExecutarImportacaoArquivoAcervoDocumentalUseCase>();
         }
         protected override void RegistrarHttpClients()
         {}

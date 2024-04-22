@@ -1,6 +1,7 @@
 ﻿using System.Globalization;
 using Newtonsoft.Json;
 using Shouldly;
+using SME.CDEP.Aplicacao;
 using SME.CDEP.Aplicacao.DTOS;
 using SME.CDEP.Dominio.Entidades;
 using SME.CDEP.Dominio.Excecoes;
@@ -22,7 +23,10 @@ namespace SME.CDEP.TesteIntegracao
         {
             await InserirDadosBasicos();
             
-            var servicoImportacaoArquivo = GetServicoImportacaoArquivoAcervoTridimensional();
+            var notificarQtdeDiasAntesDoVencimentoEmprestimo = ParametroSistemaMock.Instance.GerarParametroSistema(TipoParametroSistema.LimiteAcervosImportadosViaPanilha, "1");
+            await InserirNaBase(notificarQtdeDiasAntesDoVencimentoEmprestimo);
+
+            var casoDeUso = ObterCasoDeUso<IImportacaoArquivoAcervoTridimensionalAuxiliar>();
 
             var acervoTridimensionalLinhas = AcervoTridimensionalLinhaMock.GerarAcervoTridimensionalLinhaDTO().Generate(10);
 
@@ -32,8 +36,8 @@ namespace SME.CDEP.TesteIntegracao
             acervoTridimensionalLinhas[8].Codigo.Conteudo = string.Empty;
             var linhasComErros = new[] { 3, 5, 8, 9 };
             
-            await servicoImportacaoArquivo.CarregarDominios();
-            servicoImportacaoArquivo.ValidarPreenchimentoValorFormatoQtdeCaracteres(acervoTridimensionalLinhas);
+            await casoDeUso.CarregarDominiosTridimensionais();
+            casoDeUso.ValidarPreenchimentoValorFormatoQtdeCaracteres(acervoTridimensionalLinhas);
 
             foreach (var linha in acervoTridimensionalLinhas)
             {
@@ -98,7 +102,10 @@ namespace SME.CDEP.TesteIntegracao
         {
             await InserirDadosBasicos();
             
-            var servicoImportacaoArquivo = GetServicoImportacaoArquivoAcervoTridimensional();
+            var notificarQtdeDiasAntesDoVencimentoEmprestimo = ParametroSistemaMock.Instance.GerarParametroSistema(TipoParametroSistema.LimiteAcervosImportadosViaPanilha, "1");
+            await InserirNaBase(notificarQtdeDiasAntesDoVencimentoEmprestimo);
+
+            var casoDeUso = ObterCasoDeUso<IImportacaoArquivoAcervoTridimensionalAuxiliar>();
 
             var acervoTridimensionalLinhas = AcervoTridimensionalLinhaMock.GerarAcervoTridimensionalLinhaDTO().Generate(10);
 
@@ -109,8 +116,8 @@ namespace SME.CDEP.TesteIntegracao
             acervoTridimensionalLinhas[8].EstadoConservacao.Conteudo = "Desconhecido";
             var linhasComErros = new[] { 3, 5, 8, 9 };
             
-            await servicoImportacaoArquivo.CarregarDominios();
-            servicoImportacaoArquivo.ValidarPreenchimentoValorFormatoQtdeCaracteres(acervoTridimensionalLinhas);
+            await casoDeUso.CarregarDominiosTridimensionais();
+            casoDeUso.ValidarPreenchimentoValorFormatoQtdeCaracteres(acervoTridimensionalLinhas);
 
             foreach (var linha in acervoTridimensionalLinhas)
             {
@@ -178,7 +185,10 @@ namespace SME.CDEP.TesteIntegracao
         {
             await InserirDadosBasicos();
 
-            var servicoImportacaoArquivo = GetServicoImportacaoArquivoAcervoTridimensional();
+            var notificarQtdeDiasAntesDoVencimentoEmprestimo = ParametroSistemaMock.Instance.GerarParametroSistema(TipoParametroSistema.LimiteAcervosImportadosViaPanilha, "1");
+            await InserirNaBase(notificarQtdeDiasAntesDoVencimentoEmprestimo);
+
+            var casoDeUso = ObterCasoDeUso<IImportacaoArquivoAcervoTridimensionalAuxiliar>();
         
             var acervoTridimensionalLinhas = AcervoTridimensionalLinhaMock.GerarAcervoTridimensionalLinhaDTO().Generate(10);
 
@@ -193,8 +203,8 @@ namespace SME.CDEP.TesteIntegracao
                 CriadoEm = DateTimeExtension.HorarioBrasilia().Date, CriadoPor = ConstantesTestes.SISTEMA, CriadoLogin = ConstantesTestes.LOGIN_123456789
             });
             
-            await servicoImportacaoArquivo.CarregarDominios();
-            await servicoImportacaoArquivo.PersistenciaAcervo(acervoTridimensionalLinhas);
+            await casoDeUso.CarregarDominiosTridimensionais();
+            await casoDeUso.PersistenciaAcervo(acervoTridimensionalLinhas);
         
             var acervos = ObterTodos<Acervo>();
             var acervosTridimensional = ObterTodos<AcervoTridimensional>();
@@ -238,6 +248,11 @@ namespace SME.CDEP.TesteIntegracao
         {
             await InserirDadosBasicos();
 
+            var notificarQtdeDiasAntesDoVencimentoEmprestimo = ParametroSistemaMock.Instance.GerarParametroSistema(TipoParametroSistema.LimiteAcervosImportadosViaPanilha, "1");
+            await InserirNaBase(notificarQtdeDiasAntesDoVencimentoEmprestimo);
+
+            var casoDeUso = ObterCasoDeUso<IImportacaoArquivoAcervoTridimensionalAuxiliar>();
+            
             var servicoImportacaoArquivo = GetServicoImportacaoArquivoAcervoTridimensional();
         
             var acervoTridimensionalLinhas = AcervoTridimensionalLinhaMock.GerarAcervoTridimensionalLinhaDTO().Generate(10);
@@ -256,9 +271,9 @@ namespace SME.CDEP.TesteIntegracao
                 CriadoEm = DateTimeExtension.HorarioBrasilia().Date, CriadoPor = ConstantesTestes.SISTEMA, CriadoLogin = ConstantesTestes.LOGIN_123456789
             });
             
-            await servicoImportacaoArquivo.CarregarDominios();
-            servicoImportacaoArquivo.ValidarPreenchimentoValorFormatoQtdeCaracteres(acervoTridimensionalLinhas);
-            await servicoImportacaoArquivo.PersistenciaAcervo(acervoTridimensionalLinhas);
+            await casoDeUso.CarregarDominiosTridimensionais();
+            casoDeUso.ValidarPreenchimentoValorFormatoQtdeCaracteres(acervoTridimensionalLinhas);
+            await casoDeUso.PersistenciaAcervo(acervoTridimensionalLinhas);
             await servicoImportacaoArquivo.AtualizarImportacao(1, JsonConvert.SerializeObject(acervoTridimensionalLinhas), acervoTridimensionalLinhas.Any(a=> a.PossuiErros) ? ImportacaoStatus.Erros : ImportacaoStatus.Sucesso);
             var retorno = await servicoImportacaoArquivo.ObterImportacaoPendente();
 
@@ -351,6 +366,11 @@ namespace SME.CDEP.TesteIntegracao
         {
             await InserirDadosBasicos();
 
+            var notificarQtdeDiasAntesDoVencimentoEmprestimo = ParametroSistemaMock.Instance.GerarParametroSistema(TipoParametroSistema.LimiteAcervosImportadosViaPanilha, "1");
+            await InserirNaBase(notificarQtdeDiasAntesDoVencimentoEmprestimo);
+
+            var casoDeUso = ObterCasoDeUso<IImportacaoArquivoAcervoTridimensionalAuxiliar>();
+            
             var servicoImportacaoArquivo = GetServicoImportacaoArquivoAcervoTridimensional();
         
             var acervoTridimensionalLinhas = AcervoTridimensionalLinhaMock.GerarAcervoTridimensionalLinhaDTO().Generate(10);
@@ -368,9 +388,9 @@ namespace SME.CDEP.TesteIntegracao
                 CriadoEm = DateTimeExtension.HorarioBrasilia().Date, CriadoPor = ConstantesTestes.SISTEMA, CriadoLogin = ConstantesTestes.LOGIN_123456789
             });
             
-            await servicoImportacaoArquivo.CarregarDominios();
-            servicoImportacaoArquivo.ValidarPreenchimentoValorFormatoQtdeCaracteres(acervoTridimensionalLinhas);
-            await servicoImportacaoArquivo.PersistenciaAcervo(acervoTridimensionalLinhas);
+            await casoDeUso.CarregarDominiosTridimensionais();
+            casoDeUso.ValidarPreenchimentoValorFormatoQtdeCaracteres(acervoTridimensionalLinhas);
+            await casoDeUso.PersistenciaAcervo(acervoTridimensionalLinhas);
             await servicoImportacaoArquivo.AtualizarImportacao(1, JsonConvert.SerializeObject(acervoTridimensionalLinhas), acervoTridimensionalLinhas.Any(a=> a.PossuiErros) ? ImportacaoStatus.Erros : ImportacaoStatus.Sucesso);
             var retorno = await servicoImportacaoArquivo.ObterImportacaoPendente();
 
@@ -461,6 +481,9 @@ namespace SME.CDEP.TesteIntegracao
         [Fact(DisplayName = "Importação Arquivo Acervo Tridimensional - Obter importação pendente com Erros")]
         public async Task Obter_importacao_pendente_com_erros()
         {
+            var notificarQtdeDiasAntesDoVencimentoEmprestimo = ParametroSistemaMock.Instance.GerarParametroSistema(TipoParametroSistema.LimiteAcervosImportadosViaPanilha, "1");
+            await InserirNaBase(notificarQtdeDiasAntesDoVencimentoEmprestimo);
+            
             var servicoImportacaoArquivo = GetServicoImportacaoArquivoAcervoTridimensional();
         
             var linhasInseridas = AcervoTridimensionalLinhaMock.GerarAcervoTridimensionalLinhaDTO().Generate(10);
@@ -661,6 +684,9 @@ namespace SME.CDEP.TesteIntegracao
         [Fact(DisplayName = "Importação Arquivo Acervo Tridimensional - Validação de RetornoObjeto")]
         public async Task Validacao_retorno_objeto()
         {
+            var notificarQtdeDiasAntesDoVencimentoEmprestimo = ParametroSistemaMock.Instance.GerarParametroSistema(TipoParametroSistema.LimiteAcervosImportadosViaPanilha, "1");
+            await InserirNaBase(notificarQtdeDiasAntesDoVencimentoEmprestimo);
+            
             var servicoImportacaoArquivo = GetServicoImportacaoArquivoAcervoTridimensional();
 
             var linhasInseridas = AcervoTridimensionalLinhaMock.GerarAcervoTridimensionalLinhaDTO().Generate(10);

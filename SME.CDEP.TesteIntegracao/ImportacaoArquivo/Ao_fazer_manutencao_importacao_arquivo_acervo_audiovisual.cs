@@ -1,5 +1,6 @@
 ﻿using Newtonsoft.Json;
 using Shouldly;
+using SME.CDEP.Aplicacao;
 using SME.CDEP.Aplicacao.DTOS;
 using SME.CDEP.Dominio.Entidades;
 using SME.CDEP.Dominio.Excecoes;
@@ -21,7 +22,10 @@ namespace SME.CDEP.TesteIntegracao
         {
             await InserirDadosBasicos();
             
-            var servicoImportacaoArquivo = GetServicoImportacaoArquivoAcervoAudiovisual();
+            var notificarQtdeDiasAntesDoVencimentoEmprestimo = ParametroSistemaMock.Instance.GerarParametroSistema(TipoParametroSistema.LimiteAcervosImportadosViaPanilha, "1");
+            await InserirNaBase(notificarQtdeDiasAntesDoVencimentoEmprestimo);
+
+            var casoDeUso = ObterCasoDeUso<IImportacaoArquivoAcervoAudiovisualAuxiliar>();
 
             var acervoAudiovisualLinhas = AcervoAudiovisualLinhaMock.GerarAcervoAudiovisualLinhaDTO().Generate(10);
             var creditos = acervoAudiovisualLinhas
@@ -38,8 +42,8 @@ namespace SME.CDEP.TesteIntegracao
             acervoAudiovisualLinhas[8].Codigo.Conteudo = string.Empty;
             var linhasComErros = new[] { 3, 5, 6, 8, 9 };
             
-            await servicoImportacaoArquivo.CarregarDominios();
-            servicoImportacaoArquivo.ValidarPreenchimentoValorFormatoQtdeCaracteres(acervoAudiovisualLinhas);
+            await casoDeUso.CarregarDominiosAudiovisuais();
+            casoDeUso.ValidarPreenchimentoValorFormatoQtdeCaracteres(acervoAudiovisualLinhas);
 
             foreach (var linha in acervoAudiovisualLinhas)
             {
@@ -119,7 +123,10 @@ namespace SME.CDEP.TesteIntegracao
         {
             await InserirDadosBasicos();
             
-            var servicoImportacaoArquivo = GetServicoImportacaoArquivoAcervoAudiovisual();
+            var notificarQtdeDiasAntesDoVencimentoEmprestimo = ParametroSistemaMock.Instance.GerarParametroSistema(TipoParametroSistema.LimiteAcervosImportadosViaPanilha, "1");
+            await InserirNaBase(notificarQtdeDiasAntesDoVencimentoEmprestimo);
+
+            var casoDeUso = ObterCasoDeUso<IImportacaoArquivoAcervoAudiovisualAuxiliar>();
 
             var acervoAudiovisualLinhas = AcervoAudiovisualLinhaMock.GerarAcervoAudiovisualLinhaDTO().Generate(10);
             var creditos = acervoAudiovisualLinhas
@@ -143,8 +150,8 @@ namespace SME.CDEP.TesteIntegracao
             acervoAudiovisualLinhas[8].Codigo.Conteudo = string.Empty;
             var linhasComErros = new[] { 3, 5, 6, 8, 9 };
             
-            await servicoImportacaoArquivo.CarregarDominios();
-            servicoImportacaoArquivo.ValidarPreenchimentoValorFormatoQtdeCaracteres(acervoAudiovisualLinhas);
+            await casoDeUso.CarregarDominiosAudiovisuais();
+            casoDeUso.ValidarPreenchimentoValorFormatoQtdeCaracteres(acervoAudiovisualLinhas);
 
             foreach (var linha in acervoAudiovisualLinhas)
             {
@@ -233,7 +240,10 @@ namespace SME.CDEP.TesteIntegracao
         {
             await InserirDadosBasicos();
 
-            var servicoImportacaoArquivo = GetServicoImportacaoArquivoAcervoAudiovisual();
+            var notificarQtdeDiasAntesDoVencimentoEmprestimo = ParametroSistemaMock.Instance.GerarParametroSistema(TipoParametroSistema.LimiteAcervosImportadosViaPanilha, "1");
+            await InserirNaBase(notificarQtdeDiasAntesDoVencimentoEmprestimo);
+
+            var casoDeUso = ObterCasoDeUso<IImportacaoArquivoAcervoAudiovisualAuxiliar>();
         
             var acervoAudiovisualLinhas = AcervoAudiovisualLinhaMock.GerarAcervoAudiovisualLinhaDTO().Generate(10);
         
@@ -253,8 +263,8 @@ namespace SME.CDEP.TesteIntegracao
                 CriadoEm = DateTimeExtension.HorarioBrasilia().Date, CriadoPor = ConstantesTestes.SISTEMA, CriadoLogin = ConstantesTestes.LOGIN_123456789
             });
             
-            await servicoImportacaoArquivo.CarregarDominios();
-            await servicoImportacaoArquivo.PersistenciaAcervo(acervoAudiovisualLinhas);
+            await casoDeUso.CarregarDominiosAudiovisuais();
+            await casoDeUso.PersistenciaAcervo(acervoAudiovisualLinhas);
         
             var acervos = ObterTodos<Acervo>();
             var acervosAudiovisual = ObterTodos<AcervoAudiovisual>();
@@ -310,6 +320,11 @@ namespace SME.CDEP.TesteIntegracao
         {
             await InserirDadosBasicos();
 
+            var notificarQtdeDiasAntesDoVencimentoEmprestimo = ParametroSistemaMock.Instance.GerarParametroSistema(TipoParametroSistema.LimiteAcervosImportadosViaPanilha, "1");
+            await InserirNaBase(notificarQtdeDiasAntesDoVencimentoEmprestimo);
+
+            var casoDeUso = ObterCasoDeUso<IImportacaoArquivoAcervoAudiovisualAuxiliar>();
+            
             var servicoImportacaoArquivo = GetServicoImportacaoArquivoAcervoAudiovisual();
         
             var acervoAudiovisualLinhas = AcervoAudiovisualLinhaMock.GerarAcervoAudiovisualLinhaDTO().Generate(10);
@@ -335,9 +350,9 @@ namespace SME.CDEP.TesteIntegracao
                 CriadoEm = DateTimeExtension.HorarioBrasilia().Date, CriadoPor = ConstantesTestes.SISTEMA, CriadoLogin = ConstantesTestes.LOGIN_123456789
             });
             
-            await servicoImportacaoArquivo.CarregarDominios();
-            servicoImportacaoArquivo.ValidarPreenchimentoValorFormatoQtdeCaracteres(acervoAudiovisualLinhas);
-            await servicoImportacaoArquivo.PersistenciaAcervo(acervoAudiovisualLinhas);
+            await casoDeUso.CarregarDominiosAudiovisuais();
+            casoDeUso.ValidarPreenchimentoValorFormatoQtdeCaracteres(acervoAudiovisualLinhas);
+            await casoDeUso.PersistenciaAcervo(acervoAudiovisualLinhas);
             await servicoImportacaoArquivo.AtualizarImportacao(1, JsonConvert.SerializeObject(acervoAudiovisualLinhas), acervoAudiovisualLinhas.Any(a=> a.PossuiErros) ? ImportacaoStatus.Erros : ImportacaoStatus.Sucesso);
             var retorno = await servicoImportacaoArquivo.ObterImportacaoPendente();
             
@@ -445,6 +460,9 @@ namespace SME.CDEP.TesteIntegracao
         [Fact(DisplayName = "Importação Arquivo Acervo Audiovisual - Obter importação pendente com Erros")]
         public async Task Obter_importacao_pendente_com_erros()
         {
+            var notificarQtdeDiasAntesDoVencimentoEmprestimo = ParametroSistemaMock.Instance.GerarParametroSistema(TipoParametroSistema.LimiteAcervosImportadosViaPanilha, "1");
+            await InserirNaBase(notificarQtdeDiasAntesDoVencimentoEmprestimo);
+            
             var servicoImportacaoArquivo = GetServicoImportacaoArquivoAcervoAudiovisual();
         
             var linhasInseridas = AcervoAudiovisualLinhaMock.GerarAcervoAudiovisualLinhaDTO().Generate(10);
@@ -666,6 +684,9 @@ namespace SME.CDEP.TesteIntegracao
         [Fact(DisplayName = "Importação Arquivo Acervo Audiovisual - Validação de RetornoObjeto")]
         public async Task Validacao_retorno_objeto()
         {
+            var notificarQtdeDiasAntesDoVencimentoEmprestimo = ParametroSistemaMock.Instance.GerarParametroSistema(TipoParametroSistema.LimiteAcervosImportadosViaPanilha, "1");
+            await InserirNaBase(notificarQtdeDiasAntesDoVencimentoEmprestimo);
+            
             var servicoImportacaoArquivo = GetServicoImportacaoArquivoAcervoAudiovisual();
 
             var linhasInseridas = AcervoAudiovisualLinhaMock.GerarAcervoAudiovisualLinhaDTO().Generate(10);

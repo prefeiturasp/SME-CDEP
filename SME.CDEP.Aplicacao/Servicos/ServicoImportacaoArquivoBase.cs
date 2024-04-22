@@ -16,7 +16,7 @@ namespace SME.CDEP.Aplicacao.Servicos
 {
     public class ServicoImportacaoArquivoBase : IServicoImportacaoArquivoBase
     {
-        protected readonly IRepositorioImportacaoArquivo repositorioImportacaoArquivo;
+        private readonly IRepositorioParametroSistema repositorioParametroSistema;
         private readonly IServicoMaterial servicoMaterial;
         private readonly IServicoEditora servicoEditora;
         private readonly IServicoSerieColecao servicoSerieColecao;
@@ -28,6 +28,9 @@ namespace SME.CDEP.Aplicacao.Servicos
         private readonly IServicoCromia servicoCromia;
         private readonly IServicoSuporte servicoSuporte;
         private readonly IServicoFormato servicoFormato;
+        private readonly IMapper mapper;
+        
+        protected readonly IRepositorioImportacaoArquivo repositorioImportacaoArquivo;
         protected List<IdNomeTipoDTO> Materiais;
         protected List<IdNomeDTO> Editoras;
         protected List<IdNomeDTO> SeriesColecoes;
@@ -38,15 +41,18 @@ namespace SME.CDEP.Aplicacao.Servicos
         protected List<IdNomeDTO> Cromias;
         protected List<IdNomeTipoDTO> Suportes;
         protected List<IdNomeTipoDTO> Formatos;
-        private readonly IMapper mapper;
+        protected long LimiteAcervosImportadosViaPanilha;
 
         protected List<IdNomeTipoDTO> CreditosAutores { get; set; }
+        protected List<IdNomeTipoDTO> CoAutores { get; set; }
 
         public ServicoImportacaoArquivoBase(IRepositorioImportacaoArquivo repositorioImportacaoArquivo, IServicoMaterial servicoMaterial,
             IServicoEditora servicoEditora,IServicoSerieColecao servicoSerieColecao,IServicoIdioma servicoIdioma, IServicoAssunto servicoAssunto,
             IServicoCreditoAutor servicoCreditoAutor,IServicoConservacao servicoConservacao, IServicoAcessoDocumento servicoAcessoDocumento,
-            IServicoCromia servicoCromia, IServicoSuporte servicoSuporte,IServicoFormato servicoFormato, IMapper mapper)
+            IServicoCromia servicoCromia, IServicoSuporte servicoSuporte,IServicoFormato servicoFormato, IMapper mapper,
+            IRepositorioParametroSistema repositorioParametroSistema)
         {
+            this.repositorioParametroSistema = repositorioParametroSistema ?? throw new ArgumentNullException(nameof(repositorioParametroSistema));
             this.repositorioImportacaoArquivo = repositorioImportacaoArquivo ?? throw new ArgumentNullException(nameof(repositorioImportacaoArquivo));
             this.servicoMaterial = servicoMaterial ?? throw new ArgumentNullException(nameof(servicoMaterial));
             this.servicoEditora = servicoEditora ?? throw new ArgumentNullException(nameof(servicoEditora));
@@ -66,6 +72,7 @@ namespace SME.CDEP.Aplicacao.Servicos
             Idiomas = new List<IdNomeDTO>();
             Assuntos = new List<IdNomeDTO>();
             CreditosAutores = new List<IdNomeTipoDTO>();
+            CoAutores = new List<IdNomeTipoDTO>();
             AcessoDocumentos = new List<IdNomeDTO>();
             Formatos = new List<IdNomeTipoDTO>();
             Suportes = new List<IdNomeTipoDTO>();
@@ -73,8 +80,11 @@ namespace SME.CDEP.Aplicacao.Servicos
             Conservacoes = new List<IdNomeDTO>();
         }
 
-        protected async Task ObterDominios()
+        protected async Task CarregarTodosOsDominios()
         {
+            LimiteAcervosImportadosViaPanilha = long.Parse((await repositorioParametroSistema
+                .ObterParametroPorTipoEAno(TipoParametroSistema.LimiteAcervosImportadosViaPanilha, DateTimeExtension.HorarioBrasilia().Year)).Valor);
+            
             Suportes = (await servicoSuporte.ObterTodos()).Select(s=> mapper.Map<IdNomeTipoDTO>(s)).ToList();
             Cromias = (await servicoCromia.ObterTodos()).Select(s => mapper.Map<IdNomeDTO>(s)).ToList();
             Conservacoes = (await servicoConservacao.ObterTodos()).Select(s=> mapper.Map<IdNomeDTO>(s)).ToList();
@@ -122,151 +132,6 @@ namespace SME.CDEP.Aplicacao.Servicos
             importacaoArquivo.Conteudo = conteudo;
             
             return await repositorioImportacaoArquivo.Salvar(importacaoArquivo);
-        }
-
-        public async Task ValidarOuInserirMateriais(IEnumerable<string> materiais, TipoMaterial tipoMaterial)
-        {
-            foreach (var nome in materiais)
-            {
-                if (!await ExisteMaterialPorNomeETipo(tipoMaterial, nome))
-                {
-                    var id = await servicoMaterial.Inserir(new IdNomeTipoExcluidoDTO() { Nome = nome, Tipo = (int)tipoMaterial });
-                    CachearMateriais(tipoMaterial, nome, id);
-                }
-            }
-        }
-        
-        private async Task<bool> ExisteMaterialPorNomeETipo(TipoMaterial tipo, string nome)
-        {
-            var id = await servicoMaterial.ObterPorNomeETipo(nome, tipo);
-            
-            var existeRegistro = id.EhMaiorQueZero();
-            
-            if (existeRegistro)
-                CachearMateriais(tipo, nome, id);
-            
-            return existeRegistro;
-        }
-
-        private void CachearMateriais(TipoMaterial tipo, string nome, long id)
-        {
-            Materiais.Add(new IdNomeTipoDTO() { Id = id, Nome = nome, Tipo = (int)tipo });
-        }
-
-        public async Task ValidarOuInserirEditoras(IEnumerable<string> editoras)
-        {
-            foreach (var nome in editoras)
-            {
-                if (!await ExisteEditoraPorNome(nome))
-                {
-                    var id = await servicoEditora.Inserir(new IdNomeExcluidoAuditavelDTO() { Nome = nome});
-                    CachearEditora(nome, id);
-                }
-            }
-        }
-
-        private async Task<bool> ExisteEditoraPorNome(string nome)
-        {
-            var id = await servicoEditora.ObterPorNome(nome);
-            
-            var existeRegistro = id.EhMaiorQueZero();
-            
-            if (existeRegistro)
-                CachearEditora(nome, id);
-            
-            return existeRegistro;
-        }
-
-        private void CachearEditora(string nome, long id)
-        {
-            Editoras.Add(new IdNomeDTO() { Id = id, Nome = nome });
-        }
-
-        public async Task ValidarOuInserirSeriesColecoes(IEnumerable<string> seriesColecoes)
-        {
-            foreach (var nome in seriesColecoes)
-            {
-                if (!await ExisteSerieColecaoPorNome(nome))
-                {
-                    var id  = await servicoSerieColecao.Inserir(new IdNomeExcluidoAuditavelDTO() { Nome = nome });
-                    CachearSerieColecao(nome, id);
-                }
-            }
-        }
-
-        private async Task<bool> ExisteSerieColecaoPorNome(string nome)
-        {
-            var id = await servicoSerieColecao.ObterPorNome(nome);
-
-            var existeRegistro = id.EhMaiorQueZero();
-            
-            if (existeRegistro)
-                CachearSerieColecao(nome, id);
-
-            return existeRegistro;
-        }
-
-        private void CachearSerieColecao(string nome, long id)
-        {
-            SeriesColecoes.Add(new IdNomeDTO() { Id = id, Nome = nome });
-        }
-        
-        public async Task ValidarOuInserirIdiomas(IEnumerable<string> idiomas)
-        {
-            foreach (var nome in idiomas)
-            {
-                if (!await ExisteIdiomaPorNome(nome))
-                {
-                    var id  = await servicoIdioma.Inserir(new IdNomeExcluidoDTO() { Nome = nome });
-                    CachearIdioma(nome, id);
-                }
-            }
-        }
-
-        private async Task<bool> ExisteIdiomaPorNome(string nome)
-        {
-            var id = await servicoIdioma.ObterPorNome(nome);
-
-            var existeRegistro = id.EhMaiorQueZero();
-            
-            if (existeRegistro)
-                CachearIdioma(nome, id);
-
-            return existeRegistro;
-        }
-
-        private void CachearIdioma(string nome, long id)
-        {
-            Idiomas.Add(new IdNomeDTO() { Id = id, Nome = nome });
-        }
-        
-        public async Task ValidarOuInserirAssuntos(IEnumerable<string> assuntos)
-        {
-            foreach (var nome in assuntos)
-            {
-                if (!await ExisteAssuntoPorNome(nome))
-                {
-                    var id  = await servicoAssunto.Inserir(new IdNomeExcluidoAuditavelDTO() { Nome = nome });
-                    CachearAssunto(nome, id);
-                }
-            }
-        }
-
-        private async Task<bool> ExisteAssuntoPorNome(string nome)
-        {
-            var id = await servicoAssunto.ObterPorNome(nome);
-
-            var existeRegistro = id.EhMaiorQueZero();
-            
-            if (existeRegistro)
-                CachearAssunto(nome, id);
-
-            return existeRegistro;
-        }
-
-        private void CachearAssunto(string nome, long id)
-        {
-            Assuntos.Add(new IdNomeDTO() { Id = id, Nome = nome });
         }
 
         public void ValidarPreenchimentoLimiteCaracteres(LinhaConteudoAjustarDTO campo, string nomeCampo)
@@ -730,6 +595,11 @@ namespace SME.CDEP.Aplicacao.Servicos
             CreditosAutores = CreditosAutores.Where(w=> w.Tipo == (int)tipoCreditoAutoria).ToList();
         }
         
+        protected async Task ObterCoAutores(TipoCreditoAutoria tipoCreditoAutoria)
+        {
+            CoAutores = CreditosAutores.Where(w=> w.Tipo == (int)tipoCreditoAutoria).ToList();
+        }
+        
         protected async Task ObterFormatosPorTipo(TipoFormato tipoFormato)
         {
             Formatos = Formatos.Where(w=> w.Tipo == (int)tipoFormato).ToList();
@@ -762,6 +632,19 @@ namespace SME.CDEP.Aplicacao.Servicos
                 if (!dominio.Any(a=> a.Nome.RemoverAcentuacao().SaoIguais(campo.Conteudo.RemoverAcentuacao())))
                     DefinirMensagemErro(campo, string.Format(MensagemNegocio.O_ITEM_X_DO_DOMINIO_X_NAO_ENCONTRADO, campo.Conteudo, nomeCampo));    
             }
+        }
+        
+        protected async Task ValidarQtdeLinhasImportadas(int totalLinhas)
+        {
+            LimiteAcervosImportadosViaPanilha = long.Parse((await repositorioParametroSistema
+                .ObterParametroPorTipoEAno(TipoParametroSistema.LimiteAcervosImportadosViaPanilha, DateTimeExtension.HorarioBrasilia().Year)).Valor);
+            
+            if (totalLinhas <= Constantes.INICIO_LINHA_TITULO)
+                throw new NegocioException(MensagemNegocio.PLANILHA_VAZIA);
+            
+            var qtdeLinhasComAcervos = totalLinhas - 1;
+            if (qtdeLinhasComAcervos > LimiteAcervosImportadosViaPanilha)
+                throw new NegocioException(string.Format(MensagemNegocio.LIMITE_ACERVOS_IMPORTADOS_VIA_PLANILHA,LimiteAcervosImportadosViaPanilha));
         }
     }
 }

@@ -1,5 +1,6 @@
 ﻿using Newtonsoft.Json;
 using Shouldly;
+using SME.CDEP.Aplicacao;
 using SME.CDEP.Aplicacao.DTOS;
 using SME.CDEP.Dominio.Entidades;
 using SME.CDEP.Dominio.Excecoes;
@@ -21,7 +22,10 @@ namespace SME.CDEP.TesteIntegracao
         {
             await InserirDadosBasicos();
                 
-            var servicoImportacaoArquivo = GetServicoImportacaoArquivoAcervoDocumental();
+            var notificarQtdeDiasAntesDoVencimentoEmprestimo = ParametroSistemaMock.Instance.GerarParametroSistema(TipoParametroSistema.LimiteAcervosImportadosViaPanilha, "1");
+            await InserirNaBase(notificarQtdeDiasAntesDoVencimentoEmprestimo);
+
+            var casoDeUso = ObterCasoDeUso<IImportacaoArquivoAcervoDocumentalAuxiliar>();
 
             var acervoDocumentalLinhas = AcervoDocumentalLinhaMock.GerarAcervoDocumentalLinhaDTO().Generate(10);
             
@@ -38,8 +42,8 @@ namespace SME.CDEP.TesteIntegracao
             acervoDocumentalLinhas[8].Volume.Conteudo = faker.Lorem.Paragraph();
             var linhasComErros = new[] { 3, 5, 6, 8, 9 };
             
-            await servicoImportacaoArquivo.CarregarDominios();
-            servicoImportacaoArquivo.ValidarPreenchimentoValorFormatoQtdeCaracteres(acervoDocumentalLinhas);
+            await casoDeUso.CarregarDominiosDocumentais();
+            casoDeUso.ValidarPreenchimentoValorFormatoQtdeCaracteres(acervoDocumentalLinhas);
 
             foreach (var linha in acervoDocumentalLinhas)
             {
@@ -121,7 +125,10 @@ namespace SME.CDEP.TesteIntegracao
         {
             await InserirDadosBasicos();
                 
-            var servicoImportacaoArquivo = GetServicoImportacaoArquivoAcervoDocumental();
+            var notificarQtdeDiasAntesDoVencimentoEmprestimo = ParametroSistemaMock.Instance.GerarParametroSistema(TipoParametroSistema.LimiteAcervosImportadosViaPanilha, "1");
+            await InserirNaBase(notificarQtdeDiasAntesDoVencimentoEmprestimo);
+
+            var casoDeUso = ObterCasoDeUso<IImportacaoArquivoAcervoDocumentalAuxiliar>();
 
             var acervoDocumentalLinhas = AcervoDocumentalLinhaMock.GerarAcervoDocumentalLinhaDTO().Generate(10);
             
@@ -147,8 +154,8 @@ namespace SME.CDEP.TesteIntegracao
             
             var linhasComErros = new[] { 3, 5, 6, 8, 9 };
             
-            await servicoImportacaoArquivo.CarregarDominios();
-            servicoImportacaoArquivo.ValidarPreenchimentoValorFormatoQtdeCaracteres(acervoDocumentalLinhas);
+            await casoDeUso.CarregarDominiosDocumentais();
+            casoDeUso.ValidarPreenchimentoValorFormatoQtdeCaracteres(acervoDocumentalLinhas);
 
             foreach (var linha in acervoDocumentalLinhas)
             {
@@ -242,7 +249,10 @@ namespace SME.CDEP.TesteIntegracao
         {
             await InserirDadosBasicos();
 
-            var servicoImportacaoArquivo = GetServicoImportacaoArquivoAcervoDocumental();
+            var notificarQtdeDiasAntesDoVencimentoEmprestimo = ParametroSistemaMock.Instance.GerarParametroSistema(TipoParametroSistema.LimiteAcervosImportadosViaPanilha, "1");
+            await InserirNaBase(notificarQtdeDiasAntesDoVencimentoEmprestimo);
+
+            var casoDeUso = ObterCasoDeUso<IImportacaoArquivoAcervoDocumentalAuxiliar>();
         
             var acervoDocumentalLinhas = AcervoDocumentalLinhaMock.GerarAcervoDocumentalLinhaDTO().Generate(10);
         
@@ -262,8 +272,8 @@ namespace SME.CDEP.TesteIntegracao
                 CriadoEm = DateTimeExtension.HorarioBrasilia().Date, CriadoPor = ConstantesTestes.SISTEMA, CriadoLogin = ConstantesTestes.LOGIN_123456789
             });
             
-            await servicoImportacaoArquivo.CarregarDominios();
-            await servicoImportacaoArquivo.PersistenciaAcervo(acervoDocumentalLinhas);
+            await casoDeUso.CarregarDominiosDocumentais();
+            await casoDeUso.PersistenciaAcervo(acervoDocumentalLinhas);
         
             var acervos = ObterTodos<Acervo>();
             var acervosDocumentais = ObterTodos<AcervoDocumental>();
@@ -339,6 +349,11 @@ namespace SME.CDEP.TesteIntegracao
         {
             await InserirDadosBasicos();
 
+            var notificarQtdeDiasAntesDoVencimentoEmprestimo = ParametroSistemaMock.Instance.GerarParametroSistema(TipoParametroSistema.LimiteAcervosImportadosViaPanilha, "1");
+            await InserirNaBase(notificarQtdeDiasAntesDoVencimentoEmprestimo);
+
+            var casoDeUso = ObterCasoDeUso<IImportacaoArquivoAcervoDocumentalAuxiliar>();
+            
             var servicoImportacaoArquivo = GetServicoImportacaoArquivoAcervoDocumental();
         
             var acervoDocumentalLinhas = AcervoDocumentalLinhaMock.GerarAcervoDocumentalLinhaDTO().Generate(10);
@@ -365,9 +380,9 @@ namespace SME.CDEP.TesteIntegracao
                 CriadoEm = DateTimeExtension.HorarioBrasilia().Date, CriadoPor = ConstantesTestes.SISTEMA, CriadoLogin = ConstantesTestes.LOGIN_123456789
             });
             
-            await servicoImportacaoArquivo.CarregarDominios();
-            servicoImportacaoArquivo.ValidarPreenchimentoValorFormatoQtdeCaracteres(acervoDocumentalLinhas);
-            await servicoImportacaoArquivo.PersistenciaAcervo(acervoDocumentalLinhas);
+            await casoDeUso.CarregarDominiosDocumentais();
+            casoDeUso.ValidarPreenchimentoValorFormatoQtdeCaracteres(acervoDocumentalLinhas);
+            await casoDeUso.PersistenciaAcervo(acervoDocumentalLinhas);
             await servicoImportacaoArquivo.AtualizarImportacao(1, JsonConvert.SerializeObject(acervoDocumentalLinhas), acervoDocumentalLinhas.Any(a=> a.PossuiErros) ? ImportacaoStatus.Erros : ImportacaoStatus.Sucesso);
             var retorno = await servicoImportacaoArquivo.ObterImportacaoPendente();
         
@@ -507,6 +522,11 @@ namespace SME.CDEP.TesteIntegracao
         {
             await InserirDadosBasicos();
 
+            var notificarQtdeDiasAntesDoVencimentoEmprestimo = ParametroSistemaMock.Instance.GerarParametroSistema(TipoParametroSistema.LimiteAcervosImportadosViaPanilha, "1");
+            await InserirNaBase(notificarQtdeDiasAntesDoVencimentoEmprestimo);
+
+            var casoDeUso = ObterCasoDeUso<IImportacaoArquivoAcervoDocumentalAuxiliar>();
+            
             var servicoImportacaoArquivo = GetServicoImportacaoArquivoAcervoDocumental();
         
             var acervoDocumentalLinhas = AcervoDocumentalLinhaMock.GerarAcervoDocumentalLinhaDTO().Generate(10);
@@ -533,9 +553,9 @@ namespace SME.CDEP.TesteIntegracao
                 CriadoEm = DateTimeExtension.HorarioBrasilia().Date, CriadoPor = ConstantesTestes.SISTEMA, CriadoLogin = ConstantesTestes.LOGIN_123456789
             });
             
-            await servicoImportacaoArquivo.CarregarDominios();
-            servicoImportacaoArquivo.ValidarPreenchimentoValorFormatoQtdeCaracteres(acervoDocumentalLinhas);
-            await servicoImportacaoArquivo.PersistenciaAcervo(acervoDocumentalLinhas);
+            await casoDeUso.CarregarDominiosDocumentais();
+            casoDeUso.ValidarPreenchimentoValorFormatoQtdeCaracteres(acervoDocumentalLinhas);
+            await casoDeUso.PersistenciaAcervo(acervoDocumentalLinhas);
             await servicoImportacaoArquivo.AtualizarImportacao(1, JsonConvert.SerializeObject(acervoDocumentalLinhas), acervoDocumentalLinhas.Any(a=> a.PossuiErros) ? ImportacaoStatus.Erros : ImportacaoStatus.Sucesso);
             var retorno = await servicoImportacaoArquivo.ObterImportacaoPendente();
         
@@ -674,6 +694,9 @@ namespace SME.CDEP.TesteIntegracao
         public async Task Obter_importacao_pendente_com_erros()
         {
             await InserirDadosBasicos();
+            
+            var notificarQtdeDiasAntesDoVencimentoEmprestimo = ParametroSistemaMock.Instance.GerarParametroSistema(TipoParametroSistema.LimiteAcervosImportadosViaPanilha, "1");
+            await InserirNaBase(notificarQtdeDiasAntesDoVencimentoEmprestimo);
             
             var servicoImportacaoArquivo = GetServicoImportacaoArquivoAcervoDocumental();
         
@@ -832,6 +855,9 @@ namespace SME.CDEP.TesteIntegracao
         [Fact(DisplayName = "Importação Arquivo Acervo Documental - Deve permitir remover linha do arquivo")]
         public async Task Deve_permitir_remover_a_linha_do_arquivo()
         {
+            var notificarQtdeDiasAntesDoVencimentoEmprestimo = ParametroSistemaMock.Instance.GerarParametroSistema(TipoParametroSistema.LimiteAcervosImportadosViaPanilha, "1");
+            await InserirNaBase(notificarQtdeDiasAntesDoVencimentoEmprestimo);
+            
             var servicoImportacaoArquivo = GetServicoImportacaoArquivoAcervoDocumental();
 
             var linhasInseridas = AcervoDocumentalLinhaMock.GerarAcervoDocumentalLinhaDTO().Generate(10);
@@ -971,6 +997,9 @@ namespace SME.CDEP.TesteIntegracao
         [Fact(DisplayName = "Importação Arquivo Acervo Documental - Validação de RetornoObjeto")]
         public async Task Validacao_retorno_objeto()
         {
+            var notificarQtdeDiasAntesDoVencimentoEmprestimo = ParametroSistemaMock.Instance.GerarParametroSistema(TipoParametroSistema.LimiteAcervosImportadosViaPanilha, "1");
+            await InserirNaBase(notificarQtdeDiasAntesDoVencimentoEmprestimo);
+
             var servicoImportacaoArquivo = GetServicoImportacaoArquivoAcervoDocumental();
 
             var acervoDocumentalLinhas = AcervoDocumentalLinhaMock.GerarAcervoDocumentalLinhaDTO().Generate(10);

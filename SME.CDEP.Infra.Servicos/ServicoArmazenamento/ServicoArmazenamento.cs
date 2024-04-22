@@ -36,7 +36,7 @@ namespace SME.CDEP.Infra.Servicos.ServicoArmazenamento
         {
             await ArmazenarArquivo(nomeArquivo, stream, contentType, configuracaoArmazenamentoOptions.BucketTemp);
 
-            return await ObterUrl(nomeArquivo, configuracaoArmazenamentoOptions.BucketTemp);
+            return ObterUrl(nomeArquivo, configuracaoArmazenamentoOptions.BucketTemp);
         }
 
         public async Task<string> Armazenar(string nomeArquivo, Stream stream, string contentType)
@@ -56,7 +56,7 @@ namespace SME.CDEP.Infra.Servicos.ServicoArmazenamento
 
             await minioClient.PutObjectAsync(args);
 
-            return await ObterUrl(nomeArquivo, bucket);
+            return ObterUrl(nomeArquivo, bucket);
         }
 
         private async Task<string> Copiar(string nomeArquivo)
@@ -122,13 +122,12 @@ namespace SME.CDEP.Infra.Servicos.ServicoArmazenamento
                 ? configuracaoArmazenamentoOptions.BucketTemp
                 : configuracaoArmazenamentoOptions.BucketArquivos;
 
-            return await ObterUrl(nomeArquivo, bucketNome);
+            return ObterUrl(nomeArquivo, bucketNome);
         }
 
-        private async Task<string> ObterUrl(string nomeArquivo, string bucketName)
+        private string ObterUrl(string nomeArquivo, string bucketName)
         {
-            var hostAplicacao = configuration["UrlFrontEnd"];
-            return $"{hostAplicacao}{bucketName}/{nomeArquivo}";
+            return $"{configuracaoArmazenamentoOptions.EnderecoCompletoPadrao()}/{bucketName}/{nomeArquivo}";
         }
     }
 }

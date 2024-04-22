@@ -1,6 +1,7 @@
 ﻿using Bogus.Extensions.Brazil;
 using Newtonsoft.Json;
 using Shouldly;
+using SME.CDEP.Aplicacao;
 using SME.CDEP.Aplicacao.DTOS;
 using SME.CDEP.Dominio.Entidades;
 using SME.CDEP.Dominio.Excecoes;
@@ -20,6 +21,9 @@ namespace SME.CDEP.TesteIntegracao
         [Fact(DisplayName = "Importação Arquivo Acervo Bibliográfico - ObterCoAutoresTipoAutoria com tipo autoria nos 3 primeiros coautores")]
         public async Task Validar_obter_coautores_tipo_autoria_com_tipo_autoria_nos_tres_primeiros_coautores()
         {
+            var notificarQtdeDiasAntesDoVencimentoEmprestimo = ParametroSistemaMock.Instance.GerarParametroSistema(TipoParametroSistema.LimiteAcervosImportadosViaPanilha, "1");
+            await InserirNaBase(notificarQtdeDiasAntesDoVencimentoEmprestimo);
+            
             var servicoImportacaoArquivo = GetServicoImportacaoArquivoAcervoBibliografico();
 
             var acervoBibliograficoLinha = new AcervoBibliograficoLinhaDTO()
@@ -41,7 +45,7 @@ namespace SME.CDEP.TesteIntegracao
             var coautoresNumerados = acervoBibliograficoLinha.CoAutor.Conteudo.FormatarTextoEmArray()
                 .Select((coautoresEmTexto, indice) => new IdNomeTipoDTO { Id = indice + 10, Nome = coautoresEmTexto }).ToList();
                 
-            servicoImportacaoArquivo.DefinirCreditosAutores(coautoresNumerados); 
+            servicoImportacaoArquivo.DefinirCoAutores(coautoresNumerados); 
             
             var coautores = servicoImportacaoArquivo.ObterCoAutoresTipoAutoria(acervoBibliograficoLinha.CoAutor.Conteudo, acervoBibliograficoLinha.TipoAutoria.Conteudo);
             coautores.ShouldNotBeNull();
@@ -60,6 +64,9 @@ namespace SME.CDEP.TesteIntegracao
         [Fact(DisplayName = "Importação Arquivo Acervo Bibliográfico - ObterCoAutoresTipoAutoria com tipo autoria somente no primeiro coautor")]
         public async Task Validar_obter_coautores_tipo_autoria_com_tipo_autoria_no_primeiro_coautor()
         {
+            var notificarQtdeDiasAntesDoVencimentoEmprestimo = ParametroSistemaMock.Instance.GerarParametroSistema(TipoParametroSistema.LimiteAcervosImportadosViaPanilha, "1");
+            await InserirNaBase(notificarQtdeDiasAntesDoVencimentoEmprestimo);
+            
             var servicoImportacaoArquivo = GetServicoImportacaoArquivoAcervoBibliografico();
 
             var acervoBibliograficoLinha = new AcervoBibliograficoLinhaDTO()
@@ -81,7 +88,7 @@ namespace SME.CDEP.TesteIntegracao
             var coautoresNumerados = acervoBibliograficoLinha.CoAutor.Conteudo.FormatarTextoEmArray()
                 .Select((coautoresEmTexto, indice) => new IdNomeTipoDTO { Id = indice + 10, Nome = coautoresEmTexto }).ToList();
                 
-            servicoImportacaoArquivo.DefinirCreditosAutores(coautoresNumerados); 
+            servicoImportacaoArquivo.DefinirCoAutores(coautoresNumerados); 
             
             var coautores = servicoImportacaoArquivo.ObterCoAutoresTipoAutoria(acervoBibliograficoLinha.CoAutor.Conteudo, acervoBibliograficoLinha.TipoAutoria.Conteudo);
             coautores.ShouldNotBeNull();
@@ -100,6 +107,9 @@ namespace SME.CDEP.TesteIntegracao
         [Fact(DisplayName = "Importação Arquivo Acervo Bibliográfico - ObterCoAutoresTipoAutoria sem tipo autoria")]
         public async Task Validar_obter_coautores_tipo_autoria_sem_tipo_autoria()
         {
+            var notificarQtdeDiasAntesDoVencimentoEmprestimo = ParametroSistemaMock.Instance.GerarParametroSistema(TipoParametroSistema.LimiteAcervosImportadosViaPanilha, "1");
+            await InserirNaBase(notificarQtdeDiasAntesDoVencimentoEmprestimo);
+            
             var servicoImportacaoArquivo = GetServicoImportacaoArquivoAcervoBibliografico();
 
             var acervoBibliograficoLinha = new AcervoBibliograficoLinhaDTO()
@@ -119,7 +129,7 @@ namespace SME.CDEP.TesteIntegracao
             var coautoresNumerados = acervoBibliograficoLinha.CoAutor.Conteudo.FormatarTextoEmArray()
                 .Select((coautoresEmTexto, indice) => new IdNomeTipoDTO { Id = indice + 10, Nome = coautoresEmTexto }).ToList();
                 
-            servicoImportacaoArquivo.DefinirCreditosAutores(coautoresNumerados); 
+            servicoImportacaoArquivo.DefinirCoAutores(coautoresNumerados); 
             
             var coautores = servicoImportacaoArquivo.ObterCoAutoresTipoAutoria(acervoBibliograficoLinha.CoAutor.Conteudo, acervoBibliograficoLinha.TipoAutoria.Conteudo);
             coautores.ShouldNotBeNull();
@@ -134,6 +144,9 @@ namespace SME.CDEP.TesteIntegracao
         [Fact(DisplayName = "Importação Arquivo Acervo Bibliográfico - ObterCoAutoresTipoAutoria com tipo autoria e coautores iguais")]
         public async Task Validar_obter_coautores_tipo_autoria_com_tipo_autoria_iguais_ao_numero_decoautores()
         {
+            var notificarQtdeDiasAntesDoVencimentoEmprestimo = ParametroSistemaMock.Instance.GerarParametroSistema(TipoParametroSistema.LimiteAcervosImportadosViaPanilha, "1");
+            await InserirNaBase(notificarQtdeDiasAntesDoVencimentoEmprestimo);
+            
             var servicoImportacaoArquivo = GetServicoImportacaoArquivoAcervoBibliografico();
 
             var acervoBibliograficoLinha = new AcervoBibliograficoLinhaDTO()
@@ -155,7 +168,7 @@ namespace SME.CDEP.TesteIntegracao
             var coautoresNumerados = acervoBibliograficoLinha.CoAutor.Conteudo.FormatarTextoEmArray()
                 .Select((coautoresEmTexto, indice) => new IdNomeTipoDTO { Id = indice + 10, Nome = coautoresEmTexto }).ToList();
                 
-            servicoImportacaoArquivo.DefinirCreditosAutores(coautoresNumerados); 
+            servicoImportacaoArquivo.DefinirCoAutores(coautoresNumerados); 
             
             var coautores = servicoImportacaoArquivo.ObterCoAutoresTipoAutoria(acervoBibliograficoLinha.CoAutor.Conteudo, acervoBibliograficoLinha.TipoAutoria.Conteudo);
             coautores.ShouldNotBeNull();
@@ -172,7 +185,10 @@ namespace SME.CDEP.TesteIntegracao
         {
             await InserirDadosBasicos();
             
-            var servicoImportacaoArquivo = GetServicoImportacaoArquivoAcervoBibliografico();
+            var notificarQtdeDiasAntesDoVencimentoEmprestimo = ParametroSistemaMock.Instance.GerarParametroSistema(TipoParametroSistema.LimiteAcervosImportadosViaPanilha, "1");
+            await InserirNaBase(notificarQtdeDiasAntesDoVencimentoEmprestimo);
+            
+            var casoDeUso = ObterCasoDeUso<IImportacaoArquivoAcervoBibliograficoAuxiliar>();
 
             var acervoBibliograficoLinhas = AcervoBibliograficoLinhaMock.GerarAcervoBibliograficoLinhaDTO().Generate(10);
             var autores = acervoBibliograficoLinhas
@@ -185,7 +201,7 @@ namespace SME.CDEP.TesteIntegracao
                 .SelectMany(acervoArteGraficaLinhaDto => acervoArteGraficaLinhaDto.CoAutor.Conteudo.FormatarTextoEmArray().UnificarPipe().SplitPipe())
                 .Distinct()
                 .ToList();
-            await InserirCreditosAutorias(coAutores, TipoCreditoAutoria.Autoria);
+            await InserirCreditosAutorias(coAutores, TipoCreditoAutoria.Coautor);
             
             var inserirAssuntos = acervoBibliograficoLinhas
                 .SelectMany(acervo => acervo.Assunto.Conteudo.FormatarTextoEmArray().UnificarPipe().SplitPipe())
@@ -200,8 +216,8 @@ namespace SME.CDEP.TesteIntegracao
             acervoBibliograficoLinhas[8].Volume.Conteudo = faker.Lorem.Paragraph();
             var linhasComErros = new[] { 3, 5, 6, 8, 9 };
             
-            await servicoImportacaoArquivo.CarregarDominios();
-            servicoImportacaoArquivo.ValidarPreenchimentoValorFormatoQtdeCaracteres(acervoBibliograficoLinhas);
+            await casoDeUso.CarregarDominiosBibliograficos();
+            casoDeUso.ValidarPreenchimentoValorFormatoQtdeCaracteres(acervoBibliograficoLinhas);
 
             foreach (var linha in acervoBibliograficoLinhas)
             {
@@ -286,7 +302,10 @@ namespace SME.CDEP.TesteIntegracao
         {
             await InserirDadosBasicos();
             
-            var servicoImportacaoArquivo = GetServicoImportacaoArquivoAcervoBibliografico();
+            var notificarQtdeDiasAntesDoVencimentoEmprestimo = ParametroSistemaMock.Instance.GerarParametroSistema(TipoParametroSistema.LimiteAcervosImportadosViaPanilha, "1");
+            await InserirNaBase(notificarQtdeDiasAntesDoVencimentoEmprestimo);
+            
+            var casoDeUso = ObterCasoDeUso<IImportacaoArquivoAcervoBibliograficoAuxiliar>();
 
             var acervoBibliograficoLinhas = AcervoBibliograficoLinhaMock.GerarAcervoBibliograficoLinhaDTO().Generate(10);
             var autores = acervoBibliograficoLinhas
@@ -299,7 +318,7 @@ namespace SME.CDEP.TesteIntegracao
                 .SelectMany(acervoArteGraficaLinhaDto => acervoArteGraficaLinhaDto.CoAutor.Conteudo.FormatarTextoEmArray().UnificarPipe().SplitPipe())
                 .Distinct()
                 .ToList();
-            await InserirCreditosAutorias(coAutores, TipoCreditoAutoria.Autoria);
+            await InserirCreditosAutorias(coAutores, TipoCreditoAutoria.Coautor);
             
             var inserirAssuntos = acervoBibliograficoLinhas
                 .SelectMany(acervo => acervo.Assunto.Conteudo.FormatarTextoEmArray().UnificarPipe().SplitPipe())
@@ -328,8 +347,8 @@ namespace SME.CDEP.TesteIntegracao
             
             var linhasComErros = new[] { 1, 2, 3, 5, 6, 8, 9 };
             
-            await servicoImportacaoArquivo.CarregarDominios();
-            servicoImportacaoArquivo.ValidarPreenchimentoValorFormatoQtdeCaracteres(acervoBibliograficoLinhas);
+            await casoDeUso.CarregarDominiosBibliograficos();
+            casoDeUso.ValidarPreenchimentoValorFormatoQtdeCaracteres(acervoBibliograficoLinhas);
 
             foreach (var linha in acervoBibliograficoLinhas)
             {
@@ -446,7 +465,10 @@ namespace SME.CDEP.TesteIntegracao
         {
             await InserirDadosBasicos();
             
-            var servicoImportacaoArquivo = GetServicoImportacaoArquivoAcervoBibliografico();
+            var notificarQtdeDiasAntesDoVencimentoEmprestimo = ParametroSistemaMock.Instance.GerarParametroSistema(TipoParametroSistema.LimiteAcervosImportadosViaPanilha, "1");
+            await InserirNaBase(notificarQtdeDiasAntesDoVencimentoEmprestimo);
+            
+            var casoDeUso = ObterCasoDeUso<IImportacaoArquivoAcervoBibliograficoAuxiliar>();
 
             var acervoBibliograficoLinhas = AcervoBibliograficoLinhaMock.GerarAcervoBibliograficoLinhaDTO().Generate(10);
 
@@ -460,7 +482,7 @@ namespace SME.CDEP.TesteIntegracao
                 .SelectMany(acervo => acervo.CoAutor.Conteudo.FormatarTextoEmArray().UnificarPipe().SplitPipe())
                 .Distinct()
                 .ToList();
-            await InserirCreditosAutorias(coAutores,TipoCreditoAutoria.Autoria);
+            await InserirCreditosAutorias(coAutores,TipoCreditoAutoria.Coautor);
             
             var inserirAssuntos = acervoBibliograficoLinhas
                 .SelectMany(acervo => acervo.Assunto.Conteudo.FormatarTextoEmArray().UnificarPipe().SplitPipe())
@@ -477,8 +499,8 @@ namespace SME.CDEP.TesteIntegracao
                 CriadoEm = DateTimeExtension.HorarioBrasilia().Date, CriadoPor = ConstantesTestes.SISTEMA, CriadoLogin = ConstantesTestes.LOGIN_123456789
             });
             
-            await servicoImportacaoArquivo.CarregarDominios();
-            await servicoImportacaoArquivo.PersistenciaAcervo(acervoBibliograficoLinhas);
+            await casoDeUso.CarregarDominiosBibliograficos();
+            await casoDeUso.PersistenciaAcervo(acervoBibliograficoLinhas);
 
             var acervos = ObterTodos<Acervo>();
             var acervosBibliograficos = ObterTodos<AcervoBibliografico>();
@@ -565,6 +587,11 @@ namespace SME.CDEP.TesteIntegracao
         {
             await InserirDadosBasicos();
             
+            var notificarQtdeDiasAntesDoVencimentoEmprestimo = ParametroSistemaMock.Instance.GerarParametroSistema(TipoParametroSistema.LimiteAcervosImportadosViaPanilha, "1");
+            await InserirNaBase(notificarQtdeDiasAntesDoVencimentoEmprestimo);
+
+            var casoDeUso = ObterCasoDeUso<IImportacaoArquivoAcervoBibliograficoAuxiliar>();
+            
             var servicoImportacaoArquivo = GetServicoImportacaoArquivoAcervoBibliografico();
 
             var acervoBibliograficoLinhas = AcervoBibliograficoLinhaMock.GerarAcervoBibliograficoLinhaDTO().Generate(10);
@@ -573,15 +600,13 @@ namespace SME.CDEP.TesteIntegracao
                 .SelectMany(acervo => acervo.Autor.Conteudo.FormatarTextoEmArray().UnificarPipe().SplitPipe())
                 .Distinct()
                 .ToList();
-
             await InserirCreditosAutorias(autores,TipoCreditoAutoria.Autoria);
             
             var coAutores = acervoBibliograficoLinhas
                 .SelectMany(acervo => acervo.CoAutor.Conteudo.FormatarTextoEmArray().UnificarPipe().SplitPipe())
                 .Distinct()
                 .ToList();
-
-            await InserirCreditosAutorias(coAutores,TipoCreditoAutoria.Autoria);
+            await InserirCreditosAutorias(coAutores,TipoCreditoAutoria.Coautor);
             
             var inserirAssuntos = acervoBibliograficoLinhas
                 .SelectMany(acervo => acervo.Assunto.Conteudo.FormatarTextoEmArray().UnificarPipe().SplitPipe())
@@ -603,9 +628,9 @@ namespace SME.CDEP.TesteIntegracao
                 CriadoEm = DateTimeExtension.HorarioBrasilia().Date, CriadoPor = ConstantesTestes.SISTEMA, CriadoLogin = ConstantesTestes.LOGIN_123456789
             });
             
-            await servicoImportacaoArquivo.CarregarDominios();
-            servicoImportacaoArquivo.ValidarPreenchimentoValorFormatoQtdeCaracteres(acervoBibliograficoLinhas);
-            await servicoImportacaoArquivo.PersistenciaAcervo(acervoBibliograficoLinhas);
+            await casoDeUso.CarregarDominiosBibliograficos();
+            casoDeUso.ValidarPreenchimentoValorFormatoQtdeCaracteres(acervoBibliograficoLinhas);
+            await casoDeUso.PersistenciaAcervo(acervoBibliograficoLinhas);
             await servicoImportacaoArquivo.AtualizarImportacao(1, JsonConvert.SerializeObject(acervoBibliograficoLinhas), acervoBibliograficoLinhas.Any(a=> a.PossuiErros) ? ImportacaoStatus.Erros : ImportacaoStatus.Sucesso);
             var retorno = await servicoImportacaoArquivo.ObterImportacaoPendente();
 
@@ -757,6 +782,11 @@ namespace SME.CDEP.TesteIntegracao
         {
             await InserirDadosBasicos();
             
+            var notificarQtdeDiasAntesDoVencimentoEmprestimo = ParametroSistemaMock.Instance.GerarParametroSistema(TipoParametroSistema.LimiteAcervosImportadosViaPanilha, "1");
+            await InserirNaBase(notificarQtdeDiasAntesDoVencimentoEmprestimo);
+
+            var casoDeUso = ObterCasoDeUso<IImportacaoArquivoAcervoBibliograficoAuxiliar>();
+            
             var servicoImportacaoArquivo = GetServicoImportacaoArquivoAcervoBibliografico();
 
             var acervoBibliograficoLinhas = AcervoBibliograficoLinhaMock.GerarAcervoBibliograficoLinhaDTO().Generate(10);
@@ -772,14 +802,12 @@ namespace SME.CDEP.TesteIntegracao
                 .SelectMany(acervo => acervo.CoAutor.Conteudo.FormatarTextoEmArray().UnificarPipe().SplitPipe())
                 .Distinct()
                 .ToList();
-
-            await InserirCreditosAutorias(coAutores,TipoCreditoAutoria.Autoria);
+            await InserirCreditosAutorias(coAutores,TipoCreditoAutoria.Coautor);
             
             var inserirAssuntos = acervoBibliograficoLinhas
                 .SelectMany(acervo => acervo.Assunto.Conteudo.FormatarTextoEmArray().UnificarPipe().SplitPipe())
                 .Distinct()
                 .ToList();
-
             await InserirAssuntos(inserirAssuntos);
             
             acervoBibliograficoLinhas[3].Largura.Conteudo = "10";
@@ -796,9 +824,9 @@ namespace SME.CDEP.TesteIntegracao
                 CriadoEm = DateTimeExtension.HorarioBrasilia().Date, CriadoPor = ConstantesTestes.SISTEMA, CriadoLogin = ConstantesTestes.LOGIN_123456789
             });
             
-            await servicoImportacaoArquivo.CarregarDominios();
-            servicoImportacaoArquivo.ValidarPreenchimentoValorFormatoQtdeCaracteres(acervoBibliograficoLinhas);
-            await servicoImportacaoArquivo.PersistenciaAcervo(acervoBibliograficoLinhas);
+            await casoDeUso.CarregarDominiosBibliograficos();
+            casoDeUso.ValidarPreenchimentoValorFormatoQtdeCaracteres(acervoBibliograficoLinhas);
+            await casoDeUso.PersistenciaAcervo(acervoBibliograficoLinhas);
             await servicoImportacaoArquivo.AtualizarImportacao(1, JsonConvert.SerializeObject(acervoBibliograficoLinhas), acervoBibliograficoLinhas.Any(a=> a.PossuiErros) ? ImportacaoStatus.Erros : ImportacaoStatus.Sucesso);
             var retorno = await servicoImportacaoArquivo.ObterImportacaoPendente();
 
@@ -948,6 +976,9 @@ namespace SME.CDEP.TesteIntegracao
         [Fact(DisplayName = "Importação Arquivo Acervo Bibliográfico - Obter importação pendente com Erros")]
         public async Task Obter_importacao_pendente_com_erros()
         {
+            var notificarQtdeDiasAntesDoVencimentoEmprestimo = ParametroSistemaMock.Instance.GerarParametroSistema(TipoParametroSistema.LimiteAcervosImportadosViaPanilha, "1");
+            await InserirNaBase(notificarQtdeDiasAntesDoVencimentoEmprestimo);
+            
             var servicoImportacaoArquivo = GetServicoImportacaoArquivoAcervoBibliografico();
 
             var linhasInseridas = AcervoBibliograficoLinhaMock.GerarAcervoBibliograficoLinhaDTO().Generate(10);
@@ -1363,6 +1394,9 @@ namespace SME.CDEP.TesteIntegracao
         [Fact(DisplayName = "Importação Arquivo Acervo Bibliográfico - Validação de RetornoObjeto")]
         public async Task Validacao_retorno_objeto()
         {
+            var notificarQtdeDiasAntesDoVencimentoEmprestimo = ParametroSistemaMock.Instance.GerarParametroSistema(TipoParametroSistema.LimiteAcervosImportadosViaPanilha, "1");
+            await InserirNaBase(notificarQtdeDiasAntesDoVencimentoEmprestimo);
+            
             var servicoImportacaoArquivo = GetServicoImportacaoArquivoAcervoBibliografico();
 
             var linhasInseridas = AcervoBibliograficoLinhaMock.GerarAcervoBibliograficoLinhaDTO().Generate(10);
