@@ -290,6 +290,7 @@ public class Constantes
     
     public const int CARACTERES_PERMITIDOS_500 = 500;
     public const int CARACTERES_PERMITIDOS_200 = 200;
+    public const int CARACTERES_PERMITIDOS_270 = 270;
     public const int CARACTERES_PERMITIDOS_100 = 100;
     public const int CARACTERES_PERMITIDOS_50 = 50;
     public const int CARACTERES_PERMITIDOS_30 = 30;

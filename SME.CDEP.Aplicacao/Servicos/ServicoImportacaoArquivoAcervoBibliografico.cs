@@ -352,7 +352,7 @@ namespace SME.CDEP.Aplicacao.Servicos
                         Assunto = new LinhaConteudoAjustarDTO()
                         {
                             Conteudo = planilha.ObterValorDaCelula(numeroLinha, Constantes.ACERVO_BIBLIOGRAFICO_CAMPO_ASSUNTO),
-                            LimiteCaracteres = Constantes.CARACTERES_PERMITIDOS_200,
+                            LimiteCaracteres = Constantes.CARACTERES_PERMITIDOS_270,
                             EhCampoObrigatorio = true
                         },
                         Ano = new LinhaConteudoAjustarDTO()
