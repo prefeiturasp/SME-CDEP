@@ -284,7 +284,7 @@ namespace SME.CDEP.Aplicacao.Mapeamentos
             CreateMap<EventoDetalhe,EventoDetalheDTO>()
                 .ForMember(dest => dest.TipoId, opt => opt.MapFrom(o => o.Tipo))
                 .ForMember(dest => dest.Tipo, opt => opt.MapFrom(o => o.Tipo.Descricao()))
-                .ForMember(dest => dest.SituacaoSolicitacaoItemDescricao, opt => opt.MapFrom(o => o.SituacaoSolicitacaoItem.Descricao()))
+                .ForMember(dest => dest.SituacaoSolicitacaoItemDescricao, opt => opt.MapFrom(o => o.SituacaoSolicitacaoItem > 0 ? o.SituacaoSolicitacaoItem.Descricao() : string.Empty))
                 .ForMember(dest => dest.SituacaoSolicitacaoItemId, opt => opt.MapFrom(o => o.SituacaoSolicitacaoItem))
                 .ForMember(dest => dest.Horario, opt => opt.MapFrom(o => o.Data.ToString("HH:mm")))
                 .ReverseMap();
