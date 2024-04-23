@@ -38,6 +38,8 @@ namespace SME.CDEP.Aplicacao.Servicos
         {
             var evento = mapper.Map<Evento>(eventoCadastroDto);
 
+            ValidarVisitaEmFinaisDeSemana(eventoCadastroDto.Tipo.EhVisita(), evento.Data.FimDeSemana());
+
             evento.Descricao = eventoCadastroDto.Tipo.EhVisita() 
                 ? await ObterDetalhesDoAcervo(evento) 
                 : eventoCadastroDto.Tipo.EhFeriado() ? eventoCadastroDto.Descricao : "Suspensão";
@@ -45,6 +47,12 @@ namespace SME.CDEP.Aplicacao.Servicos
             await Validar(evento);
             
             return await repositorioEvento.Inserir(evento);
+        }
+
+        private void ValidarVisitaEmFinaisDeSemana(bool ehVisita, bool ehFinalDeSemana)
+        {
+            if (ehVisita && ehFinalDeSemana)
+                throw new NegocioException(MensagemNegocio.NAO_EH_PERMITIDO_AGENDAR_VISITA_NO_FINAL_DE_SEMANA);
         }
 
         private async Task<string> ObterDetalhesDoAcervo(Evento evento)
@@ -87,6 +95,8 @@ namespace SME.CDEP.Aplicacao.Servicos
            
             if (eventoAtual.EhNulo())
                 throw new NegocioException(MensagemNegocio.EVENTO_NAO_ENCONTRADO);
+            
+            ValidarVisitaEmFinaisDeSemana(eventoCadastroDto.Tipo.EhVisita(), eventoAtual.Data.FimDeSemana());
             
             var evento = mapper.Map<Evento>(eventoCadastroDto);
             evento.CriadoEm = eventoAtual.CriadoEm;
