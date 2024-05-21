@@ -18,7 +18,7 @@ namespace SME.CDEP.Aplicacao.Servicos
     public class ServicoImportacaoArquivoAcervoFotografico : ServicoImportacaoArquivoBase, IServicoImportacaoArquivoAcervoFotografico
     {
         private readonly IServicoMensageria servicoMensageria;
-        
+        private const int QTDE_CARECTERES_DATA_PARCIAL = 7;
         public ServicoImportacaoArquivoAcervoFotografico(IRepositorioImportacaoArquivo repositorioImportacaoArquivo, IServicoMaterial servicoMaterial,
             IServicoEditora servicoEditora,IServicoSerieColecao servicoSerieColecao,IServicoIdioma servicoIdioma, IServicoAssunto servicoAssunto,
             IServicoCreditoAutor servicoCreditoAutor,IServicoConservacao servicoConservacao, IServicoAcessoDocumento servicoAcessoDocumento,
@@ -396,18 +396,18 @@ namespace SME.CDEP.Aplicacao.Servicos
         {
             var campoData = planilha.Cell(numeroLinha, Constantes.ACERVO_FOTOGRAFICO_CAMPO_DATA);
 
-            var dataLiteral = campoData.Value.ToString().Trim();
+            var dataNaoTipada = campoData.Value.ToString().Trim();
             
-            if (dataLiteral.NaoEstaPreenchido())
+            if (dataNaoTipada.NaoEstaPreenchido())
                 return string.Empty;
             
-            if (dataLiteral.Length <= 7)
-                return dataLiteral;
+            if (dataNaoTipada.Length <= QTDE_CARECTERES_DATA_PARCIAL)
+                return dataNaoTipada;
 
-            if (DateTime.TryParse(dataLiteral,out DateTime dataConvertida))
-                return dataConvertida.ToString("dd/MM/yyyy", CultureInfo.GetCultureInfo("pt-BR"));
+            if (DateTime.TryParse(dataNaoTipada,out DateTime dataTipada))
+                return dataTipada.ToString("dd/MM/yyyy", CultureInfo.GetCultureInfo("pt-BR"));
 
-            throw new NegocioException(string.Format(MensagemNegocio.NAO_FOI_POSSIVEL_CONVERTER_A_DATA_ACERVO, dataLiteral));
+            throw new NegocioException(string.Format(MensagemNegocio.NAO_FOI_POSSIVEL_CONVERTER_A_DATA_ACERVO, dataNaoTipada));
         }
 
         private void ValidarOrdemColunas(IXLWorksheet planilha, int numeroLinha)
