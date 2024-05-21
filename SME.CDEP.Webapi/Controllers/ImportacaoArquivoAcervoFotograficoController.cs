@@ -17,7 +17,7 @@ public class ImportacaoArquivoAcervoFotograficoController: BaseController
     [ProducesResponseType(typeof(ImportacaoArquivoRetornoDTO<AcervoLinhaErroDTO<AcervoFotograficoDTO,AcervoFotograficoLinhaRetornoDTO>,AcervoLinhaRetornoSucessoDTO>),200)]
     [ProducesResponseType(401)]
     [ProducesResponseType(typeof(RetornoBaseDTO), 500)]
-    // [Permissao(Permissao.CadastroAcervo_I, Policy = "Bearer")]
+    [Permissao(Permissao.CadastroAcervo_I, Policy = "Bearer")]
     public async Task<IActionResult> ImportarArquivo(IFormFile file,[FromServices] IServicoImportacaoArquivoAcervoFotografico servicoImportacaoArquivoAcervoFotografico)
     {
         return Ok(await servicoImportacaoArquivoAcervoFotografico.ImportarArquivo(file));
