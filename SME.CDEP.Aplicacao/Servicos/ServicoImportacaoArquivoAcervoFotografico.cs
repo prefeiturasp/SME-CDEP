@@ -1,4 +1,5 @@
-﻿using AutoMapper;
+﻿using System.Globalization;
+using AutoMapper;
 using ClosedXML.Excel;
 using Microsoft.AspNetCore.Http;
 using Newtonsoft.Json;
@@ -309,7 +310,7 @@ namespace SME.CDEP.Aplicacao.Servicos
                         },
                         Data = new LinhaConteudoAjustarDTO()
                         {
-                            Conteudo = planilha.ObterValorDaCelula(numeroLinha, Constantes.ACERVO_FOTOGRAFICO_CAMPO_DATA),
+                            Conteudo = ObterData(planilha, numeroLinha),
                             LimiteCaracteres = Constantes.CARACTERES_PERMITIDOS_50,
                             EhCampoObrigatorio = true
                         },
@@ -390,7 +391,25 @@ namespace SME.CDEP.Aplicacao.Servicos
 
             return linhas;
         }
-        
+
+        private static string ObterData(IXLWorksheet planilha, int numeroLinha)
+        {
+            var campoData = planilha.Cell(numeroLinha, Constantes.ACERVO_FOTOGRAFICO_CAMPO_DATA);
+
+            var dataLiteral = campoData.ToString();
+            
+            if (dataLiteral.NaoEstaPreenchido())
+                return string.Empty;
+            
+            if (dataLiteral.Length <= 7)
+                return dataLiteral;
+
+            if (DateTime.TryParse(dataLiteral,out DateTime dataConvertida))
+                return dataConvertida.ToString("dd/MM/yyyy", CultureInfo.GetCultureInfo("pt-BR"));
+
+            throw new NegocioException(string.Format(MensagemNegocio.NAO_FOI_POSSIVEL_CONVERTER_A_DATA_ACERVO, dataLiteral));
+        }
+
         private void ValidarOrdemColunas(IXLWorksheet planilha, int numeroLinha)
         {
             ValidarTituloDaColuna(planilha, numeroLinha, Constantes.NOME_DA_COLUNA_TITULO, 
