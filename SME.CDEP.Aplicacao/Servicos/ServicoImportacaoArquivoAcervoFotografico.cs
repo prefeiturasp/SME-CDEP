@@ -396,7 +396,7 @@ namespace SME.CDEP.Aplicacao.Servicos
         {
             var campoData = planilha.Cell(numeroLinha, Constantes.ACERVO_FOTOGRAFICO_CAMPO_DATA);
 
-            var dataLiteral = campoData.ToString();
+            var dataLiteral = campoData.Value.ToString().Trim();
             
             if (dataLiteral.NaoEstaPreenchido())
                 return string.Empty;
