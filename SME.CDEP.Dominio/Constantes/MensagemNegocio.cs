@@ -74,4 +74,5 @@ public class MensagemNegocio
     public const string LIMITE_ACERVOS_IMPORTADOS_VIA_PLANILHA = "O limite de acervos importados por planilha não pode ser superior a '{0}' linhas";
     public const string IMPORTACAO_NAO_LOCALIZADA = "Importação não localizada";
     public const string NAO_EH_PERMITIDO_AGENDAR_VISITA_NO_FINAL_DE_SEMANA = "Não é permitido agendar visita no final de semana";
+    public const string NAO_FOI_POSSIVEL_CONVERTER_A_DATA_ACERVO = "Não foi possível converter a data do acervo: '{0}'.";
 }

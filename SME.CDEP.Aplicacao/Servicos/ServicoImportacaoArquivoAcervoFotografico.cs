@@ -1,4 +1,5 @@
-﻿using AutoMapper;
+﻿using System.Globalization;
+using AutoMapper;
 using ClosedXML.Excel;
 using Microsoft.AspNetCore.Http;
 using Newtonsoft.Json;
@@ -17,7 +18,7 @@ namespace SME.CDEP.Aplicacao.Servicos
     public class ServicoImportacaoArquivoAcervoFotografico : ServicoImportacaoArquivoBase, IServicoImportacaoArquivoAcervoFotografico
     {
         private readonly IServicoMensageria servicoMensageria;
-        
+        private const int QTDE_CARECTERES_DATA_PARCIAL = 7;
         public ServicoImportacaoArquivoAcervoFotografico(IRepositorioImportacaoArquivo repositorioImportacaoArquivo, IServicoMaterial servicoMaterial,
             IServicoEditora servicoEditora,IServicoSerieColecao servicoSerieColecao,IServicoIdioma servicoIdioma, IServicoAssunto servicoAssunto,
             IServicoCreditoAutor servicoCreditoAutor,IServicoConservacao servicoConservacao, IServicoAcessoDocumento servicoAcessoDocumento,
@@ -309,7 +310,7 @@ namespace SME.CDEP.Aplicacao.Servicos
                         },
                         Data = new LinhaConteudoAjustarDTO()
                         {
-                            Conteudo = planilha.ObterValorDaCelula(numeroLinha, Constantes.ACERVO_FOTOGRAFICO_CAMPO_DATA),
+                            Conteudo = ObterData(planilha, numeroLinha),
                             LimiteCaracteres = Constantes.CARACTERES_PERMITIDOS_50,
                             EhCampoObrigatorio = true
                         },
@@ -390,7 +391,25 @@ namespace SME.CDEP.Aplicacao.Servicos
 
             return linhas;
         }
-        
+
+        private static string ObterData(IXLWorksheet planilha, int numeroLinha)
+        {
+            var campoData = planilha.Cell(numeroLinha, Constantes.ACERVO_FOTOGRAFICO_CAMPO_DATA);
+
+            var dataNaoTipada = campoData.Value.ToString().Trim();
+            
+            if (dataNaoTipada.NaoEstaPreenchido())
+                return string.Empty;
+            
+            if (dataNaoTipada.Length <= QTDE_CARECTERES_DATA_PARCIAL)
+                return dataNaoTipada;
+
+            if (DateTime.TryParse(dataNaoTipada,out DateTime dataTipada))
+                return dataTipada.ToString("dd/MM/yyyy", CultureInfo.GetCultureInfo("pt-BR"));
+
+            throw new NegocioException(string.Format(MensagemNegocio.NAO_FOI_POSSIVEL_CONVERTER_A_DATA_ACERVO, dataNaoTipada));
+        }
+
         private void ValidarOrdemColunas(IXLWorksheet planilha, int numeroLinha)
         {
             ValidarTituloDaColuna(planilha, numeroLinha, Constantes.NOME_DA_COLUNA_TITULO, 
