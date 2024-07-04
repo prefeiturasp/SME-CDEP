@@ -138,10 +138,12 @@ namespace SME.CDEP.Aplicacao.Servicos
 
         private async Task<AcervoSolicitacaoRetornoCadastroDTO> ObterAcervosSolicitacoesPorIdTiposPermitidos(long acervoSolicitacaoId, long[] tiposAcervosPermitidos)
         {
+            var perfilLogado = new Guid(contextoAplicacao.PerfilUsuario);
             var acervosItensCompletos = await repositorioAcervo.ObterAcervosSolicitacoesItensCompletoPorId(acervoSolicitacaoId, tiposAcervosPermitidos);
-
-            var acervoItensRetorno = mapper.Map<IEnumerable<AcervoSolicitacaoItemRetornoCadastroDTO>>(acervosItensCompletos);
-
+            var acervoItensRetorno = mapper.Map<IEnumerable<AcervoSolicitacaoItemRetornoCadastroDTO>>(acervosItensCompletos, 
+                                                                                                        opt => 
+                                                                                                            opt.Items.Add(Constantes.PERFIL_USUARIO_LOGADO_DESABILITA_DATA_VISITA, 
+                                                                                                                        perfilLogado.EhPerfilExterno()));
             var arquivosDoAcervo = await repositorioAcervo.ObterArquivosPorAcervoId(acervosItensCompletos.Select(s => s.AcervoId).ToArray());
 
             foreach (var retorno in acervoItensRetorno)

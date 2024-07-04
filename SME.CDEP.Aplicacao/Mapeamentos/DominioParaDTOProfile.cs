@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using Minio.DataModel;
 using SME.CDEP.Aplicacao.DTOS;
 using SME.CDEP.Dominio.Constantes;
 using SME.CDEP.Dominio.Entidades;
@@ -192,9 +193,13 @@ namespace SME.CDEP.Aplicacao.Mapeamentos
                 .ForMember(dest => dest.TipoAcervo, opt => opt.MapFrom(o => o.TipoAcervo.Descricao()))
                 .ForMember(dest => dest.TipoAtendimento, opt => opt.MapFrom(o => o.TipoAtendimento.Descricao()))
                 .ForMember(dest => dest.AlteraDataVisita,
-                    opt => opt.MapFrom(o =>
-                        o.SituacaoItem.EstaAguardandoVisita() && o.TipoAtendimento.EhAtendimentoPresencial() &&
-                        o.SituacaoItem.NaoEstaCancelado()))
+                    opt => opt.MapFrom((o, dest, _, context) =>
+                    {
+                        var perfilUsuarioLogadoDesabilitaDataVisita = context.Items.ContainsKey(Constantes.PERFIL_USUARIO_LOGADO_DESABILITA_DATA_VISITA)  
+                                                                     && (bool)context.Items[Constantes.PERFIL_USUARIO_LOGADO_DESABILITA_DATA_VISITA];
+                        return o.SituacaoItem.EstaAguardandoVisita() && o.TipoAtendimento.EhAtendimentoPresencial() &&
+                        o.SituacaoItem.NaoEstaCancelado() && !perfilUsuarioLogadoDesabilitaDataVisita;
+                    }))
                 .ForMember(dest => dest.TemControleDisponibilidade, opt => opt.MapFrom(o => o.TipoAcervo.EhAcervoBibliografico()))
                 .ForMember(dest => dest.EstaDisponivel, opt => opt.MapFrom(o => o.SituacaoSaldo.EstaDisponivel()))
                 .ForMember(dest => dest.SituacaoDisponibilidade, opt => opt.MapFrom(o => o.SituacaoSaldoDescricao()))
