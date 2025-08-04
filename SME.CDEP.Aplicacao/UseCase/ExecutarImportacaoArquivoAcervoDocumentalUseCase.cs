@@ -73,8 +73,8 @@ namespace SME.CDEP.Aplicacao.Servicos
                     var acervoDocumental = new AcervoDocumentalCadastroDTO()
                     {
                         Titulo = acervoDocumentalLinha.Titulo.Conteudo,
-                        Codigo = acervoDocumentalLinha.Codigo.Conteudo,
-                        CodigoNovo = acervoDocumentalLinha.CodigoNovo.Conteudo,
+                        Codigo = acervoDocumentalLinha.Codigo.Conteudo.EstaPreenchido() ? acervoDocumentalLinha.Codigo.Conteudo : null,
+                        CodigoNovo = acervoDocumentalLinha.CodigoNovo.Conteudo.EstaPreenchido() ? acervoDocumentalLinha.CodigoNovo.Conteudo : null,
                         MaterialId = ObterMaterialDocumentalIdOuNuloPorValorDoCampo(acervoDocumentalLinha.Material.Conteudo),
                         IdiomaId = ObterIdiomaIdPorValorDoCampo(acervoDocumentalLinha.Idioma.Conteudo),
                         CreditosAutoresIds = ObterCreditoAutoresIdsPorValorDoCampo(acervoDocumentalLinha.Autor.Conteudo, TipoCreditoAutoria.Autoria, false),

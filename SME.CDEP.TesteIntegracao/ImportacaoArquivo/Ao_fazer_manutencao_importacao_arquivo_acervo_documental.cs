@@ -344,6 +344,86 @@ namespace SME.CDEP.TesteIntegracao
             }
         }
         
+        [Fact(DisplayName = "Importação Arquivo Acervo Documental - PersistenciaAcervo sem código, só com codigo_novo")]
+        public async Task Persistencia_acervo_sem_codigo()
+        {
+            await InserirDadosBasicos();
+
+            var notificarQtdeDiasAntesDoVencimentoEmprestimo = ParametroSistemaMock.Instance.GerarParametroSistema(TipoParametroSistema.LimiteAcervosImportadosViaPanilha, "1");
+            await InserirNaBase(notificarQtdeDiasAntesDoVencimentoEmprestimo);
+
+            var casoDeUso = ObterCasoDeUso<IImportacaoArquivoAcervoDocumentalAuxiliar>();
+        
+            var acervoDocumentalLinhas = AcervoDocumentalLinhaMock.GerarAcervoDocumentalLinhaDTO().Generate(10);
+        
+            var autores = acervoDocumentalLinhas
+                .SelectMany(acervo => acervo.Autor.Conteudo.FormatarTextoEmArray().UnificarPipe().SplitPipe())
+                .Distinct()
+                .ToList();
+
+            await InserirCreditosAutorias(autores,TipoCreditoAutoria.Autoria);
+            
+            await InserirNaBase(new ImportacaoArquivo()
+            {
+                Nome = faker.Hacker.Verb(),
+                TipoAcervo = TipoAcervo.DocumentacaoHistorica,
+                Status = ImportacaoStatus.Pendente,
+                Conteudo = JsonConvert.SerializeObject(acervoDocumentalLinhas),
+                CriadoEm = DateTimeExtension.HorarioBrasilia().Date, CriadoPor = ConstantesTestes.SISTEMA, CriadoLogin = ConstantesTestes.LOGIN_123456789
+            });
+            
+            await casoDeUso.CarregarDominiosDocumentais();
+            acervoDocumentalLinhas.FirstOrDefault().Codigo.Conteudo = string.Empty;
+            await casoDeUso.PersistenciaAcervo(acervoDocumentalLinhas);
+        
+            var acervos = ObterTodos<Acervo>();
+            
+            //Acervos inseridos
+            acervos.ShouldNotBeNull();
+            acervos.Count().ShouldBe(10);
+            acervos.Any(a=> a.Codigo.EhNulo()).ShouldBeTrue();
+        }
+        
+        [Fact(DisplayName = "Importação Arquivo Acervo Documental - PersistenciaAcervo sem código_novo")]
+        public async Task Persistencia_acervo_sem_codigo_novo()
+        {
+            await InserirDadosBasicos();
+
+            var notificarQtdeDiasAntesDoVencimentoEmprestimo = ParametroSistemaMock.Instance.GerarParametroSistema(TipoParametroSistema.LimiteAcervosImportadosViaPanilha, "1");
+            await InserirNaBase(notificarQtdeDiasAntesDoVencimentoEmprestimo);
+
+            var casoDeUso = ObterCasoDeUso<IImportacaoArquivoAcervoDocumentalAuxiliar>();
+        
+            var acervoDocumentalLinhas = AcervoDocumentalLinhaMock.GerarAcervoDocumentalLinhaDTO().Generate(10);
+        
+            var autores = acervoDocumentalLinhas
+                .SelectMany(acervo => acervo.Autor.Conteudo.FormatarTextoEmArray().UnificarPipe().SplitPipe())
+                .Distinct()
+                .ToList();
+
+            await InserirCreditosAutorias(autores,TipoCreditoAutoria.Autoria);
+            
+            await InserirNaBase(new ImportacaoArquivo()
+            {
+                Nome = faker.Hacker.Verb(),
+                TipoAcervo = TipoAcervo.DocumentacaoHistorica,
+                Status = ImportacaoStatus.Pendente,
+                Conteudo = JsonConvert.SerializeObject(acervoDocumentalLinhas),
+                CriadoEm = DateTimeExtension.HorarioBrasilia().Date, CriadoPor = ConstantesTestes.SISTEMA, CriadoLogin = ConstantesTestes.LOGIN_123456789
+            });
+            
+            await casoDeUso.CarregarDominiosDocumentais();
+            acervoDocumentalLinhas.FirstOrDefault().CodigoNovo.Conteudo = string.Empty;
+            await casoDeUso.PersistenciaAcervo(acervoDocumentalLinhas);
+        
+            var acervos = ObterTodos<Acervo>();
+            
+            //Acervos inseridos
+            acervos.ShouldNotBeNull();
+            acervos.Count().ShouldBe(10);
+            acervos.Any(a=> a.CodigoNovo.EhNulo()).ShouldBeTrue();
+        }
+        
         [Fact(DisplayName = "Importação Arquivo Acervo Documental - Geral - Com erros em 4 linhas")]
         public async Task Importacao_geral()
         {
