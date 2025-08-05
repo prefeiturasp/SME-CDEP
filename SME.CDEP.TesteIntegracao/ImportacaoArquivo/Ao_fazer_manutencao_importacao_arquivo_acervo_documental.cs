@@ -266,7 +266,7 @@ namespace SME.CDEP.TesteIntegracao
             await InserirNaBase(new ImportacaoArquivo()
             {
                 Nome = faker.Hacker.Verb(),
-                TipoAcervo = TipoAcervo.DocumentacaoHistorica,
+                TipoAcervo = TipoAcervo.DocumentacaoTextual,
                 Status = ImportacaoStatus.Pendente,
                 Conteudo = JsonConvert.SerializeObject(acervoDocumentalLinhas),
                 CriadoEm = DateTimeExtension.HorarioBrasilia().Date, CriadoPor = ConstantesTestes.SISTEMA, CriadoLogin = ConstantesTestes.LOGIN_123456789
@@ -366,7 +366,7 @@ namespace SME.CDEP.TesteIntegracao
             await InserirNaBase(new ImportacaoArquivo()
             {
                 Nome = faker.Hacker.Verb(),
-                TipoAcervo = TipoAcervo.DocumentacaoHistorica,
+                TipoAcervo = TipoAcervo.DocumentacaoTextual,
                 Status = ImportacaoStatus.Pendente,
                 Conteudo = JsonConvert.SerializeObject(acervoDocumentalLinhas),
                 CriadoEm = DateTimeExtension.HorarioBrasilia().Date, CriadoPor = ConstantesTestes.SISTEMA, CriadoLogin = ConstantesTestes.LOGIN_123456789
@@ -406,7 +406,7 @@ namespace SME.CDEP.TesteIntegracao
             await InserirNaBase(new ImportacaoArquivo()
             {
                 Nome = faker.Hacker.Verb(),
-                TipoAcervo = TipoAcervo.DocumentacaoHistorica,
+                TipoAcervo = TipoAcervo.DocumentacaoTextual,
                 Status = ImportacaoStatus.Pendente,
                 Conteudo = JsonConvert.SerializeObject(acervoDocumentalLinhas),
                 CriadoEm = DateTimeExtension.HorarioBrasilia().Date, CriadoPor = ConstantesTestes.SISTEMA, CriadoLogin = ConstantesTestes.LOGIN_123456789
@@ -454,7 +454,7 @@ namespace SME.CDEP.TesteIntegracao
             await InserirNaBase(new ImportacaoArquivo()
             {
                 Nome = faker.Hacker.Verb(),
-                TipoAcervo = TipoAcervo.DocumentacaoHistorica,
+                TipoAcervo = TipoAcervo.DocumentacaoTextual,
                 Status = ImportacaoStatus.Pendente,
                 Conteudo = JsonConvert.SerializeObject(acervoDocumentalLinhas),
                 CriadoEm = DateTimeExtension.HorarioBrasilia().Date, CriadoPor = ConstantesTestes.SISTEMA, CriadoLogin = ConstantesTestes.LOGIN_123456789
@@ -491,7 +491,7 @@ namespace SME.CDEP.TesteIntegracao
             //Retorno front
             retorno.Id.ShouldBe(1);
             retorno.Nome.ShouldNotBeEmpty();
-            retorno.TipoAcervo.ShouldBe(TipoAcervo.DocumentacaoHistorica);
+            retorno.TipoAcervo.ShouldBe(TipoAcervo.DocumentacaoTextual);
             retorno.DataImportacao.Value.Date.ShouldBe(DateTimeExtension.HorarioBrasilia().Date);
             
             foreach (var linhaInserida in acervoDocumentalLinhas.Where(w=> !w.PossuiErros))
@@ -627,7 +627,7 @@ namespace SME.CDEP.TesteIntegracao
             await InserirNaBase(new ImportacaoArquivo()
             {
                 Nome = faker.Hacker.Verb(),
-                TipoAcervo = TipoAcervo.DocumentacaoHistorica,
+                TipoAcervo = TipoAcervo.DocumentacaoTextual,
                 Status = ImportacaoStatus.Pendente,
                 Conteudo = JsonConvert.SerializeObject(acervoDocumentalLinhas),
                 CriadoEm = DateTimeExtension.HorarioBrasilia().Date, CriadoPor = ConstantesTestes.SISTEMA, CriadoLogin = ConstantesTestes.LOGIN_123456789
@@ -664,7 +664,7 @@ namespace SME.CDEP.TesteIntegracao
             //Retorno front
             retorno.Id.ShouldBe(1);
             retorno.Nome.ShouldNotBeEmpty();
-            retorno.TipoAcervo.ShouldBe(TipoAcervo.DocumentacaoHistorica);
+            retorno.TipoAcervo.ShouldBe(TipoAcervo.DocumentacaoTextual);
             retorno.DataImportacao.Value.Date.ShouldBe(DateTimeExtension.HorarioBrasilia().Date);
             
             foreach (var linhaInserida in acervoDocumentalLinhas.Where(w=> !w.PossuiErros))
@@ -795,7 +795,7 @@ namespace SME.CDEP.TesteIntegracao
             await InserirNaBase(new ImportacaoArquivo()
             {
                 Nome = faker.Hacker.Verb(),
-                TipoAcervo = TipoAcervo.DocumentacaoHistorica,
+                TipoAcervo = TipoAcervo.DocumentacaoTextual,
                 Status = ImportacaoStatus.Pendente,
                 Conteudo = JsonConvert.SerializeObject(linhasInseridas),
                 CriadoEm = DateTimeExtension.HorarioBrasilia().Date, CriadoPor = ConstantesTestes.SISTEMA, CriadoLogin = ConstantesTestes.LOGIN_123456789
@@ -945,7 +945,7 @@ namespace SME.CDEP.TesteIntegracao
             await InserirNaBase(new ImportacaoArquivo()
             {
                 Nome = faker.Hacker.Verb(),
-                TipoAcervo = TipoAcervo.DocumentacaoHistorica,
+                TipoAcervo = TipoAcervo.DocumentacaoTextual,
                 Status = ImportacaoStatus.Pendente,
                 Conteudo = JsonConvert.SerializeObject(linhasInseridas),
                 CriadoEm = DateTimeExtension.HorarioBrasilia().Date, CriadoPor = ConstantesTestes.SISTEMA, CriadoLogin = ConstantesTestes.LOGIN_123456789
@@ -968,7 +968,7 @@ namespace SME.CDEP.TesteIntegracao
             await InserirNaBase(new ImportacaoArquivo()
             {
                 Nome = faker.Hacker.Verb(),
-                TipoAcervo = TipoAcervo.DocumentacaoHistorica,
+                TipoAcervo = TipoAcervo.DocumentacaoTextual,
                 Status = ImportacaoStatus.Pendente,
                 Conteudo = JsonConvert.SerializeObject(linhasInseridas),
                 CriadoEm = DateTimeExtension.HorarioBrasilia().Date, CriadoPor = ConstantesTestes.SISTEMA, CriadoLogin = ConstantesTestes.LOGIN_123456789
@@ -987,7 +987,7 @@ namespace SME.CDEP.TesteIntegracao
             await InserirNaBase(new ImportacaoArquivo()
             {
                 Nome = faker.Hacker.Verb(),
-                TipoAcervo = TipoAcervo.DocumentacaoHistorica,
+                TipoAcervo = TipoAcervo.DocumentacaoTextual,
                 Status = ImportacaoStatus.Pendente,
                 Conteudo = JsonConvert.SerializeObject(linhasInseridas),
                 CriadoEm = DateTimeExtension.HorarioBrasilia().Date, CriadoPor = ConstantesTestes.SISTEMA, CriadoLogin = ConstantesTestes.LOGIN_123456789
@@ -1022,7 +1022,7 @@ namespace SME.CDEP.TesteIntegracao
             await InserirNaBase(new ImportacaoArquivo()
             {
                 Nome = faker.Hacker.Verb(),
-                TipoAcervo = TipoAcervo.DocumentacaoHistorica,
+                TipoAcervo = TipoAcervo.DocumentacaoTextual,
                 Status = ImportacaoStatus.Erros,
                 Conteudo = JsonConvert.SerializeObject(linhasInseridas),
                 CriadoEm = DateTimeExtension.HorarioBrasilia().Date, CriadoPor = ConstantesTestes.SISTEMA, CriadoLogin = ConstantesTestes.LOGIN_123456789
@@ -1055,7 +1055,7 @@ namespace SME.CDEP.TesteIntegracao
             await InserirNaBase(new ImportacaoArquivo()
             {
                 Nome = faker.Hacker.Verb(),
-                TipoAcervo = TipoAcervo.DocumentacaoHistorica,
+                TipoAcervo = TipoAcervo.DocumentacaoTextual,
                 Status = ImportacaoStatus.Erros,
                 Conteudo = JsonConvert.SerializeObject(linhasInseridas),
                 CriadoEm = DateTimeExtension.HorarioBrasilia().Date, CriadoPor = ConstantesTestes.SISTEMA, CriadoLogin = ConstantesTestes.LOGIN_123456789
@@ -1110,7 +1110,7 @@ namespace SME.CDEP.TesteIntegracao
             await InserirNaBase(new ImportacaoArquivo()
             {
                 Nome = faker.Hacker.Verb(),
-                TipoAcervo = TipoAcervo.DocumentacaoHistorica,
+                TipoAcervo = TipoAcervo.DocumentacaoTextual,
                 Status = ImportacaoStatus.Pendente,
                 Conteudo = JsonConvert.SerializeObject(acervoDocumentalLinhas),
                 CriadoEm = DateTimeExtension.HorarioBrasilia().Date, CriadoPor = ConstantesTestes.SISTEMA,

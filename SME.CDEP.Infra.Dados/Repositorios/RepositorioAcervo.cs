@@ -1,6 +1,9 @@
 ﻿using Dapper;
+using Dommel;
 using SME.CDEP.Dominio.Contexto;
+using SME.CDEP.Dominio.Dtos;
 using SME.CDEP.Dominio.Entidades;
+using SME.CDEP.Dominio.Enumerados;
 using SME.CDEP.Dominio.Extensions;
 using SME.CDEP.Infra.Dados.Repositorios.Interfaces;
 using SME.CDEP.Infra.Dominio.Enumerados;
@@ -9,63 +12,142 @@ namespace SME.CDEP.Infra.Dados.Repositorios
 {
     public class RepositorioAcervo : RepositorioBaseAuditavel<Acervo>, IRepositorioAcervo
     {
-        public RepositorioAcervo(IContextoAplicacao contexto, ICdepConexao conexao) : base(contexto,conexao)
+        public RepositorioAcervo(IContextoAplicacao contexto, ICdepConexao conexao) : base(contexto, conexao)
         { }
 
-        public async Task<IEnumerable<Acervo>> PesquisarPorFiltro(int? tipoAcervo, string titulo, long? creditoAutorId, string codigo)
+        public async Task<int> ContarPorFiltro(AcervoFiltroDto filtro)
         {
-            var query = @"select a.id, 
-                                 a.tipo, 
-                                 a.titulo,
-                                 a.descricao, 
-                                 case when length(a.codigo_novo) > 0 then 
-     	                                case when length(a.codigo) > 0 then concat(a.codigo,'/',a.codigo_novo) 
-     	                                else a.codigo_novo 
-     	                                end
-                                     else a.codigo end codigo,
-                                 a.data_acervo,
-                                 a.ano,
-                                 a.criado_em, 
-                                 a.criado_por, 
-                                 a.criado_login, 
-                                 a.alterado_em, 
-                                 a.alterado_por, 
-                                 a.alterado_login, 
-                                 ca.id, 
-                                 ca.nome, 
-                                 ca.tipo 
-							from acervo a
-							    left join acervo_credito_autor aca on aca.acervo_id = a.id
-						        left join credito_autor ca on aca.credito_autor_id = ca.id
-						    where not a.excluido ";
+            var construtorDeConsultas = new SqlBuilder();
 
-            if (titulo.EstaPreenchido())
-                query += $"and lower(a.titulo) like lower('%{titulo}%') ";
-	
-            if (codigo.EstaPreenchido())
-                query += $"and (lower(a.codigo) = lower('{codigo}') or lower(a.codigo_novo) = lower('{codigo}') )";
-	
-            if (tipoAcervo > 0)
-                query += "and a.Tipo = @tipoAcervo ";
-	
-            if (creditoAutorId > 0)
-                query += "and aca.credito_autor_id = @creditoAutorId ";
-	
-            return (await conexao.Obter().QueryAsync<Acervo, CreditoAutor, Acervo>(query, (acervo, creditoAutor) =>
-            {
-                acervo.CreditoAutor = creditoAutor;
-                return acervo;
-            }, new { tipoAcervo, creditoAutorId }, splitOn: "id"));
+            var modelo = construtorDeConsultas.AddTemplate(@"
+                SELECT COUNT(distinct a.id)
+                FROM acervo a
+                LEFT JOIN acervo_credito_autor aca on aca.acervo_id = a.id
+                /**where**/");
+
+            ConstruirClausulasWhereParaPesquisa(filtro, construtorDeConsultas);
+
+            return await conexao.Obter().ExecuteScalarAsync<int>(modelo.RawSql, modelo.Parameters);
         }
-        
+
+        public async Task<IEnumerable<Acervo>> PesquisarPorFiltroPaginado(AcervoFiltroDto filtro, PaginacaoDto paginacao)
+        {
+            var construtorDeConsultas = new SqlBuilder();
+            var deslocamento = (paginacao.Pagina - 1) * paginacao.QuantidadeRegistros;
+            var clausulaOrdenacao = ObterColunaDeOrdenacao(paginacao.Ordenacao, paginacao.DirecaoOrdenacaoEnum);
+
+            var modelo = construtorDeConsultas.AddTemplate($@"
+                WITH AcervosPaginados AS (
+                    SELECT DISTINCT a.id,
+                                    a.titulo,
+                                    COALESCE(a.alterado_em, a.criado_em) as data_ordenacao,
+                                    CASE 
+				                        WHEN length(a.codigo_novo) > 0 THEN 
+				                            CASE WHEN length(a.codigo) > 0 THEN concat(a.codigo, '/', a.codigo_novo) ELSE a.codigo_novo END
+				                        ELSE a.codigo 
+				                    END as codigo
+                    FROM acervo a
+                    LEFT JOIN acervo_credito_autor aca ON aca.acervo_id = a.id
+                    /**where**/
+                    ORDER BY {clausulaOrdenacao}
+                    LIMIT @QuantidadeRegistros OFFSET @Offset
+                )
+                SELECT
+                     a.id, 
+                     a.tipo, 
+                     a.titulo,
+                     a.descricao, 
+                     case when length(a.codigo_novo) > 0 then 
+                            case when length(a.codigo) > 0 then concat(a.codigo,'/',a.codigo_novo) 
+                            else a.codigo_novo 
+                            end
+                         else a.codigo end codigo,
+                     a.data_acervo,
+                     a.ano,
+                     a.criado_em, 
+                     a.criado_por, 
+                     a.criado_login, 
+                     a.alterado_em, 
+                     a.alterado_por, 
+                     a.alterado_login, 
+                     ca.id, 
+                     ca.nome, 
+                     ca.tipo 
+                FROM acervo a
+                JOIN AcervosPaginados ap ON a.id = ap.id
+                LEFT JOIN acervo_credito_autor aca ON aca.acervo_id = a.id
+                LEFT JOIN credito_autor ca ON aca.credito_autor_id = ca.id
+                ORDER BY {clausulaOrdenacao};");
+
+            construtorDeConsultas.AddParameters(new { paginacao.QuantidadeRegistros, Offset = deslocamento });
+            ConstruirClausulasWhereParaPesquisa(filtro, construtorDeConsultas);
+
+            var indiceDeAcervos = new Dictionary<long, Acervo>();
+
+            await conexao.Obter().QueryAsync<Acervo, CreditoAutor, Acervo>(
+                modelo.RawSql,
+                (acervo, creditoAutor) =>
+                {
+                    if (!indiceDeAcervos.TryGetValue(acervo.Id, out var acervoEntrada))
+                    {
+                        acervoEntrada = acervo;
+                        acervoEntrada.CreditosAutores = new List<CreditoAutor>();
+                        indiceDeAcervos.Add(acervoEntrada.Id, acervoEntrada);
+                    }
+                    if (creditoAutor != null)
+                    {
+                        acervoEntrada.CreditosAutores.Add(creditoAutor);
+                    }
+                    return acervoEntrada;
+                },
+                modelo.Parameters,
+                splitOn: "id"
+            );
+
+            return indiceDeAcervos.Values;
+        }
+        private static void ConstruirClausulasWhereParaPesquisa(AcervoFiltroDto filtro, SqlBuilder builder)
+        {
+            builder.Where("NOT a.excluido");
+
+            if (!string.IsNullOrWhiteSpace(filtro.Titulo))
+                builder.Where("lower(a.titulo) LIKE lower(@Titulo)", new { Titulo = $"%{filtro.Titulo}%" });
+
+            if (!string.IsNullOrWhiteSpace(filtro.Codigo))
+                builder.Where("(lower(a.codigo) = lower(@Codigo) OR lower(a.codigo_novo) = lower(@Codigo))", new { filtro.Codigo });
+
+            if (filtro.TipoAcervo.HasValue && filtro.TipoAcervo > 0)
+                builder.Where("a.tipo = @TipoAcervo", new { filtro.TipoAcervo });
+
+            if (filtro.CreditoAutorId.HasValue && filtro.CreditoAutorId > 0)
+                builder.Where("aca.credito_autor_id = @CreditoAutorId", new { filtro.CreditoAutorId });
+        }
+
+        private static string ObterColunaDeOrdenacao(TipoOrdenacao ordenacao, DirecaoOrdenacaoEnum direcao)
+        {
+            string direcaoSql = direcao.ToString();
+
+            switch (ordenacao)
+            {
+                case TipoOrdenacao.DATA:
+                    return $"data_ordenacao {direcaoSql}";
+                case TipoOrdenacao.TITULO:
+                    return $"a.titulo {direcaoSql}";
+                case TipoOrdenacao.CODIGO:
+                    return $"codigo {direcaoSql}";
+                default:
+                    return $"data_ordenacao {direcaoSql}";
+            }
+        }
+
         public Task<bool> ExisteCodigo(string codigo, long id, TipoAcervo tipo)
         {
-            return conexao.Obter().QueryFirstOrDefaultAsync<bool>("select 1 from acervo where (lower(codigo) = @codigo or lower(codigo_novo) = @codigo) and not excluido and id != @id and tipo = @tipo",new { id, codigo = codigo.ToLower(), tipo });
+            return conexao.Obter().QueryFirstOrDefaultAsync<bool>("select 1 from acervo where (lower(codigo) = @codigo or lower(codigo_novo) = @codigo) and not excluido and id != @id and tipo = @tipo", new { id, codigo = codigo.ToLower(), tipo });
         }
 
         public async Task<IEnumerable<ArquivoCodigoNomeAcervoId>> ObterArquivosPorAcervoId(long[] acervosIds)
         {
-             var query = @"
+            var query = @"
              select a.nome, a.codigo, aag.acervo_id as acervoId 
              from acervo_arte_grafica_arquivo aaga 
              join acervo_arte_grafica aag on aag.id = aaga.acervo_arte_grafica_id 
@@ -101,10 +183,10 @@ namespace SME.CDEP.Infra.Dados.Repositorios
              join arquivo a on a.id = ata.arquivo_id 
              where at.acervo_id = any(@acervosIds)
              and not a.excluido; ";
-            
+
             return await conexao.Obter().QueryAsync<ArquivoCodigoNomeAcervoId>(query, new { acervosIds });
         }
-        
+
         public async Task<IEnumerable<Acervo>> ObterAcervosPorIds(long[] ids)
         {
             var query = @"
@@ -130,7 +212,7 @@ namespace SME.CDEP.Infra.Dados.Repositorios
             from acervo
             where id = any(@ids)
                 and not excluido; ";
-            
+
             return await conexao.Obter().QueryAsync<Acervo>(query, new { ids });
         }
 
@@ -168,18 +250,18 @@ namespace SME.CDEP.Infra.Dados.Repositorios
               join credito_autor ca on ca.id = aca.credito_autor_id
             where aca.acervo_id in (select acervo_id from acervo_solicitacao_item a join acervo b on a.acervo_id = b.id where acervo_solicitacao_id = @acervoSolicitacaoId and b.tipo = ANY(@tiposAcervosPermitidos))
             and not ca.excluido; ";
-            
+
             var retorno = await conexao.Obter().QueryMultipleAsync(query, new { acervoSolicitacaoId, tiposAcervosPermitidos });
 
             if (retorno.EhNulo())
                 return default;
-            
+
             var acervosSolicitacoes = retorno.Read<AcervoSolicitacaoItemCompleto>();
             var creditosAutoresNomes = retorno.Read<CreditoAutorNomeAcervoId>();
 
             foreach (var acervoSolicitacao in acervosSolicitacoes)
                 acervoSolicitacao.AutoresCreditos = ObterCreditosAutores(creditosAutoresNomes, acervoSolicitacao);
-            
+
             return acervosSolicitacoes;
         }
 
@@ -190,7 +272,7 @@ namespace SME.CDEP.Infra.Dados.Repositorios
 
         private IEnumerable<CreditoAutorNomeAcervoId> ObterCreditosAutores(IEnumerable<CreditoAutorNomeAcervoId> creditosAutoresNomes, AcervoSolicitacaoItemCompleto acervoSolicitacao)
         {
-            return creditosAutoresNomes.PossuiElementos() ? creditosAutoresNomes.Where(w => w.AcervoId == acervoSolicitacao.AcervoId).Select(s=> s) : Enumerable.Empty<CreditoAutorNomeAcervoId>();
+            return creditosAutoresNomes.PossuiElementos() ? creditosAutoresNomes.Where(w => w.AcervoId == acervoSolicitacao.AcervoId).Select(s => s) : Enumerable.Empty<CreditoAutorNomeAcervoId>();
         }
 
         public async Task<IEnumerable<PesquisaAcervo>> ObterPorTextoLivreETipoAcervo(string? textoLivre, TipoAcervo? tipoAcervo, int? anoInicial, int? anoFinal)
@@ -227,30 +309,30 @@ namespace SME.CDEP.Infra.Dados.Repositorios
                                 left join acervo_bibliografico_assunto aba on aba.acervo_bibliografico_id = ab.id
                                 left join assunto ast on ast.id = aba.assunto_id
                          ";
-            
-	        var retorno  = await conexao.Obter().QueryAsync<PesquisaAcervo>(query, 
+
+            var retorno = await conexao.Obter().QueryAsync<PesquisaAcervo>(query,
                 new
                 {
-                    tipoAcervo = tipoAcervo.HasValue ? (int)tipoAcervo : (int?)null, 
+                    tipoAcervo = tipoAcervo.HasValue ? (int)tipoAcervo : (int?)null,
                     textoLivre = textoLivre.NaoEhNulo() ? textoLivre.ToLower() : null,
                     anoInicial,
                     anoFinal
                 });
-            
+
             return retorno;
         }
-        
+
         private string IncluirFiltroPorAno(int? anoInicial, int? anoFinal)
         {
             if (anoInicial.HasValue && anoFinal.HasValue)
                 return " and (a.ano_inicio between @anoInicial and @anoFinal or a.ano_fim between @anoInicial and @anoFinal) ";
-            
+
             if (anoInicial.HasValue)
                 return " and (@anoInicial between a.ano_inicio and a.ano_fim) ";
-                
+
             return anoFinal.HasValue ? " and (@anoFinal between a.ano_inicio and a.ano_fim) " : string.Empty;
         }
-        
+
         private string IncluirFiltroPorTextoLivre(string? textoLivre)
         {
             if (textoLivre.EstaPreenchido())
@@ -275,8 +357,8 @@ namespace SME.CDEP.Infra.Dados.Repositorios
             where (lower(codigo) = @codigo or lower(codigo_novo) = @codigo)
               and tipo = ANY(@tiposAcervosPermitidos)
               and not excluido ";
-            
-            return conexao.Obter().QueryFirstOrDefaultAsync<Acervo>(query,new { codigo = codigoTombo.ToLower(), tiposAcervosPermitidos });
+
+            return conexao.Obter().QueryFirstOrDefaultAsync<Acervo>(query, new { codigo = codigoTombo.ToLower(), tiposAcervosPermitidos });
         }
     }
 }

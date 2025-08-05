@@ -2,7 +2,9 @@
 using Minio.DataModel;
 using SME.CDEP.Aplicacao.DTOS;
 using SME.CDEP.Dominio.Constantes;
+using SME.CDEP.Dominio.Dtos;
 using SME.CDEP.Dominio.Entidades;
+using SME.CDEP.Dominio.Enumerados;
 using SME.CDEP.Dominio.Extensions;
 using SME.CDEP.Infra.Dominio.Enumerados;
 
@@ -292,6 +294,11 @@ namespace SME.CDEP.Aplicacao.Mapeamentos
                 .ForMember(dest => dest.SituacaoSolicitacaoItemDescricao, opt => opt.MapFrom(o => o.SituacaoSolicitacaoItem > 0 ? o.SituacaoSolicitacaoItem.Descricao() : string.Empty))
                 .ForMember(dest => dest.SituacaoSolicitacaoItemId, opt => opt.MapFrom(o => o.SituacaoSolicitacaoItem))
                 .ForMember(dest => dest.Horario, opt => opt.MapFrom(o => o.Data.ToString("HH:mm")))
+                .ReverseMap();
+
+            CreateMap<PaginacaoAcervoAuditavel, PaginacaoDto>()
+                .ForMember(dest => dest.Ordenacao, opt => opt.MapFrom(o => (TipoOrdenacao)o.Ordenacao))
+                .ForMember(dest => dest.DirecaoOrdenacaoEnum, opt => opt.MapFrom(o => o.DirecaoOrdenacao == null || o.DirecaoOrdenacao == "ASC" ? DirecaoOrdenacaoEnum.ASC : DirecaoOrdenacaoEnum.DESC))
                 .ReverseMap();
         }
     }

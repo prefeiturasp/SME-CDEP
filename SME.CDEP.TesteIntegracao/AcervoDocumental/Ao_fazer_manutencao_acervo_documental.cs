@@ -104,7 +104,7 @@ namespace SME.CDEP.TesteIntegracao
             acervo.Descricao.Equals(acervoDocumentalAlteracaoDto.Descricao).ShouldBeTrue();
             acervo.Codigo.Equals(acervoDocumentalAlteracaoDto.Codigo).ShouldBeTrue();
             acervo.CodigoNovo.Equals(acervoDocumentalAlteracaoDto.CodigoNovo).ShouldBeTrue();
-            acervo.TipoAcervoId.ShouldBe((int)TipoAcervo.DocumentacaoHistorica);
+            acervo.TipoAcervoId.ShouldBe((int)TipoAcervo.DocumentacaoTextual);
             acervo.CriadoLogin.ShouldNotBeEmpty();
             acervo.CriadoEm.Date.ShouldBe(DateTimeExtension.HorarioBrasilia().Date);
             acervo.CriadoPor.ShouldNotBeEmpty();
@@ -191,7 +191,7 @@ namespace SME.CDEP.TesteIntegracao
             acervo.Descricao.Equals(acervoDocumentalAlteracaoDto.Descricao).ShouldBeTrue();
             acervo.Codigo.ShouldBeNull();
             acervo.CodigoNovo.Equals(acervoDocumentalAlteracaoDto.CodigoNovo).ShouldBeTrue();
-            acervo.TipoAcervoId.ShouldBe((int)TipoAcervo.DocumentacaoHistorica);
+            acervo.TipoAcervoId.ShouldBe((int)TipoAcervo.DocumentacaoTextual);
             acervo.CriadoLogin.ShouldNotBeEmpty();
             acervo.CriadoEm.Date.ShouldBe(DateTimeExtension.HorarioBrasilia().Date);
             acervo.CriadoPor.ShouldNotBeEmpty();
@@ -278,7 +278,7 @@ namespace SME.CDEP.TesteIntegracao
             acervo.Descricao.Equals(acervoDocumentalAlteracaoDto.Descricao).ShouldBeTrue();
             acervo.CodigoNovo.ShouldBeNull();
             acervo.Codigo.Equals(acervoDocumentalAlteracaoDto.Codigo).ShouldBeTrue();
-            acervo.TipoAcervoId.ShouldBe((int)TipoAcervo.DocumentacaoHistorica);
+            acervo.TipoAcervoId.ShouldBe((int)TipoAcervo.DocumentacaoTextual);
             acervo.CriadoLogin.ShouldNotBeEmpty();
             acervo.CriadoEm.Date.ShouldBe(DateTimeExtension.HorarioBrasilia().Date);
             acervo.CriadoPor.ShouldNotBeEmpty();
@@ -365,7 +365,7 @@ namespace SME.CDEP.TesteIntegracao
             acervo.Descricao.Equals(acervoDocumentalAlteracaoDto.Descricao).ShouldBeTrue();
             acervo.Codigo.Equals(acervoDocumentalAlteracaoDto.Codigo).ShouldBeTrue();
             acervo.CodigoNovo.Equals(acervoDocumentalAlteracaoDto.CodigoNovo).ShouldBeTrue();
-            acervo.TipoAcervoId.ShouldBe((int)TipoAcervo.DocumentacaoHistorica);
+            acervo.TipoAcervoId.ShouldBe((int)TipoAcervo.DocumentacaoTextual);
             acervo.CriadoLogin.ShouldNotBeEmpty();
             acervo.CriadoEm.Date.ShouldBe(DateTimeExtension.HorarioBrasilia().Date);
             acervo.CriadoPor.ShouldNotBeEmpty();
@@ -449,7 +449,7 @@ namespace SME.CDEP.TesteIntegracao
             acervo.Descricao.Equals(acervoDocumentalAlteracaoDto.Descricao).ShouldBeTrue();
             acervo.Codigo.Equals(acervoDocumentalAlteracaoDto.Codigo).ShouldBeTrue();
             acervo.CodigoNovo.Equals(acervoDocumentalAlteracaoDto.CodigoNovo).ShouldBeTrue();
-            acervo.TipoAcervoId.ShouldBe((int)TipoAcervo.DocumentacaoHistorica);
+            acervo.TipoAcervoId.ShouldBe((int)TipoAcervo.DocumentacaoTextual);
             acervo.CriadoLogin.ShouldNotBeEmpty();
             acervo.CriadoEm.Date.ShouldBe(DateTimeExtension.HorarioBrasilia().Date);
             acervo.CriadoPor.ShouldNotBeEmpty();
@@ -533,7 +533,7 @@ namespace SME.CDEP.TesteIntegracao
             acervo.Descricao.Equals(acervoDocumentalCadastroDto.Descricao).ShouldBeTrue();
             acervo.Codigo.Equals(acervoDocumentalCadastroDto.Codigo).ShouldBeTrue();
             acervo.CodigoNovo.Equals(acervoDocumentalCadastroDto.CodigoNovo).ShouldBeTrue();
-            acervo.TipoAcervoId.ShouldBe((int)TipoAcervo.DocumentacaoHistorica);
+            acervo.TipoAcervoId.ShouldBe((int)TipoAcervo.DocumentacaoTextual);
             acervo.CriadoLogin.ShouldNotBeEmpty();
             acervo.CriadoEm.Date.ShouldBe(DateTimeExtension.HorarioBrasilia().Date);
             acervo.CriadoPor.ShouldNotBeEmpty();
@@ -1095,7 +1095,7 @@ namespace SME.CDEP.TesteIntegracao
                     CodigoNovo = $"{j.ToString()}.NOVO",
                     Titulo = faker.Lorem.Text().Limite(500),
                     Descricao = faker.Lorem.Text(),
-                    TipoAcervoId = (int)TipoAcervo.DocumentacaoHistorica,
+                    TipoAcervoId = (int)TipoAcervo.DocumentacaoTextual,
                     CriadoPor = ConstantesTestes.SISTEMA,
                     CriadoEm = DateTimeExtension.HorarioBrasilia().AddMinutes(-15),
                     CriadoLogin = ConstantesTestes.LOGIN_123456789,

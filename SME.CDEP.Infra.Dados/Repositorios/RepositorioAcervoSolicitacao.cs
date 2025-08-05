@@ -95,7 +95,7 @@ namespace SME.CDEP.Infra.Dados.Repositorios
 		   
 		   SELECT DISTINCT ON (asi.id)
 		     asi.id,
-             coalesce(a.codigo, a.codigo_novo) as codigo,
+             coalesce(a.codigo_novo, a.codigo) as codigo,
              a.tipo as tipoAcervo,
              a.titulo,
              asi.dt_visita as dataVisita,

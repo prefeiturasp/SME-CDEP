@@ -6,6 +6,7 @@
         public long TipoAcervoId { get; set; }
         public string Codigo { get; set; }
         public CreditoAutor? CreditoAutor { get; set; }
+        public List<CreditoAutor> CreditosAutores { get; set; }
         public long[]? CreditosAutoresIds { get; set; }
         public string CodigoNovo { get; set; }
         public string SubTitulo { get; set; }
