@@ -296,9 +296,17 @@ namespace SME.CDEP.Aplicacao.Mapeamentos
                 .ForMember(dest => dest.Horario, opt => opt.MapFrom(o => o.Data.ToString("HH:mm")))
                 .ReverseMap();
 
-            CreateMap<PaginacaoAcervoAuditavel, PaginacaoDto>()
-                .ForMember(dest => dest.Ordenacao, opt => opt.MapFrom(o => (TipoOrdenacao)o.Ordenacao))
-                .ForMember(dest => dest.DirecaoOrdenacaoEnum, opt => opt.MapFrom(o => o.DirecaoOrdenacao == null || o.DirecaoOrdenacao == "ASC" ? DirecaoOrdenacaoEnum.ASC : DirecaoOrdenacaoEnum.DESC))
+            CreateMap<Paginacao, PaginacaoDto>()
+                .ForMember(dest => dest.OrdenacaoDto, opt => opt.MapFrom(o =>
+                    o.Ordenacao == Enumerados.TipoOrdenacao.AZ || o.Ordenacao == Enumerados.TipoOrdenacao.ZA
+                        ? TipoOrdenacaoDto.TITULO :
+                    o.Ordenacao == Enumerados.TipoOrdenacao.CODIGO_ASCENDENTE || o.Ordenacao == Enumerados.TipoOrdenacao.CODIGO_DESCENDENTE
+                        ? TipoOrdenacaoDto.CODIGO :
+                    TipoOrdenacaoDto.DATA))
+                .ForMember(dest => dest.DirecaoOrdenacaoDto, opt => opt.MapFrom(o => 
+                   o.Ordenacao == Enumerados.TipoOrdenacao.ZA || o.Ordenacao == Enumerados.TipoOrdenacao.CODIGO_DESCENDENTE
+                        ? DirecaoOrdenacaoDto.DESC
+                        : DirecaoOrdenacaoDto.ASC))
                 .ReverseMap();
         }
     }

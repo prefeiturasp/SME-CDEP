@@ -126,13 +126,11 @@ namespace SME.CDEP.Aplicacao.Servicos
 
         private static string ObterCodigoOuTomboPorTipoAcervo(TipoAcervo tipoAcervo)
         {
-            switch (tipoAcervo)
+            return tipoAcervo switch
             {
-                case TipoAcervo.DocumentacaoTextual:
-                    return "Código antigo ou Código novo";
-                default:
-                    return "Tombo";
-            }
+                TipoAcervo.DocumentacaoTextual => "Código antigo ou Código novo",
+                _ => "Tombo",
+            };
         }
 
         public async Task ValidarCodigoTomboCodigoNovoDuplicado(string codigo, long id, TipoAcervo tipo)
@@ -517,14 +515,13 @@ namespace SME.CDEP.Aplicacao.Servicos
             return mapper.Map<IdNomeCodigoTipoParaEmprestimoDTO>(retorno);
         }
 
-        private PaginacaoAcervoAuditavel Paginacao
+        private Paginacao Paginacao
         {
             get
             {
                 var numeroPaginaQueryString = contextoAplicacao.ObterVariavel<string>("NumeroPagina");
                 var numeroRegistrosQueryString = contextoAplicacao.ObterVariavel<string>("NumeroRegistros");
                 var ordenacaoQueryString = contextoAplicacao.ObterVariavel<string>("Ordenacao") ?? "0";
-                var direcaoOrdenacaoQueryString = contextoAplicacao.ObterVariavel<string>("DirecaoOrdenacao");
 
                 if (numeroPaginaQueryString.NaoEstaPreenchido() || numeroRegistrosQueryString.NaoEstaPreenchido())
                 {
@@ -536,7 +533,7 @@ namespace SME.CDEP.Aplicacao.Servicos
                 var numeroRegistros = numeroRegistrosQueryString.ConverterParaInteiro();
                 var ordenacao = ordenacaoQueryString.ConverterParaInteiro();
 
-                return new PaginacaoAcervoAuditavel(numeroPagina, numeroRegistros == 0 ? 10 : numeroRegistros, ordenacao, direcaoOrdenacaoQueryString);
+                return new Paginacao(numeroPagina, numeroRegistros == 0 ? 10 : numeroRegistros, ordenacao);
             }
         }
 

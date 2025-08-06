@@ -26,7 +26,6 @@ namespace SME.CDEP.Webapi.Contexto;
             Variaveis.Add("NumeroPagina", httpContextAccessor.HttpContext?.Request?.Query["NumeroPagina"].FirstOrDefault() ?? "0");
             Variaveis.Add("NumeroRegistros", httpContextAccessor.HttpContext?.Request?.Query["NumeroRegistros"].FirstOrDefault() ?? "0");
             Variaveis.Add("Ordenacao", httpContextAccessor.HttpContext?.Request?.Query["Ordenacao"].FirstOrDefault() ?? "0");
-            Variaveis.Add("DirecaoOrdenacao", httpContextAccessor.HttpContext?.Request?.Query["DirecaoOrdenacao"].FirstOrDefault() ?? "ASC");
             
             var authorizationHeader = httpContextAccessor.HttpContext?.Request?.Headers["authorization"];
 

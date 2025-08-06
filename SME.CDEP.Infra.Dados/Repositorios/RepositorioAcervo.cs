@@ -34,7 +34,7 @@ namespace SME.CDEP.Infra.Dados.Repositorios
         {
             var construtorDeConsultas = new SqlBuilder();
             var deslocamento = (paginacao.Pagina - 1) * paginacao.QuantidadeRegistros;
-            var clausulaOrdenacao = ObterColunaDeOrdenacao(paginacao.Ordenacao, paginacao.DirecaoOrdenacaoEnum);
+            var clausulaOrdenacao = ObterColunaDeOrdenacao(paginacao.OrdenacaoDto, paginacao.DirecaoOrdenacaoDto);
 
             var modelo = construtorDeConsultas.AddTemplate($@"
                 WITH AcervosPaginados AS (
@@ -123,17 +123,17 @@ namespace SME.CDEP.Infra.Dados.Repositorios
                 builder.Where("aca.credito_autor_id = @CreditoAutorId", new { filtro.CreditoAutorId });
         }
 
-        private static string ObterColunaDeOrdenacao(TipoOrdenacao ordenacao, DirecaoOrdenacaoEnum direcao)
+        private static string ObterColunaDeOrdenacao(TipoOrdenacaoDto ordenacao, DirecaoOrdenacaoDto direcao)
         {
             string direcaoSql = direcao.ToString();
 
             switch (ordenacao)
             {
-                case TipoOrdenacao.DATA:
+                case TipoOrdenacaoDto.DATA:
                     return $"data_ordenacao {direcaoSql}";
-                case TipoOrdenacao.TITULO:
+                case TipoOrdenacaoDto.TITULO:
                     return $"a.titulo {direcaoSql}";
-                case TipoOrdenacao.CODIGO:
+                case TipoOrdenacaoDto.CODIGO:
                     return $"codigo {direcaoSql}";
                 default:
                     return $"data_ordenacao {direcaoSql}";

@@ -1,6 +1,6 @@
 ﻿namespace SME.CDEP.Dominio.Enumerados;
 
-public enum DirecaoOrdenacaoEnum
+public enum DirecaoOrdenacaoDto
 {
     ASC,
     DESC

@@ -6,7 +6,7 @@ namespace SME.CDEP.Dominio.Dtos
     {
         public int Pagina { get; set; }
         public int QuantidadeRegistros { get; set; }
-        public TipoOrdenacao Ordenacao { get; set; }
-        public DirecaoOrdenacaoEnum DirecaoOrdenacaoEnum { get; set; }
+        public TipoOrdenacaoDto OrdenacaoDto { get; set; }
+        public DirecaoOrdenacaoDto DirecaoOrdenacaoDto { get; set; }
     }
 }

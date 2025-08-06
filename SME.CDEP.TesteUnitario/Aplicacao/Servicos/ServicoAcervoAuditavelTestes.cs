@@ -251,7 +251,7 @@ namespace SME.CDEP.TesteUnitario.Aplicacao.Servicos
         {
             // Arrange
             var totalRegistros = 2;
-            var paginacao = new PaginacaoAcervoAuditavel(1, 10, 0, "ASC");
+            var paginacao = new Paginacao(1, 10, 0);
             var paginacaoDto = new PaginacaoDto { Pagina = 1, QuantidadeRegistros = 10 };
 
             var autores = new Faker<CreditoAutor>("pt_BR").Generate(2);
@@ -272,7 +272,7 @@ namespace SME.CDEP.TesteUnitario.Aplicacao.Servicos
 
             _contextoAplicacaoMock.Setup(c => c.ObterVariavel<string>("NumeroPagina")).Returns(paginacao.Pagina.ToString());
             _contextoAplicacaoMock.Setup(c => c.ObterVariavel<string>("NumeroRegistros")).Returns(paginacao.QuantidadeRegistros.ToString());
-            _mapperMock.Setup(m => m.Map<PaginacaoDto>(It.IsAny<PaginacaoAcervoAuditavel>())).Returns(paginacaoDto);
+            _mapperMock.Setup(m => m.Map<PaginacaoDto>(It.IsAny<Paginacao>())).Returns(paginacaoDto);
 
             _repositorioAcervoMock.Setup(r => r.ContarPorFiltro(It.IsAny<AcervoFiltroDto>()))
                                   .ReturnsAsync(totalRegistros);
@@ -313,7 +313,7 @@ namespace SME.CDEP.TesteUnitario.Aplicacao.Servicos
         };
 
             _contextoAplicacaoMock.Setup(c => c.ObterVariavel<string>(It.IsAny<string>())).Returns("1");
-            _mapperMock.Setup(m => m.Map<PaginacaoDto>(It.IsAny<PaginacaoAcervoAuditavel>())).Returns(new PaginacaoDto());
+            _mapperMock.Setup(m => m.Map<PaginacaoDto>(It.IsAny<Paginacao>())).Returns(new PaginacaoDto());
             _repositorioAcervoMock.Setup(r => r.ContarPorFiltro(It.IsAny<AcervoFiltroDto>())).ReturnsAsync(1);
             _repositorioAcervoMock.Setup(r => r.PesquisarPorFiltroPaginado(It.IsAny<AcervoFiltroDto>(), It.IsAny<PaginacaoDto>()))
                                   .ReturnsAsync(acervoDoRepo);
@@ -341,7 +341,7 @@ namespace SME.CDEP.TesteUnitario.Aplicacao.Servicos
 
             _contextoAplicacaoMock.Setup(c => c.ObterVariavel<string>("NumeroPagina")).Returns("1");
             _contextoAplicacaoMock.Setup(c => c.ObterVariavel<string>("NumeroRegistros")).Returns(registrosPorPagina.ToString());
-            _mapperMock.Setup(m => m.Map<PaginacaoDto>(It.IsAny<PaginacaoAcervoAuditavel>()))
+            _mapperMock.Setup(m => m.Map<PaginacaoDto>(It.IsAny<Paginacao>()))
                        .Returns(new PaginacaoDto { QuantidadeRegistros = registrosPorPagina });
 
             _repositorioAcervoMock.Setup(r => r.ContarPorFiltro(It.IsAny<AcervoFiltroDto>()))
