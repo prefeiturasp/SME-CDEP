@@ -26,7 +26,7 @@ public class AcervoDocumentalMock : AcervoMock
         faker.RuleFor(x => x.NumeroPagina, f => random.Next(1,2000));
         faker.RuleFor(x => x.Volume, f => f.Address.Random.ToString().Limite(15));
         faker.RuleFor(x => x.TamanhoArquivo, f => f.Address.Random.ToString().Limite(15));
-        faker.RuleFor(x => x.Acervo, f => Gerar(TipoAcervo.DocumentacaoHistorica).Generate());
+        faker.RuleFor(x => x.Acervo, f => Gerar(TipoAcervo.DocumentacaoTextual).Generate());
         return faker;
     }
 }

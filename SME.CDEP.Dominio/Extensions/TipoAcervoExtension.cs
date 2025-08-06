@@ -7,7 +7,7 @@ namespace SME.CDEP.Dominio.Extensions
     {
         public static bool EhAcervoDocumental(this TipoAcervo tipo)
         {
-            return tipo == TipoAcervo.DocumentacaoHistorica; 
+            return tipo == TipoAcervo.DocumentacaoTextual; 
         }
         
         public static bool EhAcervoArteGraficaOuFotograficoOuTridimensional(this TipoAcervo tipo)

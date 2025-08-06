@@ -411,7 +411,7 @@ namespace SME.CDEP.TesteIntegracao
         public async Task Deve_alterar_com_codigo_iguais_e_acervos_diferentes()
         {
             await InserirDadosBasicosAleatorios();
-            await InserirAcervo(TipoAcervo.DocumentacaoHistorica);
+            await InserirAcervo(TipoAcervo.DocumentacaoTextual);
             var servicoAcervo = GetServicoAcervo();
             
             var acervos = ObterTodos<Acervo>();
@@ -616,7 +616,7 @@ namespace SME.CDEP.TesteIntegracao
         public async Task Deve_inserir_com_codigo_iguais_e_acervos_diferentes()
         {
             await InserirDadosBasicosAleatorios();
-            await InserirAcervo(TipoAcervo.DocumentacaoHistorica);
+            await InserirAcervo(TipoAcervo.DocumentacaoTextual);
             var servicoAcervo = GetServicoAcervo();
             
             var acervoInserir = AcervoMock.Instance.Gerar(TipoAcervo.Bibliografico).Generate();

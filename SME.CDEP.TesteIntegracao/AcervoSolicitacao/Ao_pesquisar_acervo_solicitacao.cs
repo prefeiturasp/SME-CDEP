@@ -175,7 +175,7 @@ namespace SME.CDEP.TesteIntegracao
             retorno.Items.Any(w => w.TipoAcervo.Equals(TipoAcervo.Bibliografico.Descricao()));
             retorno.Items.Any(w => w.TipoAcervo.Equals(TipoAcervo.ArtesGraficas.Descricao()));
             retorno.Items.Any(w => w.TipoAcervo.Equals(TipoAcervo.Fotografico.Descricao()));
-            retorno.Items.Any(w => w.TipoAcervo.Equals(TipoAcervo.DocumentacaoHistorica.Descricao()));
+            retorno.Items.Any(w => w.TipoAcervo.Equals(TipoAcervo.DocumentacaoTextual.Descricao()));
             retorno.Items.Any(w => w.TipoAcervo.Equals(TipoAcervo.Audiovisual.Descricao()));
         }
         
@@ -195,7 +195,7 @@ namespace SME.CDEP.TesteIntegracao
             retorno.Items.Any(w => w.TipoAcervo.Equals(TipoAcervo.Bibliografico.Descricao()));
             retorno.Items.Any(w => w.TipoAcervo.Equals(TipoAcervo.ArtesGraficas.Descricao()));
             retorno.Items.Any(w => w.TipoAcervo.Equals(TipoAcervo.Fotografico.Descricao()));
-            retorno.Items.Any(w => w.TipoAcervo.Equals(TipoAcervo.DocumentacaoHistorica.Descricao()));
+            retorno.Items.Any(w => w.TipoAcervo.Equals(TipoAcervo.DocumentacaoTextual.Descricao()));
             retorno.Items.Any(w => w.TipoAcervo.Equals(TipoAcervo.Audiovisual.Descricao()));
         }
         
@@ -258,7 +258,7 @@ namespace SME.CDEP.TesteIntegracao
             var retorno = await _servicoAcervoSolicitacao.ObterAtendimentoSolicitacoesPorFiltro(new FiltroSolicitacaoDTO());
             
             retorno.Items.Count().ShouldBe(1);
-            retorno.Items.Any(w => w.TipoAcervo.Equals(TipoAcervo.DocumentacaoHistorica.Descricao()));
+            retorno.Items.Any(w => w.TipoAcervo.Equals(TipoAcervo.DocumentacaoTextual.Descricao()));
         }
 
         private async Task InserirAcervosEAtendimentos()

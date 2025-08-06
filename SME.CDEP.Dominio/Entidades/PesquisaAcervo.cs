@@ -23,7 +23,7 @@ namespace SME.CDEP.Dominio.Entidades
                     case TipoAcervo.Bibliografico:
                         return TipoAcervoTag.Biblioteca;
                     
-                    case TipoAcervo.DocumentacaoHistorica:
+                    case TipoAcervo.DocumentacaoTextual:
                         return TipoAcervoTag.MemoriaDocumental;
                     
                     default:

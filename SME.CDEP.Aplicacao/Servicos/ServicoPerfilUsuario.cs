@@ -27,7 +27,7 @@ namespace SME.CDEP.Aplicacao.Servicos
                 if (retorno.PerfilUsuario.EhNulo())
                     throw new NegocioException(MensagemNegocio.NAO_FOI_POSSIVEL_VINCULAR_PERFIL_EXTERNO_CORESSO_USUARIO_SEM_PERFIL);
             }
-            
+
             return retorno;
         }
 

@@ -1,8 +1,4 @@
-﻿using System.Runtime.CompilerServices;
-using SME.CDEP.Dominio.Entidades;
-using SME.CDEP.Infra.Dominio.Enumerados;
-
-namespace SME.CDEP.Aplicacao.DTOS;
+﻿namespace SME.CDEP.Aplicacao.DTOS;
 
 public class AcervoDocumentalDTO
 {

@@ -14,16 +14,12 @@ namespace SME.CDEP.Aplicacao.Servicos
 {
     public class ServicoAcervoDocumental : ServicoAcervoBase,IServicoAcervoDocumental
     {
-        private readonly IRepositorioAcervo repositorioAcervo;
-        private readonly IRepositorioArquivo repositorioArquivo;
         private readonly IRepositorioAcervoDocumentalArquivo repositorioAcervoDocumentalArquivo;
         private readonly IRepositorioAcervoDocumentalAcessoDocumento repositorioAcervoDocumentalAcessoDocumento;
         private readonly IRepositorioAcervoDocumental repositorioAcervoDocumental;
         private readonly IMapper mapper;
         private readonly IServicoAcervo servicoAcervo;
         private readonly ITransacao transacao;
-        private readonly IServicoMoverArquivoTemporario servicoMoverArquivoTemporario;
-        private readonly IServicoArmazenamento servicoArmazenamento;
         private readonly IRepositorioAcessoDocumento repositorioAcessoDocumento;
         
         public ServicoAcervoDocumental(
@@ -63,7 +59,7 @@ namespace SME.CDEP.Aplicacao.Servicos
             var acessoDocumentosCompletos =  await repositorioAcessoDocumento.ObterPorIds(acervoDocumentalCadastroDto.AcessoDocumentosIds);
             
             var acervo = mapper.Map<Acervo>(acervoDocumentalCadastroDto);
-            acervo.TipoAcervoId = (int)TipoAcervo.DocumentacaoHistorica;
+            acervo.TipoAcervoId = (int)TipoAcervo.DocumentacaoTextual;
             
             var acervoDocumental = mapper.Map<AcervoDocumental>(acervoDocumentalCadastroDto);
             
