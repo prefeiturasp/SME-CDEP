@@ -15,7 +15,7 @@ public class MensagemNegocio
     public const string MES_INVALIDO = "Mês inválido";
     public const string JUSTIFICATIVA_NAO_INFORMADA = "Justificativa não informada para a suspensão";
     public const string O_ANO_NAO_ESTA_SEGUINDO_FORMATO_ABNT = "O Ano do acervo não está seguindo o formato da ABNT";
-    public const string ACERVO_NAO_ENCONTRADO = "Acervo não encontrado";
+    public const string ACERVO_NAO_ENCONTRADO = "Acervo não encontrado.";
     public const string SOLICITACAO_ATENDIMENTO_NAO_ENCONTRADA = "Solicitação de atendimento não encontrada";
     public const string SOLICITACAO_ATENDIMENTO_ITEM_NAO_ENCONTRADA = "Solicitação de atendimento item não encontrada";
     public const string NÃO_PODE_FINALIZAR_QUANDO_AGUARDANDO_VISITA_DATA_FUTURA_OU_AGUARDANDO_ATENDIMENTO = "O atendimento não pode ser finalizado enquanto houver itens aguardando para visita (datas de visita futura) ou aguardando atendimento";

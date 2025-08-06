@@ -1,5 +1,4 @@
 ﻿using AutoMapper;
-using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Options;
 using SME.CDEP.Aplicacao.DTOS;
 using SME.CDEP.Aplicacao.Extensions;
@@ -25,7 +24,6 @@ namespace SME.CDEP.Aplicacao.Servicos
         private readonly IMapper mapper;
         private readonly IContextoAplicacao contextoAplicacao;
         private readonly IRepositorioArquivo repositorioArquivo;
-        private readonly IConfiguration configuration;
         private readonly IRepositorioAcervoBibliografico repositorioAcervoBibliografico;
         private readonly IRepositorioAcervoDocumental repositorioAcervoDocumental;
         private readonly IRepositorioAcervoArteGrafica repositorioAcervoArteGrafica;
@@ -37,7 +35,7 @@ namespace SME.CDEP.Aplicacao.Servicos
 
         public ServicoAcervoAuditavel(IRepositorioAcervo repositorioAcervo, IMapper mapper,
             IContextoAplicacao contextoAplicacao, IRepositorioAcervoCreditoAutor repositorioAcervoCreditoAutor,
-            IRepositorioArquivo repositorioArquivo, IConfiguration configuration,
+            IRepositorioArquivo repositorioArquivo,
             IRepositorioAcervoBibliografico repositorioAcervoBibliografico,
             IRepositorioAcervoDocumental repositorioAcervoDocumental,
             IRepositorioAcervoArteGrafica repositorioAcervoArteGrafica,
@@ -52,7 +50,6 @@ namespace SME.CDEP.Aplicacao.Servicos
             this.contextoAplicacao = contextoAplicacao ?? throw new ArgumentNullException(nameof(contextoAplicacao));
             this.repositorioAcervoCreditoAutor = repositorioAcervoCreditoAutor ?? throw new ArgumentNullException(nameof(repositorioAcervoCreditoAutor));
             this.repositorioArquivo = repositorioArquivo ?? throw new ArgumentNullException(nameof(repositorioArquivo));
-            this.configuration = configuration ?? throw new ArgumentNullException(nameof(configuration));
             this.repositorioAcervoBibliografico = repositorioAcervoBibliografico ?? throw new ArgumentNullException(nameof(repositorioAcervoBibliografico));
             this.repositorioAcervoDocumental = repositorioAcervoDocumental ?? throw new ArgumentNullException(nameof(repositorioAcervoDocumental));
             this.repositorioAcervoArteGrafica = repositorioAcervoArteGrafica ?? throw new ArgumentNullException(nameof(repositorioAcervoArteGrafica));
