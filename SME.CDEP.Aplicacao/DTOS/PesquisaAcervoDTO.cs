@@ -7,6 +7,7 @@ public class PesquisaAcervoDTO
     public string Codigo { get; set; }
     public TipoAcervo Tipo { get; set; }
     public string Titulo { get; set; }
+    public string Editora { get; set; }
     public string CreditoAutoria { get; set; }
     public string Assunto { get; set; }
     public string Descricao { get; set; }

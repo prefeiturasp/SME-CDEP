@@ -260,7 +260,7 @@ namespace SME.CDEP.Aplicacao.Servicos
                 var imagensPadrao = await ObterImagensPadrao();
 
                 var acervosAgrupandoCreditoAutor = acervos
-                    .GroupBy(g => new { g.AcervoId, g.Codigo, g.Titulo, g.Tipo, g.Descricao, g.TipoAcervoTag, g.DataAcervo, g.Ano, g.SituacaoSaldo })
+                    .GroupBy(g => new { g.AcervoId,g.Codigo, g.Titulo, g.Tipo, g.Descricao, g.TipoAcervoTag, g.DataAcervo, g.Ano, g.SituacaoSaldo, g.Editora })
                     .Select(s => new PesquisaAcervoDTO
                     {
                         AcervoId = s.Key.AcervoId,
@@ -269,6 +269,7 @@ namespace SME.CDEP.Aplicacao.Servicos
                         Titulo = s.Key.Titulo,
                         Descricao = s.Key.Descricao.RemoverTagsHtml(),
                         DataAcervo = s.Key.DataAcervo,
+                        Editora = s.Key.Editora,
                         Ano = s.Key.Ano,
                         TipoAcervoTag = s.Key.TipoAcervoTag,
                         CreditoAutoria = s.Any(w => w.CreditoAutoria.NaoEhNulo()) ? string.Join(", ", s.Select(ca => ca.CreditoAutoria).Distinct()) : string.Empty,
@@ -339,11 +340,11 @@ namespace SME.CDEP.Aplicacao.Servicos
             };
         }
 
-        public async Task<PaginacaoResultadoDTO<IdTipoTituloCreditoAutoriaCodigoAcervoDTO>> ObterPorFiltro(int? tipoAcervo, string titulo, long? creditoAutorId, string codigo)
+        public async Task<PaginacaoResultadoDTO<IdTipoTituloCreditoAutoriaCodigoAcervoDTO>> ObterPorFiltro(int? tipoAcervo, string titulo, long? creditoAutorId, string codigo, int? idEditora)
         {
             var paginacao = Paginacao;
 
-            var filtroDto = new AcervoFiltroDto(tipoAcervo, titulo, creditoAutorId, codigo);
+            var filtroDto = new AcervoFiltroDto(tipoAcervo, titulo, creditoAutorId, codigo, idEditora);
             var paginacaoDto = mapper.Map<PaginacaoDto>(paginacao);
 
             var totalRegistros = await repositorioAcervo.ContarPorFiltro(filtroDto);
@@ -363,6 +364,7 @@ namespace SME.CDEP.Aplicacao.Servicos
                 AcervoId = acervo.Id,
                 Codigo = acervo.Codigo,
                 Data = acervo.DataAcervo,
+                Editora = acervo.Editora,
                 CreditoAutoria = acervo.CreditosAutores is not null ? string.Join(", ", acervo.CreditosAutores.Select(c => c.Nome)) : string.Empty,
                 TipoAcervo = ((TipoAcervo)acervo.TipoAcervoId).Descricao(),
                 TipoAcervoId = (TipoAcervo)acervo.TipoAcervoId,

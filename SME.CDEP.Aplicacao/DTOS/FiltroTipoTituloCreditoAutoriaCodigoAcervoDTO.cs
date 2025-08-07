@@ -10,4 +10,5 @@ public class FiltroTipoTituloCreditoAutoriaCodigoAcervoDTO
     public string? Codigo { get; set; }
     public int? AnoInicial { get; set; }
     public int? AnoFinal { get; set; }
+    public int? IdEditora { get; set; }
 }
