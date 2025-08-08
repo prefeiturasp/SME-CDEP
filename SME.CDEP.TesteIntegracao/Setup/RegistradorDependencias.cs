@@ -15,6 +15,8 @@ using SME.CDEP.Infra.Servicos.Mensageria;
 using SME.CDEP.Infra.Servicos.ServicoArmazenamento.Interface;
 using SME.CDEP.Webapi.Contexto;
 using SSME.CDEP.TesteIntegracao.ServicosFakes;
+using SME.CDEP.Aplicacao.UseCase.Interface;
+using SME.CDEP.Aplicacao.UseCase;
 
 namespace SME.CDEP.TesteIntegracao.Setup
 {
@@ -134,6 +136,7 @@ namespace SME.CDEP.TesteIntegracao.Setup
             
             _serviceCollection.TryAddScoped<IExecutarImportacaoArquivoAcervoDocumentalUseCase, ExecutarImportacaoArquivoAcervoDocumentalUseCase>();
             _serviceCollection.TryAddScoped<IImportacaoArquivoAcervoDocumentalAuxiliar, ExecutarImportacaoArquivoAcervoDocumentalUseCase>();
+            _serviceCollection.TryAddScoped<IRelatorioControleLivrosEmprestadosUseCase, RelatorioControleLivrosEmprestadosUseCase>();
         }
         protected override void RegistrarHttpClients()
         {}
