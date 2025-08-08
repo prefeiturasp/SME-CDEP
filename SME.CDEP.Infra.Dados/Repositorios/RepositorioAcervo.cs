@@ -15,6 +15,7 @@ namespace SME.CDEP.Infra.Dados.Repositorios
         public RepositorioAcervo(IContextoAplicacao contexto, ICdepConexao conexao) : base(contexto, conexao)
         { }
 
+
         public async Task<int> ContarPorFiltro(AcervoFiltroDto filtro)
         {
             var construtorDeConsultas = new SqlBuilder();
@@ -23,6 +24,7 @@ namespace SME.CDEP.Infra.Dados.Repositorios
                 SELECT COUNT(distinct a.id)
                 FROM acervo a
                 LEFT JOIN acervo_credito_autor aca on aca.acervo_id = a.id
+                LEFT JOIN acervo_bibliografico ab on a.id = ab.acervo_id 
                 /**where**/");
 
             ConstruirClausulasWhereParaPesquisa(filtro, construtorDeConsultas);
@@ -42,12 +44,13 @@ namespace SME.CDEP.Infra.Dados.Repositorios
                                     a.titulo,
                                     COALESCE(a.alterado_em, a.criado_em) as data_ordenacao,
                                     CASE 
-				                        WHEN length(a.codigo_novo) > 0 THEN 
-				                            CASE WHEN length(a.codigo) > 0 THEN concat(a.codigo, '/', a.codigo_novo) ELSE a.codigo_novo END
-				                        ELSE a.codigo 
-				                    END as codigo
+                                        WHEN length(a.codigo_novo) > 0 THEN 
+                                            CASE WHEN length(a.codigo) > 0 THEN concat(a.codigo, '/', a.codigo_novo) ELSE a.codigo_novo END
+                                        ELSE a.codigo 
+                                    END as codigo
                     FROM acervo a
                     LEFT JOIN acervo_credito_autor aca ON aca.acervo_id = a.id
+                    LEFT JOIN acervo_bibliografico ab ON ab.acervo_id = a.id
                     /**where**/
                     ORDER BY {clausulaOrdenacao}
                     LIMIT @QuantidadeRegistros OFFSET @Offset
@@ -69,29 +72,34 @@ namespace SME.CDEP.Infra.Dados.Repositorios
                      a.criado_login, 
                      a.alterado_em, 
                      a.alterado_por, 
-                     a.alterado_login, 
+                     a.alterado_login,
+                     -- Campos do CreditoAutor
                      ca.id, 
                      ca.nome, 
-                     ca.tipo 
+                     ca.tipo,
+                     -- Campo da Editora
+                     e.nome AS editora
                 FROM acervo a
                 JOIN AcervosPaginados ap ON a.id = ap.id
                 LEFT JOIN acervo_credito_autor aca ON aca.acervo_id = a.id
                 LEFT JOIN credito_autor ca ON aca.credito_autor_id = ca.id
+                LEFT JOIN acervo_bibliografico ab ON ab.acervo_id = a.id
+                LEFT JOIN editora e ON ab.editora_id = e.id
                 ORDER BY {clausulaOrdenacao};");
 
             construtorDeConsultas.AddParameters(new { paginacao.QuantidadeRegistros, Offset = deslocamento });
             ConstruirClausulasWhereParaPesquisa(filtro, construtorDeConsultas);
 
             var indiceDeAcervos = new Dictionary<long, Acervo>();
-
-            await conexao.Obter().QueryAsync<Acervo, CreditoAutor, Acervo>(
+            await conexao.Obter().QueryAsync<Acervo, CreditoAutor, string, Acervo>(
                 modelo.RawSql,
-                (acervo, creditoAutor) =>
+                (acervo, creditoAutor, editora) =>
                 {
                     if (!indiceDeAcervos.TryGetValue(acervo.Id, out var acervoEntrada))
                     {
                         acervoEntrada = acervo;
                         acervoEntrada.CreditosAutores = new List<CreditoAutor>();
+                        acervoEntrada.Editora = editora;
                         indiceDeAcervos.Add(acervoEntrada.Id, acervoEntrada);
                     }
                     if (creditoAutor != null)
@@ -101,7 +109,7 @@ namespace SME.CDEP.Infra.Dados.Repositorios
                     return acervoEntrada;
                 },
                 modelo.Parameters,
-                splitOn: "id"
+                splitOn: "id,editora" 
             );
 
             return indiceDeAcervos.Values;
@@ -118,6 +126,9 @@ namespace SME.CDEP.Infra.Dados.Repositorios
 
             if (filtro.TipoAcervo.HasValue && filtro.TipoAcervo > 0)
                 builder.Where("a.tipo = @TipoAcervo", new { filtro.TipoAcervo });
+
+            if (filtro.IdEditora.HasValue && filtro.IdEditora > 0)
+                builder.Where("ab.editora_id = @IdEditora", new { filtro.IdEditora });
 
             if (filtro.CreditoAutorId.HasValue && filtro.CreditoAutorId > 0)
                 builder.Where("aca.credito_autor_id = @CreditoAutorId", new { filtro.CreditoAutorId });
@@ -284,6 +295,7 @@ namespace SME.CDEP.Infra.Dados.Repositorios
                                 left join acervo_credito_autor aca on aca.acervo_id = a.id
                                 left join credito_autor ca on aca.credito_autor_id = ca.id
                                 left join acervo_bibliografico ab on a.id = ab.acervo_id 
+                                left join editora e ON ab.editora_id = e.id
                                 left join acervo_bibliografico_assunto aba on aba.acervo_bibliografico_id = ab.id
                                 left join assunto ast on ast.id = aba.assunto_id      
                             where not a.excluido
@@ -300,12 +312,14 @@ namespace SME.CDEP.Infra.Dados.Repositorios
                                      a.descricao,
                                      a.data_acervo dataAcervo,
                                      a.ano,
-                                     coalesce(ab.situacao_saldo,0) as situacaoSaldo
+                                     coalesce(ab.situacao_saldo,0) as situacaoSaldo,
+                                     e.nome as editora
                             from acervo a
                                 join acervosIds aid on aid.acervoId = a.id
                                 left join acervo_credito_autor aca on aca.acervo_id = a.id
                                 left join credito_autor ca on aca.credito_autor_id = ca.id
                                 left join acervo_bibliografico ab on a.id = ab.acervo_id 
+                                left join editora e on ab.editora_id = e.id
                                 left join acervo_bibliografico_assunto aba on aba.acervo_bibliografico_id = ab.id
                                 left join assunto ast on ast.id = aba.assunto_id
                          ";
@@ -336,7 +350,11 @@ namespace SME.CDEP.Infra.Dados.Repositorios
         private string IncluirFiltroPorTextoLivre(string? textoLivre)
         {
             if (textoLivre.EstaPreenchido())
-                return " and ( f_unaccent(lower(a.titulo)) LIKE ('%' || f_unaccent(@textoLivre) || '%') Or f_unaccent(lower(ca.nome)) LIKE ('%' || f_unaccent(@textoLivre) || '%')  Or f_unaccent(lower(ast.nome)) LIKE ('%' || f_unaccent(@textoLivre) || '%'))";
+                return " and ( f_unaccent(lower(a.titulo)) LIKE ('%' || f_unaccent(@textoLivre) || '%') " +
+                    "Or f_unaccent(lower(ca.nome)) LIKE ('%' || f_unaccent(@textoLivre) || '%') " +
+                    "Or f_unaccent(lower(ast.nome)) LIKE ('%' || f_unaccent(@textoLivre) || '%') " +
+                    "Or f_unaccent(lower(e.nome)) LIKE ('%' || f_unaccent(@textoLivre) || '%') " +
+                    "Or f_unaccent(lower(a.descricao)) LIKE ('%' || f_unaccent(@textoLivre) || '%'))";
 
             return string.Empty;
         }

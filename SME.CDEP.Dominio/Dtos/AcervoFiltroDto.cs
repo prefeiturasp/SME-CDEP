@@ -1,4 +1,4 @@
 ﻿namespace SME.CDEP.Dominio.Dtos
 {
-    public record AcervoFiltroDto(int? TipoAcervo, string Titulo, long? CreditoAutorId, string Codigo);
+    public record AcervoFiltroDto(int? TipoAcervo, string Titulo, long? CreditoAutorId, string Codigo, int? IdEditora);
 }
