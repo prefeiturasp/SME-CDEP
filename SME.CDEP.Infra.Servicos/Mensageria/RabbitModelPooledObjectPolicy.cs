@@ -16,10 +16,10 @@ namespace SME.CDEP.Infra.Servicos.Mensageria
         {
             var factory = new ConnectionFactory()
             {
-                HostName = "10.50.1.209",
-                UserName = "usr_amcom",
-                Password = "AMcom20anos",
-                VirtualHost = "hom"
+                HostName = configuracaoRabbit.HostName,
+                UserName = configuracaoRabbit.UserName,
+                Password = configuracaoRabbit.Password,
+                VirtualHost = configuracaoRabbit.VirtualHost
             };
 
             return factory.CreateConnection();
