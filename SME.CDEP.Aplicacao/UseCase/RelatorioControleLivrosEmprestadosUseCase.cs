@@ -24,7 +24,7 @@ namespace SME.CDEP.Aplicacao.UseCase
             this.contextoAplicacao = contextoAplicacao;
         }
 
-        public async Task<string> Executar(RelatorioControleLivroEmprestadosRequest filtros)
+        public async Task<Stream> Executar(RelatorioControleLivroEmprestadosRequest filtros)
         {
             var tiposAcervosPermitidos = servicoAcervo.ObterTiposAcervosPermitidosDoPerfilLogado();
             var filtrosValidos = new RelatorioControleLivroEmprestadosDTO()
@@ -48,13 +48,9 @@ namespace SME.CDEP.Aplicacao.UseCase
                 var resposta = await httpClient.PostAsync("v1/cdep/controle-livros-emprestados", new StringContent(mensagem, Encoding.UTF8, "application/json"));
 
                 if (!resposta.IsSuccessStatusCode || resposta.StatusCode == HttpStatusCode.NoContent)
-                    return string.Empty;
+                    return null;
 
-                var json = await resposta.Content.ReadAsStringAsync();
-
-                var nomeArquivo = JsonConvert.DeserializeObject<string>(json);
-
-                return $"{configuration.GetValue<string>("UrlApiServidorRelatorios")}relatorios/{nomeArquivo}.xls";
+                return await resposta.Content.ReadAsStreamAsync();
             }
         }
     }
