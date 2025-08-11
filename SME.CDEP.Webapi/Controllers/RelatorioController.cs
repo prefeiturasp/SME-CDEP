@@ -15,7 +15,11 @@ namespace SME.CDEP.Webapi.Controllers
         public async Task<IActionResult> GerarSync([FromBody] RelatorioControleLivroEmprestadosRequest filtros,
            [FromServices] IRelatorioControleLivrosEmprestadosUseCase relatorioControleLivrosEmprestadosUseCase)
         {
-            return Ok(await relatorioControleLivrosEmprestadosUseCase.Executar(filtros));
+            var file = await relatorioControleLivrosEmprestadosUseCase.Executar(filtros);
+            if (file == null)
+                return NotFound();
+
+            return File(file, "application/vnd.ms-excel", "relatorio.xls", enableRangeProcessing: true);
         }
     }
 }

@@ -4,6 +4,6 @@ namespace SME.CDEP.Aplicacao.UseCase.Interface
 {
     public interface IRelatorioControleLivrosEmprestadosUseCase
     {
-        Task<string> Executar(RelatorioControleLivroEmprestadosRequest filtros);
+        Task<Stream> Executar(RelatorioControleLivroEmprestadosRequest filtros);
     }
 }
