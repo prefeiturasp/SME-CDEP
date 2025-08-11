@@ -31,4 +31,15 @@ public static class StringExtension
                 throw new NegocioException("Formato da imagem não identificado");
         }
     }
+
+    public static (string contentType, string base64Data, string extension) ObterContentTypeBase64EExtension(this string base64String)
+    {
+        var dataParts = base64String.Split(',');
+        if (dataParts.Length != 2 || !dataParts[0].StartsWith("data:") || !dataParts[0].Contains(";base64"))
+            throw new NegocioException("String Base64 inválida.");
+        var contentType = dataParts[0].Substring(5, dataParts[0].IndexOf(";base64") - 5);
+        var base64Data = dataParts[1];
+        var extension = contentType.Split('/').Last();
+        return (contentType, base64Data, extension);
+    }
 }

@@ -50,7 +50,7 @@ namespace SME.CDEP.Infra.Dados.Repositorios
             return retorno;
         }
         
-        public async Task<AcervoDocumentalCompleto> ObterPorId(long id)
+        public async Task<AcervoDocumentalCompleto> ObterComDetalhesPorId(long id)
         {
             var query = @"select  a.ano,
                                   a.descricao,
@@ -77,7 +77,8 @@ namespace SME.CDEP.Infra.Dados.Repositorios
                                   ad.copia_digital as copiaDigital,
                                   ad.idioma_id as IdiomaId,
                                   ad.material_id as MaterialId,
-                                  ad.conservacao_id as ConservacaoId
+                                  ad.conservacao_id as ConservacaoId,
+                                  capa_documento as CapaDocumento
                         from acervo_documental ad
                             join acervo a on a.id = ad.acervo_id 
                             join idioma i on i.id = ad.idioma_id  

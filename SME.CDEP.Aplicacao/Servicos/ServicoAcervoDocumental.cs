@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using SME.CDEP.Aplicacao.DTOS;
+using SME.CDEP.Aplicacao.Extensions;
 using SME.CDEP.Aplicacao.Servicos.Interface;
 using SME.CDEP.Dominio.Constantes;
 using SME.CDEP.Dominio.Entidades;
@@ -50,6 +51,7 @@ namespace SME.CDEP.Aplicacao.Servicos
             this.repositorioAcervoDocumentalAcessoDocumento = repositorioAcervoDocumentalAcessoDocumento ?? throw new ArgumentNullException(nameof(repositorioAcervoDocumentalAcessoDocumento));
             this.servicoAcervo = servicoAcervo ?? throw new ArgumentNullException(nameof(servicoAcervo));
             this.repositorioAcessoDocumento = repositorioAcessoDocumento ?? throw new ArgumentNullException(nameof(repositorioAcessoDocumento));
+            this.servicoArmazenamento = servicoArmazenamento ?? throw new ArgumentNullException(nameof(servicoArmazenamento));
         }
 
         public async Task<long> Inserir(AcervoDocumentalCadastroDTO acervoDocumentalCadastroDto)
@@ -66,13 +68,15 @@ namespace SME.CDEP.Aplicacao.Servicos
             acervo.TipoAcervoId = (int)TipoAcervo.DocumentacaoHistorica;
             
             var acervoDocumental = mapper.Map<AcervoDocumental>(acervoDocumentalCadastroDto);
-            
             var tran = transacao.Iniciar();
+            var urlCapaDocumento = "";
             try
             {
                 var retornoAcervo = await servicoAcervo.Inserir(acervo);
                 acervoDocumental.AcervoId = retornoAcervo;
-                
+                urlCapaDocumento = await ArmazenarImagemCapaDocumento(acervoDocumentalCadastroDto.CapaDocumento);
+                acervoDocumental.CapaDocumento = urlCapaDocumento;
+
                 await repositorioAcervoDocumental.Inserir(acervoDocumental);
                 
                 foreach (var arquivo in arquivosCompletos)
@@ -98,6 +102,8 @@ namespace SME.CDEP.Aplicacao.Servicos
             catch
             {
                 tran.Rollback();
+                if (urlCapaDocumento.EstaPreenchido())
+                    await servicoArmazenamento.Excluir(urlCapaDocumento);
                 throw;
             }
             finally
@@ -109,7 +115,7 @@ namespace SME.CDEP.Aplicacao.Servicos
           
             return acervoDocumental.AcervoId;
         }
-        
+
         private void ValidarPreenchimentoAcervoDocumental(string? altura, string? largura)
         {
             if (largura.EstaPreenchido() && largura.NaoEhNumericoComCasasDecimais())
@@ -135,7 +141,7 @@ namespace SME.CDEP.Aplicacao.Servicos
             var acessosDocumentosIdsExcluir =  Enumerable.Empty<long>();
             
             var acervoDocumental = mapper.Map<AcervoDocumental>(acervoDocumentalAlteracaoDto);
-            
+
             var arquivosExistentes = (await repositorioAcervoDocumentalArquivo.ObterPorAcervoDocumentalId(acervoDocumentalAlteracaoDto.Id)).Select(s => s.ArquivoId).ToArray();
             (arquivosIdsInserir, arquivosIdsExcluir) = await ObterArquivosInseridosExcluidosMovidos(acervoDocumentalAlteracaoDto.Arquivos, arquivosExistentes);
             
@@ -143,12 +149,13 @@ namespace SME.CDEP.Aplicacao.Servicos
             (acessosDocumentosIdsInserir, acessosDocumentosIdsExcluir) = await ObterAcessoDocumentosInseridosExcluidos(acervoDocumentalAlteracaoDto.AcessoDocumentosIds, acessoDocumentosExistentes);
 
             var acervoDTO = mapper.Map<AcervoDTO>(acervoDocumentalAlteracaoDto);
-            
             var tran = transacao.Iniciar();
+            var urlCapaDocumento = "";
             try
             {
-                await servicoAcervo.Alterar(acervoDTO);
-                
+                acervoDTO = await servicoAcervo.Alterar(acervoDTO);
+                urlCapaDocumento = await AtualizarImagemCapaDocumento(acervoDocumental.Id, acervoDocumentalAlteracaoDto.CapaDocumento);
+                acervoDocumental.CapaDocumento = urlCapaDocumento;
                 await repositorioAcervoDocumental.Atualizar(acervoDocumental);
                 
                 foreach (var arquivo in arquivosIdsInserir)
@@ -178,6 +185,8 @@ namespace SME.CDEP.Aplicacao.Servicos
             catch
             {
                 tran.Rollback();
+                if (urlCapaDocumento.EstaPreenchido())
+                    await servicoArmazenamento.Excluir(urlCapaDocumento);
                 throw;
             }
             finally
@@ -202,11 +211,12 @@ namespace SME.CDEP.Aplicacao.Servicos
 
         public async Task<AcervoDocumentalDTO> ObterPorId(long id)
         {
-            var acervoDocumentalSimples = await repositorioAcervoDocumental.ObterPorId(id);
+            var acervoDocumentalSimples = await repositorioAcervoDocumental.ObterComDetalhesPorId(id);
             if (acervoDocumentalSimples.NaoEhNulo())
             {
                 var acervoDocumentalDto = mapper.Map<AcervoDocumentalDTO>(acervoDocumentalSimples);
                 acervoDocumentalDto.Auditoria = mapper.Map<AuditoriaDTO>(acervoDocumentalSimples);
+                acervoDocumentalDto.CapaDocumento = await servicoAcervo.ObterImagemBase64(acervoDocumentalSimples.CapaDocumento);
                 return acervoDocumentalDto;
             }
 
@@ -216,6 +226,26 @@ namespace SME.CDEP.Aplicacao.Servicos
         public async Task<bool> Excluir(long id)
         {
             return await servicoAcervo.Excluir(id);
+        }
+
+        private async Task<string> AtualizarImagemCapaDocumento(long idAcervoDocumental, string capaDocumentoBase64)
+        {
+            var acervoDocumental = await repositorioAcervoDocumental.ObterPorId(idAcervoDocumental);
+            if (acervoDocumental == null) return await ArmazenarImagemCapaDocumento(capaDocumentoBase64);
+            if (acervoDocumental.CapaDocumento.EstaPreenchido())
+                await servicoArmazenamento.Excluir(acervoDocumental.CapaDocumento);
+            return await ArmazenarImagemCapaDocumento(capaDocumentoBase64);
+        }
+
+        private async Task<string> ArmazenarImagemCapaDocumento(string capaDocumentoBase64)
+        {
+            if (capaDocumentoBase64.NaoEstaPreenchido()) return capaDocumentoBase64;
+            var anexoInfo = capaDocumentoBase64.ObterContentTypeBase64EExtension();
+            var bytes = Convert.FromBase64String(anexoInfo.base64Data);
+            var stream = new MemoryStream(bytes);
+            var nomeArquivo = $"capa_acervo_{Guid.NewGuid()}.{anexoInfo.extension}";
+            await servicoArmazenamento.Armazenar(nomeArquivo, stream, anexoInfo.contentType);
+            return nomeArquivo;
         }
     }
 }

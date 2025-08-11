@@ -31,12 +31,14 @@ namespace SME.CDEP.Infra.Dados.Repositorios
                                  a.alterado_em, 
                                  a.alterado_por, 
                                  a.alterado_login, 
+                                 ad.capa_documento as capaDocumento,
                                  ca.id, 
                                  ca.nome, 
                                  ca.tipo 
 							from acervo a
 							    left join acervo_credito_autor aca on aca.acervo_id = a.id
 						        left join credito_autor ca on aca.credito_autor_id = ca.id
+						        left join acervo_documental ad on ad.acervo_id = a.id
 						    where not a.excluido ";
 
             if (titulo.EstaPreenchido())
@@ -50,12 +52,13 @@ namespace SME.CDEP.Infra.Dados.Repositorios
 	
             if (creditoAutorId > 0)
                 query += "and aca.credito_autor_id = @creditoAutorId ";
-	
-            return (await conexao.Obter().QueryAsync<Acervo, CreditoAutor, Acervo>(query, (acervo, creditoAutor) =>
+
+            return (await conexao.Obter().QueryAsync<Acervo, AcervoDocumental, CreditoAutor, Acervo>(query, (acervo, acervoDocumental, creditoAutor) =>
             {
+                acervo.CapaDocumento = acervoDocumental?.CapaDocumento;
                 acervo.CreditoAutor = creditoAutor;
                 return acervo;
-            }, new { tipoAcervo, creditoAutorId }, splitOn: "id"));
+            }, new { tipoAcervo, creditoAutorId }, splitOn: "capaDocumento,id"));
         }
         
         public Task<bool> ExisteCodigo(string codigo, long id, TipoAcervo tipo)
