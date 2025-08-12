@@ -309,6 +309,7 @@ namespace SME.CDEP.Infra.Dados.Repositorios
                             {IncluirFiltroPorTipoAcervo(tipoAcervo)}
                             {IncluirFiltroPorTextoLivre(textoLivre)}
                             {IncluirFiltroPorAno(anoInicial, anoFinal)}
+                            {IncluirFiltroSituacaoAcervo()}
                          )
                           select   distinct a.id as acervoId,
                                      coalesce(a.codigo,a.codigo_novo)  codigo,              
@@ -369,6 +370,11 @@ namespace SME.CDEP.Infra.Dados.Repositorios
         private string IncluirFiltroPorTipoAcervo(TipoAcervo? tipoAcervo)
         {
             return tipoAcervo.NaoEhNulo() ? "and a.tipo = @tipoAcervo " : string.Empty;
+        }
+
+        private string IncluirFiltroSituacaoAcervo()
+        {
+            return " and COALESCE(a.situacao, 1) = 1 ";
         }
 
         public Task<Acervo> PesquisarAcervoPorCodigoTombo(string codigoTombo, long[] tiposAcervosPermitidos)
