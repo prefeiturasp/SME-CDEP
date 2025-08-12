@@ -4,6 +4,7 @@
     {
         public string Titulo { get; set; }
         public long TipoAcervoId { get; set; }
+        public string Editora { get; set; }
         public string Codigo { get; set; }
         public CreditoAutor? CreditoAutor { get; set; }
         public List<CreditoAutor> CreditosAutores { get; set; }

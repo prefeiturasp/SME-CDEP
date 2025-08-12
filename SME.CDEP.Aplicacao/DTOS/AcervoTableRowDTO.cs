@@ -12,4 +12,5 @@ public class AcervoTableRowDTO
     public string Codigo { get; set; }
     public string Data { get; set; }
     public string? CapaDocumento { get; set; }
+    public string Editora { get; set; }
 }

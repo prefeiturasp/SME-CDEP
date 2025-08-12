@@ -1,4 +1,3 @@
-using System.Configuration;
 using Elastic.Apm.AspNetCore;
 using Elastic.Apm.DiagnosticSource;
 using Elastic.Apm.SqlClient;
@@ -23,6 +22,7 @@ var registradorDeDependencia = new RegistradorDeDependencia(builder.Services, bu
 registradorDeDependencia.Registrar();
 RegistraDocumentacaoSwagger.Registrar(builder.Services);
 RegistraAutenticacao.Registrar(builder.Services, builder.Configuration);
+RegistraClientesHttp.Registrar(builder.Services, builder.Configuration);
 
 builder.Services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
 builder.Services.AddScoped<IContextoAplicacao, ContextoHttp>();

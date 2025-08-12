@@ -18,6 +18,7 @@ namespace SME.CDEP.Infra.Dados.Mapeamentos
             Map(c => c.AnoInicio).ToColumn("ano_inicio");
             Map(c => c.AnoFim).ToColumn("ano_fim");
             Map(c => c.CapaDocumento).Ignore();
+            Map(c => c.Editora).Ignore();
         }
     }
 }
