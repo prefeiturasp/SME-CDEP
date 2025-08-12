@@ -1,4 +1,6 @@
-﻿namespace SME.CDEP.Dominio.Entidades
+﻿using SME.CDEP.Dominio.Enumerados;
+
+namespace SME.CDEP.Dominio.Entidades
 {
     public class Acervo : EntidadeBaseAuditavel
     {
@@ -18,5 +20,6 @@
         public int AnoInicio { get; set; }
         public int AnoFim { get; set; }
         public string? CapaDocumento { get; set; }
+        public SituacaoAcervo? SituacaoAcervo { get; set; }
     }
 }
