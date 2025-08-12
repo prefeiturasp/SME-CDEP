@@ -23,4 +23,5 @@ public class AcervoDocumentalCompleto : EntidadeBaseAuditavel
     public ArquivoResumido[] Arquivos  { get; set; }
     public long[] CreditosAutoresIds { get; set; }
     public long[] AcessoDocumentosIds  { get; set; }
+    public string? CapaDocumento { get; set; }
 }

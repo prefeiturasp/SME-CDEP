@@ -25,4 +25,5 @@ public class AcervoDocumentalDTO
     public long[] AcessoDocumentosIds { get; set; }
     public AuditoriaDTO Auditoria { get; set; }
     public long[] CreditosAutoresIds { get; set; }
+    public string CapaDocumento { get; set; }
 }

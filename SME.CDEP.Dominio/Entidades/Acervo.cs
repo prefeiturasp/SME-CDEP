@@ -16,5 +16,6 @@
         public IEnumerable<CoAutor>? CoAutores { get; set; }
         public int AnoInicio { get; set; }
         public int AnoFim { get; set; }
+        public string? CapaDocumento { get; set; }
     }
 }
