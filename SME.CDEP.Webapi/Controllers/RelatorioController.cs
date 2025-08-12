@@ -24,10 +24,10 @@ namespace SME.CDEP.Webapi.Controllers
 
         [HttpPost("controle-acervo")]
         [Permissao(Permissao.OperacoesSolicitacoes_C, Policy = "Bearer")]
-        public async Task<IActionResult> RelatorioControleAcervo([FromBody] RelatorioControleLivroEmprestadosRequest filtros,
-          [FromServices] IRelatorioControleLivrosEmprestadosUseCase relatorioControleLivrosEmprestadosUseCase)
+        public async Task<IActionResult> RelatorioControleAcervo([FromBody] RelatorioControleAcervoRequest filtros,
+          [FromServices] IRelatorioControleAcervoUseCase relatorioControleAcervoUseCase)
         {
-            var file = await relatorioControleLivrosEmprestadosUseCase.Executar(filtros);
+            var file = await relatorioControleAcervoUseCase.Executar(filtros);
             if (file == null)
                 return NotFound();
 
