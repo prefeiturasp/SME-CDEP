@@ -1,6 +1,5 @@
 ﻿using AutoMapper;
 using SME.CDEP.Aplicacao.DTOS;
-using SME.CDEP.Aplicacao.Extensions;
 using SME.CDEP.Aplicacao.Servicos.Interface;
 using SME.CDEP.Dominio.Constantes;
 using SME.CDEP.Dominio.Entidades;
@@ -13,7 +12,7 @@ using SME.CDEP.Infra.Servicos.ServicoArmazenamento.Interface;
 
 namespace SME.CDEP.Aplicacao.Servicos
 {
-    public class ServicoAcervoDocumental : ServicoAcervoBase,IServicoAcervoDocumental
+    public class ServicoAcervoDocumental : ServicoAcervoBase, IServicoAcervoDocumental
     {
         private readonly IRepositorioAcervoDocumentalArquivo repositorioAcervoDocumentalArquivo;
         private readonly IRepositorioAcervoDocumentalAcessoDocumento repositorioAcervoDocumentalAcessoDocumento;
@@ -22,10 +21,10 @@ namespace SME.CDEP.Aplicacao.Servicos
         private readonly IServicoAcervo servicoAcervo;
         private readonly ITransacao transacao;
         private readonly IRepositorioAcessoDocumento repositorioAcessoDocumento;
-        
+
         public ServicoAcervoDocumental(
             IRepositorioAcervo repositorioAcervo,
-            IRepositorioAcervoDocumental repositorioAcervoDocumental, 
+            IRepositorioAcervoDocumental repositorioAcervoDocumental,
             IMapper mapper,
             ITransacao transacao,
             IServicoAcervo servicoAcervo,
@@ -34,7 +33,7 @@ namespace SME.CDEP.Aplicacao.Servicos
             IRepositorioAcervoDocumentalArquivo repositorioAcervoDocumentalArquivo,
             IServicoMoverArquivoTemporario servicoMoverArquivoTemporario,
             IServicoArmazenamento servicoArmazenamento,
-            IRepositorioAcervoDocumentalAcessoDocumento repositorioAcervoDocumentalAcessoDocumento) : 
+            IRepositorioAcervoDocumentalAcessoDocumento repositorioAcervoDocumentalAcessoDocumento) :
             base(repositorioAcervo,
                 repositorioArquivo,
                 servicoMoverArquivoTemporario,
@@ -47,22 +46,21 @@ namespace SME.CDEP.Aplicacao.Servicos
             this.repositorioAcervoDocumentalAcessoDocumento = repositorioAcervoDocumentalAcessoDocumento ?? throw new ArgumentNullException(nameof(repositorioAcervoDocumentalAcessoDocumento));
             this.servicoAcervo = servicoAcervo ?? throw new ArgumentNullException(nameof(servicoAcervo));
             this.repositorioAcessoDocumento = repositorioAcessoDocumento ?? throw new ArgumentNullException(nameof(repositorioAcessoDocumento));
-            this.servicoArmazenamento = servicoArmazenamento ?? throw new ArgumentNullException(nameof(servicoArmazenamento));
         }
 
         public async Task<long> Inserir(AcervoDocumentalCadastroDTO acervoDocumentalCadastroDto)
         {
             ValidarPreenchimentoAcervoDocumental(acervoDocumentalCadastroDto.Altura, acervoDocumentalCadastroDto.Largura);
-            
-            var arquivosCompletos =  acervoDocumentalCadastroDto.Arquivos.NaoEhNulo()
-                ? await ObterArquivosPorIds(acervoDocumentalCadastroDto.Arquivos) 
+
+            var arquivosCompletos = acervoDocumentalCadastroDto.Arquivos.NaoEhNulo()
+                ? await ObterArquivosPorIds(acervoDocumentalCadastroDto.Arquivos)
                 : Enumerable.Empty<Arquivo>();
-            
-            var acessoDocumentosCompletos =  await repositorioAcessoDocumento.ObterPorIds(acervoDocumentalCadastroDto.AcessoDocumentosIds);
-            
+
+            var acessoDocumentosCompletos = await repositorioAcessoDocumento.ObterPorIds(acervoDocumentalCadastroDto.AcessoDocumentosIds);
+
             var acervo = mapper.Map<Acervo>(acervoDocumentalCadastroDto);
             acervo.TipoAcervoId = (int)TipoAcervo.DocumentacaoTextual;
-            
+
             var acervoDocumental = mapper.Map<AcervoDocumental>(acervoDocumentalCadastroDto);
             var tran = transacao.Iniciar();
             var urlCapaDocumento = "";
@@ -74,32 +72,32 @@ namespace SME.CDEP.Aplicacao.Servicos
                 acervoDocumental.CapaDocumento = urlCapaDocumento;
 
                 await repositorioAcervoDocumental.Inserir(acervoDocumental);
-                
+
                 foreach (var arquivo in arquivosCompletos)
                 {
                     await repositorioAcervoDocumentalArquivo.Inserir(new AcervoDocumentalArquivo()
                     {
-                        ArquivoId = arquivo.Id, 
-                        AcervoDocumentalId= acervoDocumental.Id
+                        ArquivoId = arquivo.Id,
+                        AcervoDocumentalId = acervoDocumental.Id
                     });
                 }
-                
+
                 foreach (var acessoDocumento in acessoDocumentosCompletos)
                 {
                     await repositorioAcervoDocumentalAcessoDocumento.Inserir(new AcervoDocumentalAcessoDocumento()
                     {
-                        AcessoDocumentoId = acessoDocumento.Id, 
-                        AcervoDocumentalId= acervoDocumental.Id
+                        AcessoDocumentoId = acessoDocumento.Id,
+                        AcervoDocumentalId = acervoDocumental.Id
                     });
                 }
-                
+
                 tran.Commit();
             }
             catch
             {
                 tran.Rollback();
                 if (urlCapaDocumento.EstaPreenchido())
-                    await servicoArmazenamento.Excluir(urlCapaDocumento);
+                    await ExcluirArquivoArmazenamento(urlCapaDocumento);
                 throw;
             }
             finally
@@ -107,8 +105,8 @@ namespace SME.CDEP.Aplicacao.Servicos
                 tran.Dispose();
             }
 
-            await MoverArquivosTemporarios(TipoArquivo.AcervoDocumental,arquivosCompletos);
-          
+            await MoverArquivosTemporarios(TipoArquivo.AcervoDocumental, arquivosCompletos);
+
             return acervoDocumental.AcervoId;
         }
 
@@ -123,24 +121,24 @@ namespace SME.CDEP.Aplicacao.Servicos
 
         public async Task<IEnumerable<AcervoDocumentalDTO>> ObterTodos()
         {
-            return (await repositorioAcervoDocumental.ObterTodos()).Select(s=> mapper.Map<AcervoDocumentalDTO>(s));
+            return (await repositorioAcervoDocumental.ObterTodos()).Select(s => mapper.Map<AcervoDocumentalDTO>(s));
         }
 
         public async Task<AcervoDocumentalDTO> Alterar(AcervoDocumentalAlteracaoDTO acervoDocumentalAlteracaoDto)
         {
             ValidarPreenchimentoAcervoDocumental(acervoDocumentalAlteracaoDto.Altura, acervoDocumentalAlteracaoDto.Largura);
-            
-            var arquivosIdsInserir =  Enumerable.Empty<long>();
-            var arquivosIdsExcluir =  Enumerable.Empty<long>();
-            
-            var acessosDocumentosIdsInserir =  Enumerable.Empty<long>();
-            var acessosDocumentosIdsExcluir =  Enumerable.Empty<long>();
-            
+
+            var arquivosIdsInserir = Enumerable.Empty<long>();
+            var arquivosIdsExcluir = Enumerable.Empty<long>();
+
+            var acessosDocumentosIdsInserir = Enumerable.Empty<long>();
+            var acessosDocumentosIdsExcluir = Enumerable.Empty<long>();
+
             var acervoDocumental = mapper.Map<AcervoDocumental>(acervoDocumentalAlteracaoDto);
 
             var arquivosExistentes = (await repositorioAcervoDocumentalArquivo.ObterPorAcervoDocumentalId(acervoDocumentalAlteracaoDto.Id)).Select(s => s.ArquivoId).ToArray();
             (arquivosIdsInserir, arquivosIdsExcluir) = await ObterArquivosInseridosExcluidosMovidos(acervoDocumentalAlteracaoDto.Arquivos, arquivosExistentes);
-            
+
             var acessoDocumentosExistentes = (await repositorioAcervoDocumentalAcessoDocumento.ObterPorAcervoDocumentalId(acervoDocumentalAlteracaoDto.Id)).Select(s => s.AcessoDocumentoId).ToArray();
             (acessosDocumentosIdsInserir, acessosDocumentosIdsExcluir) = await ObterAcessoDocumentosInseridosExcluidos(acervoDocumentalAlteracaoDto.AcessoDocumentosIds, acessoDocumentosExistentes);
 
@@ -153,36 +151,36 @@ namespace SME.CDEP.Aplicacao.Servicos
                 urlCapaDocumento = await AtualizarImagemCapaDocumento(acervoDocumental.Id, acervoDocumentalAlteracaoDto.CapaDocumento);
                 acervoDocumental.CapaDocumento = urlCapaDocumento;
                 await repositorioAcervoDocumental.Atualizar(acervoDocumental);
-                
+
                 foreach (var arquivo in arquivosIdsInserir)
                 {
                     await repositorioAcervoDocumentalArquivo.Inserir(new AcervoDocumentalArquivo()
                     {
-                        ArquivoId = arquivo, 
-                        AcervoDocumentalId = acervoDocumental.Id 
+                        ArquivoId = arquivo,
+                        AcervoDocumentalId = acervoDocumental.Id
                     });
                 }
-                
+
                 foreach (var acessoDocumento in acessosDocumentosIdsInserir)
                 {
                     await repositorioAcervoDocumentalAcessoDocumento.Inserir(new AcervoDocumentalAcessoDocumento()
                     {
-                        AcessoDocumentoId = acessoDocumento, 
-                        AcervoDocumentalId= acervoDocumental.Id
+                        AcessoDocumentoId = acessoDocumento,
+                        AcervoDocumentalId = acervoDocumental.Id
                     });
                 }
 
                 await repositorioAcervoDocumentalArquivo.Excluir(arquivosIdsExcluir.ToArray(), acervoDocumental.Id);
-                
+
                 await repositorioAcervoDocumentalAcessoDocumento.Excluir(acessosDocumentosIdsExcluir.ToArray(), acervoDocumental.Id);
-                
+
                 tran.Commit();
             }
             catch
             {
                 tran.Rollback();
                 if (urlCapaDocumento.EstaPreenchido())
-                    await servicoArmazenamento.Excluir(urlCapaDocumento);
+                    await ExcluirArquivoArmazenamento(urlCapaDocumento);
                 throw;
             }
             finally
@@ -201,8 +199,8 @@ namespace SME.CDEP.Aplicacao.Servicos
         {
             var acessodocumentosIdsInserir = acessoDocumentosAlterados.Except(acessoDocumentosExistentes);
             var acessoDocumentosIdsExcluir = acessoDocumentosExistentes.Except(acessoDocumentosAlterados);
-            
-            return (acessodocumentosIdsInserir,acessoDocumentosIdsExcluir);
+
+            return (acessodocumentosIdsInserir, acessoDocumentosIdsExcluir);
         }
 
         public async Task<AcervoDocumentalDTO> ObterPorId(long id)
@@ -229,19 +227,8 @@ namespace SME.CDEP.Aplicacao.Servicos
             var acervoDocumental = await repositorioAcervoDocumental.ObterPorId(idAcervoDocumental);
             if (acervoDocumental == null) return await ArmazenarImagemCapaDocumento(capaDocumentoBase64);
             if (acervoDocumental.CapaDocumento.EstaPreenchido())
-                await servicoArmazenamento.Excluir(acervoDocumental.CapaDocumento);
+                await ExcluirArquivoArmazenamento(acervoDocumental.CapaDocumento);
             return await ArmazenarImagemCapaDocumento(capaDocumentoBase64);
-        }
-
-        private async Task<string> ArmazenarImagemCapaDocumento(string capaDocumentoBase64)
-        {
-            if (capaDocumentoBase64.NaoEstaPreenchido()) return capaDocumentoBase64;
-            var anexoInfo = capaDocumentoBase64.ObterContentTypeBase64EExtension();
-            var bytes = Convert.FromBase64String(anexoInfo.base64Data);
-            var stream = new MemoryStream(bytes);
-            var nomeArquivo = $"capa_acervo_{Guid.NewGuid()}.{anexoInfo.extension}";
-            await servicoArmazenamento.Armazenar(nomeArquivo, stream, anexoInfo.contentType);
-            return nomeArquivo;
         }
     }
 }

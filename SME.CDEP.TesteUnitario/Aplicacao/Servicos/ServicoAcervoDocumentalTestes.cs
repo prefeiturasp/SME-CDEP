@@ -144,7 +144,7 @@ namespace SME.CDEP.TesteUnitario.Aplicacao.Servicos
             // Mock dos mapeamentos e chamadas de serviço/repositório
             _mapperMock.Setup(m => m.Map<AcervoDocumental>(dto)).Returns(new AcervoDocumental { Id = dto.Id, AcervoId = dto.AcervoId });
             _mapperMock.Setup(m => m.Map<AcervoDTO>(dto)).Returns(new AcervoDTO());
-            _repositorioAcervoDocumentalMock.Setup(r => r.ObterPorId(dto.AcervoId)).ReturnsAsync(new AcervoDocumentalCompleto());
+            _repositorioAcervoDocumentalMock.Setup(r => r.ObterComDetalhesPorId(dto.AcervoId)).ReturnsAsync(new AcervoDocumentalCompleto());
             _mapperMock.Setup(m => m.Map<AcervoDocumentalDTO>(It.IsAny<AcervoDocumentalCompleto>())).Returns(new AcervoDocumentalDTO());
             _mapperMock.Setup(m => m.Map<AuditoriaDTO>(It.IsAny<AcervoDocumental>())).Returns(new AuditoriaDTO());
 
@@ -177,7 +177,7 @@ namespace SME.CDEP.TesteUnitario.Aplicacao.Servicos
             var dto = new AcervoDocumentalDTO { Id = id, Titulo = "Documento Teste" };
             var auditoriaDto = new AuditoriaDTO();
 
-            _repositorioAcervoDocumentalMock.Setup(r => r.ObterPorId(id)).ReturnsAsync(entidade);
+            _repositorioAcervoDocumentalMock.Setup(r => r.ObterComDetalhesPorId(id)).ReturnsAsync(entidade);
             _mapperMock.Setup(m => m.Map<AcervoDocumentalDTO>(entidade)).Returns(dto);
             _mapperMock.Setup(m => m.Map<AuditoriaDTO>(entidade)).Returns(auditoriaDto);
 

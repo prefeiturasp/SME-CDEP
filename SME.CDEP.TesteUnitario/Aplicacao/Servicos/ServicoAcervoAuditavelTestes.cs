@@ -2,6 +2,7 @@
 using Bogus;
 using FluentAssertions;
 using Microsoft.Extensions.Options;
+using Minio.DataModel;
 using Moq;
 using SME.CDEP.Aplicacao.DTOS;
 using SME.CDEP.Aplicacao.Servicos;
@@ -12,6 +13,7 @@ using SME.CDEP.Dominio.Excecoes;
 using SME.CDEP.Infra.Dados.Repositorios.Interfaces;
 using SME.CDEP.Infra.Dominio.Enumerados;
 using SME.CDEP.Infra.Servicos.ServicoArmazenamento;
+using SME.CDEP.Infra.Servicos.ServicoArmazenamento.Interface;
 
 namespace SME.CDEP.TesteUnitario.Aplicacao.Servicos
 {
@@ -24,6 +26,8 @@ namespace SME.CDEP.TesteUnitario.Aplicacao.Servicos
         private readonly Mock<IRepositorioArquivo> _repositorioArquivoMock;
         private readonly Mock<IRepositorioAcervoBibliografico> _repositorioAcervoBibliograficoMock;
         private readonly Mock<IRepositorioParametroSistema> _repositorioParametroSistemaMock;
+        private readonly Mock<IServicoArmazenamento> _servicoArmazenamentoMock;
+        private readonly Mock<IRepositorioAcervoDocumental> _repositorioAcervoDocumentalMock;
         private readonly Mock<IOptions<ConfiguracaoArmazenamentoOptions>> _optionsMock;
 
         private readonly ServicoAcervoAuditavel _servico;
@@ -38,6 +42,8 @@ namespace SME.CDEP.TesteUnitario.Aplicacao.Servicos
             _repositorioArquivoMock = new Mock<IRepositorioArquivo>();
             _repositorioAcervoBibliograficoMock = new Mock<IRepositorioAcervoBibliografico>();
             _repositorioParametroSistemaMock = new Mock<IRepositorioParametroSistema>();
+            _servicoArmazenamentoMock = new Mock<IServicoArmazenamento>();
+            _repositorioAcervoDocumentalMock = new Mock<IRepositorioAcervoDocumental>();
 
             var configOptions = new ConfiguracaoArmazenamentoOptions { EndPoint = "localhost/arquivos", TipoRequisicao = "http" };
             _optionsMock = new Mock<IOptions<ConfiguracaoArmazenamentoOptions>>();
@@ -54,13 +60,14 @@ namespace SME.CDEP.TesteUnitario.Aplicacao.Servicos
                 _repositorioAcervoCreditoAutorMock.Object,
                 _repositorioArquivoMock.Object,
                 _repositorioAcervoBibliograficoMock.Object,
-                Mock.Of<IRepositorioAcervoDocumental>(),
+                _repositorioAcervoDocumentalMock.Object,
                 Mock.Of<IRepositorioAcervoArteGrafica>(),
                 Mock.Of<IRepositorioAcervoAudiovisual>(),
                 Mock.Of<IRepositorioAcervoFotografico>(),
                 Mock.Of<IRepositorioAcervoTridimensional>(),
                 _repositorioParametroSistemaMock.Object,
-                _optionsMock.Object
+                _optionsMock.Object,
+                _servicoArmazenamentoMock.Object
             );
         }
 
@@ -143,14 +150,16 @@ namespace SME.CDEP.TesteUnitario.Aplicacao.Servicos
                 new AcervoCreditoAutor { AcervoId = 1, CreditoAutorId = 2 }
             };
 
+            _repositorioAcervoMock.Setup(r => r.ObterPorId(It.IsAny<long>())).ReturnsAsync(acervo);
             _repositorioAcervoMock.Setup(r => r.ExisteCodigo(acervo.Codigo, acervo.Id, It.IsAny<TipoAcervo>())).ReturnsAsync(false);
             _repositorioAcervoCreditoAutorMock.Setup(r => r.ObterPorAcervoId(acervo.Id, false)).ReturnsAsync(autoresAtuais);
             _repositorioAcervoCreditoAutorMock.Setup(r => r.ObterPorAcervoId(acervo.Id, true)).ReturnsAsync(new List<AcervoCreditoAutor>());
             _repositorioAcervoMock.Setup(r => r.Atualizar(acervo)).ReturnsAsync(acervo);
+            _mapperMock.Setup(m => m.Map<Acervo>(It.IsAny<AcervoDTO>())).Returns(acervo);
             _mapperMock.Setup(m => m.Map<AcervoDTO>(It.IsAny<Acervo>())).Returns(acervoDto);
 
             // Act
-            await _servico.Alterar(acervo);
+            await _servico.Alterar(acervoDto);
 
             // Assert
             _repositorioAcervoMock.Verify(r => r.Atualizar(It.Is<Acervo>(a => a.AlteradoLogin == "usuario.teste")), Times.Once);
@@ -337,7 +346,13 @@ namespace SME.CDEP.TesteUnitario.Aplicacao.Servicos
         public async Task ObterPorFiltro_DeveCalcularCorretamenteTotalDePaginas(int totalRegistros, int registrosPorPagina, int paginasEsperadas)
         {
             // Arrange
-            var acervosDoRepo = new Faker<Acervo>().Generate(1); // Apenas para o fluxo não retornar vazio
+            var acervosDoRepo = new List<Acervo> {new Acervo
+            {
+                Id = 1,
+                TipoAcervoId = (long)TipoAcervo.Bibliografico,
+                CreditosAutores = new List<CreditoAutor> { new CreditoAutor { Nome = "Autor Teste" } },
+                Titulo = "Acervo Teste",
+            } };
 
             _contextoAplicacaoMock.Setup(c => c.ObterVariavel<string>("NumeroPagina")).Returns("1");
             _contextoAplicacaoMock.Setup(c => c.ObterVariavel<string>("NumeroRegistros")).Returns(registrosPorPagina.ToString());
@@ -356,5 +371,237 @@ namespace SME.CDEP.TesteUnitario.Aplicacao.Servicos
             resultado.TotalPaginas.Should().Be(paginasEsperadas);
         }
 
+        [Fact]
+        public async Task ObterPorFiltro_QuandoDocumentacaoTextualECapaDocumentoVazia_DeveRetornarCapaDocumentoVazia()
+        {
+            // Arrange
+            var filtro = new AcervoFiltroDto(null, "", null, "");
+            var acervo = new Acervo
+            {
+                Id = 1,
+                TipoAcervoId = (long)TipoAcervo.DocumentacaoTextual,
+                CreditosAutores = new List<CreditoAutor> { new CreditoAutor { Nome = "Autor Teste" } },
+                Titulo = "Acervo Teste",
+                CapaDocumento = null // Capa documento vazia
+            };
+            _contextoAplicacaoMock.Setup(c => c.ObterVariavel<string>("NumeroPagina")).Returns("1");
+            _contextoAplicacaoMock.Setup(c => c.ObterVariavel<string>("NumeroRegistros")).Returns("10");
+            _mapperMock.Setup(m => m.Map<PaginacaoDto>(It.IsAny<Paginacao>()))
+                       .Returns(new PaginacaoDto { QuantidadeRegistros = 10 });
+            _repositorioAcervoMock.Setup(r => r.ContarPorFiltro(It.IsAny<AcervoFiltroDto>()))
+                                  .ReturnsAsync(1);
+            _repositorioAcervoMock.Setup(r => r.PesquisarPorFiltroPaginado(It.IsAny<AcervoFiltroDto>(), It.IsAny<PaginacaoDto>()))
+                                  .ReturnsAsync(new List<Acervo> { acervo });
+            // Act
+            var resultado = await _servico.ObterPorFiltro(null, "", null, "");
+            // Assert
+            resultado.Items.Should().HaveCount(1);
+            var item = resultado.Items.First();
+            item.CapaDocumento.Should().BeNullOrEmpty();
+        }
+
+        [Fact]
+        public async Task ObterImagemBase64_QuandoArquivoExiste_DeveRetornarStringBase64Formatada()
+        {
+            // Arrange
+            const string nomeArquivo = "imagem.png";
+            const string contentType = "image/png";
+            var bytesArquivo = System.Text.Encoding.UTF8.GetBytes("conteudo-simulado-da-imagem");
+            var streamArquivo = new MemoryStream(bytesArquivo);
+            var metadados = ObterMetadados(nomeArquivo, contentType, 10);
+            var base64Esperada = Convert.ToBase64String(bytesArquivo);
+            var resultadoEsperado = $"data:{contentType};base64,{base64Esperada}";
+
+            _servicoArmazenamentoMock.Setup(s => s.ObterMetadadosObjeto(It.IsAny<string>(), It.IsAny<string>()))
+                                     .ReturnsAsync(metadados);
+            _servicoArmazenamentoMock.Setup(s => s.ObterStream(It.IsAny<string>(), It.IsAny<string>()))
+                                     .ReturnsAsync(streamArquivo);
+
+            // Act
+            var resultado = await _servico.ObterImagemBase64(nomeArquivo);
+
+            // Assert
+            resultado.Should().NotBeNull();
+            resultado.Should().Be(resultadoEsperado);
+            _servicoArmazenamentoMock.Verify(s => s.ObterMetadadosObjeto(nomeArquivo, null), Times.Once);
+            _servicoArmazenamentoMock.Verify(s => s.ObterStream(nomeArquivo, null), Times.Once);
+        }
+
+        [Fact]
+        public async Task ObterImagemBase64_QuandoMetadadosNaoEncontrados_DeveRetornarNull()
+        {
+            // Arrange
+            const string nomeArquivo = "arquivo-inexistente.txt";
+
+            // Act
+            var resultado = await _servico.ObterImagemBase64(nomeArquivo);
+
+            // Assert
+            resultado.Should().BeNull();
+            _servicoArmazenamentoMock.Verify(s => s.ObterStream("", ""), Times.Never);
+        }
+
+        [Theory(DisplayName = "Deve retornar nulo quando stream do arquivo é nulo ou vazio")]
+        [InlineData(true)]  // Testa com stream nulo
+        [InlineData(false)] // Testa com stream vazio
+        public async Task ObterImagemBase64_QuandoStreamNuloOuVazio_DeveRetornarNull(bool streamNulo)
+        {
+            // Arrange
+            const string nomeArquivo = "arquivo-com-problema.dat";
+
+            var metadados = ObterMetadados(nomeArquivo, "application/octet-stream", 10);
+
+            Stream? stream = streamNulo ? null : new MemoryStream();
+
+            _servicoArmazenamentoMock.Setup(s => s.ObterMetadadosObjeto(It.IsAny<string>(), It.IsAny<string>()))
+                                     .ReturnsAsync(metadados);
+            _servicoArmazenamentoMock.Setup(s => s.ObterStream(It.IsAny<string>(), It.IsAny<string>()))
+                                     .ReturnsAsync(stream);
+
+            // Act
+            var resultado = await _servico.ObterImagemBase64(nomeArquivo);
+
+            // Assert
+            resultado.Should().BeNull();
+        }
+
+        [Fact]
+        public async Task ObterImagemBase64_QuandoServicoArmazenamentoLancaExcecao_DeveRetornarNull()
+        {
+            // Arrange
+            const string nomeArquivo = "arquivo-com-erro.zip";
+            _servicoArmazenamentoMock.Setup(s => s.ObterMetadadosObjeto(It.IsAny<string>(), It.IsAny<string>()))
+                                     .ThrowsAsync(new Exception("Erro de conexão simulado."));
+
+            // Act
+            var resultado = await _servico.ObterImagemBase64(nomeArquivo);
+
+            // Assert
+            resultado.Should().BeNull();
+        }
+
+        [Fact]
+        public async Task ObterDetalhamento_ParaTipoDocumentalComImagens_DeveRetornarDetalhesCorretos()
+        {
+            // Arrange
+            var filtro = new FiltroDetalharAcervoDTO { Codigo = "COD-DOC-01", Tipo = TipoAcervo.DocumentacaoTextual };
+            var enderecoBase = _optionsMock.Object.Value.EnderecoCompletoBucketArquivos();
+
+            var nomeOriginalArquivo = "documento_historico.jpg";
+            var codigoOriginalGuid = Guid.NewGuid();
+            var codigoThumbnailGuid = Guid.NewGuid();
+
+            var imagemDominio = new ImagemDetalhe
+            {
+                NomeOriginal = nomeOriginalArquivo,
+                CodigoOriginal = codigoOriginalGuid,
+                CodigoThumbnail = codigoThumbnailGuid
+            };
+
+            var detalheDominio = new AcervoDocumentalDetalhe
+            {
+                Id = 1,
+                Titulo = "Documento Histórico",
+                Imagens = new List<ImagemDetalhe> { imagemDominio }
+            };
+
+            var imagemDto = new ImagemDTO
+            {
+                Original = imagemDominio.Original,
+                Thumbnail = imagemDominio.Thumbnail
+            };
+
+            var detalheDto = new AcervoDocumentalDetalheDTO
+            {
+                Titulo = detalheDominio.Titulo,
+                Imagens = new[] { imagemDto }
+            };
+
+            _repositorioAcervoDocumentalMock.Setup(r => r.ObterDetalhamentoPorCodigo(filtro.Codigo)).ReturnsAsync(detalheDominio);
+            _mapperMock.Setup(m => m.Map<AcervoDocumentalDetalheDTO>(detalheDominio)).Returns(detalheDto);
+
+            // Act
+            var resultado = await _servico.ObterDetalhamentoPorTipoAcervoECodigo(filtro) as AcervoDocumentalDetalheDTO;
+
+            // Assert
+            resultado.Should().NotBeNull();
+            resultado.Titulo.Should().Be(detalheDominio.Titulo);
+            resultado.TipoAcervoId.Should().Be((int)TipoAcervo.DocumentacaoTextual);
+            resultado.EnderecoImagemPadrao.Should().BeEmpty();
+
+            var urlOriginalEsperada = $"{enderecoBase}/{imagemDominio.Original}";
+            var urlThumbnailEsperada = $"{enderecoBase}/{imagemDominio.Thumbnail}";
+
+            resultado.Imagens.First().Original.Should().Be(urlOriginalEsperada);
+            resultado.Imagens.First().Thumbnail.Should().Be(urlThumbnailEsperada);
+
+            _repositorioAcervoDocumentalMock.Verify(r => r.ObterDetalhamentoPorCodigo(filtro.Codigo), Times.Once);
+        }
+        [Fact]
+        public async Task ObterDetalhamento_ParaTipoDocumentalSemImagens_DeveRetornarComImagemPadrao()
+        {
+            // Arrange
+            var filtro = new FiltroDetalharAcervoDTO { Codigo = "COD-DOC-02", Tipo = TipoAcervo.DocumentacaoTextual };
+            var enderecoBase = _optionsMock.Object.Value.EnderecoCompletoBucketArquivos();
+            var codigo = Guid.NewGuid();
+            var nomeImagemPadraoFisico = $"{codigo}.png";
+
+            var detalheDominio = new AcervoDocumentalDetalhe { Id = 2, Titulo = "Documento Sem Imagem", Imagens = new List<ImagemDetalhe>() };
+            var detalheDto = new AcervoDocumentalDetalheDTO { Titulo = detalheDominio.Titulo, Imagens = Array.Empty<ImagemDTO>() };
+
+            _repositorioAcervoDocumentalMock.Setup(r => r.ObterDetalhamentoPorCodigo(filtro.Codigo)).ReturnsAsync(detalheDominio);
+            _mapperMock.Setup(m => m.Map<AcervoDocumentalDetalheDTO>(detalheDominio)).Returns(detalheDto);
+
+            var arquivoPadrao = new Arquivo
+            {
+                Codigo = codigo,
+                Nome = nomeImagemPadraoFisico
+            };
+
+            _repositorioArquivoMock.Setup(r => r.ObterArquivoPorNomeTipoArquivo(It.IsAny<string>(), TipoArquivo.Sistema))
+                                   .ReturnsAsync(arquivoPadrao);
+
+            // Act
+            var resultado = await _servico.ObterDetalhamentoPorTipoAcervoECodigo(filtro) as AcervoDocumentalDetalheDTO;
+
+            // Assert
+            resultado.Should().NotBeNull();
+            resultado.Imagens.Should().BeEmpty();
+
+            // Valida que, na ausência de imagens, o endereço da imagem padrão foi preenchido com o nome físico correto.
+            resultado.EnderecoImagemPadrao.Should().Be($"{enderecoBase}{nomeImagemPadraoFisico}");
+
+            _repositorioAcervoDocumentalMock.Verify(r => r.ObterDetalhamentoPorCodigo(filtro.Codigo), Times.Once);
+            _repositorioArquivoMock.Verify(r => r.ObterArquivoPorNomeTipoArquivo(It.IsAny<string>(), TipoArquivo.Sistema), Times.Once);
+        }
+
+        [Fact]
+        public async Task ObterDetalhamento_ParaTipoDocumentalNaoEncontrado_DeveLancarNegocioException()
+        {
+            // Arrange
+            var filtro = new FiltroDetalharAcervoDTO { Codigo = "COD-INEXISTENTE", Tipo = TipoAcervo.DocumentacaoTextual };
+
+            _repositorioAcervoDocumentalMock.Setup(r => r.ObterDetalhamentoPorCodigo(filtro.Codigo))
+                                            .ReturnsAsync((AcervoDocumentalDetalhe)null);
+
+            // Act
+            Func<Task> acao = async () => await _servico.ObterDetalhamentoPorTipoAcervoECodigo(filtro);
+
+            // Assert
+            await acao.Should().ThrowAsync<NegocioException>().WithMessage("Acervo não encontrado.");
+            _repositorioAcervoDocumentalMock.Verify(r => r.ObterDetalhamentoPorCodigo(filtro.Codigo), Times.Once);
+        }
+
+        private static ObjectStat ObterMetadados(string nomeArquivo, string contentType, long tamanho)
+        {
+            var headers = new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase)
+            {
+                { "Content-Type", contentType },
+                { "Content-Length", tamanho.ToString() },
+                { "Last-Modified", DateTime.Now.ToString("R") }, // Formato RFC1123
+                { "ETag", "etag-teste" }
+            };
+            return ObjectStat.FromResponseHeaders(nomeArquivo, headers);
+        }
     }
 }

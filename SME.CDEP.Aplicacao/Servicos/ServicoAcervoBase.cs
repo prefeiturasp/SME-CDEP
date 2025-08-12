@@ -1,5 +1,7 @@
-﻿using SME.CDEP.Aplicacao.Servicos.Interface;
+﻿using SME.CDEP.Aplicacao.Extensions;
+using SME.CDEP.Aplicacao.Servicos.Interface;
 using SME.CDEP.Dominio.Entidades;
+using SME.CDEP.Dominio.Extensions;
 using SME.CDEP.Infra.Dados.Repositorios.Interfaces;
 using SME.CDEP.Infra.Dominio.Enumerados;
 using SME.CDEP.Infra.Servicos.ServicoArmazenamento.Interface;
@@ -54,11 +56,18 @@ namespace SME.CDEP.Aplicacao.Servicos
         {
             foreach (var arquivoAExcluir in ArquivosExcluirArmazenamento)
             {
-                await servicoArmazenamento.Excluir(arquivoAExcluir.NomeArquivoFisico);
-                // await servicoArmazenamento.Excluir(arquivoAExcluir.NomeArquivoFisicoMiniatura);
+                await ExcluirArquivoArmazenamento(arquivoAExcluir.NomeArquivoFisico);
             }
         }
-        
+
+        public async Task ExcluirArquivoArmazenamento(string urlArquivo)
+        {
+            if (string.IsNullOrWhiteSpace(urlArquivo))
+                return;
+            await servicoArmazenamento.Excluir(urlArquivo);
+        }
+
+
         public async Task<(IEnumerable<long>,IEnumerable<long>)> ObterArquivosInseridosExcluidosMovidos(long[]? arquivosAlterados, long[] arquivosExistentes)
         {
             arquivosAlterados = arquivosAlterados ?? Array.Empty<long>();
@@ -78,6 +87,17 @@ namespace SME.CDEP.Aplicacao.Servicos
         {
             await repositorioAcervo.Remover(id);
             return true;
+        }
+
+        public async Task<string> ArmazenarImagemCapaDocumento(string capaDocumentoBase64)
+        {
+            if (capaDocumentoBase64.NaoEstaPreenchido()) return capaDocumentoBase64;
+            var anexoInfo = capaDocumentoBase64.ObterContentTypeBase64EExtension();
+            var bytes = Convert.FromBase64String(anexoInfo.base64Data);
+            var stream = new MemoryStream(bytes);
+            var nomeArquivo = $"capa_acervo_{Guid.NewGuid()}.{anexoInfo.extension}";
+            await servicoArmazenamento.Armazenar(nomeArquivo, stream, anexoInfo.contentType);
+            return nomeArquivo;
         }
     }
 }
