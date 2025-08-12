@@ -23,7 +23,7 @@ public class AcervoController: BaseController
     }
     
     [HttpGet]
-    [ProducesResponseType(typeof(PaginacaoResultadoDTO<IdTipoTituloCreditoAutoriaCodigoAcervoDTO>), 200)]
+    [ProducesResponseType(typeof(PaginacaoResultadoDTO<AcervoTableRowDTO>), 200)]
     [ProducesResponseType(typeof(RetornoBaseDTO), 400)]
     [ProducesResponseType(typeof(RetornoBaseDTO), 403)]
     [ProducesResponseType(typeof(RetornoBaseDTO), 601)]

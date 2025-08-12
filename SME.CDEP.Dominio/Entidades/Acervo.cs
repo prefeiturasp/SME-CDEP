@@ -19,6 +19,7 @@ namespace SME.CDEP.Dominio.Entidades
         public IEnumerable<CoAutor>? CoAutores { get; set; }
         public int AnoInicio { get; set; }
         public int AnoFim { get; set; }
+        public string? CapaDocumento { get; set; }
         public SituacaoAcervo? SituacaoAcervo { get; set; }
     }
 }

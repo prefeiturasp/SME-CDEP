@@ -2,7 +2,7 @@
 
 namespace SME.CDEP.Aplicacao.DTOS;
 
-public class IdTipoTituloCreditoAutoriaCodigoAcervoDTO
+public class AcervoTableRowDTO
 {
     public long AcervoId { get; set; }
     public string TipoAcervo { get; set; }
@@ -11,5 +11,6 @@ public class IdTipoTituloCreditoAutoriaCodigoAcervoDTO
     public string CreditoAutoria { get; set; }
     public string Codigo { get; set; }
     public string Data { get; set; }
+    public string? CapaDocumento { get; set; }
     public string Editora { get; set; }
 }

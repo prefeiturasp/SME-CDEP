@@ -7,9 +7,11 @@ using SME.CDEP.Dominio.Enumerados;
 using SME.CDEP.Dominio.Extensions;
 using SME.CDEP.Infra.Dados.Repositorios.Interfaces;
 using SME.CDEP.Infra.Dominio.Enumerados;
+using System.Diagnostics.CodeAnalysis;
 
 namespace SME.CDEP.Infra.Dados.Repositorios
 {
+    [ExcludeFromCodeCoverage]
     public class RepositorioAcervo : RepositorioBaseAuditavel<Acervo>, IRepositorioAcervo
     {
         public RepositorioAcervo(IContextoAplicacao contexto, ICdepConexao conexao) : base(contexto, conexao)
@@ -78,11 +80,14 @@ namespace SME.CDEP.Infra.Dados.Repositorios
                      ca.nome, 
                      ca.tipo,
                      -- Campo da Editora
-                     e.nome AS editora
+                     e.nome AS editora,
+                     -- Campo da CapaDocumento
+                     ad.capa_documento as capaDocumento
                 FROM acervo a
                 JOIN AcervosPaginados ap ON a.id = ap.id
                 LEFT JOIN acervo_credito_autor aca ON aca.acervo_id = a.id
                 LEFT JOIN credito_autor ca ON aca.credito_autor_id = ca.id
+				LEFT JOIN acervo_documental ad on ad.acervo_id = a.id
                 LEFT JOIN acervo_bibliografico ab ON ab.acervo_id = a.id
                 LEFT JOIN editora e ON ab.editora_id = e.id
                 ORDER BY {clausulaOrdenacao};");
@@ -91,14 +96,15 @@ namespace SME.CDEP.Infra.Dados.Repositorios
             ConstruirClausulasWhereParaPesquisa(filtro, construtorDeConsultas);
 
             var indiceDeAcervos = new Dictionary<long, Acervo>();
-            await conexao.Obter().QueryAsync<Acervo, CreditoAutor, string, Acervo>(
+            await conexao.Obter().QueryAsync<Acervo, CreditoAutor, string, string, Acervo>(
                 modelo.RawSql,
-                (acervo, creditoAutor, editora) =>
+                (acervo, creditoAutor, editora, capaDocumento) =>
                 {
                     if (!indiceDeAcervos.TryGetValue(acervo.Id, out var acervoEntrada))
                     {
                         acervoEntrada = acervo;
                         acervoEntrada.CreditosAutores = new List<CreditoAutor>();
+                        acervoEntrada.CapaDocumento = capaDocumento;
                         acervoEntrada.Editora = editora;
                         indiceDeAcervos.Add(acervoEntrada.Id, acervoEntrada);
                     }
@@ -109,11 +115,12 @@ namespace SME.CDEP.Infra.Dados.Repositorios
                     return acervoEntrada;
                 },
                 modelo.Parameters,
-                splitOn: "id,editora" 
+                splitOn: "id,editora,capaDocumento" 
             );
 
             return indiceDeAcervos.Values;
         }
+
         private static void ConstruirClausulasWhereParaPesquisa(AcervoFiltroDto filtro, SqlBuilder builder)
         {
             builder.Where("NOT a.excluido");

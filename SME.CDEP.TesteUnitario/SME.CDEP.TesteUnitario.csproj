@@ -22,6 +22,7 @@
   <ItemGroup>
     <ProjectReference Include="..\SME.CDEP.Aplicacao\SME.CDEP.Aplicacao.csproj" />
     <ProjectReference Include="..\SME.CDEP.Infra.Dados\SME.CDEP.Infra.Dados.csproj" />
+    <ProjectReference Include="..\SME.CDEP.Webapi\SME.CDEP.Webapi.csproj" />
   </ItemGroup>
 
   <ItemGroup>

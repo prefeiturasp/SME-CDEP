@@ -1,6 +1,8 @@
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Options;
 using Minio;
+using Minio.DataModel;
+using Minio.Exceptions;
 using SME.CDEP.Dominio.Extensions;
 using SME.CDEP.Infra.Servicos.Mensageria;
 using SME.CDEP.Infra.Servicos.ServicoArmazenamento.Interface;
@@ -128,6 +130,63 @@ namespace SME.CDEP.Infra.Servicos.ServicoArmazenamento
         private string ObterUrl(string nomeArquivo, string bucketName)
         {
             return $"{configuracaoArmazenamentoOptions.EnderecoCompletoPadrao()}/{bucketName}/{nomeArquivo}";
+        }
+
+        public async Task<Stream?> ObterStream(string nomeArquivo, string? nomeBucket = null)
+        {
+            try
+            {
+                var bucket = nomeBucket.NaoEstaPreenchido()
+                ? configuracaoArmazenamentoOptions.BucketArquivos
+                : nomeBucket;
+
+                var memoryStream = new MemoryStream();
+
+                var args = new GetObjectArgs()
+                    .WithBucket(bucket)
+                    .WithObject(nomeArquivo)
+                    .WithCallbackStream(async (stream, cancellationToken) =>
+                    {
+                        await stream.CopyToAsync(memoryStream, cancellationToken);
+                    });
+
+                await minioClient.GetObjectAsync(args);
+                memoryStream.Position = 0;
+                return memoryStream;
+            }
+            catch (ObjectNotFoundException)
+            {
+                return null;
+            }
+            catch (Exception ex)
+            {
+                await servicoMensageriaLogs.Enviar($"Erro ao obter o arquivo {nomeArquivo} do bucket {nomeBucket}: {ex.Message}", "ErroObterArquivo", "CDEP");
+                return null;
+            }
+        }
+        public async Task<ObjectStat?> ObterMetadadosObjeto(string nomeArquivo, string? nomeBucket = null)
+        {
+            try
+            {
+                var bucket = nomeBucket.NaoEstaPreenchido()
+                    ? configuracaoArmazenamentoOptions.BucketArquivos
+                    : nomeBucket;
+
+                var args = new StatObjectArgs()
+                    .WithBucket(bucket)
+                    .WithObject(nomeArquivo);
+
+                return await minioClient.StatObjectAsync(args);
+            }
+            catch (ObjectNotFoundException)
+            {
+                return null;
+            }
+            catch (Exception ex)
+            {
+                await servicoMensageriaLogs.Enviar($"Erro ao obter metadados do arquivo {nomeArquivo} do bucket {nomeBucket}: {ex.Message}", "ErroObterMetadadosArquivo", "CDEP");
+                return null;
+            }
         }
     }
 }
