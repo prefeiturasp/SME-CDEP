@@ -58,7 +58,7 @@ namespace SME.CDEP.TesteUnitario.WebApi.Controllers
                 TotalPaginas = 1
             };
 
-            _servicoAcervoMock.Setup(s => s.ObterPorFiltro(filtro.TipoAcervo, filtro.Titulo, filtro.CreditoAutorId, filtro.Codigo))
+            _servicoAcervoMock.Setup(s => s.ObterPorFiltro(filtro.TipoAcervo, filtro.Titulo, filtro.CreditoAutorId, filtro.Codigo, filtro.IdEditora))
                               .ReturnsAsync(paginacaoResultado);
 
             // Act
@@ -69,7 +69,7 @@ namespace SME.CDEP.TesteUnitario.WebApi.Controllers
             var valorRetornado = Assert.IsType<PaginacaoResultadoDTO<AcervoTableRowDTO>>(okResult.Value);
             valorRetornado.Should().BeEquivalentTo(paginacaoResultado);
 
-            _servicoAcervoMock.Verify(s => s.ObterPorFiltro(filtro.TipoAcervo, filtro.Titulo, filtro.CreditoAutorId, filtro.Codigo), Times.Once);
+            _servicoAcervoMock.Verify(s => s.ObterPorFiltro(filtro.TipoAcervo, filtro.Titulo, filtro.CreditoAutorId, filtro.Codigo, filtro.IdEditora), Times.Once);
         }
 
         [Fact]
