@@ -4,7 +4,7 @@ namespace SME.CDEP.Aplicacao.DTOS
 {
     public class RelatorioControleAcervoAutorRequest
     {
-        public List<string> Autores { get; set; }
+        public List<int>? Autores { get; set; }
         public TipoAcervo TipoAcervo { get; set; }
     }
 }
