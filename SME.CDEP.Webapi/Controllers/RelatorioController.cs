@@ -17,7 +17,7 @@ namespace SME.CDEP.Webapi.Controllers
         {
             var file = await relatorioControleLivrosEmprestadosUseCase.Executar(filtros);
             if (file == null)
-                return NotFound();
+                return NoContent();
 
             return File(file, "application/vnd.ms-excel", "relatorio.xls", enableRangeProcessing: true);
         }
@@ -29,9 +29,22 @@ namespace SME.CDEP.Webapi.Controllers
         {
             var file = await relatorioControleAcervoUseCase.Executar(filtros);
             if (file == null)
-                return NotFound();
+                return NoContent();
 
             return File(file, "application/vnd.ms-excel", "relatorio.xls", enableRangeProcessing: true);
+        }
+
+        [HttpPost("controle-acervo-autor")]
+        [Permissao(Permissao.OperacoesSolicitacoes_C, Policy = "Bearer")]
+        public async Task<IActionResult> RelatorioControleAcervoAutor([FromBody] RelatorioControleAcervoAutorRequest request,
+           [FromServices] IRelatorioControleAcervoAutorUseCase relatorioControleAcervoAutorUseCase)
+        {
+                var file = await relatorioControleAcervoAutorUseCase.Executar(request);
+            if (file == null)
+                return NoContent();
+
+            return File(file, "application/vnd.ms-excel", "relatorio.xls", enableRangeProcessing: true);
+
         }
     }
 }
