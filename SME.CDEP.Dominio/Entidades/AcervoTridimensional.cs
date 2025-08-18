@@ -1,4 +1,6 @@
-﻿namespace SME.CDEP.Dominio.Entidades
+﻿using SME.CDEP.Dominio.Enumerados;
+
+namespace SME.CDEP.Dominio.Entidades
 {
     public class AcervoTridimensional : EntidadeBase
     {
@@ -11,5 +13,6 @@
         public string? Altura { get; set; }
         public string? Profundidade { get; set; }
         public string? Diametro { get; set; }
+        public SituacaoAcervo SituacaoAcervo { get; set; }
     }
 }

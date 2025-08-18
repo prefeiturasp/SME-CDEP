@@ -1,4 +1,6 @@
-﻿namespace SME.CDEP.Dominio.Entidades
+﻿using SME.CDEP.Dominio.Enumerados;
+
+namespace SME.CDEP.Dominio.Entidades
 {
     public class AcervoArteGrafica : EntidadeBase
     {
@@ -16,5 +18,6 @@
         public string Tecnica { get; set; }
         public long SuporteId { get; set; }
         public long Quantidade { get; set; }
+        public SituacaoAcervo SituacaoAcervo { get; set; }
     }
 }

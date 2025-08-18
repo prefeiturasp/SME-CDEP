@@ -1,4 +1,6 @@
-﻿namespace SME.CDEP.Dominio.Entidades
+﻿using SME.CDEP.Dominio.Enumerados;
+
+namespace SME.CDEP.Dominio.Entidades
 {
     public class AcervoDocumental : EntidadeBase
     {
@@ -16,5 +18,6 @@
         public bool? CopiaDigital { get; set; }
         public long? ConservacaoId { get; set; }
         public string? CapaDocumento { get; set; }
+        public SituacaoAcervo SituacaoAcervo { get; set; }
     }
 }

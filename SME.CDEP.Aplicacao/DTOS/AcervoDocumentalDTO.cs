@@ -1,4 +1,6 @@
-﻿namespace SME.CDEP.Aplicacao.DTOS;
+﻿using SME.CDEP.Dominio.Enumerados;
+
+namespace SME.CDEP.Aplicacao.DTOS;
 
 public class AcervoDocumentalDTO
 {
@@ -26,4 +28,5 @@ public class AcervoDocumentalDTO
     public AuditoriaDTO Auditoria { get; set; }
     public long[] CreditosAutoresIds { get; set; }
     public string CapaDocumento { get; set; }
+    public SituacaoAcervo SituacaoAcervo { get; set; }
 }

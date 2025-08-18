@@ -1,4 +1,6 @@
-﻿namespace SME.CDEP.Dominio.Entidades
+﻿using SME.CDEP.Dominio.Enumerados;
+
+namespace SME.CDEP.Dominio.Entidades
 {
     public class AcervoAudiovisual : EntidadeBase
     {
@@ -15,5 +17,6 @@
         public string TamanhoArquivo { get; set; }
         public string Acessibilidade { get; set; }
         public string Disponibilizacao { get; set; }
+        public SituacaoAcervo SituacaoAcervo { get; set; }
     }
 }

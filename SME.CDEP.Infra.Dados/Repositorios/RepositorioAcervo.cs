@@ -82,7 +82,8 @@ namespace SME.CDEP.Infra.Dados.Repositorios
                      -- Campo da Editora
                      e.nome AS editora,
                      -- Campo da CapaDocumento
-                     ad.capa_documento as capaDocumento
+                     ad.capa_documento as capaDocumento,
+                     COALESCE(a.situacao, 1) as SituacaoAcervo       
                 FROM acervo a
                 JOIN AcervosPaginados ap ON a.id = ap.id
                 LEFT JOIN acervo_credito_autor aca ON aca.acervo_id = a.id
@@ -226,7 +227,8 @@ namespace SME.CDEP.Infra.Dados.Repositorios
                 ano,
                 data_acervo,
                 ano_inicio,
-                ano_fim
+                ano_fim,
+                COALESCE(a.situacao, 1) as SituacaoAcervo       
             from acervo
             where id = any(@ids)
                 and not excluido; ";
@@ -248,7 +250,8 @@ namespace SME.CDEP.Infra.Dados.Repositorios
               aso.situacao,
               ae.situacao as situacaoEmprestimo,
               ab.situacao_saldo as situacaoSaldo,
-              asi.acervo_solicitacao_id as acervoSolicitacaoId
+              asi.acervo_solicitacao_id as acervoSolicitacaoId,
+              COALESCE(a.situacao, 1) as SituacaoAcervo       
             FROM acervo a 
             JOIN acervo_solicitacao_item asi on asi.acervo_id = a.id
             JOIN acervo_solicitacao aso on aso.id = asi.acervo_solicitacao_id
@@ -321,7 +324,8 @@ namespace SME.CDEP.Infra.Dados.Repositorios
                                      a.data_acervo dataAcervo,
                                      a.ano,
                                      coalesce(ab.situacao_saldo,0) as situacaoSaldo,
-                                     e.nome as editora
+                                     e.nome as editora,
+                                     COALESCE(a.situacao, 1) as SituacaoAcervo       
                             from acervo a
                                 join acervosIds aid on aid.acervoId = a.id
                                 left join acervo_credito_autor aca on aca.acervo_id = a.id
@@ -383,7 +387,8 @@ namespace SME.CDEP.Infra.Dados.Repositorios
             select id, 
                    titulo,
                    tipo,
-                   coalesce(codigo, codigo_novo) as codigo
+                   coalesce(codigo, codigo_novo) as codigo,
+                   COALESCE(a.situacao, 1) as SituacaoAcervo       
             from acervo
             where (lower(codigo) = @codigo or lower(codigo_novo) = @codigo)
               and tipo = ANY(@tiposAcervosPermitidos)

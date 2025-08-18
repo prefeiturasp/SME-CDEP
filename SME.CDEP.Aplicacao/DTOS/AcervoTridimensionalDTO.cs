@@ -1,5 +1,6 @@
 ﻿using System.Runtime.CompilerServices;
 using SME.CDEP.Dominio.Entidades;
+using SME.CDEP.Dominio.Enumerados;
 using SME.CDEP.Infra.Dominio.Enumerados;
 
 namespace SME.CDEP.Aplicacao.DTOS;
@@ -23,4 +24,5 @@ public class AcervoTridimensionalDTO
     public ArquivoResumidoDTO[]? Arquivos { get; set; }
     public AuditoriaDTO Auditoria { get; set; }
     public string? Ano { get; set; }
+    public SituacaoAcervo SituacaoAcervo { get; set; }
 }

@@ -1,4 +1,5 @@
-﻿using SME.CDEP.Infra.Dominio.Enumerados;
+﻿using SME.CDEP.Dominio.Enumerados;
+using SME.CDEP.Infra.Dominio.Enumerados;
 
 namespace SME.CDEP.Dominio.Entidades
 {
@@ -14,6 +15,7 @@ namespace SME.CDEP.Dominio.Entidades
         public string Descricao { get; set; }
         public string Ano { get; set; }
         public SituacaoSaldo SituacaoSaldo { get; set; }
+        public SituacaoAcervo SituacaoAcervo { get; set; }
 
         public TipoAcervoTag TipoAcervoTag
         {

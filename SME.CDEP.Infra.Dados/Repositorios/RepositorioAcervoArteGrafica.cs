@@ -32,7 +32,8 @@ namespace SME.CDEP.Infra.Dados.Repositorios
                                   a.codigo,
                                   a.tipo,
                                   ca.id,
-                                  ca.nome
+                                  ca.nome,
+                                  COALESCE(a.situacao, 1) as SituacaoAcervo
                         from acervo_arte_grafica ag
                         join acervo a on a.id = ag.acervo_id 
                         left join acervo_credito_autor aca on aca.acervo_id = a.id
@@ -78,7 +79,8 @@ namespace SME.CDEP.Infra.Dados.Repositorios
                                   ag.diametro,
                                   ag.tecnica,
                                   ag.suporte_id as suporteId,
-                                  ag.quantidade                                  
+                                  ag.quantidade,
+                                  COALESCE(a.situacao, 1) as SituacaoAcervo
                                   
                         from acervo_arte_grafica ag
                         join acervo a on a.id = ag.acervo_id 
@@ -148,7 +150,8 @@ namespace SME.CDEP.Infra.Dados.Repositorios
                                   ag.tecnica,          
                                   su.nome as suporte,
                                   ag.quantidade,
-                                  a.descricao
+                                  a.descricao,
+                                  COALESCE(a.situacao, 1) as SituacaoAcervo
                         from acervo_arte_grafica ag
                         join acervo a on a.id = ag.acervo_id 
                         join cromia c on c.id = ag.cromia_id

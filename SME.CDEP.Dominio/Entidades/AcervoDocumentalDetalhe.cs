@@ -1,4 +1,5 @@
-﻿using SME.CDEP.Dominio.Extensions;
+﻿using SME.CDEP.Dominio.Enumerados;
+using SME.CDEP.Dominio.Extensions;
 
 namespace SME.CDEP.Dominio.Entidades;
 
@@ -25,6 +26,7 @@ public class AcervoDocumentalDetalhe
     public string Autores { get; set; }
     public string AcessosDocumentos { get; set; }
     public IEnumerable<ImagemDetalhe>? Imagens { get; set; }
+    public SituacaoAcervo SituacaoAcervo { get; set; }
     public string Dimensoes
     {
         get

@@ -1,4 +1,4 @@
-﻿using System.Text;
+﻿using SME.CDEP.Dominio.Enumerados;
 using SME.CDEP.Dominio.Extensions;
 
 namespace SME.CDEP.Dominio.Entidades;
@@ -26,6 +26,7 @@ public class AcervoArteGraficaDetalhe
     public string Descricao { get; set; }
     public IEnumerable<ImagemDetalhe>? Imagens { get; set; }
     public string Creditos { get; set; }
+    public SituacaoAcervo SituacaoAcervo { get; set; }
     public string Dimensoes
     {
         get
