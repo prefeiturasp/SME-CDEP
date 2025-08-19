@@ -46,5 +46,18 @@ namespace SME.CDEP.Webapi.Controllers
             return File(file, "application/vnd.ms-excel", "relatorio.xls", enableRangeProcessing: true);
 
         }
+
+        [HttpPost("controle-devolucao-livros")]
+        [Permissao(Permissao.OperacoesSolicitacoes_C, Policy = "Bearer")]
+        public async Task<IActionResult> RelatorioControleAcervoAutor([FromBody] RelatorioControleDevolucaoLivrosRequest request,
+           [FromServices] IRelatorioControleDevolucaoLivrosUseCase relatorioControleDevolucaoLivrosUseCase)
+        {
+            var file = await relatorioControleDevolucaoLivrosUseCase.Executar(request);
+            if (file == null)
+                return NoContent();
+
+            return File(file, "application/vnd.ms-excel", "relatorio.xls", enableRangeProcessing: true);
+
+        }
     }
 }

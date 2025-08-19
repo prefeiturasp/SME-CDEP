@@ -18,6 +18,5 @@ namespace SME.CDEP.Dominio.Entidades
         public string Tecnica { get; set; }
         public long SuporteId { get; set; }
         public long Quantidade { get; set; }
-        public SituacaoAcervo SituacaoAcervo { get; set; }
     }
 }

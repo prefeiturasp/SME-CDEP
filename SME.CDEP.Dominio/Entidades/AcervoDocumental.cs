@@ -18,6 +18,5 @@ namespace SME.CDEP.Dominio.Entidades
         public bool? CopiaDigital { get; set; }
         public long? ConservacaoId { get; set; }
         public string? CapaDocumento { get; set; }
-        public SituacaoAcervo SituacaoAcervo { get; set; }
     }
 }

@@ -8,9 +8,9 @@ namespace SME.CDEP.Infra.Dados.Repositorios
 {
     public class RepositorioAcervoArteGrafica : RepositorioBase<AcervoArteGrafica>, IRepositorioAcervoArteGrafica
     {
-        public RepositorioAcervoArteGrafica(IContextoAplicacao contexto, ICdepConexao conexao) : base(contexto,conexao)
+        public RepositorioAcervoArteGrafica(IContextoAplicacao contexto, ICdepConexao conexao) : base(contexto, conexao)
         { }
-        
+
         public async Task<IEnumerable<AcervoArteGrafica>> ObterTodos()
         {
             var query = @"select  ag.id,
@@ -40,20 +40,23 @@ namespace SME.CDEP.Infra.Dados.Repositorios
                         left join credito_autor ca on aca.credito_autor_id = ca.id
                         where not a.excluido ";
 
-            var retorno = await conexao.Obter().QueryAsync<AcervoArteGrafica, Acervo, CreditoAutor,  AcervoArteGrafica>(
+            var retorno = await conexao.Obter().QueryAsync<AcervoArteGrafica, Acervo, CreditoAutor, AcervoArteGrafica>(
                 query, (acervoArteGrafica, acervo, creditoAutor) =>
                 {
                     acervo.CreditoAutor = creditoAutor;
                     acervoArteGrafica.Acervo = acervo;
                     return acervoArteGrafica;
                 });
-            
+
             return retorno;
         }
-        
+
         public async Task<AcervoArteGraficaCompleto> ObterPorId(long id)
         {
-            var query = @"select  a.descricao,
+            try
+            {
+
+                var query = @"select  a.descricao,
                                   a.id as AcervoId,
                                   a.titulo,
                                   a.codigo,
@@ -108,12 +111,16 @@ namespace SME.CDEP.Infra.Dados.Repositorios
                         where not  arq.excluido
                         and ag.acervo_id = @id;";
 
-            var queryMultiple = await conexao.Obter().QueryMultipleAsync(query, new { id });
-            var acervoArteGraficaCompleto = queryMultiple.ReadFirst<AcervoArteGraficaCompleto>();
-            acervoArteGraficaCompleto.CreditosAutoresIds = queryMultiple.Read<long>().ToArray();
-            acervoArteGraficaCompleto.Arquivos = queryMultiple.Read<ArquivoResumido>().ToArray();
-            
-            return acervoArteGraficaCompleto;
+                var queryMultiple = await conexao.Obter().QueryMultipleAsync(query, new { id });
+                var acervoArteGraficaCompleto = queryMultiple.ReadFirst<AcervoArteGraficaCompleto>();
+                acervoArteGraficaCompleto.CreditosAutoresIds = queryMultiple.Read<long>().ToArray();
+                acervoArteGraficaCompleto.Arquivos = queryMultiple.Read<ArquivoResumido>().ToArray();
+                return acervoArteGraficaCompleto;
+            }
+            catch (Exception)
+            {
+                return null;
+            }
         }
 
         public async Task<AcervoArteGraficaDetalhe> ObterDetalhamentoPorCodigo(string filtroCodigo)
@@ -122,14 +129,14 @@ namespace SME.CDEP.Infra.Dados.Repositorios
 
             if (acervoArteGrafica.EhNulo())
                 return default;
-            
+
             acervoArteGrafica.Imagens = await ObterArquivos(acervoArteGrafica.Id);
-            
+
             acervoArteGrafica.Creditos = await ObterCreditosAutores(acervoArteGrafica.AcervoId);
 
             return acervoArteGrafica;
         }
-        
+
         private async Task<AcervoArteGraficaDetalhe> ObterPorCodigo(string codigo)
         {
             var query = @"select ag.id,
@@ -164,7 +171,7 @@ namespace SME.CDEP.Infra.Dados.Repositorios
                         and a.codigo = @codigo ";
             return conexao.Obter().QueryFirstOrDefault<AcervoArteGraficaDetalhe>(query, new { codigo });
         }
-        
+
         protected async Task<IEnumerable<ImagemDetalhe>> ObterArquivos(long acervoArteGraficaId)
         {
             var query = @" select a.nome NomeOriginal,
