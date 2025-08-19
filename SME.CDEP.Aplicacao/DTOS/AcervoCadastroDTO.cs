@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using SME.CDEP.Dominio.Enumerados;
+using System.ComponentModel.DataAnnotations;
 
 namespace SME.CDEP.Aplicacao.DTOS;
 
@@ -17,4 +18,5 @@ public class AcervoCadastroDTO
     
     [Required(ErrorMessage = "É necessário informar o ano do acervo")]
     public string Ano { get; set; }
+    public SituacaoAcervo SituacaoAcervo { get; set; }
 }

@@ -1,4 +1,6 @@
-﻿namespace SME.CDEP.Dominio.Entidades;
+﻿using SME.CDEP.Dominio.Enumerados;
+
+namespace SME.CDEP.Dominio.Entidades;
 
 public class AcervoTridimensionalCompleto: EntidadeBaseAuditavel
 {
@@ -18,4 +20,5 @@ public class AcervoTridimensionalCompleto: EntidadeBaseAuditavel
     public string? Diametro { get; set; }
     public ArquivoResumido[] Arquivos  { get; set; }
     public long[] CreditosAutoresIds { get; set; }
+    public SituacaoAcervo SituacaoAcervo { get; set; }
 }

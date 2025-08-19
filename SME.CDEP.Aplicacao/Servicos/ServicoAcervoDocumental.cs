@@ -3,6 +3,7 @@ using SME.CDEP.Aplicacao.DTOS;
 using SME.CDEP.Aplicacao.Servicos.Interface;
 using SME.CDEP.Dominio.Constantes;
 using SME.CDEP.Dominio.Entidades;
+using SME.CDEP.Dominio.Enumerados;
 using SME.CDEP.Dominio.Excecoes;
 using SME.CDEP.Dominio.Extensions;
 using SME.CDEP.Infra.Dados;
@@ -60,6 +61,7 @@ namespace SME.CDEP.Aplicacao.Servicos
 
             var acervo = mapper.Map<Acervo>(acervoDocumentalCadastroDto);
             acervo.TipoAcervoId = (int)TipoAcervo.DocumentacaoTextual;
+            acervo.SituacaoAcervo = SituacaoAcervo.Ativo;
 
             var acervoDocumental = mapper.Map<AcervoDocumental>(acervoDocumentalCadastroDto);
             var tran = transacao.Iniciar();
