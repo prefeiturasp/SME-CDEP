@@ -34,7 +34,7 @@ namespace SME.CDEP.Aplicacao.Servicos
         {
             var acervo = mapper.Map<Acervo>(acervoAudiovisualCadastroDto);
             acervo.TipoAcervoId = (int)TipoAcervo.Audiovisual;
-            acervo.SituacaoAcervo = SituacaoAcervo.Ativo;
+            acervo.Situacao = SituacaoAcervo.Ativo;
             acervo.Codigo = ObterCodigoAcervo(acervo.Codigo);
             
             var acervoAudiovisual = mapper.Map<AcervoAudiovisual>(acervoAudiovisualCadastroDto);

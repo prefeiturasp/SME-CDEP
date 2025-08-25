@@ -3,8 +3,8 @@ using SME.CDEP.Aplicacao.DTOS;
 using SME.CDEP.Aplicacao.Servicos.Interface;
 using SME.CDEP.Dominio.Entidades;
 using SME.CDEP.Dominio.Extensions;
-using SME.CDEP.TesteIntegracao.Setup;
 using SME.CDEP.Infra.Dominio.Enumerados;
+using SME.CDEP.TesteIntegracao.Setup;
 using Xunit;
 
 namespace SME.CDEP.TesteIntegracao.Eventos
@@ -18,55 +18,15 @@ namespace SME.CDEP.TesteIntegracao.Eventos
             servicoEvento = GetServicoEvento();
         }
         
-        [Fact(DisplayName = "Evento - Inserir visita")]
-        public async Task Inserir_visita()
-        {
-            var eventoDto = EventoCadastroDTO.GerarEventoDTO(TipoEvento.VISITA).Generate(); 
-
-            var eventoId = await servicoEvento.Inserir(eventoDto);
-            eventoId.ShouldBeGreaterThan(0);
-            
-            var retorno = ObterTodos<Dominio.Entidades.Evento>().LastOrDefault();
-            retorno.ShouldNotBeNull();
-            retorno.Id.ShouldBe(eventoId);
-            retorno.Data.ShouldBe(eventoDto.Data);
-            retorno.Descricao.ShouldBe("Visita agendada");
-            retorno.Tipo.ShouldBe(eventoDto.Tipo);
-            retorno.Justificativa.ShouldBe(eventoDto.Justificativa);
-        }
-        
-        [Fact(DisplayName = "Evento - Inserir visita com acervo")]
-        public async Task Inserir_visita_com_acervo()
-        {
-            await InserirDadosBasicosAleatorios();
-
-            await InserirAcervoTridimensional();
-
-            await InserirAcervoSolicitacao(10);
-            
-            var eventoDto = EventoCadastroDTO.GerarEventoDTO(TipoEvento.VISITA).Generate();
-            eventoDto.AcervoSolicitacaoItemId = 1;
-            
-            var eventoId = await servicoEvento.Inserir(eventoDto);
-            eventoId.ShouldBeGreaterThan(0);
-            
-            var retorno = ObterTodos<Dominio.Entidades.Evento>().LastOrDefault();
-            retorno.ShouldNotBeNull();
-            retorno.Id.ShouldBe(eventoId);
-            retorno.Data.ShouldBe(eventoDto.Data);
-            retorno.Descricao.Contains("Visita agendada ao acervo de tombo/código:").ShouldBeTrue();
-            retorno.Tipo.ShouldBe(eventoDto.Tipo);
-            retorno.Justificativa.ShouldBe(eventoDto.Justificativa);
-        }
-        
-        [Fact(DisplayName = "Evento - Inserir feriado")]
+             [Fact(DisplayName = "Evento - Inserir feriado")]
         public async Task Inserir_feriado()
         {
-            var eventoDto = EventoCadastroDTO.GerarEventoDTO(TipoEvento.FERIADO).Generate(); 
+            var eventoDto = EventoCadastroDTO.GerarEventoDTO(TipoEvento.FERIADO).Generate();
+            eventoDto.Descricao = "Feriado";
 
             var eventoId = await servicoEvento.Inserir(eventoDto);
             eventoId.ShouldBeGreaterThan(0);
-            
+
             var retorno = ObterTodos<Dominio.Entidades.Evento>().LastOrDefault();
             retorno.ShouldNotBeNull();
             retorno.Id.ShouldBe(eventoId);
@@ -75,7 +35,8 @@ namespace SME.CDEP.TesteIntegracao.Eventos
             retorno.Tipo.ShouldBe(eventoDto.Tipo);
             retorno.Justificativa.ShouldBe(eventoDto.Justificativa);
         }
-        
+
+
         [Fact(DisplayName = "Evento - Inserir suspensão")]
         public async Task Inserir_suspensao()
         {

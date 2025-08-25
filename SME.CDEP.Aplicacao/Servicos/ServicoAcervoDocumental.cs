@@ -61,7 +61,7 @@ namespace SME.CDEP.Aplicacao.Servicos
 
             var acervo = mapper.Map<Acervo>(acervoDocumentalCadastroDto);
             acervo.TipoAcervoId = (int)TipoAcervo.DocumentacaoTextual;
-            acervo.SituacaoAcervo = SituacaoAcervo.Ativo;
+            acervo.Situacao = SituacaoAcervo.Ativo;
 
             var acervoDocumental = mapper.Map<AcervoDocumental>(acervoDocumentalCadastroDto);
             var tran = transacao.Iniciar();

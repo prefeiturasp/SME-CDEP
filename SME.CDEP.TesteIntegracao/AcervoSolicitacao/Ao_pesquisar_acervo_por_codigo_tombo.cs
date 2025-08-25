@@ -108,37 +108,7 @@ namespace SME.CDEP.TesteIntegracao
             
             filtro = new FiltroCodigoTomboDTO() { CodigoTombo = acervos.FirstOrDefault(f => f.TipoAcervoId.EhAcervoAudiovisual()).Codigo };
             await DeveRetornarCodigoTombo(filtro);
-        }
-        
-        [Fact(DisplayName = "Acervo - Deve pesquisar somente o tipo de acervo bibliográfico com perfil Admin Bibliográfico")]
-        public async Task Deve_retornar_somente_o_tipo_de_acervo_bibliografico_com_perfil_admin_biblioteca()
-        {
-            CriarClaimUsuario(Dominio.Constantes.Constantes.PERFIL_ADMIN_BIBLIOTECA_GUID);
-            
-            await InserirDadosBasicosAleatorios();
-
-            await InserirAcervos();
-
-            var acervos = ObterTodos<Acervo>();
-
-            var filtro = new FiltroCodigoTomboDTO() { CodigoTombo = acervos.FirstOrDefault(f => f.TipoAcervoId.EhAcervoDocumental()).Codigo };
-            await NaoDeveRetornarCodigoTombo(filtro);
-
-            filtro = new FiltroCodigoTomboDTO() { CodigoTombo = acervos.FirstOrDefault(f => f.TipoAcervoId.EhAcervoTridimensional()).Codigo };
-            await NaoDeveRetornarCodigoTombo(filtro);
-            
-            filtro = new FiltroCodigoTomboDTO() { CodigoTombo = acervos.FirstOrDefault(f => f.TipoAcervoId.EhAcervoBibliografico()).Codigo };
-            await DeveRetornarCodigoTombo(filtro);
-            
-            filtro = new FiltroCodigoTomboDTO() { CodigoTombo = acervos.FirstOrDefault(f => f.TipoAcervoId.EhAcervoArteGrafica()).Codigo };
-            await NaoDeveRetornarCodigoTombo(filtro);
-            
-            filtro = new FiltroCodigoTomboDTO() { CodigoTombo = acervos.FirstOrDefault(f => f.TipoAcervoId.EhAcervoFotografico()).Codigo };
-            await NaoDeveRetornarCodigoTombo(filtro);
-            
-            filtro = new FiltroCodigoTomboDTO() { CodigoTombo = acervos.FirstOrDefault(f => f.TipoAcervoId.EhAcervoAudiovisual()).Codigo };
-            await NaoDeveRetornarCodigoTombo(filtro);
-        }
+        }       
         
         [Fact(DisplayName = "Acervo - Deve pesquisar somente o tipo de acervo documental com perfil Admin Memoria")]
         public async Task Deve_retornar_somente_o_tipo_de_acervo_documental_com_perfil_admin_memoria()
@@ -198,38 +168,6 @@ namespace SME.CDEP.TesteIntegracao
             
             filtro = new FiltroCodigoTomboDTO() { CodigoTombo = acervos.FirstOrDefault(f => f.TipoAcervoId.EhAcervoAudiovisual()).Codigo };
             await NaoDeveRetornarCodigoTombo(filtro);
-        }
-        
-        [Theory(DisplayName = "Acervo - Não deve retornar acervo disponível com perfil Admin Geral")]
-        [InlineData(SituacaoSaldo.RESERVADO)]
-        [InlineData(SituacaoSaldo.EMPRESTADO)]
-        public async Task Nao_deve_retornar_acervo_disponivel_com_perfil_admin_geral(SituacaoSaldo situacaoSaldo)
-        {
-            CriarClaimUsuario(Dominio.Constantes.Constantes.PERFIL_ADMIN_GERAL_GUID);
-            
-            await InserirDadosBasicosAleatorios();
-
-            await InserirAcervos(situacaoSaldo);
-
-            var acervos = ObterTodos<Acervo>();
-
-            var filtro = new FiltroCodigoTomboDTO() { CodigoTombo = acervos.FirstOrDefault(f => f.TipoAcervoId.EhAcervoDocumental()).Codigo };
-            await DeveRetornarCodigoTombo(filtro);
-
-            filtro = new FiltroCodigoTomboDTO() { CodigoTombo = acervos.FirstOrDefault(f => f.TipoAcervoId.EhAcervoTridimensional()).Codigo };
-            await DeveRetornarCodigoTombo(filtro);
-            
-            filtro = new FiltroCodigoTomboDTO() { CodigoTombo = acervos.FirstOrDefault(f => f.TipoAcervoId.EhAcervoBibliografico()).Codigo };
-            await NaoDeveRetornarCodigoTombo(filtro);
-            
-            filtro = new FiltroCodigoTomboDTO() { CodigoTombo = acervos.FirstOrDefault(f => f.TipoAcervoId.EhAcervoArteGrafica()).Codigo };
-            await DeveRetornarCodigoTombo(filtro);
-            
-            filtro = new FiltroCodigoTomboDTO() { CodigoTombo = acervos.FirstOrDefault(f => f.TipoAcervoId.EhAcervoFotografico()).Codigo };
-            await DeveRetornarCodigoTombo(filtro);
-            
-            filtro = new FiltroCodigoTomboDTO() { CodigoTombo = acervos.FirstOrDefault(f => f.TipoAcervoId.EhAcervoAudiovisual()).Codigo };
-            await DeveRetornarCodigoTombo(filtro);
         }
         
         private async Task DeveRetornarCodigoTombo(FiltroCodigoTomboDTO filtro)

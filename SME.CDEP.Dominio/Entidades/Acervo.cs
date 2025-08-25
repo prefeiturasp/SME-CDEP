@@ -20,6 +20,6 @@ namespace SME.CDEP.Dominio.Entidades
         public int AnoInicio { get; set; }
         public int AnoFim { get; set; }
         public string? CapaDocumento { get; set; }
-        public SituacaoAcervo SituacaoAcervo { get; set; }
+        public SituacaoAcervo Situacao { get; set; }
     }
 }

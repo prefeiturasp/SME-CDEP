@@ -760,6 +760,7 @@ namespace SME.CDEP.TesteIntegracao
                     CriadoEm = DateTimeExtension.HorarioBrasilia().AddMinutes(-15),
                     CriadoLogin = ConstantesTestes.LOGIN_123456789,
                     Ano = faker.Date.Past().Year.ToString(),
+                    Situacao = Dominio.Enumerados.SituacaoAcervo.Ativo,
                     DataAcervo = DateTimeExtension.HorarioBrasilia().Date.ToString("dd/MM/yyyy"),
                 });
 
@@ -771,7 +772,8 @@ namespace SME.CDEP.TesteIntegracao
                     Quantidade = random.Next(15,55),
                     Largura = "50,45",
                     Altura = "10,20",
-                    Diametro = "15,40",	
+                    Diametro = "15,40",
+                    SituacaoAcervo = Dominio.Enumerados.SituacaoAcervo.Ativo,
                     Profundidade = "18,01",	
                 });
 

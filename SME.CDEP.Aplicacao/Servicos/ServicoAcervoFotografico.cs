@@ -63,7 +63,7 @@ namespace SME.CDEP.Aplicacao.Servicos
             
             var acervo = mapper.Map<Acervo>(acervoFotograficoCadastroDto);
             acervo.TipoAcervoId = (int)TipoAcervo.Fotografico;
-            acervo.SituacaoAcervo = SituacaoAcervo.Ativo;
+            acervo.Situacao = SituacaoAcervo.Ativo;
             acervo.Codigo = ObterCodigoAcervo(acervo.Codigo);
             
             var acervoFotografico = mapper.Map<AcervoFotografico>(acervoFotograficoCadastroDto);
