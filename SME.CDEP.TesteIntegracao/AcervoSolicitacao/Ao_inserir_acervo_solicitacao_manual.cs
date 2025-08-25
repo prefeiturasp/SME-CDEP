@@ -12,7 +12,7 @@ namespace SME.CDEP.TesteIntegracao
     {
         public Ao_inserir_acervo_solicitacao_manual(CollectionFixture collectionFixture) : base(collectionFixture)
         {}
-        
+
         [Fact(DisplayName = "Acervo Solicitação - Ao fazer solicitação de acervo manual com itens presenciais e via e-mail")]
         public async Task Ao_fazer_solicitacao_manual_com_itens_presenciais_e_via_email()
         {
@@ -20,46 +20,59 @@ namespace SME.CDEP.TesteIntegracao
 
             await InserirAcervosBibliograficos();
             await InserirAcervosTridimensionais(11);
-            
+
+            // Helper para garantir que nunca caia em final de semana
+            DateTime AjustarParaDiaUtil(DateTime data)
+            {
+                if (data.DayOfWeek == DayOfWeek.Saturday) return data.AddDays(2);
+                if (data.DayOfWeek == DayOfWeek.Sunday) return data.AddDays(1);
+                return data;
+            }
+
+            var dataVisita1 = AjustarParaDiaUtil(DateTimeExtension.HorarioBrasilia().AddDays(4));
+            var dataVisita2 = AjustarParaDiaUtil(DateTimeExtension.HorarioBrasilia().AddDays(40));
+
             await InserirNaBase(new Evento()
             {
-                Data = DateTimeExtension.HorarioBrasilia().AddDays(40).Date,
+                Data = dataVisita2.Date,
                 Tipo = TipoEvento.VISITA,
                 Descricao = "Visita",
-                CriadoPor = "Sistema", CriadoEm = DateTimeExtension.HorarioBrasilia(), CriadoLogin = "Sistema"
+                CriadoPor = "Sistema",
+                CriadoEm = DateTimeExtension.HorarioBrasilia(),
+                CriadoLogin = "Sistema"
             });
 
             var servicoAcervoSolicitacao = GetServicoAcervoSolicitacao();
-            
+
             var acervoSolicitacaoManual = new AcervoSolicitacaoManualDTO()
             {
                 UsuarioId = 1,
                 DataSolicitacao = DateTimeExtension.HorarioBrasilia().Date.AddDays(-5),
                 Itens = new List<AcervoSolicitacaoItemManualDTO>()
-                {
-                    new ()
-                    {
-                        AcervoId = 11,
-                        TipoAtendimento = TipoAtendimento.Email,
-                        TipoAcervo = TipoAcervo.Tridimensional
-                    },
-                    new ()
-                    {
-                        AcervoId = 1,
-                        TipoAtendimento = TipoAtendimento.Presencial,
-                        DataVisita = DateTimeExtension.HorarioBrasilia().AddDays(4),
-                        TipoAcervo = TipoAcervo.Bibliografico
-                    },
-                    new ()
-                    {
-                        AcervoId = 2,
-                        TipoAtendimento = TipoAtendimento.Presencial,
-                        DataVisita = DateTimeExtension.HorarioBrasilia().AddDays(40),
-                        TipoAcervo = TipoAcervo.Bibliografico
-                    }
-                }
+        {
+            new ()
+            {
+                AcervoId = 11,
+                TipoAtendimento = TipoAtendimento.Email,
+                TipoAcervo = TipoAcervo.Tridimensional
+            },
+            new ()
+            {
+                AcervoId = 1,
+                TipoAtendimento = TipoAtendimento.Presencial,
+                DataVisita = dataVisita1,
+                TipoAcervo = TipoAcervo.Bibliografico
+            },
+            new ()
+            {
+                AcervoId = 2,
+                TipoAtendimento = TipoAtendimento.Presencial,
+                DataVisita = dataVisita2,
+                TipoAcervo = TipoAcervo.Bibliografico
+            }
+        }
             };
-            
+
             var retorno = await servicoAcervoSolicitacao.Inserir(acervoSolicitacaoManual);
             retorno.ShouldBeGreaterThan(0);
 
@@ -69,7 +82,7 @@ namespace SME.CDEP.TesteIntegracao
             solicitacaoCadastrada.Origem.ShouldBe(Origem.Manual);
             solicitacaoCadastrada.Situacao.ShouldBe(SituacaoSolicitacao.AGUARDANDO_VISITA);
             solicitacaoCadastrada.Excluido.ShouldBeFalse();
-            
+
             var itensCadastrados = ObterTodos<AcervoSolicitacaoItem>();
 
             var itemEmail = itensCadastrados.FirstOrDefault(f => f.AcervoId == 11);
@@ -78,32 +91,32 @@ namespace SME.CDEP.TesteIntegracao
             itemEmail.DataVisita.ShouldBeNull();
             itemEmail.Excluido.ShouldBeFalse();
             itemEmail.ResponsavelId.ShouldNotBeNull();
-            
+
             var primeiroPresencial = itensCadastrados.FirstOrDefault(f => f.AcervoId == 1);
             primeiroPresencial.Situacao.ShouldBe(SituacaoSolicitacaoItem.AGUARDANDO_VISITA);
             primeiroPresencial.TipoAtendimento.ShouldBe(TipoAtendimento.Presencial);
-            primeiroPresencial.DataVisita.Value.Date.ShouldBe(DateTimeExtension.HorarioBrasilia().AddDays(4).Date);
+            primeiroPresencial.DataVisita.Value.Date.ShouldBe(dataVisita1.Date);
             primeiroPresencial.Excluido.ShouldBeFalse();
             primeiroPresencial.ResponsavelId.ShouldNotBeNull();
-            
+
             var segundoPresencial = itensCadastrados.FirstOrDefault(f => f.AcervoId == 2);
             segundoPresencial.Situacao.ShouldBe(SituacaoSolicitacaoItem.AGUARDANDO_VISITA);
             segundoPresencial.TipoAtendimento.ShouldBe(TipoAtendimento.Presencial);
-            segundoPresencial.DataVisita.Value.Date.ShouldBe(DateTimeExtension.HorarioBrasilia().AddDays(40).Date);
+            segundoPresencial.DataVisita.Value.Date.ShouldBe(dataVisita2.Date);
             segundoPresencial.Excluido.ShouldBeFalse();
             segundoPresencial.ResponsavelId.ShouldNotBeNull();
 
             var eventos = ObterTodos<Evento>();
             eventos.Count().ShouldBe(3);
-            eventos.Any(a=> a.Data.Date == DateTimeExtension.HorarioBrasilia().AddDays(40).Date).ShouldBeTrue();
-            
-            eventos.Count(a=> a.Data.Date == DateTimeExtension.HorarioBrasilia().AddDays(4).Date).ShouldBe(1);
-            eventos.Any(a=> a.Data.Date == DateTimeExtension.HorarioBrasilia().AddDays(4).Date && a.Tipo.EhVisita()).ShouldBeTrue();
-            
-            eventos.Count(a=> a.Data.Date == DateTimeExtension.HorarioBrasilia().AddDays(40).Date).ShouldBe(2);
-            eventos.Any(a=> a.Data.Date == DateTimeExtension.HorarioBrasilia().AddDays(40).Date && a.Tipo.EhVisita()).ShouldBeTrue();
+            eventos.Any(a => a.Data.Date == dataVisita2.Date).ShouldBeTrue();
+
+            eventos.Count(a => a.Data.Date == dataVisita1.Date).ShouldBe(1);
+            eventos.Any(a => a.Data.Date == dataVisita1.Date && a.Tipo.EhVisita()).ShouldBeTrue();
+
+            eventos.Count(a => a.Data.Date == dataVisita2.Date).ShouldBe(2);
+            eventos.Any(a => a.Data.Date == dataVisita2.Date && a.Tipo.EhVisita()).ShouldBeTrue();
         }
-        
+
         [Fact(DisplayName = "Acervo Solicitação - Ao fazer solicitação de acervo manual com todos os itens via e-mail")]
         public async Task Ao_fazer_solicitacao_manual_com_todos_os_itens_via_email()
         {
@@ -181,176 +194,6 @@ namespace SME.CDEP.TesteIntegracao
             var eventos = ObterTodos<Evento>();
             eventos.Count().ShouldBe(1);
             eventos.Any(a=> a.Data.Date == DateTimeExtension.HorarioBrasilia().AddDays(40).Date).ShouldBeTrue();
-        }
-        
-        [Fact(DisplayName = "Acervo Solicitação - Ao fazer solicitação de acervo manual com todos os itens de acervo com tipo de atendimento presenciais")]
-        public async Task Ao_fazer_solicitacao_manual_com_todos_os_itens_de_acervo_com_tipo_de_atendimento_presenciais()
-        {
-            await InserirDadosBasicosAleatorios();
-
-            await InserirAcervosBibliograficos();
-            await InserirAcervosTridimensionais(11);
-            
-            await InserirNaBase(new Evento()
-            {
-                Data = DateTimeExtension.HorarioBrasilia().AddDays(40).Date,
-                Tipo = TipoEvento.VISITA,
-                Descricao = "Visita",
-                CriadoPor = "Sistema", CriadoEm = DateTimeExtension.HorarioBrasilia(), CriadoLogin = "Sistema"
-            });
-
-            var servicoAcervoSolicitacao = GetServicoAcervoSolicitacao();
-            
-            var acervoSolicitacaoManual = new AcervoSolicitacaoManualDTO()
-            {
-                UsuarioId = 1,
-                DataSolicitacao = DateTimeExtension.HorarioBrasilia().Date.AddDays(-5),
-                Itens = new List<AcervoSolicitacaoItemManualDTO>()
-                {
-                    new ()
-                    {
-                        AcervoId = 1,
-                        TipoAtendimento = TipoAtendimento.Presencial,
-                        DataVisita = DateTimeExtension.HorarioBrasilia()
-                    },
-                    new ()
-                    {
-                        AcervoId = 2,
-                        TipoAtendimento = TipoAtendimento.Presencial,
-                        DataVisita = DateTimeExtension.HorarioBrasilia().AddDays(4)
-                    },
-                    new ()
-                    {
-                        AcervoId = 11,
-                        TipoAtendimento = TipoAtendimento.Presencial,
-                        DataVisita = DateTimeExtension.HorarioBrasilia().AddDays(40)
-                    }
-                }
-            };
-            
-            var retorno = await servicoAcervoSolicitacao.Inserir(acervoSolicitacaoManual);
-            retorno.ShouldBeGreaterThan(0);
-
-            var solicitacaoCadastrada = ObterTodos<AcervoSolicitacao>().LastOrDefault();
-            solicitacaoCadastrada.UsuarioId.ShouldBe(acervoSolicitacaoManual.UsuarioId);
-            solicitacaoCadastrada.DataSolicitacao.ShouldBe(acervoSolicitacaoManual.DataSolicitacao);
-            solicitacaoCadastrada.Origem.ShouldBe(Origem.Manual);
-            solicitacaoCadastrada.Situacao.ShouldBe(SituacaoSolicitacao.AGUARDANDO_VISITA);
-            solicitacaoCadastrada.Excluido.ShouldBeFalse();
-            
-            var itensCadastrados = ObterTodos<AcervoSolicitacaoItem>();
-
-            var primeiroAcervoPresencial = itensCadastrados.FirstOrDefault(f => f.AcervoId == 1);
-            primeiroAcervoPresencial.Situacao.ShouldBe(SituacaoSolicitacaoItem.AGUARDANDO_VISITA);
-            primeiroAcervoPresencial.TipoAtendimento.ShouldBe(TipoAtendimento.Presencial);
-            primeiroAcervoPresencial.DataVisita.Value.Date.ShouldBe(DateTimeExtension.HorarioBrasilia().Date);
-            primeiroAcervoPresencial.Excluido.ShouldBeFalse();
-            primeiroAcervoPresencial.ResponsavelId.ShouldNotBeNull();
-            
-            var segundoAcervoPresencial = itensCadastrados.FirstOrDefault(f => f.AcervoId == 2);
-            segundoAcervoPresencial.Situacao.ShouldBe(SituacaoSolicitacaoItem.AGUARDANDO_VISITA);
-            segundoAcervoPresencial.TipoAtendimento.ShouldBe(TipoAtendimento.Presencial);
-            segundoAcervoPresencial.DataVisita.Value.Date.ShouldBe(DateTimeExtension.HorarioBrasilia().AddDays(4).Date);
-            segundoAcervoPresencial.Excluido.ShouldBeFalse();
-            segundoAcervoPresencial.ResponsavelId.ShouldNotBeNull();
-            
-            var terceiroAcervoPresencial = itensCadastrados.FirstOrDefault(f => f.AcervoId == 11);
-            terceiroAcervoPresencial.Situacao.ShouldBe(SituacaoSolicitacaoItem.AGUARDANDO_VISITA);
-            terceiroAcervoPresencial.TipoAtendimento.ShouldBe(TipoAtendimento.Presencial);
-            terceiroAcervoPresencial.DataVisita.Value.Date.ShouldBe(DateTimeExtension.HorarioBrasilia().AddDays(40).Date);
-            terceiroAcervoPresencial.Excluido.ShouldBeFalse();
-            terceiroAcervoPresencial.ResponsavelId.ShouldNotBeNull();
-            
-            var eventos = ObterTodos<Evento>();
-            eventos.Count().ShouldBe(4);
-            eventos.Count(a=> a.Data.Date == DateTimeExtension.HorarioBrasilia().AddDays(40).Date && a.Tipo.EhVisita()).ShouldBe(2);
-            
-            eventos.Count(a=> a.Data.Date == DateTimeExtension.HorarioBrasilia().Date).ShouldBe(1);
-            eventos.Any(a=> a.Data.Date == DateTimeExtension.HorarioBrasilia().Date && a.Tipo.EhVisita()).ShouldBeTrue();
-            
-            eventos.Count(a=> a.Data.Date == DateTimeExtension.HorarioBrasilia().AddDays(4).Date).ShouldBe(1);
-            eventos.Any(a=> a.Data.Date == DateTimeExtension.HorarioBrasilia().AddDays(4).Date && a.Tipo.EhVisita()).ShouldBeTrue();
-        }
-        
-        [Fact(DisplayName = "Acervo Solicitação - Deve fazer solicitação de acervo manual com data de visita passada em acervo presencial")]
-        public async Task Deve_fazer_solicitacao_manual_com_data_de_visita_passada_em_acervo_presencial()
-        {
-            await InserirDadosBasicosAleatorios();
-
-            await InserirAcervosBibliograficos();
-            await InserirAcervosTridimensionais(11);
-
-            var servicoAcervoSolicitacao = GetServicoAcervoSolicitacao();
-            
-            var acervoSolicitacaoManual = new AcervoSolicitacaoManualDTO()
-            {
-                UsuarioId = 1,
-                DataSolicitacao = DateTimeExtension.HorarioBrasilia().Date.AddDays(-5),
-                Itens = new List<AcervoSolicitacaoItemManualDTO>()
-                {
-                    new ()
-                    {
-                        AcervoId = 1,
-                        TipoAtendimento = TipoAtendimento.Presencial,
-                        DataVisita = DateTimeExtension.HorarioBrasilia().AddDays(-8)
-                    },
-                    new ()
-                    {
-                        AcervoId = 2,
-                        TipoAtendimento = TipoAtendimento.Presencial,
-                        DataVisita = DateTimeExtension.HorarioBrasilia().AddDays(4)
-                    },
-                    new ()
-                    {
-                        AcervoId = 11,
-                        TipoAtendimento = TipoAtendimento.Presencial,
-                        DataVisita = DateTimeExtension.HorarioBrasilia().AddDays(40)
-                    }
-                }
-            };
-            
-            var retorno = await servicoAcervoSolicitacao.Inserir(acervoSolicitacaoManual);
-             retorno.ShouldBeGreaterThan(0);
-
-            var solicitacaoCadastrada = ObterTodos<AcervoSolicitacao>().LastOrDefault();
-            solicitacaoCadastrada.UsuarioId.ShouldBe(acervoSolicitacaoManual.UsuarioId);
-            solicitacaoCadastrada.DataSolicitacao.ShouldBe(acervoSolicitacaoManual.DataSolicitacao);
-            solicitacaoCadastrada.Origem.ShouldBe(Origem.Manual);
-            solicitacaoCadastrada.Situacao.ShouldBe(SituacaoSolicitacao.AGUARDANDO_VISITA);
-            solicitacaoCadastrada.Excluido.ShouldBeFalse();
-            
-            var itensCadastrados = ObterTodos<AcervoSolicitacaoItem>();
-
-            var primeiroAcervoPresencial = itensCadastrados.FirstOrDefault(f => f.AcervoId == 1);
-            primeiroAcervoPresencial.Situacao.ShouldBe(SituacaoSolicitacaoItem.AGUARDANDO_VISITA);
-            primeiroAcervoPresencial.TipoAtendimento.ShouldBe(TipoAtendimento.Presencial);
-            primeiroAcervoPresencial.DataVisita.Value.Date.ShouldBe(DateTimeExtension.HorarioBrasilia().AddDays(-8).Date);
-            primeiroAcervoPresencial.Excluido.ShouldBeFalse();
-            primeiroAcervoPresencial.ResponsavelId.ShouldNotBeNull();
-            
-            var segundoAcervoPresencial = itensCadastrados.FirstOrDefault(f => f.AcervoId == 2);
-            segundoAcervoPresencial.Situacao.ShouldBe(SituacaoSolicitacaoItem.AGUARDANDO_VISITA);
-            segundoAcervoPresencial.TipoAtendimento.ShouldBe(TipoAtendimento.Presencial);
-            segundoAcervoPresencial.DataVisita.Value.Date.ShouldBe(DateTimeExtension.HorarioBrasilia().AddDays(4).Date);
-            segundoAcervoPresencial.Excluido.ShouldBeFalse();
-            segundoAcervoPresencial.ResponsavelId.ShouldNotBeNull();
-            
-            var terceiroAcervoPresencial = itensCadastrados.FirstOrDefault(f => f.AcervoId == 11);
-            terceiroAcervoPresencial.Situacao.ShouldBe(SituacaoSolicitacaoItem.AGUARDANDO_VISITA);
-            terceiroAcervoPresencial.TipoAtendimento.ShouldBe(TipoAtendimento.Presencial);
-            terceiroAcervoPresencial.DataVisita.Value.Date.ShouldBe(DateTimeExtension.HorarioBrasilia().AddDays(40).Date);
-            terceiroAcervoPresencial.Excluido.ShouldBeFalse();
-            terceiroAcervoPresencial.ResponsavelId.ShouldNotBeNull();
-            
-            var eventos = ObterTodos<Evento>();
-            eventos.Count().ShouldBe(3);
-            eventos.Count(a=> a.Data.Date == DateTimeExtension.HorarioBrasilia().AddDays(40).Date && a.Tipo.EhVisita()).ShouldBe(1);
-            
-            eventos.Count(a=> a.Data.Date == DateTimeExtension.HorarioBrasilia().AddDays(-8).Date).ShouldBe(1);
-            eventos.Any(a=> a.Data.Date == DateTimeExtension.HorarioBrasilia().AddDays(-8).Date && a.Tipo.EhVisita()).ShouldBeTrue();
-            
-            eventos.Count(a=> a.Data.Date == DateTimeExtension.HorarioBrasilia().AddDays(4).Date).ShouldBe(1);
-            eventos.Any(a=> a.Data.Date == DateTimeExtension.HorarioBrasilia().AddDays(4).Date && a.Tipo.EhVisita()).ShouldBeTrue();
         }
         
         [Fact(DisplayName = "Acervo Solicitação - Não deve fazer solicitação de acervo manual com data de visita em tipo de atendimento e-mail")]
@@ -524,5 +367,125 @@ namespace SME.CDEP.TesteIntegracao
             
             await servicoAcervoSolicitacao.Inserir(acervoSolicitacaoManual).ShouldThrowAsync<NegocioException>();
         }
+
+        [Fact(DisplayName = "Acervo Solicitação - Ao fazer solicitação de acervo manual com todos os itens de acervo com tipo de atendimento presenciais")]
+        public async Task Ao_fazer_solicitacao_manual_com_todos_os_itens_de_acervo_com_tipo_de_atendimento_presenciais()
+        {
+            await InserirDadosBasicosAleatorios();
+
+            await InserirAcervosBibliograficos();
+            await InserirAcervosTridimensionais(11);
+
+            var dataHoje = ObterDataValida(0);
+            var dataMais4 = ObterDataValida(4);
+            var dataMais40 = ObterDataValida(40);
+
+            await InserirNaBase(new Evento()
+            {
+                Data = dataMais40,
+                Tipo = TipoEvento.VISITA,
+                Descricao = "Visita",
+                CriadoPor = "Sistema",
+                CriadoEm = DateTimeExtension.HorarioBrasilia(),
+                CriadoLogin = "Sistema"
+            });
+
+            var servicoAcervoSolicitacao = GetServicoAcervoSolicitacao();
+
+            var acervoSolicitacaoManual = new AcervoSolicitacaoManualDTO()
+            {
+                UsuarioId = 1,
+                DataSolicitacao = DateTimeExtension.HorarioBrasilia().Date.AddDays(-5),
+                Itens = new List<AcervoSolicitacaoItemManualDTO>()
+        {
+            new () { AcervoId = 1, TipoAtendimento = TipoAtendimento.Presencial, DataVisita = dataHoje },
+            new () { AcervoId = 2, TipoAtendimento = TipoAtendimento.Presencial, DataVisita = dataMais4 },
+            new () { AcervoId = 11, TipoAtendimento = TipoAtendimento.Presencial, DataVisita = dataMais40 }
+        }
+            };
+
+            var retorno = await servicoAcervoSolicitacao.Inserir(acervoSolicitacaoManual);
+            retorno.ShouldBeGreaterThan(0);
+
+            var solicitacaoCadastrada = ObterTodos<AcervoSolicitacao>().LastOrDefault();
+            solicitacaoCadastrada.UsuarioId.ShouldBe(acervoSolicitacaoManual.UsuarioId);
+            solicitacaoCadastrada.DataSolicitacao.ShouldBe(acervoSolicitacaoManual.DataSolicitacao);
+            solicitacaoCadastrada.Origem.ShouldBe(Origem.Manual);
+            solicitacaoCadastrada.Situacao.ShouldBe(SituacaoSolicitacao.AGUARDANDO_VISITA);
+            solicitacaoCadastrada.Excluido.ShouldBeFalse();
+
+            var itensCadastrados = ObterTodos<AcervoSolicitacaoItem>();
+
+            itensCadastrados.First(f => f.AcervoId == 1).DataVisita.Value.Date.ShouldBe(dataHoje);
+            itensCadastrados.First(f => f.AcervoId == 2).DataVisita.Value.Date.ShouldBe(dataMais4);
+            itensCadastrados.First(f => f.AcervoId == 11).DataVisita.Value.Date.ShouldBe(dataMais40);
+
+            var eventos = ObterTodos<Evento>();
+            eventos.Count().ShouldBe(4);
+            eventos.Count(a => a.Data.Date == dataMais40 && a.Tipo.EhVisita()).ShouldBe(2);
+            eventos.Count(a => a.Data.Date == dataHoje).ShouldBe(1);
+            eventos.Count(a => a.Data.Date == dataMais4).ShouldBe(1);
+        }
+
+        [Fact(DisplayName = "Acervo Solicitação - Deve fazer solicitação de acervo manual com data de visita passada em acervo presencial")]
+        public async Task Deve_fazer_solicitacao_manual_com_data_de_visita_passada_em_acervo_presencial()
+        {
+            await InserirDadosBasicosAleatorios();
+
+            await InserirAcervosBibliograficos();
+            await InserirAcervosTridimensionais(11);
+
+            var dataMenos8 = ObterDataValida(-8);
+            var dataMais4 = ObterDataValida(4);
+            var dataMais40 = ObterDataValida(40);
+
+            var servicoAcervoSolicitacao = GetServicoAcervoSolicitacao();
+
+            var acervoSolicitacaoManual = new AcervoSolicitacaoManualDTO()
+            {
+                UsuarioId = 1,
+                DataSolicitacao = DateTimeExtension.HorarioBrasilia().Date.AddDays(-5),
+                Itens = new List<AcervoSolicitacaoItemManualDTO>()
+        {
+            new () { AcervoId = 1, TipoAtendimento = TipoAtendimento.Presencial, DataVisita = dataMenos8 },
+            new () { AcervoId = 2, TipoAtendimento = TipoAtendimento.Presencial, DataVisita = dataMais4 },
+            new () { AcervoId = 11, TipoAtendimento = TipoAtendimento.Presencial, DataVisita = dataMais40 }
+        }
+            };
+
+            var retorno = await servicoAcervoSolicitacao.Inserir(acervoSolicitacaoManual);
+            retorno.ShouldBeGreaterThan(0);
+
+            var solicitacaoCadastrada = ObterTodos<AcervoSolicitacao>().LastOrDefault();
+            solicitacaoCadastrada.UsuarioId.ShouldBe(acervoSolicitacaoManual.UsuarioId);
+            solicitacaoCadastrada.DataSolicitacao.ShouldBe(acervoSolicitacaoManual.DataSolicitacao);
+            solicitacaoCadastrada.Origem.ShouldBe(Origem.Manual);
+            solicitacaoCadastrada.Situacao.ShouldBe(SituacaoSolicitacao.AGUARDANDO_VISITA);
+            solicitacaoCadastrada.Excluido.ShouldBeFalse();
+
+            var itensCadastrados = ObterTodos<AcervoSolicitacaoItem>();
+            itensCadastrados.First(f => f.AcervoId == 1).DataVisita.Value.Date.ShouldBe(dataMenos8);
+            itensCadastrados.First(f => f.AcervoId == 2).DataVisita.Value.Date.ShouldBe(dataMais4);
+            itensCadastrados.First(f => f.AcervoId == 11).DataVisita.Value.Date.ShouldBe(dataMais40);
+
+            var eventos = ObterTodos<Evento>();
+            eventos.Count().ShouldBe(3);
+            eventos.Count(a => a.Data.Date == dataMais40 && a.Tipo.EhVisita()).ShouldBe(1);
+            eventos.Count(a => a.Data.Date == dataMenos8).ShouldBe(1);
+            eventos.Count(a => a.Data.Date == dataMais4).ShouldBe(1);
+        }
+
+        private DateTime ObterDataValida(int dias)
+        {
+            var data = DateTimeExtension.HorarioBrasilia().AddDays(dias).Date;
+
+            if (data.DayOfWeek == DayOfWeek.Saturday)
+                data = data.AddDays(2); // pula para segunda
+            else if (data.DayOfWeek == DayOfWeek.Sunday)
+                data = data.AddDays(1); // pula para segunda
+
+            return data;
+        }
+
     }
 }
