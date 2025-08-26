@@ -25,13 +25,13 @@ namespace SME.CDEP.TesteIntegracao
                     new ()
                     {
                         TipoAcervoId = TipoAcervo.Bibliografico,
-                        DataVisita = DateTimeExtension.HorarioBrasilia().AddDays(1),
+                        DataVisita = DataHelper.ProximaDataUtil(DateTime.Now.AddDays(1)),
                         SituacaoId = SituacaoSolicitacaoItem.AGUARDANDO_VISITA
                     },
                     new ()
                     {
                         TipoAcervoId = TipoAcervo.Bibliografico,
-                        DataVisita = DateTimeExtension.HorarioBrasilia().AddDays(-2),
+                        DataVisita = DataHelper.ProximaDataUtil(DateTime.Now.AddDays(-2)),
                         SituacaoId = SituacaoSolicitacaoItem.FINALIZADO_MANUALMENTE
                     },
                 }
@@ -53,13 +53,13 @@ namespace SME.CDEP.TesteIntegracao
                     new ()
                     {
                         TipoAcervoId = TipoAcervo.Bibliografico,
-                        DataVisita = DateTimeExtension.HorarioBrasilia(),
+                        DataVisita = DataHelper.ProximaDataUtil(DateTime.Now),
                         SituacaoId = SituacaoSolicitacaoItem.AGUARDANDO_VISITA
                     },
                     new ()
                     {
                         TipoAcervoId = TipoAcervo.Bibliografico,
-                        DataVisita = DateTimeExtension.HorarioBrasilia(),
+                        DataVisita = DataHelper.ProximaDataUtil(DateTime.Now),
                         SituacaoId = SituacaoSolicitacaoItem.FINALIZADO_MANUALMENTE
                     },
                 }
@@ -86,7 +86,7 @@ namespace SME.CDEP.TesteIntegracao
                     new ()
                     {
                         TipoAcervoId = TipoAcervo.Bibliografico,
-                        DataVisita = DateTimeExtension.HorarioBrasilia().AddDays(-2),
+                        DataVisita = DataHelper.ProximaDataUtil(DateTime.Now.AddDays(-2)),
                         SituacaoId = SituacaoSolicitacaoItem.FINALIZADO_MANUALMENTE
                     },
                 }
@@ -108,13 +108,13 @@ namespace SME.CDEP.TesteIntegracao
                     new ()
                     {
                         TipoAcervoId = TipoAcervo.Bibliografico,
-                        DataVisita = DateTimeExtension.HorarioBrasilia().AddDays(-1),
+                        DataVisita = DataHelper.ProximaDataUtil(DateTime.Now.AddDays(-1)),
                         SituacaoId = SituacaoSolicitacaoItem.FINALIZADO_MANUALMENTE
                     },
                     new ()
                     {
                         TipoAcervoId = TipoAcervo.Bibliografico,
-                        DataVisita = DateTimeExtension.HorarioBrasilia().AddDays(-2),
+                        DataVisita = DataHelper.ProximaDataUtil(DateTime.Now.AddDays(-2)),
                         SituacaoId = SituacaoSolicitacaoItem.FINALIZADO_MANUALMENTE
                     },
                 }
@@ -136,13 +136,13 @@ namespace SME.CDEP.TesteIntegracao
                     new ()
                     {
                         TipoAcervoId = TipoAcervo.Tridimensional,
-                        DataVisita = DateTimeExtension.HorarioBrasilia().AddDays(1),
+                        DataVisita = DataHelper.ProximaDataUtil(DateTime.Now.AddDays(1)),
                         SituacaoId = SituacaoSolicitacaoItem.AGUARDANDO_VISITA
                     },
                     new ()
                     {
                         TipoAcervoId = TipoAcervo.Tridimensional,
-                        DataVisita = DateTimeExtension.HorarioBrasilia().AddDays(-2),
+                        DataVisita = DataHelper.ProximaDataUtil(DateTime.Now.AddDays(-2)),
                         SituacaoId = SituacaoSolicitacaoItem.FINALIZADO_MANUALMENTE
                     },
                 }
@@ -164,13 +164,13 @@ namespace SME.CDEP.TesteIntegracao
                     new ()
                     {
                         TipoAcervoId = TipoAcervo.Tridimensional,
-                        DataVisita = DateTimeExtension.HorarioBrasilia(),
+                        DataVisita = DataHelper.ProximaDataUtil(DateTime.Now),
                         SituacaoId = SituacaoSolicitacaoItem.AGUARDANDO_VISITA
                     },
                     new ()
                     {
                         TipoAcervoId = TipoAcervo.Tridimensional,
-                        DataVisita = DateTimeExtension.HorarioBrasilia().AddDays(-2),
+                        DataVisita = DataHelper.ProximaDataUtil(DateTime.Now.AddDays(-2)),
                         SituacaoId = SituacaoSolicitacaoItem.FINALIZADO_MANUALMENTE
                     },
                 }
@@ -192,13 +192,13 @@ namespace SME.CDEP.TesteIntegracao
                     new ()
                     {
                         TipoAcervoId = TipoAcervo.Tridimensional,
-                        DataVisita = DateTimeExtension.HorarioBrasilia(),
+                        DataVisita = DataHelper.ProximaDataUtil(DateTime.Now),
                         SituacaoId = SituacaoSolicitacaoItem.AGUARDANDO_VISITA
                     },
                     new ()
                     {
                         TipoAcervoId = TipoAcervo.ArtesGraficas,
-                        DataVisita = DateTimeExtension.HorarioBrasilia().AddDays(-2),
+                        DataVisita = DataHelper.ProximaDataUtil(DateTime.Now.AddDays(-2)),
                         SituacaoId = SituacaoSolicitacaoItem.FINALIZADO_MANUALMENTE
                     },
                 }
@@ -220,19 +220,19 @@ namespace SME.CDEP.TesteIntegracao
                     new ()
                     {
                         TipoAcervoId = TipoAcervo.Tridimensional,
-                        DataVisita = DateTimeExtension.HorarioBrasilia(),
+                        DataVisita = DataHelper.ProximaDataUtil(DateTime.Now),
                         SituacaoId = SituacaoSolicitacaoItem.AGUARDANDO_VISITA
                     },
                     new ()
                     {
                         TipoAcervoId = TipoAcervo.ArtesGraficas,
-                        DataVisita = DateTimeExtension.HorarioBrasilia().AddDays(-2),
+                        DataVisita = DataHelper.ProximaDataUtil(DateTime.Now.AddDays(-2)),
                         SituacaoId = SituacaoSolicitacaoItem.FINALIZADO_MANUALMENTE
                     },
                     new ()
                     {
                         TipoAcervoId = TipoAcervo.Bibliografico,
-                        DataVisita = DateTimeExtension.HorarioBrasilia().AddDays(-2),
+                        DataVisita = DataHelper.ProximaDataUtil(DateTime.Now.AddDays(-2)),
                         SituacaoId = SituacaoSolicitacaoItem.FINALIZADO_MANUALMENTE
                     },
                 }
@@ -254,13 +254,13 @@ namespace SME.CDEP.TesteIntegracao
                     new ()
                     {
                         TipoAcervoId = TipoAcervo.Tridimensional,
-                        DataVisita = DateTimeExtension.HorarioBrasilia(),
+                        DataVisita = DataHelper.ProximaDataUtil(DateTime.Now),
                         SituacaoId = SituacaoSolicitacaoItem.AGUARDANDO_VISITA
                     },
                     new ()
                     {
                         TipoAcervoId = TipoAcervo.ArtesGraficas,
-                        DataVisita = DateTimeExtension.HorarioBrasilia().AddDays(-2),
+                        DataVisita = DataHelper.ProximaDataUtil(DateTime.Now.AddDays(-2)),
                         SituacaoId = SituacaoSolicitacaoItem.FINALIZADO_MANUALMENTE
                     },
                     new ()
@@ -287,19 +287,19 @@ namespace SME.CDEP.TesteIntegracao
                     new ()
                     {
                         TipoAcervoId = TipoAcervo.Tridimensional,
-                        DataVisita = DateTimeExtension.HorarioBrasilia(),
+                        DataVisita = DataHelper.ProximaDataUtil(DateTime.Now),
                         SituacaoId = SituacaoSolicitacaoItem.AGUARDANDO_VISITA
                     },
                     new ()
                     {
                         TipoAcervoId = TipoAcervo.ArtesGraficas,
-                        DataVisita = DateTimeExtension.HorarioBrasilia().AddDays(-2),
+                        DataVisita = DataHelper.ProximaDataUtil(DateTime.Now.AddDays(-2)),
                         SituacaoId = SituacaoSolicitacaoItem.FINALIZADO_MANUALMENTE
                     },
                     new ()
                     {
                         TipoAcervoId = TipoAcervo.Bibliografico,
-                        DataVisita = DateTimeExtension.HorarioBrasilia(),
+                        DataVisita = DataHelper.ProximaDataUtil(DateTime.Now),
                         SituacaoId = SituacaoSolicitacaoItem.AGUARDANDO_VISITA
                     },
                 }

@@ -205,7 +205,7 @@ namespace SME.CDEP.TesteIntegracao
                 Id = 1,
                 ItemId = 1,
                 TipoAtendimento = TipoAtendimento.Presencial,
-                DataVisita = DateTimeExtension.HorarioBrasilia().Date.AddDays(4).Date
+                DataVisita = DataHelper.ProximaDataUtil(DateTime.Now.AddDays(4))
             });
                 
             await servicoAcervoSolicitacao.ConfirmarAtendimento(new AcervoSolicitacaoConfirmarDTO()
@@ -226,7 +226,7 @@ namespace SME.CDEP.TesteIntegracao
             
             var itemAguardandoVisita = itensAlterados.FirstOrDefault(w => w.Id == 1);
             itemAguardandoVisita.TipoAtendimento.ShouldBe(TipoAtendimento.Presencial);
-            itemAguardandoVisita.DataVisita.ShouldBe(DateTimeExtension.HorarioBrasilia().Date.AddDays(4).Date);
+            itemAguardandoVisita.DataVisita.ShouldBe(DataHelper.ProximaDataUtil(DateTime.Now.AddDays(4)));
             itemAguardandoVisita.Excluido.ShouldBeFalse();
             itemAguardandoVisita.Situacao.ShouldBe(SituacaoSolicitacaoItem.AGUARDANDO_VISITA);
             
@@ -262,7 +262,7 @@ namespace SME.CDEP.TesteIntegracao
                 Id = 1,
                 ItemId = 1,
                 TipoAtendimento = TipoAtendimento.Presencial,
-                DataVisita = DateTimeExtension.HorarioBrasilia().Date.AddDays(4).Date
+                DataVisita = DataHelper.ProximaDataUtil(DateTime.Now.AddDays(4))
             });
             
             retorno.ShouldBeTrue();
@@ -277,7 +277,7 @@ namespace SME.CDEP.TesteIntegracao
             
             var itemAguardandoVisita = itensAlterados.FirstOrDefault(w => w.Id == 1);
             itemAguardandoVisita.TipoAtendimento.ShouldBe(TipoAtendimento.Presencial);
-            itemAguardandoVisita.DataVisita.ShouldBe(DateTimeExtension.HorarioBrasilia().Date.AddDays(4).Date);
+            itemAguardandoVisita.DataVisita.ShouldBe(DataHelper.ProximaDataUtil(DateTime.Now.AddDays(4)));
             itemAguardandoVisita.Excluido.ShouldBeFalse();
             itemAguardandoVisita.Situacao.ShouldBe(SituacaoSolicitacaoItem.AGUARDANDO_VISITA);
             
@@ -362,7 +362,7 @@ namespace SME.CDEP.TesteIntegracao
             {
                 Id = 1,
                 ItemId = 1,
-                DataVisita = DateTimeExtension.HorarioBrasilia().Date,
+                DataVisita = DataHelper.ProximaDataUtil(DateTime.Now),
                 TipoAtendimento = TipoAtendimento.Presencial,
                 TipoAcervo = TipoAcervo.Tridimensional
             });
@@ -387,7 +387,7 @@ namespace SME.CDEP.TesteIntegracao
             {
                 Id = 1,
                 ItemId = 2,
-                DataVisita = DateTimeExtension.HorarioBrasilia().AddDays(10).Date,
+                DataVisita = DataHelper.ProximaDataUtil(DateTime.Now.AddDays(10)),
                 TipoAtendimento = TipoAtendimento.Presencial,
                 TipoAcervo = TipoAcervo.Tridimensional
             });
@@ -543,7 +543,7 @@ namespace SME.CDEP.TesteIntegracao
             {
                 Id = 101515,
                 ItemId = 1,
-                DataVisita = DateTimeExtension.HorarioBrasilia().Date,
+                DataVisita = DataHelper.ProximaDataUtil(DateTime.Now),
                 TipoAtendimento = TipoAtendimento.Presencial,
                 TipoAcervo = TipoAcervo.Tridimensional
             }).ShouldThrowAsync<NegocioException>();
@@ -553,7 +553,7 @@ namespace SME.CDEP.TesteIntegracao
             {
                 Id = 101515,
                 ItemId = 2,
-                DataVisita = DateTimeExtension.HorarioBrasilia().Date,
+                DataVisita = DataHelper.ProximaDataUtil(DateTime.Now),
                 TipoAtendimento = TipoAtendimento.Email,
                 TipoAcervo = TipoAcervo.Tridimensional
             }).ShouldThrowAsync<NegocioException>();
@@ -562,7 +562,7 @@ namespace SME.CDEP.TesteIntegracao
             {
                 Id = 101515,
                 ItemId = 3,
-                DataVisita = DateTimeExtension.HorarioBrasilia().Date,
+                DataVisita = DataHelper.ProximaDataUtil(DateTime.Now),
                 TipoAtendimento = TipoAtendimento.Email,
                 TipoAcervo = TipoAcervo.Tridimensional
             }).ShouldThrowAsync<NegocioException>();
@@ -587,7 +587,7 @@ namespace SME.CDEP.TesteIntegracao
             
             await InserirNaBase(new Evento()
             {
-                Data = DateTimeExtension.HorarioBrasilia().AddDays(5).Date,
+                Data = DataHelper.ProximaDataUtil(DateTime.Now.AddDays(5)),
                 Tipo = TipoEvento.VISITA,
                 Descricao = "Visita",
                 CriadoPor = "Sistema", CriadoEm = DateTimeExtension.HorarioBrasilia(), CriadoLogin = "Sistema"
@@ -599,7 +599,7 @@ namespace SME.CDEP.TesteIntegracao
             {
                 Id = 1,
                 ItemId = 1,
-                DataVisita = DateTimeExtension.HorarioBrasilia().Date,
+                DataVisita = DataHelper.ProximaDataUtil(DateTime.Now),
                 TipoAtendimento = TipoAtendimento.Presencial,
                 TipoAcervo = TipoAcervo.Tridimensional
             }).ShouldThrowAsync<NegocioException>();
@@ -616,7 +616,7 @@ namespace SME.CDEP.TesteIntegracao
         
             await InserirNaBase(new Evento()
             {
-                Data = DateTimeExtension.HorarioBrasilia().Date,
+                Data = DataHelper.ProximaDataUtil(DateTime.Now),
                 Tipo = TipoEvento.SUSPENSAO,
                 Descricao = "Suspensão",
                 Justificativa = "Justificativa da suspensão",
@@ -625,7 +625,7 @@ namespace SME.CDEP.TesteIntegracao
             
             await InserirNaBase(new Evento()
             {
-                Data = DateTimeExtension.HorarioBrasilia().AddDays(10).Date,
+                Data = DataHelper.ProximaDataUtil(DateTime.Now.AddDays(10)),
                 Tipo = TipoEvento.VISITA,
                 Descricao = "Visita",
                 CriadoPor = "Sistema", CriadoEm = DateTimeExtension.HorarioBrasilia(), CriadoLogin = "Sistema"
@@ -637,7 +637,7 @@ namespace SME.CDEP.TesteIntegracao
             {
                 Id = 1,
                 ItemId = 1,
-                DataVisita = DateTimeExtension.HorarioBrasilia().Date,
+                DataVisita = DataHelper.ProximaDataUtil(DateTime.Now),
                 TipoAtendimento = TipoAtendimento.Presencial,
                 TipoAcervo = TipoAcervo.Tridimensional
             }).ShouldThrowAsync<NegocioException>();
@@ -652,8 +652,8 @@ namespace SME.CDEP.TesteIntegracao
 
             await InserirAcervoSolicitacao(10);
 
-            var dataVisita10 = ObterDataVisitaValida(10);
-            var dataVisita5 = ObterDataVisitaValida(5);
+            var dataVisita10 = DataHelper.ProximaDataUtil(DateTime.Now.AddDays(10));
+            var dataVisita5 = DataHelper.ProximaDataUtil(DateTime.Now.AddDays(5));
 
             await InserirNaBase(new Evento()
             {
@@ -713,17 +713,6 @@ namespace SME.CDEP.TesteIntegracao
             eventos.Any(f => f.Data.Date == dataVisita10.Date).ShouldBeTrue();
             eventos.Count(f => f.Data.Date == dataVisita10.Date).ShouldBe(2);
             eventos.Count(f => f.Data.Date == dataVisita5.Date).ShouldBe(1);
-        }
-        private DateTime ObterDataVisitaValida(int dias)
-        {
-            var data = DateTimeExtension.HorarioBrasilia().AddDays(dias).Date;
-
-            if (data.DayOfWeek == DayOfWeek.Saturday)
-                data = data.AddDays(2); 
-            else if (data.DayOfWeek == DayOfWeek.Sunday)
-                data = data.AddDays(1); 
-
-            return data;
         }
     }
 }

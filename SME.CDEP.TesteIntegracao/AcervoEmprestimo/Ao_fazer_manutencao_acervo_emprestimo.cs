@@ -16,7 +16,6 @@ namespace SME.CDEP.TesteIntegracao
         [Fact(DisplayName = "Acervo empréstimo - Deve inserir empréstimo de acervo - persistência")]
         public async Task Deve_inserir_emprestimo_de_acervo()
         {
-            //Arrange
             await InserirDadosBasicosAleatorios();
 
             await InserirAcervosBibliograficos();
@@ -24,7 +23,7 @@ namespace SME.CDEP.TesteIntegracao
             await InserirAcervosSolicitacoes();
 
             var atendimentoPresencial = TipoAtendimento.Presencial;
-            var dataVisita = DateTimeExtension.HorarioBrasilia().Date;
+            var dataVisita = DataHelper.ProximaDataUtil(DateTime.Now);
             await InserirAcervoSolicitacaoItem(atendimentoPresencial, dataVisita,1,2);
             await InserirAcervoSolicitacaoItem(atendimentoPresencial, dataVisita,2,4);
             await InserirAcervoSolicitacaoItem(atendimentoPresencial, dataVisita,3,3);
@@ -38,7 +37,6 @@ namespace SME.CDEP.TesteIntegracao
             var acervosEmprestados = ObterTodos<AcervoEmprestimo>();
             acervosEmprestados.Count().ShouldBe(3);
             
-            //Assert
             foreach (var acervoEmprestado in acervosEmprestados)
             {
                 acervoEmprestado.DataEmprestimo.Date.ShouldBe(dataVisita.Date);
@@ -52,7 +50,6 @@ namespace SME.CDEP.TesteIntegracao
         [Fact(DisplayName = "Acervo Solicitação com empréstimo - Confirmar atendimento/empréstimo")]
         public async Task Deve_confirmar_atendimento_emprestimo()
         {
-            //Arrange
             await InserirDadosBasicosAleatorios();
 
             await InserirAcervosBibliograficos();
@@ -60,7 +57,7 @@ namespace SME.CDEP.TesteIntegracao
             await InserirAcervosSolicitacoes();
 
             var atendimentoPresencial = TipoAtendimento.Presencial;
-            var dataVisita = DateTimeExtension.HorarioBrasilia().Date;
+            var dataVisita = DataHelper.ProximaDataUtil(DateTime.Now);
             await InserirAcervoSolicitacaoItem(atendimentoPresencial, dataVisita,1,2);
             await InserirAcervoSolicitacaoItem(atendimentoPresencial, dataVisita,2,4);
             await InserirAcervoSolicitacaoItem(atendimentoPresencial, dataVisita,3,3);
@@ -71,14 +68,13 @@ namespace SME.CDEP.TesteIntegracao
             foreach (var item in itensDaSolicitacao)
                 await InserirAcervoEmprestimo(item.Id, dataVisita);
 
-            //Act
             var servicoAcervoSolicitacao = GetServicoAcervoSolicitacao();
 
             await servicoAcervoSolicitacao.ConfirmarAtendimento(new AcervoSolicitacaoConfirmarDTO()
             {
                 Id = 1,
                 ItemId = 1,
-                DataVisita = DateTimeExtension.HorarioBrasilia().Date,
+                DataVisita = DataHelper.ProximaDataUtil(DateTime.Now),
                 TipoAtendimento = TipoAtendimento.Presencial,
                 DataEmprestimo = DateTimeExtension.HorarioBrasilia().Date,
                 DataDevolucao = DateTimeExtension.HorarioBrasilia().AddDays(8).Date,
@@ -90,7 +86,7 @@ namespace SME.CDEP.TesteIntegracao
             {
                 Id = 1,
                 ItemId = 2,
-                DataVisita = DateTimeExtension.HorarioBrasilia().Date,
+                DataVisita = DataHelper.ProximaDataUtil(DateTime.Now),
                 TipoAtendimento = TipoAtendimento.Presencial,
                 DataEmprestimo = DateTimeExtension.HorarioBrasilia().Date,
                 DataDevolucao = DateTimeExtension.HorarioBrasilia().AddDays(7).Date,
@@ -98,7 +94,6 @@ namespace SME.CDEP.TesteIntegracao
                 
             });
             
-            //Assert
             var solicitacaoAlterada = ObterTodos<AcervoSolicitacao>().FirstOrDefault(f=> f.Id == 1);
             solicitacaoAlterada.Id.ShouldBe(1);
             solicitacaoAlterada.UsuarioId.ShouldBe(1);
@@ -109,20 +104,20 @@ namespace SME.CDEP.TesteIntegracao
             itensAlterados.Count().ShouldBe(2);
             
             var itemAguardandoVisita = itensAlterados.FirstOrDefault(w => w.Id == 1);
-            itemAguardandoVisita.DataVisita.Value.Date.ShouldBe(DateTimeExtension.HorarioBrasilia().Date);
+            itemAguardandoVisita.DataVisita.Value.Date.ShouldBe(DataHelper.ProximaDataUtil(DateTime.Now));
             itemAguardandoVisita.TipoAtendimento.ShouldBe(TipoAtendimento.Presencial);
             itemAguardandoVisita.Excluido.ShouldBeFalse();
             itemAguardandoVisita.Situacao.ShouldBe(SituacaoSolicitacaoItem.FINALIZADO_MANUALMENTE);
             
             var itemFinalizadoManualmente = itensAlterados.FirstOrDefault(w => w.Id == 2);
-            itemFinalizadoManualmente.DataVisita.Value.Date.ShouldBe(DateTimeExtension.HorarioBrasilia().Date);
+            itemFinalizadoManualmente.DataVisita.Value.Date.ShouldBe(DataHelper.ProximaDataUtil(DateTime.Now));
             itemFinalizadoManualmente.TipoAtendimento.ShouldBe(TipoAtendimento.Presencial);
             itemFinalizadoManualmente.Excluido.ShouldBeFalse();
             itemFinalizadoManualmente.Situacao.ShouldBe(SituacaoSolicitacaoItem.FINALIZADO_MANUALMENTE);
             
             var eventos = ObterTodos<Evento>();
             eventos.Count().ShouldBe(2);
-            eventos.All(a=> a.Data.Date == DateTimeExtension.HorarioBrasilia().Date).ShouldBeTrue();
+            eventos.All(a=> a.Data.Date == DataHelper.ProximaDataUtil(DateTime.Now)).ShouldBeTrue();
             
             var acervoEmprestimos = ObterTodos<AcervoEmprestimo>();
             acervoEmprestimos.Count().ShouldBe(5);
@@ -150,20 +145,19 @@ namespace SME.CDEP.TesteIntegracao
             await InserirAcervosSolicitacoes();
         
             var atendimentoPresencial = TipoAtendimento.Presencial;
-            var dataVisita = DateTimeExtension.HorarioBrasilia().Date;
+            var dataVisita = DataHelper.ProximaDataUtil(DateTime.Now);
             await InserirAcervoSolicitacaoItem(atendimentoPresencial, dataVisita,1,2);
             await InserirAcervoSolicitacaoItem(atendimentoPresencial, dataVisita,2,4);
             await InserirAcervoSolicitacaoItem(atendimentoPresencial, dataVisita,3,3);
             await InserirAcervoSolicitacaoItem(atendimentoPresencial, dataVisita,4,1);
            
-            //Act
             var servicoAcervoSolicitacao = GetServicoAcervoSolicitacao();
             
             await servicoAcervoSolicitacao.ConfirmarAtendimento(new AcervoSolicitacaoConfirmarDTO()
             {
                 Id = 1,
                 ItemId = 1,
-                DataVisita = DateTimeExtension.HorarioBrasilia().Date,
+                DataVisita = DataHelper.ProximaDataUtil(DateTime.Now),
                 TipoAtendimento = TipoAtendimento.Presencial,
                 TipoAcervo = TipoAcervo.Bibliografico
             });
@@ -172,12 +166,11 @@ namespace SME.CDEP.TesteIntegracao
             {
                 Id = 1,
                 ItemId = 2,
-                DataVisita = DateTimeExtension.HorarioBrasilia().Date,
+                DataVisita = DataHelper.ProximaDataUtil(DateTime.Now),
                 TipoAtendimento = TipoAtendimento.Presencial,
                 TipoAcervo = TipoAcervo.Bibliografico
             });
             
-            //Assert
             var solicitacaoAlterada = ObterTodos<AcervoSolicitacao>().FirstOrDefault(f=> f.Id == 1);
             solicitacaoAlterada.Id.ShouldBe(1);
             solicitacaoAlterada.UsuarioId.ShouldBe(1);
@@ -188,20 +181,20 @@ namespace SME.CDEP.TesteIntegracao
             itensAlterados.Count().ShouldBe(2);
             
             var itemAguardandoVisita = itensAlterados.FirstOrDefault(w => w.Id == 1);
-            itemAguardandoVisita.DataVisita.Value.Date.ShouldBe(DateTimeExtension.HorarioBrasilia().Date);
+            itemAguardandoVisita.DataVisita.Value.Date.ShouldBe(DataHelper.ProximaDataUtil(DateTime.Now));
             itemAguardandoVisita.TipoAtendimento.ShouldBe(TipoAtendimento.Presencial);
             itemAguardandoVisita.Excluido.ShouldBeFalse();
             itemAguardandoVisita.Situacao.ShouldBe(SituacaoSolicitacaoItem.AGUARDANDO_VISITA);
             
             var itemFinalizadoManualmente = itensAlterados.FirstOrDefault(w => w.Id == 2);
-            itemFinalizadoManualmente.DataVisita.Value.Date.ShouldBe(DateTimeExtension.HorarioBrasilia().Date);
+            itemFinalizadoManualmente.DataVisita.Value.Date.ShouldBe(DataHelper.ProximaDataUtil(DateTime.Now));
             itemFinalizadoManualmente.TipoAtendimento.ShouldBe(TipoAtendimento.Presencial);
             itemFinalizadoManualmente.Excluido.ShouldBeFalse();
             itemFinalizadoManualmente.Situacao.ShouldBe(SituacaoSolicitacaoItem.AGUARDANDO_VISITA);
             
             var eventos = ObterTodos<Evento>();
             eventos.Count().ShouldBe(2);
-            eventos.All(a=> a.Data.Date == DateTimeExtension.HorarioBrasilia().Date).ShouldBeTrue();
+            eventos.All(a=> a.Data.Date == DataHelper.ProximaDataUtil(DateTime.Now)).ShouldBeTrue();
             
             var acervoEmprestimos = ObterTodos<AcervoEmprestimo>();
             acervoEmprestimos.Count().ShouldBe(0);
@@ -213,7 +206,6 @@ namespace SME.CDEP.TesteIntegracao
         [Fact(DisplayName = "Acervo Solicitação com empréstimo - Não deve confirmar empréstimo com acervos diferentes de bibliográficos")]
         public async Task Nao_deve_confirmar_atendimento_em_acervos_diferentes_de_bibliograficos()
         {
-            //Arrange
             await InserirDadosBasicosAleatorios();
         
             await InserirAcervoTridimensional();
@@ -221,7 +213,7 @@ namespace SME.CDEP.TesteIntegracao
             await InserirAcervosSolicitacoes();
         
             var atendimentoPresencial = TipoAtendimento.Presencial;
-            var dataVisita = DateTimeExtension.HorarioBrasilia().Date;
+            var dataVisita = DataHelper.ProximaDataUtil(DateTime.Now);
             await InserirAcervoSolicitacaoItem(atendimentoPresencial, dataVisita,1,2);
             await InserirAcervoSolicitacaoItem(atendimentoPresencial, dataVisita,2,4);
             await InserirAcervoSolicitacaoItem(atendimentoPresencial, dataVisita,3,3);
@@ -239,7 +231,7 @@ namespace SME.CDEP.TesteIntegracao
             {
                 Id = 1,
                 ItemId = 1,
-                DataVisita = DateTimeExtension.HorarioBrasilia().Date,
+                DataVisita = DataHelper.ProximaDataUtil(DateTime.Now),
                 TipoAtendimento = TipoAtendimento.Presencial,
                 DataEmprestimo = DateTimeExtension.HorarioBrasilia().Date,
                 DataDevolucao = DateTimeExtension.HorarioBrasilia().AddDays(8).Date,
@@ -250,7 +242,7 @@ namespace SME.CDEP.TesteIntegracao
             {
                 Id = 1,
                 ItemId = 2,
-                DataVisita = DateTimeExtension.HorarioBrasilia().Date,
+                DataVisita = DataHelper.ProximaDataUtil(DateTime.Now),
                 TipoAtendimento = TipoAtendimento.Presencial,
                 DataEmprestimo = DateTimeExtension.HorarioBrasilia().Date,
                 DataDevolucao = DateTimeExtension.HorarioBrasilia().AddDays(7).Date,
@@ -261,7 +253,6 @@ namespace SME.CDEP.TesteIntegracao
         [Fact(DisplayName = "Acervo Solicitação com empréstimo - Não deve confirmar empréstimo com uma das datas de empréstimo e devolução faltando")]
         public async Task Nao_deve_confirmar_atendimento_com_uma_das_datas_de_emprestimo_e_devolucao_faltando()
         {
-            //Arrange
             await InserirDadosBasicosAleatorios();
         
             await InserirAcervosBibliograficos();
@@ -269,7 +260,7 @@ namespace SME.CDEP.TesteIntegracao
             await InserirAcervosSolicitacoes();
         
             var atendimentoPresencial = TipoAtendimento.Presencial;
-            var dataVisita = DateTimeExtension.HorarioBrasilia().Date;
+            var dataVisita = DataHelper.ProximaDataUtil(DateTime.Now);
             await InserirAcervoSolicitacaoItem(atendimentoPresencial, dataVisita,1,2);
             await InserirAcervoSolicitacaoItem(atendimentoPresencial, dataVisita,2,4);
             await InserirAcervoSolicitacaoItem(atendimentoPresencial, dataVisita,3,3);
@@ -280,14 +271,13 @@ namespace SME.CDEP.TesteIntegracao
             foreach (var item in itensDaSolicitacao)
                 await InserirAcervoEmprestimo(item.Id, dataVisita);
         
-            //Act
             var servicoAcervoSolicitacao = GetServicoAcervoSolicitacao();
             
             await servicoAcervoSolicitacao.ConfirmarAtendimento(new AcervoSolicitacaoConfirmarDTO()
             {
                 Id = 1,
                 ItemId = 1,
-                DataVisita = DateTimeExtension.HorarioBrasilia().Date,
+                DataVisita = DataHelper.ProximaDataUtil(DateTime.Now),
                 TipoAtendimento = TipoAtendimento.Presencial,
                 DataDevolucao = DateTimeExtension.HorarioBrasilia().AddDays(8).Date,
                 TipoAcervo = TipoAcervo.Bibliografico
@@ -297,7 +287,7 @@ namespace SME.CDEP.TesteIntegracao
             {
                 Id = 1,
                 ItemId = 2,
-                DataVisita = DateTimeExtension.HorarioBrasilia().Date,
+                DataVisita = DataHelper.ProximaDataUtil(DateTime.Now),
                 TipoAtendimento = TipoAtendimento.Presencial,
                 DataEmprestimo = DateTimeExtension.HorarioBrasilia().Date,
                 TipoAcervo = TipoAcervo.Bibliografico
@@ -307,7 +297,6 @@ namespace SME.CDEP.TesteIntegracao
         [Fact(DisplayName = "Acervo Solicitação com empréstimo - Não deve confirmar empréstimo com data de empréstimo futura")]
         public async Task Nao_deve_confirmar_atendimento_com_datas_de_emprestimo_futura()
         {
-            //Arrange
             await InserirDadosBasicosAleatorios();
         
             await InserirAcervosBibliograficos();
@@ -315,7 +304,7 @@ namespace SME.CDEP.TesteIntegracao
             await InserirAcervosSolicitacoes();
         
             var atendimentoPresencial = TipoAtendimento.Presencial;
-            var dataVisita = DateTimeExtension.HorarioBrasilia().Date;
+            var dataVisita = DataHelper.ProximaDataUtil(DateTime.Now);
             await InserirAcervoSolicitacaoItem(atendimentoPresencial, dataVisita,1,2);
             await InserirAcervoSolicitacaoItem(atendimentoPresencial, dataVisita,2,4);
             await InserirAcervoSolicitacaoItem(atendimentoPresencial, dataVisita,3,3);
@@ -326,14 +315,13 @@ namespace SME.CDEP.TesteIntegracao
             foreach (var item in itensDaSolicitacao)
                 await InserirAcervoEmprestimo(item.Id, dataVisita);
         
-            //Act
             var servicoAcervoSolicitacao = GetServicoAcervoSolicitacao();
             
             await servicoAcervoSolicitacao.ConfirmarAtendimento(new AcervoSolicitacaoConfirmarDTO()
             {
                 Id = 1,
                 ItemId = 1,
-                DataVisita = DateTimeExtension.HorarioBrasilia().Date,
+                DataVisita = DataHelper.ProximaDataUtil(DateTime.Now),
                 TipoAtendimento = TipoAtendimento.Presencial,
                 DataEmprestimo = DateTimeExtension.HorarioBrasilia().AddDays(5).Date,
                 DataDevolucao = DateTimeExtension.HorarioBrasilia().AddDays(8).Date,
@@ -344,7 +332,7 @@ namespace SME.CDEP.TesteIntegracao
             {
                 Id = 1,
                 ItemId = 2,
-                DataVisita = DateTimeExtension.HorarioBrasilia().Date,
+                DataVisita = DataHelper.ProximaDataUtil(DateTime.Now),
                 TipoAtendimento = TipoAtendimento.Presencial,
                 DataEmprestimo = DateTimeExtension.HorarioBrasilia().AddDays(5).Date,
                 DataDevolucao = DateTimeExtension.HorarioBrasilia().AddDays(7).Date,
@@ -355,7 +343,6 @@ namespace SME.CDEP.TesteIntegracao
         [Fact(DisplayName = "Acervo Solicitação com empréstimo - Não deve confirmar empréstimo com data de empréstimo menor que data de visita")]
         public async Task Nao_deve_confirmar_atendimento_com_datas_de_emprestimo_menor_que_data_de_visita()
         {
-            //Arrange
             await InserirDadosBasicosAleatorios();
         
             await InserirAcervosBibliograficos();
@@ -363,7 +350,7 @@ namespace SME.CDEP.TesteIntegracao
             await InserirAcervosSolicitacoes();
         
             var atendimentoPresencial = TipoAtendimento.Presencial;
-            var dataVisita = DateTimeExtension.HorarioBrasilia().Date;
+            var dataVisita = DataHelper.ProximaDataUtil(DateTime.Now);
             await InserirAcervoSolicitacaoItem(atendimentoPresencial, dataVisita,1,2);
             await InserirAcervoSolicitacaoItem(atendimentoPresencial, dataVisita,2,4);
             await InserirAcervoSolicitacaoItem(atendimentoPresencial, dataVisita,3,3);
@@ -374,14 +361,13 @@ namespace SME.CDEP.TesteIntegracao
             foreach (var item in itensDaSolicitacao)
                 await InserirAcervoEmprestimo(item.Id, dataVisita);
         
-            //Act
             var servicoAcervoSolicitacao = GetServicoAcervoSolicitacao();
             
             await servicoAcervoSolicitacao.ConfirmarAtendimento(new AcervoSolicitacaoConfirmarDTO()
             {
                 Id = 1,
                 ItemId = 1,
-                DataVisita = DateTimeExtension.HorarioBrasilia().Date,
+                DataVisita = DataHelper.ProximaDataUtil(DateTime.Now),
                 TipoAtendimento = TipoAtendimento.Presencial,
                 DataEmprestimo = DateTimeExtension.HorarioBrasilia().AddDays(-5).Date,
                 DataDevolucao = DateTimeExtension.HorarioBrasilia().AddDays(8).Date,
@@ -392,7 +378,7 @@ namespace SME.CDEP.TesteIntegracao
             {
                 Id = 1,
                 ItemId = 2,
-                DataVisita = DateTimeExtension.HorarioBrasilia().Date,
+                DataVisita = DataHelper.ProximaDataUtil(DateTime.Now),
                 TipoAtendimento = TipoAtendimento.Presencial,
                 DataEmprestimo = DateTimeExtension.HorarioBrasilia().AddDays(-5).Date,
                 DataDevolucao = DateTimeExtension.HorarioBrasilia().AddDays(7).Date,
@@ -403,7 +389,6 @@ namespace SME.CDEP.TesteIntegracao
         [Fact(DisplayName = "Acervo Solicitação com empréstimo - Não deve confirmar empréstimo com data de devolução menor que data do empréstimo")]
         public async Task Nao_deve_confirmar_atendimento_com_datas_de_devolucao_menor_que_data_do_emprestimo()
         {
-            //Arrange
             await InserirDadosBasicosAleatorios();
         
             await InserirAcervosBibliograficos();
@@ -411,7 +396,7 @@ namespace SME.CDEP.TesteIntegracao
             await InserirAcervosSolicitacoes();
         
             var atendimentoPresencial = TipoAtendimento.Presencial;
-            var dataVisita = DateTimeExtension.HorarioBrasilia().Date;
+            var dataVisita = DataHelper.ProximaDataUtil(DateTime.Now);
             await InserirAcervoSolicitacaoItem(atendimentoPresencial, dataVisita,1,2);
             await InserirAcervoSolicitacaoItem(atendimentoPresencial, dataVisita,2,4);
             await InserirAcervoSolicitacaoItem(atendimentoPresencial, dataVisita,3,3);
@@ -422,14 +407,13 @@ namespace SME.CDEP.TesteIntegracao
             foreach (var item in itensDaSolicitacao)
                 await InserirAcervoEmprestimo(item.Id, dataVisita);
         
-            //Act
             var servicoAcervoSolicitacao = GetServicoAcervoSolicitacao();
             
             await servicoAcervoSolicitacao.ConfirmarAtendimento(new AcervoSolicitacaoConfirmarDTO()
             {
                 Id = 1,
                 ItemId = 1,
-                DataVisita = DateTimeExtension.HorarioBrasilia().Date,
+                DataVisita = DataHelper.ProximaDataUtil(DateTime.Now),
                 TipoAtendimento = TipoAtendimento.Presencial,
                 DataEmprestimo = DateTimeExtension.HorarioBrasilia().AddDays(5).Date,
                 DataDevolucao = DateTimeExtension.HorarioBrasilia().AddDays(-8).Date,
@@ -440,7 +424,7 @@ namespace SME.CDEP.TesteIntegracao
             {
                 Id = 1,
                 ItemId = 2,
-                DataVisita = DateTimeExtension.HorarioBrasilia().Date,
+                DataVisita = DataHelper.ProximaDataUtil(DateTime.Now),
                 TipoAtendimento = TipoAtendimento.Presencial,
                 DataEmprestimo = DateTimeExtension.HorarioBrasilia().AddDays(5).Date,
                 DataDevolucao = DateTimeExtension.HorarioBrasilia().AddDays(-7).Date,
@@ -451,7 +435,6 @@ namespace SME.CDEP.TesteIntegracao
         [Fact(DisplayName = "Acervo Solicitação empréstimo - Deve prorrogar empréstimo")]
         public async Task Deve_prorrogar_emprestimo()
         {
-            //Arrange
             await InserirDadosBasicosAleatorios();
 
             await InserirAcervosBibliograficos();
@@ -459,7 +442,7 @@ namespace SME.CDEP.TesteIntegracao
             await InserirAcervosSolicitacoes(SituacaoSolicitacao.FINALIZADO_ATENDIMENTO);
 
             var atendimentoPresencial = TipoAtendimento.Presencial;
-            var dataVisita = DateTimeExtension.HorarioBrasilia().Date;
+            var dataVisita = DataHelper.ProximaDataUtil(DateTime.Now);
             await InserirAcervoSolicitacaoItem(atendimentoPresencial, dataVisita,1,2, SituacaoSolicitacaoItem.FINALIZADO_MANUALMENTE);
             await InserirAcervoSolicitacaoItem(atendimentoPresencial, dataVisita,2,4, SituacaoSolicitacaoItem.FINALIZADO_MANUALMENTE);
             await InserirAcervoSolicitacaoItem(atendimentoPresencial, dataVisita,3,3, SituacaoSolicitacaoItem.FINALIZADO_MANUALMENTE);
@@ -470,7 +453,6 @@ namespace SME.CDEP.TesteIntegracao
             foreach (var item in itensDaSolicitacao)
                 await InserirAcervoEmprestimo(item.Id, dataVisita);
 
-            //Act
             var servicoAcervoEmprestimo = GetServicoAcervoEmprestimo();
             
             var retorno = await servicoAcervoEmprestimo.ProrrogarEmprestimo(new AcervoEmprestimoProrrogacaoDTO()
@@ -480,7 +462,6 @@ namespace SME.CDEP.TesteIntegracao
             });
             retorno.ShouldBeTrue();
             
-            //Assert
             var solicitacaoAlterada = ObterTodos<AcervoSolicitacao>().FirstOrDefault(f=> f.Id == 1);
             solicitacaoAlterada.Id.ShouldBe(1);
             solicitacaoAlterada.UsuarioId.ShouldBe(1);
@@ -491,13 +472,13 @@ namespace SME.CDEP.TesteIntegracao
             itensAlterados.Count().ShouldBe(2);
             
             var itemAguardandoVisita = itensAlterados.FirstOrDefault(w => w.Id == 1);
-            itemAguardandoVisita.DataVisita.Value.Date.ShouldBe(DateTimeExtension.HorarioBrasilia().Date);
+            itemAguardandoVisita.DataVisita.Value.Date.ShouldBe(DataHelper.ProximaDataUtil(DateTime.Now));
             itemAguardandoVisita.TipoAtendimento.ShouldBe(TipoAtendimento.Presencial);
             itemAguardandoVisita.Excluido.ShouldBeFalse();
             itemAguardandoVisita.Situacao.ShouldBe(SituacaoSolicitacaoItem.FINALIZADO_MANUALMENTE);
             
             var itemFinalizadoManualmente = itensAlterados.FirstOrDefault(w => w.Id == 2);
-            itemFinalizadoManualmente.DataVisita.Value.Date.ShouldBe(DateTimeExtension.HorarioBrasilia().Date);
+            itemFinalizadoManualmente.DataVisita.Value.Date.ShouldBe(DataHelper.ProximaDataUtil(DateTime.Now));
             itemFinalizadoManualmente.TipoAtendimento.ShouldBe(TipoAtendimento.Presencial);
             itemFinalizadoManualmente.Excluido.ShouldBeFalse();
             itemFinalizadoManualmente.Situacao.ShouldBe(SituacaoSolicitacaoItem.FINALIZADO_MANUALMENTE);
@@ -519,7 +500,6 @@ namespace SME.CDEP.TesteIntegracao
         [Fact(DisplayName = "Acervo Solicitação empréstimo - Não deve prorrogar empréstimo quando o item da solicitação não for encontrado")]
         public async Task Nao_deve_prorrogar_emprestimo_quando_item_da_solicitacao_nao_for_encontrado()
         {
-            //Arrange
             await InserirDadosBasicosAleatorios();
 
             await InserirAcervosBibliograficos();
@@ -527,7 +507,7 @@ namespace SME.CDEP.TesteIntegracao
             await InserirAcervosSolicitacoes(SituacaoSolicitacao.FINALIZADO_ATENDIMENTO);
 
             var atendimentoPresencial = TipoAtendimento.Presencial;
-            var dataVisita = DateTimeExtension.HorarioBrasilia().Date;
+            var dataVisita = DataHelper.ProximaDataUtil(DateTime.Now);
             await InserirAcervoSolicitacaoItem(atendimentoPresencial, dataVisita,1,2, SituacaoSolicitacaoItem.FINALIZADO_MANUALMENTE);
             await InserirAcervoSolicitacaoItem(atendimentoPresencial, dataVisita,2,4, SituacaoSolicitacaoItem.FINALIZADO_MANUALMENTE);
             await InserirAcervoSolicitacaoItem(atendimentoPresencial, dataVisita,3,3, SituacaoSolicitacaoItem.FINALIZADO_MANUALMENTE);
@@ -538,7 +518,6 @@ namespace SME.CDEP.TesteIntegracao
             foreach (var item in itensDaSolicitacao)
                 await InserirAcervoEmprestimo(item.Id, dataVisita);
 
-            //Act
             var servicoAcervoEmprestimo = GetServicoAcervoEmprestimo();
             
             await servicoAcervoEmprestimo.ProrrogarEmprestimo(new AcervoEmprestimoProrrogacaoDTO()
@@ -551,7 +530,6 @@ namespace SME.CDEP.TesteIntegracao
         [Fact(DisplayName = "Acervo Solicitação empréstimo - Não deve prorrogar empréstimo quando a data de devolução for no passado")]
         public async Task Nao_deve_prorrogar_emprestimo_quando_a_data_da_devolucao_for_no_passado()
         {
-            //Arrange
             await InserirDadosBasicosAleatorios();
 
             await InserirAcervosBibliograficos();
@@ -559,7 +537,7 @@ namespace SME.CDEP.TesteIntegracao
             await InserirAcervosSolicitacoes(SituacaoSolicitacao.FINALIZADO_ATENDIMENTO);
 
             var atendimentoPresencial = TipoAtendimento.Presencial;
-            var dataVisita = DateTimeExtension.HorarioBrasilia().Date;
+            var dataVisita = DataHelper.ProximaDataUtil(DateTime.Now);
             await InserirAcervoSolicitacaoItem(atendimentoPresencial, dataVisita,1,2, SituacaoSolicitacaoItem.FINALIZADO_MANUALMENTE);
             await InserirAcervoSolicitacaoItem(atendimentoPresencial, dataVisita,2,4, SituacaoSolicitacaoItem.FINALIZADO_MANUALMENTE);
             await InserirAcervoSolicitacaoItem(atendimentoPresencial, dataVisita,3,3, SituacaoSolicitacaoItem.FINALIZADO_MANUALMENTE);
@@ -570,7 +548,6 @@ namespace SME.CDEP.TesteIntegracao
             foreach (var item in itensDaSolicitacao)
                 await InserirAcervoEmprestimo(item.Id, dataVisita);
 
-            //Act
             var servicoAcervoEmprestimo = GetServicoAcervoEmprestimo();
             
             await servicoAcervoEmprestimo.ProrrogarEmprestimo(new AcervoEmprestimoProrrogacaoDTO()
@@ -583,7 +560,6 @@ namespace SME.CDEP.TesteIntegracao
         [Fact(DisplayName = "Acervo Solicitação empréstimo - Não deve prorrogar empréstimo quando a data de devolução for menor que a atual")]
         public async Task Nao_deve_prorrogar_emprestimo_quando_a_data_da_devolucao_for_menor_que_a_atual()
         {
-            //Arrange
             await InserirDadosBasicosAleatorios();
 
             await InserirAcervosBibliograficos();
@@ -591,7 +567,7 @@ namespace SME.CDEP.TesteIntegracao
             await InserirAcervosSolicitacoes(SituacaoSolicitacao.FINALIZADO_ATENDIMENTO);
 
             var atendimentoPresencial = TipoAtendimento.Presencial;
-            var dataVisita = DateTimeExtension.HorarioBrasilia().Date;
+            var dataVisita = DataHelper.ProximaDataUtil(DateTime.Now);
             await InserirAcervoSolicitacaoItem(atendimentoPresencial, dataVisita,1,2, SituacaoSolicitacaoItem.FINALIZADO_MANUALMENTE);
             await InserirAcervoSolicitacaoItem(atendimentoPresencial, dataVisita,2,4, SituacaoSolicitacaoItem.FINALIZADO_MANUALMENTE);
             await InserirAcervoSolicitacaoItem(atendimentoPresencial, dataVisita,3,3, SituacaoSolicitacaoItem.FINALIZADO_MANUALMENTE);
@@ -602,7 +578,6 @@ namespace SME.CDEP.TesteIntegracao
             foreach (var item in itensDaSolicitacao)
                 await InserirAcervoEmprestimo(item.Id, dataVisita);
 
-            //Act
             var servicoAcervoEmprestimo = GetServicoAcervoEmprestimo();
             
             await servicoAcervoEmprestimo.ProrrogarEmprestimo(new AcervoEmprestimoProrrogacaoDTO()
@@ -615,7 +590,6 @@ namespace SME.CDEP.TesteIntegracao
         [Fact(DisplayName = "Acervo Solicitação empréstimo - Deve permitir devolver item emprestado")]
         public async Task Deve_permitir_devolver_item_emprestado()
         {
-            //Arrange
             await InserirDadosBasicosAleatorios();
 
             await InserirAcervosBibliograficos();
@@ -623,7 +597,7 @@ namespace SME.CDEP.TesteIntegracao
             await InserirAcervosSolicitacoes(SituacaoSolicitacao.FINALIZADO_ATENDIMENTO);
 
             var atendimentoPresencial = TipoAtendimento.Presencial;
-            var dataVisita = DateTimeExtension.HorarioBrasilia().Date;
+            var dataVisita = DataHelper.ProximaDataUtil(DateTime.Now);
             await InserirAcervoSolicitacaoItem(atendimentoPresencial, dataVisita,1,2, SituacaoSolicitacaoItem.FINALIZADO_MANUALMENTE);
             await InserirAcervoSolicitacaoItem(atendimentoPresencial, dataVisita,2,4, SituacaoSolicitacaoItem.FINALIZADO_MANUALMENTE);
             await InserirAcervoSolicitacaoItem(atendimentoPresencial, dataVisita,3,3, SituacaoSolicitacaoItem.FINALIZADO_MANUALMENTE);
@@ -634,7 +608,6 @@ namespace SME.CDEP.TesteIntegracao
             foreach (var item in itensDaSolicitacao)
                 await InserirAcervoEmprestimo(item.Id, dataVisita);
 
-            //Act
             var servicoAcervoEmprestimo = GetServicoAcervoEmprestimo();
             
             var retorno = await servicoAcervoEmprestimo.DevolverItemEmprestado(1);
@@ -660,7 +633,6 @@ namespace SME.CDEP.TesteIntegracao
         [Fact(DisplayName = "Acervo Solicitação empréstimo - Não deve permitir devolver item emprestado com item inválido")]
         public async Task Nao_deve_permitir_devolver_item_emprestado_com_item_invalido()
         {
-            //Arrange
             await InserirDadosBasicosAleatorios();
 
             await InserirAcervosBibliograficos();
@@ -668,7 +640,7 @@ namespace SME.CDEP.TesteIntegracao
             await InserirAcervosSolicitacoes(SituacaoSolicitacao.FINALIZADO_ATENDIMENTO);
 
             var atendimentoPresencial = TipoAtendimento.Presencial;
-            var dataVisita = DateTimeExtension.HorarioBrasilia().Date;
+            var dataVisita = DataHelper.ProximaDataUtil(DateTime.Now);
             await InserirAcervoSolicitacaoItem(atendimentoPresencial, dataVisita,1,2, SituacaoSolicitacaoItem.FINALIZADO_MANUALMENTE);
             await InserirAcervoSolicitacaoItem(atendimentoPresencial, dataVisita,2,4, SituacaoSolicitacaoItem.FINALIZADO_MANUALMENTE);
             await InserirAcervoSolicitacaoItem(atendimentoPresencial, dataVisita,3,3, SituacaoSolicitacaoItem.FINALIZADO_MANUALMENTE);
@@ -679,7 +651,6 @@ namespace SME.CDEP.TesteIntegracao
             foreach (var item in itensDaSolicitacao)
                 await InserirAcervoEmprestimo(item.Id, dataVisita);
 
-            //Act
             var servicoAcervoEmprestimo = GetServicoAcervoEmprestimo();
             
             await servicoAcervoEmprestimo.DevolverItemEmprestado(1000).ShouldThrowAsync<NegocioException>();
@@ -688,12 +659,10 @@ namespace SME.CDEP.TesteIntegracao
         [Fact(DisplayName = "Acervo Solicitação com empréstimo - Confirmar empréstimo após inserção manual")]
         public async Task Deve_permitir_fazer_acervo_manual_com_emprestimo()
         {
-            //Arrange
             await InserirDadosBasicosAleatorios();
 
             await InserirAcervosBibliograficos();
 
-            //Act
             var servicoAcervoSolicitacao = GetServicoAcervoSolicitacao();
 
             var retorno = await servicoAcervoSolicitacao.Inserir(new AcervoSolicitacaoManualDTO()
@@ -711,7 +680,7 @@ namespace SME.CDEP.TesteIntegracao
                     {
                         AcervoId = 2,
                         TipoAtendimento = TipoAtendimento.Presencial,
-                        DataVisita = DateTimeExtension.HorarioBrasilia().Date,
+                        DataVisita = DataHelper.ProximaDataUtil(DateTime.Now),
                         DataEmprestimo = DateTimeExtension.HorarioBrasilia().Date,
                         DataDevolucao = DateTimeExtension.HorarioBrasilia().AddDays(5).Date,
                         TipoAcervo = TipoAcervo.Bibliografico
@@ -720,7 +689,7 @@ namespace SME.CDEP.TesteIntegracao
                     {
                         AcervoId = 3,
                         TipoAtendimento = TipoAtendimento.Presencial,
-                        DataVisita = DateTimeExtension.HorarioBrasilia().Date,
+                        DataVisita = DataHelper.ProximaDataUtil(DateTime.Now),
                         DataEmprestimo = DateTimeExtension.HorarioBrasilia().Date,
                         DataDevolucao = DateTimeExtension.HorarioBrasilia().AddDays(8).Date,
                         TipoAcervo = TipoAcervo.Bibliografico
@@ -728,7 +697,6 @@ namespace SME.CDEP.TesteIntegracao
                 }
             });
 
-            //Assert
             var solicitacaoAlterada = ObterTodos<AcervoSolicitacao>().LastOrDefault();
             solicitacaoAlterada.Id.ShouldBe(1);
             solicitacaoAlterada.UsuarioId.ShouldBe(1);
@@ -745,13 +713,13 @@ namespace SME.CDEP.TesteIntegracao
             itemEnviadoViaEmail.Situacao.ShouldBe(SituacaoSolicitacaoItem.FINALIZADO_MANUALMENTE);
 
             var itemAguardandoVisita = itensAlterados.FirstOrDefault(f=> f.AcervoId == 2);
-            itemAguardandoVisita.DataVisita.Value.Date.ShouldBe(DateTimeExtension.HorarioBrasilia().Date);
+            itemAguardandoVisita.DataVisita.Value.Date.ShouldBe(DataHelper.ProximaDataUtil(DateTime.Now));
             itemAguardandoVisita.TipoAtendimento.ShouldBe(TipoAtendimento.Presencial);
             itemAguardandoVisita.Excluido.ShouldBeFalse();
             itemAguardandoVisita.Situacao.ShouldBe(SituacaoSolicitacaoItem.FINALIZADO_MANUALMENTE);
 
             var itemFinalizadoManualmente = itensAlterados.FirstOrDefault(w => w.AcervoId == 3);
-            itemFinalizadoManualmente.DataVisita.Value.Date.ShouldBe(DateTimeExtension.HorarioBrasilia().Date);
+            itemFinalizadoManualmente.DataVisita.Value.Date.ShouldBe(DataHelper.ProximaDataUtil(DateTime.Now));
             itemFinalizadoManualmente.TipoAtendimento.ShouldBe(TipoAtendimento.Presencial);
             itemFinalizadoManualmente.Excluido.ShouldBeFalse();
             itemFinalizadoManualmente.Situacao.ShouldBe(SituacaoSolicitacaoItem.FINALIZADO_MANUALMENTE);
@@ -777,12 +745,10 @@ namespace SME.CDEP.TesteIntegracao
         [Fact(DisplayName = "Acervo Solicitação com empréstimo - Confirmar empréstimo após alteração manual")]
         public async Task Deve_permitir_fazer_acervo_manual_com_emprestimo_apos_alteracao()
         {
-            //Arrange
             await InserirDadosBasicosAleatorios();
 
             await InserirAcervosBibliograficos();
 
-            //Act
             var servicoAcervoSolicitacao = GetServicoAcervoSolicitacao();
 
             var retorno = await servicoAcervoSolicitacao.Inserir(new AcervoSolicitacaoManualDTO()
@@ -800,7 +766,7 @@ namespace SME.CDEP.TesteIntegracao
                     {
                         AcervoId = 2,
                         TipoAtendimento = TipoAtendimento.Presencial,
-                        DataVisita = DateTimeExtension.HorarioBrasilia().Date,
+                        DataVisita = DataHelper.ProximaDataUtil(DateTime.Now),
                         DataEmprestimo = DateTimeExtension.HorarioBrasilia().Date,
                         DataDevolucao = DateTimeExtension.HorarioBrasilia().AddDays(5).Date,
                         TipoAcervo = TipoAcervo.Bibliografico
@@ -809,7 +775,7 @@ namespace SME.CDEP.TesteIntegracao
                     {
                         AcervoId = 3,
                         TipoAtendimento = TipoAtendimento.Presencial,
-                        DataVisita = DateTimeExtension.HorarioBrasilia().Date,
+                        DataVisita = DataHelper.ProximaDataUtil(DateTime.Now),
                         DataEmprestimo = DateTimeExtension.HorarioBrasilia().Date,
                         DataDevolucao = DateTimeExtension.HorarioBrasilia().AddDays(8).Date,
                         TipoAcervo = TipoAcervo.Bibliografico
@@ -829,7 +795,7 @@ namespace SME.CDEP.TesteIntegracao
                         Id = 1,
                         AcervoId = 1,
                         TipoAtendimento = TipoAtendimento.Presencial,
-                        DataVisita = DateTimeExtension.HorarioBrasilia().Date,
+                        DataVisita = DataHelper.ProximaDataUtil(DateTime.Now),
                         DataEmprestimo = DateTimeExtension.HorarioBrasilia().Date,
                         DataDevolucao = DateTimeExtension.HorarioBrasilia().AddDays(10).Date,
                         TipoAcervo = TipoAcervo.Bibliografico
@@ -839,7 +805,7 @@ namespace SME.CDEP.TesteIntegracao
                         Id = 2,
                         AcervoId = 2,
                         TipoAtendimento = TipoAtendimento.Presencial,
-                        DataVisita = DateTimeExtension.HorarioBrasilia().Date,
+                        DataVisita = DataHelper.ProximaDataUtil(DateTime.Now),
                         DataEmprestimo = DateTimeExtension.HorarioBrasilia().Date,
                         DataDevolucao = DateTimeExtension.HorarioBrasilia().AddDays(15).Date,
                         TipoAcervo = TipoAcervo.Bibliografico
@@ -849,7 +815,7 @@ namespace SME.CDEP.TesteIntegracao
                         Id = 3,
                         AcervoId = 3,
                         TipoAtendimento = TipoAtendimento.Presencial,
-                        DataVisita = DateTimeExtension.HorarioBrasilia().Date,
+                        DataVisita = DataHelper.ProximaDataUtil(DateTime.Now),
                         DataEmprestimo = DateTimeExtension.HorarioBrasilia().Date,
                         DataDevolucao = DateTimeExtension.HorarioBrasilia().AddDays(18).Date,
                         TipoAcervo = TipoAcervo.Bibliografico
@@ -857,7 +823,6 @@ namespace SME.CDEP.TesteIntegracao
                 }
             });
 
-            //Assert
             var solicitacaoAlterada = ObterTodos<AcervoSolicitacao>().LastOrDefault();
             solicitacaoAlterada.Id.ShouldBe(1);
             solicitacaoAlterada.UsuarioId.ShouldBe(1);
@@ -868,19 +833,19 @@ namespace SME.CDEP.TesteIntegracao
             itensAlterados.Count().ShouldBe(3);
 
             var itemEnviadoViaEmail = itensAlterados.FirstOrDefault(f=> f.AcervoId == 1);
-            itemEnviadoViaEmail.DataVisita.Value.Date.ShouldBe(DateTimeExtension.HorarioBrasilia().Date);
+            itemEnviadoViaEmail.DataVisita.Value.Date.ShouldBe(DataHelper.ProximaDataUtil(DateTime.Now));
             itemEnviadoViaEmail.TipoAtendimento.ShouldBe(TipoAtendimento.Presencial);
             itemEnviadoViaEmail.Excluido.ShouldBeFalse();
             itemEnviadoViaEmail.Situacao.ShouldBe(SituacaoSolicitacaoItem.FINALIZADO_MANUALMENTE);
 
             var itemAguardandoVisita = itensAlterados.FirstOrDefault(f=> f.AcervoId == 2);
-            itemAguardandoVisita.DataVisita.Value.Date.ShouldBe(DateTimeExtension.HorarioBrasilia().Date);
+            itemAguardandoVisita.DataVisita.Value.Date.ShouldBe(DataHelper.ProximaDataUtil(DateTime.Now));
             itemAguardandoVisita.TipoAtendimento.ShouldBe(TipoAtendimento.Presencial);
             itemAguardandoVisita.Excluido.ShouldBeFalse();
             itemAguardandoVisita.Situacao.ShouldBe(SituacaoSolicitacaoItem.FINALIZADO_MANUALMENTE);
 
             var itemFinalizadoManualmente = itensAlterados.FirstOrDefault(w => w.AcervoId == 3);
-            itemFinalizadoManualmente.DataVisita.Value.Date.ShouldBe(DateTimeExtension.HorarioBrasilia().Date);
+            itemFinalizadoManualmente.DataVisita.Value.Date.ShouldBe(DataHelper.ProximaDataUtil(DateTime.Now));
             itemFinalizadoManualmente.TipoAtendimento.ShouldBe(TipoAtendimento.Presencial);
             itemFinalizadoManualmente.Excluido.ShouldBeFalse();
             itemFinalizadoManualmente.Situacao.ShouldBe(SituacaoSolicitacaoItem.FINALIZADO_MANUALMENTE);
@@ -910,7 +875,6 @@ namespace SME.CDEP.TesteIntegracao
         [Fact(DisplayName = "Acervo Solicitação empréstimo - Não deve permitir confirmar atendimento com data de empréstimo e devolução em data de visita futura")]
         public async Task Nao_deve_permitir_confirmar_atendimento_com_data_de_emprestimo_e_devolucao_em_visita_futura()
         {
-            //Arrange
             await InserirDadosBasicosAleatorios();
 
             await InserirAcervoTridimensional();
@@ -918,7 +882,7 @@ namespace SME.CDEP.TesteIntegracao
             await InserirAcervosSolicitacoes();
 
             var atendimentoPresencial = TipoAtendimento.Presencial;
-            var dataVisita = DateTimeExtension.HorarioBrasilia().Date;
+            var dataVisita = DataHelper.ProximaDataUtil(DateTime.Now);
             await InserirAcervoSolicitacaoItem(atendimentoPresencial, dataVisita,1,2);
             await InserirAcervoSolicitacaoItem(atendimentoPresencial, dataVisita,2,4);
             await InserirAcervoSolicitacaoItem(atendimentoPresencial, dataVisita,3,3);
@@ -929,14 +893,13 @@ namespace SME.CDEP.TesteIntegracao
             foreach (var item in itensDaSolicitacao)
                 await InserirAcervoEmprestimo(item.Id, dataVisita);
 
-            //Act
             var servicoAcervoSolicitacao = GetServicoAcervoSolicitacao();
             
             await servicoAcervoSolicitacao.ConfirmarAtendimento(new AcervoSolicitacaoConfirmarDTO()
             {
                 Id = 1,
                 ItemId = 1, 
-                DataVisita = DateTimeExtension.HorarioBrasilia().AddDays(1).Date,
+                DataVisita = DataHelper.ProximaDataUtil(DateTime.Now.AddDays(1)),
                 TipoAtendimento = TipoAtendimento.Presencial,
                 DataEmprestimo = DateTimeExtension.HorarioBrasilia().AddDays(2).Date,
                 DataDevolucao = DateTimeExtension.HorarioBrasilia().AddDays(10).Date,
@@ -947,7 +910,7 @@ namespace SME.CDEP.TesteIntegracao
             {
                 Id = 1,
                 ItemId = 2,
-                DataVisita = DateTimeExtension.HorarioBrasilia().AddDays(4).Date,
+                DataVisita = DataHelper.ProximaDataUtil(DateTime.Now.AddDays(4)),
                 TipoAtendimento = TipoAtendimento.Presencial,
                 DataEmprestimo = DateTimeExtension.HorarioBrasilia().AddDays(3).Date,
                 DataDevolucao = DateTimeExtension.HorarioBrasilia().AddDays(11).Date,
@@ -958,7 +921,6 @@ namespace SME.CDEP.TesteIntegracao
         [Fact(DisplayName = "Acervo Solicitação empréstimo - Não deve permitir confirmar atendimento alterando data de empréstimo e devolução")]
         public async Task Nao_deve_permitir_confirmar_atendimento_alterando_data_de_emprestimo_e_devolucao()
         {
-            //Arrange
             await InserirDadosBasicosAleatorios();
 
             await InserirAcervosBibliograficos();
@@ -966,7 +928,7 @@ namespace SME.CDEP.TesteIntegracao
             await InserirAcervosSolicitacoes();
 
             var atendimentoPresencial = TipoAtendimento.Presencial;
-            var dataVisita = DateTimeExtension.HorarioBrasilia().Date;
+            var dataVisita = DataHelper.ProximaDataUtil(DateTime.Now);
             await InserirAcervoSolicitacaoItem(atendimentoPresencial, dataVisita,1,2);
             await InserirAcervoSolicitacaoItem(atendimentoPresencial, dataVisita,2,4);
             await InserirAcervoSolicitacaoItem(atendimentoPresencial, dataVisita,3,3);
@@ -977,14 +939,13 @@ namespace SME.CDEP.TesteIntegracao
             foreach (var item in itensDaSolicitacao)
                 await InserirAcervoEmprestimo(item.Id, dataVisita);
 
-            //Act
             var servicoAcervoSolicitacao = GetServicoAcervoSolicitacao();
             
             await servicoAcervoSolicitacao.ConfirmarAtendimento(new AcervoSolicitacaoConfirmarDTO()
             {
                 Id = 1,
                 ItemId = 1, 
-                DataVisita = DateTimeExtension.HorarioBrasilia().Date,
+                DataVisita = DataHelper.ProximaDataUtil(DateTime.Now),
                 TipoAtendimento = TipoAtendimento.Presencial,
                 DataEmprestimo = DateTimeExtension.HorarioBrasilia().Date,
                 DataDevolucao = DateTimeExtension.HorarioBrasilia().AddDays(10).Date,
