@@ -21,16 +21,8 @@ namespace SME.CDEP.TesteIntegracao
             await InserirAcervosBibliograficos();
             await InserirAcervosTridimensionais(11);
 
-            // Helper para garantir que nunca caia em final de semana
-            DateTime AjustarParaDiaUtil(DateTime data)
-            {
-                if (data.DayOfWeek == DayOfWeek.Saturday) return data.AddDays(2);
-                if (data.DayOfWeek == DayOfWeek.Sunday) return data.AddDays(1);
-                return data;
-            }
-
-            var dataVisita1 = AjustarParaDiaUtil(DateTimeExtension.HorarioBrasilia().AddDays(4));
-            var dataVisita2 = AjustarParaDiaUtil(DateTimeExtension.HorarioBrasilia().AddDays(40));
+            var dataVisita1 = DataHelper.ProximaDataUtil(DateTime.Now.AddDays(4));
+            var dataVisita2 = DataHelper.ProximaDataUtil(DateTime.Now.AddDays(40));
 
             await InserirNaBase(new Evento()
             {
@@ -123,41 +115,35 @@ namespace SME.CDEP.TesteIntegracao
             await InserirDadosBasicosAleatorios();
 
             await InserirAcervoTridimensional(false);
-            
+
+            // Capturando a data exata do evento e a data da solicitação
+            var dataEventoEsperada = DataHelper.ProximaDataUtil(DateTime.Now.AddDays(40));
+            var dataSolicitacao = DateTimeExtension.HorarioBrasilia().Date.AddDays(-5);
+
             await InserirNaBase(new Evento()
             {
-                Data = DateTimeExtension.HorarioBrasilia().AddDays(40).Date,
+                Data = dataEventoEsperada,
                 Tipo = TipoEvento.VISITA,
                 Descricao = "Visita",
-                CriadoPor = "Sistema", CriadoEm = DateTimeExtension.HorarioBrasilia(), CriadoLogin = "Sistema"
+                CriadoPor = "Sistema",
+                CriadoEm = DateTimeExtension.HorarioBrasilia(),
+                CriadoLogin = "Sistema"
             });
 
             var servicoAcervoSolicitacao = GetServicoAcervoSolicitacao();
-            
+
             var acervoSolicitacaoManual = new AcervoSolicitacaoManualDTO()
             {
                 UsuarioId = 1,
-                DataSolicitacao = DateTimeExtension.HorarioBrasilia().Date.AddDays(-5),
+                DataSolicitacao = dataSolicitacao,
                 Itens = new List<AcervoSolicitacaoItemManualDTO>()
-                {
-                    new ()
-                    {
-                        AcervoId = 1,
-                        TipoAtendimento = TipoAtendimento.Email
-                    },
-                    new ()
-                    {
-                        AcervoId = 2,
-                        TipoAtendimento = TipoAtendimento.Email
-                    },
-                    new ()
-                    {
-                        AcervoId = 3,
-                        TipoAtendimento = TipoAtendimento.Email
-                    }
-                }
+        {
+            new () { AcervoId = 1, TipoAtendimento = TipoAtendimento.Email },
+            new () { AcervoId = 2, TipoAtendimento = TipoAtendimento.Email },
+            new () { AcervoId = 3, TipoAtendimento = TipoAtendimento.Email }
+        }
             };
-            
+
             var retorno = await servicoAcervoSolicitacao.Inserir(acervoSolicitacaoManual);
             retorno.ShouldBeGreaterThan(0);
 
@@ -167,7 +153,7 @@ namespace SME.CDEP.TesteIntegracao
             solicitacaoCadastrada.Origem.ShouldBe(Origem.Manual);
             solicitacaoCadastrada.Situacao.ShouldBe(SituacaoSolicitacao.FINALIZADO_ATENDIMENTO);
             solicitacaoCadastrada.Excluido.ShouldBeFalse();
-            
+
             var itensCadastrados = ObterTodos<AcervoSolicitacaoItem>();
 
             var primeiroAcervoViaEmail = itensCadastrados.FirstOrDefault(f => f.AcervoId == 1);
@@ -176,26 +162,26 @@ namespace SME.CDEP.TesteIntegracao
             primeiroAcervoViaEmail.DataVisita.ShouldBeNull();
             primeiroAcervoViaEmail.Excluido.ShouldBeFalse();
             primeiroAcervoViaEmail.ResponsavelId.ShouldNotBeNull();
-            
-            var segundoAcevoViaEmail = itensCadastrados.FirstOrDefault(f => f.AcervoId == 1);
-            segundoAcevoViaEmail.Situacao.ShouldBe(SituacaoSolicitacaoItem.FINALIZADO_MANUALMENTE);
-            segundoAcevoViaEmail.TipoAtendimento.ShouldBe(TipoAtendimento.Email);
-            segundoAcevoViaEmail.DataVisita.ShouldBeNull();
-            segundoAcevoViaEmail.Excluido.ShouldBeFalse();
-            segundoAcevoViaEmail.ResponsavelId.ShouldNotBeNull();
-            
+
+            var segundoAcervoViaEmail = itensCadastrados.FirstOrDefault(f => f.AcervoId == 2);
+            segundoAcervoViaEmail.Situacao.ShouldBe(SituacaoSolicitacaoItem.FINALIZADO_MANUALMENTE);
+            segundoAcervoViaEmail.TipoAtendimento.ShouldBe(TipoAtendimento.Email);
+            segundoAcervoViaEmail.DataVisita.ShouldBeNull();
+            segundoAcervoViaEmail.Excluido.ShouldBeFalse();
+            segundoAcervoViaEmail.ResponsavelId.ShouldNotBeNull();
+
             var terceiroAcervoViaEmail = itensCadastrados.FirstOrDefault(f => f.AcervoId == 3);
             terceiroAcervoViaEmail.Situacao.ShouldBe(SituacaoSolicitacaoItem.FINALIZADO_MANUALMENTE);
             terceiroAcervoViaEmail.TipoAtendimento.ShouldBe(TipoAtendimento.Email);
             terceiroAcervoViaEmail.DataVisita.ShouldBeNull();
             terceiroAcervoViaEmail.Excluido.ShouldBeFalse();
             terceiroAcervoViaEmail.ResponsavelId.ShouldNotBeNull();
-            
+
             var eventos = ObterTodos<Evento>();
             eventos.Count().ShouldBe(1);
-            eventos.Any(a=> a.Data.Date == DateTimeExtension.HorarioBrasilia().AddDays(40).Date).ShouldBeTrue();
+            eventos.Any(a => a.Data.Date == dataEventoEsperada.Date).ShouldBeTrue();
         }
-        
+
         [Fact(DisplayName = "Acervo Solicitação - Não deve fazer solicitação de acervo manual com data de visita em tipo de atendimento e-mail")]
         public async Task Nao_deve_fazer_solicitacao_manual_com_data_de_visita_em_tipo_de_atendimento_via_email()
         {
@@ -215,19 +201,19 @@ namespace SME.CDEP.TesteIntegracao
                     {
                         AcervoId = 2,
                         TipoAtendimento = TipoAtendimento.Email,
-                        DataVisita = DateTimeExtension.HorarioBrasilia().AddDays(4)
+                        DataVisita = DataHelper.ProximaDataUtil(DateTime.Now.AddDays(4))
                     },
                     new ()
                     {
                         AcervoId = 2,
                         TipoAtendimento = TipoAtendimento.Presencial,
-                        DataVisita = DateTimeExtension.HorarioBrasilia().AddDays(4)
+                        DataVisita = DataHelper.ProximaDataUtil(DateTime.Now.AddDays(4))
                     },
                     new ()
                     {
                         AcervoId = 3,
                         TipoAtendimento = TipoAtendimento.Presencial,
-                        DataVisita = DateTimeExtension.HorarioBrasilia().AddDays(40)
+                        DataVisita = DataHelper.ProximaDataUtil(DateTime.Now.AddDays(40))
                     }
                 }
             };
@@ -254,13 +240,13 @@ namespace SME.CDEP.TesteIntegracao
                     {
                         AcervoId = 2,
                         TipoAtendimento = TipoAtendimento.Presencial,
-                        DataVisita = DateTimeExtension.HorarioBrasilia().AddDays(4)
+                        DataVisita = DataHelper.ProximaDataUtil(DateTime.Now.AddDays(4))
                     },
                     new ()
                     {
                         AcervoId = 3,
                         TipoAtendimento = TipoAtendimento.Presencial,
-                        DataVisita = DateTimeExtension.HorarioBrasilia().AddDays(40)
+                        DataVisita = DataHelper.ProximaDataUtil(DateTime.Now.AddDays(40))
                     },
                     new ()
                     {
@@ -272,100 +258,108 @@ namespace SME.CDEP.TesteIntegracao
             
             await servicoAcervoSolicitacao.Inserir(acervoSolicitacaoManual).ShouldThrowAsync<NegocioException>();
         }
-        
+
         [Fact(DisplayName = "Acervo Solicitação - Não deve fazer solicitação de acervo manual com data de visita em dia de feriado")]
         public async Task Nao_deve_fazer_solicitacao_manual_com_data_de_visita_em_dia_de_feriado()
         {
             await InserirDadosBasicosAleatorios();
-
             await InserirAcervoTridimensional(false);
-            
+
+            var dataFeriado = DateTimeExtension.HorarioBrasilia().AddDays(40).Date;
+
             await InserirNaBase(new Evento()
             {
-                Data = DateTimeExtension.HorarioBrasilia().AddDays(40).Date,
+                Data = dataFeriado,
                 Tipo = TipoEvento.FERIADO,
                 Descricao = "Feriado",
-                CriadoPor = "Sistema", CriadoEm = DateTimeExtension.HorarioBrasilia(), CriadoLogin = "Sistema"
+                CriadoPor = "Sistema",
+                CriadoEm = DateTimeExtension.HorarioBrasilia(),
+                CriadoLogin = "Sistema"
             });
 
             var servicoAcervoSolicitacao = GetServicoAcervoSolicitacao();
-            
+
             var acervoSolicitacaoManual = new AcervoSolicitacaoManualDTO()
             {
                 UsuarioId = 1,
                 DataSolicitacao = DateTimeExtension.HorarioBrasilia().Date.AddDays(-5),
                 Itens = new List<AcervoSolicitacaoItemManualDTO>()
-                {
-                    new ()
-                    {
-                        AcervoId = 2,
-                        TipoAtendimento = TipoAtendimento.Presencial,
-                        DataVisita = DateTimeExtension.HorarioBrasilia().AddDays(4)
-                    },
-                    new ()
-                    {
-                        AcervoId = 3,
-                        TipoAtendimento = TipoAtendimento.Presencial,
-                        DataVisita = DateTimeExtension.HorarioBrasilia().AddDays(40)
-                    },
-                    new ()
-                    {
-                        AcervoId = 3,
-                        TipoAtendimento = TipoAtendimento.Presencial,
-                        DataVisita = DateTimeExtension.HorarioBrasilia().AddDays(60)
-                    }
-                }
-            };
-            
-            await servicoAcervoSolicitacao.Inserir(acervoSolicitacaoManual).ShouldThrowAsync<NegocioException>();
+        {
+            new()
+            {
+                AcervoId = 2,
+                TipoAtendimento = TipoAtendimento.Presencial,
+                DataVisita = DataHelper.ProximaDataUtil(DateTimeExtension.HorarioBrasilia().AddDays(4))
+            },
+            new()
+            {
+                AcervoId = 3,
+                TipoAtendimento = TipoAtendimento.Presencial,
+                DataVisita = dataFeriado
+            },
+            new()
+            {
+                AcervoId = 3,
+                TipoAtendimento = TipoAtendimento.Presencial,
+                DataVisita = DataHelper.ProximaDataUtil(DateTimeExtension.HorarioBrasilia().AddDays(60))
+            }
         }
-        
+            };
+
+            await Assert.ThrowsAsync<NegocioException>(async () =>
+                await servicoAcervoSolicitacao.Inserir(acervoSolicitacaoManual));
+        }
+
         [Fact(DisplayName = "Acervo Solicitação - Não deve fazer solicitação de acervo manual com data de visita em dia de suspensão")]
         public async Task Nao_deve_fazer_solicitacao_manual_com_data_de_visita_em_dia_de_suspensao()
         {
             await InserirDadosBasicosAleatorios();
-
             await InserirAcervoTridimensional(false);
-            
+
+            var dataSuspensao = DateTimeExtension.HorarioBrasilia().AddDays(40).Date;
+
             await InserirNaBase(new Evento()
             {
-                Data = DateTimeExtension.HorarioBrasilia().AddDays(40).Date,
+                Data = dataSuspensao,
                 Tipo = TipoEvento.SUSPENSAO,
                 Descricao = "Suspensão",
                 Justificativa = "Justificativa da Suspensão",
-                CriadoPor = "Sistema", CriadoEm = DateTimeExtension.HorarioBrasilia(), CriadoLogin = "Sistema"
+                CriadoPor = "Sistema",
+                CriadoEm = DateTimeExtension.HorarioBrasilia(),
+                CriadoLogin = "Sistema"
             });
 
             var servicoAcervoSolicitacao = GetServicoAcervoSolicitacao();
-            
+
             var acervoSolicitacaoManual = new AcervoSolicitacaoManualDTO()
             {
                 UsuarioId = 1,
                 DataSolicitacao = DateTimeExtension.HorarioBrasilia().Date.AddDays(-5),
                 Itens = new List<AcervoSolicitacaoItemManualDTO>()
-                {
-                    new ()
-                    {
-                        AcervoId = 2,
-                        TipoAtendimento = TipoAtendimento.Presencial,
-                        DataVisita = DateTimeExtension.HorarioBrasilia().AddDays(4)
-                    },
-                    new ()
-                    {
-                        AcervoId = 3,
-                        TipoAtendimento = TipoAtendimento.Presencial,
-                        DataVisita = DateTimeExtension.HorarioBrasilia().AddDays(40)
-                    },
-                    new ()
-                    {
-                        AcervoId = 3,
-                        TipoAtendimento = TipoAtendimento.Presencial,
-                        DataVisita = DateTimeExtension.HorarioBrasilia().AddDays(60)
-                    }
-                }
+        {
+            new()
+            {
+                AcervoId = 2,
+                TipoAtendimento = TipoAtendimento.Presencial,
+                DataVisita = DataHelper.ProximaDataUtil(DateTimeExtension.HorarioBrasilia().AddDays(4))
+            },
+            new()
+            {
+                AcervoId = 3,
+                TipoAtendimento = TipoAtendimento.Presencial,
+                DataVisita = dataSuspensao
+            },
+            new()
+            {
+                AcervoId = 3,
+                TipoAtendimento = TipoAtendimento.Presencial,
+                DataVisita = DataHelper.ProximaDataUtil(DateTimeExtension.HorarioBrasilia().AddDays(60))
+            }
+        }
             };
-            
-            await servicoAcervoSolicitacao.Inserir(acervoSolicitacaoManual).ShouldThrowAsync<NegocioException>();
+
+            await Assert.ThrowsAsync<NegocioException>(async () =>
+                await servicoAcervoSolicitacao.Inserir(acervoSolicitacaoManual));
         }
     }
 }

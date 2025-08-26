@@ -87,7 +87,7 @@ namespace SME.CDEP.TesteIntegracao
                 item.AcervoSolicitacaoId = acervoSolicitadoId;
                 item.TipoAtendimento = TipoAtendimento.Presencial;
                 item.Situacao = SituacaoSolicitacaoItem.AGUARDANDO_VISITA;
-                item.DataVisita = DateTimeExtension.HorarioBrasilia().AddDays(-2);
+                item.DataVisita = DataHelper.ProximaDataUtil(DateTime.Now.AddDays(-2));
                 await InserirNaBase(item);
             }
             
@@ -180,7 +180,7 @@ namespace SME.CDEP.TesteIntegracao
                 item.AcervoSolicitacaoId = acervoSolicitadoId;
                 item.TipoAtendimento = TipoAtendimento.Presencial;
                 item.Situacao = SituacaoSolicitacaoItem.AGUARDANDO_VISITA;
-                item.DataVisita = DateTimeExtension.HorarioBrasilia().AddDays(2);
+                item.DataVisita = DataHelper.ProximaDataUtil(DateTime.Now.AddDays(2));
                 await InserirNaBase(item);
             }
             
@@ -208,7 +208,7 @@ namespace SME.CDEP.TesteIntegracao
                 item.AcervoSolicitacaoId = acervoSolicitadoId;
                 item.TipoAtendimento = TipoAtendimento.Presencial;
                 item.Situacao = contador > 1 ? SituacaoSolicitacaoItem.AGUARDANDO_VISITA : SituacaoSolicitacaoItem.AGUARDANDO_ATENDIMENTO;
-                item.DataVisita = DateTimeExtension.HorarioBrasilia().AddDays(2);
+                item.DataVisita = DataHelper.ProximaDataUtil(DateTime.Now.AddDays(2));
                 await InserirNaBase(item);
             }
             
