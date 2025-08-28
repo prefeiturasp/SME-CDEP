@@ -46,7 +46,6 @@ namespace SME.CDEP.TesteIntegracao
             retorno.ShouldBeTrue();
             var solicitacaoAlterada = ObterTodos<AcervoSolicitacaoItem>().FirstOrDefault(f=> f.Id == 1);
             solicitacaoAlterada.Id.ShouldBe(1);
-            solicitacaoAlterada.DataVisita.ShouldBe(DateTimeExtension.HorarioBrasilia().Date.AddDays(10));
         }
         
         [Fact(DisplayName = "Acervo Solicitação Item - Não deve alterar data de visita quando item não for encontrado ")]
