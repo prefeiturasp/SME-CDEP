@@ -20,6 +20,7 @@ namespace SME.CDEP.TesteIntegracao
             await InserirDadosBasicosAleatorios();
 
             await InserirAcervosBibliograficos();
+
             await InserirAcervosTridimensionais(11);
 
             var servicoAcervoSolicitacao = GetServicoAcervoSolicitacao();
@@ -156,9 +157,9 @@ namespace SME.CDEP.TesteIntegracao
             await InserirAcervoTridimensional(true);
 
             var dataFeriado = DataHelper.ProximaDataUtil(DateTime.Now.AddDays(2));
-            var dataVisitaItem2 = DataHelper.ProximaDataUtil(DateTime.Now.AddDays(4));
+            var dataVisitaItem2 = DataHelper.ProximaDataUtil(DateTime.Now.AddDays(5));
             var dataVisitaItem3 = DataHelper.ProximaDataUtil(DateTime.Now.AddDays(40));
-
+            
             await InserirNaBase(new Evento()
             {
                 Data = dataFeriado,
@@ -234,13 +235,11 @@ namespace SME.CDEP.TesteIntegracao
         }
             };
 
-            var excecao = await Should.ThrowAsync<NegocioException>(
-                () => servicoAcervoSolicitacao.Alterar(alteracaoAcervoSolicitacaoManual)
-            );
+            // act
+            var excecao = await Should.ThrowAsync<NegocioException>(() => servicoAcervoSolicitacao.Alterar(alteracaoAcervoSolicitacaoManual));
 
-            excecao.Message
-                .Contains(MensagemNegocio.DATAS_DE_VISITAS_CONFLITANTES.Substring(0, 75))
-                .ShouldBeTrue();
+            // assert
+            excecao.Message.Contains(MensagemNegocio.DATAS_DE_VISITAS_CONFLITANTES.Substring(0, 75)).ShouldBeTrue();
         }
 
         [Fact(DisplayName = "Acervo Solicitação Manual - Não deve alterar solicitação de acervo em dia de suspensão")]
@@ -378,7 +377,7 @@ namespace SME.CDEP.TesteIntegracao
                     }
                 }
             };
-
+            // act
             var excecao = await Should.ThrowAsync<NegocioException>(() => servicoAcervoSolicitacao.Inserir(acervoSolicitacaoManual));
 
             excecao.Message.Contains(MensagemNegocio.DATA_DO_EMPRESTIMO_NAO_PODE_SER_FUTURA).ShouldBeTrue();
@@ -429,8 +428,10 @@ namespace SME.CDEP.TesteIntegracao
                 }
             };
 
+            // act
             var excecao = await Should.ThrowAsync<NegocioException>(() => servicoAcervoSolicitacao.Inserir(acervoSolicitacaoManual));
 
+            // assert
             excecao.Message.Contains(MensagemNegocio.DATA_DO_EMPRESTIMO_MENOR_QUE_DATA_VISITA).ShouldBeTrue();
         }
 
@@ -479,8 +480,10 @@ namespace SME.CDEP.TesteIntegracao
                 }
             };
 
+            // act
             var excecao = await Should.ThrowAsync<NegocioException>(() => servicoAcervoSolicitacao.Inserir(acervoSolicitacaoManual));
 
+            // assert
             excecao.Message.Contains(MensagemNegocio.DATA_DA_DEVOLUCAO_MENOR_DATA_DO_EMPRESTIMO).ShouldBeTrue();
         }
 
@@ -529,6 +532,7 @@ namespace SME.CDEP.TesteIntegracao
                 }
             };
 
+            // act
             var excecao = await Should.ThrowAsync<NegocioException>(() => servicoAcervoSolicitacao.Inserir(acervoSolicitacaoManual));
 
             excecao.Message.Contains(MensagemNegocio.DATA_DO_EMPRESTIMO_E_DEVOLUCAO_EXCLUSIVO_PARA_ACERVOS_BIBLIOGRAFICOS).ShouldBeTrue();
@@ -622,8 +626,10 @@ namespace SME.CDEP.TesteIntegracao
                 }
             };
 
+            // act
             var excecao = await Should.ThrowAsync<NegocioException>(() => servicoAcervoSolicitacao.Alterar(alteracaoAcervoSolicitacaoManual));
 
+            // assert
             excecao.Message.Contains(MensagemNegocio.DATA_DO_EMPRESTIMO_NAO_PODE_SER_FUTURA).ShouldBeTrue();
         }
 
@@ -715,6 +721,7 @@ namespace SME.CDEP.TesteIntegracao
                 }
             };
 
+            // act
             var excecao = await Should.ThrowAsync<NegocioException>(() => servicoAcervoSolicitacao.Alterar(alteracaoAcervoSolicitacaoManual));
 
             excecao.Message.Contains(MensagemNegocio.DATA_DO_EMPRESTIMO_MENOR_QUE_DATA_VISITA).ShouldBeTrue();
@@ -808,8 +815,10 @@ namespace SME.CDEP.TesteIntegracao
                 }
             };
 
+            // act
             var excecao = await Should.ThrowAsync<NegocioException>(() => servicoAcervoSolicitacao.Alterar(alteracaoAcervoSolicitacaoManual));
 
+            // assert
             excecao.Message.Contains(MensagemNegocio.DATA_DA_DEVOLUCAO_MENOR_DATA_DO_EMPRESTIMO).ShouldBeTrue();
         }
 
@@ -901,6 +910,7 @@ namespace SME.CDEP.TesteIntegracao
                 }
             };
 
+            // act
             var excecao = await Should.ThrowAsync<NegocioException>(() => servicoAcervoSolicitacao.Alterar(alteracaoAcervoSolicitacaoManual));
 
             excecao.Message.Contains(MensagemNegocio.DATA_DO_EMPRESTIMO_E_DEVOLUCAO_EXCLUSIVO_PARA_ACERVOS_BIBLIOGRAFICOS).ShouldBeTrue();
