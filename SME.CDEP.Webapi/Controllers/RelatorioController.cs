@@ -19,7 +19,9 @@ namespace SME.CDEP.Webapi.Controllers
             if (file == null)
                 return NoContent();
 
-            return File(file, "application/vnd.ms-excel", "relatorio.xls", enableRangeProcessing: true);
+            return File(file,
+                     "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+                     "relatorio.xlsx");
         }
 
         [HttpPost("controle-acervo")]
@@ -31,7 +33,9 @@ namespace SME.CDEP.Webapi.Controllers
             if (file == null)
                 return NoContent();
 
-            return File(file, "application/vnd.ms-excel", "relatorio.xls", enableRangeProcessing: true);
+            return File(file,
+                     "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+                     "relatorio.xlsx");
         }
 
         [HttpPost("controle-acervo-autor")]
@@ -43,7 +47,9 @@ namespace SME.CDEP.Webapi.Controllers
             if (file == null)
                 return NoContent();
 
-            return File(file, "application/vnd.ms-excel", "relatorio.xls", enableRangeProcessing: true);
+            return File(file,
+                      "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+                      "relatorio.xlsx");
 
         }
 
@@ -56,7 +62,9 @@ namespace SME.CDEP.Webapi.Controllers
             if (file == null)
                 return NoContent();
 
-            return File(file, "application/vnd.ms-excel", "relatorio.xls", enableRangeProcessing: true);
+            return File(file,
+                     "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+                     "relatorio.xlsx");
 
         }
 
@@ -69,7 +77,9 @@ namespace SME.CDEP.Webapi.Controllers
             if (file == null)
                 return NoContent();
 
-            return File(file, "application/vnd.ms-excel", "relatorio.xls", enableRangeProcessing: true);
+            return File(file,
+                     "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+                     "relatorio.xlsx");
         }
     }
 }
