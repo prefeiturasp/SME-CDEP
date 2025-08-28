@@ -2,7 +2,7 @@
 {
     public class RelatorioControleDevolucaoLivrosRequest
     {
-        public List<int>? Solicitante { get; set; }
+        public string? Solicitante { get; set; }
         public bool SomenteEmAtraso { get; set; }
     }
 }

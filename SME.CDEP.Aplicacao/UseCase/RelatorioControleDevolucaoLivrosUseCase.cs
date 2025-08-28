@@ -29,7 +29,8 @@ namespace SME.CDEP.Aplicacao.UseCase
                 Usuario = contextoAplicacao.NomeUsuario,
                 UsuarioRF = contextoAplicacao.UsuarioLogado,
                 Solicitante = filtros.Solicitante,
-                TiposAcervosPermitidos = tiposAcervosPermitidos
+                TiposAcervosPermitidos = tiposAcervosPermitidos,
+                SomenteEmAtraso = filtros.SomenteEmAtraso
             };
 
             var mensagem = JsonConvert.SerializeObject(new { Mensagem = filtrosValidos });
