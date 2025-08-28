@@ -44,9 +44,8 @@ namespace SME.CDEP.Aplicacao.Servicos
             var assuntosSelecionados =  await repositorioAssunto.ObterPorIds(acervoBibliograficoCadastroDto.AssuntosIds);
             
             var acervo = mapper.Map<Acervo>(acervoBibliograficoCadastroDto);
-            acervo.SituacaoAcervo = Dominio.Enumerados.SituacaoAcervo.Ativo;
+            acervo.Situacao = Dominio.Enumerados.SituacaoAcervo.Ativo;
             acervo.TipoAcervoId = (int)TipoAcervo.Bibliografico;
-            acervo.SituacaoAcervo = SituacaoAcervo.Ativo;
 
             var acervoBibliografico = mapper.Map<AcervoBibliografico>(acervoBibliograficoCadastroDto);
             

@@ -39,12 +39,12 @@ namespace SME.CDEP.TesteIntegracao
                 item.AcervoSolicitacaoId = acervoSolicitadoId;
                 item.Situacao = SituacaoSolicitacaoItem.AGUARDANDO_VISITA;
                 item.TipoAtendimento = TipoAtendimento.Presencial;
-                item.DataVisita = DateTimeExtension.HorarioBrasilia().Date.AddDays(2);
+                item.DataVisita = DataHelper.ProximaDataUtil(DateTime.Now.AddDays(2));
                 await InserirNaBase(item);
                 
                 await InserirNaBase(new Evento()
                 {
-                    Data = DateTimeExtension.HorarioBrasilia().AddDays(2).Date,
+                    Data = DataHelper.ProximaDataUtil(DateTime.Now.AddDays(2)),
                     Tipo = TipoEvento.VISITA,
                     AcervoSolicitacaoItemId = itemCount,
                     Descricao = "Visita",
@@ -102,12 +102,12 @@ namespace SME.CDEP.TesteIntegracao
                 item.AcervoSolicitacaoId = acervoSolicitadoId;
                 item.Situacao = SituacaoSolicitacaoItem.AGUARDANDO_VISITA;
                 item.TipoAtendimento = TipoAtendimento.Presencial;
-                item.DataVisita = DateTimeExtension.HorarioBrasilia().Date.AddDays(2);
+                item.DataVisita = DataHelper.ProximaDataUtil(DateTime.Now.AddDays(2));
                 await InserirNaBase(item);
                 
                 await InserirNaBase(new Evento()
                 {
-                    Data = DateTimeExtension.HorarioBrasilia().AddDays(2).Date,
+                    Data = DataHelper.ProximaDataUtil(DateTime.Now.AddDays(2)),
                     Tipo = TipoEvento.VISITA,
                     AcervoSolicitacaoItemId = itemCount,
                     Descricao = "Visita",

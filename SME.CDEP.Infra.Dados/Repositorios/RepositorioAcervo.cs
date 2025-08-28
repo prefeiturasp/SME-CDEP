@@ -228,7 +228,7 @@ namespace SME.CDEP.Infra.Dados.Repositorios
                 data_acervo,
                 ano_inicio,
                 ano_fim,
-                COALESCE(a.situacao, 1) as SituacaoAcervo       
+                COALESCE(situacao, 1) as SituacaoAcervo       
             from acervo
             where id = any(@ids)
                 and not excluido; ";
@@ -388,7 +388,7 @@ namespace SME.CDEP.Infra.Dados.Repositorios
                    titulo,
                    tipo,
                    coalesce(codigo, codigo_novo) as codigo,
-                   COALESCE(a.situacao, 1) as SituacaoAcervo       
+                   COALESCE(situacao, 1) as SituacaoAcervo       
             from acervo
             where (lower(codigo) = @codigo or lower(codigo_novo) = @codigo)
               and tipo = ANY(@tiposAcervosPermitidos)

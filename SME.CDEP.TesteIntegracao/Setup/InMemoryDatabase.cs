@@ -107,9 +107,25 @@ namespace SME.CDEP.TesteIntegracao.Setup
 
         public void Dispose()
         {
-            Conexao.Close();
-            Conexao.Dispose();
-            _postgresRunner.Dispose();
+            try
+            {
+                if (Conexao?.State == System.Data.ConnectionState.Open)
+                    Conexao.Close();
+            }
+            catch { }
+            finally
+            {
+                Conexao?.Dispose();
+            }
+
+            try
+            {
+                _postgresRunner?.Dispose();
+            }
+            catch (InvalidOperationException)
+            {
+               
+            }
         }
     }
 }

@@ -2,10 +2,8 @@
 using SME.CDEP.Aplicacao.DTOS;
 using SME.CDEP.Dominio.Entidades;
 using SME.CDEP.Dominio.Excecoes;
-using SME.CDEP.Dominio.Extensions;
 using SME.CDEP.Infra.Dominio.Enumerados;
 using SME.CDEP.TesteIntegracao.Setup;
-using SME.CDEP.TesteIntegracao.Constantes;
 using Xunit;
 
 namespace SME.CDEP.TesteIntegracao
@@ -30,7 +28,7 @@ namespace SME.CDEP.TesteIntegracao
            foreach (var item in acervoSolicitacao.Itens)
            {
                 item.AcervoSolicitacaoId = 1;
-                item.DataVisita = DateTimeExtension.HorarioBrasilia().Date;
+                item.DataVisita = DataHelper.ProximaDataUtil(DateTime.Now);
                 item.Situacao = SituacaoSolicitacaoItem.AGUARDANDO_VISITA;
                 await InserirNaBase(item);
            }
@@ -40,7 +38,7 @@ namespace SME.CDEP.TesteIntegracao
             var retorno = await servicoAcervoSolicitacao.AlterarDataVisitaDoItemAtendimento(new AlterarDataVisitaAcervoSolicitacaoItemDTO()
             {
                 Id = 1,
-                DataVisita = DateTimeExtension.HorarioBrasilia().Date.AddDays(10)
+                DataVisita = DataHelper.ProximaDataUtil(DateTime.Now.AddDays(10))
             });
             
             retorno.ShouldBeTrue();
@@ -62,7 +60,7 @@ namespace SME.CDEP.TesteIntegracao
             foreach (var item in acervoSolicitacao.Itens)
             {
                 item.AcervoSolicitacaoId = 1;
-                item.DataVisita = DateTimeExtension.HorarioBrasilia().Date;
+                item.DataVisita = DataHelper.ProximaDataUtil(DateTime.Now);
                 await InserirNaBase(item);
             }
             
@@ -71,7 +69,7 @@ namespace SME.CDEP.TesteIntegracao
             await servicoAcervoSolicitacao.AlterarDataVisitaDoItemAtendimento(new AlterarDataVisitaAcervoSolicitacaoItemDTO()
             {
                 Id = 2024,
-                DataVisita = DateTimeExtension.HorarioBrasilia().Date.AddDays(10)
+                DataVisita = DataHelper.ProximaDataUtil(DateTime.Now.AddDays(10))
             }).ShouldThrowAsync<NegocioException>();
         }
         
@@ -119,7 +117,7 @@ namespace SME.CDEP.TesteIntegracao
             foreach (var item in acervoSolicitacao.Itens)
             {
                 item.AcervoSolicitacaoId = 1;
-                item.DataVisita = DateTimeExtension.HorarioBrasilia().Date;
+                item.DataVisita = DataHelper.ProximaDataUtil(DateTime.Now);
                 item.Situacao = SituacaoSolicitacaoItem.CANCELADO;
                 await InserirNaBase(item);
             }
@@ -129,7 +127,7 @@ namespace SME.CDEP.TesteIntegracao
             await servicoAcervoSolicitacao.AlterarDataVisitaDoItemAtendimento(new AlterarDataVisitaAcervoSolicitacaoItemDTO()
             {
                 Id = 1,
-                DataVisita = DateTimeExtension.HorarioBrasilia().Date.AddDays(10)
+                DataVisita = DataHelper.ProximaDataUtil(DateTime.Now.AddDays(10))
             }).ShouldThrowAsync<NegocioException>();
         }
         
@@ -148,7 +146,7 @@ namespace SME.CDEP.TesteIntegracao
             foreach (var item in acervoSolicitacao.Itens)
             {
                 item.AcervoSolicitacaoId = 1;
-                item.DataVisita = DateTimeExtension.HorarioBrasilia().Date;
+                item.DataVisita = DataHelper.ProximaDataUtil(DateTime.Now);
                 item.Situacao = SituacaoSolicitacaoItem.FINALIZADO_AUTOMATICAMENTE;
                 await InserirNaBase(item);
             }
@@ -158,7 +156,7 @@ namespace SME.CDEP.TesteIntegracao
             await servicoAcervoSolicitacao.AlterarDataVisitaDoItemAtendimento(new AlterarDataVisitaAcervoSolicitacaoItemDTO()
             {
                 Id = 1,
-                DataVisita = DateTimeExtension.HorarioBrasilia().Date.AddDays(10)
+                DataVisita = DataHelper.ProximaDataUtil(DateTime.Now.AddDays(10))
             }).ShouldThrowAsync<NegocioException>();
         }
         
@@ -177,7 +175,7 @@ namespace SME.CDEP.TesteIntegracao
             foreach (var item in acervoSolicitacao.Itens)
             {
                 item.AcervoSolicitacaoId = 1;
-                item.DataVisita = DateTimeExtension.HorarioBrasilia().Date;
+                item.DataVisita = DataHelper.ProximaDataUtil(DateTime.Now);
                 item.Situacao = SituacaoSolicitacaoItem.FINALIZADO_AUTOMATICAMENTE;
                 await InserirNaBase(item);
             }
@@ -187,7 +185,7 @@ namespace SME.CDEP.TesteIntegracao
             await servicoAcervoSolicitacao.AlterarDataVisitaDoItemAtendimento(new AlterarDataVisitaAcervoSolicitacaoItemDTO()
             {
                 Id = 1,
-                DataVisita = DateTimeExtension.HorarioBrasilia().Date.AddDays(10)
+                DataVisita = DataHelper.ProximaDataUtil(DateTime.Now.AddDays(10))
             }).ShouldThrowAsync<NegocioException>();
         }
     }

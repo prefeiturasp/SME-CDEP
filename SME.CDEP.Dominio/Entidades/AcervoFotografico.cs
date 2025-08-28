@@ -1,4 +1,5 @@
 ﻿using SME.CDEP.Dominio.Enumerados;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace SME.CDEP.Dominio.Entidades
 {
@@ -19,6 +20,8 @@ namespace SME.CDEP.Dominio.Entidades
         public long CromiaId { get; set; }
         public string Resolucao { get; set; }
         public string TamanhoArquivo { get; set; }
+
+        [Column("situacao_acervo")]
         public SituacaoAcervo SituacaoAcervo { get; set; }
     }
 }

@@ -1,4 +1,5 @@
 ﻿using SME.CDEP.Dominio.Enumerados;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace SME.CDEP.Dominio.Entidades
 {
@@ -13,6 +14,8 @@ namespace SME.CDEP.Dominio.Entidades
         public string? Altura { get; set; }
         public string? Profundidade { get; set; }
         public string? Diametro { get; set; }
+
+        [Column("situacao_acervo")]
         public SituacaoAcervo SituacaoAcervo { get; set; }
     }
 }

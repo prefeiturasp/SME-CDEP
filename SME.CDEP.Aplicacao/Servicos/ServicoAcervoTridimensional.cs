@@ -64,7 +64,7 @@ namespace SME.CDEP.Aplicacao.Servicos
             
             var acervo = mapper.Map<Acervo>(acervoTridimensionalCadastroDto);
             acervo.TipoAcervoId = (int)TipoAcervo.Tridimensional;
-            acervo.SituacaoAcervo = SituacaoAcervo.Ativo;
+            acervo.Situacao = SituacaoAcervo.Ativo;
             acervo.Codigo = ObterCodigoAcervo(acervo.Codigo);
             
             var acervoTridimensional = mapper.Map<AcervoTridimensional>(acervoTridimensionalCadastroDto);
