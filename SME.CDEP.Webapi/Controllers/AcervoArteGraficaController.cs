@@ -1,5 +1,4 @@
-﻿using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using SME.CDEP.Aplicacao.DTOS;
 using SME.CDEP.Aplicacao.Servicos.Interface;
 using SME.CDEP.Infra.Dominio.Enumerados;

@@ -23,14 +23,14 @@ public class AcervoController: BaseController
     }
     
     [HttpGet]
-    [ProducesResponseType(typeof(PaginacaoResultadoDTO<IdTipoTituloCreditoAutoriaCodigoAcervoDTO>), 200)]
+    [ProducesResponseType(typeof(PaginacaoResultadoDTO<AcervoTableRowDTO>), 200)]
     [ProducesResponseType(typeof(RetornoBaseDTO), 400)]
     [ProducesResponseType(typeof(RetornoBaseDTO), 403)]
     [ProducesResponseType(typeof(RetornoBaseDTO), 601)]
     [Permissao(Permissao.CadastroAcervo_C, Policy = "Bearer")]
     public async Task<IActionResult> ObterTodosOuPorTipoTituloCreditoAutoriaTomboECodigo([FromQuery] FiltroTipoTituloCreditoAutoriaCodigoAcervoDTO filtro,[FromServices]IServicoAcervo servicoAcervo)
     {
-        return Ok(await servicoAcervo.ObterPorFiltro(filtro.TipoAcervo, filtro.Titulo, filtro.CreditoAutorId, filtro.Codigo));
+        return Ok(await servicoAcervo.ObterPorFiltro(filtro.TipoAcervo, filtro.Titulo, filtro.CreditoAutorId, filtro.Codigo, filtro.IdEditora));
     }
     
     [HttpGet("pesquisar-acervos")]

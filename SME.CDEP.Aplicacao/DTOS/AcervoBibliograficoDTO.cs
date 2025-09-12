@@ -1,5 +1,4 @@
-﻿using System.Runtime.CompilerServices;
-using SME.CDEP.Dominio.Entidades;
+﻿using SME.CDEP.Dominio.Enumerados;
 using SME.CDEP.Infra.Dominio.Enumerados;
 
 namespace SME.CDEP.Aplicacao.DTOS;
@@ -31,4 +30,6 @@ public class AcervoBibliograficoDTO
     public long[] CreditosAutoresIds { get; set; }
     public CoAutorDTO[]? CoAutores { get; set; }
     public SituacaoSaldo SituacaoSaldo { get; set; }
+    public SituacaoAcervo SituacaoAcervo { get; set; }
+
 }

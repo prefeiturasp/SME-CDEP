@@ -3,6 +3,7 @@ using SME.CDEP.Aplicacao.DTOS;
 using SME.CDEP.Aplicacao.Servicos.Interface;
 using SME.CDEP.Dominio.Constantes;
 using SME.CDEP.Dominio.Entidades;
+using SME.CDEP.Dominio.Enumerados;
 using SME.CDEP.Dominio.Extensions;
 using SME.CDEP.Infra.Dados;
 using SME.CDEP.Infra.Dados.Repositorios.Interfaces;
@@ -33,6 +34,7 @@ namespace SME.CDEP.Aplicacao.Servicos
         {
             var acervo = mapper.Map<Acervo>(acervoAudiovisualCadastroDto);
             acervo.TipoAcervoId = (int)TipoAcervo.Audiovisual;
+            acervo.Situacao = SituacaoAcervo.Ativo;
             acervo.Codigo = ObterCodigoAcervo(acervo.Codigo);
             
             var acervoAudiovisual = mapper.Map<AcervoAudiovisual>(acervoAudiovisualCadastroDto);

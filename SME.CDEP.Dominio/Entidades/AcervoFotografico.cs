@@ -1,4 +1,7 @@
-﻿namespace SME.CDEP.Dominio.Entidades
+﻿using SME.CDEP.Dominio.Enumerados;
+using System.ComponentModel.DataAnnotations.Schema;
+
+namespace SME.CDEP.Dominio.Entidades
 {
     public class AcervoFotografico : EntidadeBase
     {
@@ -17,5 +20,8 @@
         public long CromiaId { get; set; }
         public string Resolucao { get; set; }
         public string TamanhoArquivo { get; set; }
+
+        [Column("situacao_acervo")]
+        public SituacaoAcervo SituacaoAcervo { get; set; }
     }
 }

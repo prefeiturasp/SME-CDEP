@@ -33,7 +33,8 @@ namespace SME.CDEP.Infra.Dados.Repositorios
                                   a.codigo,
                                   a.tipo,
                                   ca.id,
-                                  ca.nome
+                                  ca.nome,
+                                  COALESCE(a.situacao, 1) as SituacaoAcervo
                         from acervo_fotografico af
                         join acervo a on a.id = af.acervo_id 
                         join acervo_credito_autor aca on aca.acervo_id = a.id
@@ -80,7 +81,8 @@ namespace SME.CDEP.Infra.Dados.Repositorios
                                af.formato_id as formatoId,
                                af.cromia_id as cromiaId,
                                af.resolucao,
-                               af.tamanho_arquivo as TamanhoArquivo
+                               af.tamanho_arquivo as TamanhoArquivo,
+                               COALESCE(a.situacao, 1) as SituacaoAcervo
                     from acervo_fotografico af
                     join acervo a on a.id = af.acervo_id  
                     where not a.excluido 
@@ -160,7 +162,8 @@ namespace SME.CDEP.Infra.Dados.Repositorios
                                   fo.nome as formato,
                                   af.tamanho_arquivo as TamanhoArquivo,
                                   cro.nome as cromia,
-                                  af.resolucao
+                                  af.resolucao,
+                                  COALESCE(a.situacao, 1) as SituacaoAcervo
                         from acervo_fotografico af
                         join acervo a on a.id = af.acervo_id 
                         join conservacao c on c.id = af.conservacao_id

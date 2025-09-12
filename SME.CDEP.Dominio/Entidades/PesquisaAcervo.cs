@@ -1,4 +1,5 @@
-﻿using SME.CDEP.Infra.Dominio.Enumerados;
+﻿using SME.CDEP.Dominio.Enumerados;
+using SME.CDEP.Infra.Dominio.Enumerados;
 
 namespace SME.CDEP.Dominio.Entidades
 {
@@ -6,6 +7,7 @@ namespace SME.CDEP.Dominio.Entidades
     {
         public long AcervoId { get; set; }
         public string Codigo { get; set; }
+        public string Editora { get; set; }
         public TipoAcervo Tipo { get; set; }
         public string Titulo { get; set; }
         public string CreditoAutoria { get; set; }
@@ -13,6 +15,7 @@ namespace SME.CDEP.Dominio.Entidades
         public string Descricao { get; set; }
         public string Ano { get; set; }
         public SituacaoSaldo SituacaoSaldo { get; set; }
+        public SituacaoAcervo SituacaoAcervo { get; set; }
 
         public TipoAcervoTag TipoAcervoTag
         {
@@ -23,7 +26,7 @@ namespace SME.CDEP.Dominio.Entidades
                     case TipoAcervo.Bibliografico:
                         return TipoAcervoTag.Biblioteca;
                     
-                    case TipoAcervo.DocumentacaoHistorica:
+                    case TipoAcervo.DocumentacaoTextual:
                         return TipoAcervoTag.MemoriaDocumental;
                     
                     default:

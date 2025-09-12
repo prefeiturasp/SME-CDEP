@@ -1,4 +1,6 @@
-﻿namespace SME.CDEP.Dominio.Entidades
+﻿using SME.CDEP.Dominio.Enumerados;
+
+namespace SME.CDEP.Dominio.Entidades
 {
     public class AcervoArteGrafica : EntidadeBase
     {

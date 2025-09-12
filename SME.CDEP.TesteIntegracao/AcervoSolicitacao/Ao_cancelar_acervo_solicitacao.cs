@@ -39,12 +39,12 @@ namespace SME.CDEP.TesteIntegracao
                 item.AcervoSolicitacaoId = acervoSolicitadoId;
                 item.Situacao = SituacaoSolicitacaoItem.AGUARDANDO_VISITA;
                 item.TipoAtendimento = TipoAtendimento.Presencial;
-                item.DataVisita = DateTimeExtension.HorarioBrasilia().AddDays(15);
+                item.DataVisita = DataHelper.ProximaDataUtil(DateTime.Now.AddDays(15));
                 await InserirNaBase(item);
                 
                 await InserirNaBase(new Evento()
                 {
-                    Data = DateTimeExtension.HorarioBrasilia().AddDays(15),
+                    Data = DataHelper.ProximaDataUtil(DateTime.Now.AddDays(15)),
                     Tipo = TipoEvento.VISITA,
                     AcervoSolicitacaoItemId = itemCount,
                     Descricao = "Visita",
@@ -106,12 +106,12 @@ namespace SME.CDEP.TesteIntegracao
                 item.AcervoSolicitacaoId = acervoSolicitadoId;
                 item.Situacao = SituacaoSolicitacaoItem.AGUARDANDO_VISITA;
                 item.TipoAtendimento = TipoAtendimento.Presencial;
-                item.DataVisita = DateTimeExtension.HorarioBrasilia().AddDays(15);
+                item.DataVisita = DataHelper.ProximaDataUtil(DateTime.Now.AddDays(15));
                 await InserirNaBase(item);
                 
                 await InserirNaBase(new Evento()
                 {
-                    Data = DateTimeExtension.HorarioBrasilia().AddDays(15),
+                    Data = DataHelper.ProximaDataUtil(DateTime.Now.AddDays(15)),
                     Tipo = TipoEvento.VISITA,
                     AcervoSolicitacaoItemId = itemCount,
                     Descricao = "Visita",
@@ -213,7 +213,7 @@ namespace SME.CDEP.TesteIntegracao
             {
                 item.AcervoSolicitacaoId = acervoSolicitadoId;
                 item.Situacao = SituacaoSolicitacaoItem.AGUARDANDO_ATENDIMENTO;
-                item.DataVisita = DateTimeExtension.HorarioBrasilia().AddDays(5);
+                item.DataVisita = DataHelper.ProximaDataUtil(DateTime.Now.AddDays(5));
                 await InserirNaBase(item);
             }
             
@@ -313,7 +313,7 @@ namespace SME.CDEP.TesteIntegracao
                     await InserirNaBase(new Evento()
                     {
                         AcervoSolicitacaoItemId = contador,
-                        Data = DateTimeExtension.HorarioBrasilia(),
+                        Data = DataHelper.ProximaDataUtil(DateTime.Now),
                         Tipo = TipoEvento.VISITA,
                         Descricao = TipoEvento.VISITA.Descricao(),
                         CriadoPor = "Sistema", CriadoEm = DateTimeExtension.HorarioBrasilia(), CriadoLogin = "Sistema"

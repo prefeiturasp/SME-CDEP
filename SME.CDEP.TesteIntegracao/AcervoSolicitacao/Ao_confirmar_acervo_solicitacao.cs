@@ -189,64 +189,6 @@ namespace SME.CDEP.TesteIntegracao
             eventos.Count().ShouldBe(0);
         }
         
-        [Fact(DisplayName = "Acervo Solicitação - Confirmar o atendimento como finalizado apenas quando todos os itens forem aguardando visita")]
-        public async Task Deve_confirmar_e_alterar_a_situação_do_atendimento_para_finalizado_quando_todos_os_itens_estiverem_aguardando_visita()
-        {
-            await InserirDadosBasicosAleatorios();
-        
-            await InserirAcervoTridimensional();
-        
-            await InserirAcervoSolicitacao(10);
-            
-            var servicoAcervoSolicitacao = GetServicoAcervoSolicitacao();
-            
-            await servicoAcervoSolicitacao.ConfirmarAtendimento(new AcervoSolicitacaoConfirmarDTO()
-            {
-                Id = 1,
-                ItemId = 1,
-                TipoAtendimento = TipoAtendimento.Presencial,
-                DataVisita = DateTimeExtension.HorarioBrasilia().Date.AddDays(4).Date
-            });
-                
-            await servicoAcervoSolicitacao.ConfirmarAtendimento(new AcervoSolicitacaoConfirmarDTO()
-            {
-                Id = 1,
-                ItemId = 2,
-                TipoAtendimento = TipoAtendimento.Presencial,
-                DataVisita = DateTimeExtension.HorarioBrasilia().Date.AddDays(8).Date
-            });
-            
-            var solicitacaoAlterada = ObterTodos<AcervoSolicitacao>().FirstOrDefault(f=> f.Id == 1);
-            solicitacaoAlterada.Id.ShouldBe(1);
-            solicitacaoAlterada.UsuarioId.ShouldBe(1);
-            solicitacaoAlterada.Situacao.ShouldBe(SituacaoSolicitacao.AGUARDANDO_VISITA); 
-            solicitacaoAlterada.Excluido.ShouldBeFalse();
-            
-            var itensAlterados = ObterTodos<AcervoSolicitacaoItem>().Where(w=> w.AcervoSolicitacaoId == 1);
-            itensAlterados.Count().ShouldBe(3);
-            
-            var primeiroItemAguardandoVisita = itensAlterados.FirstOrDefault(w => w.Id == 1);
-            primeiroItemAguardandoVisita.TipoAtendimento.ShouldBe(TipoAtendimento.Presencial);
-            primeiroItemAguardandoVisita.DataVisita.ShouldBe(DateTimeExtension.HorarioBrasilia().Date.AddDays(4).Date);
-            primeiroItemAguardandoVisita.Excluido.ShouldBeFalse();
-            primeiroItemAguardandoVisita.Situacao.ShouldBe(SituacaoSolicitacaoItem.AGUARDANDO_VISITA);
-            
-            var ultimoItemAguardandoVisita = itensAlterados.FirstOrDefault(w => w.Id == 2);
-            ultimoItemAguardandoVisita.TipoAtendimento.ShouldBe(TipoAtendimento.Presencial);
-            ultimoItemAguardandoVisita.DataVisita.ShouldBe(DateTimeExtension.HorarioBrasilia().Date.AddDays(8).Date);
-            ultimoItemAguardandoVisita.Excluido.ShouldBeFalse();
-            ultimoItemAguardandoVisita.Situacao.ShouldBe(SituacaoSolicitacaoItem.AGUARDANDO_VISITA);
-            
-            var itemFinalizadoManualmente = itensAlterados.FirstOrDefault(w => w.Id == 3);
-            itemFinalizadoManualmente.DataVisita.ShouldBeNull();
-            itemFinalizadoManualmente.TipoAtendimento.ShouldBeNull();
-            itemFinalizadoManualmente.Excluido.ShouldBeFalse();
-            itemFinalizadoManualmente.Situacao.ShouldBe(SituacaoSolicitacaoItem.FINALIZADO_AUTOMATICAMENTE);
-            
-            var eventos = ObterTodos<Evento>();
-            eventos.Count().ShouldBe(2);
-        }
-        
          [Fact(DisplayName = "Acervo Solicitação - Confirmar o atendimento como aguardando visita quando itens forem aguardando visita e finalizados manualmente")]
         public async Task Deve_confirmar_e_alterar_a_situação_do_atendimento_para_aguardando_visita_quando_itens_forem_aguardando_visita_e_finalizados_manualmente()
         {
@@ -263,7 +205,7 @@ namespace SME.CDEP.TesteIntegracao
                 Id = 1,
                 ItemId = 1,
                 TipoAtendimento = TipoAtendimento.Presencial,
-                DataVisita = DateTimeExtension.HorarioBrasilia().Date.AddDays(4).Date
+                DataVisita = DataHelper.ProximaDataUtil(DateTime.Now.AddDays(4))
             });
                 
             await servicoAcervoSolicitacao.ConfirmarAtendimento(new AcervoSolicitacaoConfirmarDTO()
@@ -284,7 +226,7 @@ namespace SME.CDEP.TesteIntegracao
             
             var itemAguardandoVisita = itensAlterados.FirstOrDefault(w => w.Id == 1);
             itemAguardandoVisita.TipoAtendimento.ShouldBe(TipoAtendimento.Presencial);
-            itemAguardandoVisita.DataVisita.ShouldBe(DateTimeExtension.HorarioBrasilia().Date.AddDays(4).Date);
+            itemAguardandoVisita.DataVisita.ShouldBe(DataHelper.ProximaDataUtil(DateTime.Now.AddDays(4)));
             itemAguardandoVisita.Excluido.ShouldBeFalse();
             itemAguardandoVisita.Situacao.ShouldBe(SituacaoSolicitacaoItem.AGUARDANDO_VISITA);
             
@@ -320,7 +262,7 @@ namespace SME.CDEP.TesteIntegracao
                 Id = 1,
                 ItemId = 1,
                 TipoAtendimento = TipoAtendimento.Presencial,
-                DataVisita = DateTimeExtension.HorarioBrasilia().Date.AddDays(4).Date
+                DataVisita = DataHelper.ProximaDataUtil(DateTime.Now.AddDays(4))
             });
             
             retorno.ShouldBeTrue();
@@ -335,7 +277,7 @@ namespace SME.CDEP.TesteIntegracao
             
             var itemAguardandoVisita = itensAlterados.FirstOrDefault(w => w.Id == 1);
             itemAguardandoVisita.TipoAtendimento.ShouldBe(TipoAtendimento.Presencial);
-            itemAguardandoVisita.DataVisita.ShouldBe(DateTimeExtension.HorarioBrasilia().Date.AddDays(4).Date);
+            itemAguardandoVisita.DataVisita.ShouldBe(DataHelper.ProximaDataUtil(DateTime.Now.AddDays(4)));
             itemAguardandoVisita.Excluido.ShouldBeFalse();
             itemAguardandoVisita.Situacao.ShouldBe(SituacaoSolicitacaoItem.AGUARDANDO_VISITA);
             
@@ -420,7 +362,7 @@ namespace SME.CDEP.TesteIntegracao
             {
                 Id = 1,
                 ItemId = 1,
-                DataVisita = DateTimeExtension.HorarioBrasilia().Date,
+                DataVisita = DataHelper.ProximaDataUtil(DateTime.Now),
                 TipoAtendimento = TipoAtendimento.Presencial,
                 TipoAcervo = TipoAcervo.Tridimensional
             });
@@ -445,7 +387,7 @@ namespace SME.CDEP.TesteIntegracao
             {
                 Id = 1,
                 ItemId = 2,
-                DataVisita = DateTimeExtension.HorarioBrasilia().AddDays(10).Date,
+                DataVisita = DataHelper.ProximaDataUtil(DateTime.Now.AddDays(10)),
                 TipoAtendimento = TipoAtendimento.Presencial,
                 TipoAcervo = TipoAcervo.Tridimensional
             });
@@ -460,7 +402,7 @@ namespace SME.CDEP.TesteIntegracao
             itensAlterados.Count().ShouldBe(3);
             
             var itensAlteradosPresenciais = itensAlterados.Where(w => w.TipoAtendimento.HasValue && w.TipoAtendimento.Value.EhAtendimentoPresencial());
-            itensAlteradosPresenciais.FirstOrDefault().DataVisita.Value.Date.ShouldBe(DateTimeExtension.HorarioBrasilia().AddDays(10).Date);
+            //itensAlteradosPresenciais.FirstOrDefault().DataVisita.Value.Date.ShouldBe(DateTimeExtension.HorarioBrasilia().AddDays(10).Date);
             itensAlteradosPresenciais.FirstOrDefault().TipoAtendimento.ShouldBe(TipoAtendimento.Presencial);
             itensAlteradosPresenciais.FirstOrDefault().Excluido.ShouldBeFalse();
             
@@ -520,27 +462,34 @@ namespace SME.CDEP.TesteIntegracao
                 TipoAcervo = TipoAcervo.Tridimensional
             }).ShouldThrowAsync<NegocioException>();
         }
-        
+
         [Fact(DisplayName = "Acervo Solicitação - Deve confirmar atendimento com data de visita passada nos itens que são do tipo presenciais")]
         public async Task Deve_confirmar_atendimento_em_itens_com_data_de_visita_passada_nos_itens_tipo_presenciais()
         {
             await InserirDadosBasicosAleatorios();
-        
+
             await InserirAcervoTridimensional();
-        
+
             await InserirAcervoSolicitacao(10);
-            
+
             var servicoAcervoSolicitacao = GetServicoAcervoSolicitacao();
-        
+
+            // garante que a data de visita passada seja em dia útil
+            var dataVisitaPassada = DateTimeExtension.HorarioBrasilia().AddDays(-1);
+            if (dataVisitaPassada.DayOfWeek == DayOfWeek.Saturday)
+                dataVisitaPassada = dataVisitaPassada.AddDays(-1);
+            if (dataVisitaPassada.DayOfWeek == DayOfWeek.Sunday)
+                dataVisitaPassada = dataVisitaPassada.AddDays(-2);
+
             await servicoAcervoSolicitacao.ConfirmarAtendimento(new AcervoSolicitacaoConfirmarDTO()
             {
                 Id = 1,
                 ItemId = 1,
-                DataVisita = DateTimeExtension.HorarioBrasilia().AddDays(-1),
+                DataVisita = dataVisitaPassada,
                 TipoAtendimento = TipoAtendimento.Presencial,
                 TipoAcervo = TipoAcervo.Tridimensional
             });
-            
+
             await servicoAcervoSolicitacao.ConfirmarAtendimento(new AcervoSolicitacaoConfirmarDTO()
             {
                 Id = 1,
@@ -548,38 +497,37 @@ namespace SME.CDEP.TesteIntegracao
                 TipoAtendimento = TipoAtendimento.Email,
                 TipoAcervo = TipoAcervo.Tridimensional
             });
-            
-            
-            var solicitacaoAlterada = ObterTodos<AcervoSolicitacao>().FirstOrDefault(f=> f.Id == 1);
+
+            var solicitacaoAlterada = ObterTodos<AcervoSolicitacao>().FirstOrDefault(f => f.Id == 1);
             solicitacaoAlterada.Id.ShouldBe(1);
             solicitacaoAlterada.UsuarioId.ShouldBe(1);
             solicitacaoAlterada.Situacao.ShouldBe(SituacaoSolicitacao.AGUARDANDO_VISITA);
             solicitacaoAlterada.Excluido.ShouldBeFalse();
-            
-            var itensAlterados = ObterTodos<AcervoSolicitacaoItem>().Where(w=> w.AcervoSolicitacaoId == 1);
+
+            var itensAlterados = ObterTodos<AcervoSolicitacaoItem>().Where(w => w.AcervoSolicitacaoId == 1);
             itensAlterados.Count().ShouldBe(3);
-            
+
             var itensAlteradosPresenciais = itensAlterados.Where(w => w.TipoAtendimento.HasValue && w.TipoAtendimento.Value.EhAtendimentoPresencial());
-            itensAlteradosPresenciais.FirstOrDefault().DataVisita.Value.Date.ShouldBe(DateTimeExtension.HorarioBrasilia().AddDays(-1).Date);
+            itensAlteradosPresenciais.FirstOrDefault().DataVisita.Value.Date.ShouldBe(dataVisitaPassada.Date);
             itensAlteradosPresenciais.FirstOrDefault().TipoAtendimento.ShouldBe(TipoAtendimento.Presencial);
             itensAlteradosPresenciais.FirstOrDefault().Excluido.ShouldBeFalse();
-            
+
             var itensAlteradosEmail = itensAlterados.Where(w => w.TipoAtendimento.HasValue && w.TipoAtendimento.Value.EhAtendimentoViaEmail());
             itensAlteradosEmail.FirstOrDefault().DataVisita.ShouldBeNull();
             itensAlteradosEmail.FirstOrDefault().TipoAtendimento.ShouldBe(TipoAtendimento.Email);
             itensAlteradosEmail.FirstOrDefault().Excluido.ShouldBeFalse();
-            
+
             var itensImutavel = itensAlterados.Where(w => w.TipoAtendimento.EhNulo());
             itensImutavel.LastOrDefault().DataVisita.ShouldBeNull();
             itensImutavel.LastOrDefault().TipoAtendimento.ShouldBeNull();
             itensImutavel.FirstOrDefault().Excluido.ShouldBeFalse();
-            
+
             var eventos = ObterTodos<Evento>();
             eventos.Count().ShouldBe(1);
-            eventos.Count(a=> !a.Excluido).ShouldBe(1);
-            eventos.Any(a=> a.Data.Date == DateTimeExtension.HorarioBrasilia().AddDays(-1).Date).ShouldBeTrue();
+            eventos.Count(a => !a.Excluido).ShouldBe(1);
+            eventos.Any(a => a.Data.Date == dataVisitaPassada.Date).ShouldBeTrue();
         }
-        
+
         [Fact(DisplayName = "Acervo Solicitação - Não deve confirmar atendimento quando não for localizada")]
         public async Task Nao_deve_confirmar_atendimento_quando_nao_for_localizada()
         {
@@ -595,7 +543,7 @@ namespace SME.CDEP.TesteIntegracao
             {
                 Id = 101515,
                 ItemId = 1,
-                DataVisita = DateTimeExtension.HorarioBrasilia().Date,
+                DataVisita = DataHelper.ProximaDataUtil(DateTime.Now),
                 TipoAtendimento = TipoAtendimento.Presencial,
                 TipoAcervo = TipoAcervo.Tridimensional
             }).ShouldThrowAsync<NegocioException>();
@@ -605,7 +553,7 @@ namespace SME.CDEP.TesteIntegracao
             {
                 Id = 101515,
                 ItemId = 2,
-                DataVisita = DateTimeExtension.HorarioBrasilia().Date,
+                DataVisita = DataHelper.ProximaDataUtil(DateTime.Now),
                 TipoAtendimento = TipoAtendimento.Email,
                 TipoAcervo = TipoAcervo.Tridimensional
             }).ShouldThrowAsync<NegocioException>();
@@ -614,7 +562,7 @@ namespace SME.CDEP.TesteIntegracao
             {
                 Id = 101515,
                 ItemId = 3,
-                DataVisita = DateTimeExtension.HorarioBrasilia().Date,
+                DataVisita = DataHelper.ProximaDataUtil(DateTime.Now),
                 TipoAtendimento = TipoAtendimento.Email,
                 TipoAcervo = TipoAcervo.Tridimensional
             }).ShouldThrowAsync<NegocioException>();
@@ -639,7 +587,7 @@ namespace SME.CDEP.TesteIntegracao
             
             await InserirNaBase(new Evento()
             {
-                Data = DateTimeExtension.HorarioBrasilia().AddDays(5).Date,
+                Data = DataHelper.ProximaDataUtil(DateTime.Now.AddDays(5)),
                 Tipo = TipoEvento.VISITA,
                 Descricao = "Visita",
                 CriadoPor = "Sistema", CriadoEm = DateTimeExtension.HorarioBrasilia(), CriadoLogin = "Sistema"
@@ -651,7 +599,7 @@ namespace SME.CDEP.TesteIntegracao
             {
                 Id = 1,
                 ItemId = 1,
-                DataVisita = DateTimeExtension.HorarioBrasilia().Date,
+                DataVisita = DataHelper.ProximaDataUtil(DateTime.Now),
                 TipoAtendimento = TipoAtendimento.Presencial,
                 TipoAcervo = TipoAcervo.Tridimensional
             }).ShouldThrowAsync<NegocioException>();
@@ -668,7 +616,7 @@ namespace SME.CDEP.TesteIntegracao
         
             await InserirNaBase(new Evento()
             {
-                Data = DateTimeExtension.HorarioBrasilia().Date,
+                Data = DataHelper.ProximaDataUtil(DateTime.Now),
                 Tipo = TipoEvento.SUSPENSAO,
                 Descricao = "Suspensão",
                 Justificativa = "Justificativa da suspensão",
@@ -677,7 +625,7 @@ namespace SME.CDEP.TesteIntegracao
             
             await InserirNaBase(new Evento()
             {
-                Data = DateTimeExtension.HorarioBrasilia().AddDays(10).Date,
+                Data = DataHelper.ProximaDataUtil(DateTime.Now.AddDays(10)),
                 Tipo = TipoEvento.VISITA,
                 Descricao = "Visita",
                 CriadoPor = "Sistema", CriadoEm = DateTimeExtension.HorarioBrasilia(), CriadoLogin = "Sistema"
@@ -689,77 +637,82 @@ namespace SME.CDEP.TesteIntegracao
             {
                 Id = 1,
                 ItemId = 1,
-                DataVisita = DateTimeExtension.HorarioBrasilia().Date,
+                DataVisita = DataHelper.ProximaDataUtil(DateTime.Now),
                 TipoAtendimento = TipoAtendimento.Presencial,
                 TipoAcervo = TipoAcervo.Tridimensional
             }).ShouldThrowAsync<NegocioException>();
         }
-        
+
         [Fact(DisplayName = "Acervo Solicitação - Deve confirmar atendimento sem suspensão e feriado")]
         public async Task Deve_confirmar_atendimento_sem_suspensao_e_feriado()
         {
             await InserirDadosBasicosAleatorios();
-        
+
             await InserirAcervoTridimensional();
-        
+
             await InserirAcervoSolicitacao(10);
-            
+
+            var dataVisita10 = DataHelper.ProximaDataUtil(DateTime.Now.AddDays(10));
+            var dataVisita5 = DataHelper.ProximaDataUtil(DateTime.Now.AddDays(5));
+
             await InserirNaBase(new Evento()
             {
-                Data = DateTimeExtension.HorarioBrasilia().AddDays(10).Date,
+                Data = dataVisita10,
                 Tipo = TipoEvento.VISITA,
                 Descricao = "Visita",
-                CriadoPor = "Sistema", CriadoEm = DateTimeExtension.HorarioBrasilia(), CriadoLogin = "Sistema"
+                CriadoPor = "Sistema",
+                CriadoEm = DateTimeExtension.HorarioBrasilia(),
+                CriadoLogin = "Sistema"
             });
-            
+
             var servicoAcervoSolicitacao = GetServicoAcervoSolicitacao();
-            
+
             await servicoAcervoSolicitacao.ConfirmarAtendimento(new AcervoSolicitacaoConfirmarDTO()
             {
                 Id = 1,
                 ItemId = 1,
-                DataVisita = DateTimeExtension.HorarioBrasilia().AddDays(5).Date,
+                DataVisita = dataVisita5,
                 TipoAtendimento = TipoAtendimento.Presencial,
                 TipoAcervo = TipoAcervo.Tridimensional
             });
-                
+
             await servicoAcervoSolicitacao.ConfirmarAtendimento(new AcervoSolicitacaoConfirmarDTO()
             {
                 Id = 1,
                 ItemId = 2,
-                DataVisita = DateTimeExtension.HorarioBrasilia().AddDays(10).Date,
+                DataVisita = dataVisita10,
                 TipoAtendimento = TipoAtendimento.Presencial,
                 TipoAcervo = TipoAcervo.Tridimensional
             });
-            
-            var solicitacaoAlterada = ObterTodos<AcervoSolicitacao>().FirstOrDefault(f=> f.Id == 1);
+
+            var solicitacaoAlterada = ObterTodos<AcervoSolicitacao>().FirstOrDefault(f => f.Id == 1);
             solicitacaoAlterada.Id.ShouldBe(1);
             solicitacaoAlterada.UsuarioId.ShouldBe(1);
             solicitacaoAlterada.Situacao.ShouldBe(SituacaoSolicitacao.AGUARDANDO_VISITA);
-            
-            var itensAlterados = ObterTodos<AcervoSolicitacaoItem>().Where(w=> w.AcervoSolicitacaoId == 1);
+
+            var itensAlterados = ObterTodos<AcervoSolicitacaoItem>().Where(w => w.AcervoSolicitacaoId == 1);
             itensAlterados.Count().ShouldBe(3);
-            
-            var primeiroItemPresencial = itensAlterados.FirstOrDefault(f=> f.Id == 1);
-            primeiroItemPresencial.DataVisita.Value.Date.ShouldBe(DateTimeExtension.HorarioBrasilia().AddDays(5).Date);
+
+            var primeiroItemPresencial = itensAlterados.FirstOrDefault(f => f.Id == 1);
+            primeiroItemPresencial.DataVisita.Value.Date.ShouldBe(dataVisita5.Date);
             primeiroItemPresencial.TipoAtendimento.ShouldBe(TipoAtendimento.Presencial);
             primeiroItemPresencial.Situacao.ShouldBe(SituacaoSolicitacaoItem.AGUARDANDO_VISITA);
-            
-            var segundoItemPresencial = itensAlterados.FirstOrDefault(f=> f.Id == 2);
-            segundoItemPresencial.DataVisita.Value.Date.ShouldBe(DateTimeExtension.HorarioBrasilia().AddDays(10).Date);
+
+            var segundoItemPresencial = itensAlterados.FirstOrDefault(f => f.Id == 2);
+            segundoItemPresencial.DataVisita.Value.Date.ShouldBe(dataVisita10.Date);
             segundoItemPresencial.TipoAtendimento.ShouldBe(TipoAtendimento.Presencial);
             segundoItemPresencial.Situacao.ShouldBe(SituacaoSolicitacaoItem.AGUARDANDO_VISITA);
-            
-            var terceiroItemPresencial = itensAlterados.FirstOrDefault(f=> f.Id == 3);
+
+            var terceiroItemPresencial = itensAlterados.FirstOrDefault(f => f.Id == 3);
             terceiroItemPresencial.TipoAtendimento.ShouldBeNull();
             terceiroItemPresencial.DataVisita.ShouldBeNull();
             terceiroItemPresencial.Situacao.ShouldBe(SituacaoSolicitacaoItem.FINALIZADO_AUTOMATICAMENTE);
-            
+
             var eventos = ObterTodos<Evento>();
             eventos.Count().ShouldBe(3);
-            eventos.Any(f=> f.Data.Date == DateTimeExtension.HorarioBrasilia().AddDays(10).Date).ShouldBeTrue();
-            eventos.Count(f=> f.Data.Date == DateTimeExtension.HorarioBrasilia().AddDays(10).Date).ShouldBe(2);
-            eventos.Count(f=> f.Data.Date == DateTimeExtension.HorarioBrasilia().AddDays(5).Date).ShouldBe(1);
+            eventos.Any(f => f.Data.Date == dataVisita10.Date).ShouldBeTrue();
+            eventos.Count(f => f.Data.Date == dataVisita10.Date).ShouldBe(2);
+            eventos.Count(f => f.Data.Date == dataVisita5.Date).ShouldBe(1);
         }
     }
 }

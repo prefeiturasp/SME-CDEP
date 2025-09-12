@@ -3,6 +3,7 @@ using SME.CDEP.Aplicacao.DTOS;
 using SME.CDEP.Aplicacao.Servicos.Interface;
 using SME.CDEP.Dominio.Constantes;
 using SME.CDEP.Dominio.Entidades;
+using SME.CDEP.Dominio.Enumerados;
 using SME.CDEP.Dominio.Excecoes;
 using SME.CDEP.Dominio.Extensions;
 using SME.CDEP.Infra.Dados;
@@ -43,8 +44,9 @@ namespace SME.CDEP.Aplicacao.Servicos
             var assuntosSelecionados =  await repositorioAssunto.ObterPorIds(acervoBibliograficoCadastroDto.AssuntosIds);
             
             var acervo = mapper.Map<Acervo>(acervoBibliograficoCadastroDto);
+            acervo.Situacao = Dominio.Enumerados.SituacaoAcervo.Ativo;
             acervo.TipoAcervoId = (int)TipoAcervo.Bibliografico;
-            
+
             var acervoBibliografico = mapper.Map<AcervoBibliografico>(acervoBibliograficoCadastroDto);
             
             var tran = transacao.Iniciar();

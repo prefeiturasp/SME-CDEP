@@ -35,4 +35,5 @@ public class AcervoDocumentalCadastroDTO : AcervoCadastroDTO
     public long[]? Arquivos { get; set; }
     
     public long[] AcessoDocumentosIds { get; set; }
+    public string? CapaDocumento { get; set; }
 }

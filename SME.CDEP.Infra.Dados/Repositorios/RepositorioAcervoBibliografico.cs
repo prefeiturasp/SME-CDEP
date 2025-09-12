@@ -55,7 +55,7 @@ namespace SME.CDEP.Infra.Dados.Repositorios
         
         public async Task<AcervoBibliograficoCompleto> ObterAcervoBibliograficoCompletoPorId(long id)
         {
-            var query =  @"select  a.id as AcervoId,
+            var query = @"select  a.id as AcervoId,
                                    a.titulo,
                                    a.subTitulo,
                                    a.codigo, 
@@ -83,7 +83,8 @@ namespace SME.CDEP.Infra.Dados.Repositorios
                                    ab.material_id as MaterialId,
                                    ab.editora_id as EditoraId,
                                    ab.serie_colecao_id as SerieColecaoId,
-                                   ab.situacao_saldo as situacaoSaldo
+                                   ab.situacao_saldo as situacaoSaldo,
+                                   COALESCE(a.situacao, 1) as SituacaoAcervo
                         from acervo_bibliografico ab
                             join acervo a on a.id = ab.acervo_id 
                             join idioma i on i.id = ab.idioma_id                          

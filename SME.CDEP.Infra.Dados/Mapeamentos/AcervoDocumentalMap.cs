@@ -20,6 +20,7 @@ namespace SME.CDEP.Infra.Dados.Mapeamentos
             Map(c => c.CopiaDigital).ToColumn("copia_digital");
             Map(c => c.ConservacaoId).ToColumn("conservacao_id");
             Map(c => c.Excluido).Ignore();
+            Map(c => c.CapaDocumento).ToColumn("capa_documento");
         }
     }
 }

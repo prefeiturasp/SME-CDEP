@@ -27,7 +27,8 @@ namespace SME.CDEP.Infra.Dados.Repositorios
                                   a.codigo,
                                   a.tipo,
                                   ca.id,
-                                  ca.nome
+                                  ca.nome,
+                                  COALESCE(a.situacao, 1) as SituacaoAcervo       
                         from acervo_tridimensional at
                         join acervo a on a.id = at.acervo_id 
                         join acervo_credito_autor aca on aca.acervo_id = a.id
@@ -68,7 +69,8 @@ namespace SME.CDEP.Infra.Dados.Repositorios
                                   at.largura,
                                   at.altura,
                                   at.profundidade,
-                                  at.diametro
+                                  at.diametro,
+                                  COALESCE(a.situacao, 1) as SituacaoAcervo       
                         from acervo_tridimensional at
                         join acervo a on a.id = at.acervo_id  
                         where not a.excluido 
@@ -118,7 +120,8 @@ namespace SME.CDEP.Infra.Dados.Repositorios
                                   at.largura,
                                   at.altura,
                                   at.profundidade,
-                                  at.diametro
+                                  at.diametro,
+                                  COALESCE(a.situacao, 1) as SituacaoAcervo       
                         from acervo_tridimensional at
                         join acervo a on a.id = at.acervo_id 
                         join conservacao c on c.id = at.conservacao_id 
