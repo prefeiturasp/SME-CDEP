@@ -124,7 +124,7 @@ namespace SME.CDEP.Infra.Servicos.ServicoArmazenamento
                 ? configuracaoArmazenamentoOptions.BucketTemp
                 : configuracaoArmazenamentoOptions.BucketArquivos;
 
-            return ObterUrl(nomeArquivo, bucketNome);
+            return await Task.Run(() => ObterUrl(nomeArquivo, bucketNome));
         }
 
         private string ObterUrl(string nomeArquivo, string bucketName)
@@ -136,7 +136,7 @@ namespace SME.CDEP.Infra.Servicos.ServicoArmazenamento
         {
             try
             {
-                var bucket = nomeBucket.NaoEstaPreenchido()
+                var bucket = string.IsNullOrWhiteSpace(nomeBucket)
                 ? configuracaoArmazenamentoOptions.BucketArquivos
                 : nomeBucket;
 
