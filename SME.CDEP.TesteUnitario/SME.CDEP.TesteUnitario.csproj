@@ -1,0 +1,40 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net8.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+
+    <IsPackable>false</IsPackable>
+    <IsTestProject>true</IsTestProject>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Bogus" Version="34.0.2" />
+    <PackageReference Include="BouncyCastle.Cryptography" Version="2.6.2" />
+    <PackageReference Include="coverlet.collector" Version="6.0.0" />
+    <PackageReference Include="FluentAssertions" Version="8.5.0" />
+    <PackageReference Include="Microsoft.IdentityModel.JsonWebTokens" Version="7.7.1" />
+    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.8.0" />
+    <PackageReference Include="MimeKit" Version="4.7.1" />
+    <PackageReference Include="Moq" Version="4.20.69" />
+    <PackageReference Include="Npgsql" Version="7.0.7" />
+    <PackageReference Include="Swashbuckle.AspNetCore.SwaggerUI" Version="6.3.0" />
+    <PackageReference Include="System.IdentityModel.Tokens.Jwt" Version="7.7.1" />
+    <PackageReference Include="System.IO.Packaging" Version="6.0.1" />
+    <PackageReference Include="System.Net.Security" Version="4.0.1" />
+    <PackageReference Include="xunit" Version="2.5.3" />
+    <PackageReference Include="xunit.runner.visualstudio" Version="2.5.3" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\SME.CDEP.Aplicacao\SME.CDEP.Aplicacao.csproj" />
+    <ProjectReference Include="..\SME.CDEP.Infra.Dados\SME.CDEP.Infra.Dados.csproj" />
+    <ProjectReference Include="..\SME.CDEP.Webapi\SME.CDEP.Webapi.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Using Include="Xunit" />
+  </ItemGroup>
+
+</Project>

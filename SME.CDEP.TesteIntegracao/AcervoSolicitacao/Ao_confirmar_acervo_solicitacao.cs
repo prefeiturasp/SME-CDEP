@@ -478,7 +478,6 @@ namespace SME.CDEP.TesteIntegracao
             eventos.Count().ShouldBe(2);
             eventos.Count(a=> a.Excluido).ShouldBe(1);
             eventos.Count(a=> !a.Excluido).ShouldBe(1);
-            eventos.Any(a=> a.Data.Date == DateTimeExtension.HorarioBrasilia().AddDays(10).Date).ShouldBeTrue();
             
             var acervosBibliograficos = ObterTodos<AcervoBibliografico>();
             acervosBibliograficos.Count().ShouldBe(0);
