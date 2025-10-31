@@ -30,12 +30,12 @@ namespace SME.CDEP.Aplicacao.Servicos
 
         public async Task<bool> RemoverLinhaDoArquivo(long id, LinhaDTO linhaDoArquivo)
         {
-            return await RemoverLinhaDoArquivo<AcervoDocumentalLinhaDTO>(id, linhaDoArquivo, TipoAcervo.DocumentacaoHistorica);
+            return await RemoverLinhaDoArquivo<AcervoDocumentalLinhaDTO>(id, linhaDoArquivo, TipoAcervo.DocumentacaoTextual);
         }
         
         public async Task<bool> AtualizarLinhaParaSucesso(long id, LinhaDTO linhaDoArquivo)
         {
-            var conteudo = await ValidacoesImportacaoArquivo<AcervoDocumentalLinhaDTO>(id, linhaDoArquivo.NumeroLinha, TipoAcervo.DocumentacaoHistorica);
+            var conteudo = await ValidacoesImportacaoArquivo<AcervoDocumentalLinhaDTO>(id, linhaDoArquivo.NumeroLinha, TipoAcervo.DocumentacaoTextual);
             
             var novoConteudo = conteudo.FirstOrDefault(w => w.NumeroLinha.SaoIguais(linhaDoArquivo.NumeroLinha));
             novoConteudo.DefinirLinhaComoSucesso();
@@ -49,7 +49,7 @@ namespace SME.CDEP.Aplicacao.Servicos
         
         public async Task<ImportacaoArquivoRetornoDTO<AcervoLinhaErroDTO<AcervoDocumentalDTO,AcervoDocumentalLinhaRetornoDTO>,AcervoLinhaRetornoSucessoDTO>> ObterImportacaoPendente()
         {
-            var arquivoImportado = await repositorioImportacaoArquivo.ObterUltimaImportacao(TipoAcervo.DocumentacaoHistorica);
+            var arquivoImportado = await repositorioImportacaoArquivo.ObterUltimaImportacao(TipoAcervo.DocumentacaoTextual);
             
             if (arquivoImportado.EhNulo())
                 return default;
@@ -73,7 +73,7 @@ namespace SME.CDEP.Aplicacao.Servicos
         
             var acervosDocumentalLinhas = await LerPlanilha(file);
 
-            var importacaoArquivo = ObterImportacaoArquivoParaSalvar(file.FileName, TipoAcervo.DocumentacaoHistorica, JsonConvert.SerializeObject(acervosDocumentalLinhas));
+            var importacaoArquivo = ObterImportacaoArquivoParaSalvar(file.FileName, TipoAcervo.DocumentacaoTextual, JsonConvert.SerializeObject(acervosDocumentalLinhas));
             
             var importacaoArquivoId = await PersistirImportacao(importacaoArquivo);
             

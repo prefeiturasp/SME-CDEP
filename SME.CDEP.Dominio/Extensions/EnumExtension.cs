@@ -7,7 +7,7 @@ namespace SME.CDEP.Dominio.Extensions
     {
         public static bool EhAcervoDocumental(this TipoAcervo tipoAcervo)
         {
-            return tipoAcervo == TipoAcervo.DocumentacaoHistorica; 
+            return tipoAcervo == TipoAcervo.DocumentacaoTextual; 
         }
         
         public static bool NaoEhAcervoDocumental(this TipoAcervo tipoAcervo)
@@ -32,7 +32,7 @@ namespace SME.CDEP.Dominio.Extensions
                 case TipoAcervo.Bibliografico:
                     return Constantes.Constantes.PLANILHA_ACERVO_BIBLIOGRAFICO;
                 
-                case TipoAcervo.DocumentacaoHistorica:
+                case TipoAcervo.DocumentacaoTextual:
                     return Constantes.Constantes.PLANILHA_ACERVO_DOCUMENTAL;
                 
                 case TipoAcervo.ArtesGraficas:

@@ -1,3 +1,4 @@
+using Minio.DataModel;
 using SME.CDEP.Infra.Servicos.ServicoArmazenamento.Interface;
 
 namespace SME.CDEP.TesteIntegracao.ServicosFakes
@@ -52,6 +53,16 @@ namespace SME.CDEP.TesteIntegracao.ServicosFakes
         private Task<string> ObterUrl(string nomeArquivo, string bucketName)
         {
             return Task.FromResult(string.Empty);
+        }
+
+        public Task<Stream?> ObterStream(string nomeArquivo, string? nomeBucket = null)
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task<ObjectStat?> ObterMetadadosObjeto(string nomeArquivo, string? nomeBucket = null)
+        {
+            throw new NotImplementedException();
         }
     }
 }

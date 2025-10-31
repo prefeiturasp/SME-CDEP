@@ -279,7 +279,7 @@ public class Constantes
     public const string PERFIL_BASICO_GUID = "064B3481-439B-4C67-8C88-5D1F1E9B91CE";
     public const string PERFIL_ADMIN_MEMORIA_GUID = "35F9D620-49A8-446A-8A75-0A0D26EBD79D";
     public const string PERFIL_ADMIN_MEMORIAL_GUID = "89C9D50D-B73B-4DDE-B870-7685FCD88B0C";
-        
+    
     public const string CLAIM_PERMISSAO = "http://schemas.microsoft.com/ws/2008/06/identity/claims/role";
     public const string CLAIMS = "Claims";
     public const string EXPRESSAO_TAG_BR = @"<br[^>]*>";
@@ -303,4 +303,10 @@ public class Constantes
     public const string ASSUNTOS = "Assuntos";
 
     public const string PERMITIR_SOMENTE_NUMERAL_SEPARADO_POR_VIRGULA_DUAS_CASAS_DECIMAIS = @"^(\d+,\d{2})$";
+
+    #region Constantes Context Mapper
+
+    public const string PERFIL_USUARIO_LOGADO_DESABILITA_DATA_VISITA = "PerfilUsuarioLogadoDesabilitaDataVisita";
+
+    #endregion
 }

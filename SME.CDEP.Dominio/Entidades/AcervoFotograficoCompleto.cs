@@ -1,5 +1,6 @@
 ﻿using System.Runtime.CompilerServices;
 using SME.CDEP.Dominio.Entidades;
+using SME.CDEP.Dominio.Enumerados;
 using SME.CDEP.Infra.Dominio.Enumerados;
 
 namespace SME.CDEP.Dominio.Entidades;
@@ -28,4 +29,5 @@ public class AcervoFotograficoCompleto: EntidadeBaseAuditavel
     public string TamanhoArquivo { get; set; }
     public ArquivoResumido[] Arquivos  { get; set; }
     public long[] CreditosAutoresIds { get; set; }
+    public SituacaoAcervo SituacaoAcervo { get; set; }
 }

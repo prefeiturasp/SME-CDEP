@@ -1,4 +1,5 @@
 ﻿using SME.CDEP.Dominio.Constantes;
+using SME.CDEP.Dominio.Enumerados;
 using SME.CDEP.Infra.Dominio.Enumerados;
 
 namespace SME.CDEP.Dominio.Entidades
@@ -21,6 +22,7 @@ namespace SME.CDEP.Dominio.Entidades
         public SituacaoEmprestimo? SituacaoEmprestimo { get; set; }
         public bool TemControleDisponibilidade { get; set; }
         public string SituacaoDisponibilidade { get; set; }
+        public SituacaoAcervo SituacaoAcervo { get; set; }
 
         public string SituacaoSaldoDescricao()
         {

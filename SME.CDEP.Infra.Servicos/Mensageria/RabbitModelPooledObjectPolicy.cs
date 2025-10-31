@@ -1,9 +1,11 @@
 ﻿using Microsoft.Extensions.ObjectPool;
 using RabbitMQ.Client;
 using SME.CDEP.Infra.Servicos.Options;
+using System.Diagnostics.CodeAnalysis;
 
 namespace SME.CDEP.Infra.Servicos.Mensageria
 {
+    [ExcludeFromCodeCoverage]
     public class RabbitModelPooledObjectPolicy : IPooledObjectPolicy<IModel>
     {
         private readonly IConnection conexao;

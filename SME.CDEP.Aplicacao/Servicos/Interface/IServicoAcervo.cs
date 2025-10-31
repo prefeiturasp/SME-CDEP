@@ -8,12 +8,13 @@ namespace SME.CDEP.Aplicacao.Servicos.Interface
         Task<long> Inserir(Acervo acervo);
         Task<IEnumerable<AcervoDTO>> ObterTodos();
         Task<AcervoDTO> Alterar(AcervoDTO acervoDTO);
-        Task<AcervoDTO> Alterar(Acervo acervo);
+        Task<AcervoDTO> AlterarCreditoAutor(Acervo acervo);
         Task<AcervoDTO> ObterPorId(long acervoId);
         Task<bool> Excluir(long entidaId);
-        Task<PaginacaoResultadoDTO<IdTipoTituloCreditoAutoriaCodigoAcervoDTO>> ObterPorFiltro(int? tipoAcervo, string titulo, long? creditoAutorId, string codigo);
+        Task<PaginacaoResultadoDTO<AcervoTableRowDTO>> ObterPorFiltro(int? tipoAcervo, string titulo, long? creditoAutorId, string codigo, int? idEditora);
         Task<AcervoDetalheDTO> ObterDetalhamentoPorTipoAcervoECodigo(FiltroDetalharAcervoDTO filtro);
         Task<string> ObterTermoDeCompromisso();
         Task<IdNomeCodigoTipoParaEmprestimoDTO> PesquisarAcervoPorCodigoTombo(FiltroCodigoTomboDTO filtroCodigoTomboDto);
+        Task<string?> ObterImagemBase64(string nomeArquivo);
     }
 }

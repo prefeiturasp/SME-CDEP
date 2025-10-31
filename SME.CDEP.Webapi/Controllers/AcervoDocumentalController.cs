@@ -1,5 +1,4 @@
-﻿using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using SME.CDEP.Aplicacao.DTOS;
 using SME.CDEP.Aplicacao.Servicos.Interface;
 using SME.CDEP.Infra.Dominio.Enumerados;
@@ -9,7 +8,7 @@ namespace SME.CDEP.Webapi.Controllers;
 
 [ApiController]
 [ValidaDto]
-public class AcervoDocumentalController: BaseController
+public class AcervoDocumentalController : BaseController
 {
     [HttpPost]
     [ProducesResponseType(typeof(AcervoDocumentalCadastroDTO), 200)]
@@ -23,7 +22,7 @@ public class AcervoDocumentalController: BaseController
     {
         return Ok(await servicoArteDocumental.Inserir(acervoDocumental));
     }
-    
+
     [HttpPut]
     [ProducesResponseType(typeof(AcervoDocumentalDTO), 200)]
     [ProducesResponseType(typeof(RetornoBaseDTO), 400)]
@@ -36,18 +35,18 @@ public class AcervoDocumentalController: BaseController
     {
         return Ok(await servicoArteDocumental.Alterar(acervoDocumental));
     }
-    
+
     [HttpGet("{acervoId}")]
     [ProducesResponseType(typeof(AcervoDocumentalDTO), 200)]
     [ProducesResponseType(typeof(RetornoBaseDTO), 400)]
     [ProducesResponseType(typeof(RetornoBaseDTO), 403)]
     [ProducesResponseType(typeof(RetornoBaseDTO), 601)]
     [Permissao(Permissao.CadastroAcervo_C, Policy = "Bearer")]
-    public async Task<IActionResult> ObterPorId([FromRoute] long acervoId,[FromServices] IServicoAcervoDocumental servicoArteDocumental)
+    public async Task<IActionResult> ObterPorId([FromRoute] long acervoId, [FromServices] IServicoAcervoDocumental servicoArteDocumental)
     {
         return Ok(await servicoArteDocumental.ObterPorId(acervoId));
     }
-    
+
     [HttpDelete("{acervoId}")]
     [ProducesResponseType(typeof(bool), 200)]
     [ProducesResponseType(typeof(RetornoBaseDTO), 400)]

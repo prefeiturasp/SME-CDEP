@@ -7,8 +7,8 @@ public enum TipoAcervo
     [Display(Description = "Bibliográfico")]
     Bibliografico = 1,
     
-    [Display(Description = "Documentação histórica")]
-    DocumentacaoHistorica = 2,
+    [Display(Description = "Documentação textual")]
+    DocumentacaoTextual = 2,
     
     [Display(Description = "Artes gráficas")]
     ArtesGraficas = 3,

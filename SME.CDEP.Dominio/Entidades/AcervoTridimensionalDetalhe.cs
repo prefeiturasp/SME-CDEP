@@ -1,4 +1,5 @@
-﻿using SME.CDEP.Dominio.Extensions;
+﻿using SME.CDEP.Dominio.Enumerados;
+using SME.CDEP.Dominio.Extensions;
 
 namespace SME.CDEP.Dominio.Entidades;
 
@@ -19,6 +20,7 @@ public class AcervoTridimensionalDetalhe
     public string? Profundidade { get; set; }
     public string? Diametro { get; set; }
     public IEnumerable<ImagemDetalhe> Imagens { get; set; }
+    public SituacaoAcervo SituacaoAcervo { get; set; }
     public string Dimensoes
     {
         get

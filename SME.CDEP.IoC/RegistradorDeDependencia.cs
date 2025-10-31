@@ -11,6 +11,8 @@ using SME.CDEP.Aplicacao.Integracoes.Interfaces;
 using SME.CDEP.Aplicacao.Mapeamentos;
 using SME.CDEP.Aplicacao.Servicos;
 using SME.CDEP.Aplicacao.Servicos.Interface;
+using SME.CDEP.Aplicacao.UseCase;
+using SME.CDEP.Aplicacao.UseCase.Interface;
 using SME.CDEP.Infra.Dados;
 using SME.CDEP.Infra.Dados.Mapeamentos;
 using SME.CDEP.Infra.Dados.Repositorios;
@@ -272,6 +274,11 @@ public class RegistradorDeDependencia
         _serviceCollection.TryAddScoped<IServicoMensageria, ServicoMensageria>();
         _serviceCollection.TryAddScoped<IServicoNotificacaoEmail, ServicoNotificacaoEmail>();
         _serviceCollection.TryAddScoped<IServicoAcervoEmprestimo, ServicoAcervoEmprestimo>();
+        _serviceCollection.TryAddScoped<IRelatorioControleLivrosEmprestadosUseCase, RelatorioControleLivrosEmprestadosUseCase>();
+        _serviceCollection.TryAddScoped<IRelatorioControleAcervoUseCase, RelatorioControleAcervoUseCase>();
+        _serviceCollection.TryAddScoped<IRelatorioControleAcervoAutorUseCase, RelatorioControleAcervoAutorUseCase>();
+        _serviceCollection.TryAddScoped<IRelatorioControleDevolucaoLivrosUseCase, RelatorioControleDevolucaoLivrosUseCase>();
+        _serviceCollection.TryAddScoped<IRelatorioControleEditoraUseCase, RelatorioControleEditoraUseCase>();
     }
     protected virtual void RegistrarHttpClients()
     {

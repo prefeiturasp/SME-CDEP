@@ -1,4 +1,6 @@
-﻿namespace SME.CDEP.Aplicacao.DTOS;
+﻿using SME.CDEP.Dominio.Enumerados;
+
+namespace SME.CDEP.Aplicacao.DTOS;
 
 public class AcervoDTO : BaseAuditavelDTO
 {
@@ -13,4 +15,5 @@ public class AcervoDTO : BaseAuditavelDTO
     public IEnumerable<CoAutorDTO> CoAutores { get; set; }
     public string DataAcervo { get; set; }
     public string Ano { get; set; }
+    public SituacaoAcervo SituacaoAcervo { get; set; }
 }

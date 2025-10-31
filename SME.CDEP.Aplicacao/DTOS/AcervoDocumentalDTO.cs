@@ -1,6 +1,4 @@
-﻿using System.Runtime.CompilerServices;
-using SME.CDEP.Dominio.Entidades;
-using SME.CDEP.Infra.Dominio.Enumerados;
+﻿using SME.CDEP.Dominio.Enumerados;
 
 namespace SME.CDEP.Aplicacao.DTOS;
 
@@ -29,4 +27,6 @@ public class AcervoDocumentalDTO
     public long[] AcessoDocumentosIds { get; set; }
     public AuditoriaDTO Auditoria { get; set; }
     public long[] CreditosAutoresIds { get; set; }
+    public string CapaDocumento { get; set; }
+    public SituacaoAcervo SituacaoAcervo { get; set; }
 }
