@@ -318,7 +318,8 @@ namespace SME.CDEP.Aplicacao.Servicos
                 TipoAcervo = filtro.TipoAcervo,
                 AnoInicial = (short?)filtro.AnoInicial,
                 AnoFinal = (short?)filtro.AnoFinal,
-                QuantidadeResultados = quantidadeResultados
+                QuantidadeResultados = quantidadeResultados,
+                DataConsulta = DateTime.UtcNow
             });
         }
 
