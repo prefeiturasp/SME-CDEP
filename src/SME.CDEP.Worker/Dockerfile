@@ -5,7 +5,7 @@ EXPOSE 443
 
 FROM mcr.microsoft.com/dotnet/sdk:8.0 AS build
 WORKDIR /src
-COPY ["SME.CDEP.Worker/SME.CDEP.Worker.csproj", "SME.CDEP.Worker/"]
+COPY ["src/SME.CDEP.Worker/SME.CDEP.Worker.csproj", "SME.CDEP.Worker/"]
 RUN dotnet restore "SME.CDEP.Worker/SME.CDEP.Worker.csproj"
 
 COPY . .
