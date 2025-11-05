@@ -1,0 +1,27 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup>
+        <TargetFramework>net8.0</TargetFramework>
+        <ImplicitUsings>enable</ImplicitUsings>
+        <Nullable>enable</Nullable>
+    </PropertyGroup>
+
+    <ItemGroup>
+      <PackageReference Include="BouncyCastle.Cryptography" Version="2.6.2" />
+      <PackageReference Include="Microsoft.Extensions.Configuration" Version="9.0.10" />
+      <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="9.0.10" />
+      <PackageReference Include="Microsoft.IdentityModel.JsonWebTokens" Version="8.14.0" />
+      <PackageReference Include="MimeKit" Version="4.14.0" />
+      <PackageReference Include="Npgsql" Version="9.0.4" />
+      <PackageReference Include="System.IdentityModel.Tokens.Jwt" Version="8.14.0" />
+      <PackageReference Include="System.IO.Packaging" Version="9.0.10" />
+      <PackageReference Include="System.Net.Security" Version="4.3.2" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <ProjectReference Include="..\SME.CDEP.Aplicacao\SME.CDEP.Aplicacao.csproj" />
+      <ProjectReference Include="..\SME.CDEP.Infra.Dados\SME.CDEP.Infra.Dados.csproj" />
+      <ProjectReference Include="..\SME.CDEP.Infra.Servicos\SME.CDEP.Infra.Servicos.csproj" />
+    </ItemGroup>
+
+</Project>
