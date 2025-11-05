@@ -1,21 +1,21 @@
-using Dapper;
 using Dommel;
 using SME.CDEP.Dominio;
 using SME.CDEP.Dominio.Constantes;
 using SME.CDEP.Dominio.Contexto;
 using SME.CDEP.Dominio.Excecoes;
 using SME.CDEP.Dominio.Repositorios;
-using SME.CDEP.Infra.Dominio.Enumerados;
+using System.Diagnostics.CodeAnalysis;
 
 namespace SME.CDEP.Infra.Dados.Repositorios;
 
+[ExcludeFromCodeCoverage]
 public abstract class RepositorioBaseSomenteId<TEntidade> : IRepositorioBaseSomenteId<TEntidade>
-    where TEntidade : EntidadeBaseSomenteId    
+    where TEntidade : EntidadeBaseSomenteId
 {
     protected readonly IContextoAplicacao contexto;
     protected readonly ICdepConexao conexao;
 
-    public RepositorioBaseSomenteId(IContextoAplicacao contexto,ICdepConexao conexao)
+    public RepositorioBaseSomenteId(IContextoAplicacao contexto, ICdepConexao conexao)
     {
         this.contexto = contexto;
         this.conexao = conexao;

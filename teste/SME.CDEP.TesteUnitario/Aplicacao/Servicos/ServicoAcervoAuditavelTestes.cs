@@ -6,6 +6,7 @@ using Minio.DataModel;
 using Moq;
 using SME.CDEP.Aplicacao.DTOS;
 using SME.CDEP.Aplicacao.Servicos;
+using SME.CDEP.Aplicacao.Servicos.Interface;
 using SME.CDEP.Dominio.Contexto;
 using SME.CDEP.Dominio.Dtos;
 using SME.CDEP.Dominio.Entidades;
@@ -28,12 +29,15 @@ namespace SME.CDEP.TesteUnitario.Aplicacao.Servicos
         private readonly Mock<IRepositorioParametroSistema> _repositorioParametroSistemaMock;
         private readonly Mock<IServicoArmazenamento> _servicoArmazenamentoMock;
         private readonly Mock<IRepositorioAcervoDocumental> _repositorioAcervoDocumentalMock;
+        private readonly Mock<IServicoHistoricoConsultaAcervo> _servicoHistoricoConsultaAcervoMock;
         private readonly Mock<IOptions<ConfiguracaoArmazenamentoOptions>> _optionsMock;
+        private readonly Faker _faker;
 
         private readonly ServicoAcervoAuditavel _servico;
 
         public ServicoAcervoAuditavelTestes()
         {
+            _faker = new Faker("pt_BR");
             _repositorioAcervoMock = new Mock<IRepositorioAcervo>();
             _repositorioAcervoCreditoAutorMock = new Mock<IRepositorioAcervoCreditoAutor>();
             _mapperMock = new Mock<IMapper>();
@@ -43,6 +47,7 @@ namespace SME.CDEP.TesteUnitario.Aplicacao.Servicos
             _repositorioParametroSistemaMock = new Mock<IRepositorioParametroSistema>();
             _servicoArmazenamentoMock = new Mock<IServicoArmazenamento>();
             _repositorioAcervoDocumentalMock = new Mock<IRepositorioAcervoDocumental>();
+            _servicoHistoricoConsultaAcervoMock = new();
 
             var configOptions = new ConfiguracaoArmazenamentoOptions { EndPoint = "localhost/arquivos", TipoRequisicao = "http" };
             _optionsMock = new Mock<IOptions<ConfiguracaoArmazenamentoOptions>>();
@@ -65,7 +70,8 @@ namespace SME.CDEP.TesteUnitario.Aplicacao.Servicos
                 Mock.Of<IRepositorioAcervoTridimensional>(),
                 _repositorioParametroSistemaMock.Object,
                 _optionsMock.Object,
-                _servicoArmazenamentoMock.Object
+                _servicoArmazenamentoMock.Object,
+                _servicoHistoricoConsultaAcervoMock.Object
             );
         }
 
@@ -550,6 +556,30 @@ namespace SME.CDEP.TesteUnitario.Aplicacao.Servicos
             // Assert
             await acao.Should().ThrowAsync<NegocioException>().WithMessage("Acervo não encontrado.");
             _repositorioAcervoDocumentalMock.Verify(r => r.ObterDetalhamentoPorCodigo(filtro.Codigo), Times.Once);
+        }
+
+        [Fact]
+        public async Task DadoUmFiltroQualquer_QuandoExecutarObterPorTextoLivreETipoAcervo_DevePersistirHistoricoDeConsulta()
+        {
+            // Arrange
+            var filtro = new FiltroTextoLivreTipoAcervoDTO
+            {
+                TextoLivre = _faker.Lorem.Word(),
+                TipoAcervo = TipoAcervo.Bibliografico
+            };
+
+            // Act
+            var resultado = await _servico.ObterPorTextoLivreETipoAcervo(filtro);
+
+            // Assert
+            _servicoHistoricoConsultaAcervoMock.Verify(s => s.InserirAsync(
+                It.Is<HistoricoConsultaAcervoDto>(h =>
+                    h.TipoAcervo == filtro.TipoAcervo &&
+                    h.TermoPesquisado == filtro.TextoLivre &&
+                    h.QuantidadeResultados == 0 &&
+                    h.AnoFinal == null &&
+                    h.AnoInicial == null
+                )), Times.Once);
         }
 
         private static ObjectStat ObterMetadados(string nomeArquivo, string contentType, long tamanho)
