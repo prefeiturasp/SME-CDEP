@@ -5,7 +5,7 @@ EXPOSE 443
 
 FROM mcr.microsoft.com/dotnet/sdk:8.0 AS build
 WORKDIR /src
-COPY ["SME.CDEP.Webapi/SME.CDEP.Webapi.csproj", "SME.CDEP.Webapi/"]
+COPY ["src/SME.CDEP.Webapi/SME.CDEP.Webapi.csproj", "SME.CDEP.Webapi/"]
 RUN dotnet restore "SME.CDEP.Webapi/SME.CDEP.Webapi.csproj"
 
 COPY . .
