@@ -1,4 +1,3 @@
-
 using SME.CDEP.Aplicacao.Servicos.Interface;
 using SME.CDEP.Infra.Servicos.Rabbit.Dto;
 

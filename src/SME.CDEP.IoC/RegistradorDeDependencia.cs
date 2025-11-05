@@ -87,6 +87,7 @@ public class RegistradorDeDependencia
         _serviceCollection.TryAddScoped<IRelatorioControleAcervoAutorUseCase, RelatorioControleAcervoAutorUseCase>();
         _serviceCollection.TryAddScoped<IRelatorioControleDevolucaoLivrosUseCase, RelatorioControleDevolucaoLivrosUseCase>();
         _serviceCollection.TryAddScoped<IRelatorioControleEditoraUseCase, RelatorioControleEditoraUseCase>();
+        _serviceCollection.TryAddScoped<IExecutarConsolidacaoDoHistoricoDeConsultasDeAcervoUseCase, ExecutarConsolidacaoDoHistoricoDeConsultasDeAcervoUseCase>();
     }
 
     protected virtual void RegistrarRabbit()
@@ -236,6 +237,7 @@ public class RegistradorDeDependencia
         _serviceCollection.TryAddScoped<IRepositorioEventoFixo, RepositorioEventoFixo>();
         _serviceCollection.TryAddScoped<IRepositorioAcervoEmprestimo, RepositorioAcervoEmprestimo>();
         _serviceCollection.TryAddScoped<IRepositorioHistoricoConsultaAcervo, RepositorioHistoricoConsultaAcervo>();
+        _serviceCollection.TryAddScoped<IRepositorioDeConsolidacao, RepositorioDeConsolidacao>();
     }
 
     protected virtual void RegistrarServicos()
@@ -286,6 +288,7 @@ public class RegistradorDeDependencia
         _serviceCollection.TryAddScoped<IServicoNotificacaoEmail, ServicoNotificacaoEmail>();
         _serviceCollection.TryAddScoped<IServicoAcervoEmprestimo, ServicoAcervoEmprestimo>();
         _serviceCollection.TryAddScoped<IServicoHistoricoConsultaAcervo, ServicoHistoricoConsultaAcervo>();
+        _serviceCollection.TryAddScoped<IServicoDeConsolidacao, ServicoDeConsolidacao>();
     }
     protected virtual void RegistrarHttpClients()
     {
