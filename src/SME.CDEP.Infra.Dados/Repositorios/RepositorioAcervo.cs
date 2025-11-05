@@ -12,12 +12,8 @@ using System.Diagnostics.CodeAnalysis;
 namespace SME.CDEP.Infra.Dados.Repositorios
 {
     [ExcludeFromCodeCoverage]
-    public class RepositorioAcervo : RepositorioBaseAuditavel<Acervo>, IRepositorioAcervo
+    public class RepositorioAcervo(IContextoAplicacao contexto, ICdepConexao conexao) : RepositorioBaseAuditavel<Acervo>(contexto, conexao), IRepositorioAcervo
     {
-        public RepositorioAcervo(IContextoAplicacao contexto, ICdepConexao conexao) : base(contexto, conexao)
-        { }
-
-
         public async Task<int> ContarPorFiltro(AcervoFiltroDto filtro)
         {
             var construtorDeConsultas = new SqlBuilder();
@@ -146,17 +142,13 @@ namespace SME.CDEP.Infra.Dados.Repositorios
         {
             string direcaoSql = direcao.ToString();
 
-            switch (ordenacao)
+            return ordenacao switch
             {
-                case TipoOrdenacaoDto.DATA:
-                    return $"data_ordenacao {direcaoSql}";
-                case TipoOrdenacaoDto.TITULO:
-                    return $"a.titulo {direcaoSql}";
-                case TipoOrdenacaoDto.CODIGO:
-                    return $"codigo {direcaoSql}";
-                default:
-                    return $"data_ordenacao {direcaoSql}";
-            }
+                TipoOrdenacaoDto.DATA => $"data_ordenacao {direcaoSql}",
+                TipoOrdenacaoDto.TITULO => $"a.titulo {direcaoSql}",
+                TipoOrdenacaoDto.CODIGO => $"codigo {direcaoSql}",
+                _ => $"data_ordenacao {direcaoSql}",
+            };
         }
 
         public Task<bool> ExisteCodigo(string codigo, long id, TipoAcervo tipo)
@@ -275,7 +267,7 @@ namespace SME.CDEP.Infra.Dados.Repositorios
             var retorno = await conexao.Obter().QueryMultipleAsync(query, new { acervoSolicitacaoId, tiposAcervosPermitidos });
 
             if (retorno.EhNulo())
-                return default;
+                return default!;
 
             var acervosSolicitacoes = retorno.Read<AcervoSolicitacaoItemCompleto>();
             var creditosAutoresNomes = retorno.Read<CreditoAutorNomeAcervoId>();
@@ -340,7 +332,7 @@ namespace SME.CDEP.Infra.Dados.Repositorios
                 new
                 {
                     tipoAcervo = tipoAcervo.HasValue ? (int)tipoAcervo : (int?)null,
-                    textoLivre = textoLivre.NaoEhNulo() ? textoLivre.ToLower() : null,
+                    textoLivre = !string.IsNullOrWhiteSpace(textoLivre) ? textoLivre.ToLower() : null,
                     anoInicial,
                     anoFinal
                 });
@@ -348,7 +340,7 @@ namespace SME.CDEP.Infra.Dados.Repositorios
             return retorno;
         }
 
-        private string IncluirFiltroPorAno(int? anoInicial, int? anoFinal)
+        private static string IncluirFiltroPorAno(int? anoInicial, int? anoFinal)
         {
             if (anoInicial.HasValue && anoFinal.HasValue)
                 return " and (a.ano_inicio between @anoInicial and @anoFinal or a.ano_fim between @anoInicial and @anoFinal) ";
@@ -359,9 +351,9 @@ namespace SME.CDEP.Infra.Dados.Repositorios
             return anoFinal.HasValue ? " and (@anoFinal between a.ano_inicio and a.ano_fim) " : string.Empty;
         }
 
-        private string IncluirFiltroPorTextoLivre(string? textoLivre)
+        private static string IncluirFiltroPorTextoLivre(string? textoLivre)
         {
-            if (textoLivre.EstaPreenchido())
+            if (!string.IsNullOrWhiteSpace(textoLivre))
                 return " and ( f_unaccent(lower(a.titulo)) LIKE ('%' || f_unaccent(@textoLivre) || '%') " +
                     "Or f_unaccent(lower(ca.nome)) LIKE ('%' || f_unaccent(@textoLivre) || '%') " +
                     "Or f_unaccent(lower(ast.nome)) LIKE ('%' || f_unaccent(@textoLivre) || '%') " +
@@ -371,17 +363,17 @@ namespace SME.CDEP.Infra.Dados.Repositorios
             return string.Empty;
         }
 
-        private string IncluirFiltroPorTipoAcervo(TipoAcervo? tipoAcervo)
+        private static string IncluirFiltroPorTipoAcervo(TipoAcervo? tipoAcervo)
         {
-            return tipoAcervo.NaoEhNulo() ? "and a.tipo = @tipoAcervo " : string.Empty;
+            return tipoAcervo is not null ? "and a.tipo = @tipoAcervo " : string.Empty;
         }
 
-        private string IncluirFiltroSituacaoAcervo()
+        private static string IncluirFiltroSituacaoAcervo()
         {
             return " and COALESCE(a.situacao, 1) = 1 ";
         }
 
-        public Task<Acervo> PesquisarAcervoPorCodigoTombo(string codigoTombo, long[] tiposAcervosPermitidos)
+        public Task<Acervo?> PesquisarAcervoPorCodigoTombo(string codigoTombo, long[] tiposAcervosPermitidos)
         {
             var query = @"
             select id, 

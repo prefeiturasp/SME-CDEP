@@ -1,8 +1,6 @@
-using SME.CDEP.Infra.Dominio.Enumerados;
-
 namespace SME.CDEP.Dominio.Repositorios;
 
-public interface IRepositorioBaseSomenteId<TEntidade> where TEntidade : EntidadeBaseSomenteId    
+public interface IRepositorioBaseSomenteId<TEntidade> where TEntidade : EntidadeBaseSomenteId
 {
     Task<TEntidade> ObterPorId(long id);
     Task<IEnumerable<TEntidade>> ObterTodos();
