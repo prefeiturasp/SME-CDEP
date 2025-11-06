@@ -263,6 +263,9 @@ namespace SME.CDEP.TesteIntegracao
         protected IServicoDeConsolidacao GetServicoDeConsolidacao() =>
             ObterServicoAplicacao<IServicoDeConsolidacao>();
 
+        protected IServicoAcervoAuditavel GetServicoAcervoAuditavel() =>
+            ObterServicoAplicacao<IServicoAcervoAuditavel>();
+
         public T ObterServicoAplicacao<T>()
             where T : IServicoAplicacao
         {
