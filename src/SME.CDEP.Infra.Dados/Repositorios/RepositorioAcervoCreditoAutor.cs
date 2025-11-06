@@ -2,9 +2,11 @@
 using SME.CDEP.Dominio.Contexto;
 using SME.CDEP.Dominio.Entidades;
 using SME.CDEP.Infra.Dados.Repositorios.Interfaces;
+using System.Diagnostics.CodeAnalysis;
 
 namespace SME.CDEP.Infra.Dados.Repositorios
 {
+    [ExcludeFromCodeCoverage]
     public class RepositorioAcervoCreditoAutor : RepositorioBaseSomenteId<AcervoCreditoAutor>, IRepositorioAcervoCreditoAutor
     {
         public RepositorioAcervoCreditoAutor(IContextoAplicacao contexto, ICdepConexao conexao) : base(contexto,conexao)

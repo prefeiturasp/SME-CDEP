@@ -34,6 +34,7 @@ namespace SME.CDEP.Aplicacao.Servicos
         private readonly IRepositorioParametroSistema repositorioParametroSistema;
         private readonly ConfiguracaoArmazenamentoOptions configuracaoArmazenamentoOptions;
         private readonly IServicoArmazenamento servicoArmazenamento;
+        private readonly IServicoHistoricoConsultaAcervo servicoHistoricoConsultaAcervo;
 
         public ServicoAcervoAuditavel(IRepositorioAcervo repositorioAcervo, IMapper mapper,
             IContextoAplicacao contextoAplicacao, IRepositorioAcervoCreditoAutor repositorioAcervoCreditoAutor,
@@ -46,7 +47,8 @@ namespace SME.CDEP.Aplicacao.Servicos
             IRepositorioAcervoTridimensional repositorioAcervoTridimensional,
             IRepositorioParametroSistema repositorioParametroSistema,
             IOptions<ConfiguracaoArmazenamentoOptions> configuracaoArmazenamentoOptions,
-            IServicoArmazenamento servicoArmazenamento)
+            IServicoArmazenamento servicoArmazenamento,
+            IServicoHistoricoConsultaAcervo servicoHistoricoConsultaAcervo)
         {
             this.repositorioAcervo = repositorioAcervo ?? throw new ArgumentNullException(nameof(repositorioAcervo));
             this.mapper = mapper ?? throw new ArgumentNullException(nameof(mapper));
@@ -62,6 +64,7 @@ namespace SME.CDEP.Aplicacao.Servicos
             this.repositorioParametroSistema = repositorioParametroSistema ?? throw new ArgumentNullException(nameof(repositorioParametroSistema));
             this.configuracaoArmazenamentoOptions = configuracaoArmazenamentoOptions?.Value ?? throw new ArgumentNullException(nameof(configuracaoArmazenamentoOptions));
             this.servicoArmazenamento = servicoArmazenamento ?? throw new ArgumentNullException(nameof(servicoArmazenamento));
+            this.servicoHistoricoConsultaAcervo = servicoHistoricoConsultaAcervo ?? throw new ArgumentNullException(nameof(servicoHistoricoConsultaAcervo));
         }
 
         public async Task<long> Inserir(Acervo acervo)
@@ -255,6 +258,8 @@ namespace SME.CDEP.Aplicacao.Servicos
 
             var acervos = await repositorioAcervo.ObterPorTextoLivreETipoAcervo(filtroTextoLivreTipoAcervo.TextoLivre, filtroTextoLivreTipoAcervo.TipoAcervo, filtroTextoLivreTipoAcervo.AnoInicial, filtroTextoLivreTipoAcervo.AnoFinal);
 
+            await RegistrarHistoricoDePesquisaAsync(filtroTextoLivreTipoAcervo, acervos.Count());
+
             if (acervos.Any())
             {
                 var acervosIds = acervos.Where(w => w.Tipo.EhAcervoArteGraficaOuFotograficoOuTridimensional()).Select(s => s.AcervoId).Distinct().ToArray();
@@ -264,7 +269,7 @@ namespace SME.CDEP.Aplicacao.Servicos
                 var imagensPadrao = await ObterImagensPadrao();
 
                 var acervosAgrupandoCreditoAutor = acervos
-                    .GroupBy(g => new { g.AcervoId,g.Codigo, g.Titulo, g.Tipo, g.Descricao, g.TipoAcervoTag, g.DataAcervo, g.Ano, g.SituacaoSaldo, g.Editora })
+                    .GroupBy(g => new { g.AcervoId, g.Codigo, g.Titulo, g.Tipo, g.Descricao, g.TipoAcervoTag, g.DataAcervo, g.Ano, g.SituacaoSaldo, g.Editora })
                     .Select(s => new PesquisaAcervoDTO
                     {
                         AcervoId = s.Key.AcervoId,
@@ -299,10 +304,23 @@ namespace SME.CDEP.Aplicacao.Servicos
 
             return new PaginacaoResultadoDTO<PesquisaAcervoDTO>()
             {
-                Items = new List<PesquisaAcervoDTO>(),
+                Items = [],
                 TotalPaginas = 0,
                 TotalRegistros = 0
             };
+        }
+
+        private async Task RegistrarHistoricoDePesquisaAsync(FiltroTextoLivreTipoAcervoDTO filtro, int quantidadeResultados)
+        {
+            await servicoHistoricoConsultaAcervo.InserirAsync(new()
+            {
+                TermoPesquisado = filtro.TextoLivre,
+                TipoAcervo = filtro.TipoAcervo,
+                AnoInicial = (short?)filtro.AnoInicial,
+                AnoFinal = (short?)filtro.AnoFinal,
+                QuantidadeResultados = quantidadeResultados,
+                DataConsulta = DateTime.UtcNow
+            });
         }
 
         private async Task<IEnumerable<TipoAcervoNomeArquivoFisicoDTO>> ObterImagensPadrao()
@@ -375,7 +393,7 @@ namespace SME.CDEP.Aplicacao.Servicos
                 CapaDocumento = acervo.TipoAcervoId == (long)TipoAcervo.DocumentacaoTextual && !string.IsNullOrEmpty(acervo.CapaDocumento)
                                 ? await ObterImagemBase64(acervo.CapaDocumento)
                                 : null
-                
+
             }).Select(t => t.Result).ToList();
 
             return new PaginacaoResultadoDTO<AcervoTableRowDTO>()
@@ -385,7 +403,7 @@ namespace SME.CDEP.Aplicacao.Servicos
                 TotalPaginas = (int)Math.Ceiling((double)totalRegistros / Paginacao.QuantidadeRegistros)
             };
         }
-        public async Task<string?> ObterImagemBase64(string nomeArquivo)
+        public async Task<string> ObterImagemBase64(string nomeArquivo)
         {
             try
             {
@@ -430,7 +448,7 @@ namespace SME.CDEP.Aplicacao.Servicos
                         if (retornoDocumental.EhNulo())
                             throw new NegocioException(MensagemNegocio.ACERVO_NAO_ENCONTRADO);
 
-                        retornoDocumental.Imagens = await AplicarEndereco(retornoDocumental.Imagens);
+                        retornoDocumental.Imagens = AplicarEndereco(retornoDocumental.Imagens);
                         retornoDocumental.EnderecoImagemPadrao = retornoDocumental.Imagens.PossuiElementos() ? string.Empty : await ObterEnderecoImagemPadrao(TipoAcervo.DocumentacaoTextual);
                         retornoDocumental.TipoAcervoId = (int)TipoAcervo.DocumentacaoTextual;
                         return retornoDocumental;
@@ -442,7 +460,7 @@ namespace SME.CDEP.Aplicacao.Servicos
                         if (retornoArteGrafica.EhNulo())
                             throw new NegocioException(MensagemNegocio.ACERVO_NAO_ENCONTRADO);
 
-                        retornoArteGrafica.Imagens = await AplicarEndereco(retornoArteGrafica.Imagens);
+                        retornoArteGrafica.Imagens = AplicarEndereco(retornoArteGrafica.Imagens);
                         retornoArteGrafica.EnderecoImagemPadrao = retornoArteGrafica.Imagens.PossuiElementos() ? string.Empty : await ObterEnderecoImagemPadrao(TipoAcervo.ArtesGraficas);
                         retornoArteGrafica.TipoAcervoId = (int)TipoAcervo.ArtesGraficas;
                         return retornoArteGrafica;
@@ -464,7 +482,7 @@ namespace SME.CDEP.Aplicacao.Servicos
                         if (retornoFotografico.EhNulo())
                             throw new NegocioException(MensagemNegocio.ACERVO_NAO_ENCONTRADO);
 
-                        retornoFotografico.Imagens = await AplicarEndereco(retornoFotografico.Imagens);
+                        retornoFotografico.Imagens = AplicarEndereco(retornoFotografico.Imagens);
                         retornoFotografico.EnderecoImagemPadrao = retornoFotografico.Imagens.PossuiElementos() ? string.Empty : await ObterEnderecoImagemPadrao(TipoAcervo.Fotografico);
                         retornoFotografico.TipoAcervoId = (int)TipoAcervo.Fotografico;
                         return retornoFotografico;
@@ -476,7 +494,7 @@ namespace SME.CDEP.Aplicacao.Servicos
                         if (retornoTridimensional.EhNulo())
                             throw new NegocioException(MensagemNegocio.ACERVO_NAO_ENCONTRADO);
 
-                        retornoTridimensional.Imagens = await AplicarEndereco(retornoTridimensional.Imagens);
+                        retornoTridimensional.Imagens = AplicarEndereco(retornoTridimensional.Imagens);
                         retornoTridimensional.EnderecoImagemPadrao = retornoTridimensional.Imagens.PossuiElementos() ? string.Empty : await ObterEnderecoImagemPadrao(TipoAcervo.Tridimensional);
                         retornoTridimensional.TipoAcervoId = (int)TipoAcervo.Tridimensional;
                         return retornoTridimensional;
@@ -489,11 +507,11 @@ namespace SME.CDEP.Aplicacao.Servicos
         private async Task<string> ObterEnderecoImagemPadrao(TipoAcervo tipoAcervo)
         {
             var nomeImagemPadrao = await repositorioArquivo.ObterArquivoPorNomeTipoArquivo(ObterNomesDasImagensPadrao(tipoAcervo), TipoArquivo.Sistema);
-            
+
             return $"{configuracaoArmazenamentoOptions.EnderecoCompletoBucketArquivos()}{nomeImagemPadrao.NomeArquivoFisico}";
         }
 
-        private async Task<ImagemDTO[]> AplicarEndereco(ImagemDTO[] imagens)
+        private ImagemDTO[] AplicarEndereco(ImagemDTO[] imagens)
         {
             foreach (var imagem in imagens)
             {
@@ -502,17 +520,6 @@ namespace SME.CDEP.Aplicacao.Servicos
             }
 
             return imagens;
-        }
-
-        private AcervoDetalheDTO AplicarEndereco(AcervoArteGraficaDetalheDTO acervo)
-        {
-            foreach (var acervoImagem in acervo.Imagens)
-            {
-                acervoImagem.Original = $"{configuracaoArmazenamentoOptions.EnderecoCompletoBucketArquivos()}/{acervoImagem.Original}";
-                acervoImagem.Thumbnail = $"{configuracaoArmazenamentoOptions.EnderecoCompletoBucketArquivos()}/{acervoImagem.Thumbnail}";
-            }
-
-            return acervo;
         }
 
         public async Task<string> ObterTermoDeCompromisso()

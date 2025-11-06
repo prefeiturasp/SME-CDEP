@@ -174,15 +174,7 @@ namespace SME.CDEP.TesteIntegracao
 
         protected IServicoAcervoSolicitacao GetServicoAcervoSolicitacao()
         {
-            try
-            {
-                return ObterServicoAplicacao<IServicoAcervoSolicitacao>();
-            }
-            catch (Exception e)
-            {
-
-                throw;
-            }
+            return ObterServicoAplicacao<IServicoAcervoSolicitacao>();
         }
 
         protected IServicoAcervoAudiovisual GetServicoAcervoAudiovisual()
@@ -202,57 +194,57 @@ namespace SME.CDEP.TesteIntegracao
 
         protected IMapper GetServicoMapper()
         {
-            return ServiceProvider.GetService<IMapper>();
+            return ServiceProvider.GetService<IMapper>()!;
         }
 
         protected IServicoExcluirArquivo GetServicoExcluirArquivo()
         {
-            return ServiceProvider.GetService<IServicoExcluirArquivo>();
+            return ServiceProvider.GetService<IServicoExcluirArquivo>()!;
         }
 
         protected IServicoMoverArquivoTemporario GetServicoMoverArquivoTemporario()
         {
-            return ServiceProvider.GetService<IServicoMoverArquivoTemporario>();
+            return ServiceProvider.GetService<IServicoMoverArquivoTemporario>()!;
         }
 
         protected IServicoUploadArquivo GetServicoUploadArquivo()
         {
-            return ServiceProvider.GetService<IServicoUploadArquivo>();
+            return ServiceProvider.GetService<IServicoUploadArquivo>()!;
         }
 
         protected IServicoImportacaoArquivoAcervoDocumental GetServicoImportacaoArquivoAcervoDocumental()
         {
-            return ServiceProvider.GetService<IServicoImportacaoArquivoAcervoDocumental>();
+            return ServiceProvider.GetService<IServicoImportacaoArquivoAcervoDocumental>()!;
         }
 
         protected IServicoImportacaoArquivoAcervoBibliografico GetServicoImportacaoArquivoAcervoBibliografico()
         {
-            return ServiceProvider.GetService<IServicoImportacaoArquivoAcervoBibliografico>();
+            return ServiceProvider.GetService<IServicoImportacaoArquivoAcervoBibliografico>()!;
         }
 
         protected IServicoImportacaoArquivoAcervoArteGrafica GetServicoImportacaoArquivoAcervoArteGrafica()
         {
-            return ServiceProvider.GetService<IServicoImportacaoArquivoAcervoArteGrafica>();
+            return ServiceProvider.GetService<IServicoImportacaoArquivoAcervoArteGrafica>()!;
         }
 
         protected IServicoImportacaoArquivoAcervoAudiovisual GetServicoImportacaoArquivoAcervoAudiovisual()
         {
-            return ServiceProvider.GetService<IServicoImportacaoArquivoAcervoAudiovisual>();
+            return ServiceProvider.GetService<IServicoImportacaoArquivoAcervoAudiovisual>()!;
         }
 
         protected IServicoImportacaoArquivoAcervoFotografico GetServicoImportacaoArquivoAcervoFotografico()
         {
-            return ServiceProvider.GetService<IServicoImportacaoArquivoAcervoFotografico>();
+            return ServiceProvider.GetService<IServicoImportacaoArquivoAcervoFotografico>()!;
         }
 
         protected IServicoImportacaoArquivoAcervoTridimensional GetServicoImportacaoArquivoAcervoTridimensional()
         {
-            return ServiceProvider.GetService<IServicoImportacaoArquivoAcervoTridimensional>();
+            return ServiceProvider.GetService<IServicoImportacaoArquivoAcervoTridimensional>()!;
         }
 
         protected IServicoImportacaoArquivoAcervo GetServicoImportacaoArquivoAcervo()
         {
-            return ServiceProvider.GetService<IServicoImportacaoArquivoAcervo>();
+            return ServiceProvider.GetService<IServicoImportacaoArquivoAcervo>()!;
         }
 
         protected IServicoEvento GetServicoEvento()
@@ -264,6 +256,12 @@ namespace SME.CDEP.TesteIntegracao
         {
             return ObterServicoAplicacao<IServicoAcervoEmprestimo>();
         }
+
+        protected IServicoHistoricoConsultaAcervo GetServicoHistoricoConsultaAcervo() =>
+            ObterServicoAplicacao<IServicoHistoricoConsultaAcervo>();
+
+        protected IServicoDeConsolidacao GetServicoDeConsolidacao() =>
+            ObterServicoAplicacao<IServicoDeConsolidacao>();
 
         public T ObterServicoAplicacao<T>()
             where T : IServicoAplicacao

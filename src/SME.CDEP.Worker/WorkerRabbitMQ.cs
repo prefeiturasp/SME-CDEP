@@ -24,8 +24,8 @@ namespace SME.CDEP.Worker
 
         protected override void RegistrarUseCases()
         {
-            Comandos.Add(RotasRabbit.ExecutarCriacaoDeEventosTipoFeriadoAnoAtual, new ComandoRabbit("Executar a criação de eventos do tipo feriado para o ano atual", typeof(IExecutarCriacaoDeEventosTipoFeriadoAnoAtualUseCase), true));
-            Comandos.Add(RotasRabbit.ExecutarCriacaoDeEventosTipoFeriadoAnoAtualPorData, new ComandoRabbit("Executar a criação de eventos do tipo feriado para o ano atual por data", typeof(IExecutarCriacaoDeEventosTipoFeriadoAnoAtualPorDataUseCase), true));
+            Comandos.Add(RotasRabbit.ExecutarCriacaoDeEventosTipoFeriadoAnoAtual, new ComandoRabbit("ExecutarAsync a criação de eventos do tipo feriado para o ano atual", typeof(IExecutarCriacaoDeEventosTipoFeriadoAnoAtualUseCase), true));
+            Comandos.Add(RotasRabbit.ExecutarCriacaoDeEventosTipoFeriadoAnoAtualPorData, new ComandoRabbit("ExecutarAsync a criação de eventos do tipo feriado para o ano atual por data", typeof(IExecutarCriacaoDeEventosTipoFeriadoAnoAtualPorDataUseCase), true));
             
             Comandos.Add(RotasRabbit.NotificarViaEmailCancelamentoAtendimento, new ComandoRabbit("Notifica usuário solicitate do acervo sobre o cancelamento do atendimento", typeof(INotificarViaEmailCancelamentoAtendimentoUseCase), true));
             Comandos.Add(RotasRabbit.NotificarViaEmailCancelamentoAtendimentoItem, new ComandoRabbit("Notifica usuário solicitate do acervo sobre o cancelamento do item do atendimento", typeof(INotificarViaEmailCancelamentoAtendimentoItemUseCase), true));
@@ -48,6 +48,8 @@ namespace SME.CDEP.Worker
             Comandos.Add(RotasRabbit.ExecutarImportacaoArquivoAcervoAudiovisual, new ComandoRabbit("Realiza a importação de acervos audiovisual por planilha", typeof(IExecutarImportacaoArquivoAcervoAudiovisualUseCase), true));
             Comandos.Add(RotasRabbit.ExecutarImportacaoArquivoAcervoFotografico, new ComandoRabbit("Realiza a importação de acervos fotográficos por planilha", typeof(IExecutarImportacaoArquivoAcervoFotograficoUseCase), true));
             Comandos.Add(RotasRabbit.ExecutarImportacaoArquivoAcervoTridimensional, new ComandoRabbit("Realiza a importação de acervos tridimensionais por planilha", typeof(IExecutarImportacaoArquivoAcervoTridimensionalUseCase), true));
+
+            Comandos.Add(RotasRabbit.ExecutarConsolidacaoDoHistoricoDeConsultasDeAcervo, new ComandoRabbit("Executa a consolidação do histórico de consultas de acervo", typeof(IExecutarConsolidacaoDoHistoricoDeConsultasDeAcervoUseCase), true));
         }
     }
 }

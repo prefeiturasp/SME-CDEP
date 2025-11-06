@@ -7,16 +7,9 @@ using SME.CDEP.Infra.Servicos.Mensageria.Log;
 
 namespace SME.CDEP.Webapi.Middlewares
 {
-    public class TratamentoExcecaoGlobalMiddleware
+    public class TratamentoExcecaoGlobalMiddleware(RequestDelegate next, IServicoLogs servicoLogs)
     {
-        private readonly RequestDelegate next;
-        private readonly IServicoLogs servicoLogs;
-
-        public TratamentoExcecaoGlobalMiddleware(RequestDelegate next, IServicoLogs servicoLogs)
-        {
-            this.next = next;
-            this.servicoLogs = servicoLogs ?? throw new ArgumentNullException(nameof(servicoLogs));
-        }
+        private readonly IServicoLogs servicoLogs = servicoLogs ?? throw new ArgumentNullException(nameof(servicoLogs));
 
         public async Task Invoke(HttpContext context)
         {
@@ -26,26 +19,26 @@ namespace SME.CDEP.Webapi.Middlewares
             }
             catch (NegocioException nex)
             {
-                if (nex.Mensagens.Any())
+                if (nex.Mensagens.Count != 0)
                 {
-                    await servicoLogs.Enviar(string.Join(" - ", nex.Mensagens), observacao: nex.Message, rastreamento: nex.StackTrace);
+                    await servicoLogs.Enviar(string.Join(" - ", nex.Mensagens), observacao: nex.Message, rastreamento: nex.StackTrace ?? string.Empty);
                     await TratarExcecao(context, nex.Mensagens, nex.StatusCode);
                 }
                 else
                 {
-                    await servicoLogs.Enviar(nex.Message, observacao: nex.Message, rastreamento: nex.StackTrace);
-                    await TratarExcecao(context, new List<string>() {nex.Message}, nex.StatusCode);
+                    await servicoLogs.Enviar(nex.Message, observacao: nex.Message, rastreamento: nex.StackTrace ?? string.Empty);
+                    await TratarExcecao(context, [nex.Message], nex.StatusCode);
                 }
             }
             catch (Exception ex)
             {
                 var mensagem = "Houve um comportamento inesperado do sistema CDEP. Por favor, contate a SME.";
-                await servicoLogs.Enviar(mensagem, observacao: ex.Message, rastreamento: ex.StackTrace);
-                await TratarExcecao(context, new List<string>() {mensagem});
+                await servicoLogs.Enviar(mensagem, observacao: ex.Message, rastreamento: ex.StackTrace ?? string.Empty);
+                await TratarExcecao(context, [mensagem]);
             }
         }
 
-        private async Task TratarExcecao(HttpContext context, List<string> mensagens, int statusCode = (int)HttpStatusCode.InternalServerError)
+        private static async Task TratarExcecao(HttpContext context, List<string> mensagens, int statusCode = (int)HttpStatusCode.InternalServerError)
         {
             context.Response.ContentType = "application/json";
             context.Response.StatusCode = statusCode;

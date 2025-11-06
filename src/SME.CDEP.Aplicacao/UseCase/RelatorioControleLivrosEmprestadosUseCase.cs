@@ -8,20 +8,12 @@ using System.Text;
 
 namespace SME.CDEP.Aplicacao.UseCase
 {
-    public class RelatorioControleLivrosEmprestadosUseCase : IRelatorioControleLivrosEmprestadosUseCase
+    public class RelatorioControleLivrosEmprestadosUseCase(IHttpClientFactory httpClientFactory, IServicoAcervo servicoAcervo, IContextoAplicacao contextoAplicacao) : 
+        IRelatorioControleLivrosEmprestadosUseCase
     {
-        private readonly IHttpClientFactory httpClientFactory;
-        private readonly IServicoAcervo servicoAcervo;
-        private readonly IContextoAplicacao contextoAplicacao;
+        private readonly IServicoAcervo servicoAcervo = servicoAcervo ?? throw new ArgumentNullException(nameof(servicoAcervo));
 
-        public RelatorioControleLivrosEmprestadosUseCase(IHttpClientFactory httpClientFactory, IServicoAcervo servicoAcervo, IContextoAplicacao contextoAplicacao)
-        {
-            this.httpClientFactory = httpClientFactory;
-            this.servicoAcervo = servicoAcervo ?? throw new ArgumentNullException(nameof(servicoAcervo));
-            this.contextoAplicacao = contextoAplicacao;
-        }
-
-        public async Task<Stream> Executar(RelatorioControleLivroEmprestadosRequest filtros)
+        public async Task<Stream?> ExecutarAsync(RelatorioControleLivroEmprestadosRequest filtros)
         {
             var tiposAcervosPermitidos = servicoAcervo.ObterTiposAcervosPermitidosDoPerfilLogado();
             var filtrosValidos = new RelatorioControleLivroEmprestadosDTO()
@@ -40,15 +32,13 @@ namespace SME.CDEP.Aplicacao.UseCase
             var mensagem = JsonConvert.SerializeObject(new { Mensagem = filtrosValidos });
 
 
-            using (var httpClient = httpClientFactory.CreateClient("apiSR"))
-            {
-                var resposta = await httpClient.PostAsync("v1/cdep/controle-livros-emprestados", new StringContent(mensagem, Encoding.UTF8, "application/json"));
+            using var httpClient = httpClientFactory.CreateClient("apiSR");
+            var resposta = await httpClient.PostAsync("v1/cdep/controle-livros-emprestados", new StringContent(mensagem, Encoding.UTF8, "application/json"));
 
-                if (!resposta.IsSuccessStatusCode || resposta.StatusCode == HttpStatusCode.NoContent)
-                    return null;
+            if (!resposta.IsSuccessStatusCode || resposta.StatusCode == HttpStatusCode.NoContent)
+                return null;
 
-                return await resposta.Content.ReadAsStreamAsync();
-            }
+            return await resposta.Content.ReadAsStreamAsync();
         }
     }
 }

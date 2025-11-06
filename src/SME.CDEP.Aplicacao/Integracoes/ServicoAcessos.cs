@@ -8,15 +8,9 @@ using SME.CDEP.Dominio.Extensions;
 
 namespace SME.CDEP.Aplicacao.Integracoes
 {
-    public class ServicoAcessos : IServicoAcessos
+    public class ServicoAcessos(HttpClient httpClient) : IServicoAcessos
     {
-        private readonly HttpClient httpClient;
         private const int Sistema_Cdep = 1006;
-
-        public ServicoAcessos(HttpClient httpClient)
-        {
-            this.httpClient = httpClient;
-        }
 
         public async Task<UsuarioAutenticacaoRetornoDTO> Autenticar(string login, string senha)
         {
