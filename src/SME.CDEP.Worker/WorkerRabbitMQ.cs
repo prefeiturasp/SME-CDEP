@@ -24,8 +24,8 @@ namespace SME.CDEP.Worker
 
         protected override void RegistrarUseCases()
         {
-            Comandos.Add(RotasRabbit.ExecutarCriacaoDeEventosTipoFeriadoAnoAtual, new ComandoRabbit("Executar a criação de eventos do tipo feriado para o ano atual", typeof(IExecutarCriacaoDeEventosTipoFeriadoAnoAtualUseCase), true));
-            Comandos.Add(RotasRabbit.ExecutarCriacaoDeEventosTipoFeriadoAnoAtualPorData, new ComandoRabbit("Executar a criação de eventos do tipo feriado para o ano atual por data", typeof(IExecutarCriacaoDeEventosTipoFeriadoAnoAtualPorDataUseCase), true));
+            Comandos.Add(RotasRabbit.ExecutarCriacaoDeEventosTipoFeriadoAnoAtual, new ComandoRabbit("ExecutarAsync a criação de eventos do tipo feriado para o ano atual", typeof(IExecutarCriacaoDeEventosTipoFeriadoAnoAtualUseCase), true));
+            Comandos.Add(RotasRabbit.ExecutarCriacaoDeEventosTipoFeriadoAnoAtualPorData, new ComandoRabbit("ExecutarAsync a criação de eventos do tipo feriado para o ano atual por data", typeof(IExecutarCriacaoDeEventosTipoFeriadoAnoAtualPorDataUseCase), true));
             
             Comandos.Add(RotasRabbit.NotificarViaEmailCancelamentoAtendimento, new ComandoRabbit("Notifica usuário solicitate do acervo sobre o cancelamento do atendimento", typeof(INotificarViaEmailCancelamentoAtendimentoUseCase), true));
             Comandos.Add(RotasRabbit.NotificarViaEmailCancelamentoAtendimentoItem, new ComandoRabbit("Notifica usuário solicitate do acervo sobre o cancelamento do item do atendimento", typeof(INotificarViaEmailCancelamentoAtendimentoItemUseCase), true));
