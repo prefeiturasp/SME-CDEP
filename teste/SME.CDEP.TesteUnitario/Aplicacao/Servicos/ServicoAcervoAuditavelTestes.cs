@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using Bogus;
 using FluentAssertions;
+using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using Minio.DataModel;
 using Moq;
@@ -71,7 +72,8 @@ namespace SME.CDEP.TesteUnitario.Aplicacao.Servicos
                 _repositorioParametroSistemaMock.Object,
                 _optionsMock.Object,
                 _servicoArmazenamentoMock.Object,
-                _servicoHistoricoConsultaAcervoMock.Object
+                _servicoHistoricoConsultaAcervoMock.Object,
+                Mock.Of<ILogger<ServicoAcervoAuditavel>>()
             );
         }
 
