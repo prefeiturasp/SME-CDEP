@@ -12,12 +12,12 @@ namespace SME.CDEP.TesteIntegracao.Consolidacoes
     public class Ao_executar_consolidacao : TesteBase
     {
         private readonly IServicoDeConsolidacao servicoDeConsolidacao;
-        private readonly Faker faker;
+        private readonly Faker _faker;
 
         public Ao_executar_consolidacao(CollectionFixture collectionFixture) : base(collectionFixture)
         {
             servicoDeConsolidacao = GetServicoDeConsolidacao();
-            faker = new Faker();
+            _faker = new Faker();
         }
 
         [Fact(DisplayName = "Consolidação - Consolidar mes do historico de consultas do dia anterior")]
@@ -37,28 +37,28 @@ namespace SME.CDEP.TesteIntegracao.Consolidacoes
                 new ()
                 {
                     TermoPesquisado = "Teste 1",
-                    DataConsulta = limiteInicial.AddDays(faker.Random.Int(0, diasDiferenca)),
+                    DataConsulta = limiteInicial.AddDays(_faker.Random.Int(0, diasDiferenca)),
                     QuantidadeResultados = 10,
                     TipoAcervo = TipoAcervo.ArtesGraficas
                 },
                 new ()
                 {
                     TermoPesquisado = "Teste 1",
-                    DataConsulta = limiteInicial.AddDays(faker.Random.Int(0, diasDiferenca)),
+                    DataConsulta = limiteInicial.AddDays(_faker.Random.Int(0, diasDiferenca)),
                     QuantidadeResultados = 10,
                     TipoAcervo = TipoAcervo.Fotografico
                 },
                 new ()
                 {
                     TermoPesquisado = "Teste 2",
-                    DataConsulta = limiteInicial.AddDays(faker.Random.Int(0, diasDiferenca)),
+                    DataConsulta = limiteInicial.AddDays(_faker.Random.Int(0, diasDiferenca)),
                     QuantidadeResultados = 5,
                     TipoAcervo = TipoAcervo.ArtesGraficas
                 },
                 new ()
                 {
                     TermoPesquisado = "Teste 2",
-                    DataConsulta = limiteInicial.AddDays(faker.Random.Int(0, diasDiferenca)),
+                    DataConsulta = limiteInicial.AddDays(_faker.Random.Int(0, diasDiferenca)),
                     QuantidadeResultados = 15,
                     TipoAcervo = TipoAcervo.ArtesGraficas
                 },
