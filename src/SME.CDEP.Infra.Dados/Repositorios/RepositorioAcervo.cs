@@ -278,11 +278,6 @@ namespace SME.CDEP.Infra.Dados.Repositorios
             return acervosSolicitacoes;
         }
 
-        private IEnumerable<ArquivoCodigoNomeAcervoId> ObterArquivos(IEnumerable<ArquivoCodigoNomeAcervoId> arquivosCodigoNome, AcervoSolicitacaoItemCompleto acervoSolicitacao)
-        {
-            return arquivosCodigoNome.PossuiElementos() ? arquivosCodigoNome.Where(w => w.AcervoId == acervoSolicitacao.AcervoId) : Enumerable.Empty<ArquivoCodigoNomeAcervoId>();
-        }
-
         private IEnumerable<CreditoAutorNomeAcervoId> ObterCreditosAutores(IEnumerable<CreditoAutorNomeAcervoId> creditosAutoresNomes, AcervoSolicitacaoItemCompleto acervoSolicitacao)
         {
             return creditosAutoresNomes.PossuiElementos() ? creditosAutoresNomes.Where(w => w.AcervoId == acervoSolicitacao.AcervoId).Select(s => s) : Enumerable.Empty<CreditoAutorNomeAcervoId>();
@@ -290,6 +285,7 @@ namespace SME.CDEP.Infra.Dados.Repositorios
 
         public async Task<IEnumerable<PesquisaAcervo>> ObterPorTextoLivreETipoAcervo(string? textoLivre, TipoAcervo? tipoAcervo, int? anoInicial, int? anoFinal)
         {
+            textoLivre = string.IsNullOrWhiteSpace(textoLivre) ? textoLivre : textoLivre.Trim().ToLower();
             var query = $@";with acervosIds as
                          (
                              select   distinct a.id as acervoId
@@ -332,7 +328,7 @@ namespace SME.CDEP.Infra.Dados.Repositorios
                 new
                 {
                     tipoAcervo = tipoAcervo.HasValue ? (int)tipoAcervo : (int?)null,
-                    textoLivre = !string.IsNullOrWhiteSpace(textoLivre) ? textoLivre.ToLower() : null,
+                    textoLivre = !string.IsNullOrWhiteSpace(textoLivre) ? textoLivre : null,
                     anoInicial,
                     anoFinal
                 });

@@ -7,15 +7,10 @@ using SME.CDEP.Dominio.Extensions;
 
 namespace SME.CDEP.Aplicacao.Servicos
 {
-    public class ServicoPerfilUsuario : IServicoPerfilUsuario
+    public class ServicoPerfilUsuario(IServicoAcessos servicoAcessos) : IServicoPerfilUsuario
     {
-        private readonly IServicoAcessos servicoAcessos;
-        
-        public ServicoPerfilUsuario(IServicoAcessos servicoAcessos) 
-        {
-            this.servicoAcessos = servicoAcessos ?? throw new ArgumentNullException(nameof(servicoAcessos));
-        }
-        
+        private readonly IServicoAcessos servicoAcessos = servicoAcessos ?? throw new ArgumentNullException(nameof(servicoAcessos));
+
         public async Task<RetornoPerfilUsuarioDTO> ObterPerfisUsuario(string login)
         {
             var retorno = await servicoAcessos.ObterPerfisUsuario(login);
