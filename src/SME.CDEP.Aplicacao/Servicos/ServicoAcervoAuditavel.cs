@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using SME.CDEP.Aplicacao.DTOS;
 using SME.CDEP.Aplicacao.Extensions;
@@ -18,54 +19,36 @@ using Exception = System.Exception;
 #nullable disable
 namespace SME.CDEP.Aplicacao.Servicos
 {
-    public class ServicoAcervoAuditavel : IServicoAcervo
+    public class ServicoAcervoAuditavel(IRepositorioAcervo repositorioAcervo, IMapper mapper,
+        IContextoAplicacao contextoAplicacao, IRepositorioAcervoCreditoAutor repositorioAcervoCreditoAutor,
+        IRepositorioArquivo repositorioArquivo,
+        IRepositorioAcervoBibliografico repositorioAcervoBibliografico,
+        IRepositorioAcervoDocumental repositorioAcervoDocumental,
+        IRepositorioAcervoArteGrafica repositorioAcervoArteGrafica,
+        IRepositorioAcervoAudiovisual repositorioAcervoAudiovisual,
+        IRepositorioAcervoFotografico repositorioAcervoFotografico,
+        IRepositorioAcervoTridimensional repositorioAcervoTridimensional,
+        IRepositorioParametroSistema repositorioParametroSistema,
+        IOptions<ConfiguracaoArmazenamentoOptions> configuracaoArmazenamentoOptions,
+        IServicoArmazenamento servicoArmazenamento,
+        IServicoHistoricoConsultaAcervo servicoHistoricoConsultaAcervo,
+        ILogger<ServicoAcervoAuditavel> logger) : IServicoAcervo
     {
-        private readonly IRepositorioAcervo repositorioAcervo;
-        private readonly IRepositorioAcervoCreditoAutor repositorioAcervoCreditoAutor;
-        private readonly IMapper mapper;
-        private readonly IContextoAplicacao contextoAplicacao;
-        private readonly IRepositorioArquivo repositorioArquivo;
-        private readonly IRepositorioAcervoBibliografico repositorioAcervoBibliografico;
-        private readonly IRepositorioAcervoDocumental repositorioAcervoDocumental;
-        private readonly IRepositorioAcervoArteGrafica repositorioAcervoArteGrafica;
-        private readonly IRepositorioAcervoAudiovisual repositorioAcervoAudiovisual;
-        private readonly IRepositorioAcervoFotografico repositorioAcervoFotografico;
-        private readonly IRepositorioAcervoTridimensional repositorioAcervoTridimensional;
-        private readonly IRepositorioParametroSistema repositorioParametroSistema;
-        private readonly ConfiguracaoArmazenamentoOptions configuracaoArmazenamentoOptions;
-        private readonly IServicoArmazenamento servicoArmazenamento;
-        private readonly IServicoHistoricoConsultaAcervo servicoHistoricoConsultaAcervo;
-
-        public ServicoAcervoAuditavel(IRepositorioAcervo repositorioAcervo, IMapper mapper,
-            IContextoAplicacao contextoAplicacao, IRepositorioAcervoCreditoAutor repositorioAcervoCreditoAutor,
-            IRepositorioArquivo repositorioArquivo,
-            IRepositorioAcervoBibliografico repositorioAcervoBibliografico,
-            IRepositorioAcervoDocumental repositorioAcervoDocumental,
-            IRepositorioAcervoArteGrafica repositorioAcervoArteGrafica,
-            IRepositorioAcervoAudiovisual repositorioAcervoAudiovisual,
-            IRepositorioAcervoFotografico repositorioAcervoFotografico,
-            IRepositorioAcervoTridimensional repositorioAcervoTridimensional,
-            IRepositorioParametroSistema repositorioParametroSistema,
-            IOptions<ConfiguracaoArmazenamentoOptions> configuracaoArmazenamentoOptions,
-            IServicoArmazenamento servicoArmazenamento,
-            IServicoHistoricoConsultaAcervo servicoHistoricoConsultaAcervo)
-        {
-            this.repositorioAcervo = repositorioAcervo ?? throw new ArgumentNullException(nameof(repositorioAcervo));
-            this.mapper = mapper ?? throw new ArgumentNullException(nameof(mapper));
-            this.contextoAplicacao = contextoAplicacao ?? throw new ArgumentNullException(nameof(contextoAplicacao));
-            this.repositorioAcervoCreditoAutor = repositorioAcervoCreditoAutor ?? throw new ArgumentNullException(nameof(repositorioAcervoCreditoAutor));
-            this.repositorioArquivo = repositorioArquivo ?? throw new ArgumentNullException(nameof(repositorioArquivo));
-            this.repositorioAcervoBibliografico = repositorioAcervoBibliografico ?? throw new ArgumentNullException(nameof(repositorioAcervoBibliografico));
-            this.repositorioAcervoDocumental = repositorioAcervoDocumental ?? throw new ArgumentNullException(nameof(repositorioAcervoDocumental));
-            this.repositorioAcervoArteGrafica = repositorioAcervoArteGrafica ?? throw new ArgumentNullException(nameof(repositorioAcervoArteGrafica));
-            this.repositorioAcervoAudiovisual = repositorioAcervoAudiovisual ?? throw new ArgumentNullException(nameof(repositorioAcervoAudiovisual));
-            this.repositorioAcervoFotografico = repositorioAcervoFotografico ?? throw new ArgumentNullException(nameof(repositorioAcervoFotografico));
-            this.repositorioAcervoTridimensional = repositorioAcervoTridimensional ?? throw new ArgumentNullException(nameof(repositorioAcervoTridimensional));
-            this.repositorioParametroSistema = repositorioParametroSistema ?? throw new ArgumentNullException(nameof(repositorioParametroSistema));
-            this.configuracaoArmazenamentoOptions = configuracaoArmazenamentoOptions?.Value ?? throw new ArgumentNullException(nameof(configuracaoArmazenamentoOptions));
-            this.servicoArmazenamento = servicoArmazenamento ?? throw new ArgumentNullException(nameof(servicoArmazenamento));
-            this.servicoHistoricoConsultaAcervo = servicoHistoricoConsultaAcervo ?? throw new ArgumentNullException(nameof(servicoHistoricoConsultaAcervo));
-        }
+        private readonly IRepositorioAcervo repositorioAcervo = repositorioAcervo ?? throw new ArgumentNullException(nameof(repositorioAcervo));
+        private readonly IRepositorioAcervoCreditoAutor repositorioAcervoCreditoAutor = repositorioAcervoCreditoAutor ?? throw new ArgumentNullException(nameof(repositorioAcervoCreditoAutor));
+        private readonly IMapper mapper = mapper ?? throw new ArgumentNullException(nameof(mapper));
+        private readonly IContextoAplicacao contextoAplicacao = contextoAplicacao ?? throw new ArgumentNullException(nameof(contextoAplicacao));
+        private readonly IRepositorioArquivo repositorioArquivo = repositorioArquivo ?? throw new ArgumentNullException(nameof(repositorioArquivo));
+        private readonly IRepositorioAcervoBibliografico repositorioAcervoBibliografico = repositorioAcervoBibliografico ?? throw new ArgumentNullException(nameof(repositorioAcervoBibliografico));
+        private readonly IRepositorioAcervoDocumental repositorioAcervoDocumental = repositorioAcervoDocumental ?? throw new ArgumentNullException(nameof(repositorioAcervoDocumental));
+        private readonly IRepositorioAcervoArteGrafica repositorioAcervoArteGrafica = repositorioAcervoArteGrafica ?? throw new ArgumentNullException(nameof(repositorioAcervoArteGrafica));
+        private readonly IRepositorioAcervoAudiovisual repositorioAcervoAudiovisual = repositorioAcervoAudiovisual ?? throw new ArgumentNullException(nameof(repositorioAcervoAudiovisual));
+        private readonly IRepositorioAcervoFotografico repositorioAcervoFotografico = repositorioAcervoFotografico ?? throw new ArgumentNullException(nameof(repositorioAcervoFotografico));
+        private readonly IRepositorioAcervoTridimensional repositorioAcervoTridimensional = repositorioAcervoTridimensional ?? throw new ArgumentNullException(nameof(repositorioAcervoTridimensional));
+        private readonly IRepositorioParametroSistema repositorioParametroSistema = repositorioParametroSistema ?? throw new ArgumentNullException(nameof(repositorioParametroSistema));
+        private readonly ConfiguracaoArmazenamentoOptions configuracaoArmazenamentoOptions = configuracaoArmazenamentoOptions?.Value ?? throw new ArgumentNullException(nameof(configuracaoArmazenamentoOptions));
+        private readonly IServicoArmazenamento servicoArmazenamento = servicoArmazenamento ?? throw new ArgumentNullException(nameof(servicoArmazenamento));
+        private readonly IServicoHistoricoConsultaAcervo servicoHistoricoConsultaAcervo = servicoHistoricoConsultaAcervo ?? throw new ArgumentNullException(nameof(servicoHistoricoConsultaAcervo));
 
         public async Task<long> Inserir(Acervo acervo)
         {
@@ -254,6 +237,7 @@ namespace SME.CDEP.Aplicacao.Servicos
 
         public async Task<PaginacaoResultadoDTO<PesquisaAcervoDTO>> ObterPorTextoLivreETipoAcervo(FiltroTextoLivreTipoAcervoDTO filtroTextoLivreTipoAcervo)
         {
+            logger.LogInformation("Iniciando pesquisa de acervo por texto livre e tipo de acervo. Filtro: {@filtroTextoLivreTipoAcervo}", filtroTextoLivreTipoAcervo);
             var paginacao = Paginacao;
 
             var acervos = await repositorioAcervo.ObterPorTextoLivreETipoAcervo(filtroTextoLivreTipoAcervo.TextoLivre, filtroTextoLivreTipoAcervo.TipoAcervo, filtroTextoLivreTipoAcervo.AnoInicial, filtroTextoLivreTipoAcervo.AnoFinal);
@@ -312,6 +296,7 @@ namespace SME.CDEP.Aplicacao.Servicos
 
         private async Task RegistrarHistoricoDePesquisaAsync(FiltroTextoLivreTipoAcervoDTO filtro, int quantidadeResultados)
         {
+            logger.LogInformation("Registrando histórico de pesquisa de acervo. Filtro: {@filtro}, QuantidadeResultados: {quantidadeResultados}", filtro, quantidadeResultados);
             await servicoHistoricoConsultaAcervo.InserirAsync(new()
             {
                 TermoPesquisado = filtro.TextoLivre,
@@ -321,6 +306,7 @@ namespace SME.CDEP.Aplicacao.Servicos
                 QuantidadeResultados = quantidadeResultados,
                 DataConsulta = DateTime.UtcNow
             });
+            logger.LogInformation("Histórico de pesquisa de acervo registrado com sucesso.");
         }
 
         private async Task<IEnumerable<TipoAcervoNomeArquivoFisicoDTO>> ObterImagensPadrao()
