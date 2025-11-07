@@ -21,7 +21,7 @@ namespace SME.CDEP.Aplicacao.Integracoes
                 throw new NegocioException(MensagemNegocio.USUARIO_OU_SENHA_INVALIDOS);
             
             var json = await resposta.Content.ReadAsStringAsync();
-            return JsonConvert.DeserializeObject<UsuarioAutenticacaoRetornoDTO>(json);
+            return JsonConvert.DeserializeObject<UsuarioAutenticacaoRetornoDTO>(json)!;
         }
 
         public async Task<RetornoPerfilUsuarioDTO> ObterPerfisUsuario(string login, Guid? perfilUsuarioId)
@@ -43,7 +43,7 @@ namespace SME.CDEP.Aplicacao.Integracoes
                throw new NegocioException(MensagemNegocio.PERFIS_DO_USUARIO_NAO_LOCALIZADOS_VERIFIQUE_O_LOGIN);
            
            var json = await resposta.Content.ReadAsStringAsync();
-            return JsonConvert.DeserializeObject<RetornoPerfilUsuarioDTO>(json);
+            return JsonConvert.DeserializeObject<RetornoPerfilUsuarioDTO>(json)!;
         }
 
         public async Task<bool> UsuarioCadastradoCoreSSO(string login)
@@ -84,7 +84,7 @@ namespace SME.CDEP.Aplicacao.Integracoes
             if (!resposta.IsSuccessStatusCode) return new DadosUsuarioDTO();
             
             var json = await resposta.Content.ReadAsStringAsync();
-            return JsonConvert.DeserializeObject<DadosUsuarioDTO>(json);
+            return JsonConvert.DeserializeObject<DadosUsuarioDTO>(json)!;
         }
 
         public Task<bool> AlterarSenha(string login, string senhaAtual, string senhaNova)
@@ -116,7 +116,7 @@ namespace SME.CDEP.Aplicacao.Integracoes
             if (!resposta.IsSuccessStatusCode) return string.Empty;
 
             var json = await resposta.Content.ReadAsStringAsync();
-            return JsonConvert.DeserializeObject<string>(json);
+            return JsonConvert.DeserializeObject<string>(json)!;
         }
 
         public async Task<bool> TokenRecuperacaoSenhaEstaValido(Guid token)
@@ -138,7 +138,7 @@ namespace SME.CDEP.Aplicacao.Integracoes
             if (!resposta.IsSuccessStatusCode) return string.Empty;
 
             var json = await resposta.Content.ReadAsStringAsync();
-            return JsonConvert.DeserializeObject<string>(json);
+            return JsonConvert.DeserializeObject<string>(json)!;
         }
 
         public async Task<RetornoPerfilUsuarioDTO> RevalidarToken(string token)
@@ -162,10 +162,10 @@ namespace SME.CDEP.Aplicacao.Integracoes
 
             var resposta = await httpClient.GetAsync($"{ConstantesServicoAcessos.URL_USUARIOS_PERFIS_RESPONSAVEIS}{parametros}");
 
-            if (!resposta.IsSuccessStatusCode) return default;
+            if (!resposta.IsSuccessStatusCode) return default!;
 
             var json = await resposta.Content.ReadAsStringAsync();
-            return JsonConvert.DeserializeObject<IEnumerable<ResponsavelDTO>>(json);
+            return JsonConvert.DeserializeObject<IEnumerable<ResponsavelDTO>>(json)!;
         }
     }
 }
