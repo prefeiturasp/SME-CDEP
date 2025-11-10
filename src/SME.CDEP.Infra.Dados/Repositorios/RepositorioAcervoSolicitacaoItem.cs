@@ -1,4 +1,5 @@
-﻿using System.Text;
+﻿using System.Diagnostics.CodeAnalysis;
+using System.Text;
 using Dapper;
 using SME.CDEP.Dominio.Contexto;
 using SME.CDEP.Dominio.Entidades;
@@ -8,11 +9,10 @@ using SME.CDEP.Infra.Dominio.Enumerados;
 
 namespace SME.CDEP.Infra.Dados.Repositorios
 {
-    public class RepositorioAcervoSolicitacaoItem : RepositorioBaseAuditavel<AcervoSolicitacaoItem>, IRepositorioAcervoSolicitacaoItem
+    [ExcludeFromCodeCoverage]
+    public class RepositorioAcervoSolicitacaoItem(IContextoAplicacao contexto, ICdepConexao conexao) : 
+        RepositorioBaseAuditavel<AcervoSolicitacaoItem>(contexto,conexao), IRepositorioAcervoSolicitacaoItem
     {
-        public RepositorioAcervoSolicitacaoItem(IContextoAplicacao contexto, ICdepConexao conexao) : base(contexto,conexao)
-        { }
-        
         public async Task<IEnumerable<AcervoSolicitacaoItemResumido>> ObterMinhasSolicitacoes(long usuarioId)
         {
             var query = @"
@@ -86,10 +86,10 @@ namespace SME.CDEP.Infra.Dados.Repositorios
             if (dataVisitaInicio.HasValue && dataVisitaFim.HasValue)
                 query.AppendLine(" and asi.dt_visita is not null and asi.dt_visita::Date between @dataVisitaInicio::Date and @dataVisitaFim::Date ");
 
-            if (responsavel.EstaPreenchido())
+            if (!string.IsNullOrWhiteSpace(responsavel))
                 query.AppendLine(" and ur.login = @responsavel ");
             
-            if (solicitanteRf.EstaPreenchido())
+            if (!string.IsNullOrWhiteSpace(solicitanteRf))
                 query.AppendLine(" and u.login = @solicitanteRf ");
             
             if (situacaoEmprestimo.HasValue)
@@ -171,7 +171,7 @@ namespace SME.CDEP.Infra.Dados.Repositorios
             return conexao.Obter().QueryAsync<AcervoSolicitacaoItem>(query, new { acervoSolicitacaoId });
         }
 
-        public Task<Acervo> ObterAcervoPorAcervoSolicitacaoItemId(long acervoSolicitacaoItemId)
+        public Task<Acervo?> ObterAcervoPorAcervoSolicitacaoItemId(long acervoSolicitacaoItemId)
         {
             var query = @"
              select a.id,

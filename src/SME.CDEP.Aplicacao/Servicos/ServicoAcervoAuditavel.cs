@@ -360,7 +360,7 @@ namespace SME.CDEP.Aplicacao.Servicos
             if (totalRegistros == 0)
                 return new PaginacaoResultadoDTO<AcervoTableRowDTO>()
                 {
-                    Items = new List<AcervoTableRowDTO>(),
+                    Items = [],
                     TotalRegistros = 0,
                     TotalPaginas = 0
                 };
