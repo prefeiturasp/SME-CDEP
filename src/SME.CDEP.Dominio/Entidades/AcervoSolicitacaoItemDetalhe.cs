@@ -10,12 +10,12 @@ namespace SME.CDEP.Dominio.Entidades
         public TipoAcervo TipoAcervo { get; set; }
         public DateTime DataCriacao { get; set; }
         public DateTime? DataVisita { get; set; }
-        public string Solicitante { get; set; }
-        public string Responsavel { get; set; }
-        public string Titulo { get; set; }
-        public string Codigo { get; set; }
-        public string CodigoNovo { get; set; }
-        public string Email { get; set; }
+        public string? Solicitante { get; set; }
+        public string? Responsavel { get; set; }
+        public string Titulo { get; set; } = null!;
+        public string? Codigo { get; set; }
+        public string? CodigoNovo { get; set; }
+        public string? Email { get; set; }
         public SituacaoSolicitacaoItem Situacao { get; set; }
         public SituacaoEmprestimo? SituacaoEmprestimo { get; set; }
         public TipoAtendimento? TipoAtendimento { get; set; }
@@ -34,11 +34,11 @@ namespace SME.CDEP.Dominio.Entidades
         {
             get
             {
-                return Codigo.EstaPreenchido() && CodigoNovo.EstaPreenchido()
+                return !string.IsNullOrWhiteSpace(Codigo) && !string.IsNullOrWhiteSpace(CodigoNovo)
                     ? $"{Codigo}/{CodigoNovo}"
-                    : Codigo.EstaPreenchido()
+                    : !string.IsNullOrWhiteSpace(Codigo)
                         ? Codigo
-                        : CodigoNovo;
+                        : CodigoNovo ?? string.Empty;
             }
         }
     }

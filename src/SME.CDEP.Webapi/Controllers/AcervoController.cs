@@ -27,7 +27,7 @@ public class AcervoController : BaseController
     [ProducesResponseType(typeof(RetornoBaseDTO), 403)]
     [ProducesResponseType(typeof(RetornoBaseDTO), 601)]
     [Permissao(Permissao.CadastroAcervo_C, Policy = "Bearer")]
-    public async Task<IActionResult> ObterTodosOuPorTipoTituloCreditoAutoriaTomboECodigo([FromQuery] FiltroTipoTituloCreditoAutoriaCodigoAcervoDTO filtro, [FromServices] IServicoAcervo servicoAcervo)
+    public async Task<IActionResult> ObterTodos([FromQuery] FiltroTipoTituloCreditoAutoriaCodigoAcervoDTO filtro, [FromServices] IServicoAcervo servicoAcervo)
     {
         return Ok(await servicoAcervo.ObterPorFiltro(filtro.TipoAcervo, filtro.Titulo, filtro.CreditoAutorId, filtro.Codigo, filtro.IdEditora));
     }

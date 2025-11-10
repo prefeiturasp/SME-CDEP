@@ -24,8 +24,8 @@ namespace SME.CDEP.Aplicacao.Servicos
             this.mapper = mapper ?? throw new ArgumentNullException(nameof(mapper));
         } 
 
-        public async Task<bool> Publicar(string rota, object filtros, Guid? codigoCorrelacao = null, Usuario usuarioLogado = null,
-            bool notificarErroUsuario = false, string exchange = null)
+        public async Task<bool> Publicar(string rota, object filtros, Guid? codigoCorrelacao = null, Usuario? usuarioLogado = null,
+            bool notificarErroUsuario = false, string? exchange = null)
         {
             var usuario = mapper.Map<UsuarioDTO>(usuarioLogado) ?? await ObterUsuario();
             

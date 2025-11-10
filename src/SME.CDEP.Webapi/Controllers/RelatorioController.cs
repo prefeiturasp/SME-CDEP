@@ -95,5 +95,18 @@ namespace SME.CDEP.Webapi.Controllers
                      "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
                      "relatorio.xlsx");
         }
+
+        [HttpPost("controle-download-acervo")]
+        [Permissao(Permissao.OperacoesSolicitacoes_C, Policy = "Bearer")]
+        public async Task<IActionResult> RelatorioControleDownloadAcervo([FromBody] RelatorioControleDownloadAcervoRequest filtros,
+           [FromServices] IRelatorioControleDownloadAcervoUseCase relatorioControleDownloadAcervoUseCase)
+        {
+            var file = await relatorioControleDownloadAcervoUseCase.ExecutarAsync(filtros);
+            if (file == null)
+                return NoContent();
+            return File(file,
+                     "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+                     "relatorio.xlsx");
+        }
     }
 }
