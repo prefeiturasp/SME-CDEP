@@ -7,16 +7,15 @@ using SME.CDEP.Webapi.Filtros;
 
 namespace SME.CDEP.Webapi.Controllers;
 
-[ApiController]
 [ValidaDto]
-public class AcervoController : BaseController
+public class AcervoController (IServicoAcervo servicoAcervo) : BaseController
 {
     [HttpGet("tipos")]
     [ProducesResponseType(typeof(IEnumerable<IdNomeDTO>), 200)]
     [ProducesResponseType(typeof(RetornoBaseDTO), 400)]
     [ProducesResponseType(typeof(RetornoBaseDTO), 403)]
     [ProducesResponseType(typeof(RetornoBaseDTO), 601)]
-    public IActionResult ObterTiposDeAcervos([FromServices] IServicoAcervo servicoAcervo)
+    public IActionResult ObterTiposDeAcervos()
     {
         return Ok(servicoAcervo.ObterTodosTipos());
     }
@@ -27,7 +26,7 @@ public class AcervoController : BaseController
     [ProducesResponseType(typeof(RetornoBaseDTO), 403)]
     [ProducesResponseType(typeof(RetornoBaseDTO), 601)]
     [Permissao(Permissao.CadastroAcervo_C, Policy = "Bearer")]
-    public async Task<IActionResult> ObterTodos([FromQuery] FiltroTipoTituloCreditoAutoriaCodigoAcervoDTO filtro, [FromServices] IServicoAcervo servicoAcervo)
+    public async Task<IActionResult> ObterTodos([FromQuery] FiltroTipoTituloCreditoAutoriaCodigoAcervoDTO filtro)
     {
         return Ok(await servicoAcervo.ObterPorFiltro(filtro.TipoAcervo, filtro.Titulo, filtro.CreditoAutorId, filtro.Codigo, filtro.IdEditora));
     }
@@ -39,7 +38,7 @@ public class AcervoController : BaseController
     [ProducesResponseType(typeof(RetornoBaseDTO), 403)]
     [ProducesResponseType(typeof(RetornoBaseDTO), 601)]
     [AllowAnonymous]
-    public async Task<IActionResult> ObterPorTextoLivreETipoAcervo([FromQuery] FiltroTextoLivreTipoAcervoDTO filtroTextoLivreTipoAcervo, [FromServices] IServicoAcervo servicoAcervo)
+    public async Task<IActionResult> ObterPorTextoLivreETipoAcervo([FromQuery] FiltroTextoLivreTipoAcervoDTO filtroTextoLivreTipoAcervo)
     {
         return Ok(await servicoAcervo.ObterPorTextoLivreETipoAcervo(filtroTextoLivreTipoAcervo));
     }
@@ -50,7 +49,7 @@ public class AcervoController : BaseController
     [ProducesResponseType(typeof(RetornoBaseDTO), 403)]
     [ProducesResponseType(typeof(RetornoBaseDTO), 601)]
     [AllowAnonymous]
-    public async Task<IActionResult> ObterDetalhamentoAcervo([FromQuery] FiltroDetalharAcervoDTO filtroDetalharAcervoDto, [FromServices] IServicoAcervo servicoAcervo)
+    public async Task<IActionResult> ObterDetalhamentoAcervo([FromQuery] FiltroDetalharAcervoDTO filtroDetalharAcervoDto)
     {
         return Ok(await servicoAcervo.ObterDetalhamentoPorTipoAcervoECodigo(filtroDetalharAcervoDto));
     }
@@ -61,7 +60,7 @@ public class AcervoController : BaseController
     [ProducesResponseType(typeof(RetornoBaseDTO), 403)]
     [ProducesResponseType(typeof(RetornoBaseDTO), 601)]
     [Permissao(Permissao.OperacoesSolicitacoes_C, Policy = "Bearer")]
-    public async Task<IActionResult> ObterTermoDeCompromisso([FromServices] IServicoAcervo servicoAcervo)
+    public async Task<IActionResult> ObterTermoDeCompromisso()
     {
         return Ok(await servicoAcervo.ObterTermoDeCompromisso());
     }
@@ -72,8 +71,19 @@ public class AcervoController : BaseController
     [ProducesResponseType(typeof(RetornoBaseDTO), 403)]
     [ProducesResponseType(typeof(RetornoBaseDTO), 601)]
     [Permissao(Permissao.CadastroAcervo_C, Policy = "Bearer")]
-    public async Task<IActionResult> PesquisarAcervoPorCodigoTombo([FromQuery] FiltroCodigoTomboDTO filtroCodigoTomboDto, [FromServices] IServicoAcervo servicoAcervo)
+    public async Task<IActionResult> PesquisarAcervoPorCodigoTombo([FromQuery] FiltroCodigoTomboDTO filtroCodigoTomboDto)
     {
         return Ok(await servicoAcervo.PesquisarAcervoPorCodigoTombo(filtroCodigoTomboDto));
+    }
+
+    [HttpGet("autocompletar-titulo")]
+    [ProducesResponseType(typeof(IEnumerable<string>), 200)]
+    [ProducesResponseType(typeof(RetornoBaseDTO), 400)]
+    [ProducesResponseType(typeof(RetornoBaseDTO), 403)]
+    [ProducesResponseType(typeof(RetornoBaseDTO), 601)]
+    [Permissao(Permissao.OperacoesSolicitacoes_C, Policy = "Bearer")]
+    public async Task<IActionResult> ObterAutocompletacaoTituloAcervosBaixados([FromQuery] string termoPesquisado)
+    {
+        return Ok(await servicoAcervo.ObterAutocompletacaoTituloAcervosBaixadosAsync(termoPesquisado));
     }
 }

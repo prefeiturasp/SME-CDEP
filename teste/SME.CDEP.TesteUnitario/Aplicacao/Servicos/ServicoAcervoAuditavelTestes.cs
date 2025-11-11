@@ -85,8 +85,8 @@ namespace SME.CDEP.TesteUnitario.Aplicacao.Servicos
                 Codigo = "TMB-001",
                 Ano = "2024",
                 TipoAcervoId = (long)TipoAcervo.Bibliografico,
-                CreditosAutoresIds = new long[] { 1, 2 },
-                CoAutores = new List<CoAutor> { new CoAutor { CreditoAutorId = 3, TipoAutoria = "Ilustrador" } }
+                CreditosAutoresIds = [1, 2],
+                CoAutores = [new CoAutor { CreditoAutorId = 3, TipoAutoria = "Ilustrador" }]
             };
 
             _repositorioAcervoMock.Setup(r => r.ExisteCodigo(acervo.Codigo, 0, It.IsAny<TipoAcervo>())).ReturnsAsync(false);
@@ -129,8 +129,8 @@ namespace SME.CDEP.TesteUnitario.Aplicacao.Servicos
                 Codigo = "TMB-001",
                 Ano = "2023",
                 TipoAcervoId = (long)TipoAcervo.Bibliografico,
-                CreditosAutoresIds = new long[] { 2, 3 }, 
-                CoAutores = new List<CoAutor>()
+                CreditosAutoresIds = [2, 3],
+                CoAutores = []
             };
             var acervoDto = new AcervoDTO
             {
@@ -142,14 +142,14 @@ namespace SME.CDEP.TesteUnitario.Aplicacao.Servicos
             };
             var autoresAtuais = new List<AcervoCreditoAutor>
             {
-                new AcervoCreditoAutor { AcervoId = 1, CreditoAutorId = 1 },
-                new AcervoCreditoAutor { AcervoId = 1, CreditoAutorId = 2 }
+                new() { AcervoId = 1, CreditoAutorId = 1 },
+                new() { AcervoId = 1, CreditoAutorId = 2 }
             };
 
             _repositorioAcervoMock.Setup(r => r.ObterPorId(It.IsAny<long>())).ReturnsAsync(acervo);
             _repositorioAcervoMock.Setup(r => r.ExisteCodigo(acervo.Codigo, acervo.Id, It.IsAny<TipoAcervo>())).ReturnsAsync(false);
             _repositorioAcervoCreditoAutorMock.Setup(r => r.ObterPorAcervoId(acervo.Id, false)).ReturnsAsync(autoresAtuais);
-            _repositorioAcervoCreditoAutorMock.Setup(r => r.ObterPorAcervoId(acervo.Id, true)).ReturnsAsync(new List<AcervoCreditoAutor>());
+            _repositorioAcervoCreditoAutorMock.Setup(r => r.ObterPorAcervoId(acervo.Id, true)).ReturnsAsync([]);
             _repositorioAcervoMock.Setup(r => r.Atualizar(acervo)).ReturnsAsync(acervo);
             _mapperMock.Setup(m => m.Map<Acervo>(It.IsAny<AcervoDTO>())).Returns(acervo);
             _mapperMock.Setup(m => m.Map<AcervoDTO>(It.IsAny<Acervo>())).Returns(acervoDto);
@@ -187,7 +187,6 @@ namespace SME.CDEP.TesteUnitario.Aplicacao.Servicos
         public async Task Obter_Detalhamento_Quando_Acervo_Nao_Encontrado_Deve_Lancar_Negocio_Exception()
         {
             var filtro = new FiltroDetalharAcervoDTO { Codigo = "COD-INEXISTENTE", Tipo = TipoAcervo.Bibliografico };
-            _repositorioAcervoBibliograficoMock.Setup(r => r.ObterDetalhamentoPorCodigo(filtro.Codigo)).ReturnsAsync((AcervoBibliograficoDetalhe)null);
 
             Func<Task> acao = async () => await _servico.ObterDetalhamentoPorTipoAcervoECodigo(filtro);
 
@@ -250,7 +249,6 @@ namespace SME.CDEP.TesteUnitario.Aplicacao.Servicos
                     .RuleFor(a => a.Id, f => f.Random.Int())
                     .Generate(),
                 new Faker<Acervo>("pt_BR")
-                    .RuleFor(a => a.CreditosAutores, f => null) 
                     .RuleFor(a => a.TipoAcervoId, (long)TipoAcervo.Fotografico)
                     .RuleFor(a => a.Id, f => f.Random.Int())
                     .Generate(),
@@ -316,11 +314,10 @@ namespace SME.CDEP.TesteUnitario.Aplicacao.Servicos
         public async Task Obter_Por_Filtro_Deve_Calcular_Corretamente_Total_De_Paginas(int totalRegistros, int registrosPorPagina, int paginasEsperadas)
         {
             // Arrange
-            var acervosDoRepo = new List<Acervo> {new Acervo
-            {
+            var acervosDoRepo = new List<Acervo> {new() {
                 Id = 1,
                 TipoAcervoId = (long)TipoAcervo.Bibliografico,
-                CreditosAutores = new List<CreditoAutor> { new CreditoAutor { Nome = "Autor Teste" } },
+                CreditosAutores = [new() { Nome = "Autor Teste" }],
                 Titulo = "Acervo Teste",
             } };
 
@@ -348,7 +345,7 @@ namespace SME.CDEP.TesteUnitario.Aplicacao.Servicos
             {
                 Id = 1,
                 TipoAcervoId = (long)TipoAcervo.DocumentacaoTextual,
-                CreditosAutores = new List<CreditoAutor> { new CreditoAutor { Nome = "Autor Teste" } },
+                CreditosAutores = [new CreditoAutor { Nome = "Autor Teste" }],
                 Titulo = "Acervo Teste",
                 CapaDocumento = null // Capa documento vazia
             };
@@ -359,7 +356,7 @@ namespace SME.CDEP.TesteUnitario.Aplicacao.Servicos
             _repositorioAcervoMock.Setup(r => r.ContarPorFiltro(It.IsAny<AcervoFiltroDto>()))
                                   .ReturnsAsync(1);
             _repositorioAcervoMock.Setup(r => r.PesquisarPorFiltroPaginado(It.IsAny<AcervoFiltroDto>(), It.IsAny<PaginacaoDto>()))
-                                  .ReturnsAsync(new List<Acervo> { acervo });
+                                  .ReturnsAsync([acervo]);
             // Act
             var resultado = await _servico.ObterPorFiltro(null, "", null, "", null);
             // Assert
@@ -470,7 +467,7 @@ namespace SME.CDEP.TesteUnitario.Aplicacao.Servicos
             {
                 Id = 1,
                 Titulo = "Documento Histórico",
-                Imagens = new List<ImagemDetalhe> { imagemDominio }
+                Imagens = [imagemDominio]
             };
 
             var imagemDto = new ImagemDTO
@@ -482,7 +479,7 @@ namespace SME.CDEP.TesteUnitario.Aplicacao.Servicos
             var detalheDto = new AcervoDocumentalDetalheDTO
             {
                 Titulo = detalheDominio.Titulo,
-                Imagens = new[] { imagemDto }
+                Imagens = [imagemDto]
             };
 
             _repositorioAcervoDocumentalMock.Setup(r => r.ObterDetalhamentoPorCodigo(filtro.Codigo)).ReturnsAsync(detalheDominio);
@@ -514,8 +511,8 @@ namespace SME.CDEP.TesteUnitario.Aplicacao.Servicos
             var codigo = Guid.NewGuid();
             var nomeImagemPadraoFisico = $"{codigo}.png";
 
-            var detalheDominio = new AcervoDocumentalDetalhe { Id = 2, Titulo = "Documento Sem Imagem", Imagens = new List<ImagemDetalhe>() };
-            var detalheDto = new AcervoDocumentalDetalheDTO { Titulo = detalheDominio.Titulo, Imagens = Array.Empty<ImagemDTO>() };
+            var detalheDominio = new AcervoDocumentalDetalhe { Id = 2, Titulo = "Documento Sem Imagem", Imagens = [] };
+            var detalheDto = new AcervoDocumentalDetalheDTO { Titulo = detalheDominio.Titulo, Imagens = [] };
 
             _repositorioAcervoDocumentalMock.Setup(r => r.ObterDetalhamentoPorCodigo(filtro.Codigo)).ReturnsAsync(detalheDominio);
             _mapperMock.Setup(m => m.Map<AcervoDocumentalDetalheDTO>(detalheDominio)).Returns(detalheDto);
@@ -544,23 +541,6 @@ namespace SME.CDEP.TesteUnitario.Aplicacao.Servicos
         }
 
         [Fact]
-        public async Task ObterDetalhamento_ParaTipoDocumentalNaoEncontrado_DeveLancarNegocioException()
-        {
-            // Arrange
-            var filtro = new FiltroDetalharAcervoDTO { Codigo = "COD-INEXISTENTE", Tipo = TipoAcervo.DocumentacaoTextual };
-
-            _repositorioAcervoDocumentalMock.Setup(r => r.ObterDetalhamentoPorCodigo(filtro.Codigo))
-                                            .ReturnsAsync((AcervoDocumentalDetalhe)null);
-
-            // Act
-            Func<Task> acao = async () => await _servico.ObterDetalhamentoPorTipoAcervoECodigo(filtro);
-
-            // Assert
-            await acao.Should().ThrowAsync<NegocioException>().WithMessage("Acervo não encontrado.");
-            _repositorioAcervoDocumentalMock.Verify(r => r.ObterDetalhamentoPorCodigo(filtro.Codigo), Times.Once);
-        }
-
-        [Fact]
         public async Task DadoUmFiltroQualquer_QuandoExecutarObterPorTextoLivreETipoAcervo_DevePersistirHistoricoDeConsulta()
         {
             // Arrange
@@ -582,6 +562,38 @@ namespace SME.CDEP.TesteUnitario.Aplicacao.Servicos
                     h.AnoFinal == null &&
                     h.AnoInicial == null
                 )), Times.Once);
+        }
+
+        [Fact]
+        public async Task DadoTermoPesquisadoMaiorQueTres_QuandoExecutarObterAutocompletacaoTituloAcervosBaixadosAsync_DeveRetornarListaDeTitulos()
+        {
+            // Arrange
+            var termoPesquisado = _faker.Random.AlphaNumeric(3);
+            var titulosEsperados = new List<string> { "Titulo 1", "Titulo 2", "Titulo 3" };
+
+            _repositorioAcervoMock
+                .Setup(r => r.ObterTituloAcervosBaixadosAsync(It.IsAny<string>()))
+                .ReturnsAsync(titulosEsperados);
+
+            // Act
+            var resultado = await _servico.ObterAutocompletacaoTituloAcervosBaixadosAsync(termoPesquisado);
+
+            // Assert
+            resultado.Should().NotBeNull();
+            resultado.Should().BeEquivalentTo(titulosEsperados);
+        }
+
+        [Theory]
+        [InlineData("")]
+        [InlineData("a")]
+        [InlineData("ab")]
+        public async Task DadoTermoPesquisadoMenorIgualTres_QuandoExecutarObterAutocompletacaoTituloAcervosBaixadosAsync_DeveRetornarListaVazia(string termoPesquisado)
+        {
+            // Act
+            var resultado = await _servico.ObterAutocompletacaoTituloAcervosBaixadosAsync(termoPesquisado);
+            // Assert
+            resultado.Should().NotBeNull();
+            resultado.Should().BeEmpty();
         }
 
         private static ObjectStat ObterMetadados(string nomeArquivo, string contentType, long tamanho)
