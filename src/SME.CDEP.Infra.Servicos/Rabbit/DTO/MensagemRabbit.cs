@@ -4,7 +4,7 @@ namespace SME.CDEP.Infra.Servicos.Rabbit.Dto
 {
     public class MensagemRabbit
     {
-        public MensagemRabbit(string action, object mensagem, Guid? codigoCorrelacao, string usuarioLogadoRF, bool notificarErroUsuario = false, string perfilUsuario = null, string administrador = null)
+        public MensagemRabbit(string action, object mensagem, Guid? codigoCorrelacao, string usuarioLogadoRF, bool notificarErroUsuario = false, string? perfilUsuario = null, string? administrador = null)
         {
             Action = action;
             Mensagem = mensagem;
@@ -15,10 +15,10 @@ namespace SME.CDEP.Infra.Servicos.Rabbit.Dto
             Administrador = administrador;
         }
 
-        public MensagemRabbit(object mensagem, Guid? codigoCorrelacao, string usuarioLogadoNomeCompleto, string usuarioLogadoRF, Guid? perfil, bool notificarErroUsuario = false, string administrador = null, string acao = null)
+        public MensagemRabbit(object mensagem, Guid? codigoCorrelacao, string? usuarioLogadoNomeCompleto, string? usuarioLogadoRF, Guid? perfil, bool notificarErroUsuario = false, string? administrador = null, string? acao = null)
         {
             Mensagem = mensagem;
-            CodigoCorrelacao = codigoCorrelacao ?? Guid.NewGuid(); ;
+            CodigoCorrelacao = codigoCorrelacao ?? Guid.NewGuid();
             UsuarioLogadoNomeCompleto = usuarioLogadoNomeCompleto;
             UsuarioLogadoRF = usuarioLogadoRF;
             NotificarErroUsuario = notificarErroUsuario;
@@ -36,18 +36,18 @@ namespace SME.CDEP.Infra.Servicos.Rabbit.Dto
         {
 
         }
-        public string Action { get; set; }
+        public string? Action { get; set; }
         public object Mensagem { get; set; }
         public Guid CodigoCorrelacao { get; set; }
-        public string UsuarioLogadoNomeCompleto { get; set; }
-        public string UsuarioLogadoRF { get; set; }
+        public string? UsuarioLogadoNomeCompleto { get; set; }
+        public string? UsuarioLogadoRF { get; set; }
         public bool NotificarErroUsuario { get; set; }
-        public string PerfilUsuario { get; set; }
-        public string Administrador { get; set; }
+        public string? PerfilUsuario { get; set; }
+        public string? Administrador { get; set; }
 
         public T ObterObjetoMensagem<T>() where T : class
         {
-            return JsonConvert.DeserializeObject<T>(Mensagem.ToString());
+            return JsonConvert.DeserializeObject<T>(Mensagem.ToString()!)!;
         }
     }
 }

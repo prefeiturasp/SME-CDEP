@@ -1,6 +1,4 @@
-﻿using SME.CDEP.Dominio.Contexto;
-
-namespace SME.CDEP.Dominio.Contexto;
+﻿namespace SME.CDEP.Dominio.Contexto;
 
 public abstract class ContextoBase : IContextoAplicacao
 {
@@ -23,14 +21,14 @@ public abstract class ContextoBase : IContextoAplicacao
         if (Variaveis.TryGetValue(nome, out var valor))
             return (T)valor;
 
-        return default;
+        return default!;
     }
-    
+
     public List<Tuple<string, string>> ObterVariavel(string nome)
     {
         if (Variaveis.TryGetValue(nome, out var valor))
             return (List<Tuple<string, string>>)valor;
 
-        return default;
+        return default!;
     }
 }

@@ -62,7 +62,7 @@ namespace SME.CDEP.TesteUnitario.WebApi.Controllers
                               .ReturnsAsync(paginacaoResultado);
 
             // Act
-            var resultado = await _controller.ObterTodosOuPorTipoTituloCreditoAutoriaTomboECodigo(filtro, _servicoAcervoMock.Object);
+            var resultado = await _controller.ObterTodos(filtro, _servicoAcervoMock.Object);
 
             // Assert
             var okResult = Assert.IsType<OkObjectResult>(resultado);

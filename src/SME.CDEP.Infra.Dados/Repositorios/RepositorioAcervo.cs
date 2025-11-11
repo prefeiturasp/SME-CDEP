@@ -100,7 +100,7 @@ namespace SME.CDEP.Infra.Dados.Repositorios
                     if (!indiceDeAcervos.TryGetValue(acervo.Id, out var acervoEntrada))
                     {
                         acervoEntrada = acervo;
-                        acervoEntrada.CreditosAutores = new List<CreditoAutor>();
+                        acervoEntrada.CreditosAutores = [];
                         acervoEntrada.CapaDocumento = capaDocumento;
                         acervoEntrada.Editora = editora;
                         indiceDeAcervos.Add(acervoEntrada.Id, acervoEntrada);
@@ -123,10 +123,10 @@ namespace SME.CDEP.Infra.Dados.Repositorios
             builder.Where("NOT a.excluido");
 
             if (!string.IsNullOrWhiteSpace(filtro.Titulo))
-                builder.Where("lower(a.titulo) LIKE lower(@Titulo)", new { Titulo = $"%{filtro.Titulo}%" });
+                builder.Where("f_unaccent(lower(a.titulo)) LIKE f_unaccent(lower(@Titulo))", new { Titulo = $"%{filtro.Titulo}%" });
 
             if (!string.IsNullOrWhiteSpace(filtro.Codigo))
-                builder.Where("(lower(a.codigo) = lower(@Codigo) OR lower(a.codigo_novo) = lower(@Codigo))", new { filtro.Codigo });
+                builder.Where("(lower(a.codigo) LIKE lower(@Codigo) OR lower(a.codigo_novo) LIKE lower(@Codigo))", new { Codigo = $"{filtro.Codigo}%" });
 
             if (filtro.TipoAcervo.HasValue && filtro.TipoAcervo > 0)
                 builder.Where("a.tipo = @TipoAcervo", new { filtro.TipoAcervo });
@@ -278,7 +278,7 @@ namespace SME.CDEP.Infra.Dados.Repositorios
             return acervosSolicitacoes;
         }
 
-        private IEnumerable<CreditoAutorNomeAcervoId> ObterCreditosAutores(IEnumerable<CreditoAutorNomeAcervoId> creditosAutoresNomes, AcervoSolicitacaoItemCompleto acervoSolicitacao)
+        private static IEnumerable<CreditoAutorNomeAcervoId> ObterCreditosAutores(IEnumerable<CreditoAutorNomeAcervoId> creditosAutoresNomes, AcervoSolicitacaoItemCompleto acervoSolicitacao)
         {
             return creditosAutoresNomes.PossuiElementos() ? creditosAutoresNomes.Where(w => w.AcervoId == acervoSolicitacao.AcervoId).Select(s => s) : Enumerable.Empty<CreditoAutorNomeAcervoId>();
         }
