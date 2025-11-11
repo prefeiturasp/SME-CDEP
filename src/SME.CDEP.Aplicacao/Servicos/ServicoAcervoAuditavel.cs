@@ -177,7 +177,7 @@ namespace SME.CDEP.Aplicacao.Servicos
 
             await repositorioAcervoCreditoAutor.Excluir(creditosAutoresIdsExcluir, acervo.Id);
 
-            var coAutoresPropostos = acervo.CoAutores.NaoEhNulo() ? acervo.CoAutores : Enumerable.Empty<CoAutor>();
+            var coAutoresPropostos = acervo.CoAutores.NaoEhNulo() ? acervo.CoAutores : [];
             var coAutoresAtuais = await repositorioAcervoCreditoAutor.ObterPorAcervoId(acervoAlterado.Id, true);
             var coAutoresAInserir = coAutoresPropostos.Select(a => a).Except(coAutoresAtuais.Select(b => new CoAutor() { CreditoAutorId = b.CreditoAutorId, TipoAutoria = b.TipoAutoria }));
             var coAutoresIdsExcluir = coAutoresAtuais.Select(b => new CoAutor() { CreditoAutorId = b.CreditoAutorId, TipoAutoria = b.TipoAutoria }).Except(coAutoresPropostos.Select(b => b)).ToArray();
@@ -334,7 +334,7 @@ namespace SME.CDEP.Aplicacao.Servicos
             return imagensPadrao;
         }
 
-        private string ObterNomesDasImagensPadrao(TipoAcervo tipoAcervo)
+        private static string ObterNomesDasImagensPadrao(TipoAcervo tipoAcervo)
         {
             return tipoAcervo switch
             {
@@ -569,27 +569,22 @@ namespace SME.CDEP.Aplicacao.Servicos
             return perfilLogado switch
             {
                 _ when perfilLogado.EhPerfilAdminGeral() || perfilLogado.EhPerfilBasico()
-                    => tiposAcervosDisponiveis.ToArray(),
+                    => [.. tiposAcervosDisponiveis],
 
                 _ when perfilLogado.EhPerfilAdminBiblioteca()
-                    => tiposAcervosDisponiveis
-                        .Where(w => w == (long)TipoAcervo.Bibliografico)
-                        .ToArray(),
+                    => [.. tiposAcervosDisponiveis.Where(w => w == (long)TipoAcervo.Bibliografico)],
 
                 _ when perfilLogado.EhPerfilAdminMemoria()
-                    => tiposAcervosDisponiveis
-                        .Where(w => w == (long)TipoAcervo.DocumentacaoTextual)
-                        .ToArray(),
+                    => [.. tiposAcervosDisponiveis.Where(w => w == (long)TipoAcervo.DocumentacaoTextual)],
 
                 _ when perfilLogado.EhPerfilAdminMemorial()
-                    => tiposAcervosDisponiveis
+                    => [.. tiposAcervosDisponiveis
                     .Where(w => w == (long)TipoAcervo.ArtesGraficas
                                  || w == (long)TipoAcervo.Fotografico
                                  || w == (long)TipoAcervo.Tridimensional
-                                 || w == (long)TipoAcervo.Audiovisual)
-                    .ToArray(),
+                                 || w == (long)TipoAcervo.Audiovisual)],
 
-                _ => Array.Empty<long>()
+                _ => []
             };
         }
 
@@ -603,5 +598,10 @@ namespace SME.CDEP.Aplicacao.Servicos
                     Nome = v.ObterAtributo<DisplayAttribute>().Description,
                 });
         }
+
+        public async Task<IEnumerable<string>> ObterAutocompletacaoTituloAcervosBaixadosAsync(string termoPesquisado) =>
+            termoPesquisado.Trim().Length >= 3 
+            ? await repositorioAcervo.ObterTituloAcervosBaixadosAsync(termoPesquisado.TrimStart())
+            : [];
     }
 }
