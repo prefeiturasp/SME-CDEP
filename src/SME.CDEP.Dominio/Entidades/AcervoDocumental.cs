@@ -1,6 +1,4 @@
-﻿using SME.CDEP.Dominio.Enumerados;
-
-namespace SME.CDEP.Dominio.Entidades
+﻿namespace SME.CDEP.Dominio.Entidades
 {
     public class AcervoDocumental : EntidadeBase
     {

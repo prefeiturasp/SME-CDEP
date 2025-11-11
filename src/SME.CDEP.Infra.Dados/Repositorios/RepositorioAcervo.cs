@@ -112,7 +112,7 @@ namespace SME.CDEP.Infra.Dados.Repositorios
                     return acervoEntrada;
                 },
                 modelo.Parameters,
-                splitOn: "id,editora,capaDocumento" 
+                splitOn: "id,editora,capaDocumento"
             );
 
             return indiceDeAcervos.Values;
@@ -280,7 +280,7 @@ namespace SME.CDEP.Infra.Dados.Repositorios
 
         private static IEnumerable<CreditoAutorNomeAcervoId> ObterCreditosAutores(IEnumerable<CreditoAutorNomeAcervoId> creditosAutoresNomes, AcervoSolicitacaoItemCompleto acervoSolicitacao)
         {
-            return creditosAutoresNomes.PossuiElementos() ? creditosAutoresNomes.Where(w => w.AcervoId == acervoSolicitacao.AcervoId).Select(s => s) : Enumerable.Empty<CreditoAutorNomeAcervoId>();
+            return creditosAutoresNomes.PossuiElementos() ? creditosAutoresNomes.Where(w => w.AcervoId == acervoSolicitacao.AcervoId).Select(s => s) : [];
         }
 
         public async Task<IEnumerable<PesquisaAcervo>> ObterPorTextoLivreETipoAcervo(string? textoLivre, TipoAcervo? tipoAcervo, int? anoInicial, int? anoFinal)
@@ -383,6 +383,28 @@ namespace SME.CDEP.Infra.Dados.Repositorios
               and not excluido ";
 
             return conexao.Obter().QueryFirstOrDefaultAsync<Acervo>(query, new { codigo = codigoTombo.ToLower(), tiposAcervosPermitidos });
+        }
+
+        public async Task<IEnumerable<string>> ObterTituloAcervosBaixadosAsync(string termoPesquisado)
+        {
+            var query = @"
+                SELECT 
+                     acervo.titulo
+                FROM acervo_solicitacao_item
+                     INNER JOIN acervo on acervo.id = acervo_solicitacao_item.acervo_id
+               WHERE NOT acervo_solicitacao_item.excluido
+                 AND NOT acervo.excluido
+                 AND acervo_solicitacao_item.situacao = @situacaoItemBaixado
+                 AND LOWER(f_unaccent(acervo.titulo)) like f_unaccent(@termoPesquisado)
+               GROUP BY  
+                     acervo.titulo 
+               ORDER BY acervo.titulo";
+
+            return await conexao.Obter().QueryAsync<string>(query, new
+            {
+                termoPesquisado = $"{termoPesquisado.ToLower()}%",
+                situacaoItemBaixado = SituacaoSolicitacaoItem.FINALIZADO_AUTOMATICAMENTE
+            });
         }
     }
 }
