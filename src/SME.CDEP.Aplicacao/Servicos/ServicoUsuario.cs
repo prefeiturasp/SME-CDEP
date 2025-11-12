@@ -103,11 +103,14 @@ namespace SME.CDEP.Aplicacao.Servicos
             var dadosUsuarioCoreSSO = await servicoAcessos.ObterMeusDados(login);
 
             var dadosusuarioAcervo = await repositorioUsuario.ObterPorLogin(login);
+            if (dadosusuarioAcervo is null)
+                return dadosUsuarioCoreSSO;
+
             if (dadosusuarioAcervo.EhCadastroExterno())
             {
                 dadosUsuarioCoreSSO.Telefone = dadosusuarioAcervo.Telefone;
                 dadosUsuarioCoreSSO.Endereco = dadosusuarioAcervo.Endereco;
-                dadosUsuarioCoreSSO.Numero = dadosusuarioAcervo.Numero.ToString();
+                dadosUsuarioCoreSSO.Numero = dadosusuarioAcervo.Numero;
                 dadosUsuarioCoreSSO.Complemento = dadosusuarioAcervo.Complemento;
                 dadosUsuarioCoreSSO.Bairro = dadosusuarioAcervo.Bairro;
                 dadosUsuarioCoreSSO.Cep = dadosusuarioAcervo.Cep;
@@ -143,6 +146,9 @@ namespace SME.CDEP.Aplicacao.Servicos
         {
             var usuario = await repositorioUsuario.ObterPorLogin(login);
 
+            if (usuario is null)
+                return false;
+
             ValidarUsuarioExterno(usuario);
                 
             usuario.Endereco = enderecoUsuarioExternoDto.Endereco;
@@ -160,6 +166,9 @@ namespace SME.CDEP.Aplicacao.Servicos
         public async Task<bool> AlterarTelefone(string login, string telefone)
         {
             var usuario = await repositorioUsuario.ObterPorLogin(login);
+
+            if (usuario is null)
+                return false;
 
             ValidarUsuarioExterno(usuario);
             
@@ -219,7 +228,7 @@ namespace SME.CDEP.Aplicacao.Servicos
         private async Task ManutencaoUsuario(string login, UsuarioAutenticacaoRetornoDTO retorno)
         {
             var usuario = await repositorioUsuario.ObterPorLogin(login);
-            if (usuario.NaoEhNulo())
+            if (usuario is not null)
             {
                 usuario.UltimoLogin = DateTimeExtension.HorarioBrasilia();
                 usuario.Nome = retorno.Nome;
@@ -258,7 +267,7 @@ namespace SME.CDEP.Aplicacao.Servicos
             return servicoAcessos.TokenRecuperacaoSenhaEstaValido(token);
         }
 
-        public async Task<RetornoPerfilUsuarioDTO> AlterarSenhaComTokenRecuperacao(RecuperacaoSenhaDto recuperacaoSenhaDto)
+        public async Task<RetornoPerfilUsuarioDTO?> AlterarSenhaComTokenRecuperacao(RecuperacaoSenhaDto recuperacaoSenhaDto)
         {
             var login = await servicoAcessos.AlterarSenhaComTokenRecuperacao(recuperacaoSenhaDto);
             return await servicoPerfilUsuario.ObterPerfisUsuario(login);
@@ -304,7 +313,7 @@ namespace SME.CDEP.Aplicacao.Servicos
             return usuarioPerfisRetornoDto;
         }
 
-        private async Task<Usuario> ObterUsuarioPorLogin(string usuarioLogin)
+        private async Task<Usuario?> ObterUsuarioPorLogin(string usuarioLogin)
         {
             return await repositorioUsuario.ObterPorLogin(usuarioLogin);
         }
@@ -333,7 +342,7 @@ namespace SME.CDEP.Aplicacao.Servicos
                 await servicoAcessos.ObterPerfisUsuario(login);
         }
 
-        private async Task<Usuario> ObterUsuarioLogadoContexto()
+        private async Task<Usuario?> ObterUsuarioLogadoContexto()
         {
             return await ObterUsuarioPorLogin(contextoAplicacao.UsuarioLogado);
         }
@@ -351,6 +360,9 @@ namespace SME.CDEP.Aplicacao.Servicos
         public async Task<bool> AlterarTipoUsuario(string login, TipoUsuarioExternoDTO tipoUsuario)
         {
             var usuario = await repositorioUsuario.ObterPorLogin(login);
+
+            if (usuario is null)
+                return false;
 
             ValidarUsuarioExterno(usuario);
             
@@ -372,11 +384,8 @@ namespace SME.CDEP.Aplicacao.Servicos
 
         private async Task<DadosSolicitanteDTO> ObterDadosSolicitantePorLogin(string login, bool incluirComplemento = true)
         {
-            var usuario = await repositorioUsuario.ObterPorLogin(login);
-
-            if (usuario.EhNulo())
-                throw new NegocioException(incluirComplemento ? Constantes.USUARIO_SEM_CADASTRO_CDEP : Constantes.USUARIO_NAO_ENCONTRADO);
-
+            var usuario = await repositorioUsuario.ObterPorLogin(login) ?? 
+                          throw new NegocioException(incluirComplemento ? Constantes.USUARIO_SEM_CADASTRO_CDEP : Constantes.USUARIO_NAO_ENCONTRADO);
             var dadosSolicitante = mapper.Map<DadosSolicitanteDTO>(usuario);
             
             dadosSolicitante.ObterEnderecoCompleto(usuario.Numero, usuario.Complemento, 
@@ -387,10 +396,8 @@ namespace SME.CDEP.Aplicacao.Servicos
 
         public async Task<DadosSolicitanteDTO> ObterDadosSolicitantePorUsuarioId(long usuarioId)
         {
-            var usuario = await repositorioUsuario.ObterPorId(usuarioId);
-            
-            if (usuario.EhNulo())
-                throw new NegocioException(MensagemNegocio.USUARIO_NAO_ENCONTRADO);
+            var usuario = await repositorioUsuario.ObterPorId(usuarioId) ?? throw new NegocioException(MensagemNegocio.USUARIO_NAO_ENCONTRADO);
+                
 
             var dadosSolicitante = mapper.Map<DadosSolicitanteDTO>(usuario);
             

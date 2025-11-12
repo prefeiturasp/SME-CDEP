@@ -2,15 +2,14 @@
 using Microsoft.AspNetCore.Mvc;
 using SME.CDEP.Aplicacao.DTOS;
 using SME.CDEP.Aplicacao.Integracoes.Interfaces;
-using SME.CDEP.Webapi.Filtros;
+using SME.CDEP.Webapi.Controllers.Filtros;
 
 namespace SME.CDEP.Webapi.Controllers;
 
-[ApiController]
 [ValidaDto]
-public class CEPController: BaseController
+public class CEPController : BaseController
 {
-    [HttpGet("{cep}")] 
+    [HttpGet("{cep}")]
     [ProducesResponseType(typeof(bool), 200)]
     [ProducesResponseType(typeof(RetornoBaseDTO), 400)]
     [ProducesResponseType(typeof(RetornoBaseDTO), 500)]

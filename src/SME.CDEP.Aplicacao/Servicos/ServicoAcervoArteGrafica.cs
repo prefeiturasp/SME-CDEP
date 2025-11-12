@@ -182,7 +182,7 @@ namespace SME.CDEP.Aplicacao.Servicos
         public async Task<AcervoArteGraficaDTO> ObterPorId(long id)
         {
             var acervoArteGraficaSimples = await repositorioAcervoArteGrafica.ObterPorId(id);
-            if (acervoArteGraficaSimples.NaoEhNulo())
+            if (acervoArteGraficaSimples is not null)
             {
                 acervoArteGraficaSimples.Codigo = acervoArteGraficaSimples.Codigo.RemoverSufixo();
                 var acervoArteGraficaDto = mapper.Map<AcervoArteGraficaDTO>(acervoArteGraficaSimples);
@@ -190,7 +190,7 @@ namespace SME.CDEP.Aplicacao.Servicos
                 return acervoArteGraficaDto;
             }
 
-            return default;
+            return default!;
         }
 
         public async Task<bool> Excluir(long id)

@@ -1,4 +1,3 @@
-
 using System.Text;
 using SME.CDEP.Aplicacao.Servicos.Interface;
 using SME.CDEP.Dominio.Constantes;
@@ -10,16 +9,9 @@ using SME.CDEP.Infra.Servicos.Rabbit.Dto;
 
 namespace SME.CDEP.Aplicacao
 {
-    public class NotificacaoDevolucaoEmprestimoAtrasadoUsuarioUseCase : NotificacaoEmailBaseUseCase, INotificacaoDevolucaoEmprestimoAtrasadoUsuarioUseCase
+    public class NotificacaoDevolucaoEmprestimoAtrasadoUsuarioUseCase(IRepositorioParametroSistema repositorioParametroSistema,
+        IServicoNotificacaoEmail servicoNotificacaoEmail) : NotificacaoEmailBaseUseCase(repositorioParametroSistema, servicoNotificacaoEmail), INotificacaoDevolucaoEmprestimoAtrasadoUsuarioUseCase
     {
-        private readonly IRepositorioParametroSistema repositorioParametroSistema;
-        private readonly IServicoNotificacaoEmail servicoNotificacaoEmail;
-
-        public NotificacaoDevolucaoEmprestimoAtrasadoUsuarioUseCase(IRepositorioParametroSistema repositorioParametroSistema,
-            IServicoNotificacaoEmail servicoNotificacaoEmail)
-            : base(repositorioParametroSistema, servicoNotificacaoEmail)
-        {}
-
         public async Task<bool> Executar(MensagemRabbit param)
         {
             await CarregarParametros();

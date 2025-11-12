@@ -5,6 +5,6 @@ namespace SME.CDEP.Infra.Dados.Repositorios.Interfaces
 {
     public interface IRepositorioUsuario : IRepositorioBaseAuditavel<Usuario>
     {
-        Task<Usuario> ObterPorLogin(string login);
+        Task<Usuario?> ObterPorLogin(string login);
     }
 }

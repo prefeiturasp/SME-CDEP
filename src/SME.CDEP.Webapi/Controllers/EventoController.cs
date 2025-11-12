@@ -1,15 +1,14 @@
-﻿using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using SME.CDEP.Aplicacao.DTOS;
 using SME.CDEP.Aplicacao.Servicos.Interface;
 using SME.CDEP.Infra.Dominio.Enumerados;
+using SME.CDEP.Webapi.Controllers.Filtros;
 using SME.CDEP.Webapi.Filtros;
 
 namespace SME.CDEP.Webapi.Controllers;
 
-[ApiController]
 [ValidaDto]
-public class EventoController: BaseController
+public class EventoController : BaseController
 {
     [HttpPost]
     [ProducesResponseType(typeof(long), 200)]
@@ -23,7 +22,7 @@ public class EventoController: BaseController
     {
         return Ok(await servicoEvento.Inserir(eventoCadastroDto));
     }
-    
+
     [HttpPut]
     [ProducesResponseType(typeof(long), 200)]
     [ProducesResponseType(typeof(RetornoBaseDTO), 400)]
@@ -36,7 +35,7 @@ public class EventoController: BaseController
     {
         return Ok(await servicoEvento.Alterar(eventoCadastroDto));
     }
-    
+
     [HttpGet("eventos-tag")]
     [ProducesResponseType(typeof(IEnumerable<EventoTagDTO>), 200)]
     [ProducesResponseType(typeof(RetornoBaseDTO), 400)]
@@ -49,7 +48,7 @@ public class EventoController: BaseController
     {
         return Ok(await servicoEvento.ObterEventosTagPorData(diaMesDto));
     }
-    
+
     [HttpDelete("{eventoId}")]
     [ProducesResponseType(typeof(long), 200)]
     [ProducesResponseType(typeof(RetornoBaseDTO), 400)]
@@ -62,7 +61,7 @@ public class EventoController: BaseController
     {
         return Ok(await servicoEvento.ExcluirLogicamente(eventoId));
     }
-    
+
     [HttpGet("{eventoId}")]
     [ProducesResponseType(typeof(IEnumerable<EventoTagDTO>), 200)]
     [ProducesResponseType(typeof(RetornoBaseDTO), 400)]
@@ -75,7 +74,7 @@ public class EventoController: BaseController
     {
         return Ok(await servicoEvento.ObterEventoPorId(eventoId));
     }
-    
+
     [HttpGet("calendario/{mes}")]
     [ProducesResponseType(typeof(CalendarioEventoDTO), 200)]
     [ProducesResponseType(typeof(RetornoBaseDTO), 400)]
@@ -88,7 +87,7 @@ public class EventoController: BaseController
     {
         return Ok(await servicoEvento.ObterCalendarioDeEventosPorMes(mes, DateTimeExtension.HorarioBrasilia().Year));
     }
-    
+
     [HttpGet("detalhes-dia")]
     [ProducesResponseType(typeof(IEnumerable<EventoDetalheDTO>), 200)]
     [ProducesResponseType(typeof(RetornoBaseDTO), 400)]
