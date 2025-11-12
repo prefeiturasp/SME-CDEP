@@ -1,30 +1,28 @@
-﻿using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using SME.CDEP.Aplicacao.DTOS;
 using SME.CDEP.Aplicacao.Servicos.Interface;
-using SME.CDEP.Dominio.Extensions;
 using SME.CDEP.Infra.Dominio.Enumerados;
+using SME.CDEP.Webapi.Controllers.Filtros;
 using SME.CDEP.Webapi.Filtros;
 
 namespace SME.CDEP.Webapi.Controllers;
 
-[ApiController]
 [Route("api/v1/acervo/artegrafica/importacao/planilha")]
 [ValidaDto]
-public class ImportacaoArquivoAcervoArteGraficaController: BaseController
+public class ImportacaoArquivoAcervoArteGraficaController : BaseController
 {
     [HttpPost]
-    [ProducesResponseType(typeof(ImportacaoArquivoRetornoDTO<AcervoLinhaErroDTO<AcervoArteGraficaDTO,AcervoArteGraficaLinhaRetornoDTO>,AcervoLinhaRetornoSucessoDTO>),200)]
+    [ProducesResponseType(typeof(ImportacaoArquivoRetornoDTO<AcervoLinhaErroDTO<AcervoArteGraficaDTO, AcervoArteGraficaLinhaRetornoDTO>, AcervoLinhaRetornoSucessoDTO>), 200)]
     [ProducesResponseType(401)]
     [ProducesResponseType(typeof(RetornoBaseDTO), 500)]
     [Permissao(Permissao.CadastroAcervo_I, Policy = "Bearer")]
-    public async Task<IActionResult> ImportarArquivo(IFormFile file,[FromServices] IServicoImportacaoArquivoAcervoArteGrafica servicoImportacaoArquivoAcervoArteGrafica)
+    public async Task<IActionResult> ImportarArquivo(IFormFile file, [FromServices] IServicoImportacaoArquivoAcervoArteGrafica servicoImportacaoArquivoAcervoArteGrafica)
     {
         return Ok(await servicoImportacaoArquivoAcervoArteGrafica.ImportarArquivo(file));
     }
-    
+
     [HttpGet]
-    [ProducesResponseType(typeof(ImportacaoArquivoRetornoDTO<AcervoLinhaErroDTO<AcervoArteGraficaDTO,AcervoArteGraficaLinhaRetornoDTO>,AcervoLinhaRetornoSucessoDTO>),200)]
+    [ProducesResponseType(typeof(ImportacaoArquivoRetornoDTO<AcervoLinhaErroDTO<AcervoArteGraficaDTO, AcervoArteGraficaLinhaRetornoDTO>, AcervoLinhaRetornoSucessoDTO>), 200)]
     [ProducesResponseType(401)]
     [ProducesResponseType(typeof(RetornoBaseDTO), 500)]
     [Permissao(Permissao.CadastroAcervo_C, Policy = "Bearer")]
@@ -32,17 +30,17 @@ public class ImportacaoArquivoAcervoArteGraficaController: BaseController
     {
         return Ok(await servicoImportacaoArquivoAcervoArteGrafica.ObterImportacaoPendente());
     }
-    
+
     [HttpGet("{id}")]
-    [ProducesResponseType(typeof(ImportacaoArquivoRetornoDTO<AcervoLinhaErroDTO<AcervoArteGraficaDTO,AcervoArteGraficaLinhaRetornoDTO>,AcervoLinhaRetornoSucessoDTO>),200)]
+    [ProducesResponseType(typeof(ImportacaoArquivoRetornoDTO<AcervoLinhaErroDTO<AcervoArteGraficaDTO, AcervoArteGraficaLinhaRetornoDTO>, AcervoLinhaRetornoSucessoDTO>), 200)]
     [ProducesResponseType(401)]
     [ProducesResponseType(typeof(RetornoBaseDTO), 500)]
     [Permissao(Permissao.CadastroAcervo_C, Policy = "Bearer")]
-    public async Task<IActionResult> ObterImportacaoPorId([FromRoute]long id, [FromServices] IServicoImportacaoArquivoAcervoArteGrafica servicoImportacaoArquivoAcervoArteGrafica)
+    public async Task<IActionResult> ObterImportacaoPorId([FromRoute] long id, [FromServices] IServicoImportacaoArquivoAcervoArteGrafica servicoImportacaoArquivoAcervoArteGrafica)
     {
         return Ok(await servicoImportacaoArquivoAcervoArteGrafica.ObterImportacaoPorId(id));
     }
-    
+
     [HttpPatch("{Id}")]
     [ProducesResponseType(typeof(bool), 200)]
     [ProducesResponseType(typeof(RetornoBaseDTO), 400)]
@@ -53,7 +51,7 @@ public class ImportacaoArquivoAcervoArteGraficaController: BaseController
     {
         return Ok(await servicoImportacaoArquivoAcervoArteGrafica.RemoverLinhaDoArquivo(id, linha));
     }
-    
+
     [HttpPatch("atualizar-linha/{id}/sucesso")]
     [ProducesResponseType(typeof(bool), 200)]
     [ProducesResponseType(typeof(RetornoBaseDTO), 400)]
@@ -62,6 +60,6 @@ public class ImportacaoArquivoAcervoArteGraficaController: BaseController
     [Permissao(Permissao.CadastroAcervo_A, Policy = "Bearer")]
     public async Task<IActionResult> AtualizarLinhaParaSucesso([FromRoute] long id, [FromBody] LinhaDTO linha, [FromServices] IServicoImportacaoArquivoAcervoArteGrafica servicoImportacaoArquivoAcervoArteGrafica)
     {
-        return Ok(await servicoImportacaoArquivoAcervoArteGrafica.AtualizarLinhaParaSucesso(id,linha));
+        return Ok(await servicoImportacaoArquivoAcervoArteGrafica.AtualizarLinhaParaSucesso(id, linha));
     }
 }

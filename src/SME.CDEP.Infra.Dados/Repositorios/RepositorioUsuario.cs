@@ -5,12 +5,9 @@ using SME.CDEP.Infra.Dados.Repositorios.Interfaces;
 
 namespace SME.CDEP.Infra.Dados.Repositorios
 {
-    public class RepositorioUsuario : RepositorioBaseAuditavel<Usuario>, IRepositorioUsuario
+    public class RepositorioUsuario(IContextoAplicacao contexto, ICdepConexao conexao) : RepositorioBaseAuditavel<Usuario>(contexto, conexao), IRepositorioUsuario
     {
-        public RepositorioUsuario(IContextoAplicacao contexto, ICdepConexao conexao) : base(contexto,conexao)
-        { }
-
-        public Task<Usuario> ObterPorLogin(string login)
+        public Task<Usuario?> ObterPorLogin(string login)
         {
             var query = @"select id, 
                                  criado_em, 

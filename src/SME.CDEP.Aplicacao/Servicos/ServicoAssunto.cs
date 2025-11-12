@@ -61,13 +61,14 @@ namespace SME.CDEP.Aplicacao.Servicos
             return repositorioAssunto.ObterPorNome(nome);
         }
 
-        private IOrderedEnumerable<IdNomeExcluidoAuditavelDTO> OrdenarRegistros(Paginacao paginacao, IEnumerable<IdNomeExcluidoAuditavelDTO> registros)
+        private static IOrderedEnumerable<IdNomeExcluidoAuditavelDTO> OrdenarRegistros(Paginacao paginacao, IEnumerable<IdNomeExcluidoAuditavelDTO> registros)
         {
             return paginacao.Ordenacao switch
             {
-                TipoOrdenacao.DATA => registros.OrderByDescending(o => o.AlteradoEm.HasValue ? o.AlteradoEm.Value : o.CriadoEm),
+                TipoOrdenacao.DATA => registros.OrderByDescending(o => o.AlteradoEm ?? o.CriadoEm),
                 TipoOrdenacao.AZ => registros.OrderBy(o => o.Nome),
                 TipoOrdenacao.ZA => registros.OrderByDescending(o => o.Nome),
+                _ => registros.OrderBy(o => o.Nome),
             };
         }
         

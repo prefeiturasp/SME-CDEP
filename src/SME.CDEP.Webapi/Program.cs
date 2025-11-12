@@ -6,15 +6,12 @@ using SME.CDEP.Dominio.Contexto;
 using SME.CDEP.IoC;
 using SME.CDEP.Webapi.Configuracoes;
 using SME.CDEP.Webapi.Contexto;
-using SME.CDEP.Webapi.Filtros;
+using SME.CDEP.Webapi.Controllers.Filtros;
 using SME.CDEP.Webapi.Middlewares;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// Add services to the container.
-
 builder.Services.AddControllers();
-// Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
@@ -48,7 +45,7 @@ AppContext.SetSwitch("Npgsql.DisableDateTimeInfinityConversions", true);
 app.UseCors(config => config
     .AllowAnyMethod()
     .AllowAnyHeader()
-    .SetIsOriginAllowed(origin => true) // allow any origin
+    .SetIsOriginAllowed(origin => true)
     .AllowCredentials());
 
 app.UseElasticApm(builder.Configuration,
@@ -56,16 +53,9 @@ app.UseElasticApm(builder.Configuration,
     new HttpDiagnosticsSubscriber());
 
 app.UseTratamentoExcecoesGlobalMiddleware();
-
-// Configure the HTTP request pipeline.
 app.UseSwagger();
 app.UseSwaggerUI();
-
-
 app.UseHttpsRedirection();
-
 app.UseAuthorization();
-
 app.MapControllers();
-
 app.Run();

@@ -10,16 +10,9 @@ using SME.CDEP.Infra.Servicos.Rabbit.Dto;
 
 namespace SME.CDEP.Aplicacao
 {
-    public class NotificacaoDevolucaoEmprestimoAtrasadoProlongadoUsuarioUseCase: NotificacaoEmailBaseUseCase, INotificacaoDevolucaoEmprestimoAtrasadoProlongadoUsuarioUseCase
+    public class NotificacaoDevolucaoEmprestimoAtrasadoProlongadoUsuarioUseCase(IRepositorioParametroSistema repositorioParametroSistema,
+        IServicoNotificacaoEmail servicoNotificacaoEmail) : NotificacaoEmailBaseUseCase(repositorioParametroSistema, servicoNotificacaoEmail), INotificacaoDevolucaoEmprestimoAtrasadoProlongadoUsuarioUseCase
     {
-        private readonly IRepositorioParametroSistema repositorioParametroSistema;
-        private readonly IServicoNotificacaoEmail servicoNotificacaoEmail;
-
-        public NotificacaoDevolucaoEmprestimoAtrasadoProlongadoUsuarioUseCase(IRepositorioParametroSistema repositorioParametroSistema,
-            IServicoNotificacaoEmail servicoNotificacaoEmail)
-            : base(repositorioParametroSistema, servicoNotificacaoEmail)
-        {}
-
         public async Task<bool> Executar(MensagemRabbit param)
         {
             await CarregarParametros();
