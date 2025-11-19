@@ -240,6 +240,7 @@ public class RegistradorDeDependencia
         _serviceCollection.TryAddScoped<IRepositorioAcervoEmprestimo, RepositorioAcervoEmprestimo>();
         _serviceCollection.TryAddScoped<IRepositorioHistoricoConsultaAcervo, RepositorioHistoricoConsultaAcervo>();
         _serviceCollection.TryAddScoped<IRepositorioDeConsolidacao, RepositorioDeConsolidacao>();
+        _serviceCollection.AddScoped<IRepositorioPainelGerencial, RepositorioPainelGerencial>();
     }
 
     protected virtual void RegistrarServicos()
@@ -291,6 +292,7 @@ public class RegistradorDeDependencia
         _serviceCollection.TryAddScoped<IServicoAcervoEmprestimo, ServicoAcervoEmprestimo>();
         _serviceCollection.TryAddScoped<IServicoHistoricoConsultaAcervo, ServicoHistoricoConsultaAcervo>();
         _serviceCollection.TryAddScoped<IServicoDeConsolidacao, ServicoDeConsolidacao>();
+        _serviceCollection.AddScoped<IServicoPainelGerencial, ServicoPainelGerencial>();
     }
     protected virtual void RegistrarHttpClients()
     {
