@@ -11,16 +11,10 @@ using SME.CDEP.Infra.Dados.Repositorios.Interfaces;
 
 namespace SME.CDEP.Aplicacao.Servicos
 {
-    public class ServicoEditora : ServicoAplicacaoAuditavel<Editora, IdNomeExcluidoAuditavelDTO>,IServicoEditora
+    public class ServicoEditora(IRepositorioEditora repositorioEditora, IMapper mapper, IContextoAplicacao contextoAplicacao) : ServicoAplicacaoAuditavel<Editora, IdNomeExcluidoAuditavelDTO>(repositorioEditora, mapper, contextoAplicacao),IServicoEditora
     {
-        private readonly IRepositorioEditora repositorioEditora;
-        private readonly IMapper mapper;
-
-        public ServicoEditora(IRepositorioEditora repositorioEditora, IMapper mapper, IContextoAplicacao contextoAplicacao) : base(repositorioEditora, mapper, contextoAplicacao)
-        {
-            this.repositorioEditora = repositorioEditora ?? throw new ArgumentNullException(nameof(repositorioEditora));   
-            this.mapper = mapper ?? throw new ArgumentNullException(nameof(mapper));   
-        }
+        private readonly IRepositorioEditora repositorioEditora = repositorioEditora ?? throw new ArgumentNullException(nameof(repositorioEditora));
+        private readonly IMapper mapper = mapper ?? throw new ArgumentNullException(nameof(mapper));
 
         public async Task<long> Inserir(IdNomeExcluidoAuditavelDTO idNomeExcluidoAuditavelDTO)
         {
@@ -38,7 +32,7 @@ namespace SME.CDEP.Aplicacao.Servicos
         
         public async Task<PaginacaoResultadoDTO<IdNomeExcluidoAuditavelDTO>> ObterPaginado(string? nome = null)
         {
-            var registros = nome.NaoEstaPreenchido() 
+            var registros = string.IsNullOrWhiteSpace(nome) 
                 ?  await ObterTodos() 
                 : mapper.Map<IEnumerable<IdNomeExcluidoAuditavelDTO>>(await repositorioEditora.PesquisarPorNome(nome));
             

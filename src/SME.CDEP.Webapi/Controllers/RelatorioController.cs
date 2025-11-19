@@ -15,7 +15,7 @@ namespace SME.CDEP.Webapi.Controllers
         public async Task<IActionResult> RelatorioControleLivrosEmprestados([FromBody] RelatorioControleLivroEmprestadosRequest filtros,
            [FromServices] IRelatorioControleLivrosEmprestadosUseCase relatorioControleLivrosEmprestadosUseCase)
         {
-            var file = await relatorioControleLivrosEmprestadosUseCase.Executar(filtros);
+            var file = await relatorioControleLivrosEmprestadosUseCase.ExecutarAsync(filtros);
             if (file == null)
                 return NoContent();
 
@@ -43,7 +43,7 @@ namespace SME.CDEP.Webapi.Controllers
         public async Task<IActionResult> RelatorioControleAcervoAutor([FromBody] RelatorioControleAcervoAutorRequest request,
            [FromServices] IRelatorioControleAcervoAutorUseCase relatorioControleAcervoAutorUseCase)
         {
-                var file = await relatorioControleAcervoAutorUseCase.Executar(request);
+            var file = await relatorioControleAcervoAutorUseCase.Executar(request);
             if (file == null)
                 return NoContent();
 
@@ -77,6 +77,33 @@ namespace SME.CDEP.Webapi.Controllers
             if (file == null)
                 return NoContent();
 
+            return File(file,
+                     "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+                     "relatorio.xlsx");
+        }
+
+        [HttpPost("titulos-mais-pesquisados")]
+        [Permissao(Permissao.OperacoesSolicitacoes_C, Policy = "Bearer")]
+        public async Task<IActionResult> RelatorioTitulosMaisPesquisados([FromBody] RelatorioTitulosMaisPesquisadosRequest filtros,
+           [FromServices] IRelatorioTitulosMaisPesquisadosUseCase relatorioTitulosMaisPesquisadosUseCase)
+        {
+            var file = await relatorioTitulosMaisPesquisadosUseCase.ExecutarAsync(filtros);
+            if (file == null)
+                return NoContent();
+
+            return File(file,
+                     "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+                     "relatorio.xlsx");
+        }
+
+        [HttpPost("controle-download-acervo")]
+        [Permissao(Permissao.OperacoesSolicitacoes_C, Policy = "Bearer")]
+        public async Task<IActionResult> RelatorioControleDownloadAcervo([FromBody] RelatorioControleDownloadAcervoRequest filtros,
+           [FromServices] IRelatorioControleDownloadAcervoUseCase relatorioControleDownloadAcervoUseCase)
+        {
+            var file = await relatorioControleDownloadAcervoUseCase.ExecutarAsync(filtros);
+            if (file == null)
+                return NoContent();
             return File(file,
                      "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
                      "relatorio.xlsx");

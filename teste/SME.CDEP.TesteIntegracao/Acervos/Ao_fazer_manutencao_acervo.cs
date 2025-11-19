@@ -51,15 +51,15 @@ namespace SME.CDEP.TesteIntegracao
         //    var servicoAcervo = GetServicoAcervo();
 
         //    var acervoAlterar = (ObterTodos<Acervo>()).FirstOrDefault();
-        //    acervoAlterar.Descricao = faker.Lorem.Text();
-        //    acervoAlterar.Titulo = faker.Lorem.Sentence();
-        //    acervoAlterar.SubTitulo = faker.Lorem.Sentence();
+        //    acervoAlterar.Descricao = _faker.Lorem.Text();
+        //    acervoAlterar.Titulo = _faker.Lorem.Sentence();
+        //    acervoAlterar.SubTitulo = _faker.Lorem.Sentence();
         //    acervoAlterar.DataAcervo = DateTimeExtension.HorarioBrasilia().Date.ToString();
         //    acervoAlterar.Ano = "[197-]";
             
         //    var creditoAutores = (ObterTodos<AcervoCreditoAutor>()).Where(w => w.AcervoId == acervoAlterar.Id);
         //    acervoAlterar.CreditosAutoresIds = creditoAutores.Take(2).Select(s => s.CreditoAutorId).ToArray();
-        //    acervoAlterar.CoAutores = creditoAutores.Take(2).Select(s=> new CoAutor() { CreditoAutorId = s.CreditoAutorId, TipoAutoria = faker.Lorem.Word().Limite(15)}).ToList();
+        //    acervoAlterar.CoAutores = creditoAutores.Take(2).Select(s=> new CoAutor() { CreditoAutorId = s.CreditoAutorId, TipoAutoria = _faker.Lorem.Word().Limite(15)}).ToList();
             
         //    var acervo = await servicoAcervo.Alterar(acervoAlterar);
         //    var acervoAlterado = (ObterTodos<Acervo>()).FirstOrDefault(w=> w.Id == acervoAlterar.Id);
@@ -91,15 +91,15 @@ namespace SME.CDEP.TesteIntegracao
         //    var servicoAcervo = GetServicoAcervo();
 
         //    var acervoAlterar = (ObterTodos<Acervo>()).FirstOrDefault();
-        //    acervoAlterar.Descricao = faker.Lorem.Text();
-        //    acervoAlterar.Titulo = faker.Lorem.Sentence();
-        //    acervoAlterar.SubTitulo = faker.Lorem.Sentence();
+        //    acervoAlterar.Descricao = _faker.Lorem.Text();
+        //    acervoAlterar.Titulo = _faker.Lorem.Sentence();
+        //    acervoAlterar.SubTitulo = _faker.Lorem.Sentence();
         //    acervoAlterar.DataAcervo = DateTimeExtension.HorarioBrasilia().Date.ToString();
         //    acervoAlterar.Ano = "[197-?]";
             
         //    var creditoAutores = (ObterTodos<AcervoCreditoAutor>()).Where(w => w.AcervoId == acervoAlterar.Id);
         //    acervoAlterar.CreditosAutoresIds = creditoAutores.Take(2).Select(s => s.CreditoAutorId).ToArray();
-        //    acervoAlterar.CoAutores = creditoAutores.Take(2).Select(s=> new CoAutor() { CreditoAutorId = s.CreditoAutorId, TipoAutoria = faker.Lorem.Word().Limite(15)}).ToList();
+        //    acervoAlterar.CoAutores = creditoAutores.Take(2).Select(s=> new CoAutor() { CreditoAutorId = s.CreditoAutorId, TipoAutoria = _faker.Lorem.Word().Limite(15)}).ToList();
             
         //    var acervo = await servicoAcervo.Alterar(acervoAlterar);
         //    var acervoAlterado = (ObterTodos<Acervo>()).FirstOrDefault(w=> w.Id == acervoAlterar.Id);
@@ -131,15 +131,15 @@ namespace SME.CDEP.TesteIntegracao
         //    var servicoAcervo = GetServicoAcervo();
 
         //    var acervoAlterar = (ObterTodos<Acervo>()).FirstOrDefault();
-        //    acervoAlterar.Descricao = faker.Lorem.Text();
-        //    acervoAlterar.Titulo = faker.Lorem.Sentence();
-        //    acervoAlterar.SubTitulo = faker.Lorem.Sentence();
+        //    acervoAlterar.Descricao = _faker.Lorem.Text();
+        //    acervoAlterar.Titulo = _faker.Lorem.Sentence();
+        //    acervoAlterar.SubTitulo = _faker.Lorem.Sentence();
         //    acervoAlterar.DataAcervo = DateTimeExtension.HorarioBrasilia().Date.ToString();
         //    acervoAlterar.Ano = "[19--]";
             
         //    var creditoAutores = (ObterTodos<AcervoCreditoAutor>()).Where(w => w.AcervoId == acervoAlterar.Id);
         //    acervoAlterar.CreditosAutoresIds = creditoAutores.Take(2).Select(s => s.CreditoAutorId).ToArray();
-        //    acervoAlterar.CoAutores = creditoAutores.Take(2).Select(s=> new CoAutor() { CreditoAutorId = s.CreditoAutorId, TipoAutoria = faker.Lorem.Word().Limite(15)}).ToList();
+        //    acervoAlterar.CoAutores = creditoAutores.Take(2).Select(s=> new CoAutor() { CreditoAutorId = s.CreditoAutorId, TipoAutoria = _faker.Lorem.Word().Limite(15)}).ToList();
             
         //    var acervo = await servicoAcervo.Alterar(acervoAlterar);
         //    var acervoAlterado = (ObterTodos<Acervo>()).FirstOrDefault(w=> w.Id == acervoAlterar.Id);
@@ -171,15 +171,15 @@ namespace SME.CDEP.TesteIntegracao
         //    var servicoAcervo = GetServicoAcervo();
 
         //    var acervoAlterar = (ObterTodos<Acervo>()).FirstOrDefault();
-        //    acervoAlterar.Descricao = faker.Lorem.Text();
-        //    acervoAlterar.Titulo = faker.Lorem.Sentence();
-        //    acervoAlterar.SubTitulo = faker.Lorem.Sentence();
+        //    acervoAlterar.Descricao = _faker.Lorem.Text();
+        //    acervoAlterar.Titulo = _faker.Lorem.Sentence();
+        //    acervoAlterar.SubTitulo = _faker.Lorem.Sentence();
         //    acervoAlterar.DataAcervo = DateTimeExtension.HorarioBrasilia().Date.ToString();
         //    acervoAlterar.Ano = "[19--?]";
             
         //    var creditoAutores = (ObterTodos<AcervoCreditoAutor>()).Where(w => w.AcervoId == acervoAlterar.Id);
         //    acervoAlterar.CreditosAutoresIds = creditoAutores.Take(2).Select(s => s.CreditoAutorId).ToArray();
-        //    acervoAlterar.CoAutores = creditoAutores.Take(2).Select(s=> new CoAutor() { CreditoAutorId = s.CreditoAutorId, TipoAutoria = faker.Lorem.Word().Limite(15)}).ToList();
+        //    acervoAlterar.CoAutores = creditoAutores.Take(2).Select(s=> new CoAutor() { CreditoAutorId = s.CreditoAutorId, TipoAutoria = _faker.Lorem.Word().Limite(15)}).ToList();
             
         //    var acervo = await servicoAcervo.Alterar(acervoAlterar);
         //    var acervoAlterado = (ObterTodos<Acervo>()).FirstOrDefault(w=> w.Id == acervoAlterar.Id);
@@ -211,15 +211,15 @@ namespace SME.CDEP.TesteIntegracao
         //    var servicoAcervo = GetServicoAcervo();
 
         //    var acervoAlterar = (ObterTodos<Acervo>()).FirstOrDefault();
-        //    acervoAlterar.Descricao = faker.Lorem.Text();
-        //    acervoAlterar.Titulo = faker.Lorem.Sentence();
-        //    acervoAlterar.SubTitulo = faker.Lorem.Sentence();
+        //    acervoAlterar.Descricao = _faker.Lorem.Text();
+        //    acervoAlterar.Titulo = _faker.Lorem.Sentence();
+        //    acervoAlterar.SubTitulo = _faker.Lorem.Sentence();
         //    acervoAlterar.DataAcervo = DateTimeExtension.HorarioBrasilia().Date.ToString();
         //    acervoAlterar.Ano = "[1995]";
             
         //    var creditoAutores = (ObterTodos<AcervoCreditoAutor>()).Where(w => w.AcervoId == acervoAlterar.Id);
         //    acervoAlterar.CreditosAutoresIds = creditoAutores.Take(2).Select(s => s.CreditoAutorId).ToArray();
-        //    acervoAlterar.CoAutores = creditoAutores.Take(2).Select(s=> new CoAutor() { CreditoAutorId = s.CreditoAutorId, TipoAutoria = faker.Lorem.Word().Limite(15)}).ToList();
+        //    acervoAlterar.CoAutores = creditoAutores.Take(2).Select(s=> new CoAutor() { CreditoAutorId = s.CreditoAutorId, TipoAutoria = _faker.Lorem.Word().Limite(15)}).ToList();
             
         //    var acervo = await servicoAcervo.Alterar(acervoAlterar);
         //    var acervoAlterado = (ObterTodos<Acervo>()).FirstOrDefault(w=> w.Id == acervoAlterar.Id);
@@ -251,15 +251,15 @@ namespace SME.CDEP.TesteIntegracao
         //    var servicoAcervo = GetServicoAcervo();
 
         //    var acervoAlterar = (ObterTodos<Acervo>()).FirstOrDefault();
-        //    acervoAlterar.Descricao = faker.Lorem.Text();
-        //    acervoAlterar.Titulo = faker.Lorem.Sentence();
-        //    acervoAlterar.SubTitulo = faker.Lorem.Sentence();
+        //    acervoAlterar.Descricao = _faker.Lorem.Text();
+        //    acervoAlterar.Titulo = _faker.Lorem.Sentence();
+        //    acervoAlterar.SubTitulo = _faker.Lorem.Sentence();
         //    acervoAlterar.DataAcervo = DateTimeExtension.HorarioBrasilia().Date.ToString();
         //    acervoAlterar.Ano = "[1990]";
             
         //    var creditoAutores = (ObterTodos<AcervoCreditoAutor>()).Where(w => w.AcervoId == acervoAlterar.Id);
         //    acervoAlterar.CreditosAutoresIds = creditoAutores.Take(2).Select(s => s.CreditoAutorId).ToArray();
-        //    acervoAlterar.CoAutores = creditoAutores.Take(2).Select(s=> new CoAutor() { CreditoAutorId = s.CreditoAutorId, TipoAutoria = faker.Lorem.Word().Limite(15)}).ToList();
+        //    acervoAlterar.CoAutores = creditoAutores.Take(2).Select(s=> new CoAutor() { CreditoAutorId = s.CreditoAutorId, TipoAutoria = _faker.Lorem.Word().Limite(15)}).ToList();
             
         //    var acervo = await servicoAcervo.Alterar(acervoAlterar);
         //    var acervoAlterado = (ObterTodos<Acervo>()).FirstOrDefault(w=> w.Id == acervoAlterar.Id);
@@ -291,9 +291,9 @@ namespace SME.CDEP.TesteIntegracao
         //    var servicoAcervo = GetServicoAcervo();
 
         //    var acervoAlterar = (ObterTodos<Acervo>()).FirstOrDefault();
-        //    acervoAlterar.Descricao = faker.Lorem.Text();
-        //    acervoAlterar.Titulo = faker.Lorem.Sentence();
-        //    acervoAlterar.SubTitulo = faker.Lorem.Sentence();
+        //    acervoAlterar.Descricao = _faker.Lorem.Text();
+        //    acervoAlterar.Titulo = _faker.Lorem.Sentence();
+        //    acervoAlterar.SubTitulo = _faker.Lorem.Sentence();
         //    acervoAlterar.DataAcervo = DateTimeExtension.HorarioBrasilia().Date.ToString();
         //    acervoAlterar.Ano = "[1995]";
             
@@ -338,7 +338,7 @@ namespace SME.CDEP.TesteIntegracao
             
         //    var creditoAutores = (ObterTodos<AcervoCreditoAutor>()).Where(w => w.AcervoId == acervoAlterar.Id);
         //    acervoAlterar.CreditosAutoresIds = creditoAutores.Take(2).Select(s => s.CreditoAutorId).ToArray();
-        //    acervoAlterar.CoAutores = creditoAutores.Take(2).Select(s=> new CoAutor() { CreditoAutorId = s.CreditoAutorId, TipoAutoria = faker.Lorem.Word().Limite(15)}).ToList();
+        //    acervoAlterar.CoAutores = creditoAutores.Take(2).Select(s=> new CoAutor() { CreditoAutorId = s.CreditoAutorId, TipoAutoria = _faker.Lorem.Word().Limite(15)}).ToList();
             
         //    await servicoAcervo.Alterar(acervoAlterar).ShouldThrowAsync<NegocioException>();
         //}
@@ -360,7 +360,7 @@ namespace SME.CDEP.TesteIntegracao
             
         //    var creditoAutores = (ObterTodos<AcervoCreditoAutor>()).Where(w => w.AcervoId == acervoAlterar.Id);
         //    acervoAlterar.CreditosAutoresIds = creditoAutores.Take(2).Select(s => s.CreditoAutorId).ToArray();
-        //    acervoAlterar.CoAutores = creditoAutores.Take(2).Select(s=> new CoAutor() { CreditoAutorId = s.CreditoAutorId, TipoAutoria = faker.Lorem.Word().Limite(15)}).ToList();
+        //    acervoAlterar.CoAutores = creditoAutores.Take(2).Select(s=> new CoAutor() { CreditoAutorId = s.CreditoAutorId, TipoAutoria = _faker.Lorem.Word().Limite(15)}).ToList();
             
         //    await servicoAcervo.Alterar(acervoAlterar).ShouldThrowAsync<NegocioException>();
         //}
@@ -375,7 +375,7 @@ namespace SME.CDEP.TesteIntegracao
         //    var acervos = ObterTodos<Acervo>();
         //    var acervoAlterar = (acervos).FirstOrDefault();
         //    acervoAlterar.Titulo = acervos.LastOrDefault().Titulo;
-        //    acervoAlterar.Descricao = faker.Lorem.Text();
+        //    acervoAlterar.Descricao = _faker.Lorem.Text();
         //    acervoAlterar.SubTitulo = acervos.LastOrDefault().SubTitulo;
         //    acervoAlterar.Codigo = "196";
         //    acervoAlterar.DataAcervo = DateTimeExtension.HorarioBrasilia().Date.ToString();
@@ -383,7 +383,7 @@ namespace SME.CDEP.TesteIntegracao
             
         //    var creditoAutores = (ObterTodos<AcervoCreditoAutor>()).Where(w => w.AcervoId == acervoAlterar.Id);
         //    acervoAlterar.CreditosAutoresIds = creditoAutores.Take(2).Select(s => s.CreditoAutorId).ToArray();
-        //    acervoAlterar.CoAutores = creditoAutores.Take(2).Select(s=> new CoAutor() { CreditoAutorId = s.CreditoAutorId, TipoAutoria = faker.Lorem.Word()}).ToList();
+        //    acervoAlterar.CoAutores = creditoAutores.Take(2).Select(s=> new CoAutor() { CreditoAutorId = s.CreditoAutorId, TipoAutoria = _faker.Lorem.Word()}).ToList();
             
         //    var acervo = await servicoAcervo.Alterar(acervoAlterar);
         //    var acervoAlterado = (ObterTodos<Acervo>()).FirstOrDefault(w=> w.Id == acervoAlterar.Id);
@@ -417,7 +417,7 @@ namespace SME.CDEP.TesteIntegracao
         //    var acervos = ObterTodos<Acervo>();
         //    var acervoAlterar = (acervos).FirstOrDefault();
         //    acervoAlterar.Titulo = acervos.LastOrDefault().Titulo;
-        //    acervoAlterar.Descricao = faker.Lorem.Text();
+        //    acervoAlterar.Descricao = _faker.Lorem.Text();
         //    acervoAlterar.SubTitulo = acervos.LastOrDefault().SubTitulo;
         //    acervoAlterar.Codigo = acervos.FirstOrDefault().Codigo;
         //    acervoAlterar.DataAcervo = DateTimeExtension.HorarioBrasilia().Date.ToString();
@@ -425,7 +425,7 @@ namespace SME.CDEP.TesteIntegracao
             
         //    var creditoAutores = (ObterTodos<AcervoCreditoAutor>()).Where(w => w.AcervoId == acervoAlterar.Id);
         //    acervoAlterar.CreditosAutoresIds = creditoAutores.Take(2).Select(s => s.CreditoAutorId).ToArray();
-        //    acervoAlterar.CoAutores = creditoAutores.Take(2).Select(s=> new CoAutor() { CreditoAutorId = s.CreditoAutorId, TipoAutoria = faker.Lorem.Word()}).ToList();
+        //    acervoAlterar.CoAutores = creditoAutores.Take(2).Select(s=> new CoAutor() { CreditoAutorId = s.CreditoAutorId, TipoAutoria = _faker.Lorem.Word()}).ToList();
             
         //    var acervo = await servicoAcervo.Alterar(acervoAlterar);
         //    var acervoAlterado = (ObterTodos<Acervo>()).FirstOrDefault(w=> w.Id == acervoAlterar.Id);
@@ -459,7 +459,7 @@ namespace SME.CDEP.TesteIntegracao
         //    var acervos = ObterTodos<Acervo>();
         //    var acervoAlterar = (acervos).FirstOrDefault();
         //    acervoAlterar.Titulo = acervos.LastOrDefault().Titulo;
-        //    acervoAlterar.Descricao = faker.Lorem.Text();
+        //    acervoAlterar.Descricao = _faker.Lorem.Text();
         //    acervoAlterar.SubTitulo = acervos.LastOrDefault().SubTitulo;
         //    acervoAlterar.Codigo = "196";
         //    acervoAlterar.DataAcervo = DateTimeExtension.HorarioBrasilia().Date.ToString();
@@ -467,7 +467,7 @@ namespace SME.CDEP.TesteIntegracao
             
         //    var creditoAutores = (ObterTodos<AcervoCreditoAutor>()).Where(w => w.AcervoId == acervoAlterar.Id);
         //    acervoAlterar.CreditosAutoresIds = creditoAutores.Take(3).Select(s => s.CreditoAutorId).ToArray();
-        //    acervoAlterar.CoAutores = creditoAutores.Take(3).Select(s=> new CoAutor() { CreditoAutorId = s.CreditoAutorId, TipoAutoria = faker.Lorem.Word().Limite(15)}).ToList();
+        //    acervoAlterar.CoAutores = creditoAutores.Take(3).Select(s=> new CoAutor() { CreditoAutorId = s.CreditoAutorId, TipoAutoria = _faker.Lorem.Word().Limite(15)}).ToList();
             
         //    var acervo = await servicoAcervo.Alterar(acervoAlterar);
         //    var acervoAlterado = (ObterTodos<Acervo>()).FirstOrDefault(w=> w.Id == acervoAlterar.Id);
@@ -501,7 +501,7 @@ namespace SME.CDEP.TesteIntegracao
         //    var acervos = ObterTodos<Acervo>();
         //    var acervoAlterar = (acervos).FirstOrDefault();
         //    acervoAlterar.Titulo = acervos.LastOrDefault().Titulo;
-        //    acervoAlterar.Descricao = faker.Lorem.Text();
+        //    acervoAlterar.Descricao = _faker.Lorem.Text();
         //    acervoAlterar.SubTitulo = acervos.LastOrDefault().SubTitulo;
         //    acervoAlterar.Codigo = "196";
         //    acervoAlterar.DataAcervo = DateTimeExtension.HorarioBrasilia().Date.ToString();
@@ -509,7 +509,7 @@ namespace SME.CDEP.TesteIntegracao
             
         //    var creditoAutores = (ObterTodos<AcervoCreditoAutor>()).Where(w => w.AcervoId == acervoAlterar.Id);
         //    acervoAlterar.CreditosAutoresIds = creditoAutores.Take(1).Select(s => s.CreditoAutorId).ToArray();
-        //    acervoAlterar.CoAutores = creditoAutores.Take(1).Select(s=> new CoAutor() { CreditoAutorId = s.CreditoAutorId, TipoAutoria = faker.Lorem.Word().Limite(15)}).ToList();
+        //    acervoAlterar.CoAutores = creditoAutores.Take(1).Select(s=> new CoAutor() { CreditoAutorId = s.CreditoAutorId, TipoAutoria = _faker.Lorem.Word().Limite(15)}).ToList();
             
         //    var acervo = await servicoAcervo.Alterar(acervoAlterar);
         //    var acervoAlterado = (ObterTodos<Acervo>()).FirstOrDefault(w=> w.Id == acervoAlterar.Id);

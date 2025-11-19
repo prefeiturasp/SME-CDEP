@@ -40,30 +40,20 @@ namespace SME.CDEP.Aplicacao.Servicos
 
             var url = await servicoArmazenamento.Obter(arquivo.NomeArquivoFisico, false);
           
-            WebClient webClient = new WebClient();
-            using (Stream stream = webClient.OpenRead(url))
-            {
-                Bitmap imagem = new Bitmap(stream);
+            WebClient webClient = new();
+            using Stream stream = webClient.OpenRead(url);
+            Bitmap imagem = new(stream);
 
-                var miniatura = imagem.GetThumbnailImage(320, 200, () => false, IntPtr.Zero);
+            var miniatura = imagem.GetThumbnailImage(320, 200, () => false, IntPtr.Zero);
 
-                var nomeMiniatura = arquivo.NomeArquivoFisicoMiniatura;
+            var nomeMiniatura = arquivo.NomeArquivoFisicoMiniatura;
 
-                using (var msImagem = new MemoryStream())
-                {
-                    miniatura.Save(msImagem, arquivo.TipoConteudo.ObterFormato());
+            using var msImagem = new MemoryStream();
+            miniatura.Save(msImagem, arquivo.TipoConteudo.ObterFormato());
 
-                    msImagem.Seek(0, SeekOrigin.Begin);
-                
-                    return await servicoArmazenamento.Armazenar(nomeMiniatura, msImagem, arquivo.TipoConteudo);    
-                }
-            }
-        }
-        
-        private ImageCodecInfo GetEncoderInfo(ImageFormat format)
-        {
-            var codecs = ImageCodecInfo.GetImageDecoders();
-            return codecs.FirstOrDefault(codec => codec.FormatID == format.Guid);
+            msImagem.Seek(0, SeekOrigin.Begin);
+
+            return await servicoArmazenamento.Armazenar(nomeMiniatura, msImagem, arquivo.TipoConteudo);
         }
 
         private async Task<(byte[], string, string)> ObterArquivo(Arquivo arquivo)

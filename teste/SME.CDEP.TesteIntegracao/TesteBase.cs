@@ -174,15 +174,7 @@ namespace SME.CDEP.TesteIntegracao
 
         protected IServicoAcervoSolicitacao GetServicoAcervoSolicitacao()
         {
-            try
-            {
-                return ObterServicoAplicacao<IServicoAcervoSolicitacao>();
-            }
-            catch (Exception e)
-            {
-
-                throw;
-            }
+            return ObterServicoAplicacao<IServicoAcervoSolicitacao>();
         }
 
         protected IServicoAcervoAudiovisual GetServicoAcervoAudiovisual()
@@ -202,57 +194,57 @@ namespace SME.CDEP.TesteIntegracao
 
         protected IMapper GetServicoMapper()
         {
-            return ServiceProvider.GetService<IMapper>();
+            return ServiceProvider.GetService<IMapper>()!;
         }
 
         protected IServicoExcluirArquivo GetServicoExcluirArquivo()
         {
-            return ServiceProvider.GetService<IServicoExcluirArquivo>();
+            return ServiceProvider.GetService<IServicoExcluirArquivo>()!;
         }
 
         protected IServicoMoverArquivoTemporario GetServicoMoverArquivoTemporario()
         {
-            return ServiceProvider.GetService<IServicoMoverArquivoTemporario>();
+            return ServiceProvider.GetService<IServicoMoverArquivoTemporario>()!;
         }
 
         protected IServicoUploadArquivo GetServicoUploadArquivo()
         {
-            return ServiceProvider.GetService<IServicoUploadArquivo>();
+            return ServiceProvider.GetService<IServicoUploadArquivo>()!;
         }
 
         protected IServicoImportacaoArquivoAcervoDocumental GetServicoImportacaoArquivoAcervoDocumental()
         {
-            return ServiceProvider.GetService<IServicoImportacaoArquivoAcervoDocumental>();
+            return ServiceProvider.GetService<IServicoImportacaoArquivoAcervoDocumental>()!;
         }
 
         protected IServicoImportacaoArquivoAcervoBibliografico GetServicoImportacaoArquivoAcervoBibliografico()
         {
-            return ServiceProvider.GetService<IServicoImportacaoArquivoAcervoBibliografico>();
+            return ServiceProvider.GetService<IServicoImportacaoArquivoAcervoBibliografico>()!;
         }
 
         protected IServicoImportacaoArquivoAcervoArteGrafica GetServicoImportacaoArquivoAcervoArteGrafica()
         {
-            return ServiceProvider.GetService<IServicoImportacaoArquivoAcervoArteGrafica>();
+            return ServiceProvider.GetService<IServicoImportacaoArquivoAcervoArteGrafica>()!;
         }
 
         protected IServicoImportacaoArquivoAcervoAudiovisual GetServicoImportacaoArquivoAcervoAudiovisual()
         {
-            return ServiceProvider.GetService<IServicoImportacaoArquivoAcervoAudiovisual>();
+            return ServiceProvider.GetService<IServicoImportacaoArquivoAcervoAudiovisual>()!;
         }
 
         protected IServicoImportacaoArquivoAcervoFotografico GetServicoImportacaoArquivoAcervoFotografico()
         {
-            return ServiceProvider.GetService<IServicoImportacaoArquivoAcervoFotografico>();
+            return ServiceProvider.GetService<IServicoImportacaoArquivoAcervoFotografico>()!;
         }
 
         protected IServicoImportacaoArquivoAcervoTridimensional GetServicoImportacaoArquivoAcervoTridimensional()
         {
-            return ServiceProvider.GetService<IServicoImportacaoArquivoAcervoTridimensional>();
+            return ServiceProvider.GetService<IServicoImportacaoArquivoAcervoTridimensional>()!;
         }
 
         protected IServicoImportacaoArquivoAcervo GetServicoImportacaoArquivoAcervo()
         {
-            return ServiceProvider.GetService<IServicoImportacaoArquivoAcervo>();
+            return ServiceProvider.GetService<IServicoImportacaoArquivoAcervo>()!;
         }
 
         protected IServicoEvento GetServicoEvento()
@@ -264,6 +256,15 @@ namespace SME.CDEP.TesteIntegracao
         {
             return ObterServicoAplicacao<IServicoAcervoEmprestimo>();
         }
+
+        protected IServicoHistoricoConsultaAcervo GetServicoHistoricoConsultaAcervo() =>
+            ObterServicoAplicacao<IServicoHistoricoConsultaAcervo>();
+
+        protected IServicoDeConsolidacao GetServicoDeConsolidacao() =>
+            ObterServicoAplicacao<IServicoDeConsolidacao>();
+
+        protected IServicoAcervoAuditavel GetServicoAcervoAuditavel() =>
+            ObterServicoAplicacao<IServicoAcervoAuditavel>();
 
         public T ObterServicoAplicacao<T>()
             where T : IServicoAplicacao
@@ -679,7 +680,7 @@ namespace SME.CDEP.TesteIntegracao
             {
                 await InserirNaBase(acervoSolicitacao);
 
-                var acervoSolicitadoId = (ObterTodos<AcervoSolicitacao>()).LastOrDefault().Id;
+                var acervoSolicitadoId = ObterTodos<AcervoSolicitacao>().Last().Id;
                 foreach (var item in acervoSolicitacao.Itens)
                 {
                     item.AcervoSolicitacaoId = acervoSolicitadoId;
@@ -688,7 +689,7 @@ namespace SME.CDEP.TesteIntegracao
             }
         }
 
-        protected AcervoSolicitacao ObterAcervoSolicitacao()
+        protected static AcervoSolicitacao ObterAcervoSolicitacao()
         {
             var acervoSolicitacao = new AcervoSolicitacao()
             {
@@ -697,8 +698,8 @@ namespace SME.CDEP.TesteIntegracao
                 CriadoEm = DateTimeExtension.HorarioBrasilia(),
                 CriadoLogin = "Sistema",
                 CriadoPor = "Sistema",
-                Itens = new List<AcervoSolicitacaoItem>()
-                {
+                Itens =
+                [
                     new ()
                     {
                         Situacao =  SituacaoSolicitacaoItem.AGUARDANDO_ATENDIMENTO,
@@ -718,14 +719,14 @@ namespace SME.CDEP.TesteIntegracao
                         Situacao = SituacaoSolicitacaoItem.FINALIZADO_AUTOMATICAMENTE,
                         AcervoId = 3, CriadoEm = DateTimeExtension.HorarioBrasilia(),
                         CriadoLogin = "Sistema", CriadoPor = "Sistema",
-                        ResponsavelId = 2,
+                        ResponsavelId = 2
                     }
-                }
+                ]
             };
             return acervoSolicitacao;
         }
 
-        protected AcervoSolicitacao ObterAcervoSolicitacaoAtendido()
+        protected static AcervoSolicitacao ObterAcervoSolicitacaoAtendido()
         {
             var acervoSolicitacao = new AcervoSolicitacao()
             {
@@ -734,8 +735,8 @@ namespace SME.CDEP.TesteIntegracao
                 CriadoEm = DateTimeExtension.HorarioBrasilia(),
                 CriadoLogin = "Sistema",
                 CriadoPor = "Sistema",
-                Itens = new List<AcervoSolicitacaoItem>()
-                {
+                Itens =
+                [
                     new ()
                     {
                         Situacao =  SituacaoSolicitacaoItem.AGUARDANDO_VISITA,
@@ -759,7 +760,7 @@ namespace SME.CDEP.TesteIntegracao
                         CriadoLogin = "Sistema", CriadoPor = "Sistema",
                         ResponsavelId = 2,
                     }
-                }
+                ]
             };
             return acervoSolicitacao;
         }
@@ -774,7 +775,7 @@ namespace SME.CDEP.TesteIntegracao
             {
                 await InserirNaBase(new Acervo()
                 {
-                    Codigo = $"{j.ToString()}.TD",
+                    Codigo = $"{j}.TD",
                     Titulo = faker.Lorem.Text().Limite(500),
                     Descricao = faker.Lorem.Text(),
                     TipoAcervoId = (int)TipoAcervo.Tridimensional,
@@ -836,7 +837,7 @@ namespace SME.CDEP.TesteIntegracao
                 }
             }
         }
-        protected void GerarArquivosSistema(List<Arquivo> arquivos)
+        protected static void GerarArquivosSistema(List<Arquivo> arquivos)
         {
             arquivos.AddRange(AdicionarArquivoSistema("Bibliografico_sem_imagem.svg"));
             arquivos.AddRange(AdicionarArquivoSistema("Documentacao_sem_imagem.svg"));
@@ -856,10 +857,10 @@ namespace SME.CDEP.TesteIntegracao
             await InserirVariosNaBase(AdicionarArquivoSistema("Tridimensional_sem_Imagem.svg"));
         }
 
-        private IEnumerable<Arquivo> AdicionarArquivoSistema(string nomeDoArquivo)
+        private static List<Arquivo> AdicionarArquivoSistema(string nomeDoArquivo)
         {
             var arquivosBibliograficosPadrao = ArquivoMock.Instance.GerarArquivo(TipoArquivo.Sistema).Generate(1);
-            arquivosBibliograficosPadrao.FirstOrDefault().Nome = nomeDoArquivo;
+            arquivosBibliograficosPadrao.First().Nome = nomeDoArquivo;
 
             return arquivosBibliograficosPadrao;
         }
@@ -977,7 +978,6 @@ namespace SME.CDEP.TesteIntegracao
             acervoSolicitacaoItem.AcervoId = acervoId;
 
             await InserirNaBase(acervoSolicitacaoItem);
-            contadorSolicitacoes++;
         }
 
         protected async Task InserirAcervos(SituacaoSaldo situacaoSaldo = SituacaoSaldo.DISPONIVEL)
@@ -1019,8 +1019,8 @@ namespace SME.CDEP.TesteIntegracao
 
         protected async Task InserirAcervosEAtendimentos()
         {
-            InserirAcervos();
-            InserirAtendimentos();
+            await InserirAcervos();
+            await InserirAtendimentos();
         }
 
         protected static AcervoSolicitacaoItem ObterAcervoSolicitacaoItem(long acervoSolicitacaoId, long acervoId, TipoAtendimento? tipoAtendimento = null, DateTime? DataVisita = null, SituacaoSolicitacaoItem situacao = SituacaoSolicitacaoItem.AGUARDANDO_ATENDIMENTO)

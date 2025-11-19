@@ -60,11 +60,14 @@ namespace SME.CDEP.Aplicacao.Servicos
             if (evento.AcervoSolicitacaoItemId.HasValue)
             {
                 var acervo = await repositorioAcervoSolicitacaoItem.ObterAcervoPorAcervoSolicitacaoItemId(evento.AcervoSolicitacaoItemId.Value);
-                
-                var codigoTombo = acervo.Codigo.EstaPreenchido() && acervo.CodigoNovo.EstaPreenchido() ? $"{acervo.Codigo}/{acervo.CodigoNovo}"
-                    : acervo.Codigo.EstaPreenchido() ? acervo.Codigo : acervo.CodigoNovo;
 
-                return $"Visita agendada ao acervo de tombo/código: {codigoTombo}";
+                if (acervo is not null)
+                {
+                    var codigoTombo = acervo.Codigo.EstaPreenchido() && acervo.CodigoNovo.EstaPreenchido() ? $"{acervo.Codigo}/{acervo.CodigoNovo}"
+                        : acervo.Codigo.EstaPreenchido() ? acervo.Codigo : acervo.CodigoNovo;
+
+                    return $"Visita agendada ao acervo de tombo/código: {codigoTombo}";
+                }
             }
 
             return "Visita agendada";

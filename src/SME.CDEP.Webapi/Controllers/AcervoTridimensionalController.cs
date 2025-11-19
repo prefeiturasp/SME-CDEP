@@ -1,15 +1,15 @@
-﻿using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using SME.CDEP.Aplicacao.DTOS;
 using SME.CDEP.Aplicacao.Servicos.Interface;
 using SME.CDEP.Infra.Dominio.Enumerados;
+using SME.CDEP.Webapi.Controllers.Filtros;
 using SME.CDEP.Webapi.Filtros;
 
 namespace SME.CDEP.Webapi.Controllers;
 
 [ApiController]
 [ValidaDto]
-public class AcervoTridimensionalController: BaseController
+public class AcervoTridimensionalController : BaseController
 {
     [HttpPost]
     [ProducesResponseType(typeof(AcervoTridimensionalCadastroDTO), 200)]
@@ -23,7 +23,7 @@ public class AcervoTridimensionalController: BaseController
     {
         return Ok(await servicoAcervoTridimensional.Inserir(acervoTridimensional));
     }
-    
+
     [HttpPut]
     [ProducesResponseType(typeof(AcervoTridimensionalDTO), 200)]
     [ProducesResponseType(typeof(RetornoBaseDTO), 400)]
@@ -36,18 +36,18 @@ public class AcervoTridimensionalController: BaseController
     {
         return Ok(await servicoAcervoTridimensional.Alterar(acervoTridimensional));
     }
-    
+
     [HttpGet("{acervoId}")]
     [ProducesResponseType(typeof(AcervoArteGraficaDTO), 200)]
     [ProducesResponseType(typeof(RetornoBaseDTO), 400)]
     [ProducesResponseType(typeof(RetornoBaseDTO), 403)]
     [ProducesResponseType(typeof(RetornoBaseDTO), 601)]
     [Permissao(Permissao.CadastroAcervo_C, Policy = "Bearer")]
-    public async Task<IActionResult> ObterPorId([FromRoute] long acervoId,[FromServices] IServicoAcervoTridimensional servicoAcervoTridimensional)
+    public async Task<IActionResult> ObterPorId([FromRoute] long acervoId, [FromServices] IServicoAcervoTridimensional servicoAcervoTridimensional)
     {
         return Ok(await servicoAcervoTridimensional.ObterPorId(acervoId));
     }
-    
+
     [HttpDelete("{acervoId}")]
     [ProducesResponseType(typeof(bool), 200)]
     [ProducesResponseType(typeof(RetornoBaseDTO), 400)]

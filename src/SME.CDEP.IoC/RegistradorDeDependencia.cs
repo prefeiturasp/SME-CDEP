@@ -82,6 +82,14 @@ public class RegistradorDeDependencia
         _serviceCollection.TryAddScoped<IExecutarImportacaoArquivoAcervoAudiovisualUseCase, ExecutarImportacaoArquivoAcervoAudiovisualUseCase>();
         _serviceCollection.TryAddScoped<IExecutarImportacaoArquivoAcervoFotograficoUseCase, ExecutarImportacaoArquivoAcervoFotograficoUseCase>();
         _serviceCollection.TryAddScoped<IExecutarImportacaoArquivoAcervoTridimensionalUseCase, ExecutarImportacaoArquivoAcervoTridimensionalUseCase>();
+        _serviceCollection.TryAddScoped<IRelatorioControleLivrosEmprestadosUseCase, RelatorioControleLivrosEmprestadosUseCase>();
+        _serviceCollection.TryAddScoped<IRelatorioControleAcervoUseCase, RelatorioControleAcervoUseCase>();
+        _serviceCollection.TryAddScoped<IRelatorioControleAcervoAutorUseCase, RelatorioControleAcervoAutorUseCase>();
+        _serviceCollection.TryAddScoped<IRelatorioControleDevolucaoLivrosUseCase, RelatorioControleDevolucaoLivrosUseCase>();
+        _serviceCollection.TryAddScoped<IRelatorioControleEditoraUseCase, RelatorioControleEditoraUseCase>();
+        _serviceCollection.TryAddScoped<IExecutarConsolidacaoDoHistoricoDeConsultasDeAcervoUseCase, ExecutarConsolidacaoDoHistoricoDeConsultasDeAcervoUseCase>();
+        _serviceCollection.TryAddScoped<IRelatorioTitulosMaisPesquisadosUseCase, RelatorioTitulosMaisPesquisadosUseCase>();
+        _serviceCollection.TryAddScoped<IRelatorioControleDownloadAcervoUseCase, RelatorioControleDownloadAcervoUseCase>();
     }
 
     protected virtual void RegistrarRabbit()
@@ -92,8 +100,8 @@ public class RegistradorDeDependencia
         _serviceCollection.AddSingleton<ConfiguracaoRabbitOptions>();
         _serviceCollection.AddSingleton<IConexoesRabbit>(serviceProvider =>
         {
-            var options = serviceProvider.GetService<IOptions<ConfiguracaoRabbitOptions>>().Value;
-            var provider = serviceProvider.GetService<IOptions<DefaultObjectPoolProvider>>().Value;
+            var options = serviceProvider.GetService<IOptions<ConfiguracaoRabbitOptions>>()!.Value;
+            var provider = serviceProvider.GetService<IOptions<DefaultObjectPoolProvider>>()!.Value;
             return new ConexoesRabbitAcessos(options, provider);
         });
 
@@ -127,8 +135,8 @@ public class RegistradorDeDependencia
         _serviceCollection.AddSingleton<ConfiguracaoRabbitLogsOptions>();
         _serviceCollection.AddSingleton<IConexoesRabbitLogs>(serviceProvider =>
         {
-            var options = serviceProvider.GetService<IOptions<ConfiguracaoRabbitLogsOptions>>().Value;
-            var provider = serviceProvider.GetService<IOptions<DefaultObjectPoolProvider>>().Value;
+            var options = serviceProvider.GetService<IOptions<ConfiguracaoRabbitLogsOptions>>()!.Value;
+            var provider = serviceProvider.GetService<IOptions<DefaultObjectPoolProvider>>()!.Value;
             return new ConexoesRabbitLogs(options, provider);
         });
 
@@ -173,6 +181,7 @@ public class RegistradorDeDependencia
             config.AddMap(new EventoMap());
             config.AddMap(new EventoFixoMap());
             config.AddMap(new AcervoEmprestimoMap());
+            config.AddMap(new HistoricoConsultaAcervoMap());
             config.ForDommel();
         });
     }
@@ -184,7 +193,7 @@ public class RegistradorDeDependencia
 
     protected virtual void RegistrarConexao()
     {
-        _serviceCollection.AddScoped<ICdepConexao, CdepConexao>(_ => new CdepConexao(_configuration.GetConnectionString("conexao")));
+        _serviceCollection.AddScoped<ICdepConexao, CdepConexao>(_ => new CdepConexao(_configuration.GetConnectionString("conexao")!));
         _serviceCollection.AddScoped<ITransacao, Transacao>();
     }
 
@@ -229,6 +238,8 @@ public class RegistradorDeDependencia
         _serviceCollection.TryAddScoped<IRepositorioEvento, RepositorioEvento>();
         _serviceCollection.TryAddScoped<IRepositorioEventoFixo, RepositorioEventoFixo>();
         _serviceCollection.TryAddScoped<IRepositorioAcervoEmprestimo, RepositorioAcervoEmprestimo>();
+        _serviceCollection.TryAddScoped<IRepositorioHistoricoConsultaAcervo, RepositorioHistoricoConsultaAcervo>();
+        _serviceCollection.TryAddScoped<IRepositorioDeConsolidacao, RepositorioDeConsolidacao>();
     }
 
     protected virtual void RegistrarServicos()
@@ -278,11 +289,8 @@ public class RegistradorDeDependencia
         _serviceCollection.TryAddScoped<IServicoMensageria, ServicoMensageria>();
         _serviceCollection.TryAddScoped<IServicoNotificacaoEmail, ServicoNotificacaoEmail>();
         _serviceCollection.TryAddScoped<IServicoAcervoEmprestimo, ServicoAcervoEmprestimo>();
-        _serviceCollection.TryAddScoped<IRelatorioControleLivrosEmprestadosUseCase, RelatorioControleLivrosEmprestadosUseCase>();
-        _serviceCollection.TryAddScoped<IRelatorioControleAcervoUseCase, RelatorioControleAcervoUseCase>();
-        _serviceCollection.TryAddScoped<IRelatorioControleAcervoAutorUseCase, RelatorioControleAcervoAutorUseCase>();
-        _serviceCollection.TryAddScoped<IRelatorioControleDevolucaoLivrosUseCase, RelatorioControleDevolucaoLivrosUseCase>();
-        _serviceCollection.TryAddScoped<IRelatorioControleEditoraUseCase, RelatorioControleEditoraUseCase>();
+        _serviceCollection.TryAddScoped<IServicoHistoricoConsultaAcervo, ServicoHistoricoConsultaAcervo>();
+        _serviceCollection.TryAddScoped<IServicoDeConsolidacao, ServicoDeConsolidacao>();
     }
     protected virtual void RegistrarHttpClients()
     {

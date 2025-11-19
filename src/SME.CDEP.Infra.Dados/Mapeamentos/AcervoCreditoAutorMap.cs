@@ -1,8 +1,10 @@
 ﻿using Dapper.FluentMap.Dommel.Mapping;
 using SME.CDEP.Dominio.Entidades;
+using System.Diagnostics.CodeAnalysis;
 
 namespace SME.CDEP.Infra.Dados.Mapeamentos
 {
+    [ExcludeFromCodeCoverage]
     public class AcervoCreditoAutorMap : DommelEntityMap<AcervoCreditoAutor>
     {
         public AcervoCreditoAutorMap()

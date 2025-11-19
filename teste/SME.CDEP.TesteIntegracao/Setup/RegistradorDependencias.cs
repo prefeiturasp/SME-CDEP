@@ -141,6 +141,10 @@ namespace SME.CDEP.TesteIntegracao.Setup
             _serviceCollection.TryAddScoped<IExecutarImportacaoArquivoAcervoDocumentalUseCase, ExecutarImportacaoArquivoAcervoDocumentalUseCase>();
             _serviceCollection.TryAddScoped<IImportacaoArquivoAcervoDocumentalAuxiliar, ExecutarImportacaoArquivoAcervoDocumentalUseCase>();
             _serviceCollection.TryAddScoped<IRelatorioControleLivrosEmprestadosUseCase, RelatorioControleLivrosEmprestadosUseCase>();
+            _serviceCollection.TryAddScoped<IServicoDeConsolidacao, ServicoDeConsolidacao>();
+            _serviceCollection.TryAddScoped<IServicoHistoricoConsultaAcervo, ServicoHistoricoConsultaAcervo>();
+
+            _serviceCollection.TryAddScoped<IRelatorioTitulosMaisPesquisadosUseCase, RelatorioTitulosMaisPesquisadosUseCase>();
         }
         protected override void RegistrarHttpClients()
         {}

@@ -38,7 +38,7 @@ namespace SME.CDEP.Aplicacao.Servicos
         
         public async Task<PaginacaoResultadoDTO<IdNomeExcluidoAuditavelDTO>> ObterPaginado(string? nome = null)
         {
-            var registros = nome.NaoEstaPreenchido() 
+            var registros = string.IsNullOrWhiteSpace(nome) 
                 ?  await ObterTodos() 
                 : mapper.Map<IEnumerable<IdNomeExcluidoAuditavelDTO>>(await repositorioSerieColecao.PesquisarPorNome(nome));
             
@@ -61,13 +61,14 @@ namespace SME.CDEP.Aplicacao.Servicos
             return repositorioSerieColecao.ObterPorNome(nome);
         }
 
-        private IOrderedEnumerable<IdNomeExcluidoAuditavelDTO> OrdenarRegistros(Paginacao paginacao, IEnumerable<IdNomeExcluidoAuditavelDTO> registros)
+        private static IOrderedEnumerable<IdNomeExcluidoAuditavelDTO> OrdenarRegistros(Paginacao paginacao, IEnumerable<IdNomeExcluidoAuditavelDTO> registros)
         {
             return paginacao.Ordenacao switch
             {
-                TipoOrdenacao.DATA => registros.OrderByDescending(o => o.AlteradoEm.HasValue ? o.AlteradoEm.Value : o.CriadoEm),
+                TipoOrdenacao.DATA => registros.OrderByDescending(o => o.AlteradoEm ?? o.CriadoEm),
                 TipoOrdenacao.AZ => registros.OrderBy(o => o.Nome),
                 TipoOrdenacao.ZA => registros.OrderByDescending(o => o.Nome),
+                _ => registros.OrderBy(o => o.Nome)
             };
         }
         
@@ -77,7 +78,7 @@ namespace SME.CDEP.Aplicacao.Servicos
                 throw new NegocioException(MensagemNegocio.REGISTRO_DUPLICADO);
         }
         
-        private void ValidarNome(IdNomeExcluidoAuditavelDTO idNomeExcluidoAuditavelDTO)
+        private static void ValidarNome(IdNomeExcluidoAuditavelDTO idNomeExcluidoAuditavelDTO)
         {
             if (idNomeExcluidoAuditavelDTO.Nome is null || idNomeExcluidoAuditavelDTO.Nome.Trim().Length == 0)
                 throw new NegocioException(string.Format(MensagemNegocio.CAMPO_NAO_INFORMADO,"Nome"));

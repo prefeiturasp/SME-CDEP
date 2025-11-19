@@ -2,6 +2,7 @@
 using FluentAssertions;
 using Microsoft.AspNetCore.Mvc;
 using Moq;
+using Moq.AutoMock;
 using SME.CDEP.Aplicacao.DTOS;
 using SME.CDEP.Aplicacao.Servicos.Interface;
 using SME.CDEP.Infra.Dominio.Enumerados;
@@ -17,8 +18,9 @@ namespace SME.CDEP.TesteUnitario.WebApi.Controllers
 
         public AcervoControllerTestes()
         {
-            _servicoAcervoMock = new Mock<IServicoAcervo>();
-            _controller = new AcervoController();
+            var mocker = new AutoMocker();
+            _servicoAcervoMock = mocker.GetMock<IServicoAcervo>();
+            _controller = mocker.CreateInstance<AcervoController>();
             _faker = new Faker("pt_BR");
         }
 
@@ -28,19 +30,19 @@ namespace SME.CDEP.TesteUnitario.WebApi.Controllers
             // Arrange
             var tiposDeAcervo = new List<IdNomeDTO>
             {
-                new IdNomeDTO { Id = 1, Nome = "Bibliográfico" },
-                new IdNomeDTO { Id = 2, Nome = "Documentação Textual" }
+                new() { Id = 1, Nome = "Bibliográfico" },
+                new() { Id = 2, Nome = "Documentação Textual" }
             };
             _servicoAcervoMock.Setup(s => s.ObterTodosTipos()).Returns(tiposDeAcervo);
 
             // Act
-            var resultado = _controller.ObterTiposDeAcervos(_servicoAcervoMock.Object);
+            var resultado = _controller.ObterTiposDeAcervos();
 
             // Assert
             var okResult = Assert.IsType<OkObjectResult>(resultado);
             okResult.StatusCode.Should().Be(200);
 
-            var valorRetornado = Assert.IsAssignableFrom<IEnumerable<IdNomeDTO>>(okResult.Value);
+            var valorRetornado = Assert.IsType<IEnumerable<IdNomeDTO>>(okResult.Value, exactMatch: false);
             valorRetornado.Should().BeEquivalentTo(tiposDeAcervo);
 
             _servicoAcervoMock.Verify(s => s.ObterTodosTipos(), Times.Once);
@@ -62,7 +64,7 @@ namespace SME.CDEP.TesteUnitario.WebApi.Controllers
                               .ReturnsAsync(paginacaoResultado);
 
             // Act
-            var resultado = await _controller.ObterTodosOuPorTipoTituloCreditoAutoriaTomboECodigo(filtro, _servicoAcervoMock.Object);
+            var resultado = await _controller.ObterTodos(filtro);
 
             // Assert
             var okResult = Assert.IsType<OkObjectResult>(resultado);
@@ -88,7 +90,7 @@ namespace SME.CDEP.TesteUnitario.WebApi.Controllers
                               .ReturnsAsync(paginacaoResultado);
 
             // Act
-            var resultado = await _controller.ObterPorTextoLivreETipoAcervo(filtro, _servicoAcervoMock.Object);
+            var resultado = await _controller.ObterPorTextoLivreETipoAcervo(filtro);
 
             // Assert
             var okResult = Assert.IsType<OkObjectResult>(resultado);
@@ -109,7 +111,7 @@ namespace SME.CDEP.TesteUnitario.WebApi.Controllers
                               .ReturnsAsync(detalheDto);
 
             // Act
-            var resultado = await _controller.ObterDetalhamentoAcervo(filtro, _servicoAcervoMock.Object);
+            var resultado = await _controller.ObterDetalhamentoAcervo(filtro);
 
             // Assert
             var okResult = Assert.IsType<OkObjectResult>(resultado);
@@ -127,7 +129,7 @@ namespace SME.CDEP.TesteUnitario.WebApi.Controllers
             _servicoAcervoMock.Setup(s => s.ObterTermoDeCompromisso()).ReturnsAsync(termo);
 
             // Act
-            var resultado = await _controller.ObterTermoDeCompromisso(_servicoAcervoMock.Object);
+            var resultado = await _controller.ObterTermoDeCompromisso();
 
             // Assert
             var okResult = Assert.IsType<OkObjectResult>(resultado);
@@ -152,7 +154,7 @@ namespace SME.CDEP.TesteUnitario.WebApi.Controllers
             _servicoAcervoMock.Setup(s => s.PesquisarAcervoPorCodigoTombo(filtro)).ReturnsAsync(resultadoDto);
 
             // Act
-            var resultado = await _controller.PesquisarAcervoPorCodigoTombo(filtro, _servicoAcervoMock.Object);
+            var resultado = await _controller.PesquisarAcervoPorCodigoTombo(filtro);
 
             // Assert
             var okResult = Assert.IsType<OkObjectResult>(resultado);
@@ -160,6 +162,23 @@ namespace SME.CDEP.TesteUnitario.WebApi.Controllers
             valorRetornado.Should().BeEquivalentTo(resultadoDto);
 
             _servicoAcervoMock.Verify(s => s.PesquisarAcervoPorCodigoTombo(filtro), Times.Once);
+        }
+
+        [Fact]
+        public async Task ObterAutocompletacaoTituloAcervosBaixados_QuandoChamado_DeveRetornarOkComListaDeTitulos()
+        {
+            // Arrange
+            var titulos = _faker.Make(3, () => _faker.Lorem.Sentence());
+            _servicoAcervoMock.Setup(s => s.ObterAutocompletacaoTituloAcervosBaixadosAsync(It.IsAny<string>())).ReturnsAsync(titulos);
+
+            // Act
+            var resultado = await _controller.ObterAutocompletacaoTituloAcervosBaixados("Historia");
+
+            // Assert
+            var okResult = Assert.IsType<OkObjectResult>(resultado);
+            var valorRetornado = Assert.IsType<IEnumerable<string>>(okResult.Value, exactMatch: false);
+            valorRetornado.Should().BeEquivalentTo(titulos);
+            _servicoAcervoMock.Verify(s => s.ObterAutocompletacaoTituloAcervosBaixadosAsync("Historia"), Times.Once);
         }
     }
 }

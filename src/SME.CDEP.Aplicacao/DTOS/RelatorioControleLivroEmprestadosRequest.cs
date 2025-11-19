@@ -10,7 +10,6 @@ namespace SME.CDEP.Aplicacao.DTOS
         public SituacaoSolicitacaoItem SituacaoSolicitacaoItem { get; set; }
         public List<SituacaoEmprestimo>? SituacaoEmprestimo { get; set; }
         public ModeloRelatorio Modelo { get; set; }
-        public bool SomenteDevolvidos { get; set; }
-       
+        public bool SomenteDevolvidos { get; set; }       
     }
 }

@@ -1,15 +1,15 @@
-﻿using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using SME.CDEP.Aplicacao.DTOS;
 using SME.CDEP.Aplicacao.Servicos.Interface;
 using SME.CDEP.Infra.Dominio.Enumerados;
+using SME.CDEP.Webapi.Controllers.Filtros;
 using SME.CDEP.Webapi.Filtros;
 
 namespace SME.CDEP.Webapi.Controllers;
 
 [ApiController]
 [ValidaDto]
-public class AcervoBibliograficoController: BaseController
+public class AcervoBibliograficoController : BaseController
 {
     [HttpPost]
     [ProducesResponseType(typeof(AcervoBibliograficoCadastroDTO), 200)]
@@ -23,7 +23,7 @@ public class AcervoBibliograficoController: BaseController
     {
         return Ok(await servicoAcervoBibliografico.Inserir(acervoBibliografico));
     }
-    
+
     [HttpPut]
     [ProducesResponseType(typeof(AcervoBibliograficoDTO), 200)]
     [ProducesResponseType(typeof(RetornoBaseDTO), 400)]
@@ -36,18 +36,18 @@ public class AcervoBibliograficoController: BaseController
     {
         return Ok(await servicoAcervoBibliografico.Alterar(acervoBibliografico));
     }
-    
+
     [HttpGet("{acervoId}")]
     [ProducesResponseType(typeof(AcervoBibliograficoDTO), 200)]
     [ProducesResponseType(typeof(RetornoBaseDTO), 400)]
     [ProducesResponseType(typeof(RetornoBaseDTO), 403)]
     [ProducesResponseType(typeof(RetornoBaseDTO), 601)]
     [Permissao(Permissao.CadastroAcervo_C, Policy = "Bearer")]
-    public async Task<IActionResult> ObterPorId([FromRoute] long acervoId,[FromServices] IServicoAcervoBibliografico servicoAcervoBibliografico)
+    public async Task<IActionResult> ObterPorId([FromRoute] long acervoId, [FromServices] IServicoAcervoBibliografico servicoAcervoBibliografico)
     {
         return Ok(await servicoAcervoBibliografico.ObterPorId(acervoId));
     }
-    
+
     [HttpDelete("{acervoId}")]
     [ProducesResponseType(typeof(bool), 200)]
     [ProducesResponseType(typeof(RetornoBaseDTO), 400)]

@@ -3,7 +3,7 @@ using Microsoft.AspNetCore.Mvc.Filters;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
 using SME.CDEP.Aplicacao.DTOS;
 
-namespace SME.CDEP.Webapi.Filtros
+namespace SME.CDEP.Webapi.Controllers.Filtros
 {
     public class ValidaDtoAttribute : ActionFilterAttribute
     {
@@ -25,10 +25,10 @@ namespace SME.CDEP.Webapi.Filtros
 
             public static RetornoBaseDTO RetornaBaseModel(ModelStateDictionary modelState)
             {
-                var dto = new RetornoBaseDTO();
-                dto.Mensagens = modelState.Keys
-                       .SelectMany(key => modelState[key].Errors.Select(x => new string(x.ErrorMessage)))
-                       .ToList();
+                var dto = new RetornoBaseDTO
+                {
+                    Mensagens = [.. modelState.Keys.SelectMany(key => modelState[key]!.Errors.Select(x => new string(x.ErrorMessage)))]
+                };
                 return dto;
             }
         }
