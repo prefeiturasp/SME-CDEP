@@ -311,6 +311,12 @@ namespace SME.CDEP.Aplicacao.Mapeamentos
                 .ReverseMap();
 
             CreateMap<HistoricoConsultaAcervo, HistoricoConsultaAcervoDto>().ReverseMap();
+
+            CreateMap<PainelGerencialAcervosCadastrados, PainelGerencialAcervosCadastradosDto>()
+                .ForMember(dest => dest.Nome, opt => opt.MapFrom(o => o.TipoAcervo.Descricao()))
+                .ForMember(dest => dest.Valor, opt => opt.MapFrom(o => o.Quantidade))
+                .ForMember(dest => dest.Id, opt => opt.MapFrom(o => o.TipoAcervo))
+                .ReverseMap();
         }
     }
 }

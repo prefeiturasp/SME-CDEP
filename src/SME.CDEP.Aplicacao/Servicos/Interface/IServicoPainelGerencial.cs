@@ -1,5 +1,8 @@
-﻿namespace SME.CDEP.Aplicacao.Servicos.Interface;
+﻿using SME.CDEP.Aplicacao.DTOS;
 
-public interface IServicoPainelGerencial
+namespace SME.CDEP.Aplicacao.Servicos.Interface;
+
+public interface IServicoPainelGerencial : IServicoAplicacao
 {
+    Task<List<PainelGerencialAcervosCadastradosDto>> ObterAcervosCadastradosAsync();
 }

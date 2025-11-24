@@ -1,7 +1,10 @@
 ﻿using Bogus;
+using FluentAssertions;
 using Moq;
 using Moq.AutoMock;
+using SME.CDEP.Aplicacao.DTOS;
 using SME.CDEP.Aplicacao.Servicos.Interface;
+using SME.CDEP.Infra.Dominio.Enumerados;
 using SME.CDEP.Webapi.Controllers;
 
 namespace SME.CDEP.TesteUnitario.WebApi.Controllers
@@ -18,6 +21,26 @@ namespace SME.CDEP.TesteUnitario.WebApi.Controllers
             _servicoPainelGerencialMock = mocker.GetMock<IServicoPainelGerencial>();
             _painelGerencialController = mocker.CreateInstance<PainelGerencialController>();
             _faker = new();
+        }
+
+        [Fact]
+        public async Task DadoQueExistemAcervosNoBanco_QuandoObterAcervosCadastrados_EntaoDeveRetornarOkComListaDeDtos()
+        {
+            // Arrange
+            var acervosCadastradosDto = new List<PainelGerencialAcervosCadastradosDto>
+            {
+                new() { Id = TipoAcervo.Bibliografico, Nome = "Bibliografico", Valor = 100 },
+                new() { Id = TipoAcervo.Fotografico, Nome = "Fotografico", Valor = 50 }
+            };
+            _servicoPainelGerencialMock
+                .Setup(s => s.ObterAcervosCadastradosAsync())
+                .ReturnsAsync(acervosCadastradosDto);
+            // Act
+            var resultado = await _painelGerencialController.ObterAcervosCadastrados();
+            // Assert
+            var okResult = resultado as Microsoft.AspNetCore.Mvc.OkObjectResult;
+            okResult.Should().NotBeNull();
+            okResult!.Value.Should().BeEquivalentTo(acervosCadastradosDto);
         }
     }
 }
