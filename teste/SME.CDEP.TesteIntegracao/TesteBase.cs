@@ -192,6 +192,11 @@ namespace SME.CDEP.TesteIntegracao
             return ObterServicoAplicacao<IServicoAcervoBibliografico>();
         }
 
+        protected IServicoPainelGerencial GetServicoPainelGerencial()
+        {
+            return ObterServicoAplicacao<IServicoPainelGerencial>();
+        }
+
         protected IMapper GetServicoMapper()
         {
             return ServiceProvider.GetService<IMapper>()!;
