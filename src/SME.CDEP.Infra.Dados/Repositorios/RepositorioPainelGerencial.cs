@@ -8,7 +8,7 @@ namespace SME.CDEP.Infra.Dados.Repositorios;
 [ExcludeFromCodeCoverage]
 public class RepositorioPainelGerencial(ICdepConexao conexao) : IRepositorioPainelGerencial
 {
-    public async Task<List<PainelGerencialAcervosCadastrados>> ObterAcervosCadastrados()
+    public async Task<List<PainelGerencialAcervosCadastrados>> ObterAcervosCadastradosAsync()
     {
         var sql = @"
             SELECT 
@@ -18,6 +18,19 @@ public class RepositorioPainelGerencial(ICdepConexao conexao) : IRepositorioPain
             GROUP BY tipo;
         ";
         var resultado = await conexao.Obter().QueryAsync<PainelGerencialAcervosCadastrados>(sql);
+        return [.. resultado];
+    }
+
+    public async Task<List<SumarioConsultaMensal>> ObterSumarioConsultasMensalAsync(int ano)
+    {
+        var sql = @"
+            SELECT 
+                mes_referencia AS MesReferencia,
+                total_consultas AS TotalConsultas
+            FROM sumario_consultas_mensal
+            WHERE EXTRACT(YEAR FROM mes_referencia) = @ano
+            ORDER BY MesReferencia;";
+        var resultado = await conexao.Obter().QueryAsync<SumarioConsultaMensal>(sql, new { ano });
         return [.. resultado];
     }
 }

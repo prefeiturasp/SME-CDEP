@@ -42,5 +42,27 @@ namespace SME.CDEP.TesteUnitario.WebApi.Controllers
             okResult.Should().NotBeNull();
             okResult!.Value.Should().BeEquivalentTo(acervosCadastradosDto);
         }
+
+        [Fact]
+        public async Task DadoQueExistemPesquisasNoBanco_QuandoObterQuantidadePesquisasMensais_EntaoDeveRetornarOkComListaDeDtos()
+        {
+            // Arrange
+            var quantidadePesquisasMensaisDto = new List<PainelGerencialQuantidadePesquisasMensaisDto>
+            {
+                new() { Id = 1, Nome = "Janeiro", Valor = 200 },
+                new() { Id = 2, Nome = "Fevereiro", Valor = 150 }
+            };
+            _servicoPainelGerencialMock
+                .Setup(s => s.ObterQuantidadePesquisasMensaisDoAnoAtualAsync())
+                .ReturnsAsync(quantidadePesquisasMensaisDto);
+
+            // Act
+            var resultado = await _painelGerencialController.ObterQuantidadePesquisasMensais();
+
+            // Assert
+            var okResult = resultado as Microsoft.AspNetCore.Mvc.OkObjectResult;
+            okResult.Should().NotBeNull();
+            okResult!.Value.Should().BeEquivalentTo(quantidadePesquisasMensaisDto);
+        }
     }
 }

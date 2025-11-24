@@ -33,6 +33,7 @@ namespace SME.CDEP.TesteIntegracao.Setup
 
         public override void Registrar()
         {
+            _serviceCollection.AddSingleton(TimeProvider.System);
             RegistrarTelemetria();
             RegistrarConexao();
             RegistrarRepositorios();

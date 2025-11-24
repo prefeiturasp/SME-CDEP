@@ -11,11 +11,21 @@ namespace SME.CDEP.Webapi.Controllers
         [HttpGet("acervos-cadastrados")]
         [ProducesResponseType(typeof(List<PainelGerencialAcervosCadastradosDto>), 200)]
         [Produces("application/json")]
-        [Permissao(Permissao.CadastroAcervo_C, Policy = "Bearer")]
+        [Permissao(Permissao.PainelGerencial_C, Policy = "Bearer")]
         public async Task<IActionResult> ObterAcervosCadastrados()
         {
             var acervosCadastrados =  await servicoPainelGerencial.ObterAcervosCadastradosAsync();
             return Ok(acervosCadastrados);
+        }
+
+        [HttpGet("quantidade-pesquisas-mensais")]
+        [ProducesResponseType(typeof(List<PainelGerencialQuantidadePesquisasMensaisDto>), 200)]
+        [Produces("application/json")]
+        [Permissao(Permissao.PainelGerencial_C, Policy = "Bearer")]
+        public async Task<IActionResult> ObterQuantidadePesquisasMensais()
+        {
+            var quantidadePesquisasMensais = await servicoPainelGerencial.ObterQuantidadePesquisasMensaisDoAnoAtualAsync();
+            return Ok(quantidadePesquisasMensais);
         }
     }
 }
