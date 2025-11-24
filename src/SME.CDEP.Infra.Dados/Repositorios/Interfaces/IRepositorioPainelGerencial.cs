@@ -4,5 +4,6 @@ namespace SME.CDEP.Infra.Dados.Repositorios.Interfaces;
 
 public interface IRepositorioPainelGerencial 
 { 
-    Task<List<PainelGerencialAcervosCadastrados>> ObterAcervosCadastrados();
+    Task<List<PainelGerencialAcervosCadastrados>> ObterAcervosCadastradosAsync();
+    Task<List<SumarioConsultaMensal>> ObterSumarioConsultasMensalAsync(int ano);
 }

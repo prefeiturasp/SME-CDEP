@@ -46,5 +46,7 @@
         GestaoDeVisitaCalendario_I = 298,
         GestaoDeVisitaCalendario_E = 299,
         GestaoDeVisitaCalendario_A = 300,
+
+        PainelGerencial_C = 265
     }
 }

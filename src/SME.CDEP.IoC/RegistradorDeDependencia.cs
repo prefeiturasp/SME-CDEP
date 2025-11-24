@@ -41,6 +41,7 @@ public class RegistradorDeDependencia
     }
     public virtual void Registrar()
     {
+        _serviceCollection.AddSingleton(TimeProvider.System);
         RegistrarTelemetria();
         RegistrarConexao();
         RegistrarRepositorios();

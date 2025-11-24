@@ -5,4 +5,5 @@ namespace SME.CDEP.Aplicacao.Servicos.Interface;
 public interface IServicoPainelGerencial : IServicoAplicacao
 {
     Task<List<PainelGerencialAcervosCadastradosDto>> ObterAcervosCadastradosAsync();
+    Task<List<PainelGerencialQuantidadePesquisasMensaisDto>> ObterQuantidadePesquisasMensaisDoAnoAtualAsync();
 }
