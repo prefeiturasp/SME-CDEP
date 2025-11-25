@@ -22,4 +22,11 @@ public class ServicoPainelGerencial(
         var pesquisas = await repositorioPainelGerencial.ObterSumarioConsultasMensalAsync(ano);
         return mapper.Map<List<PainelGerencialQuantidadePesquisasMensaisDto>>(pesquisas);
     }
+
+    public async Task<List<PainelGerencialQuantidadeSolicitacaoMensalDto>> ObterQuantidadeSolicitacoesMensaisDoAnoAtualAsync()
+    {
+        var ano = timeProvider.GetLocalNow().Year;
+        var solicitacoes = await repositorioPainelGerencial.ObterQuantidadeSolicitacoesMensaisAsync(ano);
+        return mapper.Map<List<PainelGerencialQuantidadeSolicitacaoMensalDto>>(solicitacoes);
+    }
 }
