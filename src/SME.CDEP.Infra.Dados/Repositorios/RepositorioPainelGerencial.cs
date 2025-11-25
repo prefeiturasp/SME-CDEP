@@ -33,4 +33,9 @@ public class RepositorioPainelGerencial(ICdepConexao conexao) : IRepositorioPain
         var resultado = await conexao.Obter().QueryAsync<SumarioConsultaMensal>(sql, new { ano });
         return [.. resultado];
     }
+
+    public async Task<List<PainelGerencialQuantidadeSolicitacaoMensal>> ObterQuantidadeSolicitacoesMensaisAsync(int ano)
+    {
+        throw new NotImplementedException();
+    }
 }

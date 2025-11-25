@@ -3,5 +3,6 @@
     public interface IServicoDeConsolidacao : IServicoAplicacao
     {
         Task ConsolidarMesDoHistoricoDeConsultasDoDiaAnteriorAsync();
+        Task ConsolidarMesDasSolicitacoesDeAcervosDoDiaAnteriorAsync();
     }
 }
