@@ -104,4 +104,40 @@ public class ServicoPainelGerencialTestes
         resultado[1].Valor.Should().Be(200);
         resultado[1].Nome.Should().Be("Fevereiro");
     }
+
+    [Fact]
+    public async Task DadoQueExistemSolicitacoesNoBanco_QuandoObterQuantidadeSolicitacoesMensais_EntaoDeveRetornarListaDeDtos()
+    {
+        // Arrange
+        var ano = _faker.Random.Int(2000, 2024);
+        var dataSimulada = new DateTimeOffset(ano, 8, 10, 10, 0, 0, TimeSpan.Zero);
+        _fakeTimeProvider.SetUtcNow(dataSimulada);
+        var quantidadeSolicitacoesMensais = new List<PainelGerencialQuantidadeSolicitacaoMensal>
+        {
+            new() { MesReferencia = DateOnly.FromDateTime(new DateTime(ano, 3, 1)), TotalSolicitacoes = 80 },
+            new() { MesReferencia = DateOnly.FromDateTime(new DateTime(ano, 4, 1)), TotalSolicitacoes = 120 }
+        };
+        var quantidadeSolicitacoesMensaisDto = new List<PainelGerencialQuantidadeSolicitacaoMensalDto>
+        {
+            new() { Id = 3, Nome = "Março", Valor = 80 },
+            new() { Id = 4, Nome = "Abril", Valor = 120 }
+        };
+        _repositorioPainelGerencialMock
+            .Setup(r => r.ObterQuantidadeSolicitacoesMensaisAsync(ano))
+            .ReturnsAsync(quantidadeSolicitacoesMensais);
+        _mapperMock
+            .Setup(m => m.Map<List<PainelGerencialQuantidadeSolicitacaoMensalDto>>(quantidadeSolicitacoesMensais))
+            .Returns(quantidadeSolicitacoesMensaisDto);
+        // Act
+        var resultado = await _servicoPainelGerencial.ObterQuantidadeSolicitacoesMensaisDoAnoAtualAsync();
+        // Assert
+        resultado.Should().NotBeNull();
+        resultado.Should().HaveCount(2);
+        resultado[0].Id.Should().Be(3);
+        resultado[0].Nome.Should().Be("Março");
+        resultado[0].Valor.Should().Be(80);
+        resultado[1].Id.Should().Be(4);
+        resultado[1].Nome.Should().Be("Abril");
+        resultado[1].Valor.Should().Be(120);
+    }
 }

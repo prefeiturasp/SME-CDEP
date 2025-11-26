@@ -324,6 +324,11 @@ namespace SME.CDEP.Aplicacao.Mapeamentos
                 .ForMember(dest => dest.Id, opt => opt.MapFrom(o => o.MesReferencia.Month))
                 .ForMember(dest => dest.Nome, opt => opt.MapFrom(o => culturaBrasil.TextInfo.ToTitleCase(o.MesReferencia.ToString("MMMM", culturaBrasil))))
                 .ForMember(dest => dest.Valor, opt => opt.MapFrom(o => o.TotalConsultas));
+
+            CreateMap<PainelGerencialQuantidadeSolicitacaoMensal, PainelGerencialQuantidadeSolicitacaoMensalDto>()
+                .ForMember(dest => dest.Id, opt => opt.MapFrom(o => o.MesReferencia.Month))
+                .ForMember(dest => dest.Nome, opt => opt.MapFrom(o => culturaBrasil.TextInfo.ToTitleCase(o.MesReferencia.ToString("MMMM", culturaBrasil))))
+                .ForMember(dest => dest.Valor, opt => opt.MapFrom(o => o.TotalSolicitacoes));
         }
     }
 }

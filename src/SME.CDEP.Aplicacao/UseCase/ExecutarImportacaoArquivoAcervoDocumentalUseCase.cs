@@ -114,34 +114,34 @@ namespace SME.CDEP.Aplicacao.Servicos
                     ValidarPreenchimentoLimiteCaracteres(linha.Titulo, Constantes.TITULO);
                     ValidarPreenchimentoLimiteCaracteres(linha.Codigo, Constantes.CODIGO_ANTIGO);
                     ValidarPreenchimentoLimiteCaracteres(linha.CodigoNovo, Constantes.CODIGO_NOVO);
-                    
+
                     ValidarPreenchimentoLimiteCaracteres(linha.Material,Constantes.MATERIAL);
                     ValidarConteudoCampoComDominio(linha.Material, materiaisDocumentais, Constantes.MATERIAL);
-                    
+
                     ValidarPreenchimentoLimiteCaracteres(linha.Idioma,Constantes.IDIOMA);
                     ValidarConteudoCampoComDominio(linha.Idioma, Idiomas, Constantes.IDIOMA);
-                    
+
                     ValidarPreenchimentoLimiteCaracteres(linha.Autor,Constantes.AUTOR);
                     ValidarConteudoCampoListaComDominio(linha.Autor, autores, Constantes.AUTOR);
 
                     ValidarPreenchimentoLimiteCaracteres(linha.Ano,Constantes.ANO);
                     ValidarPreenchimentoLimiteCaracteres(linha.NumeroPaginas,Constantes.NUMERO_PAGINAS);
-                    
+
                     ValidarPreenchimentoLimiteCaracteres(linha.Volume,Constantes.VOLUME);
                     ValidarPreenchimentoLimiteCaracteres(linha.Descricao,Constantes.DESCRICAO);
-                    
+
                     ValidarPreenchimentoLimiteCaracteres(linha.TipoAnexo,Constantes.TIPO_ANEXO);
                     ValidarPreenchimentoLimiteCaracteres(linha.Largura,Constantes.LARGURA);
-                    
+
                     ValidarPreenchimentoLimiteCaracteres(linha.Altura,Constantes.ALTURA);
                     ValidarPreenchimentoLimiteCaracteres(linha.TamanhoArquivo,Constantes.TAMANHO_ARQUIVO);
-                    
+
                     ValidarPreenchimentoLimiteCaracteres(linha.AcessoDocumento,Constantes.ACESSO_DOCUMENTO);
                     ValidarConteudoCampoListaComDominio(linha.AcessoDocumento, AcessoDocumentos, Constantes.ACESSO_DOCUMENTO);
 
                     ValidarPreenchimentoLimiteCaracteres(linha.Localizacao,Constantes.LOCALIZACAO);
                     ValidarPreenchimentoLimiteCaracteres(linha.CopiaDigital,Constantes.COPIA_DIGITAL);
-                    
+
                     ValidarPreenchimentoLimiteCaracteres(linha.EstadoConservacao,Constantes.ESTADO_CONSERVACAO);
                     ValidarConteudoCampoComDominio(linha.EstadoConservacao, Conservacoes, Constantes.ESTADO_CONSERVACAO);
                     
