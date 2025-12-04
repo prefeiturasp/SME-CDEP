@@ -41,6 +41,7 @@ public class RegistradorDeDependencia
     }
     public virtual void Registrar()
     {
+        _serviceCollection.AddSingleton(TimeProvider.System);
         RegistrarTelemetria();
         RegistrarConexao();
         RegistrarRepositorios();
@@ -90,6 +91,8 @@ public class RegistradorDeDependencia
         _serviceCollection.TryAddScoped<IExecutarConsolidacaoDoHistoricoDeConsultasDeAcervoUseCase, ExecutarConsolidacaoDoHistoricoDeConsultasDeAcervoUseCase>();
         _serviceCollection.TryAddScoped<IRelatorioTitulosMaisPesquisadosUseCase, RelatorioTitulosMaisPesquisadosUseCase>();
         _serviceCollection.TryAddScoped<IRelatorioControleDownloadAcervoUseCase, RelatorioControleDownloadAcervoUseCase>();
+        _serviceCollection.AddScoped<IExecutarConsolidacaoDasSolicitacoesDeAcervoUseCase, ExecutarConsolidacaoDasSolicitacoesDeAcervoUseCase>();
+        _serviceCollection.AddScoped<IRelatorioHistoricoSolicitacoesUseCase, RelatorioHistoricoSolicitacoesUseCase>();
     }
 
     protected virtual void RegistrarRabbit()
@@ -240,6 +243,7 @@ public class RegistradorDeDependencia
         _serviceCollection.TryAddScoped<IRepositorioAcervoEmprestimo, RepositorioAcervoEmprestimo>();
         _serviceCollection.TryAddScoped<IRepositorioHistoricoConsultaAcervo, RepositorioHistoricoConsultaAcervo>();
         _serviceCollection.TryAddScoped<IRepositorioDeConsolidacao, RepositorioDeConsolidacao>();
+        _serviceCollection.AddScoped<IRepositorioPainelGerencial, RepositorioPainelGerencial>();
     }
 
     protected virtual void RegistrarServicos()
@@ -291,6 +295,7 @@ public class RegistradorDeDependencia
         _serviceCollection.TryAddScoped<IServicoAcervoEmprestimo, ServicoAcervoEmprestimo>();
         _serviceCollection.TryAddScoped<IServicoHistoricoConsultaAcervo, ServicoHistoricoConsultaAcervo>();
         _serviceCollection.TryAddScoped<IServicoDeConsolidacao, ServicoDeConsolidacao>();
+        _serviceCollection.AddScoped<IServicoPainelGerencial, ServicoPainelGerencial>();
     }
     protected virtual void RegistrarHttpClients()
     {

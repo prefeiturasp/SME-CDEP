@@ -33,6 +33,7 @@ namespace SME.CDEP.TesteIntegracao.Setup
 
         public override void Registrar()
         {
+            _serviceCollection.AddSingleton(TimeProvider.System);
             RegistrarTelemetria();
             RegistrarConexao();
             RegistrarRepositorios();
@@ -145,6 +146,7 @@ namespace SME.CDEP.TesteIntegracao.Setup
             _serviceCollection.TryAddScoped<IServicoHistoricoConsultaAcervo, ServicoHistoricoConsultaAcervo>();
 
             _serviceCollection.TryAddScoped<IRelatorioTitulosMaisPesquisadosUseCase, RelatorioTitulosMaisPesquisadosUseCase>();
+            _serviceCollection.AddScoped<IServicoPainelGerencial, ServicoPainelGerencial>();
         }
         protected override void RegistrarHttpClients()
         {}

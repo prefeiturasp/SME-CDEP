@@ -28,5 +28,6 @@ namespace SME.CDEP.Infra
         public const string ExecutarImportacaoArquivoAcervoTridimensional  = "cdep.importacao.arquivo.acervo.tridimensional";
 
         public const string ExecutarConsolidacaoDoHistoricoDeConsultasDeAcervo = "cdep.consolidacao.historico.consultas.acervo";
+        public const string ExecutarConsolidacaoDasSolicitacoesDeAcervo = "cdep.consolidacao.solicitacoes.acervo";
     }
 }

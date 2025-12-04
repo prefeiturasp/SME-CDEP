@@ -113,34 +113,34 @@ namespace SME.CDEP.Aplicacao.Servicos
                 {
                     ValidarPreenchimentoLimiteCaracteres(linha.Titulo, Constantes.TITULO);
                     ValidarPreenchimentoLimiteCaracteres(linha.Codigo, Constantes.TOMBO);
-                    
+
                     ValidarPreenchimentoLimiteCaracteres(linha.Credito, Constantes.CREDITO);
-                    ValidarConteudoCampoListaComDominio(linha.Credito, creditos, Constantes.CREDITO);	
+                    ValidarConteudoCampoListaComDominio(linha.Credito, creditos, Constantes.CREDITO);
 
                     ValidarPreenchimentoLimiteCaracteres(linha.Localizacao,Constantes.LOCALIZACAO);
                     ValidarPreenchimentoLimiteCaracteres(linha.Procedencia,Constantes.PROCEDENCIA);
-                    
+
                     ValidarPreenchimentoLimiteCaracteres(linha.Ano,Constantes.ANO);
-                    
+
                     ValidarPreenchimentoLimiteCaracteres(linha.Copia,Constantes.COPIA);
                     ValidarPreenchimentoLimiteCaracteres(linha.PermiteUsoImagem,Constantes.AUTORIZACAO_USO_DE_IMAGEM);
-                    
+
                     ValidarPreenchimentoLimiteCaracteres(linha.EstadoConservacao,Constantes.ESTADO_CONSERVACAO);
                     ValidarConteudoCampoComDominio(linha.EstadoConservacao, Conservacoes, Constantes.ESTADO_CONSERVACAO);
-                    
+
                     ValidarPreenchimentoLimiteCaracteres(linha.Descricao,Constantes.DESCRICAO);
-                    
+
                     ValidarPreenchimentoLimiteCaracteres(linha.Suporte,Constantes.SUPORTE);
                     ValidarConteudoCampoComDominio(linha.Suporte, suportesDeVideo, Constantes.SUPORTE);
-                    
+
                     ValidarPreenchimentoLimiteCaracteres(linha.Duracao,Constantes.DURACAO);
-                    
+
                     ValidarPreenchimentoLimiteCaracteres(linha.Cromia,Constantes.CROMIA);
                     ValidarConteudoCampoComDominio(linha.Cromia, Cromias, Constantes.CROMIA);
-                    
+
                     ValidarPreenchimentoLimiteCaracteres(linha.TamanhoArquivo,Constantes.TAMANHO_ARQUIVO);
                     ValidarPreenchimentoLimiteCaracteres(linha.Acessibilidade,Constantes.ACESSIBILIDADE);
-                    
+
                     ValidarPreenchimentoLimiteCaracteres(linha.Disponibilizacao,Constantes.DISPONIBILIDADE);
                     linha.PossuiErros = PossuiErro(linha);
                 }

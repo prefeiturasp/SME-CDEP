@@ -7,6 +7,7 @@ using SME.CDEP.Dominio.Enumerados;
 using SME.CDEP.Dominio.Extensions;
 using SME.CDEP.Infra.Dominio.Enumerados;
 using System.Diagnostics.CodeAnalysis;
+using System.Globalization;
 
 namespace SME.CDEP.Aplicacao.Mapeamentos
 {
@@ -15,6 +16,7 @@ namespace SME.CDEP.Aplicacao.Mapeamentos
     {
         public DominioParaDTOProfile()
         {
+            var culturaBrasil = new CultureInfo("pt-BR");
             CreateMap<UsuarioDTO, Usuario>().ReverseMap();
             CreateMap<UsuarioIdNomeLoginDTO, Usuario>().ReverseMap();
             CreateMap<IdNomeExcluidoDTO, AcessoDocumento>().ReverseMap();
@@ -311,6 +313,22 @@ namespace SME.CDEP.Aplicacao.Mapeamentos
                 .ReverseMap();
 
             CreateMap<HistoricoConsultaAcervo, HistoricoConsultaAcervoDto>().ReverseMap();
+
+            CreateMap<PainelGerencialAcervosCadastrados, PainelGerencialAcervosCadastradosDto>()
+                .ForMember(dest => dest.Nome, opt => opt.MapFrom(o => o.TipoAcervo.Descricao()))
+                .ForMember(dest => dest.Valor, opt => opt.MapFrom(o => o.Quantidade))
+                .ForMember(dest => dest.Id, opt => opt.MapFrom(o => o.TipoAcervo))
+                .ReverseMap();
+
+            CreateMap<SumarioConsultaMensal, PainelGerencialQuantidadePesquisasMensaisDto>()
+                .ForMember(dest => dest.Id, opt => opt.MapFrom(o => o.MesReferencia.Month))
+                .ForMember(dest => dest.Nome, opt => opt.MapFrom(o => culturaBrasil.TextInfo.ToTitleCase(o.MesReferencia.ToString("MMMM", culturaBrasil))))
+                .ForMember(dest => dest.Valor, opt => opt.MapFrom(o => o.TotalConsultas));
+
+            CreateMap<PainelGerencialQuantidadeSolicitacaoMensal, PainelGerencialQuantidadeSolicitacaoMensalDto>()
+                .ForMember(dest => dest.Id, opt => opt.MapFrom(o => o.MesReferencia.Month))
+                .ForMember(dest => dest.Nome, opt => opt.MapFrom(o => culturaBrasil.TextInfo.ToTitleCase(o.MesReferencia.ToString("MMMM", culturaBrasil))))
+                .ForMember(dest => dest.Valor, opt => opt.MapFrom(o => o.TotalSolicitacoes));
         }
     }
 }

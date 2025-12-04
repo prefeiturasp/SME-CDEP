@@ -192,6 +192,11 @@ namespace SME.CDEP.TesteIntegracao
             return ObterServicoAplicacao<IServicoAcervoBibliografico>();
         }
 
+        protected IServicoPainelGerencial GetServicoPainelGerencial()
+        {
+            return ObterServicoAplicacao<IServicoPainelGerencial>();
+        }
+
         protected IMapper GetServicoMapper()
         {
             return ServiceProvider.GetService<IMapper>()!;
@@ -678,18 +683,22 @@ namespace SME.CDEP.TesteIntegracao
 
             for (int i = 1; i <= quantidade; i++)
             {
-                await InserirNaBase(acervoSolicitacao);
-
-                var acervoSolicitadoId = ObterTodos<AcervoSolicitacao>().Last().Id;
-                foreach (var item in acervoSolicitacao.Itens)
-                {
-                    item.AcervoSolicitacaoId = acervoSolicitadoId;
-                    await InserirNaBase(item);
-                }
+                await InserirAcervoSolicitacao(acervoSolicitacao);
             }
         }
 
-        protected static AcervoSolicitacao ObterAcervoSolicitacao()
+        protected async Task InserirAcervoSolicitacao(AcervoSolicitacao acervoSolicitacao)
+        {
+            await InserirNaBase(acervoSolicitacao);
+            var acervoSolicitadoId = ObterTodos<AcervoSolicitacao>().Last().Id;
+            foreach (var item in acervoSolicitacao.Itens)
+            {
+                item.AcervoSolicitacaoId = acervoSolicitadoId;
+                await InserirNaBase(item);
+            }
+        }
+
+        protected static AcervoSolicitacao ObterAcervoSolicitacao(DateTime? dataSolicitacao = null)
         {
             var acervoSolicitacao = new AcervoSolicitacao()
             {
@@ -698,6 +707,7 @@ namespace SME.CDEP.TesteIntegracao
                 CriadoEm = DateTimeExtension.HorarioBrasilia(),
                 CriadoLogin = "Sistema",
                 CriadoPor = "Sistema",
+                DataSolicitacao = dataSolicitacao ?? DateTimeExtension.HorarioBrasilia(),
                 Itens =
                 [
                     new ()

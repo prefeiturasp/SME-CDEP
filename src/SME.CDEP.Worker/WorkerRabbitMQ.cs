@@ -1,6 +1,7 @@
 ﻿using Microsoft.Extensions.Options;
 using RabbitMQ.Client;
 using SME.CDEP.Aplicacao;
+using SME.CDEP.Aplicacao.UseCase.Interface;
 using SME.CDEP.Infra;
 using SME.CDEP.Infra.Servicos.Mensageria;
 using SME.CDEP.Infra.Servicos.Telemetria;
@@ -50,6 +51,7 @@ namespace SME.CDEP.Worker
             Comandos.Add(RotasRabbit.ExecutarImportacaoArquivoAcervoTridimensional, new ComandoRabbit("Realiza a importação de acervos tridimensionais por planilha", typeof(IExecutarImportacaoArquivoAcervoTridimensionalUseCase), true));
 
             Comandos.Add(RotasRabbit.ExecutarConsolidacaoDoHistoricoDeConsultasDeAcervo, new ComandoRabbit("Executa a consolidação do histórico de consultas de acervo", typeof(IExecutarConsolidacaoDoHistoricoDeConsultasDeAcervoUseCase), true));
+            Comandos.Add(RotasRabbit.ExecutarConsolidacaoDasSolicitacoesDeAcervo, new ComandoRabbit("Executa a consolidação das solicitações de acervo", typeof(IExecutarConsolidacaoDasSolicitacoesDeAcervoUseCase), false));
         }
     }
 }

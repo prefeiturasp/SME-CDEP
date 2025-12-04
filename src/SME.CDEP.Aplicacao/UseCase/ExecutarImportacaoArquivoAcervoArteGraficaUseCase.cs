@@ -116,31 +116,31 @@ namespace SME.CDEP.Aplicacao.Servicos
                     ValidarPreenchimentoLimiteCaracteres(linha.Codigo, Constantes.TOMBO);
 
                     ValidarPreenchimentoLimiteCaracteres(linha.Credito, Constantes.CREDITO);
-                    ValidarConteudoCampoListaComDominio(linha.Credito, creditos, Constantes.CREDITO);	
+                    ValidarConteudoCampoListaComDominio(linha.Credito, creditos, Constantes.CREDITO);
 
                     ValidarPreenchimentoLimiteCaracteres(linha.Localizacao,Constantes.LOCALIZACAO);
                     ValidarPreenchimentoLimiteCaracteres(linha.Procedencia,Constantes.PROCEDENCIA);
-                    
+
                     ValidarPreenchimentoLimiteCaracteres(linha.Ano,Constantes.ANO);
-                    
+
                     ValidarPreenchimentoLimiteCaracteres(linha.CopiaDigital,Constantes.COPIA_DIGITAL);
                     ValidarPreenchimentoLimiteCaracteres(linha.PermiteUsoImagem,Constantes.AUTORIZACAO_USO_DE_IMAGEM);
-                    
+
                     ValidarPreenchimentoLimiteCaracteres(linha.EstadoConservacao,Constantes.ESTADO_CONSERVACAO);
                     ValidarConteudoCampoComDominio(linha.EstadoConservacao, Conservacoes, Constantes.ESTADO_CONSERVACAO);
-                    
+
                     ValidarPreenchimentoLimiteCaracteres(linha.Cromia,Constantes.CROMIA);
                     ValidarConteudoCampoComDominio(linha.Cromia, Cromias, Constantes.CROMIA);
-                    
+
                     ValidarPreenchimentoLimiteCaracteres(linha.Largura,Constantes.LARGURA);
                     ValidarPreenchimentoLimiteCaracteres(linha.Altura,Constantes.ALTURA);
-                    
+
                     ValidarPreenchimentoLimiteCaracteres(linha.Diametro,Constantes.DIAMETRO);
                     ValidarPreenchimentoLimiteCaracteres(linha.Tecnica,Constantes.TECNICA);
-                    
+
                     ValidarPreenchimentoLimiteCaracteres(linha.Suporte,Constantes.SUPORTE);
                     ValidarConteudoCampoComDominio(linha.Suporte, suportesDeImagem, Constantes.SUPORTE);
-                    
+
                     ValidarPreenchimentoLimiteCaracteres(linha.Quantidade,Constantes.QUANTIDADE);
                     ValidarPreenchimentoLimiteCaracteres(linha.Descricao,Constantes.DESCRICAO);
                     

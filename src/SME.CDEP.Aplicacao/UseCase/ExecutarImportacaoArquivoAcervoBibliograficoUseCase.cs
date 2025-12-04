@@ -157,10 +157,10 @@ namespace SME.CDEP.Aplicacao.Servicos
                 {
                     ValidarPreenchimentoLimiteCaracteres(linha.Titulo, Constantes.TITULO);
                     ValidarPreenchimentoLimiteCaracteres(linha.SubTitulo, Constantes.SUB_TITULO);
-                    
+
                     ValidarPreenchimentoLimiteCaracteres(linha.Material,Constantes.MATERIAL);
                     ValidarConteudoCampoComDominio(linha.Material, materiaisBibliograficos, Constantes.MATERIAL);
-                    
+
                     ValidarPreenchimentoLimiteCaracteres(linha.Autor,Constantes.AUTOR);
                     ValidarConteudoCampoListaComDominio(linha.Autor, autores, Constantes.AUTOR);
 
@@ -174,34 +174,34 @@ namespace SME.CDEP.Aplicacao.Servicos
 
                     if (linha.TipoAutoria.Conteudo.SplitPipe().Count() > linha.CoAutor.Conteudo.SplitPipe().Count())
                         DefinirMensagemErro(linha.TipoAutoria, Constantes.TEMOS_MAIS_TIPO_AUTORIA_QUE_COAUTORES);
-                    
+
                     ValidarPreenchimentoLimiteCaracteres(linha.Editora,Constantes.EDITORA);
                     ValidarConteudoCampoComDominio(linha.Editora, Editoras, Constantes.EDITORA);
-                    
+
                     ValidarPreenchimentoLimiteCaracteres(linha.Assunto,Constantes.ASSUNTO);
                     ValidarConteudoCampoListaComDominio(linha.Assunto, Assuntos, Constantes.ASSUNTO);
 
                     ValidarPreenchimentoLimiteCaracteres(linha.Ano,Constantes.ANO);
                     ValidarPreenchimentoLimiteCaracteres(linha.Edicao,Constantes.EDICAO);
-                    
+
                     ValidarPreenchimentoLimiteCaracteres(linha.NumeroPaginas,Constantes.NUMERO_PAGINAS);
                     ValidarPreenchimentoLimiteCaracteres(linha.Largura,Constantes.LARGURA);
                     ValidarPreenchimentoLimiteCaracteres(linha.Altura,Constantes.ALTURA);
-                    
+
                     ValidarPreenchimentoLimiteCaracteres(linha.SerieColecao,Constantes.SERIE_COLECAO);
                     ValidarConteudoCampoListaComDominio(linha.SerieColecao, SeriesColecoes, Constantes.SERIE_COLECAO);
-                    
+
                     ValidarPreenchimentoLimiteCaracteres(linha.Volume,Constantes.VOLUME);
-                    
+
                     ValidarPreenchimentoLimiteCaracteres(linha.Idioma,Constantes.IDIOMA);
                     ValidarConteudoCampoComDominio(linha.Idioma, Idiomas, Constantes.IDIOMA);
-                    
+
                     ValidarPreenchimentoLimiteCaracteres(linha.LocalizacaoCDD,Constantes.LOCALIZACAO_CDD);
                     ValidarPreenchimentoLimiteCaracteres(linha.LocalizacaoPHA,Constantes.LOCALIZACAO_PHA);
-                    
+
                     ValidarPreenchimentoLimiteCaracteres(linha.NotasGerais,Constantes.NOTAS_GERAIS);
                     ValidarPreenchimentoLimiteCaracteres(linha.Isbn,Constantes.ISBN);
-                    
+
                     ValidarPreenchimentoLimiteCaracteres(linha.Codigo,Constantes.TOMBO);
                     linha.PossuiErros = PossuiErro(linha);
                 }
