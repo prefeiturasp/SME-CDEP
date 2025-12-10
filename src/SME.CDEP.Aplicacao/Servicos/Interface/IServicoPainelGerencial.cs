@@ -9,4 +9,5 @@ public interface IServicoPainelGerencial : IServicoAplicacao
     Task<List<PainelGerencialQuantidadeSolicitacaoMensalDto>> ObterQuantidadeSolicitacoesMensaisDoAnoAtualAsync();
     Task<List<PainelGerencialQuantidadeSolicitacaoPorTipoDeAcervoDto>> ObterQuantidadeDeSolicitacoesPorTipoAcervoAsync();
     Task<List<PainelGerencialQuantidadeAcervoEmprestadoPorSituacaoDto>> ObterQuantidadeAcervoEmprestadoPorSituacaoAsync();
+    Task<List<PainelGerencialQuantidadeSolicitacaoPorSituacaoDto>> ObterQuantidadeSolicitacaoPorSituacaoAsync();
 }

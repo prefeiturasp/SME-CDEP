@@ -9,4 +9,5 @@ public interface IRepositorioPainelGerencial
     Task<List<PainelGerencialQuantidadeSolicitacaoMensal>> ObterQuantidadeSolicitacoesMensaisAsync(int ano);
     Task<List<PainelGerencialQuantidadeDeSolicitacoesPorTipoAcervo>> ObterQuantidadeDeSolicitacoesPorTipoAcervoAsync();
     Task<List<PainelGerencialQuantidadeAcervoEmprestadoPorSituacao>> ObterQuantidadeAcervoEmprestadoPorSituacaoAsync();
+    Task<List<PainelGerencialQuantidadeSolicitacaoPorSituacao>> ObterQuantidadeSolicitacaoPorSituacaoAsync();
 }

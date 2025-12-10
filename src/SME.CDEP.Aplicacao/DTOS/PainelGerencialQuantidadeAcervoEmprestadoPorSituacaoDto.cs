@@ -1,9 +1,8 @@
-﻿namespace SME.CDEP.Aplicacao.DTOS
+﻿using SME.CDEP.Infra.Dominio.Enumerados;
+
+namespace SME.CDEP.Aplicacao.DTOS
 {
-    public class PainelGerencialQuantidadeAcervoEmprestadoPorSituacaoDto
+    public class PainelGerencialQuantidadeAcervoEmprestadoPorSituacaoDto : ItemGraficoChaveValorDto<SituacaoEmprestimo>
     {
-        public required int Id { get; set; }
-        public required string Nome { get; set; }
-        public required long Valor { get; set; }
     }
 }

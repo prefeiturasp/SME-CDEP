@@ -91,8 +91,8 @@ namespace SME.CDEP.TesteUnitario.WebApi.Controllers
             // Arrange
             var quantidadeSolicitacoesPorTipoAcervoDto = new List<PainelGerencialQuantidadeSolicitacaoPorTipoDeAcervoDto>
             {
-                new() { Id = (int)TipoAcervo.Bibliografico, Nome = "Bibliografico", Valor = 100 },
-                new() { Id = (int)TipoAcervo.Fotografico, Nome = "Fotografico", Valor = 50 }
+                new() { Id = TipoAcervo.Bibliografico, Nome = "Bibliografico", Valor = 100 },
+                new() { Id = TipoAcervo.Fotografico, Nome = "Fotografico", Valor = 50 }
             };
             _servicoPainelGerencialMock
                 .Setup(s => s.ObterQuantidadeDeSolicitacoesPorTipoAcervoAsync())
@@ -111,8 +111,8 @@ namespace SME.CDEP.TesteUnitario.WebApi.Controllers
             // Arrange
             var quantidadeAcervoEmprestadoPorSituacaoDto = new List<PainelGerencialQuantidadeAcervoEmprestadoPorSituacaoDto>
             {
-                new() { Id = (int)SituacaoEmprestimo.EMPRESTADO, Nome = "Emprestado", Valor = 30 },
-                new() { Id = (int)SituacaoEmprestimo.DEVOLUCAO_EM_ATRASO, Nome = "Devolução em atraso", Valor = 10 }
+                new() { Id = SituacaoEmprestimo.EMPRESTADO, Nome = "Emprestado", Valor = 30 },
+                new() { Id = SituacaoEmprestimo.DEVOLUCAO_EM_ATRASO, Nome = "Devolução em atraso", Valor = 10 }
             };
             _servicoPainelGerencialMock
                 .Setup(s => s.ObterQuantidadeAcervoEmprestadoPorSituacaoAsync())
@@ -123,6 +123,26 @@ namespace SME.CDEP.TesteUnitario.WebApi.Controllers
             var okResult = resultado as Microsoft.AspNetCore.Mvc.OkObjectResult;
             okResult.Should().NotBeNull();
             okResult!.Value.Should().BeEquivalentTo(quantidadeAcervoEmprestadoPorSituacaoDto);
+        }
+
+        [Fact]
+        public async Task DadoQueExistemSolicitacoesNoBanco_QuandoObterQuantidadeSolicitacaoPorSituacao_EntaoDeveRetornarOkComListaDeDtos()
+        {
+            // Arrange
+            var quantidadeSolicitacaoPorSituacaoDto = new List<PainelGerencialQuantidadeSolicitacaoPorSituacaoDto>
+            {
+                new() { Id = SituacaoSolicitacaoItem.AGUARDANDO_VISITA, Nome = SituacaoSolicitacaoItem.AGUARDANDO_VISITA.Descricao(), Valor = 40 },
+                new() { Id = SituacaoSolicitacaoItem.FINALIZADO_AUTOMATICAMENTE, Nome = SituacaoSolicitacaoItem.FINALIZADO_AUTOMATICAMENTE.Descricao(), Valor = 70 }
+            };
+            _servicoPainelGerencialMock
+                .Setup(s => s.ObterQuantidadeSolicitacaoPorSituacaoAsync())
+                .ReturnsAsync(quantidadeSolicitacaoPorSituacaoDto);
+            // Act
+            var resultado = await _painelGerencialController.ObterQuantidadeSolicitacaoPorSituacao();
+            // Assert
+            var okResult = resultado as Microsoft.AspNetCore.Mvc.OkObjectResult;
+            okResult.Should().NotBeNull();
+            okResult!.Value.Should().BeEquivalentTo(quantidadeSolicitacaoPorSituacaoDto);
         }
     }
 }

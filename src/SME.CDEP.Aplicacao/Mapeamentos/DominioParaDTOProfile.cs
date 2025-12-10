@@ -339,6 +339,11 @@ namespace SME.CDEP.Aplicacao.Mapeamentos
                 .ForMember(dest => dest.Id, opt => opt.MapFrom(o => o.Situacao))
                 .ForMember(dest => dest.Nome, opt => opt.MapFrom(o => o.Situacao.Descricao()))
                 .ForMember(dest => dest.Valor, opt => opt.MapFrom(o => o.Quantidade));
+
+            CreateMap<PainelGerencialQuantidadeSolicitacaoPorSituacao, PainelGerencialQuantidadeSolicitacaoPorSituacaoDto>()
+                .ForMember(dest => dest.Id, opt => opt.MapFrom(o => o.Situacao))
+                .ForMember(dest => dest.Nome, opt => opt.MapFrom(o => o.Situacao.Descricao()))
+                .ForMember(dest => dest.Valor, opt => opt.MapFrom(o => o.Quantidade));
         }
     }
 }
