@@ -1,6 +1,7 @@
 ﻿using Dapper;
 using SME.CDEP.Dominio.Entidades;
 using SME.CDEP.Infra.Dados.Repositorios.Interfaces;
+using SME.CDEP.Infra.Dominio.Enumerados;
 using System.Diagnostics.CodeAnalysis;
 
 namespace SME.CDEP.Infra.Dados.Repositorios;
@@ -43,6 +44,44 @@ public class RepositorioPainelGerencial(ICdepConexao conexao) : IRepositorioPain
             WHERE EXTRACT(YEAR FROM mes_referencia) = @ano
             ORDER BY MesReferencia;";
         var resultado = await conexao.Obter().QueryAsync<PainelGerencialQuantidadeSolicitacaoMensal>(sql, new { ano });
+        return [.. resultado];
+    }
+
+    public async Task<List<PainelGerencialQuantidadeDeSolicitacoesPorTipoAcervo>> ObterQuantidadeDeSolicitacoesPorTipoAcervoAsync()
+    {
+        var sql = @"
+        SELECT acervo.TIPO tipoAcervo, COUNT(1) quantidade
+        FROM   acervo_solicitacao_item
+               INNER JOIN acervo ON ACERVO_ID = acervo.ID 
+        WHERE  NOT acervo_solicitacao_item.EXCLUIDO 
+        GROUP  BY acervo.TIPO;";
+
+        var resultado = await conexao.Obter().QueryAsync<PainelGerencialQuantidadeDeSolicitacoesPorTipoAcervo>(sql);
+        return [.. resultado];
+    }
+
+    public async Task<List<PainelGerencialQuantidadeAcervoEmprestadoPorSituacao>> ObterQuantidadeAcervoEmprestadoPorSituacaoAsync()
+    {
+        var sql = @"
+        SELECT SITUACAO, COUNT (1) quantidade
+        FROM acervo_emprestimo
+        WHERE SITUACAO <> @situacao
+        AND NOT excluido
+        GROUP BY situacao;";
+
+        var resultado = await conexao.Obter().QueryAsync<PainelGerencialQuantidadeAcervoEmprestadoPorSituacao>(sql, new { situacao = SituacaoEmprestimo.DEVOLVIDO });
+        return [.. resultado];
+    }
+
+    public async Task<List<PainelGerencialQuantidadeSolicitacaoPorSituacao>> ObterQuantidadeSolicitacaoPorSituacaoAsync()
+    {
+        var sql = @"
+        SELECT SITUACAO, COUNT (1) quantidade
+        FROM acervo_solicitacao_item
+        WHERE NOT excluido
+        GROUP BY situacao;";
+
+        var resultado = await conexao.Obter().QueryAsync<PainelGerencialQuantidadeSolicitacaoPorSituacao>(sql);
         return [.. resultado];
     }
 }

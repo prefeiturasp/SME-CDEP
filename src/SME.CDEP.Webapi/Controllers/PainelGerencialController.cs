@@ -37,5 +37,35 @@ namespace SME.CDEP.Webapi.Controllers
             var quantidadeSolicitacoesMensais = await servicoPainelGerencial.ObterQuantidadeSolicitacoesMensaisDoAnoAtualAsync();
             return Ok(quantidadeSolicitacoesMensais);
         }
+
+        [HttpGet("solicitacoes-tipo-acervo")]
+        [ProducesResponseType(typeof(List<PainelGerencialQuantidadeSolicitacaoPorTipoDeAcervoDto>), 200)]
+        [Produces("application/json")]
+        [Permissao(Permissao.PainelGerencial_C, Policy = "Bearer")]
+        public async Task<IActionResult> ObterQuantidadeSolicitacoesPorTipoAcervo()
+        {
+            var quantidadeSolicitacoesPorTipoAcervo = await servicoPainelGerencial.ObterQuantidadeDeSolicitacoesPorTipoAcervoAsync();
+            return Ok(quantidadeSolicitacoesPorTipoAcervo);
+        }
+
+        [HttpGet("controle-livros-emprestados")]
+        [ProducesResponseType(typeof(List<PainelGerencialQuantidadeAcervoEmprestadoPorSituacaoDto>), 200)]
+        [Produces("application/json")]
+        [Permissao(Permissao.PainelGerencial_C, Policy = "Bearer")]
+        public async Task<IActionResult> ObterQuantidadeAcervoEmprestadoPorSituacao()
+        {
+            var quantidadeAcervoEmprestadoPorSituacao = await servicoPainelGerencial.ObterQuantidadeAcervoEmprestadoPorSituacaoAsync();
+            return Ok(quantidadeAcervoEmprestadoPorSituacao);
+        }
+
+        [HttpGet("solicitacoes-por-situacao")]
+        [ProducesResponseType(typeof(List<PainelGerencialQuantidadeSolicitacaoPorSituacaoDto>), 200)]
+        [Produces("application/json")]
+        [Permissao(Permissao.PainelGerencial_C, Policy = "Bearer")]
+        public async Task<IActionResult> ObterQuantidadeSolicitacaoPorSituacao()
+        {
+            var quantidadeSolicitacaoPorSituacao = await servicoPainelGerencial.ObterQuantidadeSolicitacaoPorSituacaoAsync();
+            return Ok(quantidadeSolicitacaoPorSituacao);
+        }
     }
 }

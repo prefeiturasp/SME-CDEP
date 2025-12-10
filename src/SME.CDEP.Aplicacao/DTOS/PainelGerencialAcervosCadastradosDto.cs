@@ -2,10 +2,7 @@
 
 namespace SME.CDEP.Aplicacao.DTOS
 {
-    public class PainelGerencialAcervosCadastradosDto
+    public class PainelGerencialAcervosCadastradosDto : ItemGraficoChaveValorDto<TipoAcervo>
     {
-        public TipoAcervo Id { get; set; }
-        public string Nome { get; set; } = null!;
-        public int Valor { get; set; }
     }
 }
