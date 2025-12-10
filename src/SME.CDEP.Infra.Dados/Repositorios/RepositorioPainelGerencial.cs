@@ -1,6 +1,7 @@
 ﻿using Dapper;
 using SME.CDEP.Dominio.Entidades;
 using SME.CDEP.Infra.Dados.Repositorios.Interfaces;
+using SME.CDEP.Infra.Dominio.Enumerados;
 using System.Diagnostics.CodeAnalysis;
 
 namespace SME.CDEP.Infra.Dados.Repositorios;
@@ -56,6 +57,19 @@ public class RepositorioPainelGerencial(ICdepConexao conexao) : IRepositorioPain
         GROUP  BY acervo.TIPO;";
 
         var resultado = await conexao.Obter().QueryAsync<PainelGerencialQuantidadeDeSolicitacoesPorTipoAcervo>(sql);
+        return [.. resultado];
+    }
+
+    public async Task<List<PainelGerencialQuantidadeAcervoEmprestadoPorSituacao>> ObterQuantidadeAcervoEmprestadoPorSituacaoAsync()
+    {
+        var sql = @"
+        SELECT SITUACAO, COUNT (1) quantidade
+        FROM acervo_emprestimo
+        WHERE SITUACAO <> @situacao
+        AND NOT excluido
+        GROUP BY situacao;";
+
+        var resultado = await conexao.Obter().QueryAsync<PainelGerencialQuantidadeAcervoEmprestadoPorSituacao>(sql, new { situacao = SituacaoEmprestimo.DEVOLVIDO });
         return [.. resultado];
     }
 }

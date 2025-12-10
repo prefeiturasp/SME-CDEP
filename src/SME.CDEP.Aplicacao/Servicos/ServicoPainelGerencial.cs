@@ -35,4 +35,10 @@ public class ServicoPainelGerencial(
         var solicitacoes = await repositorioPainelGerencial.ObterQuantidadeDeSolicitacoesPorTipoAcervoAsync();
         return mapper.Map<List<PainelGerencialQuantidadeSolicitacaoPorTipoDeAcervoDto>>(solicitacoes);
     }
+
+    public async Task<List<PainelGerencialQuantidadeAcervoEmprestadoPorSituacaoDto>> ObterQuantidadeAcervoEmprestadoPorSituacaoAsync()
+    {
+        var emprestimos = await repositorioPainelGerencial.ObterQuantidadeAcervoEmprestadoPorSituacaoAsync();
+        return mapper.Map<List<PainelGerencialQuantidadeAcervoEmprestadoPorSituacaoDto>>(emprestimos);
+    }
 }

@@ -173,4 +173,37 @@ public class ServicoPainelGerencialTestes
         resultado[1].Nome.Should().Be(TipoAcervo.Fotografico.Descricao());
         resultado[1].Valor.Should().Be(150);
     }
+
+    [Fact]
+    public async Task DadoQueExistemEmprestimosNoBanco_QuandoObterQuantidadeAcervoEmprestadoPorSituacao_EntaoDeveRetornarListaDeDtos()
+    {
+        // Arrange
+        var quantidadeAcervoEmprestadoPorSituacao = new List<PainelGerencialQuantidadeAcervoEmprestadoPorSituacao>
+        {
+            new() { Situacao = SituacaoEmprestimo.EMPRESTADO, Quantidade = 400 },
+            new() { Situacao = SituacaoEmprestimo.DEVOLUCAO_EM_ATRASO, Quantidade = 75 }
+        };
+        var quantidadeAcervoEmprestadoPorSituacaoDto = new List<PainelGerencialQuantidadeAcervoEmprestadoPorSituacaoDto>
+        {
+            new() { Id = (int)SituacaoEmprestimo.EMPRESTADO, Nome = SituacaoEmprestimo.EMPRESTADO.Descricao(), Valor = 400 },
+            new() { Id = (int)SituacaoEmprestimo.DEVOLUCAO_EM_ATRASO, Nome = SituacaoEmprestimo.DEVOLUCAO_EM_ATRASO.Descricao(), Valor = 75 }
+        };
+        _repositorioPainelGerencialMock
+            .Setup(r => r.ObterQuantidadeAcervoEmprestadoPorSituacaoAsync())
+            .ReturnsAsync(quantidadeAcervoEmprestadoPorSituacao);
+        _mapperMock
+            .Setup(m => m.Map<List<PainelGerencialQuantidadeAcervoEmprestadoPorSituacaoDto>>(quantidadeAcervoEmprestadoPorSituacao))
+            .Returns(quantidadeAcervoEmprestadoPorSituacaoDto);
+        // Act
+        var resultado = await _servicoPainelGerencial.ObterQuantidadeAcervoEmprestadoPorSituacaoAsync();
+        // Assert
+        resultado.Should().NotBeNull();
+        resultado.Should().HaveCount(2);
+        resultado[0].Id.Should().Be((int)SituacaoEmprestimo.EMPRESTADO);
+        resultado[0].Nome.Should().Be(SituacaoEmprestimo.EMPRESTADO.Descricao());
+        resultado[0].Valor.Should().Be(400);
+        resultado[1].Id.Should().Be((int)SituacaoEmprestimo.DEVOLUCAO_EM_ATRASO);
+        resultado[1].Nome.Should().Be(SituacaoEmprestimo.DEVOLUCAO_EM_ATRASO.Descricao());
+        resultado[1].Valor.Should().Be(75);
+    }
 }

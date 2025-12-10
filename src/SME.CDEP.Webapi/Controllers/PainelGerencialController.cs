@@ -47,5 +47,15 @@ namespace SME.CDEP.Webapi.Controllers
             var quantidadeSolicitacoesPorTipoAcervo = await servicoPainelGerencial.ObterQuantidadeDeSolicitacoesPorTipoAcervoAsync();
             return Ok(quantidadeSolicitacoesPorTipoAcervo);
         }
+
+        [HttpGet("controle-livros-emprestados")]
+        [ProducesResponseType(typeof(List<PainelGerencialQuantidadeAcervoEmprestadoPorSituacaoDto>), 200)]
+        [Produces("application/json")]
+        [Permissao(Permissao.PainelGerencial_C, Policy = "Bearer")]
+        public async Task<IActionResult> ObterQuantidadeAcervoEmprestadoPorSituacao()
+        {
+            var quantidadeAcervoEmprestadoPorSituacao = await servicoPainelGerencial.ObterQuantidadeAcervoEmprestadoPorSituacaoAsync();
+            return Ok(quantidadeAcervoEmprestadoPorSituacao);
+        }
     }
 }

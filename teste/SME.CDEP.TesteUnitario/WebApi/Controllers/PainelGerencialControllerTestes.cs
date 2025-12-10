@@ -104,5 +104,25 @@ namespace SME.CDEP.TesteUnitario.WebApi.Controllers
             okResult.Should().NotBeNull();
             okResult!.Value.Should().BeEquivalentTo(quantidadeSolicitacoesPorTipoAcervoDto);
         }
+
+        [Fact]
+        public async Task DadoQueExistemEmprestimosNoBanco_QuandoObterQuantidadeAcervoEmprestadoPorSituacao_EntaoDeveRetornarOkComListaDeDtos()
+        {
+            // Arrange
+            var quantidadeAcervoEmprestadoPorSituacaoDto = new List<PainelGerencialQuantidadeAcervoEmprestadoPorSituacaoDto>
+            {
+                new() { Id = (int)SituacaoEmprestimo.EMPRESTADO, Nome = "Emprestado", Valor = 30 },
+                new() { Id = (int)SituacaoEmprestimo.DEVOLUCAO_EM_ATRASO, Nome = "Devolução em atraso", Valor = 10 }
+            };
+            _servicoPainelGerencialMock
+                .Setup(s => s.ObterQuantidadeAcervoEmprestadoPorSituacaoAsync())
+                .ReturnsAsync(quantidadeAcervoEmprestadoPorSituacaoDto);
+            // Act
+            var resultado = await _painelGerencialController.ObterQuantidadeAcervoEmprestadoPorSituacao();
+            // Assert
+            var okResult = resultado as Microsoft.AspNetCore.Mvc.OkObjectResult;
+            okResult.Should().NotBeNull();
+            okResult!.Value.Should().BeEquivalentTo(quantidadeAcervoEmprestadoPorSituacaoDto);
+        }
     }
 }
