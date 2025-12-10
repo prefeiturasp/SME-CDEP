@@ -45,4 +45,17 @@ public class RepositorioPainelGerencial(ICdepConexao conexao) : IRepositorioPain
         var resultado = await conexao.Obter().QueryAsync<PainelGerencialQuantidadeSolicitacaoMensal>(sql, new { ano });
         return [.. resultado];
     }
+
+    public async Task<List<PainelGerencialQuantidadeDeSolicitacoesPorTipoAcervo>> ObterQuantidadeDeSolicitacoesPorTipoAcervoAsync()
+    {
+        var sql = @"
+        SELECT acervo.TIPO tipoAcervo, COUNT(1) quantidade
+        FROM   acervo_solicitacao_item
+               INNER JOIN acervo ON ACERVO_ID = acervo.ID 
+        WHERE  NOT acervo_solicitacao_item.EXCLUIDO 
+        GROUP  BY acervo.TIPO;";
+
+        var resultado = await conexao.Obter().QueryAsync<PainelGerencialQuantidadeDeSolicitacoesPorTipoAcervo>(sql);
+        return [.. resultado];
+    }
 }

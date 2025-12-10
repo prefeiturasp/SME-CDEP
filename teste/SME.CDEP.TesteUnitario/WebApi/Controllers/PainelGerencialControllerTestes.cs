@@ -84,5 +84,25 @@ namespace SME.CDEP.TesteUnitario.WebApi.Controllers
             okResult.Should().NotBeNull();
             okResult!.Value.Should().BeEquivalentTo(quantidadeSolicitacoesMensaisDto);
         }
+
+        [Fact]
+        public async Task DadoQueExistemSolicitacoesNoBanco_QuandoObterQuantidadeSolicitacoesPorTipoAcervo_EntaoDeveRetornarOkComListaDeDtos()
+        {
+            // Arrange
+            var quantidadeSolicitacoesPorTipoAcervoDto = new List<PainelGerencialQuantidadeSolicitacaoPorTipoDeAcervoDto>
+            {
+                new() { Id = (int)TipoAcervo.Bibliografico, Nome = "Bibliografico", Valor = 100 },
+                new() { Id = (int)TipoAcervo.Fotografico, Nome = "Fotografico", Valor = 50 }
+            };
+            _servicoPainelGerencialMock
+                .Setup(s => s.ObterQuantidadeDeSolicitacoesPorTipoAcervoAsync())
+                .ReturnsAsync(quantidadeSolicitacoesPorTipoAcervoDto);
+            // Act
+            var resultado = await _painelGerencialController.ObterQuantidadeSolicitacoesPorTipoAcervo();
+            // Assert
+            var okResult = resultado as Microsoft.AspNetCore.Mvc.OkObjectResult;
+            okResult.Should().NotBeNull();
+            okResult!.Value.Should().BeEquivalentTo(quantidadeSolicitacoesPorTipoAcervoDto);
+        }
     }
 }

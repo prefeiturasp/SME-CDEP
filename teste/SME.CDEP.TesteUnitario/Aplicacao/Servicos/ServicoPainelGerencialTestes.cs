@@ -140,4 +140,37 @@ public class ServicoPainelGerencialTestes
         resultado[1].Nome.Should().Be("Abril");
         resultado[1].Valor.Should().Be(120);
     }
+
+    [Fact]
+    public async Task DadoQueExistemSolicitacoesNoBanco_QuandoObterQuantidadeSolicitacoesPorTipoAcervo_EntaoDeveRetornarListaDeDtos()
+    {
+        // Arrange
+        var quantidadeSolicitacoesPorTipoAcervo = new List<PainelGerencialQuantidadeDeSolicitacoesPorTipoAcervo>
+        {
+            new() { TipoAcervo = TipoAcervo.Bibliografico, Quantidade = 300 },
+            new() { TipoAcervo = TipoAcervo.Fotografico, Quantidade = 150 }
+        };
+        var quantidadeSolicitacoesPorTipoAcervoDto = new List<PainelGerencialQuantidadeSolicitacaoPorTipoDeAcervoDto>
+        {
+            new() { Id = (int)TipoAcervo.Bibliografico, Nome = TipoAcervo.Bibliografico.Descricao(), Valor = 300 },
+            new() { Id = (int)TipoAcervo.Fotografico, Nome = TipoAcervo.Fotografico.Descricao(), Valor = 150 }
+        };
+        _repositorioPainelGerencialMock
+            .Setup(r => r.ObterQuantidadeDeSolicitacoesPorTipoAcervoAsync())
+            .ReturnsAsync(quantidadeSolicitacoesPorTipoAcervo);
+        _mapperMock
+            .Setup(m => m.Map<List<PainelGerencialQuantidadeSolicitacaoPorTipoDeAcervoDto>>(quantidadeSolicitacoesPorTipoAcervo))
+            .Returns(quantidadeSolicitacoesPorTipoAcervoDto);
+        // Act
+        var resultado = await _servicoPainelGerencial.ObterQuantidadeDeSolicitacoesPorTipoAcervoAsync();
+        // Assert
+        resultado.Should().NotBeNull();
+        resultado.Should().HaveCount(2);
+        resultado[0].Id.Should().Be((int)TipoAcervo.Bibliografico);
+        resultado[0].Nome.Should().Be(TipoAcervo.Bibliografico.Descricao());
+        resultado[0].Valor.Should().Be(300);
+        resultado[1].Id.Should().Be((int)TipoAcervo.Fotografico);
+        resultado[1].Nome.Should().Be(TipoAcervo.Fotografico.Descricao());
+        resultado[1].Valor.Should().Be(150);
+    }
 }

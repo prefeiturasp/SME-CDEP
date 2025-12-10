@@ -37,5 +37,15 @@ namespace SME.CDEP.Webapi.Controllers
             var quantidadeSolicitacoesMensais = await servicoPainelGerencial.ObterQuantidadeSolicitacoesMensaisDoAnoAtualAsync();
             return Ok(quantidadeSolicitacoesMensais);
         }
+
+        [HttpGet("solicitacoes-tipo-acervo")]
+        [ProducesResponseType(typeof(List<PainelGerencialQuantidadeSolicitacaoPorTipoDeAcervoDto>), 200)]
+        [Produces("application/json")]
+        [Permissao(Permissao.PainelGerencial_C, Policy = "Bearer")]
+        public async Task<IActionResult> ObterQuantidadeSolicitacoesPorTipoAcervo()
+        {
+            var quantidadeSolicitacoesPorTipoAcervo = await servicoPainelGerencial.ObterQuantidadeDeSolicitacoesPorTipoAcervoAsync();
+            return Ok(quantidadeSolicitacoesPorTipoAcervo);
+        }
     }
 }
