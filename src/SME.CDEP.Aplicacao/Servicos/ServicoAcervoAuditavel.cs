@@ -34,21 +34,21 @@ namespace SME.CDEP.Aplicacao.Servicos
         IServicoHistoricoConsultaAcervo servicoHistoricoConsultaAcervo,
         ILogger<ServicoAcervoAuditavel> logger) : IServicoAcervo
     {
-        private readonly IRepositorioAcervo repositorioAcervo = repositorioAcervo ?? throw new ArgumentNullException(nameof(repositorioAcervo));
-        private readonly IRepositorioAcervoCreditoAutor repositorioAcervoCreditoAutor = repositorioAcervoCreditoAutor ?? throw new ArgumentNullException(nameof(repositorioAcervoCreditoAutor));
-        private readonly IMapper mapper = mapper ?? throw new ArgumentNullException(nameof(mapper));
-        private readonly IContextoAplicacao contextoAplicacao = contextoAplicacao ?? throw new ArgumentNullException(nameof(contextoAplicacao));
-        private readonly IRepositorioArquivo repositorioArquivo = repositorioArquivo ?? throw new ArgumentNullException(nameof(repositorioArquivo));
-        private readonly IRepositorioAcervoBibliografico repositorioAcervoBibliografico = repositorioAcervoBibliografico ?? throw new ArgumentNullException(nameof(repositorioAcervoBibliografico));
-        private readonly IRepositorioAcervoDocumental repositorioAcervoDocumental = repositorioAcervoDocumental ?? throw new ArgumentNullException(nameof(repositorioAcervoDocumental));
-        private readonly IRepositorioAcervoArteGrafica repositorioAcervoArteGrafica = repositorioAcervoArteGrafica ?? throw new ArgumentNullException(nameof(repositorioAcervoArteGrafica));
-        private readonly IRepositorioAcervoAudiovisual repositorioAcervoAudiovisual = repositorioAcervoAudiovisual ?? throw new ArgumentNullException(nameof(repositorioAcervoAudiovisual));
-        private readonly IRepositorioAcervoFotografico repositorioAcervoFotografico = repositorioAcervoFotografico ?? throw new ArgumentNullException(nameof(repositorioAcervoFotografico));
-        private readonly IRepositorioAcervoTridimensional repositorioAcervoTridimensional = repositorioAcervoTridimensional ?? throw new ArgumentNullException(nameof(repositorioAcervoTridimensional));
-        private readonly IRepositorioParametroSistema repositorioParametroSistema = repositorioParametroSistema ?? throw new ArgumentNullException(nameof(repositorioParametroSistema));
-        private readonly ConfiguracaoArmazenamentoOptions configuracaoArmazenamentoOptions = configuracaoArmazenamentoOptions?.Value ?? throw new ArgumentNullException(nameof(configuracaoArmazenamentoOptions));
-        private readonly IServicoArmazenamento servicoArmazenamento = servicoArmazenamento ?? throw new ArgumentNullException(nameof(servicoArmazenamento));
-        private readonly IServicoHistoricoConsultaAcervo servicoHistoricoConsultaAcervo = servicoHistoricoConsultaAcervo ?? throw new ArgumentNullException(nameof(servicoHistoricoConsultaAcervo));
+        private readonly IRepositorioAcervo repositorioAcervo = repositorioAcervo;
+        private readonly IRepositorioAcervoCreditoAutor repositorioAcervoCreditoAutor = repositorioAcervoCreditoAutor;
+        private readonly IMapper mapper = mapper;
+        private readonly IContextoAplicacao contextoAplicacao = contextoAplicacao;
+        private readonly IRepositorioArquivo repositorioArquivo = repositorioArquivo;
+        private readonly IRepositorioAcervoBibliografico repositorioAcervoBibliografico = repositorioAcervoBibliografico;
+        private readonly IRepositorioAcervoDocumental repositorioAcervoDocumental = repositorioAcervoDocumental;
+        private readonly IRepositorioAcervoArteGrafica repositorioAcervoArteGrafica = repositorioAcervoArteGrafica;
+        private readonly IRepositorioAcervoAudiovisual repositorioAcervoAudiovisual = repositorioAcervoAudiovisual;
+        private readonly IRepositorioAcervoFotografico repositorioAcervoFotografico = repositorioAcervoFotografico;
+        private readonly IRepositorioAcervoTridimensional repositorioAcervoTridimensional = repositorioAcervoTridimensional;
+        private readonly IRepositorioParametroSistema repositorioParametroSistema = repositorioParametroSistema;
+        private readonly ConfiguracaoArmazenamentoOptions configuracaoArmazenamentoOptions = configuracaoArmazenamentoOptions?.Value;
+        private readonly IServicoArmazenamento servicoArmazenamento = servicoArmazenamento;
+        private readonly IServicoHistoricoConsultaAcervo servicoHistoricoConsultaAcervo = servicoHistoricoConsultaAcervo;
 
         public async Task<long> Inserir(Acervo acervo)
         {
@@ -131,7 +131,8 @@ namespace SME.CDEP.Aplicacao.Servicos
 
         public async Task<IEnumerable<AcervoDTO>> ObterTodos()
         {
-            return (await repositorioAcervo.ObterTodos()).Where(w => !w.Excluido).Select(s => mapper.Map<AcervoDTO>(s));
+            var acervos = (await repositorioAcervo.ObterTodos()).Where(w => !w.Excluido);
+            return mapper.Map<IEnumerable<AcervoDTO>>(acervos); 
         }
 
         public async Task<AcervoDTO> AlterarCreditoAutor(Acervo acervo)
