@@ -140,4 +140,103 @@ public class ServicoPainelGerencialTestes
         resultado[1].Nome.Should().Be("Abril");
         resultado[1].Valor.Should().Be(120);
     }
+
+    [Fact]
+    public async Task DadoQueExistemSolicitacoesNoBanco_QuandoObterQuantidadeSolicitacoesPorTipoAcervo_EntaoDeveRetornarListaDeDtos()
+    {
+        // Arrange
+        var quantidadeSolicitacoesPorTipoAcervo = new List<PainelGerencialQuantidadeDeSolicitacoesPorTipoAcervo>
+        {
+            new() { TipoAcervo = TipoAcervo.Bibliografico, Quantidade = 300 },
+            new() { TipoAcervo = TipoAcervo.Fotografico, Quantidade = 150 }
+        };
+        var quantidadeSolicitacoesPorTipoAcervoDto = new List<PainelGerencialQuantidadeSolicitacaoPorTipoDeAcervoDto>
+        {
+            new() { Id = TipoAcervo.Bibliografico, Nome = TipoAcervo.Bibliografico.Descricao(), Valor = 300 },
+            new() { Id = TipoAcervo.Fotografico, Nome = TipoAcervo.Fotografico.Descricao(), Valor = 150 }
+        };
+        _repositorioPainelGerencialMock
+            .Setup(r => r.ObterQuantidadeDeSolicitacoesPorTipoAcervoAsync())
+            .ReturnsAsync(quantidadeSolicitacoesPorTipoAcervo);
+        _mapperMock
+            .Setup(m => m.Map<List<PainelGerencialQuantidadeSolicitacaoPorTipoDeAcervoDto>>(quantidadeSolicitacoesPorTipoAcervo))
+            .Returns(quantidadeSolicitacoesPorTipoAcervoDto);
+        // Act
+        var resultado = await _servicoPainelGerencial.ObterQuantidadeDeSolicitacoesPorTipoAcervoAsync();
+        // Assert
+        resultado.Should().NotBeNull();
+        resultado.Should().HaveCount(2);
+        resultado[0].Id.Should().Be(TipoAcervo.Bibliografico);
+        resultado[0].Nome.Should().Be(TipoAcervo.Bibliografico.Descricao());
+        resultado[0].Valor.Should().Be(300);
+        resultado[1].Id.Should().Be(TipoAcervo.Fotografico);
+        resultado[1].Nome.Should().Be(TipoAcervo.Fotografico.Descricao());
+        resultado[1].Valor.Should().Be(150);
+    }
+
+    [Fact]
+    public async Task DadoQueExistemEmprestimosNoBanco_QuandoObterQuantidadeAcervoEmprestadoPorSituacao_EntaoDeveRetornarListaDeDtos()
+    {
+        // Arrange
+        var quantidadeAcervoEmprestadoPorSituacao = new List<PainelGerencialQuantidadeAcervoEmprestadoPorSituacao>
+        {
+            new() { Situacao = SituacaoEmprestimo.EMPRESTADO, Quantidade = 400 },
+            new() { Situacao = SituacaoEmprestimo.DEVOLUCAO_EM_ATRASO, Quantidade = 75 }
+        };
+        var quantidadeAcervoEmprestadoPorSituacaoDto = new List<PainelGerencialQuantidadeAcervoEmprestadoPorSituacaoDto>
+        {
+            new() { Id = SituacaoEmprestimo.EMPRESTADO, Nome = SituacaoEmprestimo.EMPRESTADO.Descricao(), Valor = 400 },
+            new() { Id = SituacaoEmprestimo.DEVOLUCAO_EM_ATRASO, Nome = SituacaoEmprestimo.DEVOLUCAO_EM_ATRASO.Descricao(), Valor = 75 }
+        };
+        _repositorioPainelGerencialMock
+            .Setup(r => r.ObterQuantidadeAcervoEmprestadoPorSituacaoAsync())
+            .ReturnsAsync(quantidadeAcervoEmprestadoPorSituacao);
+        _mapperMock
+            .Setup(m => m.Map<List<PainelGerencialQuantidadeAcervoEmprestadoPorSituacaoDto>>(quantidadeAcervoEmprestadoPorSituacao))
+            .Returns(quantidadeAcervoEmprestadoPorSituacaoDto);
+        // Act
+        var resultado = await _servicoPainelGerencial.ObterQuantidadeAcervoEmprestadoPorSituacaoAsync();
+        // Assert
+        resultado.Should().NotBeNull();
+        resultado.Should().HaveCount(2);
+        resultado[0].Id.Should().Be(SituacaoEmprestimo.EMPRESTADO);
+        resultado[0].Nome.Should().Be(SituacaoEmprestimo.EMPRESTADO.Descricao());
+        resultado[0].Valor.Should().Be(400);
+        resultado[1].Id.Should().Be(SituacaoEmprestimo.DEVOLUCAO_EM_ATRASO);
+        resultado[1].Nome.Should().Be(SituacaoEmprestimo.DEVOLUCAO_EM_ATRASO.Descricao());
+        resultado[1].Valor.Should().Be(75);
+    }
+
+    [Fact]
+    public async Task DadoQueExistemSolicitacoesNoBanco_QuandoObterQuantidadeSolicitacaoPorSituacao_EntaoDeveRetornarListaDeDtos()
+    {
+        // Arrange
+        var quantidadeSolicitacaoPorSituacao = new List<PainelGerencialQuantidadeSolicitacaoPorSituacao>
+        {
+            new() { Situacao = SituacaoSolicitacaoItem.FINALIZADO_MANUALMENTE, Quantidade = 250 },
+            new() { Situacao = SituacaoSolicitacaoItem.CANCELADO, Quantidade = 180 }
+        };
+        var quantidadeSolicitacaoPorSituacaoDto = new List<PainelGerencialQuantidadeSolicitacaoPorSituacaoDto>
+        {
+            new() { Id = SituacaoSolicitacaoItem.FINALIZADO_MANUALMENTE, Nome = SituacaoSolicitacaoItem.FINALIZADO_MANUALMENTE.Descricao(), Valor = 250 },
+            new() { Id = SituacaoSolicitacaoItem.CANCELADO, Nome = SituacaoSolicitacaoItem.CANCELADO.Descricao(), Valor = 180 }
+        };
+        _repositorioPainelGerencialMock
+            .Setup(r => r.ObterQuantidadeSolicitacaoPorSituacaoAsync())
+            .ReturnsAsync(quantidadeSolicitacaoPorSituacao);
+        _mapperMock
+            .Setup(m => m.Map<List<PainelGerencialQuantidadeSolicitacaoPorSituacaoDto>>(quantidadeSolicitacaoPorSituacao))
+            .Returns(quantidadeSolicitacaoPorSituacaoDto);
+        // Act
+        var resultado = await _servicoPainelGerencial.ObterQuantidadeSolicitacaoPorSituacaoAsync();
+        // Assert
+        resultado.Should().NotBeNull();
+        resultado.Should().HaveCount(2);
+        resultado[0].Id.Should().Be(SituacaoSolicitacaoItem.FINALIZADO_MANUALMENTE);
+        resultado[0].Nome.Should().Be(SituacaoSolicitacaoItem.FINALIZADO_MANUALMENTE.Descricao());
+        resultado[0].Valor.Should().Be(250);
+        resultado[1].Id.Should().Be(SituacaoSolicitacaoItem.CANCELADO);
+        resultado[1].Nome.Should().Be(SituacaoSolicitacaoItem.CANCELADO.Descricao());
+        resultado[1].Valor.Should().Be(180);
+    }
 }
