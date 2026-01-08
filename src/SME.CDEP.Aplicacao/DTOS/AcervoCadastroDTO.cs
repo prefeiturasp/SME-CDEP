@@ -9,7 +9,11 @@ public class AcervoCadastroDTO
     [MaxLength(500, ErrorMessage = "A localização do acervo não pode conter mais que 500 caracteres")]
     public string Titulo { get; set; } = null!;
     public string? Descricao { get; set; }
+
+    [MaxLength(200, ErrorMessage = "O código do acervo não pode conter mais que 200 caracteres")]
     public string? Codigo { get; set; }
+
+    [MaxLength(200, ErrorMessage = "O código novo do acervo não pode conter mais que 200 caracteres")]
     public string? CodigoNovo { get; set; }
     public long[]? CreditosAutoresIds { get; set; }
     public CoAutorDTO[]? CoAutores { get; set; }

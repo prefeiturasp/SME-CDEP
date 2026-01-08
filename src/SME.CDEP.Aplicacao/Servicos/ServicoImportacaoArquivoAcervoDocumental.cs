@@ -284,12 +284,12 @@ namespace SME.CDEP.Aplicacao.Servicos
                         Codigo = new LinhaConteudoAjustarDTO()
                         {
                             Conteudo = planilha.ObterValorDaCelula(numeroLinha, Constantes.ACERVO_DOCUMENTAL_CAMPO_CODIGO_ANTIGO),
-                            LimiteCaracteres = Constantes.CARACTERES_PERMITIDOS_15,
+                            LimiteCaracteres = Constantes.CARACTERES_PERMITIDOS_200,
                         },
                         CodigoNovo = new LinhaConteudoAjustarDTO()
                         {
                             Conteudo = planilha.ObterValorDaCelula(numeroLinha, Constantes.ACERVO_DOCUMENTAL_CAMPO_CODIGO_NOVO),
-                            LimiteCaracteres = Constantes.CARACTERES_PERMITIDOS_15,
+                            LimiteCaracteres = Constantes.CARACTERES_PERMITIDOS_200,
                         },
                         Material = new LinhaConteudoAjustarDTO()
                         {
