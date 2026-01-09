@@ -1,0 +1,1 @@
+update parametro_sistema set ano = 2026 where ano = 2025;
