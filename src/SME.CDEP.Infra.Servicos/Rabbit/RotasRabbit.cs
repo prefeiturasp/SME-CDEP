@@ -29,5 +29,7 @@ namespace SME.CDEP.Infra
 
         public const string ExecutarConsolidacaoDoHistoricoDeConsultasDeAcervo = "cdep.consolidacao.historico.consultas.acervo";
         public const string ExecutarConsolidacaoDasSolicitacoesDeAcervo = "cdep.consolidacao.solicitacoes.acervo";
+
+        public const string ExecutarAtualizacaoSituacaoDasSolicitacoesDeAcervoVencidas = "cdep.atualizacao.situacao.solicitacoes.acervo.vencidas";
     }
 }

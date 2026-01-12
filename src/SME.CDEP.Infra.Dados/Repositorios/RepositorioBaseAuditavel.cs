@@ -8,17 +8,12 @@ using System.Diagnostics.CodeAnalysis;
 namespace SME.CDEP.Infra.Dados.Repositorios;
 
 [ExcludeFromCodeCoverage]
-public abstract class RepositorioBaseAuditavel<TEntidade> : IRepositorioBaseAuditavel<TEntidade>
+public abstract class RepositorioBaseAuditavel<TEntidade>(IContextoAplicacao contexto, ICdepConexao conexao) : 
+    IRepositorioBaseAuditavel<TEntidade>
     where TEntidade : EntidadeBaseAuditavel
 {
-    protected readonly IContextoAplicacao contexto;
-    protected readonly ICdepConexao conexao;
-
-    public RepositorioBaseAuditavel(IContextoAplicacao contexto, ICdepConexao conexao)
-    {
-        this.contexto = contexto;
-        this.conexao = conexao;
-    }
+    protected readonly IContextoAplicacao contexto = contexto;
+    protected readonly ICdepConexao conexao = conexao;
 
     public Task<TEntidade> ObterPorId(long id)
         => conexao.Obter().GetAsync<TEntidade>(id);
@@ -37,25 +32,25 @@ public abstract class RepositorioBaseAuditavel<TEntidade> : IRepositorioBaseAudi
 
     public async Task<TEntidade> Atualizar(TEntidade entidade)
     {
-        DefinirAtualização(entidade);
+        DefinirAtualizacao(entidade);
         await conexao.Obter().UpdateAsync(entidade);
         return entidade;
     }
 
     public async Task Remover(TEntidade entidade)
     {
-        DefinirAtualização(entidade, true);
+        DefinirAtualizacao(entidade, true);
         await conexao.Obter().UpdateAsync(entidade);
     }
 
     public async Task Remover(long id)
     {
         var entidade = await ObterPorId(id);
-        DefinirAtualização(entidade, true);
+        DefinirAtualizacao(entidade, true);
         await conexao.Obter().UpdateAsync(entidade);
     }
 
-    private void DefinirAtualização(TEntidade entidade, bool excluir = false)
+    protected void DefinirAtualizacao(TEntidade entidade, bool excluir = false)
     {
         entidade.AlteradoEm = DateTimeExtension.HorarioBrasilia();
         entidade.AlteradoPor = contexto.NomeUsuario;

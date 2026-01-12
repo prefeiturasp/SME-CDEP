@@ -6,5 +6,6 @@ namespace SME.CDEP.Infra.Dados.Repositorios.Interfaces
     public interface IRepositorioParametroSistema : IRepositorioBaseAuditavel<ParametroSistema>
     {
         Task<ParametroSistema> ObterParametroPorTipoEAno(TipoParametroSistema tipoParametroSistema, int ano);
+        Task<ParametroSistema?> ObterParametroPorTipoAsync(TipoParametroSistema tipoParametroSistema);
     }
 }
