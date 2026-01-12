@@ -19,5 +19,7 @@ namespace SME.CDEP.Infra.Dados.Repositorios.Interfaces
         Task<IEnumerable<AcervoSolicitacaoItem>> ObterItensPorSolicitacaoId(long acervoSolicitacaoId);
         Task<Acervo?> ObterAcervoPorAcervoSolicitacaoItemId(long acervoSolicitacaoItemId);
         Task<IEnumerable<AcervoSolicitacaoItemDetalhe>> ObterDetalhamentoDosItensPorSolicitacaoOuItem(long? acervoSolicitacaoId, long? acervoSolicitacaoItemId);
+        Task<IEnumerable<long?>> ObterSolicitacoesDeAcervoVencidasAsync(List<SituacaoSolicitacaoItem> situacaoParaIgnorar, int qtdeDiasLimite);
+        Task AtualizarSituacaoSolicitacaoItemAsync(long? solicitacao, SituacaoSolicitacaoItem situacao);
     }
 }

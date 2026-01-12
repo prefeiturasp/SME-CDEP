@@ -1,4 +1,5 @@
-﻿namespace SME.CDEP.Dominio.Constantes;
+﻿
+namespace SME.CDEP.Dominio.Constantes;
 
 public class MensagemNegocio
 {
@@ -75,4 +76,5 @@ public class MensagemNegocio
     public const string IMPORTACAO_NAO_LOCALIZADA = "Importação não localizada";
     public const string NAO_EH_PERMITIDO_AGENDAR_VISITA_NO_FINAL_DE_SEMANA = "Não é permitido agendar visita no final de semana";
     public const string NAO_FOI_POSSIVEL_CONVERTER_A_DATA_ACERVO = "Não foi possível converter a data do acervo: '{0}'.";
+    public const string PARAMETRO_TIPO_X_INVALIDO = "O parâmetro do tipo '{0}' é inválido.";
 }
