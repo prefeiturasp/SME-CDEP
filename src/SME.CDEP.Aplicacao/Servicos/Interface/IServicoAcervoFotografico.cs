@@ -7,7 +7,7 @@ namespace SME.CDEP.Aplicacao.Servicos.Interface
         Task<long> Inserir(AcervoFotograficoCadastroDTO acervoFotograficoCadastroDto);
         Task<IEnumerable<AcervoFotograficoDTO>> ObterTodos();
         Task<AcervoFotograficoDTO> Alterar(AcervoFotograficoAlteracaoDTO acervoFotograficoAlteracaoDto);
-        Task<AcervoFotograficoDTO> ObterPorId(long id);
+        Task<AcervoFotograficoDTO?> ObterPorId(long id);
         Task<bool> Excluir(long id);
     }
 }

@@ -117,7 +117,7 @@ namespace SME.CDEP.Infra.Dados.Repositorios
         {
             var acervoFotografico = await ObterPorCodigo(filtroCodigo);
 
-            if (acervoFotografico.EhNulo())
+            if (acervoFotografico is null)
                 return default!;
             
             acervoFotografico.Creditos = await ObterCreditosAutores(acervoFotografico.AcervoId);
@@ -137,13 +137,12 @@ namespace SME.CDEP.Infra.Dados.Repositorios
                                 join arquivo a on a.id = afa.arquivo_id 
                             --join arquivo am on am.id = afa.arquivo_miniatura_id  
                             where not a.excluido --and not am.excluido 
-                                and af.permite_uso_imagem
                                 and af.id  = @acervoFotograficoId";
 
             return await conexao.Obter().QueryAsync<ImagemDetalhe>(query, new { acervoFotograficoId });
         }
 
-        private async Task<AcervoFotograficoDetalhe> ObterPorCodigo(string codigo)
+        private async Task<AcervoFotograficoDetalhe?> ObterPorCodigo(string codigo)
         {
             var query = @"select  af.id,
                                   af.acervo_id acervoId,
