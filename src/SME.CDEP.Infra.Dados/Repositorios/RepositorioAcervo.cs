@@ -366,7 +366,7 @@ namespace SME.CDEP.Infra.Dados.Repositorios
 
         private static string IncluirFiltroSituacaoAcervo()
         {
-            return " and COALESCE(a.situacao, 1) = 1 ";
+            return " and COALESCE(a.situacao, 1) in (0, 1) ";
         }
 
         public Task<Acervo?> PesquisarAcervoPorCodigoTombo(string codigoTombo, long[] tiposAcervosPermitidos)
