@@ -287,39 +287,6 @@ namespace SME.CDEP.Infra.Dados.Repositorios
         public async Task<IEnumerable<PesquisaAcervo>> ObterPorTextoLivreETipoAcervo(string? textoLivre, TipoAcervo? tipoAcervo, int? anoInicial, int? anoFinal)
         {
             var termoPesquisa = string.IsNullOrWhiteSpace(textoLivre) ? null : textoLivre.Trim();
-            const string sqlBase = """
-                SELECT DISTINCT
-                    a.id as acervoId,
-                    COALESCE(a.codigo, a.codigo_novo) as codigo,
-                    a.tipo,
-                    a.titulo,
-                    ca.nome as creditoAutoria,
-                    ast.nome as assunto,
-                    a.descricao,
-                    a.data_acervo as dataAcervo,
-                    a.ano,
-                    COALESCE(ab.situacao_saldo, 0) as situacaoSaldo,
-                    e.nome as editora,
-                    COALESCE(a.situacao, 1) as SituacaoAcervo,
-                    -- Coluna calculada para ordenação (não mapeada na entidade, usada apenas no order by)
-                    CASE 
-                        WHEN (@Termo IS NOT NULL AND (a.codigo ILIKE @TermoWildcard OR a.codigo_novo ILIKE @TermoWildcard)) THEN 0 
-                        ELSE 1 
-                    END as RankRelevancia
-                FROM acervo a
-                LEFT JOIN acervo_credito_autor aca ON aca.acervo_id = a.id
-                LEFT JOIN credito_autor ca ON aca.credito_autor_id = ca.id
-                LEFT JOIN acervo_bibliografico ab ON a.id = ab.acervo_id 
-                LEFT JOIN editora e ON ab.editora_id = e.id
-                LEFT JOIN acervo_bibliografico_assunto aba ON aba.acervo_bibliografico_id = ab.id
-                LEFT JOIN assunto ast ON ast.id = aba.assunto_id
-                """;
-
-            const string sqlBaseOrderBy = """
-                ORDER BY 
-                    RankRelevancia ASC,
-                    a.titulo ASC
-                """;
 
             var condicoesWhere = new StringBuilder("WHERE NOT a.excluido AND COALESCE(a.situacao, 1) IN (0, 1) ");
             var parametros = new DynamicParameters();
@@ -359,9 +326,39 @@ namespace SME.CDEP.Infra.Dados.Repositorios
                     """);
             }
 
-            var query = $"{sqlBase} {condicoesWhere} {sqlBaseOrderBy}";
+            var query = new StringBuilder($"""
+                SELECT DISTINCT
+                    a.id as acervoId,
+                    COALESCE(a.codigo, a.codigo_novo) as codigo,
+                    a.tipo,
+                    a.titulo,
+                    ca.nome as creditoAutoria,
+                    ast.nome as assunto,
+                    a.descricao,
+                    a.data_acervo as dataAcervo,
+                    a.ano,
+                    COALESCE(ab.situacao_saldo, 0) as situacaoSaldo,
+                    e.nome as editora,
+                    COALESCE(a.situacao, 1) as SituacaoAcervo,
+                    -- Coluna calculada para ordenação (não mapeada na entidade, usada apenas no order by)
+                    CASE 
+                        WHEN (@Termo IS NOT NULL AND (a.codigo ILIKE @TermoWildcard OR a.codigo_novo ILIKE @TermoWildcard)) THEN 0 
+                        ELSE 1 
+                    END as RankRelevancia
+                FROM acervo a
+                LEFT JOIN acervo_credito_autor aca ON aca.acervo_id = a.id
+                LEFT JOIN credito_autor ca ON aca.credito_autor_id = ca.id
+                LEFT JOIN acervo_bibliografico ab ON a.id = ab.acervo_id 
+                LEFT JOIN editora e ON ab.editora_id = e.id
+                LEFT JOIN acervo_bibliografico_assunto aba ON aba.acervo_bibliografico_id = ab.id
+                LEFT JOIN assunto ast ON ast.id = aba.assunto_id
+                {condicoesWhere}
+                ORDER BY 
+                    RankRelevancia ASC,
+                    a.titulo ASC
+                """);
 
-            return await conexao.Obter().QueryAsync<PesquisaAcervo>(query, parametros);
+            return await conexao.Obter().QueryAsync<PesquisaAcervo>(query.ToString(), parametros);
         }
 
         public Task<Acervo?> PesquisarAcervoPorCodigoTombo(string codigoTombo, long[] tiposAcervosPermitidos)
