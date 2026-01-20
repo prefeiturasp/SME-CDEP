@@ -8,6 +8,7 @@ using SME.CDEP.Dominio.Extensions;
 using SME.CDEP.Infra.Dados.Repositorios.Interfaces;
 using SME.CDEP.Infra.Dominio.Enumerados;
 using System.Diagnostics.CodeAnalysis;
+using System.Text;
 
 namespace SME.CDEP.Infra.Dados.Repositorios
 {
@@ -285,88 +286,79 @@ namespace SME.CDEP.Infra.Dados.Repositorios
 
         public async Task<IEnumerable<PesquisaAcervo>> ObterPorTextoLivreETipoAcervo(string? textoLivre, TipoAcervo? tipoAcervo, int? anoInicial, int? anoFinal)
         {
-            textoLivre = string.IsNullOrWhiteSpace(textoLivre) ? textoLivre : textoLivre.Trim().ToLower();
-            var query = $@";with acervosIds as
-                         (
-                             select   distinct a.id as acervoId
-                           from acervo a
-                                left join acervo_credito_autor aca on aca.acervo_id = a.id
-                                left join credito_autor ca on aca.credito_autor_id = ca.id
-                                left join acervo_bibliografico ab on a.id = ab.acervo_id 
-                                left join editora e ON ab.editora_id = e.id
-                                left join acervo_bibliografico_assunto aba on aba.acervo_bibliografico_id = ab.id
-                                left join assunto ast on ast.id = aba.assunto_id      
-                            where not a.excluido
-                            {IncluirFiltroPorTipoAcervo(tipoAcervo)}
-                            {IncluirFiltroPorTextoLivre(textoLivre)}
-                            {IncluirFiltroPorAno(anoInicial, anoFinal)}
-                            {IncluirFiltroSituacaoAcervo()}
-                         )
-                          select   distinct a.id as acervoId,
-                                     coalesce(a.codigo,a.codigo_novo)  codigo,              
-                                     a.tipo, 
-                                     a.titulo,              
-                                     ca.nome as creditoAutoria,
-                                     ast.nome as assunto,
-                                     a.descricao,
-                                     a.data_acervo dataAcervo,
-                                     a.ano,
-                                     coalesce(ab.situacao_saldo,0) as situacaoSaldo,
-                                     e.nome as editora,
-                                     COALESCE(a.situacao, 1) as SituacaoAcervo       
-                            from acervo a
-                                join acervosIds aid on aid.acervoId = a.id
-                                left join acervo_credito_autor aca on aca.acervo_id = a.id
-                                left join credito_autor ca on aca.credito_autor_id = ca.id
-                                left join acervo_bibliografico ab on a.id = ab.acervo_id 
-                                left join editora e on ab.editora_id = e.id
-                                left join acervo_bibliografico_assunto aba on aba.acervo_bibliografico_id = ab.id
-                                left join assunto ast on ast.id = aba.assunto_id
-                         ";
+            var termoPesquisa = string.IsNullOrWhiteSpace(textoLivre) ? null : textoLivre.Trim();
 
-            var retorno = await conexao.Obter().QueryAsync<PesquisaAcervo>(query,
-                new
-                {
-                    tipoAcervo = tipoAcervo.HasValue ? (int)tipoAcervo : (int?)null,
-                    textoLivre = !string.IsNullOrWhiteSpace(textoLivre) ? textoLivre : null,
-                    anoInicial,
-                    anoFinal
-                });
+            var condicoesWhere = new StringBuilder("WHERE NOT a.excluido AND COALESCE(a.situacao, 1) IN (0, 1) ");
+            var parametros = new DynamicParameters();
+            parametros.Add("Termo", termoPesquisa);
+            parametros.Add("TermoWildcard", termoPesquisa is not null ? $"%{termoPesquisa}%" : null);
 
-            return retorno;
-        }
+            if (tipoAcervo.HasValue)
+            {
+                condicoesWhere.Append(" AND a.tipo = @TipoAcervo ");
+                parametros.Add("TipoAcervo", (int)tipoAcervo);
+            }
 
-        private static string IncluirFiltroPorAno(int? anoInicial, int? anoFinal)
-        {
-            if (anoInicial.HasValue && anoFinal.HasValue)
-                return " and (a.ano_inicio between @anoInicial and @anoFinal or a.ano_fim between @anoInicial and @anoFinal) ";
+            if (anoInicial is not null || anoFinal is not null)
+            {
+                condicoesWhere.Append("""
+                    AND (
+                        (@AnoIni IS NULL OR a.ano_fim >= @AnoIni) AND
+                        (@AnoFim IS NULL OR a.ano_inicio <= @AnoFim)
+                    )
+                    """);
+                parametros.Add("AnoIni", anoInicial);
+                parametros.Add("AnoFim", anoFinal);
+            }
 
-            if (anoInicial.HasValue)
-                return " and (@anoInicial between a.ano_inicio and a.ano_fim) ";
+            if (!string.IsNullOrWhiteSpace(termoPesquisa))
+            {
+                condicoesWhere.Append("""
+                    AND (
+                        a.codigo ILIKE @TermoWildcard OR
+                        a.codigo_novo ILIKE @TermoWildcard OR
+                        f_unaccent(a.titulo) ILIKE f_unaccent(@TermoWildcard) OR
+                        f_unaccent(ca.nome) ILIKE f_unaccent(@TermoWildcard) OR
+                        f_unaccent(ast.nome) ILIKE f_unaccent(@TermoWildcard) OR
+                        f_unaccent(e.nome) ILIKE f_unaccent(@TermoWildcard) OR
+                        f_unaccent(a.descricao) ILIKE f_unaccent(@TermoWildcard)
+                    )
+                    """);
+            }
 
-            return anoFinal.HasValue ? " and (@anoFinal between a.ano_inicio and a.ano_fim) " : string.Empty;
-        }
+            var query = new StringBuilder($"""
+                SELECT DISTINCT
+                    a.id as acervoId,
+                    COALESCE(a.codigo, a.codigo_novo) as codigo,
+                    a.tipo,
+                    a.titulo,
+                    ca.nome as creditoAutoria,
+                    ast.nome as assunto,
+                    a.descricao,
+                    a.data_acervo as dataAcervo,
+                    a.ano,
+                    COALESCE(ab.situacao_saldo, 0) as situacaoSaldo,
+                    e.nome as editora,
+                    COALESCE(a.situacao, 1) as SituacaoAcervo,
+                    -- Coluna calculada para ordenação (não mapeada na entidade, usada apenas no order by)
+                    CASE 
+                        WHEN (@Termo IS NOT NULL AND (a.codigo ILIKE @TermoWildcard OR a.codigo_novo ILIKE @TermoWildcard)) THEN 0 
+                        ELSE 1 
+                    END as RankRelevancia
+                FROM acervo a
+                LEFT JOIN acervo_credito_autor aca ON aca.acervo_id = a.id
+                LEFT JOIN credito_autor ca ON aca.credito_autor_id = ca.id
+                LEFT JOIN acervo_bibliografico ab ON a.id = ab.acervo_id 
+                LEFT JOIN editora e ON ab.editora_id = e.id
+                LEFT JOIN acervo_bibliografico_assunto aba ON aba.acervo_bibliografico_id = ab.id
+                LEFT JOIN assunto ast ON ast.id = aba.assunto_id
+                {condicoesWhere}
+                ORDER BY 
+                    RankRelevancia ASC,
+                    a.titulo ASC
+                """);
 
-        private static string IncluirFiltroPorTextoLivre(string? textoLivre)
-        {
-            if (!string.IsNullOrWhiteSpace(textoLivre))
-                return " and ( f_unaccent(lower(a.titulo)) LIKE ('%' || f_unaccent(@textoLivre) || '%') " +
-                    "Or f_unaccent(lower(ca.nome)) LIKE ('%' || f_unaccent(@textoLivre) || '%') " +
-                    "Or f_unaccent(lower(ast.nome)) LIKE ('%' || f_unaccent(@textoLivre) || '%') " +
-                    "Or f_unaccent(lower(e.nome)) LIKE ('%' || f_unaccent(@textoLivre) || '%') " +
-                    "Or f_unaccent(lower(a.descricao)) LIKE ('%' || f_unaccent(@textoLivre) || '%'))";
-
-            return string.Empty;
-        }
-
-        private static string IncluirFiltroPorTipoAcervo(TipoAcervo? tipoAcervo)
-        {
-            return tipoAcervo is not null ? "and a.tipo = @tipoAcervo " : string.Empty;
-        }
-
-        private static string IncluirFiltroSituacaoAcervo()
-        {
-            return " and COALESCE(a.situacao, 1) in (0, 1) ";
+            return await conexao.Obter().QueryAsync<PesquisaAcervo>(query.ToString(), parametros);
         }
 
         public Task<Acervo?> PesquisarAcervoPorCodigoTombo(string codigoTombo, long[] tiposAcervosPermitidos)
