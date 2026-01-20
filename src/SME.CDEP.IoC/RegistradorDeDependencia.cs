@@ -93,6 +93,7 @@ public class RegistradorDeDependencia
         _serviceCollection.TryAddScoped<IRelatorioControleDownloadAcervoUseCase, RelatorioControleDownloadAcervoUseCase>();
         _serviceCollection.AddScoped<IExecutarConsolidacaoDasSolicitacoesDeAcervoUseCase, ExecutarConsolidacaoDasSolicitacoesDeAcervoUseCase>();
         _serviceCollection.AddScoped<IRelatorioHistoricoSolicitacoesUseCase, RelatorioHistoricoSolicitacoesUseCase>();
+        _serviceCollection.AddScoped<IAtualizarSituacaoDasSolicitacoesDeAcervoVencidasUseCase, AtualizarSituacaoDasSolicitacoesDeAcervoVencidasUseCase>();
     }
 
     protected virtual void RegistrarRabbit()

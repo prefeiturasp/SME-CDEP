@@ -182,20 +182,20 @@ namespace SME.CDEP.Aplicacao.Servicos
 
             await ExcluirArquivosArmazenamento();
 
-            return await ObterPorId(acervoFotograficoAlteracaoDto.AcervoId);
+            return (await ObterPorId(acervoFotograficoAlteracaoDto.AcervoId))!;
         }
 
-        public async Task<AcervoFotograficoDTO> ObterPorId(long id)
+        public async Task<AcervoFotograficoDTO?> ObterPorId(long id)
         {
             var acervoFotograficoSimples = await repositorioAcervoFotografico.ObterPorId(id);
-            if (acervoFotograficoSimples.NaoEhNulo())
+            if (acervoFotograficoSimples is not null)
             {
                acervoFotograficoSimples.Codigo = acervoFotograficoSimples.Codigo.RemoverSufixo();
                var acervoFotograficoDto = mapper.Map<AcervoFotograficoDTO>(acervoFotograficoSimples);
                acervoFotograficoDto.Auditoria = mapper.Map<AuditoriaDTO>(acervoFotograficoSimples);
                return acervoFotograficoDto; 
             }
-            return default;
+            return null;
         }
 
         public async Task<bool> Excluir(long id)

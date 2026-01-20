@@ -52,6 +52,8 @@ namespace SME.CDEP.Worker
 
             Comandos.Add(RotasRabbit.ExecutarConsolidacaoDoHistoricoDeConsultasDeAcervo, new ComandoRabbit("Executa a consolidação do histórico de consultas de acervo", typeof(IExecutarConsolidacaoDoHistoricoDeConsultasDeAcervoUseCase), true));
             Comandos.Add(RotasRabbit.ExecutarConsolidacaoDasSolicitacoesDeAcervo, new ComandoRabbit("Executa a consolidação das solicitações de acervo", typeof(IExecutarConsolidacaoDasSolicitacoesDeAcervoUseCase), false));
+
+            Comandos.Add(RotasRabbit.ExecutarAtualizacaoSituacaoDasSolicitacoesDeAcervoVencidas, new ComandoRabbit("Executa a atualização da situação das solicitações de acervo vencidas", typeof(IAtualizarSituacaoDasSolicitacoesDeAcervoVencidasUseCase)));
         }
     }
 }
