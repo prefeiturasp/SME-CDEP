@@ -1,7 +1,7 @@
-﻿using System.ComponentModel.DataAnnotations;
-using AutoMapper;
+﻿using AutoMapper;
 using SME.CDEP.Aplicacao.DTOS;
 using SME.CDEP.Aplicacao.Extensions;
+using SME.CDEP.Aplicacao.Servicos.Fachadas;
 using SME.CDEP.Aplicacao.Servicos.Interface;
 using SME.CDEP.Dominio.Constantes;
 using SME.CDEP.Dominio.Contexto;
@@ -9,155 +9,64 @@ using SME.CDEP.Dominio.Entidades;
 using SME.CDEP.Dominio.Excecoes;
 using SME.CDEP.Dominio.Extensions;
 using SME.CDEP.Infra;
-using SME.CDEP.Infra.Dados.Repositorios.Interfaces;
 using SME.CDEP.Infra.Dados;
+using SME.CDEP.Infra.Dados.Repositorios;
+using SME.CDEP.Infra.Dados.Repositorios.Interfaces;
 using SME.CDEP.Infra.Dominio.Enumerados;
+using System.ComponentModel.DataAnnotations;
 
 namespace SME.CDEP.Aplicacao.Servicos
 {
-    public class ServicoAcervoSolicitacao(IRepositorioAcervoSolicitacao repositorioAcervoSolicitacao,
-        IMapper mapper, ITransacao transacao, IRepositorioAcervoSolicitacaoItem repositorioAcervoSolicitacaoItem,
-        IRepositorioUsuario repositorioUsuario, IRepositorioAcervo repositorioAcervo,
-        IServicoUsuario servicoUsuario, IContextoAplicacao contextoAplicacao,
-        IRepositorioEvento repositorioEvento, IServicoEvento servicoEvento,
-        IServicoMensageria servicoMensageria, IRepositorioAcervoEmprestimo repositorioAcervoEmprestimo,
+    public class ServicoAcervoSolicitacao(        
+        IRepositorioUsuario repositorioUsuario, 
         IRepositorioParametroSistema repositorioParametroSistema,
-        IServicoAcervo servicoAcervo, IServicoAcervoBibliografico servicoAcervoBibliografico) : IServicoAcervoSolicitacao
+        ContextoDadosAcervoSolicitacao dados,
+        ContextoInfraAcervoSolicitacao infra,
+        ContextoRegrasAcervoSolicitacao regras) : IServicoAcervoSolicitacao
     {
-        private readonly IRepositorioAcervoSolicitacao repositorioAcervoSolicitacao = repositorioAcervoSolicitacao ?? throw new ArgumentNullException(nameof(repositorioAcervoSolicitacao));
-        private readonly IRepositorioAcervoSolicitacaoItem repositorioAcervoSolicitacaoItem = repositorioAcervoSolicitacaoItem ?? throw new ArgumentNullException(nameof(repositorioAcervoSolicitacaoItem));
-        private readonly IMapper mapper = mapper ?? throw new ArgumentNullException(nameof(mapper));
-        private readonly ITransacao transacao = transacao ?? throw new ArgumentNullException(nameof(transacao));
-        private readonly IRepositorioUsuario repositorioUsuario = repositorioUsuario ?? throw new ArgumentNullException(nameof(repositorioUsuario));
-        private readonly IRepositorioAcervo repositorioAcervo = repositorioAcervo ?? throw new ArgumentNullException(nameof(repositorioAcervo));
-        private readonly IServicoUsuario servicoUsuario = servicoUsuario ?? throw new ArgumentNullException(nameof(servicoUsuario));
-        private readonly IContextoAplicacao contextoAplicacao = contextoAplicacao ?? throw new ArgumentNullException(nameof(contextoAplicacao));
-        private readonly IRepositorioEvento repositorioEvento = repositorioEvento ?? throw new ArgumentNullException(nameof(repositorioEvento));
-        private readonly IServicoEvento servicoEvento = servicoEvento ?? throw new ArgumentNullException(nameof(servicoEvento));
-        private readonly IServicoMensageria servicoMensageria = servicoMensageria ?? throw new ArgumentNullException(nameof(servicoMensageria));
-        private readonly IRepositorioAcervoEmprestimo repositorioAcervoEmprestimo = repositorioAcervoEmprestimo ?? throw new ArgumentNullException(nameof(repositorioAcervoEmprestimo));
-        private readonly IRepositorioParametroSistema repositorioParametroSistema = repositorioParametroSistema ?? throw new ArgumentNullException(nameof(repositorioParametroSistema));
-        private readonly IServicoAcervo servicoAcervo = servicoAcervo ?? throw new ArgumentNullException(nameof(servicoAcervo));
-        private readonly IServicoAcervoBibliografico servicoAcervoBibliografico = servicoAcervoBibliografico ?? throw new ArgumentNullException(nameof(servicoAcervoBibliografico));
-
-        public async Task<long> Inserir(AcervoSolicitacaoItemCadastroDTO[] acervosSolicitacaoItensCadastroDTO)
-        {
-            var usuarioLogado = await servicoUsuario.ObterUsuarioLogado();
-            
-            var usuarioSolicitante = await repositorioUsuario.ObterPorId(usuarioLogado.Id);
-            if (usuarioSolicitante.EhNulo())
-                throw new NegocioException(MensagemNegocio.USUARIO_NAO_ENCONTRADO);
-
-            var arquivosEncontrados = await repositorioAcervo.ObterArquivosPorAcervoId([.. acervosSolicitacaoItensCadastroDTO.Select(s=> s.AcervoId)]);
-            
-            var tran = transacao.Iniciar();
-            try
-            {
-                var acervoSolicitacao = new AcervoSolicitacao()
-                {
-                    UsuarioId = usuarioLogado.Id,
-                    DataSolicitacao = DateTimeExtension.HorarioBrasilia().Date,
-                    Situacao = acervosSolicitacaoItensCadastroDTO
-                        .Select(s => s.AcervoId)
-                        .Except(arquivosEncontrados.Select(s => s.AcervoId))
-                        .Any() ? SituacaoSolicitacao.AGUARDANDO_ATENDIMENTO : SituacaoSolicitacao.FINALIZADO_ATENDIMENTO
-                };
-                
-                acervoSolicitacao.Id =  await repositorioAcervoSolicitacao.Inserir(acervoSolicitacao);
-
-                foreach (var item in acervosSolicitacaoItensCadastroDTO)
-                {
-                    var acervoSolicitacaoItem = mapper.Map<AcervoSolicitacaoItem>(item);
-                    
-                    acervoSolicitacaoItem.AcervoSolicitacaoId = acervoSolicitacao.Id;
-                    
-                    acervoSolicitacaoItem.Situacao = arquivosEncontrados.Any(a => a.AcervoId == item.AcervoId)
-                        ? SituacaoSolicitacaoItem.FINALIZADO_AUTOMATICAMENTE
-                        : SituacaoSolicitacaoItem.AGUARDANDO_ATENDIMENTO;
-                    
-                    await repositorioAcervoSolicitacaoItem.Inserir(acervoSolicitacaoItem);
-                    
-                    await servicoAcervoBibliografico.AlterarSituacaoSaldo(SituacaoSaldo.RESERVADO,item.AcervoId);
-                }
-                tran.Commit();
-
-                return acervoSolicitacao.Id;
-            }
-            catch
-            {
-                tran.Rollback();
-                throw;
-            }
-            finally
-            {
-                tran.Dispose();
-            }
-        }
 
         public async Task<bool> Remover(long acervoSolicitacaoId)
         {
-            await repositorioAcervoSolicitacao.Remover(acervoSolicitacaoId);
+            await dados.RepositorioSolicitacao.Remover(acervoSolicitacaoId);
             return true;
         }
 
         public async Task<IEnumerable<AcervoTipoTituloAcervoIdCreditosAutoresDTO>> ObterItensAcervoPorAcervosIds(long[] acervosIds)
         {
-            var acervos = await repositorioAcervoSolicitacao.ObterItensDoAcervoPorAcervosIds(acervosIds);
+            var acervos = await dados.RepositorioSolicitacao.ObterItensDoAcervoPorAcervosIds(acervosIds);
 
             if (acervos.EhNulo())
                 throw new NegocioException(MensagemNegocio.ACERVO_NAO_ENCONTRADO);
             
-            return mapper.Map<IEnumerable<AcervoTipoTituloAcervoIdCreditosAutoresDTO>>(acervos);
+            return infra.Mapper.Map<IEnumerable<AcervoTipoTituloAcervoIdCreditosAutoresDTO>>(acervos);
         }
         
         public async Task<AcervoSolicitacaoRetornoCadastroDTO> ObterPorId(long acervoSolicitacaoId)
         {
-            var tiposAcervosPermitidos = servicoAcervo.ObterTiposAcervosPermitidosDoPerfilLogado();
+            var tiposAcervosPermitidos = regras.ServicoAcervo.ObterTiposAcervosPermitidosDoPerfilLogado();
 
-            return await ObterAcervosSolicitacoesPorIdTiposPermitidos(acervoSolicitacaoId, tiposAcervosPermitidos);
-        }
-
-        private async Task<AcervoSolicitacaoRetornoCadastroDTO> ObterAcervosSolicitacoesPorIdTiposPermitidos(long acervoSolicitacaoId, long[] tiposAcervosPermitidos)
-        {
-            var perfilLogado = new Guid(contextoAplicacao.PerfilUsuario);
-            var acervosItensCompletos = await repositorioAcervo.ObterAcervosSolicitacoesItensCompletoPorId(acervoSolicitacaoId, tiposAcervosPermitidos);
-            var acervoItensRetorno = mapper.Map<IEnumerable<AcervoSolicitacaoItemRetornoCadastroDTO>>(acervosItensCompletos, 
-                                                                                                        opt => 
-                                                                                                            opt.Items.Add(Constantes.PERFIL_USUARIO_LOGADO_DESABILITA_DATA_VISITA, 
-                                                                                                                        perfilLogado.EhPerfilExterno()));
-            var arquivosDoAcervo = await repositorioAcervo.ObterArquivosPorAcervoId([.. acervosItensCompletos.Select(s => s.AcervoId)]);
-
-            foreach (var retorno in acervoItensRetorno)
-                retorno.Arquivos = mapper.Map<IEnumerable<ArquivoCodigoNomeDTO>>(arquivosDoAcervo.Where(w => w.AcervoId == retorno.AcervoId).Select(s=> s));
-
-            return new AcervoSolicitacaoRetornoCadastroDTO()
-            {
-                PodeCancelarSolicitacao = acervosItensCompletos.Any(a=> a.SituacaoItem.PodeCancelarAtendimento()),
-                Itens = acervoItensRetorno
-            };
+            return await regras.ServicoAcervo.ObterAcervosSolicitacoesPorIdTiposPermitidosAsync(acervoSolicitacaoId, tiposAcervosPermitidos);
         }
 
         public async Task<AcervoSolicitacaoRetornoCadastroDTO> ObterMinhaSolicitacaoPorId(long acervoSolicitacaoId)
         {
-            var tiposAcervosPermitidos = Enum.GetValues(typeof(TipoAcervo))
-                .Cast<TipoAcervo>()
-                .Select(v => (long)v).ToArray();
+            var tiposAcervosPermitidos = Enum.GetValues<TipoAcervo>().Select(v => (long)v).ToArray();
                 
-            return await ObterAcervosSolicitacoesPorIdTiposPermitidos(acervoSolicitacaoId, tiposAcervosPermitidos);
+            return await regras.ServicoAcervo.ObterAcervosSolicitacoesPorIdTiposPermitidosAsync(acervoSolicitacaoId, tiposAcervosPermitidos);
         }
         
         public async Task<bool> Excluir(long acervoSolicitacaoId)
         {
-            await repositorioAcervoSolicitacao.Excluir(acervoSolicitacaoId);
+            await dados.RepositorioSolicitacao.Excluir(acervoSolicitacaoId);
             return true;
         }
 
         public async Task<PaginacaoResultadoDTO<MinhaSolicitacaoDTO>> ObterMinhasSolicitacoes()
         {
-            var usuario = await servicoUsuario.ObterUsuarioLogado();
+            var usuario = await infra.ServicoUsuario.ObterUsuarioLogado();
 
-            var acervoSolicitacaoItemsDTOs = mapper.Map<IEnumerable<MinhaSolicitacaoDTO>>(await repositorioAcervoSolicitacaoItem.ObterMinhasSolicitacoes(usuario.Id));
-            
+            var acervoSolicitacaoItemsDTOs = infra.Mapper.Map<IEnumerable<MinhaSolicitacaoDTO>>(await dados.RepositorioItem.ObterMinhasSolicitacoes(usuario.Id));
+
             var totalRegistros = acervoSolicitacaoItemsDTOs.Count();
             var paginacao = Paginacao;
             
@@ -173,9 +82,9 @@ namespace SME.CDEP.Aplicacao.Servicos
         {
             get
             {
-                var numeroPaginaQueryString = contextoAplicacao.ObterVariavel<string>("NumeroPagina");
-                var numeroRegistrosQueryString = contextoAplicacao.ObterVariavel<string>("NumeroRegistros");
-                var ordenacaoQueryString = contextoAplicacao.ObterVariavel<string>("Ordenacao");
+                var numeroPaginaQueryString = regras.ContextoAplicacao.ObterVariavel<string>("NumeroPagina");
+                var numeroRegistrosQueryString = regras.ContextoAplicacao.ObterVariavel<string>("NumeroRegistros");
+                var ordenacaoQueryString = regras.ContextoAplicacao.ObterVariavel<string>("Ordenacao");
 
                 if (numeroPaginaQueryString.NaoEstaPreenchido() || numeroRegistrosQueryString.NaoEstaPreenchido()|| ordenacaoQueryString.NaoEstaPreenchido())
                     return new Paginacao(0, 0,0);
@@ -190,8 +99,7 @@ namespace SME.CDEP.Aplicacao.Servicos
 
         public Task<IEnumerable<SituacaoItemDTO>> ObterSituacoesAtendimentosItem()
         {
-            var lista = Enum.GetValues(typeof(SituacaoSolicitacaoItem))
-                .Cast<SituacaoSolicitacaoItem>()
+            var lista = Enum.GetValues<SituacaoSolicitacaoItem>()
                 .OrderBy(O=> O)
                 .Select(v => new SituacaoItemDTO
                 {
@@ -204,12 +112,12 @@ namespace SME.CDEP.Aplicacao.Servicos
 
         public async Task<PaginacaoResultadoDTO<SolicitacaoDTO>> ObterAtendimentoSolicitacoesPorFiltro(FiltroSolicitacaoDTO filtroSolicitacaoDto)
         {
-            var tiposAcervosPermitidos = servicoAcervo.ObterTiposAcervosPermitidosDoPerfilLogado();
-            
-            var solicitacoes = mapper.Map<IEnumerable<SolicitacaoDTO>>(await repositorioAcervoSolicitacaoItem
-                .ObterSolicitacoesPorFiltro(filtroSolicitacaoDto.AcervoSolicitacaoId, filtroSolicitacaoDto.TipoAcervo, 
-                    filtroSolicitacaoDto.DataSolicitacaoInicio, filtroSolicitacaoDto.DataSolicitacaoFim,filtroSolicitacaoDto.Responsavel, filtroSolicitacaoDto.SituacaoItem, 
-                    filtroSolicitacaoDto.DataVisitaInicio, filtroSolicitacaoDto.DataVisitaFim,filtroSolicitacaoDto.SolicitanteRf,filtroSolicitacaoDto.SituacaoEmprestimo,tiposAcervosPermitidos));
+            var tiposAcervosPermitidos = regras.ServicoAcervo.ObterTiposAcervosPermitidosDoPerfilLogado();
+
+            var solicitacoes = infra.Mapper.Map<IEnumerable<SolicitacaoDTO>>(await dados.RepositorioItem
+                .ObterSolicitacoesPorFiltro(filtroSolicitacaoDto.AcervoSolicitacaoId, filtroSolicitacaoDto.TipoAcervo,
+                    filtroSolicitacaoDto.DataSolicitacaoInicio, filtroSolicitacaoDto.DataSolicitacaoFim, filtroSolicitacaoDto.Responsavel, filtroSolicitacaoDto.SituacaoItem,
+                    filtroSolicitacaoDto.DataVisitaInicio, filtroSolicitacaoDto.DataVisitaFim, filtroSolicitacaoDto.SolicitanteRf, filtroSolicitacaoDto.SituacaoEmprestimo, tiposAcervosPermitidos));
 
             var totalRegistros = solicitacoes.Count();
             var paginacao = Paginacao;
@@ -224,16 +132,16 @@ namespace SME.CDEP.Aplicacao.Servicos
 
         public async Task<AcervoSolicitacaoDetalheDTO> ObterDetalhesParaAtendimentoSolicitadoesPorId(long acervoSolicitacaoId)
         {
-            var perfilLogado = new Guid(contextoAplicacao.PerfilUsuario);
-            
-            var tiposAcervosPermitidos = servicoAcervo.ObterTiposAcervosPermitidosDoPerfilLogado();
-            
-            var acervoSolicitacao = mapper.Map<AcervoSolicitacaoDetalheDTO>(await repositorioAcervoSolicitacao.ObterDetalhesPorIdTiposPermitidos(acervoSolicitacaoId, tiposAcervosPermitidos));
+            var perfilLogado = new Guid(regras.ContextoAplicacao.PerfilUsuario);
+
+            var tiposAcervosPermitidos = regras.ServicoAcervo.ObterTiposAcervosPermitidosDoPerfilLogado();
+
+            var acervoSolicitacao = infra.Mapper.Map<AcervoSolicitacaoDetalheDTO>(await dados.RepositorioSolicitacao.ObterDetalhesPorIdTiposPermitidos(acervoSolicitacaoId, tiposAcervosPermitidos));
 
             if (acervoSolicitacao.EhNulo())
                 throw new NegocioException(MensagemNegocio.SOLICITACAO_ATENDIMENTO_NAO_ENCONTRADA);
 
-            acervoSolicitacao.DadosSolicitante = mapper.Map<DadosSolicitanteDTO>(await servicoUsuario.ObterDadosSolicitantePorUsuarioId(acervoSolicitacao.UsuarioId));
+            acervoSolicitacao.DadosSolicitante = infra.Mapper.Map<DadosSolicitanteDTO>(await infra.ServicoUsuario.ObterDadosSolicitantePorUsuarioId(acervoSolicitacao.UsuarioId));
             acervoSolicitacao.PodeFinalizar = PodeFinalizar(perfilLogado, acervoSolicitacao);
             
             acervoSolicitacao.PodeCancelar = perfilLogado.EhPerfilAdminGeral() && acervoSolicitacao.SituacaoId.NaoEstaFinalizadoAtendimentoOuCancelado()
@@ -265,8 +173,7 @@ namespace SME.CDEP.Aplicacao.Servicos
 
         public IEnumerable<IdNomeDTO> ObterTiposDeAtendimentos()
         {
-            return Enum.GetValues(typeof(TipoAtendimento))
-                    .Cast<TipoAtendimento>()
+            return Enum.GetValues<TipoAtendimento>()
                     .Select(v => new IdNomeDTO
                     {
                         Id = (int)v,
@@ -274,200 +181,14 @@ namespace SME.CDEP.Aplicacao.Servicos
                     });
         }
         
-        public async Task<bool> ConfirmarAtendimento(AcervoSolicitacaoConfirmarDTO acervoSolicitacaoConfirmar)
+        public async Task<bool> ConfirmarAtendimento(AcervoSolicitacaoConfirmarDto acervoSolicitacaoConfirmar)
         {
-            ValidacoesParaConfirmarAtendimentoPortal(acervoSolicitacaoConfirmar);
-
-            var acervoSolicitacao = await repositorioAcervoSolicitacao.ObterPorId(acervoSolicitacaoConfirmar.Id);
-            
-            if (acervoSolicitacao.EhNulo())
-                throw new NegocioException(MensagemNegocio.SOLICITACAO_ATENDIMENTO_NAO_ENCONTRADA);
-            
-            var itensDaSolicitacaoAtual = await repositorioAcervoSolicitacaoItem
-                .ObterItensEmSituacaoAguardandoAtendimentoOuVisitaOuFinalizadoManualmentePorSolicitacaoId(acervoSolicitacaoConfirmar.Id);
-
-            if (acervoSolicitacaoConfirmar.TipoAtendimento.EhAtendimentoPresencial() )
-                await ValidarConflitosEventos([acervoSolicitacaoConfirmar.DataVisita!.Value]);
-            
-            var itemDaSolicitacaoAtual = itensDaSolicitacaoAtual.FirstOrDefault(w => w.Id == acervoSolicitacaoConfirmar.ItemId);
-            
-            var tran = transacao.Iniciar();
-            try
-            {
-                var eraPresencial = itemDaSolicitacaoAtual!.TipoAtendimento.EhAtendimentoPresencial();
-                
-                var possuiInformacoesEmprestimo = acervoSolicitacaoConfirmar.DataEmprestimo.HasValue && acervoSolicitacaoConfirmar.DataDevolucao.HasValue;
-
-                itemDaSolicitacaoAtual.TipoAtendimento = acervoSolicitacaoConfirmar.TipoAtendimento;
-                
-                if (acervoSolicitacaoConfirmar.DataVisita.HasValue && acervoSolicitacaoConfirmar.TipoAtendimento.EhAtendimentoPresencial())
-                {
-                    itemDaSolicitacaoAtual.DataVisita = acervoSolicitacaoConfirmar.DataVisita;
-                    itemDaSolicitacaoAtual.Situacao =   possuiInformacoesEmprestimo ? SituacaoSolicitacaoItem.FINALIZADO_MANUALMENTE : SituacaoSolicitacaoItem.AGUARDANDO_VISITA;
-                }
-                else
-                {
-                    itemDaSolicitacaoAtual.Situacao = SituacaoSolicitacaoItem.FINALIZADO_MANUALMENTE;
-                    itemDaSolicitacaoAtual.DataVisita = null;
-                }
-                
-                itemDaSolicitacaoAtual.ResponsavelId = (await servicoUsuario.ObterUsuarioLogado()).Id;
-                
-                await repositorioAcervoSolicitacaoItem.Atualizar(itemDaSolicitacaoAtual);
-
-                if (eraPresencial && itemDaSolicitacaoAtual.TipoAtendimento.EhAtendimentoViaEmail())
-                {
-                    await servicoEvento.ExcluirEventoPorAcervoSolicitacaoItem(itemDaSolicitacaoAtual.Id);
-                    
-                    if (acervoSolicitacaoConfirmar.TipoAcervo.EhAcervoBibliografico())
-                        await servicoAcervoBibliografico.AlterarSituacaoSaldo(SituacaoSaldo.DISPONIVEL,itemDaSolicitacaoAtual.AcervoId);
-                }
-
-                var temInformacaoEmprestimo = acervoSolicitacaoConfirmar.DataEmprestimo.HasValue 
-                                               && acervoSolicitacaoConfirmar.DataDevolucao.HasValue;
-
-                if (itemDaSolicitacaoAtual.TipoAtendimento.EhAtendimentoPresencial())
-                {
-                    await servicoEvento.AtualizarEventoVisita(itemDaSolicitacaoAtual.DataVisita!.Value, itemDaSolicitacaoAtual.Id);
-                
-                    if (acervoSolicitacaoConfirmar.TipoAcervo.EhAcervoBibliografico())
-                    {
-                        var itemEmprestado = await repositorioAcervoEmprestimo.ObterUltimoEmprestimoPorAcervoSolicitacaoItemId(acervoSolicitacaoConfirmar.ItemId);
-
-                        if (itemEmprestado.NaoEhNulo())
-                            throw new NegocioException(MensagemNegocio.VOCE_NAO_PODE_ALTERAR_EMPRESTIMOS_ACERVOS);
-                        
-                        if (temInformacaoEmprestimo)
-                        {
-                            await InserirAcervoEmprestimo(itemDaSolicitacaoAtual.Id, acervoSolicitacaoConfirmar.DataEmprestimo!.Value, acervoSolicitacaoConfirmar.DataDevolucao!.Value, SituacaoEmprestimo.EMPRESTADO);
-                            await servicoAcervoBibliografico.AlterarSituacaoSaldo(SituacaoSaldo.EMPRESTADO,itemDaSolicitacaoAtual.AcervoId);
-                        }
-                        else
-                            await servicoAcervoBibliografico.AlterarSituacaoSaldo(SituacaoSaldo.RESERVADO,itemDaSolicitacaoAtual.AcervoId);
-                    }
-                }
-                
-                tran.Commit();
-                
-                await AtualizarSituacaoAtendimento(acervoSolicitacao);
-
-                if (itemDaSolicitacaoAtual.TipoAtendimento.EhAtendimentoPresencial())
-                {
-                    var confirmarAtendimento = new ConfirmarAtendimentoDTO()
-                    {
-                        Id = acervoSolicitacao.Id,
-                        ItemId = itemDaSolicitacaoAtual.Id
-                    };
-                    await servicoMensageria.Publicar(RotasRabbit.NotificarViaEmailConfirmacaoAtendimentoPresencial, confirmarAtendimento, null);
-                }
-                
-                return true;
-            }
-            catch
-            {
-                tran.Rollback();
-                throw;
-            }
-            finally
-            {
-                tran.Dispose();
-            }
-        }
-
-        private static void ValidacoesParaConfirmarAtendimentoPortal(AcervoSolicitacaoConfirmarDTO acervoSolicitacaoConfirmar)
-        {
-            if (acervoSolicitacaoConfirmar.DataEmprestimo.HasValue && acervoSolicitacaoConfirmar.DataDevolucao.HasValue && acervoSolicitacaoConfirmar.TipoAcervo.NaoEhAcervoBibliografico())
-                throw new NegocioException(MensagemNegocio.DATA_DO_EMPRESTIMO_E_DEVOLUCAO_EXCLUSIVO_PARA_ACERVOS_BIBLIOGRAFICOS);
-
-            if (acervoSolicitacaoConfirmar.ItemId.EhMenorIgualQueZero())
-                throw new NegocioException(MensagemNegocio.SOLICITACAO_ATENDIMENTO_ITEM_NAO_ENCONTRADA);
-
-            var ehAcervoBibliografico = acervoSolicitacaoConfirmar.TipoAcervo.EhAcervoBibliografico();
-            
-            if (ehAcervoBibliografico)
-            {
-                if ((acervoSolicitacaoConfirmar.DataEmprestimo.HasValue && !acervoSolicitacaoConfirmar.DataDevolucao.HasValue) 
-                    || (!acervoSolicitacaoConfirmar.DataEmprestimo.HasValue && acervoSolicitacaoConfirmar.DataDevolucao.HasValue))
-                    throw new NegocioException(MensagemNegocio.DATA_DO_EMPRESTIMO_E_OU_DA_DEVOLUCAO_INVALIDOS);
-                
-                if (acervoSolicitacaoConfirmar.DataEmprestimo.EhDataFutura())
-                    throw new NegocioException(MensagemNegocio.DATA_DO_EMPRESTIMO_NAO_PODE_SER_FUTURA);
-                
-                if (acervoSolicitacaoConfirmar.DataEmprestimo.EhMenorQue(acervoSolicitacaoConfirmar.DataVisita))
-                    throw new NegocioException(MensagemNegocio.DATA_DO_EMPRESTIMO_MENOR_QUE_DATA_VISITA);
-                
-                if (acervoSolicitacaoConfirmar.DataDevolucao.EhMenorIgualQue(acervoSolicitacaoConfirmar.DataEmprestimo))
-                    throw new NegocioException(MensagemNegocio.DATA_DA_DEVOLUCAO_MENOR_DATA_DO_EMPRESTIMO);
-                
-                if ((acervoSolicitacaoConfirmar.DataEmprestimo.HasValue || acervoSolicitacaoConfirmar.DataDevolucao.HasValue) 
-                    && acervoSolicitacaoConfirmar.DataVisita.EhDataFutura())
-                    throw new NegocioException(MensagemNegocio.DATA_DA_DEVOLUCAO_E_DATA_FUTURA_EM_VISITA_FUTURA);
-            }
-
-            if (acervoSolicitacaoConfirmar.TipoAtendimento.EhAtendimentoPresencial() && !acervoSolicitacaoConfirmar.DataVisita.HasValue)
-                throw new NegocioException(MensagemNegocio.ITENS_ACERVOS_PRESENCIAL_DEVEM_TER_DATA_ACERVO);
-            
-            if (acervoSolicitacaoConfirmar.TipoAtendimento.EhAtendimentoViaEmail() && acervoSolicitacaoConfirmar.DataVisita.HasValue )
-                throw new NegocioException(MensagemNegocio.ITENS_ACERVOS_EMAIL_NAO_DEVEM_TER_DATA_ACERVO);
-        }
-
-        private async Task InserirAcervoEmprestimo(long acervoSolicitacaoItemId, DateTime dataEmprestimo, DateTime dataDevolucao, SituacaoEmprestimo situacaoEmprestimo)
-        {
-            var acervoEmprestimo = new AcervoEmprestimo()
-            {
-                AcervoSolicitacaoItemId = acervoSolicitacaoItemId,
-                DataEmprestimo = dataEmprestimo,
-                DataDevolucao = dataDevolucao,
-                Situacao = situacaoEmprestimo
-            };
-            await repositorioAcervoEmprestimo.Inserir(acervoEmprestimo);
-        }
-
-        private async Task AtualizarSituacaoAtendimento(AcervoSolicitacao acervoSolicitacao, bool todosItensEstaoCancelados = false)
-        {
-            acervoSolicitacao.Situacao = todosItensEstaoCancelados 
-                ? SituacaoSolicitacao.CANCELADO 
-                : await DeterminarSituacaoAtendimento(acervoSolicitacao.Id);
-            
-            acervoSolicitacao.DataSolicitacao = DateTimeExtension.HorarioBrasilia();
-            
-            await repositorioAcervoSolicitacao.Atualizar(acervoSolicitacao);
-        }
-
-        private async Task<SituacaoSolicitacao> DeterminarSituacaoAtendimento(long id)
-        {
-            var itensDaSolicitacao = await repositorioAcervoSolicitacaoItem.ObterItensEmSituacaoAguardandoAtendimentoOuVisitaOuFinalizadoManualmentePorSolicitacaoId(id);
-            
-            var temItensAguardandoVisita = itensDaSolicitacao.Any(a => a.Situacao.EstaAguardandoVisita());
-            var temItensAguardandoAtendimento = itensDaSolicitacao.Any(a => a.Situacao.EstaAguardandoAtendimento());
-            var todosItensFinalizadosManualmente = itensDaSolicitacao.All(a => a.Situacao.EstaFinalizadoManualmente());
-            var todosItensAguardandoVisita = itensDaSolicitacao.All(a => a.Situacao.EstaAguardandoVisita());
-            
-            if (todosItensFinalizadosManualmente)
-                return SituacaoSolicitacao.FINALIZADO_ATENDIMENTO;
-
-            if (temItensAguardandoAtendimento)
-                return SituacaoSolicitacao.ATENDIDO_PARCIALMENTE;
-            
-            if (todosItensAguardandoVisita || temItensAguardandoVisita)
-                return SituacaoSolicitacao.AGUARDANDO_VISITA;
-
-            throw new NegocioException(MensagemNegocio.SITUACAO_NAO_MAPEADA);
-        }
-
-        private async Task ValidarConflitosEventos(IEnumerable<DateTime> datasDasVisitas)
-        {
-            var eventosConflitantes = datasDasVisitas.PossuiElementos()
-                ? await repositorioEvento.ObterEventosDeFeriadoESuspensaoPorDatas(datasDasVisitas.ToArray())
-                : Enumerable.Empty<DateTime>();
-
-            if (eventosConflitantes.Any())
-                throw new NegocioException(string.Format(MensagemNegocio.DATAS_DE_VISITAS_CONFLITANTES,string.Join(',',eventosConflitantes.Select(s=> s.ToString("dd/MM")))));
+            return await regras.ServicoConfirmacao.Executar(acervoSolicitacaoConfirmar);
         }
 
         public async Task<bool> FinalizarAtendimento(long acervoSolicitacaoId)
         {
-            var acervoSolicitacao = await repositorioAcervoSolicitacao.ObterPorId(acervoSolicitacaoId);
+            var acervoSolicitacao = await dados.RepositorioSolicitacao.ObterPorId(acervoSolicitacaoId);
             
             if (acervoSolicitacao.EhNulo())
                 throw new NegocioException(MensagemNegocio.SOLICITACAO_ATENDIMENTO_NAO_ENCONTRADA);
@@ -475,21 +196,21 @@ namespace SME.CDEP.Aplicacao.Servicos
             if (acervoSolicitacao.Situacao.FoiAtendidaParcialmente())
                 throw new NegocioException(MensagemNegocio.CANCELAR_SOLICITACAO_NAO_PERMITIDO_QUANDO_ITENS_ATENDIDOS_PARCIALMENTE);
 
-            if (await repositorioAcervoSolicitacaoItem.PossuiItensEmSituacaoAguardandoAtendimentoOuAguardandoVisitaComDataFutura(acervoSolicitacaoId))
+            if (await dados.RepositorioItem.PossuiItensEmSituacaoAguardandoAtendimentoOuAguardandoVisitaComDataFutura(acervoSolicitacaoId))
                 throw new NegocioException(MensagemNegocio.NÃO_PODE_FINALIZAR_QUANDO_AGUARDANDO_VISITA_DATA_FUTURA_OU_AGUARDANDO_ATENDIMENTO);
 
-            var itens = await repositorioAcervoSolicitacaoItem.ObterItensEmSituacaoAguardandoVisitaPorSolicitacaoId(acervoSolicitacaoId);
-            
-            var tran = transacao.Iniciar();
+            var itens = await dados.RepositorioItem.ObterItensEmSituacaoAguardandoVisitaPorSolicitacaoId(acervoSolicitacaoId);
+
+            var tran = infra.Transacao.Iniciar();
             try
             {
                 acervoSolicitacao.Situacao = SituacaoSolicitacao.FINALIZADO_ATENDIMENTO;
-                await repositorioAcervoSolicitacao.Atualizar(acervoSolicitacao);
+                await dados.RepositorioSolicitacao.Atualizar(acervoSolicitacao);
 
                 foreach (var item in itens)
                 {
                     item.Situacao = SituacaoSolicitacaoItem.FINALIZADO_MANUALMENTE;
-                    await repositorioAcervoSolicitacaoItem.Atualizar(item);
+                    await dados.RepositorioItem.Atualizar(item);
                 }
                 
                 tran.Commit();
@@ -508,12 +229,12 @@ namespace SME.CDEP.Aplicacao.Servicos
         
         public async Task<bool> FinalizarAtendimentoItem(long acervoSolicitacaoItemId)
         {
-            var acervoSolicitacaoItem = await repositorioAcervoSolicitacaoItem.ObterPorId(acervoSolicitacaoItemId);
+            var acervoSolicitacaoItem = await dados.RepositorioItem.ObterPorId(acervoSolicitacaoItemId);
             
             if (acervoSolicitacaoItem.EhNulo())
                 throw new NegocioException(MensagemNegocio.SOLICITACAO_ATENDIMENTO_ITEM_NAO_ENCONTRADA);
 
-            var acervo = await repositorioAcervo.ObterPorId(acervoSolicitacaoItem.AcervoId);
+            var acervo = await dados.RepositorioAcervo.ObterPorId(acervoSolicitacaoItem.AcervoId);
             
             if (acervo.EhNulo())
                 throw new NegocioException(MensagemNegocio.ACERVO_NAO_ENCONTRADO);
@@ -527,15 +248,15 @@ namespace SME.CDEP.Aplicacao.Servicos
                 throw new NegocioException(MensagemNegocio.PERMITIDO_FINALIZAR_ATENDIMENTO_AGUARDANDO_VISITA_ATE_O_DIA_DE_HOJE);
             
             acervoSolicitacaoItem.Situacao = SituacaoSolicitacaoItem.FINALIZADO_MANUALMENTE;
-            await repositorioAcervoSolicitacaoItem.Atualizar(acervoSolicitacaoItem);
+            await dados.RepositorioItem.Atualizar(acervoSolicitacaoItem);
 
-           var itens = await repositorioAcervoSolicitacaoItem.ObterItensPorSolicitacaoId(acervoSolicitacaoItem.AcervoSolicitacaoId);
+           var itens = await dados.RepositorioItem.ObterItensPorSolicitacaoId(acervoSolicitacaoItem.AcervoSolicitacaoId);
            
            if (!itens.Any(a=> a.Situacao.EstaEmSituacaoAguardandoVisitaEAguardandoAtendimento()))
            {
-               var acervoSolicitacao = await repositorioAcervoSolicitacao.ObterPorId(acervoSolicitacaoItem.AcervoSolicitacaoId);
+               var acervoSolicitacao = await dados.RepositorioSolicitacao.ObterPorId(acervoSolicitacaoItem.AcervoSolicitacaoId);
                acervoSolicitacao.Situacao = SituacaoSolicitacao.FINALIZADO_ATENDIMENTO;
-               await repositorioAcervoSolicitacao.Atualizar(acervoSolicitacao);
+               await dados.RepositorioSolicitacao.Atualizar(acervoSolicitacao);
            }
            
            return true;
@@ -543,42 +264,42 @@ namespace SME.CDEP.Aplicacao.Servicos
 
         public async Task<bool> CancelarAtendimento(long acervoSolicitacaoId)
         {
-            var acervoSolicitacao = await repositorioAcervoSolicitacao.ObterPorId(acervoSolicitacaoId);
+            var acervoSolicitacao = await dados.RepositorioSolicitacao.ObterPorId(acervoSolicitacaoId);
             
             if (acervoSolicitacao.EhNulo())
                 throw new NegocioException(MensagemNegocio.SOLICITACAO_ATENDIMENTO_NAO_ENCONTRADA);
             
-            if (await repositorioAcervoSolicitacaoItem.PossuiItensFinalizadosAutomaticamente(acervoSolicitacaoId))
+            if (await dados.RepositorioItem.PossuiItensFinalizadosAutomaticamente(acervoSolicitacaoId))
                 throw new NegocioException(MensagemNegocio.NAO_PODE_CANCELAR_ATENDIMENTO_COM_ITEM_FINALIZADO_AUTOMATICAMENTE_MANUALMENTE);
             
-            var itens = await repositorioAcervoSolicitacaoItem.ObterItensPorSolicitacaoId(acervoSolicitacaoId);
+            var itens = await dados.RepositorioItem.ObterItensPorSolicitacaoId(acervoSolicitacaoId);
 
-            var acervos = await repositorioAcervo.ObterAcervosPorIds(itens.Select(s => s.AcervoId).ToArray());
+            var acervos = await dados.RepositorioAcervo.ObterAcervosPorIds(itens.Select(s => s.AcervoId).ToArray());
                 
-            var tran = transacao.Iniciar();
+            var tran = infra.Transacao.Iniciar();
             try
             {
                 acervoSolicitacao.Situacao = SituacaoSolicitacao.CANCELADO;
-                await repositorioAcervoSolicitacao.Atualizar(acervoSolicitacao);
+                await dados.RepositorioSolicitacao.Atualizar(acervoSolicitacao);
 
                 foreach (var item in itens)
                 {
                     item.Situacao = SituacaoSolicitacaoItem.CANCELADO;
-                    await repositorioAcervoSolicitacaoItem.Atualizar(item);
+                    await dados.RepositorioItem.Atualizar(item);
 
                     if (item.TipoAtendimento is not null && item.TipoAtendimento.EhAtendimentoPresencial())
                     {
-                        await servicoEvento.ExcluirEventoPorAcervoSolicitacaoItem(item.Id);
+                        await regras.ServicoEvento.ExcluirEventoPorAcervoSolicitacaoItem(item.Id);
 
                         var ehAcervoBibliografico = acervos.Any(f => f.Id == item.AcervoId && f.TipoAcervoId.EhAcervoBibliografico());
                         
                         if (ehAcervoBibliografico)
-                            await servicoAcervoBibliografico.AlterarSituacaoSaldo(SituacaoSaldo.DISPONIVEL,item.AcervoId);  
+                            await regras.ServicoAcervoBibliografico.AlterarSituacaoSaldo(SituacaoSaldo.DISPONIVEL,item.AcervoId);
                     }
                 }
                 
                 tran.Commit();
-                await servicoMensageria.Publicar(RotasRabbit.NotificarViaEmailCancelamentoAtendimento, acervoSolicitacaoId);
+                await infra.ServicoMensageria.Publicar(RotasRabbit.NotificarViaEmailCancelamentoAtendimento, acervoSolicitacaoId);
                 return true;
             }
             catch
@@ -594,37 +315,37 @@ namespace SME.CDEP.Aplicacao.Servicos
 
         public async Task<bool> CancelarItemAtendimento(long acervoSolicitacaoItemId)
         {
-            var acervoSolicitacaoItem = await repositorioAcervoSolicitacaoItem.ObterPorId(acervoSolicitacaoItemId);
+            var acervoSolicitacaoItem = await dados.RepositorioItem.ObterPorId(acervoSolicitacaoItemId);
             
             if (acervoSolicitacaoItem.EhNulo())
                 throw new NegocioException(MensagemNegocio.SOLICITACAO_ATENDIMENTO_ITEM_NAO_ENCONTRADA);
             
-            var itens = await repositorioAcervoSolicitacaoItem.ObterItensPorSolicitacaoId(acervoSolicitacaoItem.AcervoSolicitacaoId);
+            var itens = await dados.RepositorioItem.ObterItensPorSolicitacaoId(acervoSolicitacaoItem.AcervoSolicitacaoId);
 
             if (itens.Any(a=> a.Situacao.EstaEmSituacaoFinalizadoAutomaticamenteOuCancelado() && a.Id == acervoSolicitacaoItemId)) 
                 throw new NegocioException(MensagemNegocio.NAO_PODE_CANCELAR_ATENDIMENTO_COM_ITEM_FINALIZADO_AUTOMATICAMENTE_MANUALMENTE);
             
-            var acervoSolicitacao = await repositorioAcervoSolicitacao.ObterPorId(acervoSolicitacaoItem.AcervoSolicitacaoId);
+            var acervoSolicitacao = await dados.RepositorioSolicitacao.ObterPorId(acervoSolicitacaoItem.AcervoSolicitacaoId);
             var todosItensEstaoCancelados = itens.Where(w => w.Id != acervoSolicitacaoItemId).All(a => a.Situacao.EstaCancelado());
-            
-            var acervos = await repositorioAcervo.ObterAcervosPorIds(new []{ acervoSolicitacaoItem.AcervoId });
-            
-            var tran = transacao.Iniciar();
+
+            var acervos = await dados.RepositorioAcervo.ObterAcervosPorIds([acervoSolicitacaoItem.AcervoId]);
+
+            var tran = infra.Transacao.Iniciar();
             try
             {
                 acervoSolicitacaoItem.Situacao = SituacaoSolicitacaoItem.CANCELADO;
-                await repositorioAcervoSolicitacaoItem.Atualizar(acervoSolicitacaoItem);
+                await dados.RepositorioItem.Atualizar(acervoSolicitacaoItem);
 
                 if (acervoSolicitacaoItem.TipoAtendimento.EhAtendimentoPresencial())
-                    await servicoEvento.ExcluirEventoPorAcervoSolicitacaoItem(acervoSolicitacaoItem.Id);
-                
+                    await regras.ServicoEvento.ExcluirEventoPorAcervoSolicitacaoItem(acervoSolicitacaoItem.Id);
+
                 if (acervos.Any(a=> a.TipoAcervoId.EhAcervoBibliografico()))
-                    await servicoAcervoBibliografico.AlterarSituacaoSaldo(SituacaoSaldo.DISPONIVEL,acervoSolicitacaoItem.AcervoId);
+                    await regras.ServicoAcervoBibliografico.AlterarSituacaoSaldo(SituacaoSaldo.DISPONIVEL,acervoSolicitacaoItem.AcervoId);
                 
-                await AtualizarSituacaoAtendimento(acervoSolicitacao,todosItensEstaoCancelados);
-                
-                await servicoMensageria.Publicar(RotasRabbit.NotificarViaEmailCancelamentoAtendimentoItem, acervoSolicitacaoItemId, Guid.NewGuid(), null);
-                
+                await regras.ServicoProcessamentoSituacao.AtualizarSituacaoGeralSolicitacaoAsync(acervoSolicitacao,todosItensEstaoCancelados);
+
+                await infra.ServicoMensageria.Publicar(RotasRabbit.NotificarViaEmailCancelamentoAtendimentoItem, acervoSolicitacaoItemId, Guid.NewGuid(), null);
+
                 tran.Commit();
 
                 return true;
@@ -645,24 +366,78 @@ namespace SME.CDEP.Aplicacao.Servicos
             if (alterarDataVisitaAcervoSolicitacaoItemDto.DataVisita < DateTimeExtension.HorarioBrasilia().Date)
                 throw new NegocioException(MensagemNegocio.ITENS_ACERVOS_PRESENCIAL_NAO_DEVEM_TER_DATA_ACERVO_PASSADAS);
             
-            var acervoSolicitacaoItem = await repositorioAcervoSolicitacaoItem.ObterPorId(alterarDataVisitaAcervoSolicitacaoItemDto.Id);
+            var acervoSolicitacaoItem = await dados.RepositorioItem.ObterPorId(alterarDataVisitaAcervoSolicitacaoItemDto.Id);
             
             if (acervoSolicitacaoItem.EhNulo())
                 throw new NegocioException(MensagemNegocio.SOLICITACAO_ATENDIMENTO_ITEM_NAO_ENCONTRADA);
             
-            if (await repositorioAcervoSolicitacaoItem.AtendimentoPossuiItemSituacaoFinalizadoAutomaticamenteOuCancelado(alterarDataVisitaAcervoSolicitacaoItemDto.Id))
+            if (await dados.RepositorioItem.AtendimentoPossuiItemSituacaoFinalizadoAutomaticamenteOuCancelado(alterarDataVisitaAcervoSolicitacaoItemDto.Id))
                 throw new NegocioException(MensagemNegocio.ATENDIMENTO_NAO_ESTA_AGUARDANDO_VISITA);
 
             acervoSolicitacaoItem.DataVisita = alterarDataVisitaAcervoSolicitacaoItemDto.DataVisita;
-            await repositorioAcervoSolicitacaoItem.Atualizar(acervoSolicitacaoItem);
+            await dados.RepositorioItem.Atualizar(acervoSolicitacaoItem);
             
-            await servicoEvento.AtualizarEventoVisita(acervoSolicitacaoItem.DataVisita.Value, acervoSolicitacaoItem.Id);
+            await regras.ServicoEvento.AtualizarEventoVisita(acervoSolicitacaoItem.DataVisita.Value, acervoSolicitacaoItem.Id);
             
             return true;
         }
+
+        public async Task<long> Inserir(AcervoSolicitacaoItemCadastroDTO[] acervosSolicitacaoItensCadastroDTO)
+        {
+            var usuarioLogado = await infra.ServicoUsuario.ObterUsuarioLogado();
+
+            var usuarioSolicitante = await repositorioUsuario.ObterPorId(usuarioLogado.Id);
+            if (usuarioSolicitante.EhNulo())
+                throw new NegocioException(MensagemNegocio.USUARIO_NAO_ENCONTRADO);
+
+            var arquivosEncontrados = await dados.RepositorioAcervo.ObterArquivosPorAcervoId([.. acervosSolicitacaoItensCadastroDTO.Select(s => s.AcervoId)]);
+
+            var tran = infra.Transacao.Iniciar();
+            try
+            {
+                var acervoSolicitacao = new AcervoSolicitacao()
+                {
+                    UsuarioId = usuarioLogado.Id,
+                    DataSolicitacao = DateTimeExtension.HorarioBrasilia().Date,
+                    Situacao = acervosSolicitacaoItensCadastroDTO
+                        .Select(s => s.AcervoId)
+                        .Except(arquivosEncontrados.Select(s => s.AcervoId))
+                        .Any() ? SituacaoSolicitacao.AGUARDANDO_ATENDIMENTO : SituacaoSolicitacao.FINALIZADO_ATENDIMENTO
+                };
+
+                acervoSolicitacao.Id = await dados.RepositorioSolicitacao.Inserir(acervoSolicitacao);
+
+                foreach (var item in acervosSolicitacaoItensCadastroDTO)
+                {
+                    var acervoSolicitacaoItem = infra.Mapper.Map<AcervoSolicitacaoItem>(item);
+
+                    acervoSolicitacaoItem.AcervoSolicitacaoId = acervoSolicitacao.Id;
+
+                    acervoSolicitacaoItem.Situacao = arquivosEncontrados.Any(a => a.AcervoId == item.AcervoId)
+                        ? SituacaoSolicitacaoItem.FINALIZADO_AUTOMATICAMENTE
+                        : SituacaoSolicitacaoItem.AGUARDANDO_ATENDIMENTO;
+
+                    await dados.RepositorioItem.Inserir(acervoSolicitacaoItem);
+
+                    await regras.ServicoAcervoBibliografico.AlterarSituacaoSaldo(SituacaoSaldo.RESERVADO, item.AcervoId);
+                }
+                tran.Commit();
+
+                return acervoSolicitacao.Id;
+            }
+            catch
+            {
+                tran.Rollback();
+                throw;
+            }
+            finally
+            {
+                tran.Dispose();
+            }
+        }
         public async Task<long> Inserir(AcervoSolicitacaoManualDTO acervoSolicitacaoManualDto)
         {
-            var usuario = await servicoUsuario.ObterPorId(acervoSolicitacaoManualDto.UsuarioId);
+            var usuario = await infra.ServicoUsuario.ObterPorId(acervoSolicitacaoManualDto.UsuarioId);
             
             if (usuario.EhNulo())
                 throw new NegocioException(MensagemNegocio.USUARIO_NAO_ENCONTRADO);
@@ -673,22 +448,22 @@ namespace SME.CDEP.Aplicacao.Servicos
                 .Where(w => w.TipoAtendimento.EhAtendimentoPresencial())
                 .Select(s => s.DataVisita!.Value);
 
-            await ValidarConflitosEventos(datasDasVisitas);
+            await regras.ServicoEvento.ValidarConflitosAsync(datasDasVisitas);
             
-            var acervoSolicitacao = mapper.Map<AcervoSolicitacao>(acervoSolicitacaoManualDto);
+            var acervoSolicitacao = infra.Mapper.Map<AcervoSolicitacao>(acervoSolicitacaoManualDto);
             
             acervoSolicitacao.Origem = Origem.Manual;
 
-            var usuarioLogado = await servicoUsuario.ObterUsuarioLogado();
+            var usuarioLogado = await infra.ServicoUsuario.ObterUsuarioLogado();
             
             acervoSolicitacao.Situacao = acervoSolicitacaoManualDto.Itens.Any(a=> a.TipoAtendimento.EhAtendimentoPresencial() && !a.DataEmprestimo.HasValue && !a.DataDevolucao.HasValue) 
                 ? SituacaoSolicitacao.AGUARDANDO_VISITA 
                 : SituacaoSolicitacao.FINALIZADO_ATENDIMENTO;
             
-            var tran = transacao.Iniciar();
+            var tran = infra.Transacao.Iniciar();
             try
             {
-                acervoSolicitacao.Id =  await repositorioAcervoSolicitacao.Inserir(acervoSolicitacao);
+                acervoSolicitacao.Id =  await dados.RepositorioSolicitacao.Inserir(acervoSolicitacao);
 
                 foreach (var item in acervoSolicitacao.Itens)
                 {
@@ -703,21 +478,27 @@ namespace SME.CDEP.Aplicacao.Servicos
                         ? SituacaoSolicitacaoItem.FINALIZADO_MANUALMENTE
                         : SituacaoSolicitacaoItem.AGUARDANDO_VISITA;
                     
-                    await repositorioAcervoSolicitacaoItem.Inserir(item);
+                    await dados.RepositorioItem.Inserir(item);
 
                     if (item.TipoAtendimento.EhAtendimentoPresencial())
                     {
-                        await servicoEvento.InserirEventoVisita(item.DataVisita!.Value, item.Id);
+                        await regras.ServicoEvento.InserirEventoVisita(item.DataVisita!.Value, item.Id);
 
                         if (acervoSolicitacaoItemManualDto.TipoAcervo.EhAcervoBibliografico())
                         {
                             if (possuiInformacoesEmprestimo)
                             {
-                                await InserirAcervoEmprestimo(item.Id, acervoSolicitacaoItemManualDto.DataEmprestimo!.Value, acervoSolicitacaoItemManualDto.DataDevolucao!.Value, SituacaoEmprestimo.EMPRESTADO);
-                                await servicoAcervoBibliografico.AlterarSituacaoSaldo(SituacaoSaldo.EMPRESTADO,item.AcervoId);
+                                await dados.RepositorioAcervoEmprestimo.Inserir(new ()
+                                {
+                                    AcervoSolicitacaoItemId = item.Id,
+                                    DataEmprestimo = acervoSolicitacaoItemManualDto.DataEmprestimo!.Value,
+                                    DataDevolucao = acervoSolicitacaoItemManualDto.DataDevolucao!.Value,
+                                    Situacao = SituacaoEmprestimo.EMPRESTADO
+                                });
+                                await regras.ServicoAcervoBibliografico.AlterarSituacaoSaldo(SituacaoSaldo.EMPRESTADO,item.AcervoId);
                             }
                             else
-                                await servicoAcervoBibliografico.AlterarSituacaoSaldo(SituacaoSaldo.RESERVADO,item.AcervoId);
+                                await regras.ServicoAcervoBibliografico.AlterarSituacaoSaldo(SituacaoSaldo.RESERVADO,item.AcervoId);
                         }
                     }
                 }
@@ -738,12 +519,12 @@ namespace SME.CDEP.Aplicacao.Servicos
 
         public async Task<long> Alterar(AcervoSolicitacaoManualDTO acervoSolicitacaoManualDto)
         {
-           var usuario = await servicoUsuario.ObterPorId(acervoSolicitacaoManualDto.UsuarioId);
+           var usuario = await infra.ServicoUsuario.ObterPorId(acervoSolicitacaoManualDto.UsuarioId);
             
             if (usuario.EhNulo())
                 throw new NegocioException(MensagemNegocio.USUARIO_NAO_ENCONTRADO);
 
-            var acervoSolicitacao = await repositorioAcervoSolicitacao.ObterPorId(acervoSolicitacaoManualDto.Id);
+            var acervoSolicitacao = await dados.RepositorioSolicitacao.ObterPorId(acervoSolicitacaoManualDto.Id);
             
             if (acervoSolicitacao.EhNulo())
                 throw new NegocioException(MensagemNegocio.SOLICITACAO_ATENDIMENTO_NAO_ENCONTRADA);
@@ -754,30 +535,30 @@ namespace SME.CDEP.Aplicacao.Servicos
                 .Where(w => w.TipoAtendimento.EhAtendimentoPresencial())
                 .Select(s => s.DataVisita!.Value);
 
-            await ValidarConflitosEventos(datasDasVisitas);
+            await regras.ServicoEvento.ValidarConflitosAsync(datasDasVisitas);
             
             acervoSolicitacao.Origem = Origem.Manual;
             
             acervoSolicitacao.DataSolicitacao = acervoSolicitacaoManualDto.DataSolicitacao;
 
-            var usuarioLogado = await servicoUsuario.ObterUsuarioLogado();
+            var usuarioLogado = await infra.ServicoUsuario.ObterUsuarioLogado();
             
             acervoSolicitacao.Situacao = acervoSolicitacaoManualDto.Itens.Any(a=> a.TipoAtendimento.EhAtendimentoPresencial() && !a.DataEmprestimo.HasValue && !a.DataDevolucao.HasValue) 
                 ? SituacaoSolicitacao.AGUARDANDO_VISITA 
                 : SituacaoSolicitacao.FINALIZADO_ATENDIMENTO;
             
-            var itensAtuais = await repositorioAcervoSolicitacaoItem.ObterItensPorSolicitacaoId(acervoSolicitacao.Id);
+            var itensAtuais = await dados.RepositorioItem.ObterItensPorSolicitacaoId(acervoSolicitacao.Id);
             
-            var itensEmprestados = await repositorioAcervoEmprestimo.ObterUltimoEmprestimoPorAcervoSolicitacaoItemIds([.. acervoSolicitacaoManualDto.Itens.Where(w=> w.Id.HasValue).Select(s => s.Id!.Value)]);
+            var itensEmprestados = await dados.RepositorioAcervoEmprestimo.ObterUltimoEmprestimoPorAcervoSolicitacaoItemIds([.. acervoSolicitacaoManualDto.Itens.Where(w=> w.Id.HasValue).Select(s => s.Id!.Value)]);
 
-            var tran = transacao.Iniciar();
+            var tran = infra.Transacao.Iniciar();
             try
             {
-                await repositorioAcervoSolicitacao.Atualizar(acervoSolicitacao);
+                await dados.RepositorioSolicitacao.Atualizar(acervoSolicitacao);
                 
                 foreach (var itemProposto in acervoSolicitacaoManualDto.Itens)
                 {
-                    var item = mapper.Map<AcervoSolicitacaoItem>(itemProposto);
+                    var item = infra.Mapper.Map<AcervoSolicitacaoItem>(itemProposto);
                     
                     var possuiInformacoesEmprestimo = itemProposto.DataEmprestimo.HasValue && itemProposto.DataDevolucao.HasValue;
                     
@@ -799,20 +580,20 @@ namespace SME.CDEP.Aplicacao.Servicos
                         
                         itemAtual.Situacao = item.Situacao;
                         
-                        await repositorioAcervoSolicitacaoItem.Atualizar(itemAtual);
+                        await dados.RepositorioItem.Atualizar(itemAtual);
 
                         var itemEmprestado = itensEmprestados.FirstOrDefault(f => f.AcervoSolicitacaoItemId == itemAtual.Id);
                         var naoTemEmprestimo = itemEmprestado!.EhNulo();
                         
                         if (eraPresencial && item.TipoAtendimento.EhAtendimentoViaEmail())
                         {
-                            await servicoEvento.ExcluirEventoPorAcervoSolicitacaoItem(item.Id);
-                            await servicoAcervoBibliografico.AlterarSituacaoSaldo(SituacaoSaldo.DISPONIVEL,item.AcervoId);
+                            await regras.ServicoEvento.ExcluirEventoPorAcervoSolicitacaoItem(item.Id);
+                            await regras.ServicoAcervoBibliografico.AlterarSituacaoSaldo(SituacaoSaldo.DISPONIVEL,item.AcervoId);
                         }
 
                         if (item.TipoAtendimento.EhAtendimentoPresencial())
                         {
-                            await servicoEvento.AtualizarEventoVisita(item.DataVisita!.Value, item.Id);
+                            await regras.ServicoEvento.AtualizarEventoVisita(item.DataVisita!.Value, item.Id);
                             
                             if (itemProposto.TipoAcervo.EhAcervoBibliografico())
                             {
@@ -820,18 +601,24 @@ namespace SME.CDEP.Aplicacao.Servicos
                                 {
                                     if (possuiInformacoesEmprestimo)
                                     {
-                                        await InserirAcervoEmprestimo(item.Id, itemProposto.DataEmprestimo!.Value, itemProposto.DataDevolucao!.Value, SituacaoEmprestimo.EMPRESTADO);
-                                        await servicoAcervoBibliografico.AlterarSituacaoSaldo(SituacaoSaldo.EMPRESTADO,item.AcervoId);
+                                        await dados.RepositorioAcervoEmprestimo.Inserir(new ()
+                                        {
+                                            AcervoSolicitacaoItemId = item.Id,
+                                            DataEmprestimo = itemProposto.DataEmprestimo!.Value,
+                                            DataDevolucao = itemProposto.DataDevolucao!.Value,
+                                            Situacao = SituacaoEmprestimo.EMPRESTADO
+                                        });
+                                        await regras.ServicoAcervoBibliografico.AlterarSituacaoSaldo(SituacaoSaldo.EMPRESTADO,item.AcervoId);
                                     }
                                     else
-                                        await servicoAcervoBibliografico.AlterarSituacaoSaldo(SituacaoSaldo.RESERVADO,item.AcervoId);
+                                        await regras.ServicoAcervoBibliografico.AlterarSituacaoSaldo(SituacaoSaldo.RESERVADO,item.AcervoId);
                                 }
                                 else
                                 {
                                     itemEmprestado!.DataEmprestimo = itemProposto.DataEmprestimo!.Value;
                                     itemEmprestado.DataDevolucao = itemProposto.DataDevolucao!.Value;
                                     itemEmprestado.Situacao = SituacaoEmprestimo.EMPRESTADO;
-                                    await repositorioAcervoEmprestimo.Atualizar(itemEmprestado);
+                                    await dados.RepositorioAcervoEmprestimo.Atualizar(itemEmprestado);
                                 }
                             }
                         }
@@ -840,7 +627,7 @@ namespace SME.CDEP.Aplicacao.Servicos
                     {
                         item.AcervoSolicitacaoId = acervoSolicitacao.Id;
                     
-                        await repositorioAcervoSolicitacaoItem.Inserir(item);
+                        await dados.RepositorioItem.Inserir(item);
 
                         var temInformacoesDeEmprestimo = itemProposto.DataEmprestimo.HasValue &&
                                                          itemProposto.DataDevolucao.HasValue &&
@@ -848,17 +635,23 @@ namespace SME.CDEP.Aplicacao.Servicos
 
                         if (item.TipoAtendimento.EhAtendimentoPresencial())
                         {
-                            await servicoEvento.InserirEventoVisita(item.DataVisita!.Value, item.Id);
+                            await regras.ServicoEvento.InserirEventoVisita(item.DataVisita!.Value, item.Id);
 
                             if (itemProposto.TipoAcervo.EhAcervoBibliografico())
                             {
                                 if (temInformacoesDeEmprestimo)
                                 {
-                                    await InserirAcervoEmprestimo(item.Id, itemProposto.DataEmprestimo!.Value, itemProposto.DataDevolucao!.Value, SituacaoEmprestimo.EMPRESTADO);
-                                    await servicoAcervoBibliografico.AlterarSituacaoSaldo(SituacaoSaldo.EMPRESTADO,item.AcervoId);
+                                    await dados.RepositorioAcervoEmprestimo.Inserir(new ()
+                                    {
+                                        AcervoSolicitacaoItemId = item.Id,
+                                        DataEmprestimo = itemProposto.DataEmprestimo!.Value,
+                                        DataDevolucao = itemProposto.DataDevolucao!.Value,
+                                        Situacao = SituacaoEmprestimo.EMPRESTADO
+                                    });
+                                    await regras.ServicoAcervoBibliografico.AlterarSituacaoSaldo(SituacaoSaldo.EMPRESTADO,item.AcervoId);
                                 }
                                 else
-                                    await servicoAcervoBibliografico.AlterarSituacaoSaldo(SituacaoSaldo.RESERVADO,item.AcervoId);
+                                    await regras.ServicoAcervoBibliografico.AlterarSituacaoSaldo(SituacaoSaldo.RESERVADO,item.AcervoId);
                             }
                         }
                     }
@@ -880,9 +673,6 @@ namespace SME.CDEP.Aplicacao.Servicos
 
         private static void ValidarCamposDataVisitaEmprestimoDevolucao(AcervoSolicitacaoManualDTO acervoSolicitacaoManualDto)
         {
-            if (acervoSolicitacaoManualDto.Itens.Any(a=> a.TipoAtendimento.EhAtendimentoPresencial() && !a.DataVisita.HasValue))
-                throw new NegocioException(MensagemNegocio.ITENS_ACERVOS_PRESENCIAL_DEVEM_TER_DATA_ACERVO);
-
             if (acervoSolicitacaoManualDto.Itens.Any(a=> a.TipoAtendimento.EhInvalido()))
                 throw new NegocioException(MensagemNegocio.TIPO_ATENDIMENTO_INVALIDO);
             
@@ -898,8 +688,7 @@ namespace SME.CDEP.Aplicacao.Servicos
                     throw new NegocioException(MensagemNegocio.DATA_DO_EMPRESTIMO_MENOR_QUE_DATA_VISITA);
                 
                 if (acervoSolicitacaoManualDto.Itens.Any(a=> a.DataDevolucao.HasValue && a.DataEmprestimo.HasValue && a.DataDevolucao.Value.Date < a.DataEmprestimo.Value.Date))
-                    throw new NegocioException(MensagemNegocio.DATA_DA_DEVOLUCAO_MENOR_DATA_DO_EMPRESTIMO);
-                
+                    throw new NegocioException(MensagemNegocio.DATA_DA_DEVOLUCAO_MENOR_DATA_DO_EMPRESTIMO);                
             }
             else
             {

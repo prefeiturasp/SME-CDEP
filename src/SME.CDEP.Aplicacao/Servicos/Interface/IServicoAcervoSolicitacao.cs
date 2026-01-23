@@ -1,4 +1,5 @@
 ﻿using SME.CDEP.Aplicacao.DTOS;
+using SME.CDEP.Dominio.Entidades;
 
 namespace SME.CDEP.Aplicacao.Servicos.Interface
 {
@@ -14,7 +15,7 @@ namespace SME.CDEP.Aplicacao.Servicos.Interface
         Task<PaginacaoResultadoDTO<SolicitacaoDTO>> ObterAtendimentoSolicitacoesPorFiltro(FiltroSolicitacaoDTO filtroSolicitacaoDto);
         Task<AcervoSolicitacaoDetalheDTO> ObterDetalhesParaAtendimentoSolicitadoesPorId(long acervoSolicitacaoId);
         IEnumerable<IdNomeDTO> ObterTiposDeAtendimentos();
-        Task<bool> ConfirmarAtendimento(AcervoSolicitacaoConfirmarDTO acervoSolicitacaoConfirmar);
+        Task<bool> ConfirmarAtendimento(AcervoSolicitacaoConfirmarDto acervoSolicitacaoConfirmar);
         Task<bool> FinalizarAtendimento(long acervoSolicitacaoId);
         Task<bool> CancelarAtendimento(long acervoSolicitacaoId);
         Task<bool> CancelarItemAtendimento(long acervoSolicitacaoItemId);

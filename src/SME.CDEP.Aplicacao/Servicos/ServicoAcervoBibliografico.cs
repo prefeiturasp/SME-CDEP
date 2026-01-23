@@ -12,31 +12,15 @@ using SME.CDEP.Infra.Dominio.Enumerados;
 
 namespace SME.CDEP.Aplicacao.Servicos
 {
-    public class ServicoAcervoBibliografico : IServicoAcervoBibliografico
+    public class ServicoAcervoBibliografico(
+        IRepositorioAcervoBibliograficoAssunto repositorioAcervoBibliograficoAssunto,
+        IMapper mapper,
+        ITransacao transacao,
+        IRepositorioAcervoBibliografico repositorioAcervoBibliografico,
+        IRepositorioAssunto repositorioAssunto,
+        IServicoAcervo servicoAcervo,
+        IRepositorioAcervoEmprestimo repositorioAcervoEmprestimo) : IServicoAcervoBibliografico
     {
-        private readonly IRepositorioAcervoBibliograficoAssunto repositorioAcervoBibliograficoAssunto;
-        private readonly IRepositorioAssunto repositorioAssunto;
-        private readonly IRepositorioAcervoBibliografico repositorioAcervoBibliografico;
-        private readonly IMapper mapper;
-        private readonly IServicoAcervo servicoAcervo;
-        private readonly ITransacao transacao;
-        
-        public ServicoAcervoBibliografico(
-            IRepositorioAcervoBibliograficoAssunto repositorioAcervoBibliograficoAssunto, 
-            IMapper mapper,
-            ITransacao transacao,
-            IRepositorioAcervoBibliografico repositorioAcervoBibliografico,
-            IRepositorioAssunto repositorioAssunto,
-            IServicoAcervo servicoAcervo)
-        {
-            this.repositorioAcervoBibliograficoAssunto = repositorioAcervoBibliograficoAssunto ?? throw new ArgumentNullException(nameof(repositorioAcervoBibliograficoAssunto));
-            this.mapper = mapper ?? throw new ArgumentNullException(nameof(mapper));
-            this.transacao = transacao ?? throw new ArgumentNullException(nameof(transacao));
-            this.repositorioAcervoBibliografico = repositorioAcervoBibliografico ?? throw new ArgumentNullException(nameof(repositorioAcervoBibliografico));
-            this.repositorioAssunto = repositorioAssunto ?? throw new ArgumentNullException(nameof(repositorioAssunto));
-            this.servicoAcervo = servicoAcervo ?? throw new ArgumentNullException(nameof(servicoAcervo));
-        }
-
         public async Task<long> Inserir(AcervoBibliograficoCadastroDTO acervoBibliograficoCadastroDto)
         {
             ValidarPreenchimentoAcervoBibliografico(acervoBibliograficoCadastroDto.Altura, acervoBibliograficoCadastroDto.Largura);
@@ -81,12 +65,12 @@ namespace SME.CDEP.Aplicacao.Servicos
             return acervoBibliografico.AcervoId;
         }
         
-        private void ValidarPreenchimentoAcervoBibliografico(string? altura, string? largura)
+        private static void ValidarPreenchimentoAcervoBibliografico(string? altura, string? largura)
         {
-            if (largura.EstaPreenchido() && largura.NaoEhNumericoComCasasDecimais())
+            if (!string.IsNullOrWhiteSpace(largura) && largura.NaoEhNumericoComCasasDecimais())
                 throw new NegocioException(string.Format(MensagemNegocio.CAMPO_X_ESPERADO_NUMERICO_E_COM_CASAS_DECIMAIS, Constantes.LARGURA));
 
-            if (altura.EstaPreenchido() && altura.NaoEhNumericoComCasasDecimais())
+            if (!string.IsNullOrWhiteSpace(altura) && altura.NaoEhNumericoComCasasDecimais())
                 throw new NegocioException(string.Format(MensagemNegocio.CAMPO_X_ESPERADO_NUMERICO_E_COM_CASAS_DECIMAIS, Constantes.ALTURA));
         }
 
@@ -104,7 +88,7 @@ namespace SME.CDEP.Aplicacao.Servicos
             
             var acervoBibliografico = mapper.Map<AcervoBibliografico>(acervoBibliograficoAlteracaoDto);
 
-            var acervoDTO = mapper.Map<AcervoDTO>(acervoBibliograficoAlteracaoDto);
+            var acervoDTO = mapper.Map<AcervoDto>(acervoBibliograficoAlteracaoDto);
             
             var assuntosExistentes = (await repositorioAcervoBibliograficoAssunto.ObterPorAcervoBibliograficoId(acervoBibliograficoAlteracaoDto.Id)).Select(s => s.AssuntoId).ToArray();
             (assuntosIdsInserir, assuntosIdsExcluir) = await ObterAssuntoInseridosExcluidos(acervoBibliograficoAlteracaoDto.AssuntosIds, assuntosExistentes);
@@ -160,7 +144,7 @@ namespace SME.CDEP.Aplicacao.Servicos
                 return acervoBibliograficoDto;
             }
 
-            return default;
+            return default!;
         }
 
         public async Task<bool> Excluir(long id)
@@ -176,6 +160,32 @@ namespace SME.CDEP.Aplicacao.Servicos
             acervoBibliografico.DefinirSituacaoSaldo(situacaoSaldo);
             await repositorioAcervoBibliografico.Atualizar(acervoBibliografico);
             return true;
+        }
+
+        public async Task GerenciarEmprestimoAsync(long acervoSolicitacaoItemId, long acervoId, DateTime? dataEmprestimo, DateTime? dataDevolucao)
+        {
+            var itemEmprestado = await repositorioAcervoEmprestimo.ObterUltimoEmprestimoPorAcervoSolicitacaoItemId(acervoSolicitacaoItemId);
+
+            if (itemEmprestado is not null)
+                throw new NegocioException(MensagemNegocio.VOCE_NAO_PODE_ALTERAR_EMPRESTIMOS_ACERVOS);
+
+            var temInformacaoEmprestimo = dataEmprestimo.HasValue && dataDevolucao.HasValue;
+
+            if (temInformacaoEmprestimo)
+            {
+                await repositorioAcervoEmprestimo.Inserir(new ()
+                {
+                    AcervoSolicitacaoItemId = acervoSolicitacaoItemId,
+                    DataEmprestimo = dataEmprestimo!.Value,
+                    DataDevolucao = dataDevolucao!.Value,
+                    Situacao = SituacaoEmprestimo.EMPRESTADO
+                });
+                await AlterarSituacaoSaldo(SituacaoSaldo.EMPRESTADO, acervoId);
+            }
+            else
+            {
+                await AlterarSituacaoSaldo(SituacaoSaldo.RESERVADO, acervoId);
+            }
         }
     }
 }

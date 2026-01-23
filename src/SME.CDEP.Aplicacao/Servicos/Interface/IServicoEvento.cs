@@ -18,5 +18,6 @@ namespace SME.CDEP.Aplicacao.Servicos.Interface
         Task ExcluirEventoPorAcervoSolicitacaoItem(long atendimentoItemId);
         Task GerarEventosFixos();
         Task GerarEventosMoveis();
+        Task ValidarConflitosAsync(IEnumerable<DateTime> datasDasVisitas);
     }
 }

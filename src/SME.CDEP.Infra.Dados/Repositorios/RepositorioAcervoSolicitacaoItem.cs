@@ -113,13 +113,14 @@ namespace SME.CDEP.Infra.Dados.Repositorios
                 });
         }
 
-        public Task<IEnumerable<AcervoSolicitacaoItem>> ObterItensEmSituacaoAguardandoAtendimentoOuVisitaOuFinalizadoManualmentePorSolicitacaoId(long acervoSolicitacaoId)
+        public Task<IEnumerable<AcervoSolicitacaoItem>> ObterItensVigentesPorSolicitacaoIdAsync(long acervoSolicitacaoId)
         {
-            var situacoesItensAguardandoAtendimentoEVisitaOuFinalizadoManualmente = new[]
+            var situacoesVigentes = new[]
             {
                 (int)SituacaoSolicitacaoItem.AGUARDANDO_ATENDIMENTO,
                 (int)SituacaoSolicitacaoItem.AGUARDANDO_VISITA,
                 (int)SituacaoSolicitacaoItem.FINALIZADO_MANUALMENTE,
+                (int)SituacaoSolicitacaoItem.PRESENCIAL_ABERTO
             };
 
             var query = @"
@@ -135,10 +136,10 @@ namespace SME.CDEP.Infra.Dados.Repositorios
                usuario_responsavel_id
             from acervo_solicitacao_item
             where acervo_solicitacao_id = @acervoSolicitacaoId
-              and situacao = any(@situacoesItensAguardandoAtendimentoEVisitaOuFinalizadoManualmente) 
+              and situacao = any(@situacoesVigentes) 
               and not excluido";
 
-            return conexao.Obter().QueryAsync<AcervoSolicitacaoItem>(query, new { acervoSolicitacaoId, situacoesItensAguardandoAtendimentoEVisitaOuFinalizadoManualmente });
+            return conexao.Obter().QueryAsync<AcervoSolicitacaoItem>(query, new { acervoSolicitacaoId, situacoesVigentes });
         }
 
         public Task<IEnumerable<AcervoSolicitacaoItem>> ObterItensEmSituacaoAguardandoVisitaPorSolicitacaoId(long acervoSolicitacaoId)

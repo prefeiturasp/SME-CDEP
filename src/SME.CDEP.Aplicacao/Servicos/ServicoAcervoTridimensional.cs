@@ -124,7 +124,7 @@ namespace SME.CDEP.Aplicacao.Servicos
             
             var acervoTridimensional = mapper.Map<AcervoTridimensional>(acervoTridimensionalAlteracaoDto);
 
-            var acervoDTO = mapper.Map<AcervoDTO>(acervoTridimensionalAlteracaoDto);
+            var acervoDTO = mapper.Map<AcervoDto>(acervoTridimensionalAlteracaoDto);
             acervoDTO.Codigo = ObterCodigoAcervo(acervoTridimensionalAlteracaoDto.Codigo);
             
             var arquivosExistentes = (await repositorioAcervoTridimensionalArquivo.ObterPorAcervoTridimensionalId(acervoTridimensionalAlteracaoDto.Id)).Select(s => s.ArquivoId).ToArray();

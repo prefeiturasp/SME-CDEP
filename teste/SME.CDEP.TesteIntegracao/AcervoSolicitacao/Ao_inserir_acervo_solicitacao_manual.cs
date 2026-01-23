@@ -220,44 +220,6 @@ namespace SME.CDEP.TesteIntegracao
             
             await servicoAcervoSolicitacao.Inserir(acervoSolicitacaoManual).ShouldThrowAsync<NegocioException>();
         }
-        
-        [Fact(DisplayName = "Acervo Solicitação - Não deve fazer solicitação de acervo manual sem data de visita em tipo de atendimento presencial")]
-        public async Task Nao_deve_fazer_solicitacao_manual_sem_de_data_de_visita_em_tipo_de_atendimento_presencial()
-        {
-            await InserirDadosBasicosAleatorios();
-
-            await InserirAcervoTridimensional(true);
-
-            var servicoAcervoSolicitacao = GetServicoAcervoSolicitacao();
-            
-            var acervoSolicitacaoManual = new AcervoSolicitacaoManualDTO()
-            {
-                UsuarioId = 1,
-                DataSolicitacao = DateTimeExtension.HorarioBrasilia().Date.AddDays(-5),
-                Itens = new List<AcervoSolicitacaoItemManualDTO>()
-                {
-                    new ()
-                    {
-                        AcervoId = 2,
-                        TipoAtendimento = TipoAtendimento.Presencial,
-                        DataVisita = DataHelper.ProximaDataUtil(DateTime.Now.AddDays(4))
-                    },
-                    new ()
-                    {
-                        AcervoId = 3,
-                        TipoAtendimento = TipoAtendimento.Presencial,
-                        DataVisita = DataHelper.ProximaDataUtil(DateTime.Now.AddDays(40))
-                    },
-                    new ()
-                    {
-                        AcervoId = 3,
-                        TipoAtendimento = TipoAtendimento.Presencial
-                    }
-                }
-            };
-            
-            await servicoAcervoSolicitacao.Inserir(acervoSolicitacaoManual).ShouldThrowAsync<NegocioException>();
-        }
 
         [Fact(DisplayName = "Acervo Solicitação - Não deve fazer solicitação de acervo manual com data de visita em dia de feriado")]
         public async Task Nao_deve_fazer_solicitacao_manual_com_data_de_visita_em_dia_de_feriado()
