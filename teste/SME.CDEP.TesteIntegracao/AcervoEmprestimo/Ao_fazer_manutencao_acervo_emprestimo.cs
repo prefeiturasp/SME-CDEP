@@ -70,7 +70,7 @@ namespace SME.CDEP.TesteIntegracao
 
             var servicoAcervoSolicitacao = GetServicoAcervoSolicitacao();
 
-            await servicoAcervoSolicitacao.ConfirmarAtendimento(new AcervoSolicitacaoConfirmarDTO()
+            await servicoAcervoSolicitacao.ConfirmarAtendimento(new AcervoSolicitacaoConfirmarDto()
             {
                 Id = 1,
                 ItemId = 1,
@@ -82,7 +82,7 @@ namespace SME.CDEP.TesteIntegracao
 
             });
                 
-            await servicoAcervoSolicitacao.ConfirmarAtendimento(new AcervoSolicitacaoConfirmarDTO()
+            await servicoAcervoSolicitacao.ConfirmarAtendimento(new AcervoSolicitacaoConfirmarDto()
             {
                 Id = 1,
                 ItemId = 2,
@@ -153,7 +153,7 @@ namespace SME.CDEP.TesteIntegracao
            
             var servicoAcervoSolicitacao = GetServicoAcervoSolicitacao();
             
-            await servicoAcervoSolicitacao.ConfirmarAtendimento(new AcervoSolicitacaoConfirmarDTO()
+            await servicoAcervoSolicitacao.ConfirmarAtendimento(new AcervoSolicitacaoConfirmarDto()
             {
                 Id = 1,
                 ItemId = 1,
@@ -162,7 +162,7 @@ namespace SME.CDEP.TesteIntegracao
                 TipoAcervo = TipoAcervo.Bibliografico
             });
              
-            await servicoAcervoSolicitacao.ConfirmarAtendimento(new AcervoSolicitacaoConfirmarDTO()
+            await servicoAcervoSolicitacao.ConfirmarAtendimento(new AcervoSolicitacaoConfirmarDto()
             {
                 Id = 1,
                 ItemId = 2,
@@ -227,7 +227,7 @@ namespace SME.CDEP.TesteIntegracao
             //Act
             var servicoAcervoSolicitacao = GetServicoAcervoSolicitacao();
             
-            await servicoAcervoSolicitacao.ConfirmarAtendimento(new AcervoSolicitacaoConfirmarDTO()
+            await servicoAcervoSolicitacao.ConfirmarAtendimento(new AcervoSolicitacaoConfirmarDto()
             {
                 Id = 1,
                 ItemId = 1,
@@ -238,7 +238,7 @@ namespace SME.CDEP.TesteIntegracao
                 TipoAcervo = TipoAcervo.Fotografico
             }).ShouldThrowAsync<NegocioException>();
             
-            await servicoAcervoSolicitacao.ConfirmarAtendimento(new AcervoSolicitacaoConfirmarDTO()
+            await servicoAcervoSolicitacao.ConfirmarAtendimento(new AcervoSolicitacaoConfirmarDto()
             {
                 Id = 1,
                 ItemId = 2,
@@ -273,7 +273,7 @@ namespace SME.CDEP.TesteIntegracao
         
             var servicoAcervoSolicitacao = GetServicoAcervoSolicitacao();
             
-            await servicoAcervoSolicitacao.ConfirmarAtendimento(new AcervoSolicitacaoConfirmarDTO()
+            await servicoAcervoSolicitacao.ConfirmarAtendimento(new AcervoSolicitacaoConfirmarDto()
             {
                 Id = 1,
                 ItemId = 1,
@@ -283,7 +283,7 @@ namespace SME.CDEP.TesteIntegracao
                 TipoAcervo = TipoAcervo.Bibliografico
             }).ShouldThrowAsync<NegocioException>();
             
-            await servicoAcervoSolicitacao.ConfirmarAtendimento(new AcervoSolicitacaoConfirmarDTO()
+            await servicoAcervoSolicitacao.ConfirmarAtendimento(new AcervoSolicitacaoConfirmarDto()
             {
                 Id = 1,
                 ItemId = 2,
@@ -317,7 +317,7 @@ namespace SME.CDEP.TesteIntegracao
         
             var servicoAcervoSolicitacao = GetServicoAcervoSolicitacao();
             
-            await servicoAcervoSolicitacao.ConfirmarAtendimento(new AcervoSolicitacaoConfirmarDTO()
+            await servicoAcervoSolicitacao.ConfirmarAtendimento(new AcervoSolicitacaoConfirmarDto()
             {
                 Id = 1,
                 ItemId = 1,
@@ -328,7 +328,7 @@ namespace SME.CDEP.TesteIntegracao
                 TipoAcervo = TipoAcervo.Fotografico
             }).ShouldThrowAsync<NegocioException>();
             
-            await servicoAcervoSolicitacao.ConfirmarAtendimento(new AcervoSolicitacaoConfirmarDTO()
+            await servicoAcervoSolicitacao.ConfirmarAtendimento(new AcervoSolicitacaoConfirmarDto()
             {
                 Id = 1,
                 ItemId = 2,
@@ -363,7 +363,7 @@ namespace SME.CDEP.TesteIntegracao
         
             var servicoAcervoSolicitacao = GetServicoAcervoSolicitacao();
             
-            await servicoAcervoSolicitacao.ConfirmarAtendimento(new AcervoSolicitacaoConfirmarDTO()
+            await servicoAcervoSolicitacao.ConfirmarAtendimento(new AcervoSolicitacaoConfirmarDto()
             {
                 Id = 1,
                 ItemId = 1,
@@ -374,7 +374,7 @@ namespace SME.CDEP.TesteIntegracao
                 TipoAcervo = TipoAcervo.Fotografico
             }).ShouldThrowAsync<NegocioException>();
             
-            await servicoAcervoSolicitacao.ConfirmarAtendimento(new AcervoSolicitacaoConfirmarDTO()
+            await servicoAcervoSolicitacao.ConfirmarAtendimento(new AcervoSolicitacaoConfirmarDto()
             {
                 Id = 1,
                 ItemId = 2,
@@ -409,7 +409,7 @@ namespace SME.CDEP.TesteIntegracao
         
             var servicoAcervoSolicitacao = GetServicoAcervoSolicitacao();
             
-            await servicoAcervoSolicitacao.ConfirmarAtendimento(new AcervoSolicitacaoConfirmarDTO()
+            await servicoAcervoSolicitacao.ConfirmarAtendimento(new AcervoSolicitacaoConfirmarDto()
             {
                 Id = 1,
                 ItemId = 1,
@@ -420,7 +420,7 @@ namespace SME.CDEP.TesteIntegracao
                 TipoAcervo = TipoAcervo.Fotografico
             }).ShouldThrowAsync<NegocioException>();
                 
-            await servicoAcervoSolicitacao.ConfirmarAtendimento(new AcervoSolicitacaoConfirmarDTO()
+            await servicoAcervoSolicitacao.ConfirmarAtendimento(new AcervoSolicitacaoConfirmarDto()
             {
                 Id = 1,
                 ItemId = 2,
@@ -895,7 +895,7 @@ namespace SME.CDEP.TesteIntegracao
 
             var servicoAcervoSolicitacao = GetServicoAcervoSolicitacao();
             
-            await servicoAcervoSolicitacao.ConfirmarAtendimento(new AcervoSolicitacaoConfirmarDTO()
+            await servicoAcervoSolicitacao.ConfirmarAtendimento(new AcervoSolicitacaoConfirmarDto()
             {
                 Id = 1,
                 ItemId = 1, 
@@ -906,7 +906,7 @@ namespace SME.CDEP.TesteIntegracao
                 TipoAcervo = TipoAcervo.Fotografico
             }).ShouldThrowAsync<NegocioException>();
             
-            await servicoAcervoSolicitacao.ConfirmarAtendimento(new AcervoSolicitacaoConfirmarDTO()
+            await servicoAcervoSolicitacao.ConfirmarAtendimento(new AcervoSolicitacaoConfirmarDto()
             {
                 Id = 1,
                 ItemId = 2,
@@ -941,7 +941,7 @@ namespace SME.CDEP.TesteIntegracao
 
             var servicoAcervoSolicitacao = GetServicoAcervoSolicitacao();
             
-            await servicoAcervoSolicitacao.ConfirmarAtendimento(new AcervoSolicitacaoConfirmarDTO()
+            await servicoAcervoSolicitacao.ConfirmarAtendimento(new AcervoSolicitacaoConfirmarDto()
             {
                 Id = 1,
                 ItemId = 1, 

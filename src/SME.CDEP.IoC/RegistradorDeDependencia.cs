@@ -10,6 +10,7 @@ using SME.CDEP.Aplicacao.Integracoes;
 using SME.CDEP.Aplicacao.Integracoes.Interfaces;
 using SME.CDEP.Aplicacao.Mapeamentos;
 using SME.CDEP.Aplicacao.Servicos;
+using SME.CDEP.Aplicacao.Servicos.Fachadas;
 using SME.CDEP.Aplicacao.Servicos.Interface;
 using SME.CDEP.Aplicacao.UseCase;
 using SME.CDEP.Aplicacao.UseCase.Interface;
@@ -297,6 +298,12 @@ public class RegistradorDeDependencia
         _serviceCollection.TryAddScoped<IServicoHistoricoConsultaAcervo, ServicoHistoricoConsultaAcervo>();
         _serviceCollection.TryAddScoped<IServicoDeConsolidacao, ServicoDeConsolidacao>();
         _serviceCollection.AddScoped<IServicoPainelGerencial, ServicoPainelGerencial>();
+        _serviceCollection.AddScoped<IServicoConfirmacaoAtendimentoAcervo, ServicoConfirmacaoAtendimentoAcervo>();
+        _serviceCollection.AddScoped<ConfirmacaoAtendimentoRecursos>();
+        _serviceCollection.AddScoped<ContextoDadosAcervoSolicitacao>();
+        _serviceCollection.AddScoped<ContextoInfraAcervoSolicitacao>();
+        _serviceCollection.AddScoped<ContextoRegrasAcervoSolicitacao>();
+        _serviceCollection.AddScoped<IServicoProcessamentoSituacaoSolicitacao, ServicoProcessamentoSituacaoSolicitacao>();
     }
     protected virtual void RegistrarHttpClients()
     {

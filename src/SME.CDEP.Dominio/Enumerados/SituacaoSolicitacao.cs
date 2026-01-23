@@ -17,7 +17,10 @@ public enum SituacaoSolicitacao
     CANCELADO = 4,
 
     [Display(Description = "Atendido parcialmente")]
-    ATENDIDO_PARCIALMENTE = 5
+    ATENDIDO_PARCIALMENTE = 5,
+
+    [Display(Description = "Presencial em aberto")]
+    PRESENCIAL_ABERTO = 6,
 }
 public static class SituacaoSolicitacaoExtension
 {

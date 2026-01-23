@@ -144,7 +144,7 @@ namespace SME.CDEP.Aplicacao.Servicos
             var acessoDocumentosExistentes = (await repositorioAcervoDocumentalAcessoDocumento.ObterPorAcervoDocumentalId(acervoDocumentalAlteracaoDto.Id)).Select(s => s.AcessoDocumentoId).ToArray();
             (acessosDocumentosIdsInserir, acessosDocumentosIdsExcluir) = ObterAcessoDocumentosInseridosExcluidos(acervoDocumentalAlteracaoDto.AcessoDocumentosIds, acessoDocumentosExistentes);
 
-            var acervoDTO = mapper.Map<AcervoDTO>(acervoDocumentalAlteracaoDto);
+            var acervoDTO = mapper.Map<AcervoDto>(acervoDocumentalAlteracaoDto);
             var tran = transacao.Iniciar();
             var urlCapaDocumento = "";
             try

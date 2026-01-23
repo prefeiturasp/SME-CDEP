@@ -133,7 +133,7 @@ namespace SME.CDEP.Aplicacao.Servicos
             
             var acervoArteGrafica = mapper.Map<AcervoArteGrafica>(acervoArteGraficaAlteracaoDto);
 
-            var acervoDTO = mapper.Map<AcervoDTO>(acervoArteGraficaAlteracaoDto);
+            var acervoDTO = mapper.Map<AcervoDto>(acervoArteGraficaAlteracaoDto);
             acervoDTO.Codigo = ObterCodigoAcervo(acervoArteGraficaAlteracaoDto.Codigo);
             
             
