@@ -78,7 +78,7 @@ namespace SME.CDEP.Aplicacao.Servicos
         {
             var acervoArteGrafica = mapper.Map<AcervoAudiovisual>(acervoAudiovisualAlteracaoDto);
             
-            var acervo = mapper.Map<AcervoDTO>(acervoAudiovisualAlteracaoDto);
+            var acervo = mapper.Map<AcervoDto>(acervoAudiovisualAlteracaoDto);
             
             acervo.Codigo = ObterCodigoAcervo(acervoAudiovisualAlteracaoDto.Codigo);
             

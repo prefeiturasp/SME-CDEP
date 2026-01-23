@@ -3,20 +3,21 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 using SME.CDEP.Aplicacao;
-using SME.CDEP.Aplicacao.Servicos;
-using SME.CDEP.Aplicacao.Servicos.Interface;
-using SME.CDEP.Infra.Dados;
-using SME.CDEP.IoC;
-using SME.CDEP.TesteIntegracao.ServicosFakes;
 using SME.CDEP.Aplicacao.Integracoes.Interfaces;
 using SME.CDEP.Aplicacao.Mapeamentos;
+using SME.CDEP.Aplicacao.Servicos;
+using SME.CDEP.Aplicacao.Servicos.Fachadas;
+using SME.CDEP.Aplicacao.Servicos.Interface;
+using SME.CDEP.Aplicacao.UseCase;
+using SME.CDEP.Aplicacao.UseCase.Interface;
 using SME.CDEP.Dominio.Contexto;
+using SME.CDEP.Infra.Dados;
 using SME.CDEP.Infra.Servicos.Mensageria;
 using SME.CDEP.Infra.Servicos.ServicoArmazenamento.Interface;
+using SME.CDEP.IoC;
+using SME.CDEP.TesteIntegracao.ServicosFakes;
 using SME.CDEP.Webapi.Contexto;
 using SSME.CDEP.TesteIntegracao.ServicosFakes;
-using SME.CDEP.Aplicacao.UseCase.Interface;
-using SME.CDEP.Aplicacao.UseCase;
 
 namespace SME.CDEP.TesteIntegracao.Setup
 {
@@ -147,6 +148,13 @@ namespace SME.CDEP.TesteIntegracao.Setup
 
             _serviceCollection.TryAddScoped<IRelatorioTitulosMaisPesquisadosUseCase, RelatorioTitulosMaisPesquisadosUseCase>();
             _serviceCollection.AddScoped<IServicoPainelGerencial, ServicoPainelGerencial>();
+            _serviceCollection.AddScoped<IServicoConfirmacaoAtendimentoAcervo, ServicoConfirmacaoAtendimentoAcervo>();
+            _serviceCollection.AddScoped<ConfirmacaoAtendimentoRecursos>();
+
+            _serviceCollection.AddScoped<ContextoDadosAcervoSolicitacao>();
+            _serviceCollection.AddScoped<ContextoInfraAcervoSolicitacao>();
+            _serviceCollection.AddScoped<ContextoRegrasAcervoSolicitacao>();
+            _serviceCollection.AddScoped<IServicoProcessamentoSituacaoSolicitacao, ServicoProcessamentoSituacaoSolicitacao>();
         }
         protected override void RegistrarHttpClients()
         {}

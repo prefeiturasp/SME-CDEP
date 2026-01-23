@@ -137,7 +137,7 @@ namespace SME.CDEP.Aplicacao.Servicos
             
             var acervoFotografico = mapper.Map<AcervoFotografico>(acervoFotograficoAlteracaoDto);
 
-            var acervoDTO = mapper.Map<AcervoDTO>(acervoFotograficoAlteracaoDto);
+            var acervoDTO = mapper.Map<AcervoDto>(acervoFotograficoAlteracaoDto);
             acervoDTO.Codigo = ObterCodigoAcervo(acervoFotograficoAlteracaoDto.Codigo);
             
             var arquivosExistentes = (await repositorioAcervoFotograficoArquivo.ObterPorAcervoFotograficoId(acervoFotograficoAlteracaoDto.Id)).Select(s => s.ArquivoId).ToArray();

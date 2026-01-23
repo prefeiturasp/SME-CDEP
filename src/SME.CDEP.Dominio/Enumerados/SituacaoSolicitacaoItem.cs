@@ -20,7 +20,10 @@ public enum SituacaoSolicitacaoItem
     FINALIZADO_MANUALMENTE = 5,
 
     [Display(Description = "Sem resposta do solicitante")]
-    SEM_RESPOSTA_SOLICITANTE = 6
+    SEM_RESPOSTA_SOLICITANTE = 6,
+
+    [Display(Description = "Presencial em aberto")]
+    PRESENCIAL_ABERTO = 7,
 }
 public static class SituacaoSolicitacaoItemExtension
 {

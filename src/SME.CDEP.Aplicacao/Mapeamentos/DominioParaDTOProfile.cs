@@ -30,7 +30,7 @@ namespace SME.CDEP.Aplicacao.Mapeamentos
             CreateMap<IdNomeExcluidoAuditavelDTO, Editora>().ReverseMap();
             CreateMap<IdNomeExcluidoAuditavelDTO, Assunto>().ReverseMap();
             CreateMap<IdNomeExcluidoAuditavelDTO, SerieColecao>().ReverseMap();
-            CreateMap<AcervoDTO, Acervo>().ReverseMap();
+            CreateMap<AcervoDto, Acervo>().ForMember(a => a.Situacao, opt => opt.MapFrom(o => o.SituacaoAcervo)).ReverseMap();
 
             CreateMap<AcervoFotograficoDTO, Acervo>().ReverseMap();
             CreateMap<AcervoFotograficoDTO, AcervoFotografico>().ReverseMap();
@@ -47,7 +47,7 @@ namespace SME.CDEP.Aplicacao.Mapeamentos
             CreateMap<AcervoFotograficoAlteracaoDTO, AcervoFotograficoDTO>().ReverseMap();
 
             CreateMap<AcervoFotograficoCadastroDTO, Acervo>().ReverseMap();
-            CreateMap<AcervoFotograficoAlteracaoDTO, AcervoDTO>()
+            CreateMap<AcervoFotograficoAlteracaoDTO, AcervoDto>()
                 .ForMember(dest => dest.Id, opt => opt.MapFrom(o => o.AcervoId))
                 .ReverseMap();
 
@@ -63,7 +63,7 @@ namespace SME.CDEP.Aplicacao.Mapeamentos
             CreateMap<AuditoriaDTO, AcervoArteGraficaCompleto>().ReverseMap();
             CreateMap<AcervoArteGraficaDTO, Acervo>().ReverseMap();
             CreateMap<AcervoArteGraficaDTO, AcervoArteGrafica>().ReverseMap();
-            CreateMap<AcervoArteGraficaAlteracaoDTO, AcervoDTO>()
+            CreateMap<AcervoArteGraficaAlteracaoDTO, AcervoDto>()
                 .ForMember(dest => dest.Id, opt => opt.MapFrom(o => o.AcervoId))
                 .ReverseMap();
 
@@ -80,7 +80,7 @@ namespace SME.CDEP.Aplicacao.Mapeamentos
             CreateMap<AcervoTridimensionalCompleto, AuditoriaDTO>().ReverseMap();
             CreateMap<AcervoTridimensionalDTO, Acervo>().ReverseMap();
             CreateMap<AcervoTridimensionalDTO, AcervoTridimensional>().ReverseMap();
-            CreateMap<AcervoTridimensionalAlteracaoDTO, AcervoDTO>()
+            CreateMap<AcervoTridimensionalAlteracaoDTO, AcervoDto>()
                 .ForMember(dest => dest.Id, opt => opt.MapFrom(o => o.AcervoId))
                 .ReverseMap();
 
@@ -92,7 +92,7 @@ namespace SME.CDEP.Aplicacao.Mapeamentos
             CreateMap<AuditoriaDTO, AcervoAudiovisualCompleto>().ReverseMap();
             CreateMap<AcervoAudiovisualDTO, Acervo>().ReverseMap();
             CreateMap<AcervoAudiovisualDTO, AcervoAudiovisual>().ReverseMap();
-            CreateMap<AcervoAudiovisualAlteracaoDTO, AcervoDTO>()
+            CreateMap<AcervoAudiovisualAlteracaoDTO, AcervoDto>()
                 .ForMember(dest => dest.Id, opt => opt.MapFrom(o => o.AcervoId))
                 .ReverseMap();
 
@@ -108,7 +108,7 @@ namespace SME.CDEP.Aplicacao.Mapeamentos
             CreateMap<AuditoriaDTO, AcervoDocumentalCompleto>().ReverseMap();
             CreateMap<AcervoDocumentalDTO, Acervo>().ReverseMap();
             CreateMap<AcervoDocumentalDTO, AcervoDocumental>().ReverseMap();
-            CreateMap<AcervoDocumentalAlteracaoDTO, AcervoDTO>()
+            CreateMap<AcervoDocumentalAlteracaoDTO, AcervoDto>()
                 .ForMember(dest => dest.Id, opt => opt.MapFrom(o => o.AcervoId))
                 .ReverseMap();
 
@@ -126,7 +126,7 @@ namespace SME.CDEP.Aplicacao.Mapeamentos
             CreateMap<AuditoriaDTO, AcervoBibliograficoCompleto>().ReverseMap();
             CreateMap<AcervoBibliograficoDTO, Acervo>().ReverseMap();
             CreateMap<AcervoBibliograficoDTO, AcervoBibliografico>().ReverseMap();
-            CreateMap<AcervoBibliograficoAlteracaoDTO, AcervoDTO>()
+            CreateMap<AcervoBibliograficoAlteracaoDTO, AcervoDto>()
                 .ForMember(dest => dest.Id, opt => opt.MapFrom(o => o.AcervoId))
                 .ReverseMap();
 

@@ -196,7 +196,7 @@ namespace SME.CDEP.TesteUnitario.Aplicacao.Servicos
                 new() { Id = 3, Codigo = "AC003", Excluido = false },
             };
 
-            var listaAcervosDto = new List<AcervoDTO>
+            var listaAcervosDto = new List<AcervoDto>
             {
                 new() { Id = 1, Codigo = "AC001" },
                 new() { Id = 3, Codigo = "AC003" },
@@ -207,7 +207,7 @@ namespace SME.CDEP.TesteUnitario.Aplicacao.Servicos
                 .ReturnsAsync(listaAcervos);
 
             var mapper = _mocker.GetMock<IMapper>();
-            mapper.Setup(m => m.Map<IEnumerable<AcervoDTO>>(It.IsAny<IEnumerable<Acervo>>()))
+            mapper.Setup(m => m.Map<IEnumerable<AcervoDto>>(It.IsAny<IEnumerable<Acervo>>()))
                   .Returns(listaAcervosDto);
 
             // Act
@@ -269,8 +269,8 @@ namespace SME.CDEP.TesteUnitario.Aplicacao.Servicos
                 .Setup(r => r.ObterPorAcervoId(It.IsAny<long>()))
                 .ReturnsAsync([]);
             _mocker.GetMock<IMapper>()
-                .Setup(m => m.Map<AcervoDTO>(It.IsAny<Acervo>()))
-                .Returns(new AcervoDTO());
+                .Setup(m => m.Map<AcervoDto>(It.IsAny<Acervo>()))
+                .Returns(new AcervoDto());
 
             // Act
             var resultado = await _servico.AlterarCreditoAutor(acervo);
@@ -387,7 +387,7 @@ namespace SME.CDEP.TesteUnitario.Aplicacao.Servicos
                 .Setup(r => r.ExisteCodigo(It.IsAny<string>(), It.IsAny<long>(), It.IsAny<TipoAcervo>()))
                 .ReturnsAsync(false);
             _mocker.GetMock<IMapper>()
-                .Setup(m => m.Map<Acervo>(It.IsAny<AcervoDTO>()))
+                .Setup(m => m.Map<Acervo>(It.IsAny<AcervoDto>()))
                 .Returns(acervo);
             _mocker.GetMock<IRepositorioAcervo>()
                 .Setup(r => r.ExisteCodigo(It.IsAny<string>(), It.IsAny<long>(), It.IsAny<TipoAcervo>()))
@@ -396,8 +396,8 @@ namespace SME.CDEP.TesteUnitario.Aplicacao.Servicos
                 .Setup(r => r.ObterPorAcervoId(It.IsAny<long>()))
                 .ReturnsAsync([]);
             _mocker.GetMock<IMapper>()
-                .Setup(m => m.Map<AcervoDTO>(It.IsAny<Acervo>()))
-                .Returns(new AcervoDTO());
+                .Setup(m => m.Map<AcervoDto>(It.IsAny<Acervo>()))
+                .Returns(new AcervoDto());
             // Act
             var resultado = await _servico.Alterar(new()
             {
@@ -425,8 +425,8 @@ namespace SME.CDEP.TesteUnitario.Aplicacao.Servicos
                 .Setup(r => r.ObterPorId(It.IsAny<long>()))
                 .ReturnsAsync(acervo);
             _mocker.GetMock<IMapper>()
-                .Setup(m => m.Map<AcervoDTO>(It.IsAny<Acervo>()))
-                .Returns(new AcervoDTO { Id = acervo.Id, Codigo = acervo.Codigo });
+                .Setup(m => m.Map<AcervoDto>(It.IsAny<Acervo>()))
+                .Returns(new AcervoDto { Id = acervo.Id, Codigo = acervo.Codigo });
             // Act
             var resultado = await _servico.ObterPorId(acervo.Id);
             // Assert

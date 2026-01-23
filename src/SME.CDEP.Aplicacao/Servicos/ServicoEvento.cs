@@ -11,29 +11,10 @@ using SME.CDEP.Infra.Dominio.Enumerados;
 
 namespace SME.CDEP.Aplicacao.Servicos
 {
-    public class ServicoEvento : IServicoEvento
+    public class ServicoEvento(IRepositorioEvento repositorioEvento, IMapper mapper, IRepositorioEventoFixo repositorioEventoFixo,
+        IRepositorioAcervoSolicitacaoItem repositorioAcervoSolicitacaoItem, IServicoMensageria servicoMensageria,
+        IServicoAcervo servicoAcervo) : IServicoEvento
     {
-        private readonly IRepositorioEvento repositorioEvento;
-        private readonly IRepositorioEventoFixo repositorioEventoFixo;
-        private readonly IRepositorioAcervoSolicitacaoItem repositorioAcervoSolicitacaoItem;
-        private readonly IMapper mapper;
-        private readonly IServicoMensageria servicoMensageria;
-        private readonly IServicoAcervo servicoAcervo;
-        private readonly IServicoAcervoBibliografico servicoAcervoBibliografico;
-        
-        public ServicoEvento(IRepositorioEvento repositorioEvento,IMapper mapper,IRepositorioEventoFixo repositorioEventoFixo, 
-            IRepositorioAcervoSolicitacaoItem repositorioAcervoSolicitacaoItem,IServicoMensageria servicoMensageria,
-            IServicoAcervo servicoAcervo,IServicoAcervoBibliografico servicoAcervoBibliografico) 
-        {
-            this.repositorioEvento = repositorioEvento ?? throw new ArgumentNullException(nameof(repositorioEvento));
-            this.mapper = mapper ?? throw new ArgumentNullException(nameof(mapper));
-            this.repositorioEventoFixo = repositorioEventoFixo ?? throw new ArgumentNullException(nameof(repositorioEventoFixo));
-            this.repositorioAcervoSolicitacaoItem = repositorioAcervoSolicitacaoItem ?? throw new ArgumentNullException(nameof(repositorioAcervoSolicitacaoItem));
-            this.servicoMensageria = servicoMensageria ?? throw new ArgumentNullException(nameof(servicoMensageria));
-            this.servicoAcervo = servicoAcervo ?? throw new ArgumentNullException(nameof(servicoAcervo));
-            this.servicoAcervoBibliografico = servicoAcervoBibliografico ?? throw new ArgumentNullException(nameof(servicoAcervoBibliografico));
-        }
-
         public async Task<long> Inserir(EventoCadastroDTO eventoCadastroDto)
         {
             var evento = mapper.Map<Evento>(eventoCadastroDto);
@@ -87,7 +68,7 @@ namespace SME.CDEP.Aplicacao.Servicos
             var eventos = await repositorioEvento.ObterTodos();
 
             if (eventos.NaoPossuiElementos())
-                return default;
+                return default!;
             
             return eventos.Select(s=> mapper.Map<EventoDTO>(s));
         }
@@ -131,7 +112,7 @@ namespace SME.CDEP.Aplicacao.Servicos
             var eventosTag = await repositorioEvento.ObterEventosTagPorData(diaMesDto.Data);
 
             if (eventosTag.EhNulo())
-                return default;
+                return default!;
          
             return mapper.Map<IEnumerable<EventoTagDTO>>(eventosTag);
         }
@@ -162,8 +143,8 @@ namespace SME.CDEP.Aplicacao.Servicos
         public async Task<CalendarioEventoDTO> ObterCalendarioDeEventosPorMes(int mes, int ano)
         {
             var calendarioEvento = new CalendarioEventoDTO();
-            
-            var primeiroDiaMes = new DateTime(ano, mes, 1);
+
+            var primeiroDiaMes = new DateTime(ano, mes, 1, 0, 0, 0, DateTimeKind.Local);
             var ultimoDiaMes = primeiroDiaMes.AddMonths(1).AddDays(-1);
 
             var tiposAcervosPermitidos = servicoAcervo.ObterTiposAcervosPermitidosDoPerfilLogado();
@@ -185,9 +166,9 @@ namespace SME.CDEP.Aplicacao.Servicos
                 while (primeiroDiaSemana <= ultimoDiaSemana)
                 {
                     var desabilitado = primeiroDiaSemana.Month != primeiroDiaMes.Month;
-                    
-                    var data = new DateTime(ano, primeiroDiaSemana.Month, primeiroDiaSemana.Day);
-                    
+
+                    var data = new DateTime(ano, primeiroDiaSemana.Month, primeiroDiaSemana.Day, 0, 0, 0, DateTimeKind.Local);
+
                     dias.Add(new DiaDTO()
                     {
                         Dia = primeiroDiaSemana.Day,
@@ -221,7 +202,7 @@ namespace SME.CDEP.Aplicacao.Servicos
         private IEnumerable<EventoTagDTO> ObterEventosTag(IEnumerable<Evento> eventosTag, DateTime data)
         {
             if (eventosTag.NaoPossuiElementos())
-                return default;
+                return default!;
             
             return mapper.Map<IEnumerable<EventoTagDTO>>(eventosTag.Where(w=> w.Data.Date == data.Date));
         }
@@ -256,7 +237,7 @@ namespace SME.CDEP.Aplicacao.Servicos
             var evento = await repositorioEvento.ObterPorAtendimentoItemId(atendimentoItemId);
 
             if (evento.EhNulo())
-                throw new NegocioException(MensagemNegocio.SOLICITACAO_ATENDIMENTO_ITEM_NAO_ENCONTRADA);
+                return;
 
             await repositorioEvento.Remover(evento.Id);
         }
@@ -287,7 +268,19 @@ namespace SME.CDEP.Aplicacao.Servicos
             foreach (var eventoMovel in eventosMoveis)
                 await servicoMensageria.Publicar(RotasRabbit.ExecutarCriacaoDeEventosTipoFeriadoAnoAtualPorData, eventoMovel, Guid.NewGuid(), null);
         }
-        
+        public async Task ValidarConflitosAsync(IEnumerable<DateTime> datasDasVisitas)
+        {
+            if (datasDasVisitas is null || !datasDasVisitas.Any()) return;
+
+            var eventosConflitantes = await repositorioEvento.ObterEventosDeFeriadoESuspensaoPorDatas([.. datasDasVisitas]);
+
+            if (eventosConflitantes.Any())
+            {
+                var datasFormatadas = string.Join(',', eventosConflitantes.Select(s => s.ToString("dd/MM")));
+                throw new NegocioException(string.Format(MensagemNegocio.DATAS_DE_VISITAS_CONFLITANTES, datasFormatadas));
+            }
+        }
+
         private static DateTime CalcularPascoa(int ano)
         {
             int r1 = ano % 19;
@@ -295,17 +288,17 @@ namespace SME.CDEP.Aplicacao.Servicos
             int r3 = ano % 7;
             int r4 = (19 * r1 + 24) % 30;
             int r5 = (6 * r4 + 4 * r3 + 2 * r2 + 5) % 7;
-            DateTime dataPascoa = new DateTime(ano, 3, 22).AddDays(r4 + r5);
+            var dataPascoa = new DateTime(ano, 3, 22, 0, 0, 0, DateTimeKind.Local).AddDays(r4 + r5);
             int dia = dataPascoa.Day;
             switch (dia)
             {
                 case 26:
-                    dataPascoa = new DateTime(ano, 4, 19);
+                    dataPascoa = new DateTime(ano, 4, 19, 0, 0, 0, DateTimeKind.Local);
                     break;
 
                 case 25:
                     if (r1 > 10)
-                        dataPascoa = new DateTime(ano, 4, 18);
+                        dataPascoa = new DateTime(ano, 4, 18, 0, 0, 0, DateTimeKind.Local);
                     break;
             }
             return dataPascoa.Date;

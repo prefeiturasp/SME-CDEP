@@ -12,5 +12,6 @@ namespace SME.CDEP.Aplicacao.Servicos.Interface
         Task<AcervoBibliograficoDTO> ObterPorId(long id);
         Task<bool> Excluir(long id);
         Task<bool> AlterarSituacaoSaldo(SituacaoSaldo situacaoSaldo, long id);
+        Task GerenciarEmprestimoAsync(long acervoSolicitacaoItemId, long acervoId, DateTime? dataEmprestimo, DateTime? dataDevolucao);
     }
 }

@@ -129,13 +129,13 @@ namespace SME.CDEP.Aplicacao.Servicos
                 throw new NegocioException(string.Format(MensagemNegocio.REGISTRO_X_DUPLICADO, ObterCodigoOuTomboPorTipoAcervo(tipo)));
         }
 
-        public async Task<IEnumerable<AcervoDTO>> ObterTodos()
+        public async Task<IEnumerable<AcervoDto>> ObterTodos()
         {
             var acervos = (await repositorioAcervo.ObterTodos()).Where(w => !w.Excluido);
-            return mapper.Map<IEnumerable<AcervoDTO>>(acervos); 
+            return mapper.Map<IEnumerable<AcervoDto>>(acervos); 
         }
 
-        public async Task<AcervoDTO> AlterarCreditoAutor(Acervo acervo)
+        public async Task<AcervoDto> AlterarCreditoAutor(Acervo acervo)
         {
             ValidarCodigoTomboCodigoNovoAno(acervo);
 
@@ -160,7 +160,7 @@ namespace SME.CDEP.Aplicacao.Servicos
             if (acervo.CodigoNovo.EstaPreenchido() && acervo.TipoAcervoId.NaoEhAcervoDocumental())
                 throw new NegocioException(MensagemNegocio.SOMENTE_ACERVO_DOCUMENTAL_POSSUI_CODIGO_NOVO);
 
-            var acervoAlterado = mapper.Map<AcervoDTO>(await repositorioAcervo.Atualizar(acervo));
+            var acervoAlterado = mapper.Map<AcervoDto>(await repositorioAcervo.Atualizar(acervo));
 
             var creditosAutoresPropostos = acervo.CreditosAutoresIds.NaoEhNulo() ? acervo.CreditosAutoresIds : Enumerable.Empty<long>();
             var acervoCreditoAutorAtuais = await repositorioAcervoCreditoAutor.ObterPorAcervoId(acervoAlterado.Id);
@@ -208,7 +208,7 @@ namespace SME.CDEP.Aplicacao.Servicos
             acervo.AnoFim = ehDecadaOuSeculo ? anoBase.ObterFimDaDecadaOuSeculo() : anoBase;
         }
 
-        public async Task<AcervoDTO> Alterar(AcervoDTO acervoDTO)
+        public async Task<AcervoDto> Alterar(AcervoDto acervoDTO)
         {
             var acervo = await repositorioAcervo.ObterPorId(acervoDTO.Id);
 
@@ -225,9 +225,9 @@ namespace SME.CDEP.Aplicacao.Servicos
             return await AlterarCreditoAutor(acervoAlterar);
         }
 
-        public async Task<AcervoDTO> ObterPorId(long acervoId)
+        public async Task<AcervoDto> ObterPorId(long acervoId)
         {
-            return mapper.Map<AcervoDTO>(await repositorioAcervo.ObterPorId(acervoId));
+            return mapper.Map<AcervoDto>(await repositorioAcervo.ObterPorId(acervoId));
         }
 
         public async Task<bool> Excluir(long entidaId)
@@ -604,5 +604,25 @@ namespace SME.CDEP.Aplicacao.Servicos
             termoPesquisado.Trim().Length >= 3 
             ? await repositorioAcervo.ObterTituloAcervosBaixadosAsync(termoPesquisado.TrimStart())
             : [];
+
+        public async Task<AcervoSolicitacaoRetornoCadastroDTO> ObterAcervosSolicitacoesPorIdTiposPermitidosAsync(long acervoSolicitacaoId, long[] tiposAcervosPermitidos)
+        {
+            var perfilLogado = new Guid(contextoAplicacao.PerfilUsuario);
+            var acervosItensCompletos = await repositorioAcervo.ObterAcervosSolicitacoesItensCompletoPorId(acervoSolicitacaoId, tiposAcervosPermitidos);
+            var acervoItensRetorno = mapper.Map<IEnumerable<AcervoSolicitacaoItemRetornoCadastroDTO>>(acervosItensCompletos,
+                                                                                                        opt =>
+                                                                                                            opt.Items.Add(Constantes.PERFIL_USUARIO_LOGADO_DESABILITA_DATA_VISITA,
+                                                                                                                        perfilLogado.EhPerfilExterno()));
+            var arquivosDoAcervo = await repositorioAcervo.ObterArquivosPorAcervoId([.. acervosItensCompletos.Select(s => s.AcervoId)]);
+
+            foreach (var retorno in acervoItensRetorno)
+                retorno.Arquivos = mapper.Map<IEnumerable<ArquivoCodigoNomeDTO>>(arquivosDoAcervo.Where(w => w.AcervoId == retorno.AcervoId).Select(s => s));
+
+            return new AcervoSolicitacaoRetornoCadastroDTO()
+            {
+                PodeCancelarSolicitacao = acervosItensCompletos.Any(a => a.SituacaoItem.PodeCancelarAtendimento()),
+                Itens = acervoItensRetorno
+            };
+        }
     }
 }
