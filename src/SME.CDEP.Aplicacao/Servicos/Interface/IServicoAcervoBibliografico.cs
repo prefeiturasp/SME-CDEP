@@ -13,5 +13,6 @@ namespace SME.CDEP.Aplicacao.Servicos.Interface
         Task<bool> Excluir(long id);
         Task<bool> AlterarSituacaoSaldo(SituacaoSaldo situacaoSaldo, long id);
         Task GerenciarEmprestimoAsync(long acervoSolicitacaoItemId, long acervoId, DateTime? dataEmprestimo, DateTime? dataDevolucao);
+        Task AtualizarOuCriarEmprestimoAsync(long itemId, long acervoId, DateTime dataEmprestimo, DateTime dataDevolucao);
     }
 }

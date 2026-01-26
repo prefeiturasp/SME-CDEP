@@ -299,6 +299,7 @@ public class RegistradorDeDependencia
         _serviceCollection.TryAddScoped<IServicoDeConsolidacao, ServicoDeConsolidacao>();
         _serviceCollection.AddScoped<IServicoPainelGerencial, ServicoPainelGerencial>();
         _serviceCollection.AddScoped<IServicoConfirmacaoAtendimentoAcervo, ServicoConfirmacaoAtendimentoAcervo>();
+        _serviceCollection.AddScoped<IServicoManutencaoSolicitacaoAcervo, ServicoManutencaoSolicitacaoAcervo>();
         _serviceCollection.AddScoped<ConfirmacaoAtendimentoRecursos>();
         _serviceCollection.AddScoped<ContextoDadosAcervoSolicitacao>();
         _serviceCollection.AddScoped<ContextoInfraAcervoSolicitacao>();

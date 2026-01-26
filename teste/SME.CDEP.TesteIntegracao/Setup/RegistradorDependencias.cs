@@ -149,8 +149,8 @@ namespace SME.CDEP.TesteIntegracao.Setup
             _serviceCollection.TryAddScoped<IRelatorioTitulosMaisPesquisadosUseCase, RelatorioTitulosMaisPesquisadosUseCase>();
             _serviceCollection.AddScoped<IServicoPainelGerencial, ServicoPainelGerencial>();
             _serviceCollection.AddScoped<IServicoConfirmacaoAtendimentoAcervo, ServicoConfirmacaoAtendimentoAcervo>();
+            _serviceCollection.AddScoped<IServicoManutencaoSolicitacaoAcervo, ServicoManutencaoSolicitacaoAcervo>();
             _serviceCollection.AddScoped<ConfirmacaoAtendimentoRecursos>();
-
             _serviceCollection.AddScoped<ContextoDadosAcervoSolicitacao>();
             _serviceCollection.AddScoped<ContextoInfraAcervoSolicitacao>();
             _serviceCollection.AddScoped<ContextoRegrasAcervoSolicitacao>();
