@@ -186,5 +186,38 @@ namespace SME.CDEP.Aplicacao.Servicos
                 await AlterarSituacaoSaldo(SituacaoSaldo.RESERVADO, acervoId);
             }
         }
+
+        public async Task AtualizarOuCriarEmprestimoAsync(long itemId, long acervoId, DateTime dataEmprestimo, DateTime dataDevolucao)
+        {
+            var emprestimoAtual = await repositorioAcervoEmprestimo.ObterUltimoEmprestimoPorAcervoSolicitacaoItemId(itemId);
+
+            if (emprestimoAtual != null)
+            {
+                emprestimoAtual.DataEmprestimo = dataEmprestimo;
+                emprestimoAtual.DataDevolucao = dataDevolucao;
+                emprestimoAtual.Situacao = SituacaoEmprestimo.EMPRESTADO;
+                await repositorioAcervoEmprestimo.Atualizar(emprestimoAtual);
+            }
+            else
+            {
+                // Fluxo de Criação: Usa o método privado existente
+                await InserirAcervoEmprestimo(itemId, dataEmprestimo, dataDevolucao);
+            }
+
+            // Garante o saldo correto
+            await AlterarSituacaoSaldo(SituacaoSaldo.EMPRESTADO, acervoId);
+        }
+
+        private async Task InserirAcervoEmprestimo(long acervoSolicitacaoItemId, DateTime dataEmprestimo, DateTime dataDevolucao)
+        {
+            var acervoEmprestimo = new AcervoEmprestimo
+            {
+                AcervoSolicitacaoItemId = acervoSolicitacaoItemId,
+                DataEmprestimo = dataEmprestimo,
+                DataDevolucao = dataDevolucao,
+                Situacao = SituacaoEmprestimo.EMPRESTADO
+            };
+            await repositorioAcervoEmprestimo.Inserir(acervoEmprestimo);
+        }
     }
 }
