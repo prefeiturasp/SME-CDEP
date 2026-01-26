@@ -445,7 +445,7 @@ namespace SME.CDEP.Aplicacao.Servicos
             ValidarCamposDataVisitaEmprestimoDevolucao(acervoSolicitacaoManualDto);
             
             var datasDasVisitas = acervoSolicitacaoManualDto.Itens
-                .Where(w => w.TipoAtendimento.EhAtendimentoPresencial())
+                .Where(w => w.TipoAtendimento == TipoAtendimento.Presencial && w.DataVisita.HasValue)
                 .Select(s => s.DataVisita!.Value);
 
             await regras.ServicoEvento.ValidarConflitosAsync(datasDasVisitas);
@@ -482,7 +482,8 @@ namespace SME.CDEP.Aplicacao.Servicos
 
                     if (item.TipoAtendimento.EhAtendimentoPresencial())
                     {
-                        await regras.ServicoEvento.InserirEventoVisita(item.DataVisita!.Value, item.Id);
+                        if (item.DataVisita.HasValue)
+                            await regras.ServicoEvento.InserirEventoVisita(item.DataVisita.Value, item.Id);
 
                         if (acervoSolicitacaoItemManualDto.TipoAcervo.EhAcervoBibliografico())
                         {
@@ -532,7 +533,7 @@ namespace SME.CDEP.Aplicacao.Servicos
             ValidarCamposDataVisitaEmprestimoDevolucao(acervoSolicitacaoManualDto);
 
             var datasDasVisitas = acervoSolicitacaoManualDto.Itens
-                .Where(w => w.TipoAtendimento.EhAtendimentoPresencial())
+                .Where(w => w.TipoAtendimento == TipoAtendimento.Presencial && w.DataVisita.HasValue)
                 .Select(s => s.DataVisita!.Value);
 
             await regras.ServicoEvento.ValidarConflitosAsync(datasDasVisitas);
@@ -593,7 +594,8 @@ namespace SME.CDEP.Aplicacao.Servicos
 
                         if (item.TipoAtendimento.EhAtendimentoPresencial())
                         {
-                            await regras.ServicoEvento.AtualizarEventoVisita(item.DataVisita!.Value, item.Id);
+                            if (item.DataVisita.HasValue)
+                                await regras.ServicoEvento.AtualizarEventoVisita(item.DataVisita.Value, item.Id);
                             
                             if (itemProposto.TipoAcervo.EhAcervoBibliografico())
                             {
@@ -635,7 +637,8 @@ namespace SME.CDEP.Aplicacao.Servicos
 
                         if (item.TipoAtendimento.EhAtendimentoPresencial())
                         {
-                            await regras.ServicoEvento.InserirEventoVisita(item.DataVisita!.Value, item.Id);
+                            if (item.DataVisita.HasValue)
+                                await regras.ServicoEvento.InserirEventoVisita(item.DataVisita.Value, item.Id);
 
                             if (itemProposto.TipoAcervo.EhAcervoBibliografico())
                             {
