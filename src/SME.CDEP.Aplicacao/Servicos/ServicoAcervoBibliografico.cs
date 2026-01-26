@@ -3,7 +3,6 @@ using SME.CDEP.Aplicacao.DTOS;
 using SME.CDEP.Aplicacao.Servicos.Interface;
 using SME.CDEP.Dominio.Constantes;
 using SME.CDEP.Dominio.Entidades;
-using SME.CDEP.Dominio.Enumerados;
 using SME.CDEP.Dominio.Excecoes;
 using SME.CDEP.Dominio.Extensions;
 using SME.CDEP.Infra.Dados;
@@ -24,32 +23,32 @@ namespace SME.CDEP.Aplicacao.Servicos
         public async Task<long> Inserir(AcervoBibliograficoCadastroDTO acervoBibliograficoCadastroDto)
         {
             ValidarPreenchimentoAcervoBibliografico(acervoBibliograficoCadastroDto.Altura, acervoBibliograficoCadastroDto.Largura);
-            
-            var assuntosSelecionados =  await repositorioAssunto.ObterPorIds(acervoBibliograficoCadastroDto.AssuntosIds);
-            
+
+            var assuntosSelecionados = await repositorioAssunto.ObterPorIds(acervoBibliograficoCadastroDto.AssuntosIds);
+
             var acervo = mapper.Map<Acervo>(acervoBibliograficoCadastroDto);
             acervo.Situacao = Dominio.Enumerados.SituacaoAcervo.Ativo;
             acervo.TipoAcervoId = (int)TipoAcervo.Bibliografico;
 
             var acervoBibliografico = mapper.Map<AcervoBibliografico>(acervoBibliograficoCadastroDto);
-            
+
             var tran = transacao.Iniciar();
             try
             {
                 var retornoAcervo = await servicoAcervo.Inserir(acervo);
                 acervoBibliografico.AcervoId = retornoAcervo;
-                
+
                 await repositorioAcervoBibliografico.Inserir(acervoBibliografico);
-                
+
                 foreach (var assunto in assuntosSelecionados)
                 {
                     await repositorioAcervoBibliograficoAssunto.Inserir(new AcervoBibliograficoAssunto()
                     {
-                        AssuntoId = assunto.Id, 
-                        AcervoBibliograficoId= acervoBibliografico.Id
+                        AssuntoId = assunto.Id,
+                        AcervoBibliograficoId = acervoBibliografico.Id
                     });
                 }
-                
+
                 tran.Commit();
             }
             catch
@@ -64,7 +63,7 @@ namespace SME.CDEP.Aplicacao.Servicos
 
             return acervoBibliografico.AcervoId;
         }
-        
+
         private static void ValidarPreenchimentoAcervoBibliografico(string? altura, string? largura)
         {
             if (!string.IsNullOrWhiteSpace(largura) && largura.NaoEhNumericoComCasasDecimais())
@@ -76,41 +75,41 @@ namespace SME.CDEP.Aplicacao.Servicos
 
         public async Task<IEnumerable<AcervoBibliograficoDTO>> ObterTodos()
         {
-            return (await repositorioAcervoBibliografico.ObterTodos()).Select(s=> mapper.Map<AcervoBibliograficoDTO>(s));
+            return (await repositorioAcervoBibliografico.ObterTodos()).Select(s => mapper.Map<AcervoBibliograficoDTO>(s));
         }
 
         public async Task<AcervoBibliograficoDTO> Alterar(AcervoBibliograficoAlteracaoDTO acervoBibliograficoAlteracaoDto)
         {
             ValidarPreenchimentoAcervoBibliografico(acervoBibliograficoAlteracaoDto.Altura, acervoBibliograficoAlteracaoDto.Largura);
-            
-            var assuntosIdsInserir =  Enumerable.Empty<long>();
-            var assuntosIdsExcluir =  Enumerable.Empty<long>();
-            
+
+            var assuntosIdsInserir = Enumerable.Empty<long>();
+            var assuntosIdsExcluir = Enumerable.Empty<long>();
+
             var acervoBibliografico = mapper.Map<AcervoBibliografico>(acervoBibliograficoAlteracaoDto);
 
             var acervoDTO = mapper.Map<AcervoDto>(acervoBibliograficoAlteracaoDto);
-            
+
             var assuntosExistentes = (await repositorioAcervoBibliograficoAssunto.ObterPorAcervoBibliograficoId(acervoBibliograficoAlteracaoDto.Id)).Select(s => s.AssuntoId).ToArray();
             (assuntosIdsInserir, assuntosIdsExcluir) = await ObterAssuntoInseridosExcluidos(acervoBibliograficoAlteracaoDto.AssuntosIds, assuntosExistentes);
-            
+
             var tran = transacao.Iniciar();
             try
             {
                 await servicoAcervo.Alterar(acervoDTO);
-                
+
                 await repositorioAcervoBibliografico.Atualizar(acervoBibliografico);
-                
+
                 foreach (var assunto in assuntosIdsInserir)
                 {
                     await repositorioAcervoBibliograficoAssunto.Inserir(new AcervoBibliograficoAssunto()
                     {
-                        AssuntoId = assunto, 
-                        AcervoBibliograficoId= acervoBibliografico.Id
+                        AssuntoId = assunto,
+                        AcervoBibliograficoId = acervoBibliografico.Id
                     });
                 }
 
                 await repositorioAcervoBibliograficoAssunto.Excluir(assuntosIdsExcluir.ToArray(), acervoBibliografico.Id);
-                
+
                 tran.Commit();
             }
             catch
@@ -130,8 +129,8 @@ namespace SME.CDEP.Aplicacao.Servicos
         {
             var assuntosIdsInserir = assuntosAlterados.Except(assuntosExistentes);
             var assuntosIdsExcluir = assuntosExistentes.Except(assuntosAlterados);
-            
-            return (assuntosIdsInserir,assuntosIdsExcluir);
+
+            return (assuntosIdsInserir, assuntosIdsExcluir);
         }
 
         public async Task<AcervoBibliograficoDTO> ObterPorId(long id)
@@ -151,12 +150,12 @@ namespace SME.CDEP.Aplicacao.Servicos
         {
             return await servicoAcervo.Excluir(id);
         }
-        
+
         public async Task<bool> AlterarSituacaoSaldo(SituacaoSaldo situacaoSaldo, long id)
         {
             var acervoBibliografico = await repositorioAcervoBibliografico.ObterPorAcervoId(id);
             if (acervoBibliografico.EhNulo()) return false;
-            
+
             acervoBibliografico.DefinirSituacaoSaldo(situacaoSaldo);
             await repositorioAcervoBibliografico.Atualizar(acervoBibliografico);
             return true;
@@ -173,7 +172,7 @@ namespace SME.CDEP.Aplicacao.Servicos
 
             if (temInformacaoEmprestimo)
             {
-                await repositorioAcervoEmprestimo.Inserir(new ()
+                await repositorioAcervoEmprestimo.Inserir(new()
                 {
                     AcervoSolicitacaoItemId = acervoSolicitacaoItemId,
                     DataEmprestimo = dataEmprestimo!.Value,
@@ -186,6 +185,39 @@ namespace SME.CDEP.Aplicacao.Servicos
             {
                 await AlterarSituacaoSaldo(SituacaoSaldo.RESERVADO, acervoId);
             }
+        }
+
+        public async Task AtualizarOuCriarEmprestimoAsync(long itemId, long acervoId, DateTime dataEmprestimo, DateTime dataDevolucao)
+        {
+            var emprestimoAtual = await repositorioAcervoEmprestimo.ObterUltimoEmprestimoPorAcervoSolicitacaoItemId(itemId);
+
+            if (emprestimoAtual != null)
+            {
+                emprestimoAtual.DataEmprestimo = dataEmprestimo;
+                emprestimoAtual.DataDevolucao = dataDevolucao;
+                emprestimoAtual.Situacao = SituacaoEmprestimo.EMPRESTADO;
+                await repositorioAcervoEmprestimo.Atualizar(emprestimoAtual);
+            }
+            else
+            {
+                // Fluxo de Criação: Usa o método privado existente
+                await InserirAcervoEmprestimo(itemId, dataEmprestimo, dataDevolucao);
+            }
+
+            // Garante o saldo correto
+            await AlterarSituacaoSaldo(SituacaoSaldo.EMPRESTADO, acervoId);
+        }
+
+        private async Task InserirAcervoEmprestimo(long acervoSolicitacaoItemId, DateTime dataEmprestimo, DateTime dataDevolucao)
+        {
+            var acervoEmprestimo = new AcervoEmprestimo
+            {
+                AcervoSolicitacaoItemId = acervoSolicitacaoItemId,
+                DataEmprestimo = dataEmprestimo,
+                DataDevolucao = dataDevolucao,
+                Situacao = SituacaoEmprestimo.EMPRESTADO
+            };
+            await repositorioAcervoEmprestimo.Inserir(acervoEmprestimo);
         }
     }
 }
