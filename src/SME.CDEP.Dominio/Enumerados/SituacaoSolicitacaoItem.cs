@@ -91,5 +91,10 @@ public static class SituacaoSolicitacaoItemExtension
     public static bool NaoEstaAguardandoAtendimento(this SituacaoSolicitacaoItem situacaoSolicitacaoItem)
     {
         return !situacaoSolicitacaoItem.EstaAguardandoAtendimento();
-    } 
+    }
+
+    public static bool PresencialEmAberto(this SituacaoSolicitacaoItem situacaoSolicitacaoItem)
+    {
+        return situacaoSolicitacaoItem == SituacaoSolicitacaoItem.PRESENCIAL_ABERTO;
+    }
 }
