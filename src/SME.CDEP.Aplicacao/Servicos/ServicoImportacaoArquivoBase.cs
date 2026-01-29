@@ -163,7 +163,7 @@ namespace SME.CDEP.Aplicacao.Servicos
         {
             var conteudo = campo.Conteudo?.Trim();
 
-            if (!conteudo.EstaPreenchido())
+            if (conteudo != null && !conteudo.EstaPreenchido())
             {
                 ValidarCampoObrigatorio(campo, nomeCampo);
                 return;
@@ -190,7 +190,6 @@ namespace SME.CDEP.Aplicacao.Servicos
             if (campo.FormatoTipoDeCampo.EhFormatoLongo())
             {
                 ValidarNumero<long>(campo, nomeCampo, long.TryParse);
-                return;
             }
         }
 
