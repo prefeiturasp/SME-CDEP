@@ -25,7 +25,12 @@ namespace SME.CDEP.Infra.Dados.Repositorios
                 LIMIT 1
                 """;
 
-            var retorno = await conexao.Obter().QueryFirstOrDefaultAsync<ParametroSistema>(query, new { tipoParametroSistema, ano });
+            var retorno = await conexao.Obter().QueryFirstOrDefaultAsync<ParametroSistema>(query,
+                new
+                {
+                    Tipo = (int)tipoParametroSistema,
+                    Ano = ano
+                });
 
             if (retorno is null)
                 throw new NegocioException(string.Format(MensagemNegocio.PARAMETRO_NAO_ENCONTRADO_TIPO_X, tipoParametroSistema));
