@@ -171,6 +171,12 @@ namespace SME.CDEP.Aplicacao.Servicos
 
             if (campo.FormatoTipoDeCampo.EhFormatoString())
             {
+                if (conteudo is null)
+                {
+                    ValidarCampoObrigatorio(campo, nomeCampo);
+                    return;
+                }
+
                 ValidarCampoString(campo, nomeCampo, conteudo);
                 return;
             }
