@@ -142,7 +142,7 @@ namespace SME.CDEP.Aplicacao.Servicos
             if (acervoSolicitacao.EhNulo())
                 throw new NegocioException(MensagemNegocio.SOLICITACAO_ATENDIMENTO_NAO_ENCONTRADA);
 
-            acervoSolicitacao.DadosSolicitante = infra.Mapper.Map<DadosSolicitanteDTO>(await infra.ServicoUsuario.ObterDadosSolicitantePorUsuarioId(acervoSolicitacao.UsuarioId));
+            acervoSolicitacao.DadosSolicitante = infra.Mapper.Map<DadosSolicitanteDto>(await infra.ServicoUsuario.ObterDadosSolicitantePorUsuarioId(acervoSolicitacao.UsuarioId));
             acervoSolicitacao.PodeFinalizar = PodeFinalizar(perfilLogado, acervoSolicitacao);
             
             acervoSolicitacao.PodeCancelar = perfilLogado.EhPerfilAdminGeral() && acervoSolicitacao.SituacaoId.NaoEstaFinalizadoAtendimentoOuCancelado()

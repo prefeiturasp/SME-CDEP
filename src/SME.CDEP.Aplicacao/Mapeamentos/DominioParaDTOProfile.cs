@@ -185,7 +185,7 @@ namespace SME.CDEP.Aplicacao.Mapeamentos
                 .ForMember(dest => dest.EstaDisponivel, opt => opt.MapFrom(o => o.SituacaoSaldo.EstaDisponivel()))
                 .ReverseMap();
 
-            CreateMap<Usuario, DadosSolicitanteDTO>()
+            CreateMap<Usuario, DadosSolicitanteDto>()
                 .ForMember(dest => dest.Tipo, opt => opt.MapFrom(o => o.TipoUsuario.Descricao()))
                 .ForMember(dest => dest.TipoId, opt => opt.MapFrom(o => o.TipoUsuario))
                 .ReverseMap();

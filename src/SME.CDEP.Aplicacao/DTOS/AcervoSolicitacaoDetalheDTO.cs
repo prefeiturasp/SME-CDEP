@@ -5,8 +5,8 @@ namespace SME.CDEP.Aplicacao.DTOS
 {
     public class AcervoSolicitacaoDetalheDTO
     {
-        public DadosSolicitanteDTO DadosSolicitante { get; set; }
-        
+        public DadosSolicitanteDto DadosSolicitante { get; set; } = null!;
+
         public long Id { get; set; }
         public long UsuarioId { get; set; }
         public DateTime DataSolicitacao { get; set; }
