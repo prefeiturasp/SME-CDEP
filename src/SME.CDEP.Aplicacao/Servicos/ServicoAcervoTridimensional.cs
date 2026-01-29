@@ -20,7 +20,6 @@ namespace SME.CDEP.Aplicacao.Servicos
         private readonly IMapper mapper;
         private readonly IServicoAcervo servicoAcervo;
         private readonly ITransacao transacao;
-        private readonly IServicoGerarMiniatura servicoGerarMiniatura;
         private List<AcervoTridimensionalArquivo> AcervoTridimensionalArquivoInseridos;
         
         public ServicoAcervoTridimensional(
@@ -32,8 +31,7 @@ namespace SME.CDEP.Aplicacao.Servicos
             IRepositorioArquivo repositorioArquivo,
             IRepositorioAcervoTridimensionalArquivo repositorioAcervoTridimensionalArquivo,
             IServicoMoverArquivoTemporario servicoMoverArquivoTemporario,
-            IServicoArmazenamento servicoArmazenamento,
-            IServicoGerarMiniatura servicoGerarMiniatura) : 
+            IServicoArmazenamento servicoArmazenamento) : 
             base(repositorioAcervo,
                 repositorioArquivo,
                 servicoMoverArquivoTemporario,
@@ -44,7 +42,6 @@ namespace SME.CDEP.Aplicacao.Servicos
             this.transacao = transacao ?? throw new ArgumentNullException(nameof(transacao));
             this.repositorioAcervoTridimensionalArquivo = repositorioAcervoTridimensionalArquivo ?? throw new ArgumentNullException(nameof(repositorioAcervoTridimensionalArquivo));
             this.servicoAcervo = servicoAcervo ?? throw new ArgumentNullException(nameof(servicoAcervo));
-            this.servicoGerarMiniatura = servicoGerarMiniatura ?? throw new ArgumentNullException(nameof(servicoGerarMiniatura));
             AcervoTridimensionalArquivoInseridos = new List<AcervoTridimensionalArquivo>();
         }
 

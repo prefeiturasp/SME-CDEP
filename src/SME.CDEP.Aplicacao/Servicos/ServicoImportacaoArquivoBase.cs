@@ -90,70 +90,110 @@ namespace SME.CDEP.Aplicacao.Servicos
             return await repositorioImportacaoArquivo.Salvar(importacaoArquivo);
         }
 
-        public static void ValidarPreenchimentoLimiteCaracteres(LinhaConteudoAjustarDTO campo, string nomeCampo)
+        private static void ValidarCampoObrigatorio(LinhaConteudoAjustarDTO campo, string nomeCampo)
         {
-            var conteudoCampo = campo.Conteudo.Trim();
+            if (campo.EhCampoObrigatorio)
+                DefinirMensagemErro(campo, string.Format(Constantes.CAMPO_X_NAO_PREENCHIDO, nomeCampo));
+            else
+                DefinirCampoValidado(campo);
+        }
 
-            if (conteudoCampo.EstaPreenchido())
+        private static void ValidarCampoString(LinhaConteudoAjustarDTO campo, string nomeCampo, string conteudo)
+        {
+            var itens = conteudo.FormatarTextoEmArray();
+
+            foreach (var item in itens)
             {
-                if (campo.FormatoTipoDeCampo.EhFormatoString())
-                {
-                    var conteudoCampoArray = conteudoCampo.FormatarTextoEmArray().ToList();
-                    foreach (var item in conteudoCampoArray)
-                    {
-                        if (campo.ValoresPermitidos.NaoEhNulo())
-                        {
-                            if (!campo.ValoresPermitidos.Contains(campo.Conteudo.ToLower()))
-                            {
-                                DefinirMensagemErro(campo, string.Format(Constantes.VALOR_X_DO_CAMPO_X_NAO_PERMITIDO_ESPERADO_X, item, nomeCampo, string.Join(", ", campo.ValoresPermitidos)));
-                                break;
-                            }
-                        }
-                        if (campo.Conteudo.EstaPreenchido() && campo.ValidarComExpressaoRegular.EstaPreenchido() && !Regex.IsMatch(campo.Conteudo, campo.ValidarComExpressaoRegular))
-                        {
-                            DefinirMensagemErro(campo, campo.MensagemValidacao);
-                            break;
-                        }
+                if (!ValidarValoresPermitidos(campo, item, nomeCampo)) return;
+                if (!ValidarRegex(campo)) return;
 
-                        if (item.ValidarLimiteDeCaracteres(campo.LimiteCaracteres))
-                            DefinirCampoValidado(campo);
-                        else
-                        {
-                            DefinirMensagemErro(campo, string.Format(Constantes.CAMPO_X_ATINGIU_LIMITE_CARACTERES, nomeCampo));
-                            break;
-                        }
-                    }
-                }
-                else if (campo.FormatoTipoDeCampo.EhFormatoDouble())
+                if (!item.ValidarLimiteDeCaracteres(campo.LimiteCaracteres))
                 {
-                    if (double.TryParse(conteudoCampo, out double formatoDouble))
-                        DefinirCampoValidado(campo);
-                    else
-                        DefinirMensagemErro(campo, string.Format(Constantes.CAMPO_X_REQUER_UM_VALOR_NUMERICO, nomeCampo));
-                }
-                else if (campo.FormatoTipoDeCampo.EhFormatoInteiro())
-                {
-                    if (int.TryParse(conteudoCampo, out int formatoInteiro))
-                        DefinirCampoValidado(campo);
-                    else
-                        DefinirMensagemErro(campo, string.Format(Constantes.CAMPO_X_REQUER_UM_VALOR_NUMERICO, nomeCampo));
-                }
-                else if (campo.FormatoTipoDeCampo.EhFormatoLongo())
-                {
-                    if (long.TryParse(conteudoCampo, out long formatoInteiro))
-                        DefinirCampoValidado(campo);
-                    else
-                        DefinirMensagemErro(campo, string.Format(Constantes.CAMPO_X_REQUER_UM_VALOR_NUMERICO, nomeCampo));
+                    DefinirMensagemErro(campo,
+                        string.Format(Constantes.CAMPO_X_ATINGIU_LIMITE_CARACTERES, nomeCampo));
+                    return;
                 }
             }
+
+            DefinirCampoValidado(campo);
+        }
+
+        private static bool ValidarValoresPermitidos(LinhaConteudoAjustarDTO campo, string item, string nomeCampo)
+        {
+            if (campo.ValoresPermitidos.EhNulo()) return true;
+
+            if (campo.ValoresPermitidos.Contains(item.ToLower()))
+                return true;
+
+            DefinirMensagemErro(campo,
+                string.Format(Constantes.VALOR_X_DO_CAMPO_X_NAO_PERMITIDO_ESPERADO_X,
+                    item,
+                    nomeCampo,
+                    string.Join(", ", campo.ValoresPermitidos)));
+
+            return false;
+        }
+
+        private static bool ValidarRegex(LinhaConteudoAjustarDTO campo)
+        {
+            if (!campo.ValidarComExpressaoRegular.EstaPreenchido())
+                return true;
+
+            if (Regex.IsMatch(campo.Conteudo, campo.ValidarComExpressaoRegular))
+                return true;
+
+            DefinirMensagemErro(campo, campo.MensagemValidacao);
+            return false;
+        }
+
+        private static void ValidarNumero<T>( LinhaConteudoAjustarDTO campo, string nomeCampo, TryParseHandler<T> tryParse)
+        {
+            if (tryParse(campo.Conteudo, out _))
+                DefinirCampoValidado(campo);
             else
+                DefinirMensagemErro(campo,
+                    string.Format(Constantes.CAMPO_X_REQUER_UM_VALOR_NUMERICO, nomeCampo));
+        }
+
+        private delegate bool TryParseHandler<T>(string value, out T result);
+
+        public static void ValidarPreenchimentoLimiteCaracteres(
+            LinhaConteudoAjustarDTO campo,
+            string nomeCampo)
+        {
+            var conteudo = campo.Conteudo?.Trim();
+
+            if (!conteudo.EstaPreenchido())
             {
-                if (campo.EhCampoObrigatorio)
-                    DefinirMensagemErro(campo, string.Format(Constantes.CAMPO_X_NAO_PREENCHIDO, nomeCampo));
-                else
-                    DefinirCampoValidado(campo);
+                ValidarCampoObrigatorio(campo, nomeCampo);
+                return;
+            }
+
+            if (campo.FormatoTipoDeCampo.EhFormatoString())
+            {
+                ValidarCampoString(campo, nomeCampo, conteudo);
+                return;
+            }
+
+            if (campo.FormatoTipoDeCampo.EhFormatoDouble())
+            {
+                ValidarNumero<double>(campo, nomeCampo, double.TryParse);
+                return;
+            }
+
+            if (campo.FormatoTipoDeCampo.EhFormatoInteiro())
+            {
+                ValidarNumero<int>(campo, nomeCampo, int.TryParse);
+                return;
+            }
+
+            if (campo.FormatoTipoDeCampo.EhFormatoLongo())
+            {
+                ValidarNumero<long>(campo, nomeCampo, long.TryParse);
+                return;
             }
         }
+
 
         protected static void DefinirMensagemErro(LinhaConteudoAjustarDTO campo, string mensagemErro)
         {
