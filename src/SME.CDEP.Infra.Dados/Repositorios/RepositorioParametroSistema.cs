@@ -3,28 +3,32 @@ using SME.CDEP.Dominio.Constantes;
 using SME.CDEP.Dominio.Contexto;
 using SME.CDEP.Dominio.Entidades;
 using SME.CDEP.Dominio.Excecoes;
-using SME.CDEP.Dominio.Extensions;
 using SME.CDEP.Infra.Dados.Repositorios.Interfaces;
+using System.Diagnostics.CodeAnalysis;
 
 namespace SME.CDEP.Infra.Dados.Repositorios
 {
-    public class RepositorioParametroSistema : RepositorioBaseAuditavel<ParametroSistema>, IRepositorioParametroSistema
+    [ExcludeFromCodeCoverage]
+    public class RepositorioParametroSistema(IContextoAplicacao contexto, ICdepConexao conexao) :
+        RepositorioBaseAuditavel<ParametroSistema>(contexto, conexao), IRepositorioParametroSistema
     {
-        public RepositorioParametroSistema(IContextoAplicacao contexto, ICdepConexao conexao) : base(contexto,conexao)
-        { }
-
-        public async Task<ParametroSistema> ObterParametroPorTipoEAno(TipoParametroSistema tipo, int ano = 0)
+        public async Task<ParametroSistema> ObterParametroPorTipoEAno(TipoParametroSistema tipoParametroSistema, int ano = 0)
         {
-            var query = @"select *
-                            from parametro_sistema ps
-                           where ano = @ano
-                             and tipo = @tipo
-                             and ativo";
+            const string query = """
+                SELECT *
+                FROM  parametro_sistema
+                WHERE tipo = @Tipo
+                  AND ativo = true
+                ORDER BY
+                    CASE WHEN ano = @Ano THEN 0 ELSE 1 END ASC, -- Prioridade 0: Ano solicitado
+                    ano DESC                                    -- Prioridade 1: Maior ano (fallback)
+                LIMIT 1
+                """;
 
-            var retorno = await conexao.Obter().QueryFirstOrDefaultAsync<ParametroSistema>(query, new { tipo, ano });
-            
-            if (retorno.EhNulo())
-                throw new NegocioException(string.Format(MensagemNegocio.PARAMETRO_NAO_ENCONTRADO_TIPO_X,tipo));
+            var retorno = await conexao.Obter().QueryFirstOrDefaultAsync<ParametroSistema>(query, new { tipoParametroSistema, ano });
+
+            if (retorno is null)
+                throw new NegocioException(string.Format(MensagemNegocio.PARAMETRO_NAO_ENCONTRADO_TIPO_X, tipoParametroSistema));
 
             return retorno;
         }
