@@ -25,11 +25,11 @@ namespace SME.CDEP.Aplicacao.Servicos.Interface
         IEnumerable<Permissao> ObterPermissoes();
         Task<RetornoPerfilUsuarioDTO> RevalidarToken(string token);
         Task<RetornoPerfilUsuarioDTO> AtualizarPerfil(Guid perfilUsuarioId);
-        Task<DadosSolicitanteDTO> ObterDadosSolicitante();
+        Task<DadosSolicitanteDto> ObterDadosSolicitante();
         Task<UsuarioDTO> ObterUsuarioLogado();
         Task<IEnumerable<ResponsavelDTO>> ObterUsuariosComPerfisResponsavel();
-        Task<DadosSolicitanteDTO> ObterDadosSolicitantePorUsuarioId(long usuarioId);
-        Task<DadosSolicitanteDTO> ObterDadosSolicitantePorRfOuCpf(string rfOuCpf);
+        Task<DadosSolicitanteDto> ObterDadosSolicitantePorUsuarioId(long usuarioId);
+        Task<DadosSolicitanteDto> ObterDadosSolicitantePorRfOuCpf(string rfOuCpf);
         Guid ObterPerfilUsuarioLogado();
     }
 }

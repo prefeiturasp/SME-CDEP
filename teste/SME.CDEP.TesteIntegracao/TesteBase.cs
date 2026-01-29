@@ -318,12 +318,13 @@ namespace SME.CDEP.TesteIntegracao
         protected async Task InserirDadosBasicosAleatorios()
         {
             var random = new Random();
+            string NomeCurto() => faker.Lorem.Letter(50); // <= varchar(100) safe
 
             for (int i = 1; i <= 5; i++)
             {
                 await InserirNaBase(new CreditoAutor()
                 {
-                    Nome = faker.Lorem.Sentence().Limite(200),
+                    Nome = NomeCurto(),
                     CriadoPor = ConstantesTestes.SISTEMA,
                     CriadoEm = DateTimeExtension.HorarioBrasilia().Date,
                     CriadoLogin = ConstantesTestes.LOGIN_123456789
@@ -331,40 +332,41 @@ namespace SME.CDEP.TesteIntegracao
 
                 await InserirNaBase(new Suporte()
                 {
-                    Nome = faker.Lorem.Sentence().Limite(500),
+                    Nome = NomeCurto(),
                     Tipo = (TipoSuporte)random.Next(1, 2),
                 });
 
                 await InserirNaBase(new Formato()
                 {
-                    Nome = faker.Lorem.Sentence().Limite(500),
+                    Nome = NomeCurto(),
                     Tipo = (TipoFormato)random.Next(1, 2),
                 });
 
-                await InserirNaBase(new Cromia() { Nome = faker.Lorem.Sentence().Limite(500) });
+                await InserirNaBase(new Cromia() { Nome = NomeCurto() });
+                await InserirNaBase(new Conservacao() { Nome = NomeCurto() });
+                await InserirNaBase(new Idioma() { Nome = NomeCurto() });
+                await InserirNaBase(new Material() { Nome = NomeCurto() });
+                await InserirNaBase(new AcessoDocumento() { Nome = NomeCurto() });
 
-                await InserirNaBase(new Conservacao() { Nome = faker.Lorem.Sentence().Limite(500) });
-
-                await InserirNaBase(new Idioma() { Nome = faker.Lorem.Sentence().Limite(500) });
-                await InserirNaBase(new Material() { Nome = faker.Lorem.Sentence().Limite(500) });
-                await InserirNaBase(new AcessoDocumento() { Nome = faker.Lorem.Sentence().Limite(500) });
                 await InserirNaBase(new Editora()
                 {
-                    Nome = faker.Lorem.Sentence().Limite(200),
+                    Nome = NomeCurto(),
                     CriadoPor = ConstantesTestes.SISTEMA,
                     CriadoEm = DateTimeExtension.HorarioBrasilia().Date,
                     CriadoLogin = ConstantesTestes.LOGIN_123456789
                 });
+
                 await InserirNaBase(new SerieColecao()
                 {
-                    Nome = faker.Lorem.Sentence().Limite(200),
+                    Nome = NomeCurto(),
                     CriadoPor = ConstantesTestes.SISTEMA,
                     CriadoEm = DateTimeExtension.HorarioBrasilia().Date,
                     CriadoLogin = ConstantesTestes.LOGIN_123456789
                 });
+
                 await InserirNaBase(new Assunto()
                 {
-                    Nome = faker.Lorem.Sentence().Limite(200),
+                    Nome = NomeCurto(),
                     CriadoPor = ConstantesTestes.SISTEMA,
                     CriadoEm = DateTimeExtension.HorarioBrasilia().Date,
                     CriadoLogin = ConstantesTestes.LOGIN_123456789
@@ -373,22 +375,23 @@ namespace SME.CDEP.TesteIntegracao
                 await InserirNaBase(new Dominio.Entidades.Usuario()
                 {
                     Login = $"login_{i}",
-                    Nome = faker.Lorem.Sentence().Limite(200),
+                    Nome = NomeCurto(),
                     CriadoPor = ConstantesTestes.SISTEMA,
                     CriadoEm = DateTimeExtension.HorarioBrasilia().Date,
                     CriadoLogin = ConstantesTestes.LOGIN_123456789
                 });
             }
+
             await InserirNaBase(new Dominio.Entidades.Usuario()
             {
                 Login = "Sistema",
-                Nome = faker.Lorem.Sentence().Limite(200),
+                Nome = NomeCurto(),
                 CriadoPor = ConstantesTestes.SISTEMA,
                 CriadoEm = DateTimeExtension.HorarioBrasilia().Date,
                 CriadoLogin = ConstantesTestes.LOGIN_123456789
             });
-
         }
+
 
         protected async Task InserirDadosBasicos()
         {
