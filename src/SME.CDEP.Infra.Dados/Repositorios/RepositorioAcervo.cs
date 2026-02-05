@@ -7,6 +7,7 @@ using SME.CDEP.Dominio.Enumerados;
 using SME.CDEP.Dominio.Extensions;
 using SME.CDEP.Infra.Dados.Repositorios.Interfaces;
 using SME.CDEP.Infra.Dominio.Enumerados;
+using System.Data;
 using System.Diagnostics.CodeAnalysis;
 using System.Text;
 
@@ -290,8 +291,8 @@ namespace SME.CDEP.Infra.Dados.Repositorios
 
             var condicoesWhere = new StringBuilder("WHERE NOT a.excluido AND COALESCE(a.situacao, 1) IN (0, 1) ");
             var parametros = new DynamicParameters();
-            parametros.Add("Termo", termoPesquisa);
-            parametros.Add("TermoWildcard", termoPesquisa is not null ? $"%{termoPesquisa}%" : null);
+            parametros.Add("Termo", termoPesquisa, DbType.String);
+            parametros.Add("TermoWildcard", termoPesquisa is not null ? $"%{termoPesquisa}%" : null, DbType.String);
 
             if (tipoAcervo.HasValue)
             {
