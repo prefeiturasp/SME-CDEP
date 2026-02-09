@@ -47,16 +47,18 @@ public class RepositorioPainelGerencial(ICdepConexao conexao) : IRepositorioPain
         return [.. resultado];
     }
 
-    public async Task<List<PainelGerencialQuantidadeDeSolicitacoesPorTipoAcervo>> ObterQuantidadeDeSolicitacoesPorTipoAcervoAsync()
+    public async Task<List<PainelGerencialQuantidadeDeSolicitacoesPorTipoAcervo>> ObterQuantidadeDeSolicitacoesPorTipoAcervoAsync(int? ano = null, int? mes = null)
     {
         var sql = @"
         SELECT acervo.TIPO tipoAcervo, COUNT(1) quantidade
         FROM   acervo_solicitacao_item
-               INNER JOIN acervo ON ACERVO_ID = acervo.ID 
-        WHERE  NOT acervo_solicitacao_item.EXCLUIDO 
+               INNER JOIN acervo ON ACERVO_ID = acervo.ID
+        WHERE  NOT acervo_solicitacao_item.EXCLUIDO
+               AND (@ano IS NULL OR EXTRACT(YEAR FROM acervo_solicitacao_item.CRIADO_EM) = @ano)
+               AND (@mes IS NULL OR EXTRACT(MONTH FROM acervo_solicitacao_item.CRIADO_EM) = @mes)
         GROUP  BY acervo.TIPO;";
 
-        var resultado = await conexao.Obter().QueryAsync<PainelGerencialQuantidadeDeSolicitacoesPorTipoAcervo>(sql);
+        var resultado = await conexao.Obter().QueryAsync<PainelGerencialQuantidadeDeSolicitacoesPorTipoAcervo>(sql, new { ano, mes });
         return [.. resultado];
     }
 
