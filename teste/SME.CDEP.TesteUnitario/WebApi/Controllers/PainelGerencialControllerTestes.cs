@@ -98,7 +98,7 @@ namespace SME.CDEP.TesteUnitario.WebApi.Controllers
                 .Setup(s => s.ObterQuantidadeDeSolicitacoesPorTipoAcervoAsync())
                 .ReturnsAsync(quantidadeSolicitacoesPorTipoAcervoDto);
             // Act
-            var resultado = await _painelGerencialController.ObterQuantidadeSolicitacoesPorTipoAcervo();
+            var resultado = await _painelGerencialController.ObterQuantidadeSolicitacoesPorTipoAcervo(null, null);
             // Assert
             var okResult = resultado as Microsoft.AspNetCore.Mvc.OkObjectResult;
             okResult.Should().NotBeNull();
