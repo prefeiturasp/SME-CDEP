@@ -42,7 +42,7 @@ namespace SME.CDEP.Dominio.Entidades
                        || Situacao.EstaFinalizadoManualmente();
             }
             
-            return Situacao.EstaAguardandoAtendimento()|| Situacao.EstaAguardandoVisita();
+            return Situacao.EstaAguardandoAtendimento()|| Situacao.EstaAguardandoVisita() || Situacao.PresencialEmAberto();
         }
     }
 }

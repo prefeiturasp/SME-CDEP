@@ -135,7 +135,7 @@ public class UsuarioController : BaseController
     }
 
     [HttpGet("dados-solicitante")]
-    [ProducesResponseType(typeof(DadosSolicitanteDTO), 200)]
+    [ProducesResponseType(typeof(DadosSolicitanteDto), 200)]
     [ProducesResponseType(typeof(RetornoBaseDTO), 400)]
     [ProducesResponseType(typeof(RetornoBaseDTO), 500)]
     [Permissao(Permissao.OperacoesSolicitacoes_C, Policy = "Bearer")]
@@ -155,7 +155,7 @@ public class UsuarioController : BaseController
     }
 
     [HttpGet("{rfCpf}/dados-solicitante")]
-    [ProducesResponseType(typeof(DadosSolicitanteDTO), 200)]
+    [ProducesResponseType(typeof(DadosSolicitanteDto), 200)]
     [ProducesResponseType(typeof(RetornoBaseDTO), 400)]
     [ProducesResponseType(typeof(RetornoBaseDTO), 500)]
     [Permissao(Permissao.OperacoesSolicitacoes_C, Policy = "Bearer")]

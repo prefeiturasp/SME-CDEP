@@ -30,9 +30,9 @@ public class ServicoPainelGerencial(
         return mapper.Map<List<PainelGerencialQuantidadeSolicitacaoMensalDto>>(solicitacoes);
     }
 
-    public async Task<List<PainelGerencialQuantidadeSolicitacaoPorTipoDeAcervoDto>> ObterQuantidadeDeSolicitacoesPorTipoAcervoAsync()
+    public async Task<List<PainelGerencialQuantidadeSolicitacaoPorTipoDeAcervoDto>> ObterQuantidadeDeSolicitacoesPorTipoAcervoAsync(int? ano = null, int? mes = null)
     {
-        var solicitacoes = await repositorioPainelGerencial.ObterQuantidadeDeSolicitacoesPorTipoAcervoAsync();
+        var solicitacoes = await repositorioPainelGerencial.ObterQuantidadeDeSolicitacoesPorTipoAcervoAsync(ano, mes);
         return mapper.Map<List<PainelGerencialQuantidadeSolicitacaoPorTipoDeAcervoDto>>(solicitacoes);
     }
 

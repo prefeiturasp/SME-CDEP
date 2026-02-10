@@ -10,7 +10,7 @@ namespace SME.CDEP.Infra.Dados.Repositorios.Interfaces
         Task<IEnumerable<AcervoSolicitacaoItemDetalhe>> ObterSolicitacoesPorFiltro(long? acervoSolicitacaoId, TipoAcervo? tipoAcervo,
             DateTime? dataSolicitacaoInicio, DateTime? dataSolicitacaoFim, string? responsavel, SituacaoSolicitacaoItem? situacaoItem, DateTime? dataVisitaInicio,
             DateTime? dataVisitaFim, string? filtroSolicitacaoDto, SituacaoEmprestimo? situacaoEmprestimo, long[] tiposAcervosPermitidos);
-        Task<IEnumerable<AcervoSolicitacaoItem>> ObterItensEmSituacaoAguardandoAtendimentoOuVisitaOuFinalizadoManualmentePorSolicitacaoId(long acervoSolicitacaoId);
+        Task<IEnumerable<AcervoSolicitacaoItem>> ObterItensVigentesPorSolicitacaoIdAsync(long acervoSolicitacaoId);
         Task<bool> PossuiItensEmSituacaoAguardandoAtendimentoOuAguardandoVisitaComDataFutura(long acervoSolicitacaoId);
         Task<bool> PossuiItensEmSituacaoFinalizadoAutomaticamenteOuCancelado(long acervoSolicitacaoItemId);
         Task<bool> AtendimentoPossuiItemSituacaoFinalizadoAutomaticamenteOuCancelado(long acervoSolicitacaoItemId);
@@ -19,5 +19,7 @@ namespace SME.CDEP.Infra.Dados.Repositorios.Interfaces
         Task<IEnumerable<AcervoSolicitacaoItem>> ObterItensPorSolicitacaoId(long acervoSolicitacaoId);
         Task<Acervo?> ObterAcervoPorAcervoSolicitacaoItemId(long acervoSolicitacaoItemId);
         Task<IEnumerable<AcervoSolicitacaoItemDetalhe>> ObterDetalhamentoDosItensPorSolicitacaoOuItem(long? acervoSolicitacaoId, long? acervoSolicitacaoItemId);
+        Task<IEnumerable<long?>> ObterSolicitacoesDeAcervoVencidasAsync(List<SituacaoSolicitacaoItem> situacaoParaIgnorar, int qtdeDiasLimite);
+        Task AtualizarSituacaoSolicitacaoItemAsync(long? solicitacao, SituacaoSolicitacaoItem situacao);
     }
 }

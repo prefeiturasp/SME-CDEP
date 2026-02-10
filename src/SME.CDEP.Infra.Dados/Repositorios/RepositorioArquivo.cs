@@ -95,7 +95,7 @@ namespace SME.CDEP.Infra.Dados.Repositorios
                                 from acervo_fotografico af 
                                     join acervo_fotografico_arquivo afa on afa.acervo_fotografico_id = af.id 
                                     join arquivo a on a.id = afa.arquivo_id
-                            where af.permite_uso_imagem and af.acervo_id = any(@acervosIds)
+                            where af.acervo_id = any(@acervosIds)
                             union all
                             select at.acervo_id as acervoId, a.nome , a.codigo 
                                 from acervo_tridimensional at 

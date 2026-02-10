@@ -42,9 +42,9 @@ namespace SME.CDEP.Webapi.Controllers
         [ProducesResponseType(typeof(List<PainelGerencialQuantidadeSolicitacaoPorTipoDeAcervoDto>), 200)]
         [Produces("application/json")]
         [Permissao(Permissao.PainelGerencial_C, Policy = "Bearer")]
-        public async Task<IActionResult> ObterQuantidadeSolicitacoesPorTipoAcervo()
+        public async Task<IActionResult> ObterQuantidadeSolicitacoesPorTipoAcervo([FromQuery] int? ano, [FromQuery] int? mes)
         {
-            var quantidadeSolicitacoesPorTipoAcervo = await servicoPainelGerencial.ObterQuantidadeDeSolicitacoesPorTipoAcervoAsync();
+            var quantidadeSolicitacoesPorTipoAcervo = await servicoPainelGerencial.ObterQuantidadeDeSolicitacoesPorTipoAcervoAsync(ano, mes);
             return Ok(quantidadeSolicitacoesPorTipoAcervo);
         }
 

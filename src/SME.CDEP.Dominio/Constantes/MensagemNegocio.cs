@@ -1,4 +1,5 @@
-﻿namespace SME.CDEP.Dominio.Constantes;
+﻿
+namespace SME.CDEP.Dominio.Constantes;
 
 public class MensagemNegocio
 {
@@ -23,7 +24,6 @@ public class MensagemNegocio
     public const string NAO_PODE_CANCELAR_ATENDIMENTO_COM_ITEM_FINALIZADO_AUTOMATICAMENTE_MANUALMENTE = "O atendimento não pode ser cancelado quando existir itens finalizados automaticamente ou finalizados manualmente";
     public const string SOLICITACAO_ATENDIMENTO_NAO_CONTEM_ACERVOS = "Solicitação de atendimento não contém acervos";
     public const string TIPO_ATENDIMENTO_INVALIDO = "É necessário informar o tipo de atendimento em cada item do acervo";
-    public const string ITENS_ACERVOS_PRESENCIAL_DEVEM_TER_DATA_ACERVO = "Nem todos os itens dos acervos do tipo presencial, tem data de visita";
     public const string ITENS_ACERVOS_PRESENCIAL_NAO_DEVEM_TER_DATA_ACERVO_PASSADAS = "As datas de visita dos acervos presenciais não podem ser datas passadas";
     public const string ITENS_ACERVOS_EMAIL_NAO_DEVEM_TER_DATA_ACERVO = "As datas de visita não devem ser informados nos acervos com tipo de atendimento por e-mail";
     public const string USUARIO_NAO_ENCONTRADO = "Usuário não encontrado";
@@ -75,4 +75,5 @@ public class MensagemNegocio
     public const string IMPORTACAO_NAO_LOCALIZADA = "Importação não localizada";
     public const string NAO_EH_PERMITIDO_AGENDAR_VISITA_NO_FINAL_DE_SEMANA = "Não é permitido agendar visita no final de semana";
     public const string NAO_FOI_POSSIVEL_CONVERTER_A_DATA_ACERVO = "Não foi possível converter a data do acervo: '{0}'.";
+    public const string PARAMETRO_TIPO_X_INVALIDO = "O parâmetro do tipo '{0}' é inválido.";
 }

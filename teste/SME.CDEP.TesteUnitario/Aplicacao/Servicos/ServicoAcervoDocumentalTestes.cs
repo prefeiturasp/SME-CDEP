@@ -143,7 +143,7 @@ namespace SME.CDEP.TesteUnitario.Aplicacao.Servicos
 
             // Mock dos mapeamentos e chamadas de serviço/repositório
             _mapperMock.Setup(m => m.Map<AcervoDocumental>(dto)).Returns(new AcervoDocumental { Id = dto.Id, AcervoId = dto.AcervoId });
-            _mapperMock.Setup(m => m.Map<AcervoDTO>(dto)).Returns(new AcervoDTO());
+            _mapperMock.Setup(m => m.Map<AcervoDto>(dto)).Returns(new AcervoDto());
             _repositorioAcervoDocumentalMock.Setup(r => r.ObterComDetalhesPorId(dto.AcervoId)).ReturnsAsync(new AcervoDocumentalCompleto());
             _mapperMock.Setup(m => m.Map<AcervoDocumentalDTO>(It.IsAny<AcervoDocumentalCompleto>())).Returns(new AcervoDocumentalDTO());
             _mapperMock.Setup(m => m.Map<AuditoriaDTO>(It.IsAny<AcervoDocumental>())).Returns(new AuditoriaDTO());
@@ -152,7 +152,7 @@ namespace SME.CDEP.TesteUnitario.Aplicacao.Servicos
             await _servico.Alterar(dto);
 
             // Assert
-            _servicoAcervoMock.Verify(s => s.Alterar(It.IsAny<AcervoDTO>()), Times.Once);
+            _servicoAcervoMock.Verify(s => s.Alterar(It.IsAny<AcervoDto>()), Times.Once);
             _repositorioAcervoDocumentalMock.Verify(r => r.Atualizar(It.IsAny<AcervoDocumental>()), Times.Once);
 
             // Arquivo ID 3 foi inserido

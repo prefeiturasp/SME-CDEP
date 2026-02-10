@@ -377,16 +377,16 @@ namespace SME.CDEP.Aplicacao.Servicos
             return await ValidarCpfEmUsuarioAcervoECoreSSO(cpf);
         }
 
-        public async Task<DadosSolicitanteDTO> ObterDadosSolicitante()
+        public async Task<DadosSolicitanteDto> ObterDadosSolicitante()
         {
             return await ObterDadosSolicitantePorLogin((await ObterUsuarioLogado()).Login);
         }
 
-        private async Task<DadosSolicitanteDTO> ObterDadosSolicitantePorLogin(string login, bool incluirComplemento = true)
+        private async Task<DadosSolicitanteDto> ObterDadosSolicitantePorLogin(string login, bool incluirComplemento = true)
         {
             var usuario = await repositorioUsuario.ObterPorLogin(login) ?? 
                           throw new NegocioException(incluirComplemento ? Constantes.USUARIO_SEM_CADASTRO_CDEP : Constantes.USUARIO_NAO_ENCONTRADO);
-            var dadosSolicitante = mapper.Map<DadosSolicitanteDTO>(usuario);
+            var dadosSolicitante = mapper.Map<DadosSolicitanteDto>(usuario);
             
             dadosSolicitante.ObterEnderecoCompleto(usuario.Numero, usuario.Complemento, 
                 usuario.Cidade, usuario.Estado, usuario.Cep);
@@ -394,12 +394,12 @@ namespace SME.CDEP.Aplicacao.Servicos
             return dadosSolicitante;
         }
 
-        public async Task<DadosSolicitanteDTO> ObterDadosSolicitantePorUsuarioId(long usuarioId)
+        public async Task<DadosSolicitanteDto> ObterDadosSolicitantePorUsuarioId(long usuarioId)
         {
             var usuario = await repositorioUsuario.ObterPorId(usuarioId) ?? throw new NegocioException(MensagemNegocio.USUARIO_NAO_ENCONTRADO);
                 
 
-            var dadosSolicitante = mapper.Map<DadosSolicitanteDTO>(usuario);
+            var dadosSolicitante = mapper.Map<DadosSolicitanteDto>(usuario);
             
             dadosSolicitante.ObterEnderecoCompleto(usuario.Numero, usuario.Complemento, 
                 usuario.Cidade, usuario.Estado, usuario.Cep);
@@ -418,7 +418,7 @@ namespace SME.CDEP.Aplicacao.Servicos
                 ]);
         }
         
-        public async Task<DadosSolicitanteDTO> ObterDadosSolicitantePorRfOuCpf(string rfOuCpf)
+        public async Task<DadosSolicitanteDto> ObterDadosSolicitantePorRfOuCpf(string rfOuCpf)
         {
             return await ObterDadosSolicitantePorLogin(rfOuCpf, false);
         }

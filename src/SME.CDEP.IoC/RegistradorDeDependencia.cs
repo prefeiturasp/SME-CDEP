@@ -10,6 +10,7 @@ using SME.CDEP.Aplicacao.Integracoes;
 using SME.CDEP.Aplicacao.Integracoes.Interfaces;
 using SME.CDEP.Aplicacao.Mapeamentos;
 using SME.CDEP.Aplicacao.Servicos;
+using SME.CDEP.Aplicacao.Servicos.Fachadas;
 using SME.CDEP.Aplicacao.Servicos.Interface;
 using SME.CDEP.Aplicacao.UseCase;
 using SME.CDEP.Aplicacao.UseCase.Interface;
@@ -93,6 +94,7 @@ public class RegistradorDeDependencia
         _serviceCollection.TryAddScoped<IRelatorioControleDownloadAcervoUseCase, RelatorioControleDownloadAcervoUseCase>();
         _serviceCollection.AddScoped<IExecutarConsolidacaoDasSolicitacoesDeAcervoUseCase, ExecutarConsolidacaoDasSolicitacoesDeAcervoUseCase>();
         _serviceCollection.AddScoped<IRelatorioHistoricoSolicitacoesUseCase, RelatorioHistoricoSolicitacoesUseCase>();
+        _serviceCollection.AddScoped<IAtualizarSituacaoDasSolicitacoesDeAcervoVencidasUseCase, AtualizarSituacaoDasSolicitacoesDeAcervoVencidasUseCase>();
     }
 
     protected virtual void RegistrarRabbit()
@@ -296,6 +298,13 @@ public class RegistradorDeDependencia
         _serviceCollection.TryAddScoped<IServicoHistoricoConsultaAcervo, ServicoHistoricoConsultaAcervo>();
         _serviceCollection.TryAddScoped<IServicoDeConsolidacao, ServicoDeConsolidacao>();
         _serviceCollection.AddScoped<IServicoPainelGerencial, ServicoPainelGerencial>();
+        _serviceCollection.AddScoped<IServicoConfirmacaoAtendimentoAcervo, ServicoConfirmacaoAtendimentoAcervo>();
+        _serviceCollection.AddScoped<IServicoManutencaoSolicitacaoAcervo, ServicoManutencaoSolicitacaoAcervo>();
+        _serviceCollection.AddScoped<ConfirmacaoAtendimentoRecursos>();
+        _serviceCollection.AddScoped<ContextoDadosAcervoSolicitacao>();
+        _serviceCollection.AddScoped<ContextoInfraAcervoSolicitacao>();
+        _serviceCollection.AddScoped<ContextoRegrasAcervoSolicitacao>();
+        _serviceCollection.AddScoped<IServicoProcessamentoSituacaoSolicitacao, ServicoProcessamentoSituacaoSolicitacao>();
     }
     protected virtual void RegistrarHttpClients()
     {
