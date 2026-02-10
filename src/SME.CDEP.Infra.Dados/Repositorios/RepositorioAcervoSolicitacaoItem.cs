@@ -1,17 +1,16 @@
-﻿using System.Diagnostics.CodeAnalysis;
-using System.Text;
-using Dapper;
+﻿using Dapper;
 using SME.CDEP.Dominio.Contexto;
 using SME.CDEP.Dominio.Entidades;
-using SME.CDEP.Dominio.Extensions;
 using SME.CDEP.Infra.Dados.Repositorios.Interfaces;
 using SME.CDEP.Infra.Dominio.Enumerados;
+using System.Diagnostics.CodeAnalysis;
+using System.Text;
 
 namespace SME.CDEP.Infra.Dados.Repositorios
 {
     [ExcludeFromCodeCoverage]
-    public class RepositorioAcervoSolicitacaoItem(IContextoAplicacao contexto, ICdepConexao conexao) : 
-        RepositorioBaseAuditavel<AcervoSolicitacaoItem>(contexto,conexao), IRepositorioAcervoSolicitacaoItem
+    public class RepositorioAcervoSolicitacaoItem(IContextoAplicacao contexto, ICdepConexao conexao) :
+        RepositorioBaseAuditavel<AcervoSolicitacaoItem>(contexto, conexao), IRepositorioAcervoSolicitacaoItem
     {
         public async Task<IEnumerable<AcervoSolicitacaoItemResumido>> ObterMinhasSolicitacoes(long usuarioId)
         {
@@ -31,7 +30,7 @@ namespace SME.CDEP.Infra.Dados.Repositorios
             and not aso.excluido
             and not a.excluido
             order by asi.criado_em desc";
-            
+
             return await conexao.Obter().QueryAsync<AcervoSolicitacaoItemResumido>(query, new { usuarioId });
         }
 
@@ -73,44 +72,56 @@ namespace SME.CDEP.Infra.Dados.Repositorios
 
             if (acervoSolicitacaoId.HasValue)
                 query.AppendLine(" and aso.id = @acervoSolicitacaoId ");
-            
+
             if (tipoAcervo.HasValue)
                 query.AppendLine(" and a.tipo = @tipoAcervo ");
-            
+
             if (situacaoItem.HasValue)
                 query.AppendLine(" and asi.situacao = @situacaoItem ");
-            
+
             if (dataSolicitacaoInicio.HasValue && dataSolicitacaoFim.HasValue)
                 query.AppendLine(" and asi.criado_em::Date between @dataSolicitacaoInicio::Date and @dataSolicitacaoFim::Date ");
-            
+
             if (dataVisitaInicio.HasValue && dataVisitaFim.HasValue)
                 query.AppendLine(" and asi.dt_visita is not null and asi.dt_visita::Date between @dataVisitaInicio::Date and @dataVisitaFim::Date ");
 
             if (!string.IsNullOrWhiteSpace(responsavel))
                 query.AppendLine(" and ur.login = @responsavel ");
-            
+
             if (!string.IsNullOrWhiteSpace(solicitanteRf))
                 query.AppendLine(" and u.login = @solicitanteRf ");
-            
+
             if (situacaoEmprestimo.HasValue)
                 query.AppendLine(" and situacao_emprestimo.situacao = @situacaoEmprestimo ");
-            
+
             query.AppendLine(" order by asi.id desc ");
-            
-            return await conexao.Obter().QueryAsync<AcervoSolicitacaoItemDetalhe>(query.ToString(), 
-                new { acervoSolicitacaoId, tipoAcervo, situacaoItem, dataSolicitacaoInicio, dataSolicitacaoFim, 
-                    dataVisitaInicio, dataVisitaFim, responsavel, solicitanteRf, situacaoEmprestimo, tiposAcervosPermitidos});
+
+            return await conexao.Obter().QueryAsync<AcervoSolicitacaoItemDetalhe>(query.ToString(),
+                new
+                {
+                    acervoSolicitacaoId,
+                    tipoAcervo,
+                    situacaoItem,
+                    dataSolicitacaoInicio,
+                    dataSolicitacaoFim,
+                    dataVisitaInicio,
+                    dataVisitaFim,
+                    responsavel,
+                    solicitanteRf,
+                    situacaoEmprestimo,
+                    tiposAcervosPermitidos
+                });
         }
 
         public Task<IEnumerable<AcervoSolicitacaoItem>> ObterItensEmSituacaoAguardandoAtendimentoOuVisitaOuFinalizadoManualmentePorSolicitacaoId(long acervoSolicitacaoId)
         {
-            var situacoesItensAguardandoAtendimentoEVisitaOuFinalizadoManualmente = new []
+            var situacoesItensAguardandoAtendimentoEVisitaOuFinalizadoManualmente = new[]
             {
                 (int)SituacaoSolicitacaoItem.AGUARDANDO_ATENDIMENTO,
                 (int)SituacaoSolicitacaoItem.AGUARDANDO_VISITA,
                 (int)SituacaoSolicitacaoItem.FINALIZADO_MANUALMENTE,
             };
-            
+
             var query = @"
              select id,
                acervo_solicitacao_id,
@@ -126,10 +137,10 @@ namespace SME.CDEP.Infra.Dados.Repositorios
             where acervo_solicitacao_id = @acervoSolicitacaoId
               and situacao = any(@situacoesItensAguardandoAtendimentoEVisitaOuFinalizadoManualmente) 
               and not excluido";
-            
+
             return conexao.Obter().QueryAsync<AcervoSolicitacaoItem>(query, new { acervoSolicitacaoId, situacoesItensAguardandoAtendimentoEVisitaOuFinalizadoManualmente });
         }
-        
+
         public Task<IEnumerable<AcervoSolicitacaoItem>> ObterItensEmSituacaoAguardandoVisitaPorSolicitacaoId(long acervoSolicitacaoId)
         {
             var query = @"
@@ -147,10 +158,10 @@ namespace SME.CDEP.Infra.Dados.Repositorios
             where acervo_solicitacao_id = @acervoSolicitacaoId
               and situacao = @situacaoAguardandoVisita 
               and not excluido";
-            
+
             return conexao.Obter().QueryAsync<AcervoSolicitacaoItem>(query, new { acervoSolicitacaoId, situacaoAguardandoVisita = (int)SituacaoSolicitacaoItem.AGUARDANDO_VISITA });
         }
-        
+
         public Task<IEnumerable<AcervoSolicitacaoItem>> ObterItensPorSolicitacaoId(long acervoSolicitacaoId)
         {
             var query = @"
@@ -167,7 +178,7 @@ namespace SME.CDEP.Infra.Dados.Repositorios
             from acervo_solicitacao_item
             where acervo_solicitacao_id = @acervoSolicitacaoId 
               and not excluido";
-            
+
             return conexao.Obter().QueryAsync<AcervoSolicitacaoItem>(query, new { acervoSolicitacaoId });
         }
 
@@ -184,7 +195,7 @@ namespace SME.CDEP.Infra.Dados.Repositorios
              where asi.id = @acervoSolicitacaoItemId 
                and not asi.excluido
                and not a.excluido";
-            
+
             return conexao.Obter().QueryFirstOrDefaultAsync<Acervo>(query, new { acervoSolicitacaoItemId });
         }
 
@@ -196,60 +207,64 @@ namespace SME.CDEP.Infra.Dados.Repositorios
             where acervo_solicitacao_id = @acervoSolicitacaoId
             and not excluido
             and (situacao = @situacaoAguardandoAtendimento or situacao = @situacaoAguardandoVisita and dt_visita::date > @dataAtual::date )";
-            
-            return conexao.Obter().QueryFirstOrDefaultAsync<bool>(query, new { acervoSolicitacaoId, 
+
+            return conexao.Obter().QueryFirstOrDefaultAsync<bool>(query, new
+            {
+                acervoSolicitacaoId,
                 situacaoAguardandoAtendimento = (int)SituacaoSolicitacaoItem.AGUARDANDO_ATENDIMENTO,
-                situacaoAguardandoVisita = (int)SituacaoSolicitacaoItem.AGUARDANDO_VISITA, dataAtual = DateTimeExtension.HorarioBrasilia().Date });
+                situacaoAguardandoVisita = (int)SituacaoSolicitacaoItem.AGUARDANDO_VISITA,
+                dataAtual = DateTimeExtension.HorarioBrasilia().Date
+            });
         }
 
         public Task<bool> PossuiItensEmSituacaoFinalizadoAutomaticamenteOuCancelado(long acervoSolicitacaoItemId)
         {
-            var situacoesItensNaoCancelaveis = new []
+            var situacoesItensNaoCancelaveis = new[]
             {
                 (int)SituacaoSolicitacaoItem.FINALIZADO_AUTOMATICAMENTE,
                 (int)SituacaoSolicitacaoItem.CANCELADO
             };
-            
+
             var query = @"
              select 1
             from acervo_solicitacao_item
             where id = @acervoSolicitacaoItemId
             and not excluido
             and situacao = any(@situacoesItensNaoCancelaveis) ";
-            
+
             return conexao.Obter().QueryFirstOrDefaultAsync<bool>(query, new { acervoSolicitacaoItemId, situacoesItensNaoCancelaveis });
         }
-        
+
         public Task<bool> PossuiItensFinalizadosAutomaticamente(long acervoSolicitacaoId)
         {
-            var situacoesItensFinalizados = new []
+            var situacoesItensFinalizados = new[]
             {
                 (int)SituacaoSolicitacaoItem.FINALIZADO_AUTOMATICAMENTE,
                 (int)SituacaoSolicitacaoItem.FINALIZADO_MANUALMENTE
             };
-            
+
             var query = @"
              select 1
             from acervo_solicitacao_item
             where acervo_solicitacao_id = @acervoSolicitacaoId
             and not excluido
             and situacao = any(@situacoesItensFinalizados) ";
-            
+
             return conexao.Obter().QueryFirstOrDefaultAsync<bool>(query, new
             {
-                acervoSolicitacaoId, 
+                acervoSolicitacaoId,
                 situacoesItensFinalizados
             });
         }
 
         public Task<bool> AtendimentoPossuiItemSituacaoFinalizadoAutomaticamenteOuCancelado(long acervoSolicitacaoItemId)
         {
-            var situacoesItensConfirmadas = new []
+            var situacoesItensConfirmadas = new[]
             {
                 (int)SituacaoSolicitacaoItem.FINALIZADO_AUTOMATICAMENTE,
                 (int)SituacaoSolicitacaoItem.CANCELADO
             };
-            
+
             var query = @"
              select 1
             from acervo_solicitacao_item i
@@ -258,11 +273,11 @@ namespace SME.CDEP.Infra.Dados.Repositorios
              and not i.excluido
              and not a.excluido
              and i.situacao = any(@situacoesItensConfirmadas) ";
-            
+
             return conexao.Obter().QueryFirstOrDefaultAsync<bool>(query, new { acervoSolicitacaoItemId, situacoesItensConfirmadas });
         }
-        
-        public Task<IEnumerable<AcervoSolicitacaoItemDetalhe>> ObterDetalhamentoDosItensPorSolicitacaoOuItem(long? acervoSolicitacaoId,long? acervoSolicitacaoItemId)
+
+        public Task<IEnumerable<AcervoSolicitacaoItemDetalhe>> ObterDetalhamentoDosItensPorSolicitacaoOuItem(long? acervoSolicitacaoId, long? acervoSolicitacaoItemId)
         {
             var query = @"
             select asi.Id, 
@@ -285,17 +300,52 @@ namespace SME.CDEP.Infra.Dados.Repositorios
 
             if (acervoSolicitacaoId.HasValue)
                 query += " and aso.id = @acervoSolicitacaoId";
-            
+
             if (acervoSolicitacaoItemId.HasValue)
                 query += " and asi.id = @acervoSolicitacaoItemId";
-            
-            return conexao.Obter().QueryAsync<AcervoSolicitacaoItemDetalhe>(query, 
+
+            return conexao.Obter().QueryAsync<AcervoSolicitacaoItemDetalhe>(query,
                 new
                 {
                     acervoSolicitacaoId,
-                    acervoSolicitacaoItemId, 
+                    acervoSolicitacaoItemId,
                     finalizadoAutomaticamente = (int)SituacaoSolicitacaoItem.FINALIZADO_AUTOMATICAMENTE
                 });
+        }
+
+        public async Task<IEnumerable<long?>> ObterSolicitacoesDeAcervoVencidasAsync(List<SituacaoSolicitacaoItem> situacaoParaIgnorar, int qtdeDiasLimite)
+        {
+            const string query =
+                """
+                SELECT ID 
+                FROM   PUBLIC.ACERVO_SOLICITACAO_ITEM 
+                WHERE  SITUACAO != ALL(@situacaoId)
+                AND    CRIADO_EM::DATE <= CURRENT_DATE - @qtdeDiasLimite
+                AND    NOT EXCLUIDO;
+                """;
+
+            var situacaoId = situacaoParaIgnorar.Select(s => (int)s).ToArray();
+
+            return await conexao.Obter().QueryAsync<long?>(query, new
+            {
+                situacaoId,
+                qtdeDiasLimite
+            });
+        }
+
+        public async Task AtualizarSituacaoSolicitacaoItemAsync(long? solicitacao, SituacaoSolicitacaoItem situacao)
+        {
+            const string query =
+                """
+                UPDATE PUBLIC.ACERVO_SOLICITACAO_ITEM 
+                SET    SITUACAO = @situacao, ALTERADO_EM = NOW(), ALTERADO_POR = 'SYSTEM', ALTERADO_LOGIN = 'SYSTEM'
+                WHERE  ID = @solicitacao;
+                """;
+            await conexao.Obter().ExecuteAsync(query, new
+            {
+                solicitacao,
+                situacao
+            });
         }
     }
 }

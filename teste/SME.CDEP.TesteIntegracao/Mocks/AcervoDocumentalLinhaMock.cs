@@ -25,14 +25,14 @@ public static class AcervoDocumentalLinhaMock
             
             faker.RuleFor(x => x.Codigo, f => new LinhaConteudoAjustarDTO()
             {
-                Conteudo = f.Lorem.Sentence().Limite(15),
-                LimiteCaracteres = ConstantesTestes.CARACTERES_PERMITIDOS_15,
+                Conteudo = f.Lorem.Sentence().Limite(200),
+                LimiteCaracteres = ConstantesTestes.CARACTERES_PERMITIDOS_200,
             });
-            
+
             faker.RuleFor(x => x.CodigoNovo, f => new LinhaConteudoAjustarDTO()
             {
-                Conteudo = f.Lorem.Sentence().Limite(15),
-                LimiteCaracteres = ConstantesTestes.CARACTERES_PERMITIDOS_15,
+                Conteudo = f.Lorem.Sentence().Limite(200),
+                LimiteCaracteres = ConstantesTestes.CARACTERES_PERMITIDOS_200,
             });
             
             faker.RuleFor(x => x.Material, f => new LinhaConteudoAjustarDTO()
