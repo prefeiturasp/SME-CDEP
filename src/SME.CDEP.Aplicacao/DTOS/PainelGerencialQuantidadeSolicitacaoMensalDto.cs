@@ -2,5 +2,7 @@
 {
     public class PainelGerencialQuantidadeSolicitacaoMensalDto : ItemGraficoChaveValorDto<int>
     {
+        public int TotalAutomatica { get; set; }
+        public int TotalManual { get; set; }
     }
 }

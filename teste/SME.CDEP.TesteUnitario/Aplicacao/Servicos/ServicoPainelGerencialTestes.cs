@@ -114,8 +114,8 @@ public class ServicoPainelGerencialTestes
         _fakeTimeProvider.SetUtcNow(dataSimulada);
         var quantidadeSolicitacoesMensais = new List<PainelGerencialQuantidadeSolicitacaoMensal>
         {
-            new() { MesReferencia = DateOnly.FromDateTime(new DateTime(ano, 3, 1)), TotalSolicitacoes = 80 },
-            new() { MesReferencia = DateOnly.FromDateTime(new DateTime(ano, 4, 1)), TotalSolicitacoes = 120 }
+            new() { MesReferencia = DateOnly.FromDateTime(new (ano, 3, 1, 0, 0, 0, DateTimeKind.Local)), TotalSolicitacoes = 80 },
+            new() { MesReferencia = DateOnly.FromDateTime(new (ano, 4, 1, 0, 0, 0, DateTimeKind.Local)), TotalSolicitacoes = 120 }
         };
         var quantidadeSolicitacoesMensaisDto = new List<PainelGerencialQuantidadeSolicitacaoMensalDto>
         {
@@ -129,7 +129,7 @@ public class ServicoPainelGerencialTestes
             .Setup(m => m.Map<List<PainelGerencialQuantidadeSolicitacaoMensalDto>>(quantidadeSolicitacoesMensais))
             .Returns(quantidadeSolicitacoesMensaisDto);
         // Act
-        var resultado = await _servicoPainelGerencial.ObterQuantidadeSolicitacoesMensaisDoAnoAtualAsync();
+        var resultado = await _servicoPainelGerencial.ObterQuantidadeSolicitacoesMensaisPorAnoAsync();
         // Assert
         resultado.Should().NotBeNull();
         resultado.Should().HaveCount(2);
