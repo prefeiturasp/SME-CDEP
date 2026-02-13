@@ -23,10 +23,10 @@ public class ServicoPainelGerencial(
         return mapper.Map<List<PainelGerencialQuantidadePesquisasMensaisDto>>(pesquisas);
     }
 
-    public async Task<List<PainelGerencialQuantidadeSolicitacaoMensalDto>> ObterQuantidadeSolicitacoesMensaisDoAnoAtualAsync()
+    public async Task<List<PainelGerencialQuantidadeSolicitacaoMensalDto>> ObterQuantidadeSolicitacoesMensaisPorAnoAsync(int? ano = null)
     {
-        var ano = timeProvider.GetLocalNow().Year;
-        var solicitacoes = await repositorioPainelGerencial.ObterQuantidadeSolicitacoesMensaisAsync(ano);
+        ano ??= timeProvider.GetLocalNow().Year;
+        var solicitacoes = await repositorioPainelGerencial.ObterQuantidadeSolicitacoesMensaisAsync(ano.Value);
         return mapper.Map<List<PainelGerencialQuantidadeSolicitacaoMensalDto>>(solicitacoes);
     }
 
