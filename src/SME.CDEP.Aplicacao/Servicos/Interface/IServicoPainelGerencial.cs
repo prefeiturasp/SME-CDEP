@@ -6,7 +6,7 @@ public interface IServicoPainelGerencial : IServicoAplicacao
 {
     Task<List<PainelGerencialAcervosCadastradosDto>> ObterAcervosCadastradosAsync();
     Task<List<PainelGerencialQuantidadePesquisasMensaisDto>> ObterQuantidadePesquisasMensaisDoAnoAtualAsync();
-    Task<List<PainelGerencialQuantidadeSolicitacaoMensalDto>> ObterQuantidadeSolicitacoesMensaisDoAnoAtualAsync();
+    Task<List<PainelGerencialQuantidadeSolicitacaoMensalDto>> ObterQuantidadeSolicitacoesMensaisPorAnoAsync(int? ano = null);
     Task<List<PainelGerencialQuantidadeSolicitacaoPorTipoDeAcervoDto>> ObterQuantidadeDeSolicitacoesPorTipoAcervoAsync(int? ano = null, int? mes = null);
     Task<List<PainelGerencialQuantidadeAcervoEmprestadoPorSituacaoDto>> ObterQuantidadeAcervoEmprestadoPorSituacaoAsync();
     Task<List<PainelGerencialQuantidadeSolicitacaoPorSituacaoDto>> ObterQuantidadeSolicitacaoPorSituacaoAsync();

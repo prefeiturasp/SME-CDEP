@@ -32,9 +32,9 @@ namespace SME.CDEP.Webapi.Controllers
         [ProducesResponseType(typeof(List<PainelGerencialQuantidadeSolicitacaoMensalDto>), 200)]
         [Produces("application/json")]
         [Permissao(Permissao.PainelGerencial_C, Policy = "Bearer")]
-        public async Task<IActionResult> ObterQuantidadeSolicitacoesMensais()
+        public async Task<IActionResult> ObterQuantidadeSolicitacoesMensais([FromQuery] int? ano)
         {
-            var quantidadeSolicitacoesMensais = await servicoPainelGerencial.ObterQuantidadeSolicitacoesMensaisDoAnoAtualAsync();
+            var quantidadeSolicitacoesMensais = await servicoPainelGerencial.ObterQuantidadeSolicitacoesMensaisPorAnoAsync(ano);
             return Ok(quantidadeSolicitacoesMensais);
         }
 

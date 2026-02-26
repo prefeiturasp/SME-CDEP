@@ -15,7 +15,7 @@ namespace SME.CDEP.TesteIntegracao.PainelGerencial
             await InserirSumarioSolicitacoesMensais();
             var servicoPainelGerencial = GetServicoPainelGerencial();
             // Act
-            var resposta = await servicoPainelGerencial.ObterQuantidadeSolicitacoesMensaisDoAnoAtualAsync();
+            var resposta = await servicoPainelGerencial.ObterQuantidadeSolicitacoesMensaisPorAnoAsync();
             // Assert
             resposta.Count.ShouldBe(12);
             var respostaPrimeiroMes = resposta[0];

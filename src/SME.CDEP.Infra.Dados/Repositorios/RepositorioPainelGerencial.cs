@@ -38,8 +38,10 @@ public class RepositorioPainelGerencial(ICdepConexao conexao) : IRepositorioPain
     public async Task<List<PainelGerencialQuantidadeSolicitacaoMensal>> ObterQuantidadeSolicitacoesMensaisAsync(int ano)
     {
         const string sql = @"
-            SELECT mes_referencia AS MesReferencia,
-                   total_solicitacoes AS totalSolicitacoes
+            SELECT mes_referencia AS mesReferencia,
+                   total_solicitacoes AS totalSolicitacoes,
+                   total_solicitacoes_automaticas AS totalAutomatica,
+                   total_solicitacoes_manuais AS totalManual
              FROM sumario_solicitacoes_mensal
             WHERE EXTRACT(YEAR FROM mes_referencia) = @ano
             ORDER BY MesReferencia;";

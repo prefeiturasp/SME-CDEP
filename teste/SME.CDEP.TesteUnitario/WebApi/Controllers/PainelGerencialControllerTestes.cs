@@ -75,10 +75,10 @@ namespace SME.CDEP.TesteUnitario.WebApi.Controllers
                 new() { Id = 2, Nome = "Fevereiro", Valor = 60 }
             };
             _servicoPainelGerencialMock
-                .Setup(s => s.ObterQuantidadeSolicitacoesMensaisDoAnoAtualAsync())
+                .Setup(s => s.ObterQuantidadeSolicitacoesMensaisPorAnoAsync())
                 .ReturnsAsync(quantidadeSolicitacoesMensaisDto);
             // Act
-            var resultado = await _painelGerencialController.ObterQuantidadeSolicitacoesMensais();
+            var resultado = await _painelGerencialController.ObterQuantidadeSolicitacoesMensais(It.IsAny<int?>());
             // Assert
             var okResult = resultado as Microsoft.AspNetCore.Mvc.OkObjectResult;
             okResult.Should().NotBeNull();
