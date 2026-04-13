@@ -7,9 +7,11 @@ using SME.CDEP.Infra.Servicos.Mensageria;
 using SME.CDEP.Infra.Servicos.Polly;
 using SME.CDEP.Infra.Servicos.Rabbit.Dto;
 using SME.CDEP.Infra.Servicos.Telemetria;
+using System.Diagnostics.CodeAnalysis;
 
 namespace SME.ConectaFormacao.Infra.Servicos.Mensageria
 {
+    [ExcludeFromCodeCoverage]
     public class ServicoMensageriaCDEP : IServicoMensageriaCDEP
     {
         private readonly IConexoesRabbit conexaoRabbit;

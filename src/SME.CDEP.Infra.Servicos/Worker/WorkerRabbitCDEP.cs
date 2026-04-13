@@ -15,9 +15,11 @@ using SME.CDEP.Infra.Servicos.Rabbit.Dto;
 using SME.CDEP.Infra.Servicos.Telemetria;
 using SME.CDEP.Infra.Servicos.Telemetria.Options;
 using SME.CDEP.Infra.Servicos.Utilitarios;
+using System.Diagnostics.CodeAnalysis;
 
 namespace SME.CDEP.Infra
 {
+    [ExcludeFromCodeCoverage]
     public abstract class WorkerRabbitCDEP : IHostedService
     {
         protected readonly IModel canalRabbit;

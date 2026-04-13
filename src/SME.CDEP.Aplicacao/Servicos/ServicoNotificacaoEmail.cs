@@ -2,20 +2,13 @@
 using MimeKit;
 using SME.CDEP.Aplicacao.Servicos.Interface;
 using SME.CDEP.Dominio.Entidades;
+using SME.CDEP.Dominio.Extensions;
 using SME.CDEP.Infra.Dados.Repositorios.Interfaces;
-using SME.CDEP.Infra.Dominio.Enumerados;
 
 namespace SME.CDEP.Aplicacao.Servicos
 {
-    public class ServicoNotificacaoEmail : IServicoNotificacaoEmail
+    public class ServicoNotificacaoEmail(IRepositorioParametroSistema repositorioParametroSistema) : IServicoNotificacaoEmail
     {
-        private readonly IRepositorioParametroSistema repositorioParametroSistema;
-
-        public ServicoNotificacaoEmail(IRepositorioParametroSistema repositorioParametroSistema)
-        {
-            this.repositorioParametroSistema = repositorioParametroSistema ?? throw new ArgumentNullException(nameof(repositorioParametroSistema));
-        }
-
         public async Task<bool> Enviar(string nomeDestinatario, string emailDestinatario, string assunto, string mensagem)
         {
             var anoAtual = DateTimeExtension.HorarioBrasilia().Year;

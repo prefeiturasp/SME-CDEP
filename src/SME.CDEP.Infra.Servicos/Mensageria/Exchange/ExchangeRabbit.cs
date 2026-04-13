@@ -1,5 +1,8 @@
-﻿namespace SME.CDEP.Infra.Servicos.Mensageria.Exchange
+﻿using System.Diagnostics.CodeAnalysis;
+
+namespace SME.CDEP.Infra.Servicos.Mensageria.Exchange
 {
+    [ExcludeFromCodeCoverage]
     public static class ExchangeRabbit
     {
         public static string Logs = "EnterpriseApplicationLog";

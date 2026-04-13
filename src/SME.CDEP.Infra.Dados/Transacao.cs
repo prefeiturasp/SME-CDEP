@@ -1,7 +1,9 @@
 using System.Data;
+using System.Diagnostics.CodeAnalysis;
 
 namespace SME.CDEP.Infra.Dados;
 
+[ExcludeFromCodeCoverage]
 public class Transacao : ITransacao
 {
     private readonly ICdepConexao _conexao;

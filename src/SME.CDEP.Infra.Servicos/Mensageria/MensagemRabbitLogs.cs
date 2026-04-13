@@ -1,5 +1,8 @@
-﻿namespace SME.CDEP.Infra.Servicos.Mensageria
+﻿using System.Diagnostics.CodeAnalysis;
+
+namespace SME.CDEP.Infra.Servicos.Mensageria
 {
+    [ExcludeFromCodeCoverage]
     public class MensagemRabbitLogs
     {
         public MensagemRabbitLogs(string mensagem)

@@ -1,8 +1,10 @@
 using System.Data;
+using System.Diagnostics.CodeAnalysis;
 using Npgsql;
 
 namespace SME.CDEP.Infra.Dados;
 
+[ExcludeFromCodeCoverage]
 public class CdepConexao : ICdepConexao
 {
         private readonly IDbConnection _conexao; 

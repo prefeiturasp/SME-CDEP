@@ -1,7 +1,4 @@
-﻿
-using SME.CDEP.Infra.Dominio.Enumerados;
-
-namespace SME.CDEP.Dominio.Extensions
+﻿namespace SME.CDEP.Dominio.Extensions
 {
     public static class IntExtension
     {

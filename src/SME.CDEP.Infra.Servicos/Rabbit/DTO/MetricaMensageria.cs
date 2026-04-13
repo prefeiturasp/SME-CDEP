@@ -1,4 +1,4 @@
-﻿using SME.CDEP.Infra.Dominio.Enumerados;
+﻿using SME.CDEP.Dominio.Extensions;
 
 namespace SME.CDEP.Infra.Servicos.Rabbit.Dto
 {
