@@ -27,7 +27,7 @@ namespace SME.CDEP.Aplicacao.Servicos
             servicoMoverArquivoTemporario,
             servicoArmazenamento),IServicoAcervoTridimensional
     {
-        private readonly List<AcervoTridimensionalArquivo> AcervoTridimensionalArquivoInseridos = new();
+        private readonly List<AcervoTridimensionalArquivo> AcervoTridimensionalArquivoInseridos = [];
 
         public async Task<long> Inserir(AcervoTridimensionalCadastroDTO acervoTridimensionalCadastroDto)
         {
