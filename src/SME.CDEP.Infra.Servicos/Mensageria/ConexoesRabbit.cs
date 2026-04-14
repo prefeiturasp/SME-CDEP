@@ -25,12 +25,14 @@ namespace SME.CDEP.Infra.Servicos.Mensageria
     }
 
 
+    [ExcludeFromCodeCoverage]
     public class ConexoesRabbitAcessos : ConexoesRabbit, IConexoesRabbitAcessos
     {
         public ConexoesRabbitAcessos(ConfiguracaoRabbitOptions configuracaoRabbit, ObjectPoolProvider poolProvider) : base(configuracaoRabbit, poolProvider)
         { }
     }
 
+    [ExcludeFromCodeCoverage]
     public class ConexoesRabbitLogs : ConexoesRabbit, IConexoesRabbitLogs
     {
         public ConexoesRabbitLogs(ConfiguracaoRabbitLogsOptions configuracaoRabbit, ObjectPoolProvider poolProvider) : base(configuracaoRabbit, poolProvider)

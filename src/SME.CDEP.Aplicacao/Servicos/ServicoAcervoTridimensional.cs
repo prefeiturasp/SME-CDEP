@@ -13,37 +13,21 @@ using SME.CDEP.Infra.Servicos.ServicoArmazenamento.Interface;
 
 namespace SME.CDEP.Aplicacao.Servicos
 {
-    public class ServicoAcervoTridimensional : ServicoAcervoBase,IServicoAcervoTridimensional
+    public class ServicoAcervoTridimensional(
+        IRepositorioAcervo repositorioAcervo,
+        IRepositorioAcervoTridimensional repositorioAcervoTridimensional,
+        IMapper mapper,
+        ITransacao transacao,
+        IServicoAcervo servicoAcervo,
+        IRepositorioArquivo repositorioArquivo,
+        IRepositorioAcervoTridimensionalArquivo repositorioAcervoTridimensionalArquivo,
+        IServicoMoverArquivoTemporario servicoMoverArquivoTemporario,
+        IServicoArmazenamento servicoArmazenamento) : ServicoAcervoBase(repositorioAcervo,
+            repositorioArquivo,
+            servicoMoverArquivoTemporario,
+            servicoArmazenamento),IServicoAcervoTridimensional
     {
-        private readonly IRepositorioAcervoTridimensionalArquivo repositorioAcervoTridimensionalArquivo;
-        private readonly IRepositorioAcervoTridimensional repositorioAcervoTridimensional;
-        private readonly IMapper mapper;
-        private readonly IServicoAcervo servicoAcervo;
-        private readonly ITransacao transacao;
-        private List<AcervoTridimensionalArquivo> AcervoTridimensionalArquivoInseridos;
-        
-        public ServicoAcervoTridimensional(
-            IRepositorioAcervo repositorioAcervo,
-            IRepositorioAcervoTridimensional repositorioAcervoTridimensional, 
-            IMapper mapper,
-            ITransacao transacao,
-            IServicoAcervo servicoAcervo,
-            IRepositorioArquivo repositorioArquivo,
-            IRepositorioAcervoTridimensionalArquivo repositorioAcervoTridimensionalArquivo,
-            IServicoMoverArquivoTemporario servicoMoverArquivoTemporario,
-            IServicoArmazenamento servicoArmazenamento) : 
-            base(repositorioAcervo,
-                repositorioArquivo,
-                servicoMoverArquivoTemporario,
-                servicoArmazenamento)
-        {
-            this.repositorioAcervoTridimensional = repositorioAcervoTridimensional ?? throw new ArgumentNullException(nameof(repositorioAcervoTridimensional));
-            this.mapper = mapper ?? throw new ArgumentNullException(nameof(mapper));
-            this.transacao = transacao ?? throw new ArgumentNullException(nameof(transacao));
-            this.repositorioAcervoTridimensionalArquivo = repositorioAcervoTridimensionalArquivo ?? throw new ArgumentNullException(nameof(repositorioAcervoTridimensionalArquivo));
-            this.servicoAcervo = servicoAcervo ?? throw new ArgumentNullException(nameof(servicoAcervo));
-            AcervoTridimensionalArquivoInseridos = new List<AcervoTridimensionalArquivo>();
-        }
+        private readonly List<AcervoTridimensionalArquivo> AcervoTridimensionalArquivoInseridos = [];
 
         public async Task<long> Inserir(AcervoTridimensionalCadastroDTO acervoTridimensionalCadastroDto)
         {
