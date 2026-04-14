@@ -12,20 +12,9 @@ using SME.CDEP.Infra.Servicos.Rabbit.Dto;
 
 namespace SME.CDEP.Aplicacao
 {
-    public class NotificarViaEmailConfirmacaoAtendimentoPresencialUseCaseUseCase : INotificarViaEmailConfirmacaoAtendimentoPresencialUseCase
+    public class NotificarViaEmailConfirmacaoAtendimentoPresencialUseCaseUseCase(IRepositorioAcervoSolicitacaoItem repositorioAcervoSolicitacaoItem,
+        IServicoNotificacaoEmail servicoNotificacaoEmail, IRepositorioParametroSistema repositorioParametroSistema) : INotificarViaEmailConfirmacaoAtendimentoPresencialUseCase
     {
-        private IRepositorioAcervoSolicitacaoItem repositorioAcervoSolicitacaoItem;
-        private IServicoNotificacaoEmail servicoNotificacaoEmail;
-        private IRepositorioParametroSistema repositorioParametroSistema;
-        
-        public NotificarViaEmailConfirmacaoAtendimentoPresencialUseCaseUseCase(IRepositorioAcervoSolicitacaoItem repositorioAcervoSolicitacaoItem,
-            IServicoNotificacaoEmail servicoNotificacaoEmail,IRepositorioParametroSistema repositorioParametroSistema)
-        {
-            this.repositorioAcervoSolicitacaoItem = repositorioAcervoSolicitacaoItem ?? throw new ArgumentNullException(nameof(repositorioAcervoSolicitacaoItem));
-            this.servicoNotificacaoEmail = servicoNotificacaoEmail ?? throw new ArgumentNullException(nameof(servicoNotificacaoEmail));
-            this.repositorioParametroSistema = repositorioParametroSistema ?? throw new ArgumentNullException(nameof(repositorioParametroSistema));
-        }
-
         public async Task<bool> Executar(MensagemRabbit param)
         {
             var confirmarAtendimentoDto = param.ObterObjetoMensagem<ConfirmarAtendimentoDTO>();
@@ -68,7 +57,7 @@ namespace SME.CDEP.Aplicacao
             return true;
         }
         
-        private string GerarConteudoTabela(IEnumerable<AcervoSolicitacaoItemDetalhe> detalhes)
+        private static string GerarConteudoTabela(IEnumerable<AcervoSolicitacaoItemDetalhe> detalhes)
         {
             var conteudo = new StringBuilder();
 

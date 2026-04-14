@@ -3,9 +3,11 @@ using SME.CDEP.Dominio.Contexto;
 using SME.CDEP.Dominio.Entidades;
 using SME.CDEP.Infra.Dados.Repositorios.Interfaces;
 using SME.CDEP.Infra.Dominio.Enumerados;
+using System.Diagnostics.CodeAnalysis;
 
 namespace SME.CDEP.Infra.Dados.Repositorios
 {
+    [ExcludeFromCodeCoverage]
     public class RepositorioCreditoAutor : RepositorioBase<CreditoAutor>, IRepositorioCreditoAutor
     {
         public RepositorioCreditoAutor(IContextoAplicacao contexto, ICdepConexao conexao) : base(contexto, conexao)

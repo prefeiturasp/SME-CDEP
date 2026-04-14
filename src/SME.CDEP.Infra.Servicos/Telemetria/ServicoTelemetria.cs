@@ -2,9 +2,11 @@
 using Elastic.Apm.Api;
 using SME.CDEP.Dominio.Extensions;
 using SME.CDEP.Infra.Servicos.Telemetria.Options;
+using System.Diagnostics.CodeAnalysis;
 
 namespace SME.CDEP.Infra.Servicos.Telemetria
 {
+    [ExcludeFromCodeCoverage]
     public class ServicoTelemetria : IServicoTelemetria
     {
         private readonly TelemetriaOptions _telemetriaOptions;

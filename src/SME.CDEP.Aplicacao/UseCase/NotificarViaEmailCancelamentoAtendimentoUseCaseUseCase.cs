@@ -11,20 +11,9 @@ using SME.CDEP.Infra.Servicos.Rabbit.Dto;
 
 namespace SME.CDEP.Aplicacao
 {
-    public class NotificarViaEmailCancelamentoAtendimentoUseCaseUseCase : INotificarViaEmailCancelamentoAtendimentoUseCase
+    public class NotificarViaEmailCancelamentoAtendimentoUseCaseUseCase(IRepositorioAcervoSolicitacaoItem repositorioAcervoSolicitacaoItem,
+        IServicoNotificacaoEmail servicoNotificacaoEmail, IRepositorioParametroSistema repositorioParametroSistema) : INotificarViaEmailCancelamentoAtendimentoUseCase
     {
-        private IRepositorioAcervoSolicitacaoItem repositorioAcervoSolicitacaoItem;
-        private IServicoNotificacaoEmail servicoNotificacaoEmail;
-        private IRepositorioParametroSistema repositorioParametroSistema;
-        
-        public NotificarViaEmailCancelamentoAtendimentoUseCaseUseCase(IRepositorioAcervoSolicitacaoItem repositorioAcervoSolicitacaoItem,
-            IServicoNotificacaoEmail servicoNotificacaoEmail,IRepositorioParametroSistema repositorioParametroSistema)
-        {
-            this.repositorioAcervoSolicitacaoItem = repositorioAcervoSolicitacaoItem ?? throw new ArgumentNullException(nameof(repositorioAcervoSolicitacaoItem));
-            this.servicoNotificacaoEmail = servicoNotificacaoEmail ?? throw new ArgumentNullException(nameof(servicoNotificacaoEmail));
-            this.repositorioParametroSistema = repositorioParametroSistema ?? throw new ArgumentNullException(nameof(repositorioParametroSistema));
-        }
-
         public async Task<bool> Executar(MensagemRabbit param)
         {
             if (param.Mensagem.EhNulo())
@@ -61,7 +50,7 @@ namespace SME.CDEP.Aplicacao
             return true;
         }
         
-        private string GerarConteudoTabela(IEnumerable<AcervoSolicitacaoItemDetalhe> detalhesAcervo)
+        private static string GerarConteudoTabela(IEnumerable<AcervoSolicitacaoItemDetalhe> detalhesAcervo)
         {
             var conteudo = new StringBuilder();
 

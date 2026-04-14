@@ -13,17 +13,8 @@ using SME.CDEP.Infra.Servicos.ServicoArmazenamento.Interface;
 
 namespace SME.CDEP.Aplicacao.Servicos
 {
-    public class ServicoDownloadArquivo : IServicoDownloadArquivo
+    public class ServicoDownloadArquivo(IRepositorioArquivo repositorioArquivo, IServicoArmazenamento servicoArmazenamento) : IServicoDownloadArquivo
     {
-        private readonly IRepositorioArquivo repositorioArquivo;
-        private readonly IServicoArmazenamento servicoArmazenamento;
-        
-        public ServicoDownloadArquivo(IRepositorioArquivo repositorioArquivo,IServicoArmazenamento servicoArmazenamento)
-        {
-            this.repositorioArquivo = repositorioArquivo ?? throw new ArgumentNullException(nameof(repositorioArquivo));
-            this.servicoArmazenamento = servicoArmazenamento ?? throw new ArgumentNullException(nameof(servicoArmazenamento));
-        }
-       
         public async Task<(byte[], string, string)> Download(Guid codigoArquivo)
         {
             return await ObterArquivo(await repositorioArquivo.ObterPorCodigo(codigoArquivo));

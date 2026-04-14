@@ -4,9 +4,11 @@ using Newtonsoft.Json.Serialization;
 using SME.CDEP.Aplicacao.DTOS;
 using SME.CDEP.Dominio.Excecoes;
 using SME.CDEP.Infra.Servicos.Mensageria.Log;
+using System.Diagnostics.CodeAnalysis;
 
 namespace SME.CDEP.Webapi.Middlewares
 {
+    [ExcludeFromCodeCoverage]
     public class TratamentoExcecaoGlobalMiddleware(RequestDelegate next, IServicoLogs servicoLogs)
     {
         private readonly IServicoLogs servicoLogs = servicoLogs ?? throw new ArgumentNullException(nameof(servicoLogs));
@@ -46,6 +48,7 @@ namespace SME.CDEP.Webapi.Middlewares
         }
     }
 
+    [ExcludeFromCodeCoverage]
     public static class TratamentoExcecaoGlobalMiddlewareExtensions
     {
         public static IApplicationBuilder UseTratamentoExcecoesGlobalMiddleware(this IApplicationBuilder builder)

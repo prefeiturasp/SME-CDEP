@@ -3,9 +3,11 @@ using SME.CDEP.Dominio.Contexto;
 using SME.CDEP.Dominio.Entidades;
 using SME.CDEP.Dominio.Extensions;
 using SME.CDEP.Infra.Dados.Repositorios.Interfaces;
+using System.Diagnostics.CodeAnalysis;
 
 namespace SME.CDEP.Infra.Dados.Repositorios
 {
+    [ExcludeFromCodeCoverage]
     public class RepositorioAcervoDocumental : RepositorioBase<AcervoDocumental>, IRepositorioAcervoDocumental
     {
         public RepositorioAcervoDocumental(IContextoAplicacao contexto, ICdepConexao conexao) : base(contexto,conexao)

@@ -1,13 +1,15 @@
 ﻿using Newtonsoft.Json;
-using System.Text;
 using SME.CDEP.Aplicacao.DTOS;
 using SME.CDEP.Aplicacao.Integracoes.Interfaces;
 using SME.CDEP.Dominio.Constantes;
 using SME.CDEP.Dominio.Excecoes;
 using SME.CDEP.Dominio.Extensions;
+using System.Diagnostics.CodeAnalysis;
+using System.Text;
 
 namespace SME.CDEP.Aplicacao.Integracoes
 {
+    [ExcludeFromCodeCoverage]
     public class ServicoAcessos(HttpClient httpClient) : IServicoAcessos
     {
         private const int Sistema_Cdep = 1006;

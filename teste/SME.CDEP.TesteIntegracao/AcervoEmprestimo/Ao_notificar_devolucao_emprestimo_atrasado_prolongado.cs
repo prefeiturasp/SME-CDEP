@@ -2,6 +2,7 @@
 using Shouldly;
 using SME.CDEP.Aplicacao;
 using SME.CDEP.Dominio.Entidades;
+using SME.CDEP.Dominio.Extensions;
 using SME.CDEP.Infra.Dominio.Enumerados;
 using SME.CDEP.Infra.Servicos.Rabbit.Dto;
 using SME.CDEP.TesteIntegracao.Setup;

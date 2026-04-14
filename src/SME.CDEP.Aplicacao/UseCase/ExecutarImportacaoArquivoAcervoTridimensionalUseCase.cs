@@ -11,23 +11,18 @@ using SME.CDEP.Infra.Servicos.Rabbit.Dto;
 
 namespace SME.CDEP.Aplicacao.Servicos
 {
-    public class ExecutarImportacaoArquivoAcervoTridimensionalUseCase : ServicoImportacaoArquivoBase, IExecutarImportacaoArquivoAcervoTridimensionalUseCase, IImportacaoArquivoAcervoTridimensionalAuxiliar
+    public class ExecutarImportacaoArquivoAcervoTridimensionalUseCase(
+        IRepositorioImportacaoArquivo repositorioImportacaoArquivo, IServicoMaterial servicoMaterial, 
+        IServicoEditora servicoEditora, IServicoSerieColecao servicoSerieColecao, IServicoIdioma servicoIdioma, 
+        IServicoAssunto servicoAssunto, IServicoCreditoAutor servicoCreditoAutor, IServicoConservacao servicoConservacao, 
+        IServicoAcessoDocumento servicoAcessoDocumento, IServicoCromia servicoCromia, IServicoSuporte servicoSuporte, 
+        IServicoFormato servicoFormato, IServicoAcervoTridimensional servicoAcervoTridimensional, IMapper mapper,
+        IRepositorioParametroSistema repositorioParametroSistema) : 
+        ServicoImportacaoArquivoBase(repositorioImportacaoArquivo, servicoMaterial, servicoEditora,
+            servicoSerieColecao, servicoIdioma, servicoAssunto, servicoCreditoAutor, servicoConservacao,
+            servicoAcessoDocumento,servicoCromia,servicoSuporte, servicoFormato, mapper,repositorioParametroSistema), 
+        IExecutarImportacaoArquivoAcervoTridimensionalUseCase, IImportacaoArquivoAcervoTridimensionalAuxiliar
     {
-        private readonly IServicoAcervoTridimensional servicoAcervoTridimensional;
-        private readonly IMapper mapper;
-        
-        public ExecutarImportacaoArquivoAcervoTridimensionalUseCase(IRepositorioImportacaoArquivo repositorioImportacaoArquivo, IServicoMaterial servicoMaterial,
-            IServicoEditora servicoEditora,IServicoSerieColecao servicoSerieColecao,IServicoIdioma servicoIdioma, IServicoAssunto servicoAssunto,
-            IServicoCreditoAutor servicoCreditoAutor,IServicoConservacao servicoConservacao, IServicoAcessoDocumento servicoAcessoDocumento,
-            IServicoCromia servicoCromia, IServicoSuporte servicoSuporte,IServicoFormato servicoFormato,IServicoAcervoTridimensional servicoAcervoTridimensional,IMapper mapper,
-            IRepositorioParametroSistema repositorioParametroSistema)
-            : base(repositorioImportacaoArquivo, servicoMaterial, servicoEditora,servicoSerieColecao, servicoIdioma, servicoAssunto, servicoCreditoAutor,
-                servicoConservacao,servicoAcessoDocumento,servicoCromia,servicoSuporte, servicoFormato, mapper,repositorioParametroSistema)
-        {
-            this.servicoAcervoTridimensional = servicoAcervoTridimensional ?? throw new ArgumentNullException(nameof(servicoAcervoTridimensional));
-            this.mapper = mapper ?? throw new ArgumentNullException(nameof(mapper));
-        }
-
         public async Task<bool> Executar(MensagemRabbit param)
         {
             if (param.Mensagem.EhNulo())

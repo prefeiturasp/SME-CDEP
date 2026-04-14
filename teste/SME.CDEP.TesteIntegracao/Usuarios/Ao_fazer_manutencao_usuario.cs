@@ -5,6 +5,7 @@ using SME.CDEP.TesteIntegracao.Setup;
 using SME.CDEP.Infra.Dominio.Enumerados;
 using SME.CDEP.TesteIntegracao.Constantes;
 using Xunit;
+using SME.CDEP.Dominio.Extensions;
 
 namespace SME.CDEP.TesteIntegracao.Usuario
 {

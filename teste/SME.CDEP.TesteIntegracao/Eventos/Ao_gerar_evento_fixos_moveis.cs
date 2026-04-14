@@ -1,8 +1,8 @@
 ﻿using Shouldly;
 using SME.CDEP.Dominio.Entidades;
 using SME.CDEP.TesteIntegracao.Setup;
-using SME.CDEP.Infra.Dominio.Enumerados;
 using Xunit;
+using SME.CDEP.Dominio.Extensions;
 
 namespace SME.CDEP.TesteIntegracao.Eventos
 {

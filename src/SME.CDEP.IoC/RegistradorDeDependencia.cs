@@ -27,9 +27,11 @@ using SME.CDEP.Infra.Servicos.ServicoArmazenamento;
 using SME.CDEP.Infra.Servicos.ServicoArmazenamento.Interface;
 using SME.CDEP.Infra.Servicos.Telemetria.IoC;
 using SME.CDEP.IoC.Extensions;
+using System.Diagnostics.CodeAnalysis;
 
 namespace SME.CDEP.IoC;
 
+[ExcludeFromCodeCoverage]
 public class RegistradorDeDependencia
 {
     private readonly IServiceCollection _serviceCollection;

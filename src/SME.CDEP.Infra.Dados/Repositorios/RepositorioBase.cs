@@ -6,9 +6,11 @@ using SME.CDEP.Dominio.Contexto;
 using SME.CDEP.Dominio.Excecoes;
 using SME.CDEP.Dominio.Repositorios;
 using SME.CDEP.Infra.Dominio.Enumerados;
+using System.Diagnostics.CodeAnalysis;
 
 namespace SME.CDEP.Infra.Dados.Repositorios;
 
+[ExcludeFromCodeCoverage]
 public abstract class RepositorioBase<TEntidade> : IRepositorioBase<TEntidade>
     where TEntidade : EntidadeBase    
 {

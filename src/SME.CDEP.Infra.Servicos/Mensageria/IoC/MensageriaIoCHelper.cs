@@ -2,9 +2,11 @@
 using Microsoft.Extensions.DependencyInjection;
 using SME.CDEP.Infra.Servicos.Mensageria.Options;
 using SME.ConectaFormacao.Infra.Servicos.Mensageria;
+using System.Diagnostics.CodeAnalysis;
 
 namespace SME.CDEP.Infra.Servicos.Mensageria.IoC
 {
+    [ExcludeFromCodeCoverage]
     public static class MensageriaIoCHelper
     {
         public static void ConfigurarMensageria(this IServiceCollection services, IConfiguration configuration)

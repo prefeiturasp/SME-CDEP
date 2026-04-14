@@ -1,5 +1,8 @@
-﻿namespace SME.CDEP.Infra.Servicos.Mensageria.Log
+﻿using System.Diagnostics.CodeAnalysis;
+
+namespace SME.CDEP.Infra.Servicos.Mensageria.Log
 {
+    [ExcludeFromCodeCoverage]
     public class LogMensagem 
     {
         public LogMensagem(string mensagem, string contexto = "", string nivel = "", string observacao = "", string rastreamento = "", string projeto = "CDEP")
