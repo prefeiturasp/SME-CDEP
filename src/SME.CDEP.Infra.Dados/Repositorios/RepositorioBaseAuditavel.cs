@@ -1,8 +1,8 @@
 using Dommel;
 using SME.CDEP.Dominio;
 using SME.CDEP.Dominio.Contexto;
+using SME.CDEP.Dominio.Extensions;
 using SME.CDEP.Dominio.Repositorios;
-using SME.CDEP.Infra.Dominio.Enumerados;
 using System.Diagnostics.CodeAnalysis;
 
 namespace SME.CDEP.Infra.Dados.Repositorios;

@@ -3,9 +3,11 @@ using Polly;
 using Polly.Registry;
 using System.Text;
 using SME.CDEP.Infra.Servicos.Polly;
+using System.Diagnostics.CodeAnalysis;
 
 namespace SME.CDEP.Infra.Servicos.Mensageria
 {
+    [ExcludeFromCodeCoverage]
     public class ServicoMensageriaLogs : IServicoMensageriaLogs
     {
         private readonly IConexoesRabbitLogs conexoesRabbit;

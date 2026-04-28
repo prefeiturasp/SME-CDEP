@@ -1,7 +1,6 @@
 ﻿using System;
-using SME.CDEP.Dominio.Extensions;
 
-namespace SME.CDEP.Infra.Dominio.Enumerados
+namespace SME.CDEP.Dominio.Extensions
 {
     public static class DateTimeExtension
     {

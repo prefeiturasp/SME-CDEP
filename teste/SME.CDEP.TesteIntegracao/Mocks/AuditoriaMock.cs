@@ -1,6 +1,6 @@
 ﻿using Bogus;
 using SME.CDEP.Dominio;
-using SME.CDEP.Infra.Dominio.Enumerados;
+using SME.CDEP.Dominio.Extensions;
 
 namespace SME.CDEP.TesteIntegracao;
 

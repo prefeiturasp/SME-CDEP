@@ -9,9 +9,11 @@ using SME.CDEP.Infra.Servicos.Mensageria.Log;
 using SME.CDEP.Infra.Servicos.Polly;
 using SME.CDEP.Infra.Servicos.Rabbit.Dto;
 using SME.CDEP.Infra.Servicos.Telemetria;
+using System.Diagnostics.CodeAnalysis;
 
 namespace SME.CDEP.Infra.Servicos.Mensageria
 {
+    [ExcludeFromCodeCoverage]
     public class ServicoMensageriaMetricas : IServicoMensageriaMetricas
     {
         private readonly IConexoesRabbit conexaoRabbit;

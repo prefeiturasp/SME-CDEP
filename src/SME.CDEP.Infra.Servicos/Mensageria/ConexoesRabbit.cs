@@ -1,9 +1,11 @@
 ﻿using Microsoft.Extensions.ObjectPool;
 using RabbitMQ.Client;
 using SME.CDEP.Infra.Servicos.Options;
+using System.Diagnostics.CodeAnalysis;
 
 namespace SME.CDEP.Infra.Servicos.Mensageria
 {
+    [ExcludeFromCodeCoverage]
     public class ConexoesRabbit : IConexoesRabbit
     {
         public ObjectPool<IModel> pool { get; set; }
@@ -23,12 +25,14 @@ namespace SME.CDEP.Infra.Servicos.Mensageria
     }
 
 
+    [ExcludeFromCodeCoverage]
     public class ConexoesRabbitAcessos : ConexoesRabbit, IConexoesRabbitAcessos
     {
         public ConexoesRabbitAcessos(ConfiguracaoRabbitOptions configuracaoRabbit, ObjectPoolProvider poolProvider) : base(configuracaoRabbit, poolProvider)
         { }
     }
 
+    [ExcludeFromCodeCoverage]
     public class ConexoesRabbitLogs : ConexoesRabbit, IConexoesRabbitLogs
     {
         public ConexoesRabbitLogs(ConfiguracaoRabbitLogsOptions configuracaoRabbit, ObjectPoolProvider poolProvider) : base(configuracaoRabbit, poolProvider)

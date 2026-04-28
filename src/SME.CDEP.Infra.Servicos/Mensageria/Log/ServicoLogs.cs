@@ -1,13 +1,15 @@
 ﻿using Newtonsoft.Json;
 using Polly;
 using Polly.Registry;
-using System.Text;
 using SME.CDEP.Infra.Dominio.Enumerados;
 using SME.CDEP.Infra.Servicos.Mensageria.Exchange;
 using SME.CDEP.Infra.Servicos.Polly;
+using System.Diagnostics.CodeAnalysis;
+using System.Text;
 
 namespace SME.CDEP.Infra.Servicos.Mensageria.Log
 {
+    [ExcludeFromCodeCoverage]
     public class ServicoLogs : IServicoLogs
     {
         private readonly IConexoesRabbitLogs conexoesRabbit;

@@ -2,7 +2,6 @@
 using SME.CDEP.Dominio.Constantes;
 using SME.CDEP.Dominio.Excecoes;
 using SME.CDEP.Dominio.Extensions;
-using SME.CDEP.Infra.Dominio.Enumerados;
 
 namespace SME.CDEP.Aplicacao.DTOS
 {

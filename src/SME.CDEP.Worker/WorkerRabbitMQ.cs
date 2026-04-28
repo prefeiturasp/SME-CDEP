@@ -6,9 +6,11 @@ using SME.CDEP.Infra;
 using SME.CDEP.Infra.Servicos.Mensageria;
 using SME.CDEP.Infra.Servicos.Telemetria;
 using SME.CDEP.Infra.Servicos.Telemetria.Options;
+using System.Diagnostics.CodeAnalysis;
 
 namespace SME.CDEP.Worker
 {
+    [ExcludeFromCodeCoverage]
     public sealed class WorkerRabbitMQ : WorkerRabbitCDEP
     {
         public WorkerRabbitMQ(IServiceScopeFactory serviceScopeFactory,

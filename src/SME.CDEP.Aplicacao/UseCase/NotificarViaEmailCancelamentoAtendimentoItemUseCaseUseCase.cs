@@ -11,20 +11,9 @@ using SME.CDEP.Infra.Servicos.Rabbit.Dto;
 
 namespace SME.CDEP.Aplicacao
 {
-    public class NotificarViaEmailCancelamentoAtendimentoItemUseCaseUseCase : INotificarViaEmailCancelamentoAtendimentoItemUseCase
+    public class NotificarViaEmailCancelamentoAtendimentoItemUseCaseUseCase(IRepositorioAcervoSolicitacaoItem repositorioAcervoSolicitacaoItem,
+        IServicoNotificacaoEmail servicoNotificacaoEmail, IRepositorioParametroSistema repositorioParametroSistema) : INotificarViaEmailCancelamentoAtendimentoItemUseCase
     {
-        private IRepositorioAcervoSolicitacaoItem repositorioAcervoSolicitacaoItem;
-        private IServicoNotificacaoEmail servicoNotificacaoEmail;
-        private IRepositorioParametroSistema repositorioParametroSistema;
-        
-        public NotificarViaEmailCancelamentoAtendimentoItemUseCaseUseCase(IRepositorioAcervoSolicitacaoItem repositorioAcervoSolicitacaoItem,
-            IServicoNotificacaoEmail servicoNotificacaoEmail,IRepositorioParametroSistema repositorioParametroSistema)
-        {
-            this.repositorioAcervoSolicitacaoItem = repositorioAcervoSolicitacaoItem ?? throw new ArgumentNullException(nameof(repositorioAcervoSolicitacaoItem));
-            this.servicoNotificacaoEmail = servicoNotificacaoEmail ?? throw new ArgumentNullException(nameof(servicoNotificacaoEmail));
-            this.repositorioParametroSistema = repositorioParametroSistema ?? throw new ArgumentNullException(nameof(repositorioParametroSistema));
-        }
-
         public async Task<bool> Executar(MensagemRabbit param)
         {
             if (param.Mensagem.EhNulo())
@@ -37,13 +26,13 @@ namespace SME.CDEP.Aplicacao
 
             var detalhesAcervo = await repositorioAcervoSolicitacaoItem.ObterDetalhamentoDosItensPorSolicitacaoOuItem(null,acervoSolicitacaoItemId);
 
-            if (detalhesAcervo.Any(a=> a.Email.NaoEstaPreenchido()))
+            if (detalhesAcervo.Any(a=> string.IsNullOrWhiteSpace(a.Email)))
                 throw new NegocioException(MensagemNegocio.SOLICITANTE_NAO_POSSUI_EMAIL);
             
-            if (detalhesAcervo.NaoPossuiElementos())
+            if (detalhesAcervo is null || !detalhesAcervo.Any())
                 throw new NegocioException(MensagemNegocio.SOLICITACAO_ATENDIMENTO_NAO_CONTEM_ACERVOS);
             
-            var destinatario = detalhesAcervo.FirstOrDefault().Solicitante;
+            var destinatario = detalhesAcervo.First().Solicitante!;
             
             var anoAtual = DateTimeExtension.HorarioBrasilia().Year;
 
@@ -53,15 +42,15 @@ namespace SME.CDEP.Aplicacao
             
             var textoEmail = modeloEmail
                 .Replace("#NOME", destinatario)
-                .Replace("#CONTEUDO_TABELA", GerarConteudoTabela(detalhesAcervo.FirstOrDefault()))
+                .Replace("#CONTEUDO_TABELA", GerarConteudoTabela(detalhesAcervo.First()))
                 .Replace("#LINK_FORMULARIO_CDEP", enderecoContatoCDEP);
             
-            await servicoNotificacaoEmail.Enviar(destinatario, detalhesAcervo.FirstOrDefault().Email, "CDEP - Atendimento item cancelado", textoEmail);
+            await servicoNotificacaoEmail.Enviar(destinatario, detalhesAcervo.First().Email!, "CDEP - Atendimento item cancelado", textoEmail);
             
             return true;
         }
         
-        private string GerarConteudoTabela(AcervoSolicitacaoItemDetalhe detalhe)
+        private static string GerarConteudoTabela(AcervoSolicitacaoItemDetalhe detalhe)
         {
             var conteudo = new StringBuilder();
 

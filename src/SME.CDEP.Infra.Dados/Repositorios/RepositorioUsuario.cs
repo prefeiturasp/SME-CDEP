@@ -2,9 +2,11 @@
 using SME.CDEP.Dominio.Contexto;
 using SME.CDEP.Dominio.Entidades;
 using SME.CDEP.Infra.Dados.Repositorios.Interfaces;
+using System.Diagnostics.CodeAnalysis;
 
 namespace SME.CDEP.Infra.Dados.Repositorios
 {
+    [ExcludeFromCodeCoverage]
     public class RepositorioUsuario(IContextoAplicacao contexto, ICdepConexao conexao) : RepositorioBaseAuditavel<Usuario>(contexto, conexao), IRepositorioUsuario
     {
         public Task<Usuario?> ObterPorLogin(string login)

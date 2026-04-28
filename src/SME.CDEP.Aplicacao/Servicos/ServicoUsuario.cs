@@ -13,24 +13,9 @@ using SME.CDEP.Infra.Dominio.Enumerados;
 
 namespace SME.CDEP.Aplicacao.Servicos
 {
-    public class ServicoUsuario : IServicoUsuario
+    public class ServicoUsuario(IRepositorioUsuario repositorioUsuario, IServicoAcessos servicoAcessos,
+        IMapper mapper, IServicoPerfilUsuario servicoPerfilUsuario, IContextoAplicacao contextoAplicacao) : IServicoUsuario
     {
-        private readonly IRepositorioUsuario repositorioUsuario;
-        private readonly IServicoAcessos servicoAcessos;
-        private readonly IMapper mapper;
-        private readonly IServicoPerfilUsuario servicoPerfilUsuario;
-        private readonly IContextoAplicacao contextoAplicacao;
-        
-        public ServicoUsuario(IRepositorioUsuario repositorioUsuario,IServicoAcessos servicoAcessos, 
-            IMapper mapper,IServicoPerfilUsuario servicoPerfilUsuario,IContextoAplicacao contextoAplicacao) 
-        {
-            this.repositorioUsuario = repositorioUsuario ?? throw new ArgumentNullException(nameof(repositorioUsuario));
-            this.servicoAcessos = servicoAcessos ?? throw new ArgumentNullException(nameof(servicoAcessos));
-            this.mapper = mapper ?? throw new ArgumentNullException(nameof(mapper));
-            this.servicoPerfilUsuario = servicoPerfilUsuario ?? throw new ArgumentNullException(nameof(servicoPerfilUsuario));
-            this.contextoAplicacao = contextoAplicacao ?? throw new ArgumentNullException(nameof(contextoAplicacao));
-        }
-
         public async Task<long> Inserir(UsuarioDTO usuarioDto)
         {
             var usuario = mapper.Map<Usuario>(usuarioDto);

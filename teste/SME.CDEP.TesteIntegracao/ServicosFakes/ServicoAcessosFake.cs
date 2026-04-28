@@ -1,7 +1,7 @@
 ﻿using Bogus;
 using SME.CDEP.Aplicacao.DTOS;
 using SME.CDEP.Aplicacao.Integracoes.Interfaces;
-using SME.CDEP.Infra.Dominio.Enumerados;
+using SME.CDEP.Dominio.Extensions;
 using SME.CDEP.TesteIntegracao.Constantes;
 
 namespace SME.CDEP.TesteIntegracao.ServicosFakes;
