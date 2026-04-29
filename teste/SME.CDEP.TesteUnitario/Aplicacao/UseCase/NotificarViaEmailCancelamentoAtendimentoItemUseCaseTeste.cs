@@ -12,14 +12,14 @@ using SME.CDEP.Infra.Servicos.Rabbit.Dto;
 
 namespace SME.CDEP.TesteUnitario.Aplicacao.UseCase
 {
-    public class NotificarViaEmailCancelamentoAtendimentoUseCaseTestes
+    public class NotificarViaEmailCancelamentoAtendimentoItemUseCaseTeste
     {
         private readonly Mock<IRepositorioAcervoSolicitacaoItem> repositorioAcervoSolicitacaoItemMock;
         private readonly Mock<IServicoNotificacaoEmail> servicoNotificacaoEmailMock;
         private readonly Mock<IRepositorioParametroSistema> repositorioParametroSistemaMock;
-        private readonly NotificarViaEmailCancelamentoAtendimentoUseCaseUseCase sut;
+        private readonly NotificarViaEmailCancelamentoAtendimentoItemUseCase sut;
 
-        public NotificarViaEmailCancelamentoAtendimentoUseCaseTestes()
+        public NotificarViaEmailCancelamentoAtendimentoItemUseCaseTeste()
         {
             var mocker = new AutoMocker();
 
@@ -27,7 +27,7 @@ namespace SME.CDEP.TesteUnitario.Aplicacao.UseCase
             servicoNotificacaoEmailMock = mocker.GetMock<IServicoNotificacaoEmail>();
             repositorioParametroSistemaMock = mocker.GetMock<IRepositorioParametroSistema>();
 
-            sut = mocker.CreateInstance<NotificarViaEmailCancelamentoAtendimentoUseCaseUseCase>();
+            sut = mocker.CreateInstance<NotificarViaEmailCancelamentoAtendimentoItemUseCase>();
 
             ConfigurarMocksPadroes();
         }
@@ -61,14 +61,14 @@ namespace SME.CDEP.TesteUnitario.Aplicacao.UseCase
         }
 
         [Fact]
-        public async Task DadoSolicitacaoSemItensVinculados_QuandoExecutar_EntaoLancaNegocioException()
+        public async Task DadoSolicitacaoVazia_QuandoExecutar_EntaoLancaNegocioException()
         {
             // Arrange
-            var acervoSolicitacaoId = 10L;
-            var mensagemRabbit = new MensagemRabbit { Mensagem = acervoSolicitacaoId.ToString() };
+            var acervoSolicitacaoItemId = 10L;
+            var mensagemRabbit = new MensagemRabbit { Mensagem = acervoSolicitacaoItemId.ToString() };
 
             repositorioAcervoSolicitacaoItemMock
-                .Setup(r => r.ObterDetalhamentoDosItensPorSolicitacaoOuItem(acervoSolicitacaoId, null))
+                .Setup(r => r.ObterDetalhamentoDosItensPorSolicitacaoOuItem(null, acervoSolicitacaoItemId))
                 .ReturnsAsync(new List<AcervoSolicitacaoItemDetalhe>());
 
             // Act
@@ -80,19 +80,19 @@ namespace SME.CDEP.TesteUnitario.Aplicacao.UseCase
         }
 
         [Fact]
-        public async Task DadoSolicitacaoCujoSolicitanteNaoPossuiEmail_QuandoExecutar_EntaoLancaNegocioException()
+        public async Task DadoItemCujoSolicitanteNaoPossuiEmail_QuandoExecutar_EntaoLancaNegocioException()
         {
             // Arrange
-            var acervoSolicitacaoId = 10L;
-            var mensagemRabbit = new MensagemRabbit { Mensagem = acervoSolicitacaoId.ToString() };
+            var acervoSolicitacaoItemId = 10L;
+            var mensagemRabbit = new MensagemRabbit { Mensagem = acervoSolicitacaoItemId.ToString() };
 
             var detalhes = new List<AcervoSolicitacaoItemDetalhe>
             {
-                new() { Email = null }
+                new AcervoSolicitacaoItemDetalhe { Email = "   " } // Testando string.IsNullOrWhiteSpace
             };
 
             repositorioAcervoSolicitacaoItemMock
-                .Setup(r => r.ObterDetalhamentoDosItensPorSolicitacaoOuItem(acervoSolicitacaoId, null))
+                .Setup(r => r.ObterDetalhamentoDosItensPorSolicitacaoOuItem(null, acervoSolicitacaoItemId))
                 .ReturnsAsync(detalhes);
 
             // Act
@@ -104,30 +104,30 @@ namespace SME.CDEP.TesteUnitario.Aplicacao.UseCase
         }
 
         [Fact]
-        public async Task DadoSolicitacaoValida_QuandoExecutar_EntaoConstroiEnviaEmailERetornaTrue()
+        public async Task DadoItemCanceladoValido_QuandoExecutar_EntaoConstroiEnviaEmailERetornaTrue()
         {
             // Arrange
-            var acervoSolicitacaoId = 10L;
-            var mensagemRabbit = new MensagemRabbit { Mensagem = acervoSolicitacaoId.ToString() };
+            var acervoSolicitacaoItemId = 1L;
+            var mensagemRabbit = new MensagemRabbit { Mensagem = acervoSolicitacaoItemId.ToString() };
 
             var detalhes = new List<AcervoSolicitacaoItemDetalhe>
             {
                 new AcervoSolicitacaoItemDetalhe
                 {
                     AcervoSolicitacaoId = 10,
-                    Id = 1,
-                    Solicitante = "João da Silva",
-                    Email = "joao@email.com",
-                    Titulo = "Livro de História",
-                    TipoAcervo = TipoAcervo.Bibliografico,
-                    Codigo = "LIV01",
-                    CodigoNovo = "NLIV01",
-                    DataVisita = new DateTime(2026, 05, 10, 14, 30, 0, DateTimeKind.Local)
+                    Id = acervoSolicitacaoItemId,
+                    Solicitante = "Carlos Almeida",
+                    Email = "carlos@email.com",
+                    Titulo = "Fotografia Antiga",
+                    TipoAcervo = TipoAcervo.Fotografico,
+                    Codigo = "FOTO01",
+                    CodigoNovo = "NFOTO01",
+                    DataVisita = new DateTime(2026, 08, 15, 10, 0, 0)
                 }
             };
 
             repositorioAcervoSolicitacaoItemMock
-                .Setup(r => r.ObterDetalhamentoDosItensPorSolicitacaoOuItem(acervoSolicitacaoId, null))
+                .Setup(r => r.ObterDetalhamentoDosItensPorSolicitacaoOuItem(null, acervoSolicitacaoItemId))
                 .ReturnsAsync(detalhes);
 
             // Act
@@ -137,16 +137,16 @@ namespace SME.CDEP.TesteUnitario.Aplicacao.UseCase
             resultado.Should().BeTrue();
 
             servicoNotificacaoEmailMock.Verify(s => s.Enviar(
-                "João da Silva",
-                "joao@email.com",
-                "CDEP - Atendimento cancelado",
+                "Carlos Almeida",
+                "carlos@email.com",
+                "CDEP - Atendimento item cancelado",
                 It.Is<string>(html =>
-                    html.Contains("Olá João da Silva") &&
+                    html.Contains("Olá Carlos Almeida") &&
                     html.Contains("http://cdep.com/contato") &&
-                    html.Contains("Livro de História") &&
-                    html.Contains("Bibliográfico") &&
-                    html.Contains("10/05 14:30") &&
-                    html.Contains("LIV01/NLIV01")
+                    html.Contains("Fotografia Antiga") &&
+                    html.Contains("Fotográfico") &&
+                    html.Contains("15/08 10:00") &&
+                    html.Contains("FOTO01/NFOTO01")
                 )), Times.Once);
         }
 
@@ -154,26 +154,26 @@ namespace SME.CDEP.TesteUnitario.Aplicacao.UseCase
         public async Task DadoItemSemDataDeVisita_QuandoExecutar_EntaoTabelaDeEmailExibeTracoNaData()
         {
             // Arrange
-            var acervoSolicitacaoId = 10L;
-            var mensagemRabbit = new MensagemRabbit { Mensagem = acervoSolicitacaoId.ToString() };
+            var acervoSolicitacaoItemId = 2L;
+            var mensagemRabbit = new MensagemRabbit { Mensagem = acervoSolicitacaoItemId.ToString() };
 
             var detalhes = new List<AcervoSolicitacaoItemDetalhe>
             {
                 new AcervoSolicitacaoItemDetalhe
                 {
                     AcervoSolicitacaoId = 10,
-                    Id = 2,
-                    Solicitante = "Maria Sousa",
-                    Email = "maria@email.com",
+                    Id = acervoSolicitacaoItemId,
+                    Solicitante = "Ana Lima",
+                    Email = "ana@email.com",
                     Titulo = "Peça de Museu",
                     TipoAcervo = TipoAcervo.Tridimensional,
                     Codigo = "TRID01",
-                    DataVisita = null // Data Nula para forçar o traço na extensão
+                    DataVisita = null // Data Nula para forçar o traço
                 }
             };
 
             repositorioAcervoSolicitacaoItemMock
-                .Setup(r => r.ObterDetalhamentoDosItensPorSolicitacaoOuItem(acervoSolicitacaoId, null))
+                .Setup(r => r.ObterDetalhamentoDosItensPorSolicitacaoOuItem(null, acervoSolicitacaoItemId))
                 .ReturnsAsync(detalhes);
 
             // Act
@@ -195,8 +195,8 @@ namespace SME.CDEP.TesteUnitario.Aplicacao.UseCase
         private void ConfigurarMocksPadroes()
         {
             repositorioParametroSistemaMock
-                .Setup(p => p.ObterParametroPorTipoEAno(TipoParametroSistema.ModeloEmailCancelamentoSolicitacao, It.IsAny<int>()))
-                .ReturnsAsync(new ParametroSistema { Valor = "<html>Olá #NOME, seu pedido foi cancelado. Resumo: #CONTEUDO_TABELA Dúvidas? #LINK_FORMULARIO_CDEP</html>" });
+                .Setup(p => p.ObterParametroPorTipoEAno(TipoParametroSistema.ModeloEmailCancelamentoSolicitacaoItem, It.IsAny<int>()))
+                .ReturnsAsync(new ParametroSistema { Valor = "<html>Olá #NOME, seu item foi cancelado. Resumo: #CONTEUDO_TABELA Dúvidas? #LINK_FORMULARIO_CDEP</html>" });
 
             repositorioParametroSistemaMock
                 .Setup(p => p.ObterParametroPorTipoEAno(TipoParametroSistema.EnderecoContatoCDEPConfirmacaoCancelamentoVisita, It.IsAny<int>()))

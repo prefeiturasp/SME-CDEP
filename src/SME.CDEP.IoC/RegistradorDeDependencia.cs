@@ -65,9 +65,9 @@ public class RegistradorDeDependencia
         _serviceCollection.TryAddScoped<IExecutarCriacaoDeEventosTipoFeriadoAnoAtualUseCase, ExecutarCriacaoDeEventosTipoFeriadoAnoAtualUseCase>();
         _serviceCollection.TryAddScoped<IExecutarCriacaoDeEventosTipoFeriadoAnoAtualPorDataUseCase, ExecutarCriacaoDeEventosTipoFeriadoAnoAtualPorDataUseCase>();
         
-        _serviceCollection.TryAddScoped<INotificarViaEmailCancelamentoAtendimentoUseCase, NotificarViaEmailCancelamentoAtendimentoUseCaseUseCase>();
-        _serviceCollection.TryAddScoped<INotificarViaEmailCancelamentoAtendimentoItemUseCase, NotificarViaEmailCancelamentoAtendimentoItemUseCaseUseCase>();
-        _serviceCollection.TryAddScoped<INotificarViaEmailConfirmacaoAtendimentoPresencialUseCase, NotificarViaEmailConfirmacaoAtendimentoPresencialUseCaseUseCase>();
+        _serviceCollection.TryAddScoped<INotificarViaEmailCancelamentoAtendimentoUseCase, NotificarViaEmailCancelamentoAtendimentoUseCase>();
+        _serviceCollection.TryAddScoped<INotificarViaEmailCancelamentoAtendimentoItemUseCase, NotificarViaEmailCancelamentoAtendimentoItemUseCase>();
+        _serviceCollection.TryAddScoped<INotificarViaEmailConfirmacaoAtendimentoPresencialUseCase, NotificarViaEmailConfirmacaoAtendimentoPresencialUseCase>();
         
         _serviceCollection.TryAddScoped<IExecutarAtualizacaoSituacaoParaEmprestimoComDevolucaoEmAtrasoUseCase, ExecutarAtualizacaoSituacaoParaEmprestimoComDevolucaoEmAtrasoUseCase>();
         
