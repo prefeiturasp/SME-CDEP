@@ -14,6 +14,7 @@ namespace SME.CDEP.Aplicacao
 
         public async Task<bool> Executar(MensagemRabbit param)
         {
+            ArgumentNullException.ThrowIfNull(param, nameof(param));
             await servicoEventoAcervoEmprestimo.NotificarDevolucaoEmprestimoAtrasoProlongado();
             return true;
         }

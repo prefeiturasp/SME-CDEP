@@ -1,4 +1,3 @@
-
 using SME.CDEP.Aplicacao.Servicos.Interface;
 using SME.CDEP.Infra.Servicos.Rabbit.Dto;
 
@@ -15,6 +14,9 @@ namespace SME.CDEP.Aplicacao
 
         public async Task<bool> Executar(MensagemRabbit param)
         {
+            if (param == null)
+                throw new ArgumentNullException(nameof(param));
+                
             await servicoEventoAcervoEmprestimo.NotificarDevolucaoEmprestimoAtrasado();
             return true;
         }
