@@ -14,14 +14,14 @@ using SME.CDEP.Infra.Servicos.Rabbit.Dto;
 
 namespace SME.CDEP.TesteUnitario.Aplicacao.UseCase
 {
-    public class NotificarViaEmailConfirmacaoAtendimentoPresencialUseCaseTestes
+    public class NotificarViaEmailConfirmacaoAtendimentoPresencialUseCaseTeste
     {
         private readonly Mock<IRepositorioAcervoSolicitacaoItem> repositorioAcervoSolicitacaoItemMock;
         private readonly Mock<IServicoNotificacaoEmail> servicoNotificacaoEmailMock;
         private readonly Mock<IRepositorioParametroSistema> repositorioParametroSistemaMock;
-        private readonly NotificarViaEmailConfirmacaoAtendimentoPresencialUseCaseUseCase sut;
+        private readonly NotificarViaEmailConfirmacaoAtendimentoPresencialUseCase sut;
 
-        public NotificarViaEmailConfirmacaoAtendimentoPresencialUseCaseTestes()
+        public NotificarViaEmailConfirmacaoAtendimentoPresencialUseCaseTeste()
         {
             var mocker = new AutoMocker();
 
@@ -29,7 +29,7 @@ namespace SME.CDEP.TesteUnitario.Aplicacao.UseCase
             servicoNotificacaoEmailMock = mocker.GetMock<IServicoNotificacaoEmail>();
             repositorioParametroSistemaMock = mocker.GetMock<IRepositorioParametroSistema>();
 
-            sut = mocker.CreateInstance<NotificarViaEmailConfirmacaoAtendimentoPresencialUseCaseUseCase>();
+            sut = mocker.CreateInstance<NotificarViaEmailConfirmacaoAtendimentoPresencialUseCase>();
 
             ConfigurarMocksPadroes();
         }
