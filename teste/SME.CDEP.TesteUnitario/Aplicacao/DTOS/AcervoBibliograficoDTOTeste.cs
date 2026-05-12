@@ -77,15 +77,6 @@ namespace SME.CDEP.TesteUnitario.Aplicacao.DTOS
             dto.Titulo.Should().Be(titulo);
         }
 
-        [Fact(DisplayName = "Titulo - Quando nulo - Deve retornar nulo")]
-        public void DadoTituloNulo_QuandoAcessar_EntaoDeveRetornarNulo()
-        {
-            var dto = new AcervoBibliograficoDTO();
-            dto.Titulo = null;
-
-            dto.Titulo.Should().BeNull();
-        }
-
         [Fact(DisplayName = "Titulo - Quando vazio - Deve retornar vazio")]
         public void DadoTituloVazio_QuandoAcessar_EntaoDeveRetornarVazio()
         {
@@ -146,13 +137,13 @@ namespace SME.CDEP.TesteUnitario.Aplicacao.DTOS
             dto.Codigo.Should().Be(codigo);
         }
 
-        [Fact(DisplayName = "Codigo - Quando nulo - Deve retornar nulo")]
-        public void DadoCodigoNulo_QuandoAcessar_EntaoDeveRetornarNulo()
+        [Fact(DisplayName = "Codigo - Quando vazio - Deve retornar vazio")]
+        public void DadoCodigoVazio_QuandoAcessar_EntaoDeveRetornarVazio()
         {
             var dto = new AcervoBibliograficoDTO();
-            dto.Codigo = null;
+            dto.Codigo = string.Empty;
 
-            dto.Codigo.Should().BeNull();
+            dto.Codigo.Should().Be(string.Empty);
         }
 
         [Fact(DisplayName = "MaterialId - Quando atribuído com valor - Deve retornar o valor")]
@@ -215,15 +206,6 @@ namespace SME.CDEP.TesteUnitario.Aplicacao.DTOS
             dto.AssuntosIds = assuntosIds;
 
             dto.AssuntosIds.Should().BeEmpty();
-        }
-
-        [Fact(DisplayName = "AssuntosIds - Quando nulo - Deve retornar nulo")]
-        public void DadoAssuntosIdsNulo_QuandoAcessar_EntaoDeveRetornarNulo()
-        {
-            var dto = new AcervoBibliograficoDTO();
-            dto.AssuntosIds = null;
-
-            dto.AssuntosIds.Should().BeNull();
         }
 
         [Fact(DisplayName = "Ano - Quando atribuído - Deve retornar o valor")]
@@ -406,13 +388,13 @@ namespace SME.CDEP.TesteUnitario.Aplicacao.DTOS
             dto.LocalizacaoCDD.Should().Be(localizacao);
         }
 
-        [Fact(DisplayName = "LocalizacaoCDD - Quando nulo - Deve retornar nulo")]
-        public void DadoLocalizacaoCDDNulo_QuandoAcessar_EntaoDeveRetornarNulo()
+        [Fact(DisplayName = "LocalizacaoCDD - Quando vazio - Deve retornar vazio")]
+        public void DadoLocalizacaoCDDVazio_QuandoAcessar_EntaoDeveRetornarVazio()
         {
             var dto = new AcervoBibliograficoDTO();
-            dto.LocalizacaoCDD = null;
+            dto.LocalizacaoCDD = string.Empty;
 
-            dto.LocalizacaoCDD.Should().BeNull();
+            dto.LocalizacaoCDD.Should().Be(string.Empty);
         }
 
         [Fact(DisplayName = "LocalizacaoPHA - Quando atribuído - Deve retornar o valor")]
@@ -486,15 +468,6 @@ namespace SME.CDEP.TesteUnitario.Aplicacao.DTOS
             dto.Auditoria.Should().Be(auditoria);
         }
 
-        [Fact(DisplayName = "Auditoria - Quando nulo - Deve retornar nulo")]
-        public void DadoAuditoriaNulo_QuandoAcessar_EntaoDeveRetornarNulo()
-        {
-            var dto = new AcervoBibliograficoDTO();
-            dto.Auditoria = null;
-
-            dto.Auditoria.Should().BeNull();
-        }
-
         [Fact(DisplayName = "CreditosAutoresIds - Quando atribuído - Deve retornar o array")]
         public void DadoCreditosAutoresIdsAtribuido_QuandoAcessar_EntaoDeveRetornarOArray()
         {
@@ -515,15 +488,6 @@ namespace SME.CDEP.TesteUnitario.Aplicacao.DTOS
             dto.CreditosAutoresIds = creditosIds;
 
             dto.CreditosAutoresIds.Should().BeEmpty();
-        }
-
-        [Fact(DisplayName = "CreditosAutoresIds - Quando nulo - Deve retornar nulo")]
-        public void DadoCreditosAutoresIdsNulo_QuandoAcessar_EntaoDeveRetornarNulo()
-        {
-            var dto = new AcervoBibliograficoDTO();
-            dto.CreditosAutoresIds = null;
-
-            dto.CreditosAutoresIds.Should().BeNull();
         }
 
         [Fact(DisplayName = "CoAutores - Quando atribuído - Deve retornar o array")]
@@ -744,7 +708,7 @@ namespace SME.CDEP.TesteUnitario.Aplicacao.DTOS
                 LocalizacaoCDD = "000.00",
                 MaterialId = null,
                 EditoraId = null,
-                AssuntosIds = null,
+                AssuntosIds = Array.Empty<long>(),
                 Ano = null,
                 Edicao = null,
                 NumeroPagina = null,
@@ -755,15 +719,15 @@ namespace SME.CDEP.TesteUnitario.Aplicacao.DTOS
                 LocalizacaoPHA = null,
                 NotasGerais = null,
                 Isbn = null,
-                Auditoria = null,
-                CreditosAutoresIds = null,
+                Auditoria = new AuditoriaDTO(),
+                CreditosAutoresIds = Array.Empty<long>(),
                 CoAutores = null
             };
 
             dto.Should().NotBeNull();
             dto.MaterialId.Should().BeNull();
             dto.EditoraId.Should().BeNull();
-            dto.AssuntosIds.Should().BeNull();
+            dto.AssuntosIds.Should().BeEmpty();
         }
 
         [Fact(DisplayName = "Clonagem de valores - Quando copiar propriedades entre DTOs - Deve manter valores")]
