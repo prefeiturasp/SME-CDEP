@@ -151,7 +151,7 @@ namespace SME.CDEP.TesteUnitario.Aplicacao.DTOS
 
             var isValid = Validator.TryValidateObject(dto, context, results, true);
 
-            results.Where(r => r.ErrorMessage.Contains("descrição")).Should().BeEmpty();
+            results.Where(r => r.ErrorMessage?.Contains("descrição") ?? false).Should().BeEmpty();
         }
 
         [Fact(DisplayName = "AcervoAudiovisualDetalheDTO - Descricao null deve passar validação")]
@@ -163,7 +163,7 @@ namespace SME.CDEP.TesteUnitario.Aplicacao.DTOS
 
             Validator.TryValidateObject(dto, context, results, true);
 
-            results.Where(r => r.ErrorMessage.Contains("descrição")).Should().BeEmpty();
+            results.Where(r => r.ErrorMessage?.Contains("descrição") ?? false).Should().BeEmpty();
         }
 
         [Fact(DisplayName = "AcervoAudiovisualDetalheDTO - CreditosAutores com valor válido deve passar validação")]
@@ -175,7 +175,7 @@ namespace SME.CDEP.TesteUnitario.Aplicacao.DTOS
 
             var isValid = Validator.TryValidateObject(dto, context, results, true);
 
-            results.Where(r => r.ErrorMessage.Contains("créditos")).Should().BeEmpty();
+            results.Where(r => r.ErrorMessage?.Contains("créditos") ?? false).Should().BeEmpty();
         }
 
         [Fact(DisplayName = "AcervoAudiovisualDetalheDTO - CreditosAutores null deve passar validação")]
@@ -187,7 +187,7 @@ namespace SME.CDEP.TesteUnitario.Aplicacao.DTOS
 
             Validator.TryValidateObject(dto, context, results, true);
 
-            results.Where(r => r.ErrorMessage.Contains("créditos")).Should().BeEmpty();
+            results.Where(r => r.ErrorMessage?.Contains("créditos") ?? false).Should().BeEmpty();
         }
 
         [Fact(DisplayName = "AcervoAudiovisualDetalheDTO - DataAcervo com valor válido deve passar validação")]
@@ -199,7 +199,7 @@ namespace SME.CDEP.TesteUnitario.Aplicacao.DTOS
 
             var isValid = Validator.TryValidateObject(dto, context, results, true);
 
-            results.Where(r => r.ErrorMessage.Contains("data")).Should().BeEmpty();
+            results.Where(r => r.ErrorMessage?.Contains("data") ?? false).Should().BeEmpty();
         }
 
         [Fact(DisplayName = "AcervoAudiovisualDetalheDTO - DataAcervo null deve passar validação")]
@@ -211,7 +211,7 @@ namespace SME.CDEP.TesteUnitario.Aplicacao.DTOS
 
             Validator.TryValidateObject(dto, context, results, true);
 
-            results.Where(r => r.ErrorMessage.Contains("data")).Should().BeEmpty();
+            results.Where(r => r.ErrorMessage?.Contains("data") ?? false).Should().BeEmpty();
         }
 
         [Fact(DisplayName = "AcervoAudiovisualDetalheDTO - Localizacao com valor válido deve passar validação")]
@@ -223,7 +223,7 @@ namespace SME.CDEP.TesteUnitario.Aplicacao.DTOS
 
             var isValid = Validator.TryValidateObject(dto, context, results, true);
 
-            results.Where(r => r.ErrorMessage.Contains("localização")).Should().BeEmpty();
+            results.Where(r => r.ErrorMessage?.Contains("localização") ?? false).Should().BeEmpty();
         }
 
         [Fact(DisplayName = "AcervoAudiovisualDetalheDTO - Localizacao null deve passar validação")]
@@ -235,7 +235,7 @@ namespace SME.CDEP.TesteUnitario.Aplicacao.DTOS
 
             Validator.TryValidateObject(dto, context, results, true);
 
-            results.Where(r => r.ErrorMessage.Contains("localização")).Should().BeEmpty();
+            results.Where(r => r.ErrorMessage?.Contains("localização") ?? false).Should().BeEmpty();
         }
 
         [Fact(DisplayName = "AcervoAudiovisualDetalheDTO - Procedencia com valor válido deve passar validação")]
@@ -247,7 +247,7 @@ namespace SME.CDEP.TesteUnitario.Aplicacao.DTOS
 
             var isValid = Validator.TryValidateObject(dto, context, results, true);
 
-            results.Where(r => r.ErrorMessage.Contains("procedência")).Should().BeEmpty();
+            results.Where(r => r.ErrorMessage?.Contains("procedência") ?? false).Should().BeEmpty();
         }
 
         [Fact(DisplayName = "AcervoAudiovisualDetalheDTO - Procedencia null deve passar validação")]
@@ -259,7 +259,7 @@ namespace SME.CDEP.TesteUnitario.Aplicacao.DTOS
 
             Validator.TryValidateObject(dto, context, results, true);
 
-            results.Where(r => r.ErrorMessage.Contains("procedência")).Should().BeEmpty();
+            results.Where(r => r.ErrorMessage?.Contains("procedência") ?? false).Should().BeEmpty();
         }
 
         [Fact(DisplayName = "AcervoAudiovisualDetalheDTO - Copia com valor válido deve passar validação")]
@@ -271,7 +271,7 @@ namespace SME.CDEP.TesteUnitario.Aplicacao.DTOS
 
             var isValid = Validator.TryValidateObject(dto, context, results, true);
 
-            results.Where(r => r.ErrorMessage.Contains("cópia")).Should().BeEmpty();
+            results.Where(r => r.ErrorMessage?.Contains("cópia") ?? false).Should().BeEmpty();
         }
 
         [Fact(DisplayName = "AcervoAudiovisualDetalheDTO - Copia null deve passar validação")]
@@ -283,7 +283,7 @@ namespace SME.CDEP.TesteUnitario.Aplicacao.DTOS
 
             Validator.TryValidateObject(dto, context, results, true);
 
-            results.Where(r => r.ErrorMessage.Contains("cópia")).Should().BeEmpty();
+            results.Where(r => r.ErrorMessage?.Contains("cópia") ?? false).Should().BeEmpty();
         }
 
         [Fact(DisplayName = "AcervoAudiovisualDetalheDTO - PermiteUsoImagem deve aceitar true")]
@@ -331,7 +331,7 @@ namespace SME.CDEP.TesteUnitario.Aplicacao.DTOS
 
             var isValid = Validator.TryValidateObject(dto, context, results, true);
 
-            results.Where(r => r.ErrorMessage.Contains("conservação")).Should().BeEmpty();
+            results.Where(r => r.ErrorMessage?.Contains("conservação") ?? false).Should().BeEmpty();
         }
 
         [Fact(DisplayName = "AcervoAudiovisualDetalheDTO - Conservacao null deve passar validação")]
@@ -343,7 +343,7 @@ namespace SME.CDEP.TesteUnitario.Aplicacao.DTOS
 
             Validator.TryValidateObject(dto, context, results, true);
 
-            results.Where(r => r.ErrorMessage.Contains("conservação")).Should().BeEmpty();
+            results.Where(r => r.ErrorMessage?.Contains("conservação") ?? false).Should().BeEmpty();
         }
 
         [Fact(DisplayName = "AcervoAudiovisualDetalheDTO - Cromia com valor válido deve passar validação")]
@@ -355,7 +355,7 @@ namespace SME.CDEP.TesteUnitario.Aplicacao.DTOS
 
             var isValid = Validator.TryValidateObject(dto, context, results, true);
 
-            results.Where(r => r.ErrorMessage.Contains("cromia")).Should().BeEmpty();
+            results.Where(r => r.ErrorMessage?.Contains("cromia") ?? false).Should().BeEmpty();
         }
 
         [Fact(DisplayName = "AcervoAudiovisualDetalheDTO - Cromia null deve passar validação")]
@@ -367,7 +367,7 @@ namespace SME.CDEP.TesteUnitario.Aplicacao.DTOS
 
             Validator.TryValidateObject(dto, context, results, true);
 
-            results.Where(r => r.ErrorMessage.Contains("cromia")).Should().BeEmpty();
+            results.Where(r => r.ErrorMessage?.Contains("cromia") ?? false).Should().BeEmpty();
         }
 
         [Fact(DisplayName = "AcervoAudiovisualDetalheDTO - Suporte com valor válido deve passar validação")]
@@ -379,7 +379,7 @@ namespace SME.CDEP.TesteUnitario.Aplicacao.DTOS
 
             var isValid = Validator.TryValidateObject(dto, context, results, true);
 
-            results.Where(r => r.ErrorMessage.Contains("suporte")).Should().BeEmpty();
+            results.Where(r => r.ErrorMessage?.Contains("suporte") ?? false).Should().BeEmpty();
         }
 
         [Fact(DisplayName = "AcervoAudiovisualDetalheDTO - Suporte null deve passar validação")]
@@ -391,7 +391,7 @@ namespace SME.CDEP.TesteUnitario.Aplicacao.DTOS
 
             Validator.TryValidateObject(dto, context, results, true);
 
-            results.Where(r => r.ErrorMessage.Contains("suporte")).Should().BeEmpty();
+            results.Where(r => r.ErrorMessage?.Contains("suporte") ?? false).Should().BeEmpty();
         }
 
         [Fact(DisplayName = "AcervoAudiovisualDetalheDTO - Duracao com valor válido deve passar validação")]
@@ -403,7 +403,7 @@ namespace SME.CDEP.TesteUnitario.Aplicacao.DTOS
 
             var isValid = Validator.TryValidateObject(dto, context, results, true);
 
-            results.Where(r => r.ErrorMessage.Contains("duração")).Should().BeEmpty();
+            results.Where(r => r.ErrorMessage?.Contains("duração") ?? false).Should().BeEmpty();
         }
 
         [Fact(DisplayName = "AcervoAudiovisualDetalheDTO - Duracao null deve passar validação")]
@@ -415,7 +415,7 @@ namespace SME.CDEP.TesteUnitario.Aplicacao.DTOS
 
             Validator.TryValidateObject(dto, context, results, true);
 
-            results.Where(r => r.ErrorMessage.Contains("duração")).Should().BeEmpty();
+            results.Where(r => r.ErrorMessage?.Contains("duração") ?? false).Should().BeEmpty();
         }
 
         [Fact(DisplayName = "AcervoAudiovisualDetalheDTO - TamanhoArquivo com valor válido deve passar validação")]
@@ -427,7 +427,7 @@ namespace SME.CDEP.TesteUnitario.Aplicacao.DTOS
 
             var isValid = Validator.TryValidateObject(dto, context, results, true);
 
-            results.Where(r => r.ErrorMessage.Contains("tamanho")).Should().BeEmpty();
+            results.Where(r => r.ErrorMessage?.Contains("tamanho") ?? false).Should().BeEmpty();
         }
 
         [Fact(DisplayName = "AcervoAudiovisualDetalheDTO - TamanhoArquivo null deve passar validação")]
@@ -439,7 +439,7 @@ namespace SME.CDEP.TesteUnitario.Aplicacao.DTOS
 
             Validator.TryValidateObject(dto, context, results, true);
 
-            results.Where(r => r.ErrorMessage.Contains("tamanho")).Should().BeEmpty();
+            results.Where(r => r.ErrorMessage?.Contains("tamanho") ?? false).Should().BeEmpty();
         }
 
         [Fact(DisplayName = "AcervoAudiovisualDetalheDTO - Acessibilidade com valor válido deve passar validação")]
@@ -451,7 +451,7 @@ namespace SME.CDEP.TesteUnitario.Aplicacao.DTOS
 
             var isValid = Validator.TryValidateObject(dto, context, results, true);
 
-            results.Where(r => r.ErrorMessage.Contains("acessibilidade")).Should().BeEmpty();
+            results.Where(r => r.ErrorMessage?.Contains("acessibilidade") ?? false).Should().BeEmpty();
         }
 
         [Fact(DisplayName = "AcervoAudiovisualDetalheDTO - Acessibilidade null deve passar validação")]
@@ -463,7 +463,7 @@ namespace SME.CDEP.TesteUnitario.Aplicacao.DTOS
 
             Validator.TryValidateObject(dto, context, results, true);
 
-            results.Where(r => r.ErrorMessage.Contains("acessibilidade")).Should().BeEmpty();
+            results.Where(r => r.ErrorMessage?.Contains("acessibilidade") ?? false).Should().BeEmpty();
         }
 
         [Fact(DisplayName = "AcervoAudiovisualDetalheDTO - Disponibilizacao com valor válido deve passar validação")]
@@ -475,7 +475,7 @@ namespace SME.CDEP.TesteUnitario.Aplicacao.DTOS
 
             var isValid = Validator.TryValidateObject(dto, context, results, true);
 
-            results.Where(r => r.ErrorMessage.Contains("disponibilização")).Should().BeEmpty();
+            results.Where(r => r.ErrorMessage?.Contains("disponibilização") ?? false).Should().BeEmpty();
         }
 
         [Fact(DisplayName = "AcervoAudiovisualDetalheDTO - Disponibilizacao null deve passar validação")]
@@ -487,7 +487,7 @@ namespace SME.CDEP.TesteUnitario.Aplicacao.DTOS
 
             Validator.TryValidateObject(dto, context, results, true);
 
-            results.Where(r => r.ErrorMessage.Contains("disponibilização")).Should().BeEmpty();
+            results.Where(r => r.ErrorMessage?.Contains("disponibilização") ?? false).Should().BeEmpty();
         }
 
         [Fact(DisplayName = "AcervoAudiovisualDetalheDTO - Deve permitir atribuição de valores às propriedades")]

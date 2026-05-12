@@ -103,39 +103,39 @@ namespace SME.CDEP.TesteUnitario.Aplicacao.DTOS
 
             var isValid = Validator.TryValidateObject(dto, context, results, true);
 
-            results.Where(r => r.ErrorMessage.Contains("localização do acervo audiovisual não pode conter mais que 100 caracteres")).Should().BeEmpty();
+            results.Where(r => r.ErrorMessage?.Contains("localização do acervo audiovisual não pode conter mais que 100 caracteres") ?? false).Should().BeEmpty();
         }
 
         [Fact(DisplayName = "AcervoAudiovisualCadastroDTO - Localizacao não deve permitir mais de 100 caracteres")]
         public void DadoLocalizacaoComMaisDe100Caracteres_QuandoValidar_EntaoDeveRetornarErro()
         {
-            var dto = new AcervoAudiovisualCadastroDTO 
-            { 
-                Localizacao = new string('a', 101), 
-                SuporteId = 1 
+            var dto = new AcervoAudiovisualCadastroDTO
+            {
+                Localizacao = new string('a', 101),
+                SuporteId = 1
             };
             var context = new ValidationContext(dto);
             var results = new List<ValidationResult>();
 
             Validator.TryValidateObject(dto, context, results, true);
 
-            results.Should().Contain(r => r.ErrorMessage.Contains("A localização do acervo audiovisual não pode conter mais que 100 caracteres"));
+            results.Should().Contain(r => r.ErrorMessage != null && r.ErrorMessage.Contains("A localização do acervo audiovisual não pode conter mais que 100 caracteres"));
         }
 
         [Fact(DisplayName = "AcervoAudiovisualCadastroDTO - Localizacao com exatamente 100 caracteres deve passar validação")]
         public void DadoLocalizacaoComExatamente100Caracteres_QuandoValidar_EntaoDevePassarValidacao()
         {
-            var dto = new AcervoAudiovisualCadastroDTO 
-            { 
-                Localizacao = new string('a', 100), 
-                SuporteId = 1 
+            var dto = new AcervoAudiovisualCadastroDTO
+            {
+                Localizacao = new string('a', 100),
+                SuporteId = 1
             };
             var context = new ValidationContext(dto);
             var results = new List<ValidationResult>();
 
             Validator.TryValidateObject(dto, context, results, true);
 
-            results.Where(r => r.ErrorMessage.Contains("localização do acervo audiovisual não pode conter mais que 100 caracteres")).Should().BeEmpty();
+            results.Where(r => r.ErrorMessage?.Contains("localização do acervo audiovisual não pode conter mais que 100 caracteres") ?? false).Should().BeEmpty();
         }
 
         [Fact(DisplayName = "AcervoAudiovisualCadastroDTO - Localizacao null deve passar validação")]
@@ -147,7 +147,7 @@ namespace SME.CDEP.TesteUnitario.Aplicacao.DTOS
 
             Validator.TryValidateObject(dto, context, results, true);
 
-            results.Where(r => r.ErrorMessage.Contains("localização do acervo audiovisual")).Should().BeEmpty();
+            results.Where(r => r.ErrorMessage?.Contains("localização do acervo audiovisual") ?? false).Should().BeEmpty();
         }
 
         [Fact(DisplayName = "AcervoAudiovisualCadastroDTO - Procedencia com valor válido dentro do limite deve passar validação")]
@@ -159,39 +159,39 @@ namespace SME.CDEP.TesteUnitario.Aplicacao.DTOS
 
             var isValid = Validator.TryValidateObject(dto, context, results, true);
 
-            results.Where(r => r.ErrorMessage.Contains("procedência do acervo audiovisual não pode conter mais que 200 caracteres")).Should().BeEmpty();
+            results.Where(r => r.ErrorMessage?.Contains("procedência do acervo audiovisual não pode conter mais que 200 caracteres") ?? false).Should().BeEmpty();
         }
 
         [Fact(DisplayName = "AcervoAudiovisualCadastroDTO - Procedencia não deve permitir mais de 200 caracteres")]
         public void DadoProcedenciaComMaisDe200Caracteres_QuandoValidar_EntaoDeveRetornarErro()
         {
-            var dto = new AcervoAudiovisualCadastroDTO 
-            { 
-                Procedencia = new string('a', 201), 
-                SuporteId = 1 
+            var dto = new AcervoAudiovisualCadastroDTO
+            {
+                Procedencia = new string('a', 201),
+                SuporteId = 1
             };
             var context = new ValidationContext(dto);
             var results = new List<ValidationResult>();
 
             Validator.TryValidateObject(dto, context, results, true);
 
-            results.Should().Contain(r => r.ErrorMessage.Contains("A procedência do acervo audiovisual não pode conter mais que 200 caracteres"));
+            results.Should().Contain(r => r.ErrorMessage != null && r.ErrorMessage.Contains("A procedência do acervo audiovisual não pode conter mais que 200 caracteres"));
         }
 
         [Fact(DisplayName = "AcervoAudiovisualCadastroDTO - Procedencia com exatamente 200 caracteres deve passar validação")]
         public void DadoProcedenciaComExatamente200Caracteres_QuandoValidar_EntaoDevePassarValidacao()
         {
-            var dto = new AcervoAudiovisualCadastroDTO 
-            { 
-                Procedencia = new string('a', 200), 
-                SuporteId = 1 
+            var dto = new AcervoAudiovisualCadastroDTO
+            {
+                Procedencia = new string('a', 200),
+                SuporteId = 1
             };
             var context = new ValidationContext(dto);
             var results = new List<ValidationResult>();
 
             Validator.TryValidateObject(dto, context, results, true);
 
-            results.Where(r => r.ErrorMessage.Contains("procedência do acervo audiovisual não pode conter mais que 200 caracteres")).Should().BeEmpty();
+            results.Where(r => r.ErrorMessage?.Contains("procedência do acervo audiovisual não pode conter mais que 200 caracteres") ?? false).Should().BeEmpty();
         }
 
         [Fact(DisplayName = "AcervoAudiovisualCadastroDTO - Procedencia null deve passar validação")]
@@ -203,7 +203,7 @@ namespace SME.CDEP.TesteUnitario.Aplicacao.DTOS
 
             Validator.TryValidateObject(dto, context, results, true);
 
-            results.Where(r => r.ErrorMessage.Contains("procedência do acervo audiovisual")).Should().BeEmpty();
+            results.Where(r => r.ErrorMessage?.Contains("procedência do acervo audiovisual") ?? false).Should().BeEmpty();
         }
 
         [Fact(DisplayName = "AcervoAudiovisualCadastroDTO - Copia com valor válido dentro do limite deve passar validação")]
@@ -215,39 +215,39 @@ namespace SME.CDEP.TesteUnitario.Aplicacao.DTOS
 
             var isValid = Validator.TryValidateObject(dto, context, results, true);
 
-            results.Where(r => r.ErrorMessage.Contains("cópia do acervo audiovisual não pode conter mais que 100 caracteres")).Should().BeEmpty();
+            results.Where(r => r.ErrorMessage?.Contains("cópia do acervo audiovisual não pode conter mais que 100 caracteres") ?? false).Should().BeEmpty();
         }
 
         [Fact(DisplayName = "AcervoAudiovisualCadastroDTO - Copia não deve permitir mais de 100 caracteres")]
         public void DadoCopiaComMaisDe100Caracteres_QuandoValidar_EntaoDeveRetornarErro()
         {
-            var dto = new AcervoAudiovisualCadastroDTO 
-            { 
-                Copia = new string('a', 101), 
-                SuporteId = 1 
+            var dto = new AcervoAudiovisualCadastroDTO
+            {
+                Copia = new string('a', 101),
+                SuporteId = 1
             };
             var context = new ValidationContext(dto);
             var results = new List<ValidationResult>();
 
             Validator.TryValidateObject(dto, context, results, true);
 
-            results.Should().Contain(r => r.ErrorMessage.Contains("A cópia do acervo audiovisual não pode conter mais que 100 caracteres"));
+            results.Should().Contain(r => r.ErrorMessage != null && r.ErrorMessage.Contains("A cópia do acervo audiovisual não pode conter mais que 100 caracteres"));
         }
 
         [Fact(DisplayName = "AcervoAudiovisualCadastroDTO - Copia com exatamente 100 caracteres deve passar validação")]
         public void DadoCopiaComExatamente100Caracteres_QuandoValidar_EntaoDevePassarValidacao()
         {
-            var dto = new AcervoAudiovisualCadastroDTO 
-            { 
-                Copia = new string('a', 100), 
-                SuporteId = 1 
+            var dto = new AcervoAudiovisualCadastroDTO
+            {
+                Copia = new string('a', 100),
+                SuporteId = 1
             };
             var context = new ValidationContext(dto);
             var results = new List<ValidationResult>();
 
             Validator.TryValidateObject(dto, context, results, true);
 
-            results.Where(r => r.ErrorMessage.Contains("cópia do acervo audiovisual não pode conter mais que 100 caracteres")).Should().BeEmpty();
+            results.Where(r => r.ErrorMessage?.Contains("cópia do acervo audiovisual não pode conter mais que 100 caracteres") ?? false).Should().BeEmpty();
         }
 
         [Fact(DisplayName = "AcervoAudiovisualCadastroDTO - Copia null deve passar validação")]
@@ -259,7 +259,7 @@ namespace SME.CDEP.TesteUnitario.Aplicacao.DTOS
 
             Validator.TryValidateObject(dto, context, results, true);
 
-            results.Where(r => r.ErrorMessage.Contains("cópia do acervo audiovisual")).Should().BeEmpty();
+            results.Where(r => r.ErrorMessage?.Contains("cópia do acervo audiovisual") ?? false).Should().BeEmpty();
         }
 
         [Fact(DisplayName = "AcervoAudiovisualCadastroDTO - PermiteUsoImagem deve aceitar true")]
@@ -295,7 +295,7 @@ namespace SME.CDEP.TesteUnitario.Aplicacao.DTOS
 
             var isValid = Validator.TryValidateObject(dto, context, results, true);
 
-            results.Where(r => r.ErrorMessage.Contains("conservação")).Should().BeEmpty();
+            results.Where(r => r.ErrorMessage?.Contains("conservação") ?? false).Should().BeEmpty();
         }
 
         [Fact(DisplayName = "AcervoAudiovisualCadastroDTO - ConservacaoId null deve passar validação")]
@@ -307,7 +307,7 @@ namespace SME.CDEP.TesteUnitario.Aplicacao.DTOS
 
             Validator.TryValidateObject(dto, context, results, true);
 
-            results.Where(r => r.ErrorMessage.Contains("conservação")).Should().BeEmpty();
+            results.Where(r => r.ErrorMessage?.Contains("conservação") ?? false).Should().BeEmpty();
         }
 
         [Fact(DisplayName = "AcervoAudiovisualCadastroDTO - SuporteId obrigatório")]
@@ -319,7 +319,7 @@ namespace SME.CDEP.TesteUnitario.Aplicacao.DTOS
 
             Validator.TryValidateObject(dto, context, results, true);
 
-            results.Should().Contain(r => r.ErrorMessage.Contains("O identificador do suporte do acervo audiovisual deve ser maior que zero"));
+            results.Should().Contain(r => r.ErrorMessage != null && r.ErrorMessage.Contains("O identificador do suporte do acervo audiovisual deve ser maior que zero"));
         }
 
         [Fact(DisplayName = "AcervoAudiovisualCadastroDTO - SuporteId com valor válido deve passar validação")]
@@ -331,7 +331,7 @@ namespace SME.CDEP.TesteUnitario.Aplicacao.DTOS
 
             var isValid = Validator.TryValidateObject(dto, context, results, true);
 
-            results.Where(r => r.ErrorMessage.Contains("suporte do acervo audiovisual")).Should().BeEmpty();
+            results.Where(r => r.ErrorMessage?.Contains("suporte do acervo audiovisual") ?? false).Should().BeEmpty();
         }
 
         [Fact(DisplayName = "AcervoAudiovisualCadastroDTO - SuporteId não deve permitir valor zero")]
@@ -343,7 +343,7 @@ namespace SME.CDEP.TesteUnitario.Aplicacao.DTOS
 
             Validator.TryValidateObject(dto, context, results, true);
 
-            results.Should().Contain(r => r.ErrorMessage.Contains("O identificador do suporte do acervo audiovisual deve ser maior que zero"));
+            results.Should().Contain(r => r.ErrorMessage != null && r.ErrorMessage.Contains("O identificador do suporte do acervo audiovisual deve ser maior que zero"));
         }
 
         [Fact(DisplayName = "AcervoAudiovisualCadastroDTO - SuporteId não deve permitir valor negativo")]
@@ -355,7 +355,7 @@ namespace SME.CDEP.TesteUnitario.Aplicacao.DTOS
 
             Validator.TryValidateObject(dto, context, results, true);
 
-            results.Should().Contain(r => r.ErrorMessage.Contains("O identificador do suporte do acervo audiovisual deve ser maior que zero"));
+            results.Should().Contain(r => r.ErrorMessage != null && r.ErrorMessage.Contains("O identificador do suporte do acervo audiovisual deve ser maior que zero"));
         }
 
         [Fact(DisplayName = "AcervoAudiovisualCadastroDTO - SuporteId deve permitir valores máximos para long")]
@@ -367,7 +367,7 @@ namespace SME.CDEP.TesteUnitario.Aplicacao.DTOS
 
             Validator.TryValidateObject(dto, context, results, true);
 
-            results.Where(r => r.ErrorMessage.Contains("suporte do acervo audiovisual")).Should().BeEmpty();
+            results.Where(r => r.ErrorMessage?.Contains("suporte do acervo audiovisual") ?? false).Should().BeEmpty();
         }
 
         [Fact(DisplayName = "AcervoAudiovisualCadastroDTO - Duracao com valor válido dentro do limite deve passar validação")]
@@ -379,39 +379,39 @@ namespace SME.CDEP.TesteUnitario.Aplicacao.DTOS
 
             var isValid = Validator.TryValidateObject(dto, context, results, true);
 
-            results.Where(r => r.ErrorMessage.Contains("duração do acervo audiovisual não pode conter mais que 15 caracteres")).Should().BeEmpty();
+            results.Where(r => r.ErrorMessage?.Contains("duração do acervo audiovisual não pode conter mais que 15 caracteres") ?? false).Should().BeEmpty();
         }
 
         [Fact(DisplayName = "AcervoAudiovisualCadastroDTO - Duracao não deve permitir mais de 15 caracteres")]
         public void DadoDuracaoComMaisDe15Caracteres_QuandoValidar_EntaoDeveRetornarErro()
         {
-            var dto = new AcervoAudiovisualCadastroDTO 
-            { 
-                Duracao = new string('a', 16), 
-                SuporteId = 1 
+            var dto = new AcervoAudiovisualCadastroDTO
+            {
+                Duracao = new string('a', 16),
+                SuporteId = 1
             };
             var context = new ValidationContext(dto);
             var results = new List<ValidationResult>();
 
             Validator.TryValidateObject(dto, context, results, true);
 
-            results.Should().Contain(r => r.ErrorMessage.Contains("A duração do acervo audiovisual não pode conter mais que 15 caracteres"));
+            results.Should().Contain(r => r.ErrorMessage != null && r.ErrorMessage.Contains("A duração do acervo audiovisual não pode conter mais que 15 caracteres"));
         }
 
         [Fact(DisplayName = "AcervoAudiovisualCadastroDTO - Duracao com exatamente 15 caracteres deve passar validação")]
         public void DadoDuracaoComExatamente15Caracteres_QuandoValidar_EntaoDevePassarValidacao()
         {
-            var dto = new AcervoAudiovisualCadastroDTO 
-            { 
-                Duracao = new string('a', 15), 
-                SuporteId = 1 
+            var dto = new AcervoAudiovisualCadastroDTO
+            {
+                Duracao = new string('a', 15),
+                SuporteId = 1
             };
             var context = new ValidationContext(dto);
             var results = new List<ValidationResult>();
 
             Validator.TryValidateObject(dto, context, results, true);
 
-            results.Where(r => r.ErrorMessage.Contains("duração do acervo audiovisual não pode conter mais que 15 caracteres")).Should().BeEmpty();
+            results.Where(r => r.ErrorMessage?.Contains("duração do acervo audiovisual não pode conter mais que 15 caracteres") ?? false).Should().BeEmpty();
         }
 
         [Fact(DisplayName = "AcervoAudiovisualCadastroDTO - Duracao null deve passar validação")]
@@ -423,7 +423,7 @@ namespace SME.CDEP.TesteUnitario.Aplicacao.DTOS
 
             Validator.TryValidateObject(dto, context, results, true);
 
-            results.Where(r => r.ErrorMessage.Contains("duração do acervo audiovisual")).Should().BeEmpty();
+            results.Where(r => r.ErrorMessage?.Contains("duração do acervo audiovisual") ?? false).Should().BeEmpty();
         }
 
         [Fact(DisplayName = "AcervoAudiovisualCadastroDTO - CromiaId com valor válido deve passar validação")]
@@ -435,7 +435,7 @@ namespace SME.CDEP.TesteUnitario.Aplicacao.DTOS
 
             var isValid = Validator.TryValidateObject(dto, context, results, true);
 
-            results.Where(r => r.ErrorMessage.Contains("cromia")).Should().BeEmpty();
+            results.Where(r => r.ErrorMessage?.Contains("cromia") ?? false).Should().BeEmpty();
         }
 
         [Fact(DisplayName = "AcervoAudiovisualCadastroDTO - CromiaId null deve passar validação")]
@@ -447,7 +447,7 @@ namespace SME.CDEP.TesteUnitario.Aplicacao.DTOS
 
             Validator.TryValidateObject(dto, context, results, true);
 
-            results.Where(r => r.ErrorMessage.Contains("cromia")).Should().BeEmpty();
+            results.Where(r => r.ErrorMessage?.Contains("cromia") ?? false).Should().BeEmpty();
         }
 
         [Fact(DisplayName = "AcervoAudiovisualCadastroDTO - TamanhoArquivo com valor válido dentro do limite deve passar validação")]
@@ -459,39 +459,39 @@ namespace SME.CDEP.TesteUnitario.Aplicacao.DTOS
 
             var isValid = Validator.TryValidateObject(dto, context, results, true);
 
-            results.Where(r => r.ErrorMessage.Contains("tamanho do arquivo do acervo audiovisual não pode conter mais que 15 caracteres")).Should().BeEmpty();
+            results.Where(r => r.ErrorMessage?.Contains("tamanho do arquivo do acervo audiovisual não pode conter mais que 15 caracteres") ?? false).Should().BeEmpty();
         }
 
         [Fact(DisplayName = "AcervoAudiovisualCadastroDTO - TamanhoArquivo não deve permitir mais de 15 caracteres")]
         public void DadoTamanhoArquivoComMaisDe15Caracteres_QuandoValidar_EntaoDeveRetornarErro()
         {
-            var dto = new AcervoAudiovisualCadastroDTO 
-            { 
-                TamanhoArquivo = new string('a', 16), 
-                SuporteId = 1 
+            var dto = new AcervoAudiovisualCadastroDTO
+            {
+                TamanhoArquivo = new string('a', 16),
+                SuporteId = 1
             };
             var context = new ValidationContext(dto);
             var results = new List<ValidationResult>();
 
             Validator.TryValidateObject(dto, context, results, true);
 
-            results.Should().Contain(r => r.ErrorMessage.Contains("A tamanho do arquivo do acervo audiovisual não pode conter mais que 15 caracteres"));
+            results.Should().Contain(r => r.ErrorMessage != null && r.ErrorMessage.Contains("A tamanho do arquivo do acervo audiovisual não pode conter mais que 15 caracteres"));
         }
 
         [Fact(DisplayName = "AcervoAudiovisualCadastroDTO - TamanhoArquivo com exatamente 15 caracteres deve passar validação")]
         public void DadoTamanhoArquivoComExatamente15Caracteres_QuandoValidar_EntaoDevePassarValidacao()
         {
-            var dto = new AcervoAudiovisualCadastroDTO 
-            { 
-                TamanhoArquivo = new string('a', 15), 
-                SuporteId = 1 
+            var dto = new AcervoAudiovisualCadastroDTO
+            {
+                TamanhoArquivo = new string('a', 15),
+                SuporteId = 1
             };
             var context = new ValidationContext(dto);
             var results = new List<ValidationResult>();
 
             Validator.TryValidateObject(dto, context, results, true);
 
-            results.Where(r => r.ErrorMessage.Contains("tamanho do arquivo do acervo audiovisual não pode conter mais que 15 caracteres")).Should().BeEmpty();
+            results.Where(r => r.ErrorMessage?.Contains("tamanho do arquivo do acervo audiovisual não pode conter mais que 15 caracteres") ?? false).Should().BeEmpty();
         }
 
         [Fact(DisplayName = "AcervoAudiovisualCadastroDTO - TamanhoArquivo null deve passar validação")]
@@ -503,7 +503,7 @@ namespace SME.CDEP.TesteUnitario.Aplicacao.DTOS
 
             Validator.TryValidateObject(dto, context, results, true);
 
-            results.Where(r => r.ErrorMessage.Contains("tamanho do arquivo do acervo audiovisual")).Should().BeEmpty();
+            results.Where(r => r.ErrorMessage?.Contains("tamanho do arquivo do acervo audiovisual") ?? false).Should().BeEmpty();
         }
 
         [Fact(DisplayName = "AcervoAudiovisualCadastroDTO - Acessibilidade com valor válido dentro do limite deve passar validação")]
@@ -515,39 +515,39 @@ namespace SME.CDEP.TesteUnitario.Aplicacao.DTOS
 
             var isValid = Validator.TryValidateObject(dto, context, results, true);
 
-            results.Where(r => r.ErrorMessage.Contains("acessibilidade do acervo audiovisual não pode conter mais que 100 caracteres")).Should().BeEmpty();
+            results.Where(r => r.ErrorMessage?.Contains("acessibilidade do acervo audiovisual não pode conter mais que 100 caracteres") ?? false).Should().BeEmpty();
         }
 
         [Fact(DisplayName = "AcervoAudiovisualCadastroDTO - Acessibilidade não deve permitir mais de 100 caracteres")]
         public void DadoAcessibilidadeComMaisDe100Caracteres_QuandoValidar_EntaoDeveRetornarErro()
         {
-            var dto = new AcervoAudiovisualCadastroDTO 
-            { 
-                Acessibilidade = new string('a', 101), 
-                SuporteId = 1 
+            var dto = new AcervoAudiovisualCadastroDTO
+            {
+                Acessibilidade = new string('a', 101),
+                SuporteId = 1
             };
             var context = new ValidationContext(dto);
             var results = new List<ValidationResult>();
 
             Validator.TryValidateObject(dto, context, results, true);
 
-            results.Should().Contain(r => r.ErrorMessage.Contains("A acessibilidade do acervo audiovisual não pode conter mais que 100 caracteres"));
+            results.Should().Contain(r => r.ErrorMessage != null && r.ErrorMessage.Contains("A acessibilidade do acervo audiovisual não pode conter mais que 100 caracteres"));
         }
 
         [Fact(DisplayName = "AcervoAudiovisualCadastroDTO - Acessibilidade com exatamente 100 caracteres deve passar validação")]
         public void DadoAcessibilidadeComExatamente100Caracteres_QuandoValidar_EntaoDevePassarValidacao()
         {
-            var dto = new AcervoAudiovisualCadastroDTO 
-            { 
-                Acessibilidade = new string('a', 100), 
-                SuporteId = 1 
+            var dto = new AcervoAudiovisualCadastroDTO
+            {
+                Acessibilidade = new string('a', 100),
+                SuporteId = 1
             };
             var context = new ValidationContext(dto);
             var results = new List<ValidationResult>();
 
             Validator.TryValidateObject(dto, context, results, true);
 
-            results.Where(r => r.ErrorMessage.Contains("acessibilidade do acervo audiovisual não pode conter mais que 100 caracteres")).Should().BeEmpty();
+            results.Where(r => r.ErrorMessage?.Contains("acessibilidade do acervo audiovisual não pode conter mais que 100 caracteres") ?? false).Should().BeEmpty();
         }
 
         [Fact(DisplayName = "AcervoAudiovisualCadastroDTO - Acessibilidade null deve passar validação")]
@@ -559,7 +559,7 @@ namespace SME.CDEP.TesteUnitario.Aplicacao.DTOS
 
             Validator.TryValidateObject(dto, context, results, true);
 
-            results.Where(r => r.ErrorMessage.Contains("acessibilidade do acervo audiovisual")).Should().BeEmpty();
+            results.Where(r => r.ErrorMessage?.Contains("acessibilidade do acervo audiovisual") ?? false).Should().BeEmpty();
         }
 
         [Fact(DisplayName = "AcervoAudiovisualCadastroDTO - Disponibilizacao com valor válido dentro do limite deve passar validação")]
@@ -571,39 +571,39 @@ namespace SME.CDEP.TesteUnitario.Aplicacao.DTOS
 
             var isValid = Validator.TryValidateObject(dto, context, results, true);
 
-            results.Where(r => r.ErrorMessage.Contains("disponibilização do acervo audiovisual não pode conter mais que 200 caracteres")).Should().BeEmpty();
+            results.Where(r => r.ErrorMessage?.Contains("disponibilização do acervo audiovisual não pode conter mais que 200 caracteres") ?? false).Should().BeEmpty();
         }
 
         [Fact(DisplayName = "AcervoAudiovisualCadastroDTO - Disponibilizacao não deve permitir mais de 200 caracteres")]
         public void DadoDisponibilizacaoComMaisDe200Caracteres_QuandoValidar_EntaoDeveRetornarErro()
         {
-            var dto = new AcervoAudiovisualCadastroDTO 
-            { 
-                Disponibilizacao = new string('a', 201), 
-                SuporteId = 1 
+            var dto = new AcervoAudiovisualCadastroDTO
+            {
+                Disponibilizacao = new string('a', 201),
+                SuporteId = 1
             };
             var context = new ValidationContext(dto);
             var results = new List<ValidationResult>();
 
             Validator.TryValidateObject(dto, context, results, true);
 
-            results.Should().Contain(r => r.ErrorMessage.Contains("A disponibilização do acervo audiovisual não pode conter mais que 200 caracteres"));
+            results.Should().Contain(r => r.ErrorMessage != null && r.ErrorMessage.Contains("A disponibilização do acervo audiovisual não pode conter mais que 200 caracteres"));
         }
 
         [Fact(DisplayName = "AcervoAudiovisualCadastroDTO - Disponibilizacao com exatamente 200 caracteres deve passar validação")]
         public void DadoDisponibilizacaoComExatamente200Caracteres_QuandoValidar_EntaoDevePassarValidacao()
         {
-            var dto = new AcervoAudiovisualCadastroDTO 
-            { 
-                Disponibilizacao = new string('a', 200), 
-                SuporteId = 1 
+            var dto = new AcervoAudiovisualCadastroDTO
+            {
+                Disponibilizacao = new string('a', 200),
+                SuporteId = 1
             };
             var context = new ValidationContext(dto);
             var results = new List<ValidationResult>();
 
             Validator.TryValidateObject(dto, context, results, true);
 
-            results.Where(r => r.ErrorMessage.Contains("disponibilização do acervo audiovisual não pode conter mais que 200 caracteres")).Should().BeEmpty();
+            results.Where(r => r.ErrorMessage?.Contains("disponibilização do acervo audiovisual não pode conter mais que 200 caracteres") ?? false).Should().BeEmpty();
         }
 
         [Fact(DisplayName = "AcervoAudiovisualCadastroDTO - Disponibilizacao null deve passar validação")]
@@ -615,7 +615,7 @@ namespace SME.CDEP.TesteUnitario.Aplicacao.DTOS
 
             Validator.TryValidateObject(dto, context, results, true);
 
-            results.Where(r => r.ErrorMessage.Contains("disponibilização do acervo audiovisual")).Should().BeEmpty();
+            results.Where(r => r.ErrorMessage?.Contains("disponibilização do acervo audiovisual") ?? false).Should().BeEmpty();
         }
 
         [Fact(DisplayName = "AcervoAudiovisualCadastroDTO - Herda de AcervoCadastroDTO")]
@@ -689,43 +689,43 @@ namespace SME.CDEP.TesteUnitario.Aplicacao.DTOS
             localizacaoProperty.Should().NotBeNull();
             localizacaoProperty!.CanRead.Should().BeTrue();
             localizacaoProperty.CanWrite.Should().BeTrue();
-            
+
             procedenciaProperty.Should().NotBeNull();
             procedenciaProperty!.CanRead.Should().BeTrue();
             procedenciaProperty.CanWrite.Should().BeTrue();
-            
+
             copiaProperty.Should().NotBeNull();
             copiaProperty!.CanRead.Should().BeTrue();
             copiaProperty.CanWrite.Should().BeTrue();
-            
+
             permiteUsoImagemProperty.Should().NotBeNull();
             permiteUsoImagemProperty!.CanRead.Should().BeTrue();
             permiteUsoImagemProperty.CanWrite.Should().BeTrue();
-            
+
             conservacaoIdProperty.Should().NotBeNull();
             conservacaoIdProperty!.CanRead.Should().BeTrue();
             conservacaoIdProperty.CanWrite.Should().BeTrue();
-            
+
             suporteIdProperty.Should().NotBeNull();
             suporteIdProperty!.CanRead.Should().BeTrue();
             suporteIdProperty.CanWrite.Should().BeTrue();
-            
+
             duracaoProperty.Should().NotBeNull();
             duracaoProperty!.CanRead.Should().BeTrue();
             duracaoProperty.CanWrite.Should().BeTrue();
-            
+
             cromiaIdProperty.Should().NotBeNull();
             cromiaIdProperty!.CanRead.Should().BeTrue();
             cromiaIdProperty.CanWrite.Should().BeTrue();
-            
+
             tamanhoArquivoProperty.Should().NotBeNull();
             tamanhoArquivoProperty!.CanRead.Should().BeTrue();
             tamanhoArquivoProperty.CanWrite.Should().BeTrue();
-            
+
             acessibilidadeProperty.Should().NotBeNull();
             acessibilidadeProperty!.CanRead.Should().BeTrue();
             acessibilidadeProperty.CanWrite.Should().BeTrue();
-            
+
             disponibilizacaoProperty.Should().NotBeNull();
             disponibilizacaoProperty!.CanRead.Should().BeTrue();
             disponibilizacaoProperty.CanWrite.Should().BeTrue();
@@ -746,22 +746,22 @@ namespace SME.CDEP.TesteUnitario.Aplicacao.DTOS
 
             localizacaoProperty.Should().NotBeNull();
             var localizacaoAttributes = localizacaoProperty!.GetCustomAttributes(typeof(MaxLengthAttribute), true);
-            
+
             procedenciaProperty.Should().NotBeNull();
             var procedenciaAttributes = procedenciaProperty!.GetCustomAttributes(typeof(MaxLengthAttribute), true);
-            
+
             copiaProperty.Should().NotBeNull();
             var copiaAttributes = copiaProperty!.GetCustomAttributes(typeof(MaxLengthAttribute), true);
-            
+
             duracaoProperty.Should().NotBeNull();
             var duracaoAttributes = duracaoProperty!.GetCustomAttributes(typeof(MaxLengthAttribute), true);
-            
+
             tamanhoArquivoProperty.Should().NotBeNull();
             var tamanhoArquivoAttributes = tamanhoArquivoProperty!.GetCustomAttributes(typeof(MaxLengthAttribute), true);
-            
+
             acessibilidadeProperty.Should().NotBeNull();
             var acessibilidadeAttributes = acessibilidadeProperty!.GetCustomAttributes(typeof(MaxLengthAttribute), true);
-            
+
             disponibilizacaoProperty.Should().NotBeNull();
             var disponibilizacaoAttributes = disponibilizacaoProperty!.GetCustomAttributes(typeof(MaxLengthAttribute), true);
 
@@ -804,10 +804,10 @@ namespace SME.CDEP.TesteUnitario.Aplicacao.DTOS
             Validator.TryValidateObject(dto, context, results, true);
 
             results.Should().NotBeEmpty();
-            results.Should().Contain(r => r.ErrorMessage.Contains("localização"));
-            results.Should().Contain(r => r.ErrorMessage.Contains("procedência"));
-            results.Should().Contain(r => r.ErrorMessage.Contains("cópia"));
-            results.Should().Contain(r => r.ErrorMessage.Contains("suporte"));
+            results.Should().Contain(r => r.ErrorMessage != null && r.ErrorMessage.Contains("localização"));
+            results.Should().Contain(r => r.ErrorMessage != null && r.ErrorMessage.Contains("procedência"));
+            results.Should().Contain(r => r.ErrorMessage != null && r.ErrorMessage.Contains("cópia"));
+            results.Should().Contain(r => r.ErrorMessage != null && r.ErrorMessage.Contains("suporte"));
         }
 
         [Fact(DisplayName = "AcervoAudiovisualCadastroDTO - Validação completa com todos os campos válidos")]
