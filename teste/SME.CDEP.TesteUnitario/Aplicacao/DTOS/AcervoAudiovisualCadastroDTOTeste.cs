@@ -475,7 +475,7 @@ namespace SME.CDEP.TesteUnitario.Aplicacao.DTOS
 
             Validator.TryValidateObject(dto, context, results, true);
 
-            results.Should().Contain(r => r.ErrorMessage.Contains("A localização do acervo audiovisual não pode conter mais que 100 caracteres"));
+            results.Should().Contain(r => r.ErrorMessage.Contains("A tamanho do arquivo do acervo audiovisual não pode conter mais que 15 caracteres"));
         }
 
         [Fact(DisplayName = "AcervoAudiovisualCadastroDTO - TamanhoArquivo com exatamente 15 caracteres deve passar validação")]
@@ -531,7 +531,7 @@ namespace SME.CDEP.TesteUnitario.Aplicacao.DTOS
 
             Validator.TryValidateObject(dto, context, results, true);
 
-            results.Should().Contain(r => r.ErrorMessage.Contains("A localização do acervo audiovisual não pode conter mais que 100 caracteres"));
+            results.Should().Contain(r => r.ErrorMessage.Contains("A acessibilidade do acervo audiovisual não pode conter mais que 100 caracteres"));
         }
 
         [Fact(DisplayName = "AcervoAudiovisualCadastroDTO - Acessibilidade com exatamente 100 caracteres deve passar validação")]
@@ -587,7 +587,7 @@ namespace SME.CDEP.TesteUnitario.Aplicacao.DTOS
 
             Validator.TryValidateObject(dto, context, results, true);
 
-            results.Should().Contain(r => r.ErrorMessage.Contains("A localização do acervo audiovisual não pode conter mais que 100 caracteres"));
+            results.Should().Contain(r => r.ErrorMessage.Contains("A disponibilização do acervo audiovisual não pode conter mais que 200 caracteres"));
         }
 
         [Fact(DisplayName = "AcervoAudiovisualCadastroDTO - Disponibilizacao com exatamente 200 caracteres deve passar validação")]
@@ -686,26 +686,49 @@ namespace SME.CDEP.TesteUnitario.Aplicacao.DTOS
             var acessibilidadeProperty = tipo.GetProperty("Acessibilidade");
             var disponibilizacaoProperty = tipo.GetProperty("Disponibilizacao");
 
-            localizacaoProperty?.CanRead.Should().BeTrue();
-            localizacaoProperty?.CanWrite.Should().BeTrue();
-            procedenciaProperty?.CanRead.Should().BeTrue();
-            procedenciaProperty?.CanWrite.Should().BeTrue();
-            copiaProperty?.CanRead.Should().BeTrue();
-            copiaProperty?.CanWrite.Should().BeTrue();
-            permiteUsoImagemProperty?.CanRead.Should().BeTrue();
-            permiteUsoImagemProperty?.CanWrite.Should().BeTrue();
-            conservacaoIdProperty?.CanRead.Should().BeTrue();
-            conservacaoIdProperty?.CanWrite.Should().BeTrue();
-            suporteIdProperty?.CanRead.Should().BeTrue();
-            suporteIdProperty?.CanWrite.Should().BeTrue();
-            duracaoProperty?.CanRead.Should().BeTrue();
-            duracaoProperty?.CanWrite.Should().BeTrue();
-            cromiaIdProperty?.CanRead.Should().BeTrue();
-            cromiaIdProperty?.CanWrite.Should().BeTrue();
-            tamanhoArquivoProperty?.CanRead.Should().BeTrue();
-            tamanhoArquivoProperty?.CanWrite.Should().BeTrue();
-            acessibilidadeProperty?.CanRead.Should().BeTrue();
-            acessibilidadeProperty?.CanWrite.Should().BeTrue();
+            localizacaoProperty.Should().NotBeNull();
+            localizacaoProperty!.CanRead.Should().BeTrue();
+            localizacaoProperty.CanWrite.Should().BeTrue();
+            
+            procedenciaProperty.Should().NotBeNull();
+            procedenciaProperty!.CanRead.Should().BeTrue();
+            procedenciaProperty.CanWrite.Should().BeTrue();
+            
+            copiaProperty.Should().NotBeNull();
+            copiaProperty!.CanRead.Should().BeTrue();
+            copiaProperty.CanWrite.Should().BeTrue();
+            
+            permiteUsoImagemProperty.Should().NotBeNull();
+            permiteUsoImagemProperty!.CanRead.Should().BeTrue();
+            permiteUsoImagemProperty.CanWrite.Should().BeTrue();
+            
+            conservacaoIdProperty.Should().NotBeNull();
+            conservacaoIdProperty!.CanRead.Should().BeTrue();
+            conservacaoIdProperty.CanWrite.Should().BeTrue();
+            
+            suporteIdProperty.Should().NotBeNull();
+            suporteIdProperty!.CanRead.Should().BeTrue();
+            suporteIdProperty.CanWrite.Should().BeTrue();
+            
+            duracaoProperty.Should().NotBeNull();
+            duracaoProperty!.CanRead.Should().BeTrue();
+            duracaoProperty.CanWrite.Should().BeTrue();
+            
+            cromiaIdProperty.Should().NotBeNull();
+            cromiaIdProperty!.CanRead.Should().BeTrue();
+            cromiaIdProperty.CanWrite.Should().BeTrue();
+            
+            tamanhoArquivoProperty.Should().NotBeNull();
+            tamanhoArquivoProperty!.CanRead.Should().BeTrue();
+            tamanhoArquivoProperty.CanWrite.Should().BeTrue();
+            
+            acessibilidadeProperty.Should().NotBeNull();
+            acessibilidadeProperty!.CanRead.Should().BeTrue();
+            acessibilidadeProperty.CanWrite.Should().BeTrue();
+            
+            disponibilizacaoProperty.Should().NotBeNull();
+            disponibilizacaoProperty!.CanRead.Should().BeTrue();
+            disponibilizacaoProperty.CanWrite.Should().BeTrue();
         }
 
         [Fact(DisplayName = "AcervoAudiovisualCadastroDTO - Atributos MaxLength devem estar presentes em strings")]
@@ -721,13 +744,26 @@ namespace SME.CDEP.TesteUnitario.Aplicacao.DTOS
             var acessibilidadeProperty = tipo.GetProperty("Acessibilidade");
             var disponibilizacaoProperty = tipo.GetProperty("Disponibilizacao");
 
-            var localizacaoAttributes = localizacaoProperty?.GetCustomAttributes(typeof(MaxLengthAttribute), true);
-            var procedenciaAttributes = procedenciaProperty?.GetCustomAttributes(typeof(MaxLengthAttribute), true);
-            var copiaAttributes = copiaProperty?.GetCustomAttributes(typeof(MaxLengthAttribute), true);
-            var duracaoAttributes = duracaoProperty?.GetCustomAttributes(typeof(MaxLengthAttribute), true);
-            var tamanhoArquivoAttributes = tamanhoArquivoProperty?.GetCustomAttributes(typeof(MaxLengthAttribute), true);
-            var acessibilidadeAttributes = acessibilidadeProperty?.GetCustomAttributes(typeof(MaxLengthAttribute), true);
-            var disponibilizacaoAttributes = disponibilizacaoProperty?.GetCustomAttributes(typeof(MaxLengthAttribute), true);
+            localizacaoProperty.Should().NotBeNull();
+            var localizacaoAttributes = localizacaoProperty!.GetCustomAttributes(typeof(MaxLengthAttribute), true);
+            
+            procedenciaProperty.Should().NotBeNull();
+            var procedenciaAttributes = procedenciaProperty!.GetCustomAttributes(typeof(MaxLengthAttribute), true);
+            
+            copiaProperty.Should().NotBeNull();
+            var copiaAttributes = copiaProperty!.GetCustomAttributes(typeof(MaxLengthAttribute), true);
+            
+            duracaoProperty.Should().NotBeNull();
+            var duracaoAttributes = duracaoProperty!.GetCustomAttributes(typeof(MaxLengthAttribute), true);
+            
+            tamanhoArquivoProperty.Should().NotBeNull();
+            var tamanhoArquivoAttributes = tamanhoArquivoProperty!.GetCustomAttributes(typeof(MaxLengthAttribute), true);
+            
+            acessibilidadeProperty.Should().NotBeNull();
+            var acessibilidadeAttributes = acessibilidadeProperty!.GetCustomAttributes(typeof(MaxLengthAttribute), true);
+            
+            disponibilizacaoProperty.Should().NotBeNull();
+            var disponibilizacaoAttributes = disponibilizacaoProperty!.GetCustomAttributes(typeof(MaxLengthAttribute), true);
 
             localizacaoAttributes.Should().NotBeNullOrEmpty();
             procedenciaAttributes.Should().NotBeNullOrEmpty();
@@ -744,8 +780,9 @@ namespace SME.CDEP.TesteUnitario.Aplicacao.DTOS
             var tipo = typeof(AcervoAudiovisualCadastroDTO);
             var suporteIdProperty = tipo.GetProperty("SuporteId");
 
-            var requiredAttributes = suporteIdProperty?.GetCustomAttributes(typeof(RequiredAttribute), true);
-            var rangeAttributes = suporteIdProperty?.GetCustomAttributes(typeof(RangeAttribute), true);
+            suporteIdProperty.Should().NotBeNull();
+            var requiredAttributes = suporteIdProperty!.GetCustomAttributes(typeof(RequiredAttribute), true);
+            var rangeAttributes = suporteIdProperty.GetCustomAttributes(typeof(RangeAttribute), true);
 
             requiredAttributes.Should().NotBeNullOrEmpty();
             rangeAttributes.Should().NotBeNullOrEmpty();

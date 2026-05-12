@@ -31,8 +31,8 @@ namespace SME.CDEP.TesteUnitario.Aplicacao.DTOS
 
             var isValid = Validator.TryValidateObject(dto, context, results, true);
 
-            results.Where(r => r.ErrorMessage.Contains("identificador do acervo arte gráfica")).Should().BeEmpty();
-            results.Where(r => r.ErrorMessage.Contains("identificador do acervo")).Should().BeEmpty();
+            results.Where(r => r.ErrorMessage?.Contains("identificador do acervo arte gráfica") ?? false).Should().BeEmpty();
+            results.Where(r => r.ErrorMessage?.Contains("identificador do acervo") ?? false).Should().BeEmpty();
         }
 
         [Fact(DisplayName = "AcervoAudiovisualAlteracaoDTO - Id não deve permitir valor zero")]
@@ -44,7 +44,7 @@ namespace SME.CDEP.TesteUnitario.Aplicacao.DTOS
 
             Validator.TryValidateObject(dto, context, results, true);
 
-            results.Should().Contain(r => r.ErrorMessage.Contains("O identificador do acervo arte gráfica deve ser maior que zero"));
+            results.Should().Contain(r => r.ErrorMessage != null && r.ErrorMessage.Contains("O identificador do acervo arte gráfica deve ser maior que zero"));
         }
 
         [Fact(DisplayName = "AcervoAudiovisualAlteracaoDTO - Id não deve permitir valor negativo")]
@@ -56,7 +56,7 @@ namespace SME.CDEP.TesteUnitario.Aplicacao.DTOS
 
             Validator.TryValidateObject(dto, context, results, true);
 
-            results.Should().Contain(r => r.ErrorMessage.Contains("O identificador do acervo arte gráfica deve ser maior que zero"));
+            results.Should().Contain(r => r.ErrorMessage != null && r.ErrorMessage.Contains("O identificador do acervo arte gráfica deve ser maior que zero"));
         }
 
         [Fact(DisplayName = "AcervoAudiovisualAlteracaoDTO - Id obrigatório")]
@@ -68,7 +68,7 @@ namespace SME.CDEP.TesteUnitario.Aplicacao.DTOS
 
             Validator.TryValidateObject(dto, context, results, true);
 
-            results.Should().Contain(r => r.ErrorMessage.Contains("O identificador do acervo arte gráfica deve ser maior que zero"));
+            results.Should().Contain(r => r.ErrorMessage != null && r.ErrorMessage.Contains("O identificador do acervo arte gráfica deve ser maior que zero"));
         }
 
         [Fact(DisplayName = "AcervoAudiovisualAlteracaoDTO - AcervoId com valor válido deve passar validação")]
@@ -80,7 +80,7 @@ namespace SME.CDEP.TesteUnitario.Aplicacao.DTOS
 
             var isValid = Validator.TryValidateObject(dto, context, results, true);
 
-            results.Where(r => r.ErrorMessage.Contains("identificador do acervo")).Should().BeEmpty();
+            results.Where(r => r.ErrorMessage?.Contains("identificador do acervo") ?? false).Should().BeEmpty();
         }
 
         [Fact(DisplayName = "AcervoAudiovisualAlteracaoDTO - AcervoId não deve permitir valor zero")]
@@ -92,7 +92,7 @@ namespace SME.CDEP.TesteUnitario.Aplicacao.DTOS
 
             Validator.TryValidateObject(dto, context, results, true);
 
-            results.Should().Contain(r => r.ErrorMessage.Contains("O identificador do acervo deve ser maior que zero"));
+            results.Should().Contain(r => r.ErrorMessage != null && r.ErrorMessage.Contains("O identificador do acervo deve ser maior que zero"));
         }
 
         [Fact(DisplayName = "AcervoAudiovisualAlteracaoDTO - AcervoId não deve permitir valor negativo")]
@@ -104,7 +104,7 @@ namespace SME.CDEP.TesteUnitario.Aplicacao.DTOS
 
             Validator.TryValidateObject(dto, context, results, true);
 
-            results.Should().Contain(r => r.ErrorMessage.Contains("O identificador do acervo deve ser maior que zero"));
+            results.Should().Contain(r => r.ErrorMessage != null && r.ErrorMessage.Contains("O identificador do acervo deve ser maior que zero"));
         }
 
         [Fact(DisplayName = "AcervoAudiovisualAlteracaoDTO - AcervoId obrigatório")]
@@ -116,7 +116,7 @@ namespace SME.CDEP.TesteUnitario.Aplicacao.DTOS
 
             Validator.TryValidateObject(dto, context, results, true);
 
-            results.Should().Contain(r => r.ErrorMessage.Contains("O identificador do acervo deve ser maior que zero"));
+            results.Should().Contain(r => r.ErrorMessage != null && r.ErrorMessage.Contains("O identificador do acervo deve ser maior que zero"));
         }
 
         [Fact(DisplayName = "AcervoAudiovisualAlteracaoDTO - Herda de AcervoAudiovisualCadastroDTO")]
@@ -146,7 +146,7 @@ namespace SME.CDEP.TesteUnitario.Aplicacao.DTOS
         }
 
         [Fact(DisplayName = "AcervoAudiovisualAlteracaoDTO - Deve permitir atribuição de valores às propriedades")]
-        public void DadoDTOAcervoAudiovisualAlteracao_QuandoAtribuirValores_EntaoDeveCenasCorretamente()
+        public void DadoDTOAcervoAudiovisualAlteracao_QuandoAtribuirValores_EntaoDeveDefinirCorretamente()
         {
             var id = 100L;
             var acervoId = 50L;
@@ -180,8 +180,8 @@ namespace SME.CDEP.TesteUnitario.Aplicacao.DTOS
 
             Validator.TryValidateObject(dtoComValoresMaximos, context, results, true);
 
-            results.Where(r => r.ErrorMessage.Contains("O identificador do acervo deve ser maior que zero")).Should().BeEmpty();
-            results.Where(r => r.ErrorMessage.Contains("O identificador do acervo arte gráfica deve ser maior que zero")).Should().BeEmpty();
+            results.Where(r => r.ErrorMessage?.Contains("O identificador do acervo deve ser maior que zero") ?? false).Should().BeEmpty();
+            results.Where(r => r.ErrorMessage?.Contains("O identificador do acervo arte gráfica deve ser maior que zero") ?? false).Should().BeEmpty();
         }
 
         [Fact(DisplayName = "AcervoAudiovisualAlteracaoDTO - Deve validar Id e AcervoId independentemente")]
@@ -200,7 +200,7 @@ namespace SME.CDEP.TesteUnitario.Aplicacao.DTOS
 
             Validator.TryValidateObject(dto, context, results, true);
 
-            results.Should().Contain(r => r.ErrorMessage.Contains("O identificador do acervo deve ser maior que zero"));
+            results.Should().Contain(r => r.ErrorMessage != null && r.ErrorMessage.Contains("O identificador do acervo deve ser maior que zero"));
         }
 
         [Fact(DisplayName = "AcervoAudiovisualAlteracaoDTO - Propriedades devem ser públicas")]
@@ -255,8 +255,8 @@ namespace SME.CDEP.TesteUnitario.Aplicacao.DTOS
             Validator.TryValidateObject(dto, context, results, true);
 
             results.Should().HaveCountGreaterThan(1);
-            results.Should().Contain(r => r.ErrorMessage.Contains("O identificador do acervo arte gráfica deve ser maior que zero"));
-            results.Should().Contain(r => r.ErrorMessage.Contains("O identificador do acervo deve ser maior que zero"));
+            results.Should().Contain(r => r.ErrorMessage != null && r.ErrorMessage.Contains("O identificador do acervo arte gráfica deve ser maior que zero"));
+            results.Should().Contain(r => r.ErrorMessage != null && r.ErrorMessage.Contains("O identificador do acervo deve ser maior que zero"));
         }
     }
 }
