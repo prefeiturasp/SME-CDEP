@@ -1,5 +1,4 @@
-﻿using Bogus;
-using FluentAssertions;
+﻿using FluentAssertions;
 using SME.CDEP.Aplicacao.DTOS;
 using SME.CDEP.Dominio.Enumerados;
 using SME.CDEP.Infra.Dominio.Enumerados;
@@ -9,54 +8,60 @@ namespace SME.CDEP.TesteUnitario.Aplicacao.DTOS
 {
     public class AcervoBibliograficoCadastroDtoTeste
     {
-        private readonly Faker _faker;
+        private readonly Bogus.Faker _faker;
 
         public AcervoBibliograficoCadastroDtoTeste()
         {
-            _faker = new Faker("pt_BR");
+            _faker = new Bogus.Faker("pt_BR");
         }
 
         [Fact(DisplayName = "MaterialId - Quando obrigatório e não informado - Deve retornar erro")]
         public void DadoMaterialIdNaoInformado_QuandoValidar_EntaoDeveRetornarErro()
         {
+            // Arrange
             var dto = GerarAcervoBibliograficoCadastroDtoValido();
             dto.MaterialId = 0;
-
             var validationContext = new ValidationContext(dto);
             var results = new List<System.ComponentModel.DataAnnotations.ValidationResult>();
 
+            // Act
             var ehValido = Validator.TryValidateObject(dto, validationContext, results, validateAllProperties: true);
 
+            // Assert
             ehValido.Should().BeFalse();
-            results.Should().Contain(r => r.ErrorMessage.Contains("identificador do material do acervo bibliográfico"));
+            results.Should().Contain(r => r.ErrorMessage!.Contains("identificador do material do acervo bibliográfico"));
         }
 
         [Fact(DisplayName = "MaterialId - Quando valor negativo - Deve retornar erro")]
         public void DadoMaterialIdNegativo_QuandoValidar_EntaoDeveRetornarErro()
         {
+            // Arrange
             var dto = GerarAcervoBibliograficoCadastroDtoValido();
             dto.MaterialId = -1;
-
             var validationContext = new ValidationContext(dto);
             var results = new List<System.ComponentModel.DataAnnotations.ValidationResult>();
 
+            // Act
             var ehValido = Validator.TryValidateObject(dto, validationContext, results, validateAllProperties: true);
 
+            // Assert
             ehValido.Should().BeFalse();
-            results.Should().Contain(r => r.ErrorMessage.Contains("maior que zero"));
+            results.Should().Contain(r => r.ErrorMessage!.Contains("maior que zero"));
         }
 
         [Fact(DisplayName = "MaterialId - Quando valor máximo permitido - Deve ser válido")]
         public void DadoMaterialIdComValorMaximo_QuandoValidar_EntaoDeveSerValido()
         {
+            // Arrange
             var dto = GerarAcervoBibliograficoCadastroDtoValido();
             dto.MaterialId = long.MaxValue;
-
             var validationContext = new ValidationContext(dto);
-            var results = new List<System.ComponentModel.DataAnnotations.ValidationResult>();
+            var results = new List<ValidationResult>();
 
+            // Act
             var ehValido = Validator.TryValidateObject(dto, validationContext, results, validateAllProperties: true);
 
+            // Assert
             ehValido.Should().BeTrue();
             results.Should().BeEmpty();
         }
@@ -64,74 +69,84 @@ namespace SME.CDEP.TesteUnitario.Aplicacao.DTOS
         [Fact(DisplayName = "IdiomaId - Quando obrigatório e não informado - Deve retornar erro")]
         public void DadoIdiomaIdNaoInformado_QuandoValidar_EntaoDeveRetornarErro()
         {
+            // Arrange
             var dto = GerarAcervoBibliograficoCadastroDtoValido();
             dto.IdiomaId = 0;
-
             var validationContext = new ValidationContext(dto);
-            var results = new List<System.ComponentModel.DataAnnotations.ValidationResult>();
+            var results = new List<ValidationResult>();
 
+            // Act
             var ehValido = Validator.TryValidateObject(dto, validationContext, results, validateAllProperties: true);
 
+            // Assert
             ehValido.Should().BeFalse();
-            results.Should().Contain(r => r.ErrorMessage.Contains("identificador do idioma"));
+            results.Should().Contain(r => r.ErrorMessage!.Contains("identificador do idioma"));
         }
 
         [Fact(DisplayName = "IdiomaId - Quando valor negativo - Deve retornar erro")]
         public void DadoIdiomaIdNegativo_QuandoValidar_EntaoDeveRetornarErro()
         {
+            // Arrange
             var dto = GerarAcervoBibliograficoCadastroDtoValido();
             dto.IdiomaId = -5;
-
             var validationContext = new ValidationContext(dto);
-            var results = new List<System.ComponentModel.DataAnnotations.ValidationResult>();
+            var results = new List<ValidationResult>();
 
+            // Act
             var ehValido = Validator.TryValidateObject(dto, validationContext, results, validateAllProperties: true);
 
+            // Assert
             ehValido.Should().BeFalse();
-            results.Should().Contain(r => r.ErrorMessage.Contains("maior que zero"));
+            results.Should().Contain(r => r.ErrorMessage!.Contains("maior que zero"));
         }
 
         [Fact(DisplayName = "LocalizacaoCDD - Quando obrigatório e não informado - Deve retornar erro")]
         public void DadoLocalizacaoCDDNaoInformada_QuandoValidar_EntaoDeveRetornarErro()
         {
+            // Arrange
             var dto = GerarAcervoBibliograficoCadastroDtoValido();
-            dto.LocalizacaoCDD = null;
-
+            dto.LocalizacaoCDD = null!;
             var validationContext = new ValidationContext(dto);
-            var results = new List<System.ComponentModel.DataAnnotations.ValidationResult>();
+            var results = new List<ValidationResult>();
 
+            // Act
             var ehValido = Validator.TryValidateObject(dto, validationContext, results, validateAllProperties: true);
 
+            // Assert
             ehValido.Should().BeFalse();
-            results.Should().Contain(r => r.ErrorMessage.Contains("localizção CDD"));
+            results.Should().Contain(r => r.ErrorMessage!.Contains("localizção CDD"));
         }
 
         [Fact(DisplayName = "LocalizacaoCDD - Quando excede limite de caracteres - Deve retornar erro")]
         public void DadoLocalizacaoCDDComMaisDeCaracteres_QuandoValidar_EntaoDeveRetornarErro()
         {
+            // Arrange
             var dto = GerarAcervoBibliograficoCadastroDtoValido();
             dto.LocalizacaoCDD = _faker.Lorem.Letter(51);
-
             var validationContext = new ValidationContext(dto);
-            var results = new List<System.ComponentModel.DataAnnotations.ValidationResult>();
+            var results = new List<ValidationResult>();
 
+            // Act
             var ehValido = Validator.TryValidateObject(dto, validationContext, results, validateAllProperties: true);
 
+            // Assert
             ehValido.Should().BeFalse();
-            results.Should().Contain(r => r.ErrorMessage.Contains("não pode conter mais que 50 caracteres"));
+            results.Should().Contain(r => r.ErrorMessage!.Contains("não pode conter mais que 50 caracteres"));
         }
 
         [Fact(DisplayName = "LocalizacaoCDD - Quando exatamente 50 caracteres - Deve ser válido")]
         public void DadoLocalizacaoCDDCom50Caracteres_QuandoValidar_EntaoDeveSerValido()
         {
+            // Arrange
             var dto = GerarAcervoBibliograficoCadastroDtoValido();
             dto.LocalizacaoCDD = _faker.Lorem.Letter(50);
-
             var validationContext = new ValidationContext(dto);
-            var results = new List<System.ComponentModel.DataAnnotations.ValidationResult>();
+            var results = new List<ValidationResult>();
 
+            // Act
             var ehValido = Validator.TryValidateObject(dto, validationContext, results, validateAllProperties: true);
 
+            // Assert
             ehValido.Should().BeTrue();
             results.Should().BeEmpty();
         }
@@ -139,29 +154,33 @@ namespace SME.CDEP.TesteUnitario.Aplicacao.DTOS
         [Fact(DisplayName = "LocalizacaoCDD - Quando vazio - Deve retornar erro")]
         public void DadoLocalizacaoCDDVazio_QuandoValidar_EntaoDeveRetornarErro()
         {
+            // Arrange
             var dto = GerarAcervoBibliograficoCadastroDtoValido();
             dto.LocalizacaoCDD = string.Empty;
-
             var validationContext = new ValidationContext(dto);
-            var results = new List<System.ComponentModel.DataAnnotations.ValidationResult>();
+            var results = new List<ValidationResult>();
 
+            // Act
             var ehValido = Validator.TryValidateObject(dto, validationContext, results, validateAllProperties: true);
 
+            // Assert
             ehValido.Should().BeFalse();
-            results.Should().Contain(r => r.ErrorMessage.Contains("localizção CDD"));
+            results.Should().Contain(r => r.ErrorMessage!.Contains("localizção CDD"));
         }
 
         [Fact(DisplayName = "EditoraId - Quando não informado - Deve ser nulo e válido")]
         public void DadoEditoraIdNaoInformado_QuandoValidar_EntaoDeveSerValido()
         {
+            // Arrange
             var dto = GerarAcervoBibliograficoCadastroDtoValido();
             dto.EditoraId = null;
-
             var validationContext = new ValidationContext(dto);
-            var results = new List<System.ComponentModel.DataAnnotations.ValidationResult>();
+            var results = new List<ValidationResult>();
 
+            // Act
             var ehValido = Validator.TryValidateObject(dto, validationContext, results, validateAllProperties: true);
 
+            // Assert
             ehValido.Should().BeTrue();
             results.Should().BeEmpty();
         }
@@ -169,14 +188,16 @@ namespace SME.CDEP.TesteUnitario.Aplicacao.DTOS
         [Fact(DisplayName = "AssuntosIds - Quando array vazio - Deve ser válido")]
         public void DadoAssuntosIdsVazio_QuandoValidar_EntaoDeveSerValido()
         {
+            // Arrange
             var dto = GerarAcervoBibliograficoCadastroDtoValido();
             dto.AssuntosIds = Array.Empty<long>();
-
             var validationContext = new ValidationContext(dto);
-            var results = new List<System.ComponentModel.DataAnnotations.ValidationResult>();
+            var results = new List<ValidationResult>();
 
+            // Act
             var ehValido = Validator.TryValidateObject(dto, validationContext, results, validateAllProperties: true);
 
+            // Assert
             ehValido.Should().BeTrue();
             results.Should().BeEmpty();
         }
@@ -184,14 +205,16 @@ namespace SME.CDEP.TesteUnitario.Aplicacao.DTOS
         [Fact(DisplayName = "AssuntosIds - Quando múltiplos ids - Deve ser válido")]
         public void DadoAssuntosIdsComMultiplosIds_QuandoValidar_EntaoDeveSerValido()
         {
+            // Arrange
             var dto = GerarAcervoBibliograficoCadastroDtoValido();
             dto.AssuntosIds = new long[] { 1, 2, 3, 4, 5 };
-
             var validationContext = new ValidationContext(dto);
-            var results = new List<System.ComponentModel.DataAnnotations.ValidationResult>();
+            var results = new List<ValidationResult>();
 
+            // Act
             var ehValido = Validator.TryValidateObject(dto, validationContext, results, validateAllProperties: true);
 
+            // Assert
             ehValido.Should().BeTrue();
             results.Should().BeEmpty();
         }
@@ -199,14 +222,16 @@ namespace SME.CDEP.TesteUnitario.Aplicacao.DTOS
         [Fact(DisplayName = "Edicao - Quando não informado - Deve ser nulo")]
         public void DadoEdicaoNaoInformada_QuandoValidar_EntaoDeveSerValido()
         {
+            // Arrange
             var dto = GerarAcervoBibliograficoCadastroDtoValido();
             dto.Edicao = null;
-
             var validationContext = new ValidationContext(dto);
-            var results = new List<System.ComponentModel.DataAnnotations.ValidationResult>();
+            var results = new List<ValidationResult>();
 
+            // Act
             var ehValido = Validator.TryValidateObject(dto, validationContext, results, validateAllProperties: true);
 
+            // Assert
             ehValido.Should().BeTrue();
             results.Should().BeEmpty();
         }
@@ -214,14 +239,16 @@ namespace SME.CDEP.TesteUnitario.Aplicacao.DTOS
         [Fact(DisplayName = "NumeroPagina - Quando não informado - Deve ser nulo")]
         public void DadoNumeroPaginaNaoInformado_QuandoValidar_EntaoDeveSerValido()
         {
+            // Arrange
             var dto = GerarAcervoBibliograficoCadastroDtoValido();
             dto.NumeroPagina = null;
-
             var validationContext = new ValidationContext(dto);
-            var results = new List<System.ComponentModel.DataAnnotations.ValidationResult>();
+            var results = new List<ValidationResult>();
 
+            // Act
             var ehValido = Validator.TryValidateObject(dto, validationContext, results, validateAllProperties: true);
 
+            // Assert
             ehValido.Should().BeTrue();
             results.Should().BeEmpty();
         }
@@ -229,14 +256,16 @@ namespace SME.CDEP.TesteUnitario.Aplicacao.DTOS
         [Fact(DisplayName = "Largura - Quando não informado - Deve ser nulo")]
         public void DadoLarguraNaoInformada_QuandoValidar_EntaoDeveSerValido()
         {
+            // Arrange
             var dto = GerarAcervoBibliograficoCadastroDtoValido();
             dto.Largura = null;
-
             var validationContext = new ValidationContext(dto);
-            var results = new List<System.ComponentModel.DataAnnotations.ValidationResult>();
+            var results = new List<ValidationResult>();
 
+            // Act
             var ehValido = Validator.TryValidateObject(dto, validationContext, results, validateAllProperties: true);
 
+            // Assert
             ehValido.Should().BeTrue();
             results.Should().BeEmpty();
         }
@@ -244,14 +273,16 @@ namespace SME.CDEP.TesteUnitario.Aplicacao.DTOS
         [Fact(DisplayName = "Altura - Quando não informado - Deve ser nulo")]
         public void DadoAlturaNaoInformada_QuandoValidar_EntaoDeveSerValido()
         {
+            // Arrange
             var dto = GerarAcervoBibliograficoCadastroDtoValido();
             dto.Altura = null;
-
             var validationContext = new ValidationContext(dto);
-            var results = new List<System.ComponentModel.DataAnnotations.ValidationResult>();
+            var results = new List<ValidationResult>();
 
+            // Act
             var ehValido = Validator.TryValidateObject(dto, validationContext, results, validateAllProperties: true);
 
+            // Assert
             ehValido.Should().BeTrue();
             results.Should().BeEmpty();
         }
@@ -259,14 +290,16 @@ namespace SME.CDEP.TesteUnitario.Aplicacao.DTOS
         [Fact(DisplayName = "SerieColecaoId - Quando não informado - Deve ser nulo")]
         public void DadoSerieColecaoIdNaoInformado_QuandoValidar_EntaoDeveSerValido()
         {
+            // Arrange
             var dto = GerarAcervoBibliograficoCadastroDtoValido();
             dto.SerieColecaoId = null;
-
             var validationContext = new ValidationContext(dto);
-            var results = new List<System.ComponentModel.DataAnnotations.ValidationResult>();
+            var results = new List<ValidationResult>();
 
+            // Act
             var ehValido = Validator.TryValidateObject(dto, validationContext, results, validateAllProperties: true);
 
+            // Assert
             ehValido.Should().BeTrue();
             results.Should().BeEmpty();
         }
@@ -274,14 +307,16 @@ namespace SME.CDEP.TesteUnitario.Aplicacao.DTOS
         [Fact(DisplayName = "Volume - Quando não informado - Deve ser nulo")]
         public void DadoVolumeNaoInformado_QuandoValidar_EntaoDeveSerValido()
         {
+            // Arrange
             var dto = GerarAcervoBibliograficoCadastroDtoValido();
             dto.Volume = null;
-
             var validationContext = new ValidationContext(dto);
-            var results = new List<System.ComponentModel.DataAnnotations.ValidationResult>();
+            var results = new List<ValidationResult>();
 
+            // Act
             var ehValido = Validator.TryValidateObject(dto, validationContext, results, validateAllProperties: true);
 
+            // Assert
             ehValido.Should().BeTrue();
             results.Should().BeEmpty();
         }
@@ -289,14 +324,16 @@ namespace SME.CDEP.TesteUnitario.Aplicacao.DTOS
         [Fact(DisplayName = "LocalizacaoPHA - Quando não informado - Deve ser nulo")]
         public void DadoLocalizacaoPHANaoInformada_QuandoValidar_EntaoDeveSerValido()
         {
+            // Arrange
             var dto = GerarAcervoBibliograficoCadastroDtoValido();
             dto.LocalizacaoPHA = null;
-
             var validationContext = new ValidationContext(dto);
-            var results = new List<System.ComponentModel.DataAnnotations.ValidationResult>();
+            var results = new List<ValidationResult>();
 
+            // Act
             var ehValido = Validator.TryValidateObject(dto, validationContext, results, validateAllProperties: true);
 
+            // Assert
             ehValido.Should().BeTrue();
             results.Should().BeEmpty();
         }
@@ -304,14 +341,16 @@ namespace SME.CDEP.TesteUnitario.Aplicacao.DTOS
         [Fact(DisplayName = "NotasGerais - Quando não informado - Deve ser nulo")]
         public void DadoNotasGeraisNaoInformadas_QuandoValidar_EntaoDeveSerValido()
         {
+            // Arrange
             var dto = GerarAcervoBibliograficoCadastroDtoValido();
             dto.NotasGerais = null;
-
             var validationContext = new ValidationContext(dto);
-            var results = new List<System.ComponentModel.DataAnnotations.ValidationResult>();
+            var results = new List<ValidationResult>();
 
+            // Act
             var ehValido = Validator.TryValidateObject(dto, validationContext, results, validateAllProperties: true);
 
+            // Assert
             ehValido.Should().BeTrue();
             results.Should().BeEmpty();
         }
@@ -319,14 +358,16 @@ namespace SME.CDEP.TesteUnitario.Aplicacao.DTOS
         [Fact(DisplayName = "Isbn - Quando não informado - Deve ser nulo")]
         public void DadoIsbnNaoInformado_QuandoValidar_EntaoDeveSerValido()
         {
+            // Arrange
             var dto = GerarAcervoBibliograficoCadastroDtoValido();
             dto.Isbn = null;
-
             var validationContext = new ValidationContext(dto);
-            var results = new List<System.ComponentModel.DataAnnotations.ValidationResult>();
+            var results = new List<ValidationResult>();
 
+            // Act
             var ehValido = Validator.TryValidateObject(dto, validationContext, results, validateAllProperties: true);
 
+            // Assert
             ehValido.Should().BeTrue();
             results.Should().BeEmpty();
         }
@@ -334,6 +375,7 @@ namespace SME.CDEP.TesteUnitario.Aplicacao.DTOS
         [Fact(DisplayName = "SituacaoSaldo - Quando não informado - Deve ter valor padrão DISPONIVEL")]
         public void DadoSituacaoSaldoNaoInformada_QuandoCriar_EntaoDeveSerDisponivel()
         {
+            // Arrange & Act
             var dto = new AcervoBibliograficoCadastroDTO
             {
                 Titulo = _faker.Lorem.Sentence(),
@@ -343,6 +385,7 @@ namespace SME.CDEP.TesteUnitario.Aplicacao.DTOS
                 LocalizacaoCDD = "000.00"
             };
 
+            // Assert
             dto.SituacaoSaldo.Should().Be(SituacaoSaldo.DISPONIVEL);
         }
 
@@ -353,14 +396,16 @@ namespace SME.CDEP.TesteUnitario.Aplicacao.DTOS
         [InlineData(SituacaoSaldo.INDISPONIVEL_PARA_RESERVA_EMPRESTIMO)]
         public void DadoSituacaoSaldoComDiferentesEnumerados_QuandoAtribuir_EntaoDeveSerValido(SituacaoSaldo situacao)
         {
+            // Arrange
             var dto = GerarAcervoBibliograficoCadastroDtoValido();
             dto.SituacaoSaldo = situacao;
-
             var validationContext = new ValidationContext(dto);
-            var results = new List<System.ComponentModel.DataAnnotations.ValidationResult>();
+            var results = new List<ValidationResult>();
 
+            // Act
             var ehValido = Validator.TryValidateObject(dto, validationContext, results, validateAllProperties: true);
 
+            // Assert
             ehValido.Should().BeTrue();
             dto.SituacaoSaldo.Should().Be(situacao);
         }
@@ -368,6 +413,7 @@ namespace SME.CDEP.TesteUnitario.Aplicacao.DTOS
         [Fact(DisplayName = "SituacaoAcervo - Quando não informado - Deve ter valor padrão Ativo")]
         public void DadoSituacaoAcervoNaoInformada_QuandoCriar_EntaoDeveSerAtivo()
         {
+            // Arrange & Act
             var dto = new AcervoBibliograficoCadastroDTO
             {
                 Titulo = _faker.Lorem.Sentence(),
@@ -377,6 +423,7 @@ namespace SME.CDEP.TesteUnitario.Aplicacao.DTOS
                 LocalizacaoCDD = "000.00"
             };
 
+            // Assert
             dto.SituacaoAcervo.Should().Be(SituacaoAcervo.Ativo);
         }
 
@@ -385,14 +432,16 @@ namespace SME.CDEP.TesteUnitario.Aplicacao.DTOS
         [InlineData(SituacaoAcervo.Inativo)]
         public void DadoSituacaoAcervoComDiferentesEnumerados_QuandoAtribuir_EntaoDeveSerValido(SituacaoAcervo situacao)
         {
+            // Arrange
             var dto = GerarAcervoBibliograficoCadastroDtoValido();
             dto.SituacaoAcervo = situacao;
-
             var validationContext = new ValidationContext(dto);
-            var results = new List<System.ComponentModel.DataAnnotations.ValidationResult>();
+            var results = new List<ValidationResult>();
 
+            // Act
             var ehValido = Validator.TryValidateObject(dto, validationContext, results, validateAllProperties: true);
 
+            // Assert
             ehValido.Should().BeTrue();
             dto.SituacaoAcervo.Should().Be(situacao);
         }
@@ -400,36 +449,41 @@ namespace SME.CDEP.TesteUnitario.Aplicacao.DTOS
         [Fact(DisplayName = "Herança - Quando derivado de AcervoCadastroDTO - Deve herdar Titulo obrigatório")]
         public void DadoDtoComTituloNaoInformado_QuandoValidarHeranca_EntaoDeveRetornarErro()
         {
+            // Arrange
             var dto = GerarAcervoBibliograficoCadastroDtoValido();
-            dto.Titulo = null;
-
+            dto.Titulo = null!;
             var validationContext = new ValidationContext(dto);
-            var results = new List<System.ComponentModel.DataAnnotations.ValidationResult>();
+            var results = new List<ValidationResult>();
 
+            // Act
             var ehValido = Validator.TryValidateObject(dto, validationContext, results, validateAllProperties: true);
 
+            // Assert
             ehValido.Should().BeFalse();
-            results.Should().Contain(r => r.ErrorMessage.Contains("título do acervo"));
+            results.Should().Contain(r => r.ErrorMessage!.Contains("título do acervo"));
         }
 
         [Fact(DisplayName = "Herança - Quando derivado de AcervoCadastroDTO - Deve herdar Ano obrigatório")]
         public void DadoDtoComAnoNaoInformado_QuandoValidarHeranca_EntaoDeveRetornarErro()
         {
+            // Arrange
             var dto = GerarAcervoBibliograficoCadastroDtoValido();
-            dto.Ano = null;
-
+            dto.Ano = null!;
             var validationContext = new ValidationContext(dto);
-            var results = new List<System.ComponentModel.DataAnnotations.ValidationResult>();
+            var results = new List<ValidationResult>();
 
+            // Act
             var ehValido = Validator.TryValidateObject(dto, validationContext, results, validateAllProperties: true);
 
+            // Assert
             ehValido.Should().BeFalse();
-            results.Should().Contain(r => r.ErrorMessage.Contains("ano do acervo"));
+            results.Should().Contain(r => r.ErrorMessage!.Contains("ano do acervo"));
         }
 
         [Fact(DisplayName = "Herança - Quando propriedades opcionais da classe base - Deve ser válido")]
         public void DadoPropriedadesOpcionaisDaClasseBase_QuandoNaoInformadas_EntaoDeveSerValido()
         {
+            // Arrange
             var dto = GerarAcervoBibliograficoCadastroDtoValido();
             dto.Descricao = null;
             dto.Codigo = null;
@@ -438,12 +492,13 @@ namespace SME.CDEP.TesteUnitario.Aplicacao.DTOS
             dto.CoAutores = null;
             dto.SubTitulo = null;
             dto.DataAcervo = null;
-
             var validationContext = new ValidationContext(dto);
-            var results = new List<System.ComponentModel.DataAnnotations.ValidationResult>();
+            var results = new List<ValidationResult>();
 
+            // Act
             var ehValido = Validator.TryValidateObject(dto, validationContext, results, validateAllProperties: true);
 
+            // Assert
             ehValido.Should().BeTrue();
             results.Should().BeEmpty();
         }
@@ -451,6 +506,7 @@ namespace SME.CDEP.TesteUnitario.Aplicacao.DTOS
         [Fact(DisplayName = "DTO Completo - Quando todas as propriedades informadas - Deve ser válido")]
         public void DadoDtoComTodasAsPropriedades_QuandoValidar_EntaoDeveSerValido()
         {
+            // Arrange
             var dto = new AcervoBibliograficoCadastroDTO
             {
                 Titulo = _faker.Lorem.Sentence(),
@@ -478,12 +534,13 @@ namespace SME.CDEP.TesteUnitario.Aplicacao.DTOS
                 Isbn = "978-3-16-148410-0",
                 SituacaoSaldo = SituacaoSaldo.DISPONIVEL
             };
-
             var validationContext = new ValidationContext(dto);
-            var results = new List<System.ComponentModel.DataAnnotations.ValidationResult>();
+            var results = new List<ValidationResult>();
 
+            // Act
             var ehValido = Validator.TryValidateObject(dto, validationContext, results, validateAllProperties: true);
 
+            // Assert
             ehValido.Should().BeTrue();
             results.Should().BeEmpty();
         }
@@ -491,6 +548,7 @@ namespace SME.CDEP.TesteUnitario.Aplicacao.DTOS
         [Fact(DisplayName = "DTO Mínimo - Quando apenas obrigatórios informados - Deve ser válido")]
         public void DadoDtoComApenasObrigatorios_QuandoValidar_EntaoDeveSerValido()
         {
+            // Arrange
             var dto = new AcervoBibliograficoCadastroDTO
             {
                 Titulo = _faker.Lorem.Sentence(),
@@ -499,12 +557,13 @@ namespace SME.CDEP.TesteUnitario.Aplicacao.DTOS
                 IdiomaId = 1,
                 LocalizacaoCDD = "000.00"
             };
-
             var validationContext = new ValidationContext(dto);
-            var results = new List<System.ComponentModel.DataAnnotations.ValidationResult>();
+            var results = new List<ValidationResult>();
 
+            // Act
             var ehValido = Validator.TryValidateObject(dto, validationContext, results, validateAllProperties: true);
 
+            // Assert
             ehValido.Should().BeTrue();
             results.Should().BeEmpty();
             dto.SituacaoSaldo.Should().Be(SituacaoSaldo.DISPONIVEL);
@@ -514,28 +573,31 @@ namespace SME.CDEP.TesteUnitario.Aplicacao.DTOS
         [Fact(DisplayName = "Múltiplos erros - Quando várias validações falham - Deve retornar todos os erros")]
         public void DadoDtoComMultiplosErros_QuandoValidar_EntaoDeveRetornarTodosOsErros()
         {
+            // Arrange
             var dto = new AcervoBibliograficoCadastroDTO
             {
-                Titulo = null,
-                Ano = null,
+                Titulo = null!,
+                Ano = null!,
                 MaterialId = -5,
                 IdiomaId = 0,
                 LocalizacaoCDD = _faker.Lorem.Letter(51)
             };
-
             var validationContext = new ValidationContext(dto);
             var results = new List<System.ComponentModel.DataAnnotations.ValidationResult>();
 
+            // Act
             var ehValido = Validator.TryValidateObject(dto, validationContext, results, validateAllProperties: true);
 
+            // Assert
             ehValido.Should().BeFalse();
             results.Should().HaveCountGreaterThanOrEqualTo(2);
         }
 
         private AcervoBibliograficoCadastroDTO GerarAcervoBibliograficoCadastroDtoValido()
         {
-            return new Faker<AcervoBibliograficoCadastroDTO>("pt_BR")
-                .RuleFor(x => x.Titulo, f => {
+            return new Bogus.Faker<AcervoBibliograficoCadastroDTO>("pt_BR")
+                .RuleFor(x => x.Titulo, f =>
+                {
                     var titulo = f.Lorem.Sentence(3);
                     return titulo.Length > 500 ? titulo.Substring(0, 500) : titulo;
                 })

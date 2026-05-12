@@ -30,7 +30,7 @@ namespace SME.CDEP.TesteUnitario.Aplicacao.DTOS
         public void DadoTituloNulo_QuandoAcessar_EntaoDeveRetornarNulo()
         {
             var dto = new AcervoBibliograficoDetalheDTO();
-            dto.Titulo = null;
+            dto.Titulo = null!;
 
             dto.Titulo.Should().BeNull();
         }
@@ -50,7 +50,7 @@ namespace SME.CDEP.TesteUnitario.Aplicacao.DTOS
         public void DadoCodigoNulo_QuandoAcessar_EntaoDeveRetornarNulo()
         {
             var dto = new AcervoBibliograficoDetalheDTO();
-            dto.Codigo = null;
+            dto.Codigo = null!;
 
             dto.Codigo.Should().BeNull();
         }
@@ -70,7 +70,7 @@ namespace SME.CDEP.TesteUnitario.Aplicacao.DTOS
         public void DadoAnoNulo_QuandoAcessar_EntaoDeveRetornarNulo()
         {
             var dto = new AcervoBibliograficoDetalheDTO();
-            dto.Ano = null;
+            dto.Ano = null!;
 
             dto.Ano.Should().BeNull();
         }
@@ -110,7 +110,7 @@ namespace SME.CDEP.TesteUnitario.Aplicacao.DTOS
         public void DadoEnderecoImagemPadraoNulo_QuandoAcessar_EntaoDeveRetornarNulo()
         {
             var dto = new AcervoBibliograficoDetalheDTO();
-            dto.EnderecoImagemPadrao = null;
+            dto.EnderecoImagemPadrao = null!;
 
             dto.EnderecoImagemPadrao.Should().BeNull();
         }
@@ -130,7 +130,7 @@ namespace SME.CDEP.TesteUnitario.Aplicacao.DTOS
         public void DadoSituacaoDisponibilidadeNulo_QuandoAcessar_EntaoDeveRetornarNulo()
         {
             var dto = new AcervoBibliograficoDetalheDTO();
-            dto.SituacaoDisponibilidade = null;
+            dto.SituacaoDisponibilidade = null!;
 
             dto.SituacaoDisponibilidade.Should().BeNull();
         }
@@ -210,7 +210,7 @@ namespace SME.CDEP.TesteUnitario.Aplicacao.DTOS
         public void DadoCreditosAutoresNulo_QuandoAcessar_EntaoDeveRetornarNulo()
         {
             var dto = new AcervoBibliograficoDetalheDTO();
-            dto.CreditosAutores = null;
+            dto.CreditosAutores = null!;
 
             dto.CreditosAutores.Should().BeNull();
         }
@@ -239,7 +239,7 @@ namespace SME.CDEP.TesteUnitario.Aplicacao.DTOS
         public void DadoSubTituloNulo_QuandoAcessar_EntaoDeveRetornarNulo()
         {
             var dto = new AcervoBibliograficoDetalheDTO();
-            dto.SubTitulo = null;
+            dto.SubTitulo = null!;
 
             dto.SubTitulo.Should().BeNull();
         }
@@ -259,7 +259,7 @@ namespace SME.CDEP.TesteUnitario.Aplicacao.DTOS
         public void DadoMaterialNulo_QuandoAcessar_EntaoDeveRetornarNulo()
         {
             var dto = new AcervoBibliograficoDetalheDTO();
-            dto.Material = null;
+            dto.Material = null!;
 
             dto.Material.Should().BeNull();
         }
@@ -279,7 +279,7 @@ namespace SME.CDEP.TesteUnitario.Aplicacao.DTOS
         public void DadoEditoraNulo_QuandoAcessar_EntaoDeveRetornarNulo()
         {
             var dto = new AcervoBibliograficoDetalheDTO();
-            dto.Editora = null;
+            dto.Editora = null!;
 
             dto.Editora.Should().BeNull();
         }
@@ -299,7 +299,7 @@ namespace SME.CDEP.TesteUnitario.Aplicacao.DTOS
         public void DadoAssuntosNulo_QuandoAcessar_EntaoDeveRetornarNulo()
         {
             var dto = new AcervoBibliograficoDetalheDTO();
-            dto.Assuntos = null;
+            dto.Assuntos = null!;
 
             dto.Assuntos.Should().BeNull();
         }
@@ -319,7 +319,7 @@ namespace SME.CDEP.TesteUnitario.Aplicacao.DTOS
         public void DadoEdicaoNulo_QuandoAcessar_EntaoDeveRetornarNulo()
         {
             var dto = new AcervoBibliograficoDetalheDTO();
-            dto.Edicao = null;
+            dto.Edicao = null!;
 
             dto.Edicao.Should().BeNull();
         }
@@ -368,7 +368,7 @@ namespace SME.CDEP.TesteUnitario.Aplicacao.DTOS
         public void DadoDimensoesNulo_QuandoAcessar_EntaoDeveRetornarNulo()
         {
             var dto = new AcervoBibliograficoDetalheDTO();
-            dto.Dimensoes = null;
+            dto.Dimensoes = null!;
 
             dto.Dimensoes.Should().BeNull();
         }
@@ -388,7 +388,7 @@ namespace SME.CDEP.TesteUnitario.Aplicacao.DTOS
         public void DadoSerieColecaoNulo_QuandoAcessar_EntaoDeveRetornarNulo()
         {
             var dto = new AcervoBibliograficoDetalheDTO();
-            dto.SerieColecao = null;
+            dto.SerieColecao = null!;
 
             dto.SerieColecao.Should().BeNull();
         }
@@ -408,7 +408,7 @@ namespace SME.CDEP.TesteUnitario.Aplicacao.DTOS
         public void DadoVolumeNulo_QuandoAcessar_EntaoDeveRetornarNulo()
         {
             var dto = new AcervoBibliograficoDetalheDTO();
-            dto.Volume = null;
+            dto.Volume = null!;
 
             dto.Volume.Should().BeNull();
         }
@@ -428,7 +428,7 @@ namespace SME.CDEP.TesteUnitario.Aplicacao.DTOS
         public void DadoIdiomaNulo_QuandoAcessar_EntaoDeveRetornarNulo()
         {
             var dto = new AcervoBibliograficoDetalheDTO();
-            dto.Idioma = null;
+            dto.Idioma = null!;
 
             dto.Idioma.Should().BeNull();
         }
@@ -448,7 +448,7 @@ namespace SME.CDEP.TesteUnitario.Aplicacao.DTOS
         public void DadoLocalizacaoNulo_QuandoAcessar_EntaoDeveRetornarNulo()
         {
             var dto = new AcervoBibliograficoDetalheDTO();
-            dto.Localizacao = null;
+            dto.Localizacao = null!;
 
             dto.Localizacao.Should().BeNull();
         }
@@ -468,7 +468,7 @@ namespace SME.CDEP.TesteUnitario.Aplicacao.DTOS
         public void DadoNotasGeraisNulo_QuandoAcessar_EntaoDeveRetornarNulo()
         {
             var dto = new AcervoBibliograficoDetalheDTO();
-            dto.NotasGerais = null;
+            dto.NotasGerais = null!;
 
             dto.NotasGerais.Should().BeNull();
         }
@@ -488,7 +488,7 @@ namespace SME.CDEP.TesteUnitario.Aplicacao.DTOS
         public void DadoIsbnNulo_QuandoAcessar_EntaoDeveRetornarNulo()
         {
             var dto = new AcervoBibliograficoDetalheDTO();
-            dto.Isbn = null;
+            dto.Isbn = null!;
 
             dto.Isbn.Should().BeNull();
         }
@@ -566,7 +566,7 @@ namespace SME.CDEP.TesteUnitario.Aplicacao.DTOS
             var baseType = dto.GetType().BaseType;
 
             baseType.Should().NotBeNull();
-            baseType.Name.Should().Be("AcervoDetalheDTO");
+            baseType!.Name.Should().Be("AcervoDetalheDTO");
         }
 
         [Fact(DisplayName = "Properties - Quando modificadas múltiplas vezes - Deve manter último valor")]
