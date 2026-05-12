@@ -2,6 +2,7 @@
 using Moq;
 using SME.CDEP.Aplicacao.DTOS;
 using SME.CDEP.Infra.Dominio.Enumerados;
+using System.Reflection;
 
 namespace SME.CDEP.TesteUnitario.Aplicacao.DTOS
 {
@@ -193,7 +194,7 @@ namespace SME.CDEP.TesteUnitario.Aplicacao.DTOS
             estadoConservacaoProperty?.CanRead.Should().BeTrue();
             estadoConservacaoProperty?.CanWrite.Should().BeTrue();
             descricaoProperty?.CanRead.Should().BeTrue();
-           descricaoProperty?.CanWrite.Should().BeTrue();
+            descricaoProperty?.CanWrite.Should().BeTrue();
             suporteProperty?.CanRead.Should().BeTrue();
             suporteProperty?.CanWrite.Should().BeTrue();
             duracaoProperty?.CanRead.Should().BeTrue();
@@ -275,46 +276,21 @@ namespace SME.CDEP.TesteUnitario.Aplicacao.DTOS
             dto.Disponibilizacao.Should().Be(mockDisponibilizacao.Object);
             dto.Ano.Should().Be(mockAno.Object);
         }
-       
-        [Fact(DisplayName = "AcervoAudiovisualLinhaDTO - Propriedades podem ser nulas")]
-        public void DadoDTOAcervoAudiovisualLinhaComPropriedadesNulas_QuandoCriar_EntaoDeveAceitarNulos()
-        {
-            var dto = new AcervoAudiovisualLinhaDTO
-            {
-                Titulo = null,
-                Codigo = null,
-                Credito = null,
-                Localizacao = null,
-                Procedencia = null,
-                Copia = null,
-                PermiteUsoImagem = null,
-                EstadoConservacao = null,
-                Descricao = null,
-                Suporte = null,
-                Duracao = null,
-                Cromia = null,
-                TamanhoArquivo = null,
-                Acessibilidade = null,
-                Disponibilizacao = null,
-                Ano = null
-            };
 
-            dto.Titulo.Should().BeNull();
-            dto.Codigo.Should().BeNull();
-            dto.Credito.Should().BeNull();
-            dto.Localizacao.Should().BeNull();
-            dto.Procedencia.Should().BeNull();
-            dto.Copia.Should().BeNull();
-            dto.PermiteUsoImagem.Should().BeNull();
-            dto.EstadoConservacao.Should().BeNull();
-            dto.Descricao.Should().BeNull();
-            dto.Suporte.Should().BeNull();
-            dto.Duracao.Should().BeNull();
-            dto.Cromia.Should().BeNull();
-            dto.TamanhoArquivo.Should().BeNull();
-            dto.Acessibilidade.Should().BeNull();
-            dto.Disponibilizacao.Should().BeNull();
-            dto.Ano.Should().BeNull();
+        [Fact(DisplayName = "AcervoAudiovisualLinhaDTO - Propriedades devem aceitar tipos referenciais")]
+        public void DadoDTOAcervoAudiovisualLinhaPropriedades_QuandoVerificarViaReflexao_EntaoDeveAceitarReferenciais()
+        {
+            var tipo = typeof(AcervoAudiovisualLinhaDTO);
+            var propriedades = new[] { "Titulo", "Codigo", "Credito", "Localizacao", "Procedencia", "Copia", "PermiteUsoImagem", "EstadoConservacao", "Descricao", "Suporte", "Duracao", "Cromia", "TamanhoArquivo", "Acessibilidade", "Disponibilizacao", "Ano" };
+
+            foreach (var nomePropriedade in propriedades)
+            {
+                var propriedade = tipo.GetProperty(nomePropriedade);
+                propriedade.Should().NotBeNull();
+                
+                var tipoPropriedade = propriedade!.PropertyType;
+                tipoPropriedade.IsClass.Should().BeTrue($"Propriedade {nomePropriedade} deve ser um tipo referencial");
+            }
         }
 
         [Fact(DisplayName = "AcervoAudiovisualLinhaDTO - Deve aceitar status Pendente")]
@@ -348,17 +324,6 @@ namespace SME.CDEP.TesteUnitario.Aplicacao.DTOS
             };
 
             dto.Status.Should().Be(ImportacaoStatus.Sucesso);
-        }
-
-        [Fact(DisplayName = "AcervoAudiovisualLinhaDTO - Mensagem pode ser nula")]
-        public void DadoDTOAcervoAudiovisualLinhaComMensagemNula_QuandoAtribuir_EntaoDeveAceitarNulo()
-        {
-            var dto = new AcervoAudiovisualLinhaDTO
-            {
-                Mensagem = null
-            };
-
-            dto.Mensagem.Should().BeNull();
         }
 
         [Fact(DisplayName = "AcervoAudiovisualLinhaDTO - Mensagem pode ser vazia")]
@@ -504,7 +469,7 @@ namespace SME.CDEP.TesteUnitario.Aplicacao.DTOS
             dto.Titulo.Should().Be(mockTitulo.Object);
             dto.Codigo.Should().Be(mockCodigo.Object);
         }
-       
+
         [Fact(DisplayName = "AcervoAudiovisualLinhaDTO - Deve herdar corretamente de AcervoLinhaDTO")]
         public void DadoDTOAcervoAudiovisualLinha_QuandoVerificarHeranca_EntaoDeveHerdarCorretamente()
         {

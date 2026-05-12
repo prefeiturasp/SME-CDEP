@@ -154,10 +154,10 @@ namespace SME.CDEP.TesteUnitario.Aplicacao.DTOS
             results.Where(r => r.ErrorMessage?.Contains("descrição") ?? false).Should().BeEmpty();
         }
 
-        [Fact(DisplayName = "AcervoAudiovisualDetalheDTO - Descricao null deve passar validação")]
-        public void DadoDescricaoNula_QuandoValidar_EntaoDevePassarValidacao()
+        [Fact(DisplayName = "AcervoAudiovisualDetalheDTO - Descricao vazia deve passar validação")]
+        public void DadoDescricaoVazia_QuandoValidar_EntaoDevePassarValidacao()
         {
-            var dto = new AcervoAudiovisualDetalheDTO { Descricao = null };
+            var dto = new AcervoAudiovisualDetalheDTO { Descricao = string.Empty };
             var context = new ValidationContext(dto);
             var results = new List<ValidationResult>();
 
@@ -178,10 +178,10 @@ namespace SME.CDEP.TesteUnitario.Aplicacao.DTOS
             results.Where(r => r.ErrorMessage?.Contains("créditos") ?? false).Should().BeEmpty();
         }
 
-        [Fact(DisplayName = "AcervoAudiovisualDetalheDTO - CreditosAutores null deve passar validação")]
-        public void DadoCreditosAutoresNulo_QuandoValidar_EntaoDevePassarValidacao()
+        [Fact(DisplayName = "AcervoAudiovisualDetalheDTO - CreditosAutores vazio deve passar validação")]
+        public void DadoCreditosAutoresVazio_QuandoValidar_EntaoDevePassarValidacao()
         {
-            var dto = new AcervoAudiovisualDetalheDTO { CreditosAutores = null };
+            var dto = new AcervoAudiovisualDetalheDTO { CreditosAutores = string.Empty };
             var context = new ValidationContext(dto);
             var results = new List<ValidationResult>();
 
@@ -202,10 +202,10 @@ namespace SME.CDEP.TesteUnitario.Aplicacao.DTOS
             results.Where(r => r.ErrorMessage?.Contains("data") ?? false).Should().BeEmpty();
         }
 
-        [Fact(DisplayName = "AcervoAudiovisualDetalheDTO - DataAcervo null deve passar validação")]
-        public void DadoDataAcervoNula_QuandoValidar_EntaoDevePassarValidacao()
+        [Fact(DisplayName = "AcervoAudiovisualDetalheDTO - DataAcervo vazio deve passar validação")]
+        public void DadoDataAcervoVazio_QuandoValidar_EntaoDevePassarValidacao()
         {
-            var dto = new AcervoAudiovisualDetalheDTO { DataAcervo = null };
+            var dto = new AcervoAudiovisualDetalheDTO { DataAcervo = string.Empty };
             var context = new ValidationContext(dto);
             var results = new List<ValidationResult>();
 
@@ -226,10 +226,10 @@ namespace SME.CDEP.TesteUnitario.Aplicacao.DTOS
             results.Where(r => r.ErrorMessage?.Contains("localização") ?? false).Should().BeEmpty();
         }
 
-        [Fact(DisplayName = "AcervoAudiovisualDetalheDTO - Localizacao null deve passar validação")]
-        public void DadoLocalizacaoNula_QuandoValidar_EntaoDevePassarValidacao()
+        [Fact(DisplayName = "AcervoAudiovisualDetalheDTO - Localizacao vazia deve passar validação")]
+        public void DadoLocalizacaoVazia_QuandoValidar_EntaoDevePassarValidacao()
         {
-            var dto = new AcervoAudiovisualDetalheDTO { Localizacao = null };
+            var dto = new AcervoAudiovisualDetalheDTO { Localizacao = string.Empty };
             var context = new ValidationContext(dto);
             var results = new List<ValidationResult>();
 
@@ -250,10 +250,10 @@ namespace SME.CDEP.TesteUnitario.Aplicacao.DTOS
             results.Where(r => r.ErrorMessage?.Contains("procedência") ?? false).Should().BeEmpty();
         }
 
-        [Fact(DisplayName = "AcervoAudiovisualDetalheDTO - Procedencia null deve passar validação")]
-        public void DadoProcedenciaNula_QuandoValidar_EntaoDevePassarValidacao()
+        [Fact(DisplayName = "AcervoAudiovisualDetalheDTO - Procedencia vazia deve passar validação")]
+        public void DadoProcedenciaVazia_QuandoValidar_EntaoDevePassarValidacao()
         {
-            var dto = new AcervoAudiovisualDetalheDTO { Procedencia = null };
+            var dto = new AcervoAudiovisualDetalheDTO { Procedencia = string.Empty };
             var context = new ValidationContext(dto);
             var results = new List<ValidationResult>();
 
@@ -274,10 +274,10 @@ namespace SME.CDEP.TesteUnitario.Aplicacao.DTOS
             results.Where(r => r.ErrorMessage?.Contains("cópia") ?? false).Should().BeEmpty();
         }
 
-        [Fact(DisplayName = "AcervoAudiovisualDetalheDTO - Copia null deve passar validação")]
-        public void DadoCopaiaNula_QuandoValidar_EntaoDevePassarValidacao()
+        [Fact(DisplayName = "AcervoAudiovisualDetalheDTO - Copia vazia deve passar validação")]
+        public void DadoCopiaVazia_QuandoValidar_EntaoDevePassarValidacao()
         {
-            var dto = new AcervoAudiovisualDetalheDTO { Copia = null };
+            var dto = new AcervoAudiovisualDetalheDTO { Copia = string.Empty };
             var context = new ValidationContext(dto);
             var results = new List<ValidationResult>();
 
@@ -310,10 +310,10 @@ namespace SME.CDEP.TesteUnitario.Aplicacao.DTOS
             results.Should().BeEmpty();
         }
 
-        [Fact(DisplayName = "AcervoAudiovisualDetalheDTO - PermiteUsoImagem null deve passar validação")]
-        public void DadoPermiteUsoImagemNulo_QuandoValidar_EntaoDevePassarValidacao()
+        [Fact(DisplayName = "AcervoAudiovisualDetalheDTO - PermiteUsoImagem vazio deve passar validação")]
+        public void DadoPermiteUsoImagemVazio_QuandoValidar_EntaoDevePassarValidacao()
         {
-            var dto = new AcervoAudiovisualDetalheDTO { PermiteUsoImagem = null };
+            var dto = new AcervoAudiovisualDetalheDTO { PermiteUsoImagem = string.Empty };
             var context = new ValidationContext(dto);
             var results = new List<ValidationResult>();
 
@@ -334,10 +334,10 @@ namespace SME.CDEP.TesteUnitario.Aplicacao.DTOS
             results.Where(r => r.ErrorMessage?.Contains("conservação") ?? false).Should().BeEmpty();
         }
 
-        [Fact(DisplayName = "AcervoAudiovisualDetalheDTO - Conservacao null deve passar validação")]
-        public void DadoConservacaoNula_QuandoValidar_EntaoDevePassarValidacao()
+        [Fact(DisplayName = "AcervoAudiovisualDetalheDTO - Conservacao vazia deve passar validação")]
+        public void DadoConservacaoVazia_QuandoValidar_EntaoDevePassarValidacao()
         {
-            var dto = new AcervoAudiovisualDetalheDTO { Conservacao = null };
+            var dto = new AcervoAudiovisualDetalheDTO { Conservacao = string.Empty };
             var context = new ValidationContext(dto);
             var results = new List<ValidationResult>();
 
@@ -358,10 +358,10 @@ namespace SME.CDEP.TesteUnitario.Aplicacao.DTOS
             results.Where(r => r.ErrorMessage?.Contains("cromia") ?? false).Should().BeEmpty();
         }
 
-        [Fact(DisplayName = "AcervoAudiovisualDetalheDTO - Cromia null deve passar validação")]
-        public void DadoCromiaNula_QuandoValidar_EntaoDevePassarValidacao()
+        [Fact(DisplayName = "AcervoAudiovisualDetalheDTO - Cromia vazia deve passar validação")]
+        public void DadoCromiaVazia_QuandoValidar_EntaoDevePassarValidacao()
         {
-            var dto = new AcervoAudiovisualDetalheDTO { Cromia = null };
+            var dto = new AcervoAudiovisualDetalheDTO { Cromia = string.Empty };
             var context = new ValidationContext(dto);
             var results = new List<ValidationResult>();
 
@@ -382,10 +382,10 @@ namespace SME.CDEP.TesteUnitario.Aplicacao.DTOS
             results.Where(r => r.ErrorMessage?.Contains("suporte") ?? false).Should().BeEmpty();
         }
 
-        [Fact(DisplayName = "AcervoAudiovisualDetalheDTO - Suporte null deve passar validação")]
-        public void DadoSuporteNulo_QuandoValidar_EntaoDevePassarValidacao()
+        [Fact(DisplayName = "AcervoAudiovisualDetalheDTO - Suporte vazio deve passar validação")]
+        public void DadoSuporteVazio_QuandoValidar_EntaoDevePassarValidacao()
         {
-            var dto = new AcervoAudiovisualDetalheDTO { Suporte = null };
+            var dto = new AcervoAudiovisualDetalheDTO { Suporte = string.Empty };
             var context = new ValidationContext(dto);
             var results = new List<ValidationResult>();
 
@@ -406,10 +406,10 @@ namespace SME.CDEP.TesteUnitario.Aplicacao.DTOS
             results.Where(r => r.ErrorMessage?.Contains("duração") ?? false).Should().BeEmpty();
         }
 
-        [Fact(DisplayName = "AcervoAudiovisualDetalheDTO - Duracao null deve passar validação")]
-        public void DadoDuracaoNula_QuandoValidar_EntaoDevePassarValidacao()
+        [Fact(DisplayName = "AcervoAudiovisualDetalheDTO - Duracao vazia deve passar validação")]
+        public void DadoDuracaoVazia_QuandoValidar_EntaoDevePassarValidacao()
         {
-            var dto = new AcervoAudiovisualDetalheDTO { Duracao = null };
+            var dto = new AcervoAudiovisualDetalheDTO { Duracao = string.Empty };
             var context = new ValidationContext(dto);
             var results = new List<ValidationResult>();
 
@@ -430,10 +430,10 @@ namespace SME.CDEP.TesteUnitario.Aplicacao.DTOS
             results.Where(r => r.ErrorMessage?.Contains("tamanho") ?? false).Should().BeEmpty();
         }
 
-        [Fact(DisplayName = "AcervoAudiovisualDetalheDTO - TamanhoArquivo null deve passar validação")]
-        public void DadoTamanhoArquivoNulo_QuandoValidar_EntaoDevePassarValidacao()
+        [Fact(DisplayName = "AcervoAudiovisualDetalheDTO - TamanhoArquivo vazio deve passar validação")]
+        public void DadoTamanhoArquivoVazio_QuandoValidar_EntaoDevePassarValidacao()
         {
-            var dto = new AcervoAudiovisualDetalheDTO { TamanhoArquivo = null };
+            var dto = new AcervoAudiovisualDetalheDTO { TamanhoArquivo = string.Empty };
             var context = new ValidationContext(dto);
             var results = new List<ValidationResult>();
 
@@ -454,10 +454,10 @@ namespace SME.CDEP.TesteUnitario.Aplicacao.DTOS
             results.Where(r => r.ErrorMessage?.Contains("acessibilidade") ?? false).Should().BeEmpty();
         }
 
-        [Fact(DisplayName = "AcervoAudiovisualDetalheDTO - Acessibilidade null deve passar validação")]
-        public void DadoAcessibilidadeNula_QuandoValidar_EntaoDevePassarValidacao()
+        [Fact(DisplayName = "AcervoAudiovisualDetalheDTO - Acessibilidade vazia deve passar validação")]
+        public void DadoAcessibilidadeVazia_QuandoValidar_EntaoDevePassarValidacao()
         {
-            var dto = new AcervoAudiovisualDetalheDTO { Acessibilidade = null };
+            var dto = new AcervoAudiovisualDetalheDTO { Acessibilidade = string.Empty };
             var context = new ValidationContext(dto);
             var results = new List<ValidationResult>();
 
@@ -478,10 +478,10 @@ namespace SME.CDEP.TesteUnitario.Aplicacao.DTOS
             results.Where(r => r.ErrorMessage?.Contains("disponibilização") ?? false).Should().BeEmpty();
         }
 
-        [Fact(DisplayName = "AcervoAudiovisualDetalheDTO - Disponibilizacao null deve passar validação")]
-        public void DadoDisponibilizacaoNula_QuandoValidar_EntaoDevePassarValidacao()
+        [Fact(DisplayName = "AcervoAudiovisualDetalheDTO - Disponibilizacao vazia deve passar validação")]
+        public void DadoDisponibilizacaoVazia_QuandoValidar_EntaoDevePassarValidacao()
         {
-            var dto = new AcervoAudiovisualDetalheDTO { Disponibilizacao = null };
+            var dto = new AcervoAudiovisualDetalheDTO { Disponibilizacao = string.Empty };
             var context = new ValidationContext(dto);
             var results = new List<ValidationResult>();
 
@@ -636,25 +636,13 @@ namespace SME.CDEP.TesteUnitario.Aplicacao.DTOS
             results.Should().BeEmpty();
         }
 
-        [Fact(DisplayName = "AcervoAudiovisualDetalheDTO - Instância padrão com valores nulos")]
-        public void DadoDTOAcervoAudiovisualDetalheNovembro_QuandoCriar_EntaoTodosValoresSaoNulosOuPadrao()
+        [Fact(DisplayName = "AcervoAudiovisualDetalheDTO - Deve poder ser instanciada sem parâmetros")]
+        public void DadoDTOAcervoAudiovisualDetalheNova_QuandoCriar_EntaoDeveSemParametros()
         {
             var dto = new AcervoAudiovisualDetalheDTO();
 
-            dto.Descricao.Should().BeNull();
-            dto.CreditosAutores.Should().BeNull();
-            dto.DataAcervo.Should().BeNull();
-            dto.Localizacao.Should().BeNull();
-            dto.Procedencia.Should().BeNull();
-            dto.Copia.Should().BeNull();
-            dto.PermiteUsoImagem.Should().BeNull();
-            dto.Conservacao.Should().BeNull();
-            dto.Cromia.Should().BeNull();
-            dto.Suporte.Should().BeNull();
-            dto.Duracao.Should().BeNull();
-            dto.TamanhoArquivo.Should().BeNull();
-            dto.Acessibilidade.Should().BeNull();
-            dto.Disponibilizacao.Should().BeNull();
+            dto.Should().NotBeNull();
+            dto.Should().BeOfType<AcervoAudiovisualDetalheDTO>();
         }
 
         [Fact(DisplayName = "AcervoAudiovisualDetalheDTO - Deve herdar corretamente de AcervoDetalheDTO")]

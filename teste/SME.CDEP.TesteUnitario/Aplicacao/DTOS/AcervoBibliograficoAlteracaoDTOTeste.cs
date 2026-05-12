@@ -9,17 +9,19 @@ namespace SME.CDEP.TesteUnitario.Aplicacao.DTOS
         [Fact(DisplayName = "AcervoBibliograficoAlteracaoDTO - Deve conter propriedade Id")]
         public void DadoDTOAcervoBibliograficoAlteracao_QuandoCriar_EntaoContemPropriedadeId()
         {
-            var dto = new AcervoBibliograficoAlteracaoDTO();
+            var dtoType = typeof(AcervoBibliograficoAlteracaoDTO);
+            var idProperty = dtoType.GetProperty("Id");
 
-            typeof(AcervoBibliograficoAlteracaoDTO).GetProperty("Id").Should().NotBeNull();
+            idProperty.Should().NotBeNull();
         }
 
         [Fact(DisplayName = "AcervoBibliograficoAlteracaoDTO - Deve conter propriedade AcervoId")]
         public void DadoDTOAcervoBibliograficoAlteracao_QuandoCriar_EntaoContemPropriedadeAcervoId()
         {
-            var dto = new AcervoBibliograficoAlteracaoDTO();
+            var dtoType = typeof(AcervoBibliograficoAlteracaoDTO);
+            var acervoIdProperty = dtoType.GetProperty("AcervoId");
 
-            typeof(AcervoBibliograficoAlteracaoDTO).GetProperty("AcervoId").Should().NotBeNull();
+            acervoIdProperty.Should().NotBeNull();
         }
 
         [Fact(DisplayName = "AcervoBibliograficoAlteracaoDTO - Id com valor válido deve passar validação")]
@@ -29,7 +31,7 @@ namespace SME.CDEP.TesteUnitario.Aplicacao.DTOS
             var context = new ValidationContext(dto);
             var results = new List<ValidationResult>();
 
-            var isValid = Validator.TryValidateObject(dto, context, results, true);
+            Validator.TryValidateObject(dto, context, results, true);
 
             results.Where(r => r.ErrorMessage.Contains("identificador do acervo documental")).Should().BeEmpty();
             results.Where(r => r.ErrorMessage.Contains("identificador do acervo")).Should().BeEmpty();
@@ -78,7 +80,7 @@ namespace SME.CDEP.TesteUnitario.Aplicacao.DTOS
             var context = new ValidationContext(dto);
             var results = new List<ValidationResult>();
 
-            var isValid = Validator.TryValidateObject(dto, context, results, true);
+            Validator.TryValidateObject(dto, context, results, true);
 
             results.Where(r => r.ErrorMessage.Contains("identificador do acervo")).Should().BeEmpty();
         }
@@ -190,14 +192,16 @@ namespace SME.CDEP.TesteUnitario.Aplicacao.DTOS
         public void DadoDTOAcervoBibliograficoAlteracao_QuandoVerificarVisibilidadePropriedades_EntaoDeveSerPublicas()
         {
             var tipo = typeof(AcervoBibliograficoAlteracaoDTO);
-
             var idProperty = tipo.GetProperty("Id");
             var acervoIdProperty = tipo.GetProperty("AcervoId");
 
-            idProperty?.CanRead.Should().BeTrue();
-            idProperty?.CanWrite.Should().BeTrue();
-            acervoIdProperty?.CanRead.Should().BeTrue();
-            acervoIdProperty?.CanWrite.Should().BeTrue();
+            idProperty.Should().NotBeNull();
+            idProperty!.CanRead.Should().BeTrue();
+            idProperty!.CanWrite.Should().BeTrue();
+
+            acervoIdProperty.Should().NotBeNull();
+            acervoIdProperty!.CanRead.Should().BeTrue();
+            acervoIdProperty!.CanWrite.Should().BeTrue();
         }
 
         [Fact(DisplayName = "AcervoBibliograficoAlteracaoDTO - Atributos Required devem estar presentes")]
@@ -207,10 +211,12 @@ namespace SME.CDEP.TesteUnitario.Aplicacao.DTOS
             var idProperty = tipo.GetProperty("Id");
             var acervoIdProperty = tipo.GetProperty("AcervoId");
 
-            var idAttributes = idProperty?.GetCustomAttributes(typeof(RequiredAttribute), true);
-            var acervoIdAttributes = acervoIdProperty?.GetCustomAttributes(typeof(RequiredAttribute), true);
-
+            idProperty.Should().NotBeNull();
+            var idAttributes = idProperty!.GetCustomAttributes(typeof(RequiredAttribute), true);
             idAttributes.Should().NotBeNullOrEmpty();
+
+            acervoIdProperty.Should().NotBeNull();
+            var acervoIdAttributes = acervoIdProperty!.GetCustomAttributes(typeof(RequiredAttribute), true);
             acervoIdAttributes.Should().NotBeNullOrEmpty();
         }
 
@@ -221,10 +227,12 @@ namespace SME.CDEP.TesteUnitario.Aplicacao.DTOS
             var idProperty = tipo.GetProperty("Id");
             var acervoIdProperty = tipo.GetProperty("AcervoId");
 
-            var idAttributes = idProperty?.GetCustomAttributes(typeof(RangeAttribute), true);
-            var acervoIdAttributes = acervoIdProperty?.GetCustomAttributes(typeof(RangeAttribute), true);
-
+            idProperty.Should().NotBeNull();
+            var idAttributes = idProperty!.GetCustomAttributes(typeof(RangeAttribute), true);
             idAttributes.Should().NotBeNullOrEmpty();
+
+            acervoIdProperty.Should().NotBeNull();
+            var acervoIdAttributes = acervoIdProperty!.GetCustomAttributes(typeof(RangeAttribute), true);
             acervoIdAttributes.Should().NotBeNullOrEmpty();
         }
 
@@ -296,23 +304,14 @@ namespace SME.CDEP.TesteUnitario.Aplicacao.DTOS
             var tipo = typeof(AcervoBibliograficoAlteracaoDTO);
             var bindingFlags = System.Reflection.BindingFlags.Public | System.Reflection.BindingFlags.Instance;
 
-            tipo.GetProperty("MaterialId", bindingFlags).Should().NotBeNull();
-            tipo.GetProperty("EditoraId", bindingFlags).Should().NotBeNull();
-            tipo.GetProperty("AssuntosIds", bindingFlags).Should().NotBeNull();
-            tipo.GetProperty("Edicao", bindingFlags).Should().NotBeNull();
-            tipo.GetProperty("NumeroPagina", bindingFlags).Should().NotBeNull();
-            tipo.GetProperty("Largura", bindingFlags).Should().NotBeNull();
-            tipo.GetProperty("Altura", bindingFlags).Should().NotBeNull();
-            tipo.GetProperty("SerieColecaoId", bindingFlags).Should().NotBeNull();
-            tipo.GetProperty("Volume", bindingFlags).Should().NotBeNull();
-            tipo.GetProperty("IdiomaId", bindingFlags).Should().NotBeNull();
-            tipo.GetProperty("LocalizacaoCDD", bindingFlags).Should().NotBeNull();
-            tipo.GetProperty("LocalizacaoPHA", bindingFlags).Should().NotBeNull();
-            tipo.GetProperty("NotasGerais", bindingFlags).Should().NotBeNull();
-            tipo.GetProperty("Isbn", bindingFlags).Should().NotBeNull();
-            tipo.GetProperty("SituacaoSaldo", bindingFlags).Should().NotBeNull();
-            
-            // Para SituacaoAcervo, usar DeclaredOnly para obter apenas a propriedade redeclarada com 'new'
+            var properties = new[] { "MaterialId", "EditoraId", "AssuntosIds", "Edicao", "NumeroPagina", "Largura", "Altura", "SerieColecaoId", "Volume", "IdiomaId", "LocalizacaoCDD", "LocalizacaoPHA", "NotasGerais", "Isbn", "SituacaoSaldo" };
+
+            foreach (var propertyName in properties)
+            {
+                var property = tipo.GetProperty(propertyName, bindingFlags);
+                property.Should().NotBeNull($"Property {propertyName} should exist");
+            }
+
             var situacaoAcervoProperty = typeof(AcervoBibliograficoCadastroDTO).GetProperty(
                 "SituacaoAcervo", 
                 bindingFlags | System.Reflection.BindingFlags.DeclaredOnly);
@@ -326,8 +325,11 @@ namespace SME.CDEP.TesteUnitario.Aplicacao.DTOS
             var idProperty = tipo.GetProperty("Id");
             var acervoIdProperty = tipo.GetProperty("AcervoId");
 
-            idProperty?.PropertyType.Should().Be(typeof(long));
-            acervoIdProperty?.PropertyType.Should().Be(typeof(long));
+            idProperty.Should().NotBeNull();
+            idProperty!.PropertyType.Should().Be(typeof(long));
+
+            acervoIdProperty.Should().NotBeNull();
+            acervoIdProperty!.PropertyType.Should().Be(typeof(long));
         }
 
         [Fact(DisplayName = "AcervoBibliograficoAlteracaoDTO - Validação com múltiplos erros")]

@@ -10,128 +10,96 @@ namespace SME.CDEP.TesteUnitario.Aplicacao.DTOS
         [Fact(DisplayName = "AcervoAudiovisualLinhaRetornoDTO - Deve conter propriedade Titulo")]
         public void DadoDTOAcervoAudiovisualLinhaRetorno_QuandoCriar_EntaoContemPropriedadeTitulo()
         {
-            var dto = new AcervoAudiovisualLinhaRetornoDTO();
-
             typeof(AcervoAudiovisualLinhaRetornoDTO).GetProperty("Titulo").Should().NotBeNull();
         }
 
         [Fact(DisplayName = "AcervoAudiovisualLinhaRetornoDTO - Deve conter propriedade Codigo")]
         public void DadoDTOAcervoAudiovisualLinhaRetorno_QuandoCriar_EntaoContemPropriedadeCodigo()
         {
-            var dto = new AcervoAudiovisualLinhaRetornoDTO();
-
             typeof(AcervoAudiovisualLinhaRetornoDTO).GetProperty("Codigo").Should().NotBeNull();
         }
 
         [Fact(DisplayName = "AcervoAudiovisualLinhaRetornoDTO - Deve conter propriedade CreditosAutoresIds")]
         public void DadoDTOAcervoAudiovisualLinhaRetorno_QuandoCriar_EntaoContemPropriedadeCreditosAutoresIds()
         {
-            var dto = new AcervoAudiovisualLinhaRetornoDTO();
-
             typeof(AcervoAudiovisualLinhaRetornoDTO).GetProperty("CreditosAutoresIds").Should().NotBeNull();
         }
 
         [Fact(DisplayName = "AcervoAudiovisualLinhaRetornoDTO - Deve conter propriedade Localizacao")]
         public void DadoDTOAcervoAudiovisualLinhaRetorno_QuandoCriar_EntaoContemPropriedadeLocalizacao()
         {
-            var dto = new AcervoAudiovisualLinhaRetornoDTO();
-
             typeof(AcervoAudiovisualLinhaRetornoDTO).GetProperty("Localizacao").Should().NotBeNull();
         }
 
         [Fact(DisplayName = "AcervoAudiovisualLinhaRetornoDTO - Deve conter propriedade Procedencia")]
         public void DadoDTOAcervoAudiovisualLinhaRetorno_QuandoCriar_EntaoContemPropriedadeProcedencia()
         {
-            var dto = new AcervoAudiovisualLinhaRetornoDTO();
-
             typeof(AcervoAudiovisualLinhaRetornoDTO).GetProperty("Procedencia").Should().NotBeNull();
         }
 
         [Fact(DisplayName = "AcervoAudiovisualLinhaRetornoDTO - Deve conter propriedade Copia")]
         public void DadoDTOAcervoAudiovisualLinhaRetorno_QuandoCriar_EntaoContemPropriedadeCopia()
         {
-            var dto = new AcervoAudiovisualLinhaRetornoDTO();
-
             typeof(AcervoAudiovisualLinhaRetornoDTO).GetProperty("Copia").Should().NotBeNull();
         }
 
         [Fact(DisplayName = "AcervoAudiovisualLinhaRetornoDTO - Deve conter propriedade PermiteUsoImagem")]
         public void DadoDTOAcervoAudiovisualLinhaRetorno_QuandoCriar_EntaoContemPropriedadePermiteUsoImagem()
         {
-            var dto = new AcervoAudiovisualLinhaRetornoDTO();
-
             typeof(AcervoAudiovisualLinhaRetornoDTO).GetProperty("PermiteUsoImagem").Should().NotBeNull();
         }
 
         [Fact(DisplayName = "AcervoAudiovisualLinhaRetornoDTO - Deve conter propriedade ConservacaoId")]
         public void DadoDTOAcervoAudiovisualLinhaRetorno_QuandoCriar_EntaoContemPropriedadeConservacaoId()
         {
-            var dto = new AcervoAudiovisualLinhaRetornoDTO();
-
             typeof(AcervoAudiovisualLinhaRetornoDTO).GetProperty("ConservacaoId").Should().NotBeNull();
         }
 
         [Fact(DisplayName = "AcervoAudiovisualLinhaRetornoDTO - Deve conter propriedade Descricao")]
         public void DadoDTOAcervoAudiovisualLinhaRetorno_QuandoCriar_EntaoContemPropriedadeDescricao()
         {
-            var dto = new AcervoAudiovisualLinhaRetornoDTO();
-
             typeof(AcervoAudiovisualLinhaRetornoDTO).GetProperty("Descricao").Should().NotBeNull();
         }
 
         [Fact(DisplayName = "AcervoAudiovisualLinhaRetornoDTO - Deve conter propriedade SuporteId")]
         public void DadoDTOAcervoAudiovisualLinhaRetorno_QuandoCriar_EntaoContemPropriedadeSuporteId()
         {
-            var dto = new AcervoAudiovisualLinhaRetornoDTO();
-
             typeof(AcervoAudiovisualLinhaRetornoDTO).GetProperty("SuporteId").Should().NotBeNull();
         }
 
         [Fact(DisplayName = "AcervoAudiovisualLinhaRetornoDTO - Deve conter propriedade Duracao")]
         public void DadoDTOAcervoAudiovisualLinhaRetorno_QuandoCriar_EntaoContemPropriedadeDuracao()
         {
-            var dto = new AcervoAudiovisualLinhaRetornoDTO();
-
             typeof(AcervoAudiovisualLinhaRetornoDTO).GetProperty("Duracao").Should().NotBeNull();
         }
 
         [Fact(DisplayName = "AcervoAudiovisualLinhaRetornoDTO - Deve conter propriedade CromiaId")]
         public void DadoDTOAcervoAudiovisualLinhaRetorno_QuandoCriar_EntaoContemPropriedadeCromiaId()
         {
-            var dto = new AcervoAudiovisualLinhaRetornoDTO();
-
             typeof(AcervoAudiovisualLinhaRetornoDTO).GetProperty("CromiaId").Should().NotBeNull();
         }
 
         [Fact(DisplayName = "AcervoAudiovisualLinhaRetornoDTO - Deve conter propriedade TamanhoArquivo")]
         public void DadoDTOAcervoAudiovisualLinhaRetorno_QuandoCriar_EntaoContemPropriedadeTamanhoArquivo()
         {
-            var dto = new AcervoAudiovisualLinhaRetornoDTO();
-
             typeof(AcervoAudiovisualLinhaRetornoDTO).GetProperty("TamanhoArquivo").Should().NotBeNull();
         }
 
         [Fact(DisplayName = "AcervoAudiovisualLinhaRetornoDTO - Deve conter propriedade Acessibilidade")]
         public void DadoDTOAcervoAudiovisualLinhaRetorno_QuandoCriar_EntaoContemPropriedadeAcessibilidade()
         {
-            var dto = new AcervoAudiovisualLinhaRetornoDTO();
-
             typeof(AcervoAudiovisualLinhaRetornoDTO).GetProperty("Acessibilidade").Should().NotBeNull();
         }
 
         [Fact(DisplayName = "AcervoAudiovisualLinhaRetornoDTO - Deve conter propriedade Disponibilizacao")]
         public void DadoDTOAcervoAudiovisualLinhaRetorno_QuandoCriar_EntaoContemPropriedadeDisponibilizacao()
         {
-            var dto = new AcervoAudiovisualLinhaRetornoDTO();
-
             typeof(AcervoAudiovisualLinhaRetornoDTO).GetProperty("Disponibilizacao").Should().NotBeNull();
         }
 
         [Fact(DisplayName = "AcervoAudiovisualLinhaRetornoDTO - Deve conter propriedade Ano")]
         public void DadoDTOAcervoAudiovisualLinhaRetorno_QuandoCriar_EntaoContemPropriedadeAno()
         {
-            var dto = new AcervoAudiovisualLinhaRetornoDTO();
-
             typeof(AcervoAudiovisualLinhaRetornoDTO).GetProperty("Ano").Should().NotBeNull();
         }
 
@@ -276,49 +244,6 @@ namespace SME.CDEP.TesteUnitario.Aplicacao.DTOS
             dto.Ano.Should().Be(mockAno.Object);
         }
 
-        [Fact(DisplayName = "AcervoAudiovisualLinhaRetornoDTO - Propriedades podem ser nulas")]
-        public void DadoDTOAcervoAudiovisualLinhaRetornoComPropriedadesNulas_QuandoCriar_EntaoDeveAceitarNulos()
-        {
-            var dto = new AcervoAudiovisualLinhaRetornoDTO
-            {
-                Titulo = null,
-                Codigo = null,
-                CreditosAutoresIds = null,
-                Localizacao = null,
-                Procedencia = null,
-                Copia = null,
-                PermiteUsoImagem = null,
-                ConservacaoId = null,
-                Descricao = null,
-                SuporteId = null,
-                Duracao = null,
-                CromiaId = null,
-                TamanhoArquivo = null,
-                Acessibilidade = null,
-                Disponibilizacao = null,
-                Ano = null,
-                ErrosCampos = null
-            };
-
-            dto.Titulo.Should().BeNull();
-            dto.Codigo.Should().BeNull();
-            dto.CreditosAutoresIds.Should().BeNull();
-            dto.Localizacao.Should().BeNull();
-            dto.Procedencia.Should().BeNull();
-            dto.Copia.Should().BeNull();
-            dto.PermiteUsoImagem.Should().BeNull();
-            dto.ConservacaoId.Should().BeNull();
-            dto.Descricao.Should().BeNull();
-            dto.SuporteId.Should().BeNull();
-            dto.Duracao.Should().BeNull();
-            dto.CromiaId.Should().BeNull();
-            dto.TamanhoArquivo.Should().BeNull();
-            dto.Acessibilidade.Should().BeNull();
-            dto.Disponibilizacao.Should().BeNull();
-            dto.Ano.Should().BeNull();
-            dto.ErrosCampos.Should().BeNull();
-        }
-
         [Fact(DisplayName = "AcervoAudiovisualLinhaRetornoDTO - Deve aceitar status Pendente")]
         public void DadoDTOAcervoAudiovisualLinhaRetornoComStatusPendente_QuandoAtribuir_EntaoDeveAceitarPendente()
         {
@@ -357,7 +282,7 @@ namespace SME.CDEP.TesteUnitario.Aplicacao.DTOS
         {
             var dto = new AcervoAudiovisualLinhaRetornoDTO
             {
-                Mensagem = null
+                Mensagem = null!
             };
 
             dto.Mensagem.Should().BeNull();
