@@ -91,14 +91,6 @@ namespace SME.CDEP.TesteUnitario.Aplicacao.DTOS
         }
 
         [Fact]
-        public void DadoTituloNulo_QuandoAtribuir_EntaoArmazena()
-        {
-            var dto = new AcervoArteGraficaDTO { Titulo = null };
-
-            dto.Titulo.Should().BeNull();
-        }
-
-        [Fact]
         public void DadoTituloVazio_QuandoAtribuir_EntaoArmazena()
         {
             var dto = new AcervoArteGraficaDTO { Titulo = string.Empty };
@@ -116,14 +108,6 @@ namespace SME.CDEP.TesteUnitario.Aplicacao.DTOS
         }
 
         [Fact]
-        public void DadoCodigoNulo_QuandoAtribuir_EntaoArmazena()
-        {
-            var dto = new AcervoArteGraficaDTO { Codigo = null };
-
-            dto.Codigo.Should().BeNull();
-        }
-
-        [Fact]
         public void DadoLocalizacaoComValor_QuandoAtribuir_EntaoArmazena()
         {
             var localizacao = "Sala 1, Prateleira 5";
@@ -133,11 +117,11 @@ namespace SME.CDEP.TesteUnitario.Aplicacao.DTOS
         }
 
         [Fact]
-        public void DadoLocalizacaoNula_QuandoAtribuir_EntaoArmazena()
+        public void DadoLocalizacaoVazia_QuandoAtribuir_EntaoArmazena()
         {
-            var dto = new AcervoArteGraficaDTO { Localizacao = null };
+            var dto = new AcervoArteGraficaDTO { Localizacao = string.Empty };
 
-            dto.Localizacao.Should().BeNull();
+            dto.Localizacao.Should().Be(string.Empty);
         }
 
         [Fact]
@@ -150,11 +134,11 @@ namespace SME.CDEP.TesteUnitario.Aplicacao.DTOS
         }
 
         [Fact]
-        public void DadoProcedenciaNula_QuandoAtribuir_EntaoArmazena()
+        public void DadoProcedenciaVazia_QuandoAtribuir_EntaoArmazena()
         {
-            var dto = new AcervoArteGraficaDTO { Procedencia = null };
+            var dto = new AcervoArteGraficaDTO { Procedencia = string.Empty };
 
-            dto.Procedencia.Should().BeNull();
+            dto.Procedencia.Should().Be(string.Empty);
         }
 
         [Fact]
@@ -167,14 +151,6 @@ namespace SME.CDEP.TesteUnitario.Aplicacao.DTOS
         }
 
         [Fact]
-        public void DadoDescricaoNula_QuandoAtribuir_EntaoArmazena()
-        {
-            var dto = new AcervoArteGraficaDTO { Descricao = null };
-
-            dto.Descricao.Should().BeNull();
-        }
-
-        [Fact]
         public void DadoLarguraComValor_QuandoAtribuir_EntaoArmazena()
         {
             var largura = "25.5 cm";
@@ -184,11 +160,11 @@ namespace SME.CDEP.TesteUnitario.Aplicacao.DTOS
         }
 
         [Fact]
-        public void DadoLarguraNula_QuandoAtribuir_EntaoArmazena()
+        public void DadoLarguraVazia_QuandoAtribuir_EntaoArmazena()
         {
-            var dto = new AcervoArteGraficaDTO { Largura = null };
+            var dto = new AcervoArteGraficaDTO { Largura = string.Empty };
 
-            dto.Largura.Should().BeNull();
+            dto.Largura.Should().Be(string.Empty);
         }
 
         [Fact]
@@ -201,11 +177,11 @@ namespace SME.CDEP.TesteUnitario.Aplicacao.DTOS
         }
 
         [Fact]
-        public void DadoAlturaNula_QuandoAtribuir_EntaoArmazena()
+        public void DadoAlturaVazia_QuandoAtribuir_EntaoArmazena()
         {
-            var dto = new AcervoArteGraficaDTO { Altura = null };
+            var dto = new AcervoArteGraficaDTO { Altura = string.Empty };
 
-            dto.Altura.Should().BeNull();
+            dto.Altura.Should().Be(string.Empty);
         }
 
         [Fact]
@@ -218,11 +194,11 @@ namespace SME.CDEP.TesteUnitario.Aplicacao.DTOS
         }
 
         [Fact]
-        public void DadoDiametroNulo_QuandoAtribuir_EntaoArmazena()
+        public void DadoDiametroVazio_QuandoAtribuir_EntaoArmazena()
         {
-            var dto = new AcervoArteGraficaDTO { Diametro = null };
+            var dto = new AcervoArteGraficaDTO { Diametro = string.Empty };
 
-            dto.Diametro.Should().BeNull();
+            dto.Diametro.Should().Be(string.Empty);
         }
 
         [Fact]
@@ -235,11 +211,11 @@ namespace SME.CDEP.TesteUnitario.Aplicacao.DTOS
         }
 
         [Fact]
-        public void DadoTecnicaNula_QuandoAtribuir_EntaoArmazena()
+        public void DadoTecnicaVazia_QuandoAtribuir_EntaoArmazena()
         {
-            var dto = new AcervoArteGraficaDTO { Tecnica = null };
+            var dto = new AcervoArteGraficaDTO { Tecnica = string.Empty };
 
-            dto.Tecnica.Should().BeNull();
+            dto.Tecnica.Should().Be(string.Empty);
         }
 
         [Fact]
@@ -608,7 +584,7 @@ namespace SME.CDEP.TesteUnitario.Aplicacao.DTOS
         }
 
         [Fact]
-        public void DadoMinimoDeCamposPreenchidos_QuandoCriar_EntaoOutrosCamposPermanecemNulos()
+        public void DadoMinimoDeCamposPreenchidos_QuandoCriar_EntaoOutrosCamposPermanecemVazios()
         {
             var dto = new AcervoArteGraficaDTO 
             { 
