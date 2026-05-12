@@ -101,7 +101,7 @@ namespace SME.CDEP.TesteUnitario.Aplicacao.DTOS
         public void DadoSubTituloNulo_QuandoAcessar_EntaoDeveRetornarNulo()
         {
             var dto = new AcervoBibliograficoDTO();
-            dto.SubTitulo = null;
+            dto.SubTitulo = null!;
 
             dto.SubTitulo.Should().BeNull();
         }
@@ -809,7 +809,7 @@ namespace SME.CDEP.TesteUnitario.Aplicacao.DTOS
 
         #region Métodos Auxiliares
 
-        private AcervoBibliograficoDTO GerarAcervoBibliograficoDtoCompleto()
+        private static AcervoBibliograficoDTO GerarAcervoBibliograficoDtoCompleto()
         {
             return new Faker<AcervoBibliograficoDTO>("pt_BR")
                 .RuleFor(x => x.Id, f => f.Random.Long(1, 1000))

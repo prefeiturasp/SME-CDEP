@@ -4,7 +4,7 @@ using SME.CDEP.Infra.Dominio.Enumerados;
 
 namespace SME.CDEP.TesteUnitario.Aplicacao.DTOS
 {
-    public class AcervoBibliograficoLinhaRetornoDTOTeste
+    public class AcervoBibliograficoLinhaRetornoDtoTeste
     {
         private AcervoBibliograficoLinhaRetornoDTO CriarAcervoBibliograficoLinhaRetornoDTO()
         {
@@ -533,8 +533,8 @@ namespace SME.CDEP.TesteUnitario.Aplicacao.DTOS
         {
             var dto = new AcervoBibliograficoLinhaRetornoDTO
             {
-                Mensagem = null,
-                ErrosCampos = null
+                Mensagem = null!,
+                ErrosCampos = null!
             };
 
             dto.Mensagem.Should().BeNull();

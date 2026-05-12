@@ -4,7 +4,7 @@ using SME.CDEP.Infra.Dominio.Enumerados;
 
 namespace SME.CDEP.TesteUnitario.Aplicacao.DTOS
 {
-    public class AcervoDocumentalLinhaDTOTeste
+    public class AcervoDocumentalLinhaDtoTeste
     {
         private AcervoDocumentalLinhaDTO CriarAcervoDocumentalLinhaCompleto()
         {
@@ -946,7 +946,7 @@ namespace SME.CDEP.TesteUnitario.Aplicacao.DTOS
             {
                 if (propriedade.PropertyType == typeof(LinhaConteudoAjustarDTO))
                 {
-                    var linhaConteudo = (LinhaConteudoAjustarDTO)propriedade.GetValue(dto);
+                    var linhaConteudo = (LinhaConteudoAjustarDTO)propriedade.GetValue(dto)!;
                     if (linhaConteudo != null)
                     {
                         linhaConteudo.PossuiErro = true;

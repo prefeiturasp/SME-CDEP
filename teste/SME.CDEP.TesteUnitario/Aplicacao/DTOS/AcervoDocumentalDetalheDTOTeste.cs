@@ -3,7 +3,7 @@ using SME.CDEP.Aplicacao.DTOS;
 
 namespace SME.CDEP.TesteUnitario.Aplicacao.DTOS
 {
-    public class AcervoDocumentalDetalheDTOTeste
+    public class AcervoDocumentalDetalheDtoTeste
     {
         private AcervoDocumentalDetalheDTO CriarAcervoDocumentalDetalheDTO()
         {
@@ -435,7 +435,7 @@ namespace SME.CDEP.TesteUnitario.Aplicacao.DTOS
             var dto = new AcervoDocumentalDetalheDTO();
             dto.Descricao = "Descrição";
 
-            dto.Descricao = null;
+            dto.Descricao = null!;
 
             dto.Descricao.Should().BeNull();
         }
@@ -446,7 +446,7 @@ namespace SME.CDEP.TesteUnitario.Aplicacao.DTOS
             var dto = new AcervoDocumentalDetalheDTO();
             dto.CreditosAutores = "Autor";
 
-            dto.CreditosAutores = null;
+            dto.CreditosAutores = null!;
 
             dto.CreditosAutores.Should().BeNull();
         }
@@ -457,7 +457,7 @@ namespace SME.CDEP.TesteUnitario.Aplicacao.DTOS
             var dto = new AcervoDocumentalDetalheDTO();
             dto.CodigoNovo = "COD-001";
 
-            dto.CodigoNovo = null;
+            dto.CodigoNovo = null!;
 
             dto.CodigoNovo.Should().BeNull();
         }
@@ -468,7 +468,7 @@ namespace SME.CDEP.TesteUnitario.Aplicacao.DTOS
             var dto = new AcervoDocumentalDetalheDTO();
             dto.Material = "Papel";
 
-            dto.Material = null;
+            dto.Material = null!;
 
             dto.Material.Should().BeNull();
         }
@@ -479,7 +479,7 @@ namespace SME.CDEP.TesteUnitario.Aplicacao.DTOS
             var dto = new AcervoDocumentalDetalheDTO();
             dto.Idioma = "Português";
 
-            dto.Idioma = null;
+            dto.Idioma = null!;
 
             dto.Idioma.Should().BeNull();
         }
@@ -490,7 +490,7 @@ namespace SME.CDEP.TesteUnitario.Aplicacao.DTOS
             var dto = new AcervoDocumentalDetalheDTO();
             dto.Volume = "Vol. 1";
 
-            dto.Volume = null;
+            dto.Volume = null!;
 
             dto.Volume.Should().BeNull();
         }
@@ -501,7 +501,7 @@ namespace SME.CDEP.TesteUnitario.Aplicacao.DTOS
             var dto = new AcervoDocumentalDetalheDTO();
             dto.TipoAnexo = "PDF";
 
-            dto.TipoAnexo = null;
+            dto.TipoAnexo = null!;
 
             dto.TipoAnexo.Should().BeNull();
         }
@@ -512,7 +512,7 @@ namespace SME.CDEP.TesteUnitario.Aplicacao.DTOS
             var dto = new AcervoDocumentalDetalheDTO();
             dto.Dimensoes = "21cm x 29.7cm";
 
-            dto.Dimensoes = null;
+            dto.Dimensoes = null!;
 
             dto.Dimensoes.Should().BeNull();
         }
@@ -523,7 +523,7 @@ namespace SME.CDEP.TesteUnitario.Aplicacao.DTOS
             var dto = new AcervoDocumentalDetalheDTO();
             dto.TamanhoArquivo = "5MB";
 
-            dto.TamanhoArquivo = null;
+            dto.TamanhoArquivo = null!;
 
             dto.TamanhoArquivo.Should().BeNull();
         }
@@ -534,7 +534,7 @@ namespace SME.CDEP.TesteUnitario.Aplicacao.DTOS
             var dto = new AcervoDocumentalDetalheDTO();
             dto.Localizacao = "Sala 101";
 
-            dto.Localizacao = null;
+            dto.Localizacao = null!;
 
             dto.Localizacao.Should().BeNull();
         }
@@ -545,7 +545,7 @@ namespace SME.CDEP.TesteUnitario.Aplicacao.DTOS
             var dto = new AcervoDocumentalDetalheDTO();
             dto.CopiaDigital = "Sim";
 
-            dto.CopiaDigital = null;
+            dto.CopiaDigital = null!;
 
             dto.CopiaDigital.Should().BeNull();
         }
@@ -556,7 +556,7 @@ namespace SME.CDEP.TesteUnitario.Aplicacao.DTOS
             var dto = new AcervoDocumentalDetalheDTO();
             dto.Conservacao = "Bom";
 
-            dto.Conservacao = null;
+            dto.Conservacao = null!;
 
             dto.Conservacao.Should().BeNull();
         }
@@ -567,7 +567,7 @@ namespace SME.CDEP.TesteUnitario.Aplicacao.DTOS
             var dto = new AcervoDocumentalDetalheDTO();
             dto.AcessosDocumentos = "Público";
 
-            dto.AcessosDocumentos = null;
+            dto.AcessosDocumentos = null!;
 
             dto.AcessosDocumentos.Should().BeNull();
         }
@@ -578,7 +578,7 @@ namespace SME.CDEP.TesteUnitario.Aplicacao.DTOS
             var dto = new AcervoDocumentalDetalheDTO();
             dto.Imagens = new[] { new ImagemDTO() };
 
-            dto.Imagens = null;
+            dto.Imagens = null!;
 
             dto.Imagens.Should().BeNull();
         }
@@ -1149,7 +1149,7 @@ namespace SME.CDEP.TesteUnitario.Aplicacao.DTOS
             var dto = new AcervoDocumentalDetalheDTO();
             var imagens = new[]
             {
-                new ImagemDTO { Original = null, Thumbnail = "https://exemplo.com/thumb.jpg" },
+                new ImagemDTO { Original = null!, Thumbnail = "https://exemplo.com/thumb.jpg" },
                 new ImagemDTO { Original = "https://exemplo.com/original.jpg", Thumbnail = null }
             };
 

@@ -4,7 +4,7 @@ using SME.CDEP.Dominio.Enumerados;
 
 namespace SME.CDEP.TesteUnitario.Aplicacao.DTOS
 {
-    public class AcervoDocumentalDTOTeste
+    public class AcervoDocumentalDtoTeste
     {
         private AcervoDocumentalDTO CriarAcervoDocumentalDTOCompleto()
         {
@@ -697,7 +697,7 @@ namespace SME.CDEP.TesteUnitario.Aplicacao.DTOS
             var dto = CriarAcervoDocumentalDTOCompleto();
 
             dto.Titulo = "Novo Título";
-            dto.Descricao = null;
+            dto.Descricao = null!;
             dto.Volume = "Vol. 2";
 
             dto.Titulo.Should().Be("Novo Título");

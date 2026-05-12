@@ -3,7 +3,7 @@ using SME.CDEP.Aplicacao.DTOS;
 
 namespace SME.CDEP.TesteUnitario.Aplicacao.DTOS
 {
-    public class AcervoDocumentalCadastroDTOTeste
+    public class AcervoDocumentalCadastroDtoTeste
     {
         private AcervoDocumentalCadastroDTO CriarAcervoDocumentalCadastroDTO()
         {
@@ -950,7 +950,7 @@ namespace SME.CDEP.TesteUnitario.Aplicacao.DTOS
             var dto = new AcervoDocumentalCadastroDTO();
             dto.AcessoDocumentosIds = new long[] { 1, 2, 3 };
 
-            dto.AcessoDocumentosIds = null;
+            dto.AcessoDocumentosIds = null!;
 
             dto.AcessoDocumentosIds.Should().BeNull();
         }

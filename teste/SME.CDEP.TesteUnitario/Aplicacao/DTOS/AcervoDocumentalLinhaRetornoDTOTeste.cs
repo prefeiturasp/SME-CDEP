@@ -4,7 +4,7 @@ using SME.CDEP.Infra.Dominio.Enumerados;
 
 namespace SME.CDEP.TesteUnitario.Aplicacao.DTOS
 {
-    public class AcervoDocumentalLinhaRetornoDTOTeste
+    public class AcervoDocumentalLinhaRetornoDtoTeste
     {
         private AcervoDocumentalLinhaRetornoDTO CriarAcervoDocumentalLinhaRetornoCompleto()
         {
@@ -13,7 +13,7 @@ namespace SME.CDEP.TesteUnitario.Aplicacao.DTOS
                 Status = ImportacaoStatus.Sucesso,
                 Mensagem = string.Empty,
                 NumeroLinha = 5,
-                ErrosCampos = null,
+                ErrosCampos = null!,
                 Titulo = new LinhaConteudoAjustarRetornoDTO
                 {
                     Conteudo = "Título do Documento",

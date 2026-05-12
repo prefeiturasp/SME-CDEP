@@ -4,7 +4,7 @@ using SME.CDEP.Dominio.Enumerados;
 
 namespace SME.CDEP.TesteUnitario.Aplicacao.DTOS
 {
-    public class AcervoArteGraficaDTOTeste
+    public class AcervoArteGraficaDtoTeste
     {
         #region Testes de Instanciação
 
@@ -469,7 +469,7 @@ namespace SME.CDEP.TesteUnitario.Aplicacao.DTOS
         [Fact]
         public void DadoCreditosAutoresIdsNulo_QuandoAtribuir_EntaoArmazena()
         {
-            var dto = new AcervoArteGraficaDTO { CreditosAutoresIds = null };
+            var dto = new AcervoArteGraficaDTO { CreditosAutoresIds = null! };
 
             dto.CreditosAutoresIds.Should().BeNull();
         }
@@ -496,7 +496,7 @@ namespace SME.CDEP.TesteUnitario.Aplicacao.DTOS
         [Fact]
         public void DadoAuditoriaNula_QuandoAtribuir_EntaoArmazena()
         {
-            var dto = new AcervoArteGraficaDTO { Auditoria = null };
+            var dto = new AcervoArteGraficaDTO { Auditoria = null! };
 
             dto.Auditoria.Should().BeNull();
         }

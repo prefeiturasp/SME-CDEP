@@ -4,7 +4,7 @@ using SME.CDEP.Dominio.Enumerados;
 
 namespace SME.CDEP.TesteUnitario.Aplicacao.DTOS
 {
-    public class AcervoDocumentalAlteracaoDTOTeste
+    public class AcervoDocumentalAlteracaoDtoTeste
     {
         private AcervoDocumentalAlteracaoDTO CriarAcervoDocumentalAlteracaoDTO()
         {
@@ -557,7 +557,7 @@ namespace SME.CDEP.TesteUnitario.Aplicacao.DTOS
             var dto = new AcervoDocumentalAlteracaoDTO();
             dto.Titulo = "Título";
 
-            dto.Titulo = null;
+            dto.Titulo = null!;
 
             dto.Titulo.Should().BeNull();
         }
@@ -568,7 +568,7 @@ namespace SME.CDEP.TesteUnitario.Aplicacao.DTOS
             var dto = new AcervoDocumentalAlteracaoDTO();
             dto.Ano = "2024";
 
-            dto.Ano = null;
+            dto.Ano = null!;
 
             dto.Ano.Should().BeNull();
         }
@@ -763,8 +763,6 @@ namespace SME.CDEP.TesteUnitario.Aplicacao.DTOS
         [Fact]
         public void DadoAcervoDocumentalAlteracao_QuandoVazioComValidacoes_EntaoValidacoesEstaoCorretas()
         {
-            var dto = new AcervoDocumentalAlteracaoDTO();
-
             var properties = typeof(AcervoDocumentalAlteracaoDTO).GetProperties();
             properties.Should().Contain(p => p.Name == "Id");
             properties.Should().Contain(p => p.Name == "AcervoId");

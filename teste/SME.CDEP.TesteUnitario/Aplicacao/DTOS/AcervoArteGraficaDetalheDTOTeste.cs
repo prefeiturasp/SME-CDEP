@@ -3,7 +3,7 @@ using SME.CDEP.Aplicacao.DTOS;
 
 namespace SME.CDEP.TesteUnitario.Aplicacao.DTOS
 {
-    public class AcervoArteGraficaDetalheDTOTeste
+    public class AcervoArteGraficaDetalheDtoTeste
     {
         #region Testes de Instanciação
 
@@ -349,7 +349,7 @@ namespace SME.CDEP.TesteUnitario.Aplicacao.DTOS
         {
             var imagens = new ImagemDTO[]
             {
-                new ImagemDTO { Original = "img1.jpg", Thumbnail = null }
+                new ImagemDTO { Original = "img1.jpg", Thumbnail = null! }
             };
 
             var dto = new AcervoArteGraficaDetalheDTO { Imagens = imagens };

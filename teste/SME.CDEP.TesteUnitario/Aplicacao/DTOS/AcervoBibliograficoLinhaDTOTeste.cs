@@ -4,7 +4,7 @@ using SME.CDEP.Infra.Dominio.Enumerados;
 
 namespace SME.CDEP.TesteUnitario.Aplicacao.DTOS
 {
-    public class AcervoBibliograficoLinhaDTOTeste
+    public class AcervoBibliograficoLinhaDtoTeste
     {
         private AcervoBibliograficoLinhaDTO CriarAcervoBibliograficoLinhaDTO()
         {
@@ -414,27 +414,27 @@ namespace SME.CDEP.TesteUnitario.Aplicacao.DTOS
         {
             var dto = new AcervoBibliograficoLinhaDTO
             {
-                Titulo = null,
-                SubTitulo = null,
-                Material = null,
-                Autor = null,
-                CoAutor = null,
-                TipoAutoria = null,
-                Editora = null,
-                Assunto = null,
-                Ano = null,
-                Edicao = null,
-                NumeroPaginas = null,
-                Altura = null,
-                Largura = null,
-                SerieColecao = null,
-                Volume = null,
-                Idioma = null,
-                LocalizacaoCDD = null,
-                LocalizacaoPHA = null,
-                NotasGerais = null,
-                Isbn = null,
-                Codigo = null,
+                Titulo = null!,
+                SubTitulo = null!,
+                Material = null!,
+                Autor = null!,
+                CoAutor = null!,
+                TipoAutoria = null!,
+                Editora = null!,
+                Assunto = null!,
+                Ano = null!,
+                Edicao = null!,
+                NumeroPaginas = null!,
+                Altura = null!,
+                Largura = null!,
+                SerieColecao = null!,
+                Volume = null!,
+                Idioma = null!,
+                LocalizacaoCDD = null!,
+                LocalizacaoPHA = null!,
+                NotasGerais = null!,
+                Isbn = null!,
+                Codigo = null!,
                 PossuiErros = true,
                 Mensagem = "Erro",
                 Status = ImportacaoStatus.Erros

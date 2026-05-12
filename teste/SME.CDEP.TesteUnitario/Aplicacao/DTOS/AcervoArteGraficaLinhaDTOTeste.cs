@@ -5,7 +5,7 @@ using Xunit;
 
 namespace SME.CDEP.TesteUnitario.Aplicacao.DTOS
 {
-    public class AcervoArteGraficaLinhaDTOTeste
+    public class AcervoArteGraficaLinhaDtoTeste
     {
         #region Testes de Instanciação
 
@@ -442,7 +442,7 @@ namespace SME.CDEP.TesteUnitario.Aplicacao.DTOS
             var dto = new AcervoArteGraficaLinhaDTO
             {
                 Titulo = titulo,
-                Codigo = null
+                Codigo = null!
             };
 
             var acao = () => dto.DefinirLinhaComoSucesso();
@@ -477,8 +477,6 @@ namespace SME.CDEP.TesteUnitario.Aplicacao.DTOS
         [Fact]
         public void DadoAcervoArteGraficaLinhaDTO_QuandoHerdarDeAcervoLinhaDTO_EntaoTemPropriedadesHerdadas()
         {
-            var dto = new AcervoArteGraficaLinhaDTO();
-
             typeof(AcervoArteGraficaLinhaDTO).BaseType.Should().Be(typeof(AcervoLinhaDTO));
         }
 
@@ -556,7 +554,7 @@ namespace SME.CDEP.TesteUnitario.Aplicacao.DTOS
             };
         }
 
-        private void VerificarTodasPropriedadesComoSucesso(AcervoArteGraficaLinhaDTO dto)
+        private static void VerificarTodasPropriedadesComoSucesso(AcervoArteGraficaLinhaDTO dto)
         {
             dto.Titulo.PossuiErro.Should().BeFalse();
             dto.Codigo.PossuiErro.Should().BeFalse();

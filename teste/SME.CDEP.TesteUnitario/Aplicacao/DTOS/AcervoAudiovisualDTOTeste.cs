@@ -4,12 +4,11 @@ using SME.CDEP.Dominio.Enumerados;
 
 namespace SME.CDEP.TesteUnitario.Aplicacao.DTOS
 {
-    public class AcervoAudiovisualDTOTeste
+    public class AcervoAudiovisualDtoTeste
     {
         [Fact(DisplayName = "AcervoAudiovisualDTO - Deve conter propriedade Id")]
         public void DadoDTOAcervoAudiovisual_QuandoCriar_EntaoContemPropriedadeId()
         {
-            var dto = new AcervoAudiovisualDTO();
 
             typeof(AcervoAudiovisualDTO).GetProperty("Id").Should().NotBeNull();
         }
@@ -613,7 +612,7 @@ namespace SME.CDEP.TesteUnitario.Aplicacao.DTOS
         {
             var dto = new AcervoAudiovisualDTO
             {
-                Auditoria = null
+                Auditoria = null!
             };
 
             dto.Auditoria.Should().BeNull();
@@ -624,7 +623,7 @@ namespace SME.CDEP.TesteUnitario.Aplicacao.DTOS
         {
             var dto = new AcervoAudiovisualDTO
             {
-                CreditosAutoresIds = null
+                CreditosAutoresIds = null!
             };
 
             dto.CreditosAutoresIds.Should().BeNull();

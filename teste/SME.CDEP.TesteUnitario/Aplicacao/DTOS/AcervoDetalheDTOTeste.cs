@@ -3,7 +3,7 @@ using SME.CDEP.Aplicacao.DTOS;
 
 namespace SME.CDEP.TesteUnitario.Aplicacao.DTOS
 {
-    public class AcervoDetalheDTOTeste
+    public class AcervoDetalheDtoTeste
     {
         private AcervoDetalheDTO CriarAcervoDetalheDTO()
         {
@@ -253,8 +253,6 @@ namespace SME.CDEP.TesteUnitario.Aplicacao.DTOS
         [Fact]
         public void DadoAcervoDetalhe_QuandoVazioComValidacoes_EntaoValidacoesEstaoCorretas()
         {
-            var dto = new AcervoDetalheDTO();
-
             var properties = typeof(AcervoDetalheDTO).GetProperties();
             properties.Should().Contain(p => p.Name == "Titulo");
             properties.Should().Contain(p => p.Name == "Codigo");
@@ -378,7 +376,7 @@ namespace SME.CDEP.TesteUnitario.Aplicacao.DTOS
         [Fact]
         public void DadoAcervoDetalhe_QuandoEnderecoImagemPadraoNulo_EntaoEnderecoImagemPadraoEhNulo()
         {
-            var dto = new AcervoDetalheDTO { EnderecoImagemPadrao = null };
+            var dto = new AcervoDetalheDTO { EnderecoImagemPadrao = null! };
 
             dto.EnderecoImagemPadrao.Should().BeNull();
         }
@@ -386,7 +384,7 @@ namespace SME.CDEP.TesteUnitario.Aplicacao.DTOS
         [Fact]
         public void DadoAcervoDetalhe_QuandoSituacaoDisponibilidadeNula_EntaoSituacaoDisponibilidadeEhNula()
         {
-            var dto = new AcervoDetalheDTO { SituacaoDisponibilidade = null };
+            var dto = new AcervoDetalheDTO { SituacaoDisponibilidade = null! };
 
             dto.SituacaoDisponibilidade.Should().BeNull();
         }
@@ -528,7 +526,7 @@ namespace SME.CDEP.TesteUnitario.Aplicacao.DTOS
             var dto = new AcervoDetalheDTO();
             dto.Titulo = "Título";
 
-            dto.Titulo = null;
+            dto.Titulo = null!;
 
             dto.Titulo.Should().BeNull();
         }
@@ -539,7 +537,7 @@ namespace SME.CDEP.TesteUnitario.Aplicacao.DTOS
             var dto = new AcervoDetalheDTO();
             dto.Codigo = "COD001";
 
-            dto.Codigo = null;
+            dto.Codigo = null!;
 
             dto.Codigo.Should().BeNull();
         }
@@ -550,7 +548,7 @@ namespace SME.CDEP.TesteUnitario.Aplicacao.DTOS
             var dto = new AcervoDetalheDTO();
             dto.Ano = "2024";
 
-            dto.Ano = null;
+            dto.Ano = null!;
 
             dto.Ano.Should().BeNull();
         }
@@ -561,7 +559,7 @@ namespace SME.CDEP.TesteUnitario.Aplicacao.DTOS
             var dto = new AcervoDetalheDTO();
             dto.EnderecoImagemPadrao = "https://exemplo.com/imagem.jpg";
 
-            dto.EnderecoImagemPadrao = null;
+            dto.EnderecoImagemPadrao = null!;
 
             dto.EnderecoImagemPadrao.Should().BeNull();
         }
@@ -572,7 +570,7 @@ namespace SME.CDEP.TesteUnitario.Aplicacao.DTOS
             var dto = new AcervoDetalheDTO();
             dto.SituacaoDisponibilidade = "Disponível";
 
-            dto.SituacaoDisponibilidade = null;
+            dto.SituacaoDisponibilidade = null!;
 
             dto.SituacaoDisponibilidade.Should().BeNull();
         }
