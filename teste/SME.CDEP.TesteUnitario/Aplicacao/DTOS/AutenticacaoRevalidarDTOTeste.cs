@@ -4,7 +4,7 @@ using System.ComponentModel.DataAnnotations;
 
 namespace SME.CDEP.TesteUnitario.Aplicacao.DTOS
 {
-    public class AutenticacaoRevalidarDTOTeste
+    public class AutenticacaoRevalidarDtoTeste
     {
         [Fact]
         public void DadoTokenValido_QuandoInstanciarDTO_EntaoPropriedadeArmazenaCorretamente()
@@ -33,7 +33,7 @@ namespace SME.CDEP.TesteUnitario.Aplicacao.DTOS
         [Fact]
         public void DadoTokenNulo_QuandoInstanciarDTO_EntaoPropriedadeTokenPermiteNulo()
         {
-            var dto = new AutenticacaoRevalidarDTO { Token = null };
+            var dto = new AutenticacaoRevalidarDTO { Token = null! };
 
             dto.Token.Should().BeNull();
         }
@@ -79,7 +79,7 @@ namespace SME.CDEP.TesteUnitario.Aplicacao.DTOS
         [Fact]
         public void DadoDTOComTokenNulo_QuandoAlterarParaValorValido_EntaoNovoTokenEhArmazenado()
         {
-            var dto = new AutenticacaoRevalidarDTO { Token = null };
+            var dto = new AutenticacaoRevalidarDTO { Token = null! };
             var novoToken = "token_novo_atribuido";
 
             dto.Token = novoToken;
@@ -163,7 +163,7 @@ namespace SME.CDEP.TesteUnitario.Aplicacao.DTOS
         {
             var dto = new AutenticacaoRevalidarDTO { Token = "token_original" };
 
-            dto.Token = null;
+            dto.Token = null!;
 
             dto.Token.Should().BeNull();
         }
@@ -264,7 +264,7 @@ namespace SME.CDEP.TesteUnitario.Aplicacao.DTOS
         [Fact]
         public void DadoDTOComTokenNuloEVazio_QuandoAlteracoes_EntaoPropriedadePermiteTransicoes()
         {
-            var dto = new AutenticacaoRevalidarDTO { Token = null };
+            var dto = new AutenticacaoRevalidarDTO { Token = null! };
 
             dto.Token.Should().BeNull();
 
@@ -274,7 +274,7 @@ namespace SME.CDEP.TesteUnitario.Aplicacao.DTOS
             dto.Token = "token_final";
             dto.Token.Should().Be("token_final");
 
-            dto.Token = null;
+            dto.Token = null!;
             dto.Token.Should().BeNull();
         }
 
@@ -292,7 +292,7 @@ namespace SME.CDEP.TesteUnitario.Aplicacao.DTOS
         [Fact]
         public void DadoAtributoRequired_QuandoVerificarMensagemDeErro_EntaoMensagemEhCorreta()
         {
-            var propriedade = typeof(AutenticacaoRevalidarDTO).GetProperty(nameof(AutenticacaoRevalidarDTO.Token));
+            var propriedade = typeof(AutenticacaoRevalidarDTO).GetProperty(nameof(AutenticacaoRevalidarDTO.Token))!;
             var atributoRequired = (RequiredAttribute)propriedade.GetCustomAttributes(typeof(RequiredAttribute), false)[0];
 
             atributoRequired.ErrorMessage.Should().Be("Informe o token para revalidar");
@@ -340,9 +340,12 @@ namespace SME.CDEP.TesteUnitario.Aplicacao.DTOS
         [Fact]
         public void DadoAutenticacaoRevalidarDTOComValor_QuandoInstanciarSemParametros_EntaoPropriedadeEhNula()
         {
+            // Arrange & Act
             var dto = new AutenticacaoRevalidarDTO();
 
-            dto.Token.Should().BeNull();
+            // Assert
+            dto.Token.Should().BeNull("ao instanciar sem parâmetros, Token deve ser nulo por padrão");
+            dto.Should().BeOfType<AutenticacaoRevalidarDTO>("a instância deve ser do tipo AutenticacaoRevalidarDTO");
         }
 
         [Fact]

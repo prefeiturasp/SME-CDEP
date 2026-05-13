@@ -3,7 +3,7 @@ using SME.CDEP.Aplicacao.DTOS;
 
 namespace SME.CDEP.TesteUnitario.Aplicacao.DTOS
 {
-    public class AcervoLinhaRetornoSucessoDTOTeste
+    public class AcervoLinhaRetornoSucessoDtoTeste
     {
         [Fact]
         public void DadoNumeroLinha_QuandoAssignar_EntaoRetornaValorAssignado()
@@ -70,7 +70,7 @@ namespace SME.CDEP.TesteUnitario.Aplicacao.DTOS
         {
             var dto = new AcervoLinhaRetornoSucessoDTO { Titulo = "Qualquer valor" };
 
-            dto.Titulo = null;
+            dto.Titulo = null!;
 
             dto.Titulo.Should().BeNull();
         }
@@ -80,7 +80,7 @@ namespace SME.CDEP.TesteUnitario.Aplicacao.DTOS
         {
             var dto = new AcervoLinhaRetornoSucessoDTO { Tombo = "2024.001.0001" };
 
-            dto.Tombo = null;
+            dto.Tombo = null!;
 
             dto.Tombo.Should().BeNull();
         }

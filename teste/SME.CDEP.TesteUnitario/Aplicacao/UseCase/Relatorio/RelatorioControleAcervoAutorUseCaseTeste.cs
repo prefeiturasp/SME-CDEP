@@ -12,10 +12,10 @@ namespace SME.CDEP.TesteUnitario.Aplicacao.UseCase.Relatorio
 {
     public class RelatorioControleAcervoAutorUseCaseTeste
     {
-        private Mock<IHttpClientFactory> mockHttpClientFactory;
-        private Mock<IServicoAcervo> mockServicoAcervo;
-        private Mock<IContextoAplicacao> mockContextoAplicacao;
-        private RelatorioControleAcervoAutorUseCase useCase;
+        private readonly Mock<IHttpClientFactory> mockHttpClientFactory;
+        private readonly Mock<IServicoAcervo> mockServicoAcervo;
+        private readonly Mock<IContextoAplicacao> mockContextoAplicacao;
+        private readonly RelatorioControleAcervoAutorUseCase useCase;
 
         public RelatorioControleAcervoAutorUseCaseTeste()
         {
@@ -196,7 +196,7 @@ namespace SME.CDEP.TesteUnitario.Aplicacao.UseCase.Relatorio
                 Times.Once(),
                 ItExpr.Is<HttpRequestMessage>(req =>
                     req.Method == HttpMethod.Post &&
-                    req.RequestUri.ToString().EndsWith("v1/cdep/controle-acervo-autor")),
+                    req.RequestUri!.ToString().EndsWith("v1/cdep/controle-acervo-autor")),
                 ItExpr.IsAny<CancellationToken>()
             );
         }
@@ -334,7 +334,7 @@ namespace SME.CDEP.TesteUnitario.Aplicacao.UseCase.Relatorio
                 Times.Once(),
                 ItExpr.Is<HttpRequestMessage>(req =>
                     req.Method == HttpMethod.Post &&
-                    req.RequestUri.ToString().EndsWith("v1/cdep/controle-acervo-autor")),
+                    req.RequestUri!.ToString().EndsWith("v1/cdep/controle-acervo-autor")),
                 ItExpr.IsAny<CancellationToken>()
             );
         }
@@ -456,7 +456,7 @@ namespace SME.CDEP.TesteUnitario.Aplicacao.UseCase.Relatorio
             await useCase.Executar(filtros);
 
             Assert.NotEmpty(conteudoCapturado);
-            var objetoSerializado = JsonConvert.DeserializeObject<dynamic>(conteudoCapturado);
+            var objetoSerializado = JsonConvert.DeserializeObject<dynamic>(conteudoCapturado)!;
             Assert.NotNull(objetoSerializado["Mensagem"]);
         }
 
@@ -569,7 +569,7 @@ namespace SME.CDEP.TesteUnitario.Aplicacao.UseCase.Relatorio
             );
         }
 
-        private Mock<HttpMessageHandler> CriarMockHttpMessageHandler(HttpResponseMessage response)
+        private static Mock<HttpMessageHandler> CriarMockHttpMessageHandler(HttpResponseMessage response)
         {
             var mockHandler = new Mock<HttpMessageHandler>();
             mockHandler

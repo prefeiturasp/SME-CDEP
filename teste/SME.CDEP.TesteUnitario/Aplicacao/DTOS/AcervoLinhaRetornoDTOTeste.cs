@@ -4,7 +4,7 @@ using SME.CDEP.Infra.Dominio.Enumerados;
 
 namespace SME.CDEP.TesteUnitario.Aplicacao.DTOS
 {
-    public class AcervoLinhaRetornoDTOTeste
+    public class AcervoLinhaRetornoDtoTeste
     {
         [Fact]
         public void DadoStatus_QuandoAssignar_EntaoRetornaValorAssignado()
@@ -87,7 +87,7 @@ namespace SME.CDEP.TesteUnitario.Aplicacao.DTOS
         {
             var dto = new AcervoLinhaRetornoDTO { Mensagem = "Mensagem anterior" };
 
-            dto.Mensagem = null;
+            dto.Mensagem = null!;
 
             dto.Mensagem.Should().BeNull();
         }
@@ -97,7 +97,7 @@ namespace SME.CDEP.TesteUnitario.Aplicacao.DTOS
         {
             var dto = new AcervoLinhaRetornoDTO { ErrosCampos = new[] { "Erro1" } };
 
-            dto.ErrosCampos = null;
+            dto.ErrosCampos = null!;
 
             dto.ErrosCampos.Should().BeNull();
         }
@@ -200,7 +200,7 @@ namespace SME.CDEP.TesteUnitario.Aplicacao.DTOS
                 Status = ImportacaoStatus.Pendente,
                 NumeroLinha = 1,
                 Mensagem = "Aguardando processamento",
-                ErrosCampos = null
+                ErrosCampos = null!
             };
 
             dto.Status.Should().Be(ImportacaoStatus.Pendente);

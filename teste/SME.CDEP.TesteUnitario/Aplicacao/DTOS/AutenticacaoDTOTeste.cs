@@ -3,7 +3,7 @@ using SME.CDEP.Aplicacao.DTOS;
 
 namespace SME.CDEP.TesteUnitario.Aplicacao.DTOS
 {
-    public class AutenticacaoDTOTeste
+    public class AutenticacaoDtoTeste
     {
         [Fact]
         public void DadoParametroValido_QuandoInstanciarDTO_EntaoTodasAsPropriedadesPodemSerAtribuidas()
@@ -35,7 +35,7 @@ namespace SME.CDEP.TesteUnitario.Aplicacao.DTOS
         [Fact]
         public void DadoLoginNulo_QuandoInstanciarDTO_EntaoPropriedadeLoginPermiteNulo()
         {
-            var dto = new AutenticacaoDTO { Login = null };
+            var dto = new AutenticacaoDTO { Login = null! };
 
             dto.Login.Should().BeNull();
         }
@@ -61,7 +61,7 @@ namespace SME.CDEP.TesteUnitario.Aplicacao.DTOS
         [Fact]
         public void DadoSenhaNula_QuandoInstanciarDTO_EntaoPropriedadeSenhaPermiteNula()
         {
-            var dto = new AutenticacaoDTO { Senha = null };
+            var dto = new AutenticacaoDTO { Senha = null! };
 
             dto.Senha.Should().BeNull();
         }
@@ -112,7 +112,7 @@ namespace SME.CDEP.TesteUnitario.Aplicacao.DTOS
         [Fact]
         public void DadoDTOComPropriedadesNulas_QuandoAlterarParaValoresValidos_EntaoPropriedadesArmazenamCorretamente()
         {
-            var dto = new AutenticacaoDTO { Login = null, Senha = null };
+            var dto = new AutenticacaoDTO { Login = null!, Senha = null! };
             var novoLogin = "usuario_novo";
             var novaSenha = "senha_nova";
 
@@ -325,8 +325,8 @@ namespace SME.CDEP.TesteUnitario.Aplicacao.DTOS
         {
             var dto = new AutenticacaoDTO { Login = "usuario", Senha = "senha" };
 
-            dto.Login = null;
-            dto.Senha = null;
+            dto.Login = null!;
+            dto.Senha = null!;
 
             dto.Login.Should().BeNull();
             dto.Senha.Should().BeNull();

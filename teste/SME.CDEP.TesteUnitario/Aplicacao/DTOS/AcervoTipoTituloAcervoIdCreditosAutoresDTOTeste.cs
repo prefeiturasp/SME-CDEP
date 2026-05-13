@@ -8,11 +8,11 @@ using SME.CDEP.Infra.Dominio.Enumerados;
 
 namespace SME.CDEP.TesteUnitario.Aplicacao.DTOS
 {
-    public class AcervoTipoTituloAcervoIdCreditosAutoresDTOTeste
+    public class AcervoTipoTituloAcervoIdCreditosAutoresDtoTeste
     {
         private readonly Faker faker;
 
-        public AcervoTipoTituloAcervoIdCreditosAutoresDTOTeste()
+        public AcervoTipoTituloAcervoIdCreditosAutoresDtoTeste()
         {
             faker = new Faker("pt_BR");
         }
@@ -250,7 +250,7 @@ namespace SME.CDEP.TesteUnitario.Aplicacao.DTOS
         {
             var dto = new AcervoTipoTituloAcervoIdCreditosAutoresDTO
             {
-                AutoresCreditos = null
+                AutoresCreditos = null!
             };
 
             dto.AutoresCreditos.Should().BeNull();
@@ -399,9 +399,9 @@ namespace SME.CDEP.TesteUnitario.Aplicacao.DTOS
             var dto = new AcervoTipoTituloAcervoIdCreditosAutoresDTO
             {
                 TipoAcervo = "Livro",
-                Titulo = null,
+                Titulo = null!,
                 SituacaoDisponibilidade = "Disponível",
-                AutoresCreditos = null
+                AutoresCreditos = null!
             };
 
             dto.TipoAcervo.Should().NotBeNull();
@@ -421,10 +421,10 @@ namespace SME.CDEP.TesteUnitario.Aplicacao.DTOS
                 AutoresCreditos = new[] { "Autor 1" }
             };
 
-            dto.TipoAcervo = null;
-            dto.Titulo = null;
-            dto.SituacaoDisponibilidade = null;
-            dto.AutoresCreditos = null;
+            dto.TipoAcervo = null!;
+            dto.Titulo = null!;
+            dto.SituacaoDisponibilidade = null!;
+            dto.AutoresCreditos = null!;
 
             dto.TipoAcervo.Should().BeNull();
             dto.Titulo.Should().BeNull();
@@ -602,7 +602,7 @@ namespace SME.CDEP.TesteUnitario.Aplicacao.DTOS
             dto.AutoresCreditos = autoresSet2;
             dto.AutoresCreditos.Should().BeEquivalentTo(autoresSet2);
 
-            dto.AutoresCreditos = null;
+            dto.AutoresCreditos = null!;
             dto.AutoresCreditos.Should().BeNull();
         }
 

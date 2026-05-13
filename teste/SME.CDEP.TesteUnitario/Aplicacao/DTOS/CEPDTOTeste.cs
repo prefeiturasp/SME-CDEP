@@ -4,11 +4,11 @@ using SME.CDEP.Aplicacao.DTOS;
 
 namespace SME.CDEP.TesteUnitario.Aplicacao.DTOS
 {
-    public class CEPDTOTeste
+    public class CEPDtoTeste
     {
         private readonly Faker<CEPDTO> faker;
 
-        public CEPDTOTeste()
+        public CEPDtoTeste()
         {
             faker = new Faker<CEPDTO>("pt_BR")
                 .RuleFor(x => x.Cep, f => f.Address.ZipCode("#####-###"))
@@ -154,7 +154,7 @@ namespace SME.CDEP.TesteUnitario.Aplicacao.DTOS
         {
             var dto = new CEPDTO
             {
-                Cep = null,
+                Cep = null!,
                 Logradouro = "Avenida Paulista",
                 Complemento = "Apt. 1000",
                 Bairro = "Bela Vista",
@@ -171,7 +171,7 @@ namespace SME.CDEP.TesteUnitario.Aplicacao.DTOS
             var dto = new CEPDTO
             {
                 Cep = "01310-100",
-                Logradouro = null,
+                Logradouro = null!,
                 Complemento = "Apt. 1000",
                 Bairro = "Bela Vista",
                 Localidade = "São Paulo",
@@ -188,7 +188,7 @@ namespace SME.CDEP.TesteUnitario.Aplicacao.DTOS
             {
                 Cep = "01310-100",
                 Logradouro = "Avenida Paulista",
-                Complemento = null,
+                Complemento = null!,
                 Bairro = "Bela Vista",
                 Localidade = "São Paulo",
                 UF = "SP"
@@ -205,7 +205,7 @@ namespace SME.CDEP.TesteUnitario.Aplicacao.DTOS
                 Cep = "01310-100",
                 Logradouro = "Avenida Paulista",
                 Complemento = "Apt. 1000",
-                Bairro = null,
+                Bairro = null!,
                 Localidade = "São Paulo",
                 UF = "SP"
             };
@@ -222,7 +222,7 @@ namespace SME.CDEP.TesteUnitario.Aplicacao.DTOS
                 Logradouro = "Avenida Paulista",
                 Complemento = "Apt. 1000",
                 Bairro = "Bela Vista",
-                Localidade = null,
+                Localidade = null!,
                 UF = "SP"
             };
 
@@ -239,7 +239,7 @@ namespace SME.CDEP.TesteUnitario.Aplicacao.DTOS
                 Complemento = "Apt. 1000",
                 Bairro = "Bela Vista",
                 Localidade = "São Paulo",
-                UF = null
+                UF = null!
             };
 
             dto.UF.Should().BeNull();

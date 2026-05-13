@@ -5,7 +5,7 @@ using SME.CDEP.Infra.Dominio.Enumerados;
 
 namespace SME.CDEP.TesteUnitario.Aplicacao.DTOS
 {
-    public class AcervoSolicitacaoItemDetalheResumidoDTOTeste
+    public class AcervoSolicitacaoItemDetalheResumidoDtoTeste
     {
         #region Testes de Propriedade Id
 
@@ -82,7 +82,7 @@ namespace SME.CDEP.TesteUnitario.Aplicacao.DTOS
         {
             var dto = new AcervoSolicitacaoItemDetalheResumidoDTO { Codigo = "ACE-001" };
 
-            dto.Codigo = null;
+            dto.Codigo = null!;
 
             dto.Codigo.Should().BeNull();
         }
@@ -129,7 +129,7 @@ namespace SME.CDEP.TesteUnitario.Aplicacao.DTOS
         {
             var dto = new AcervoSolicitacaoItemDetalheResumidoDTO { TipoAcervo = "Livro" };
 
-            dto.TipoAcervo = null;
+            dto.TipoAcervo = null!;
 
             dto.TipoAcervo.Should().BeNull();
         }
@@ -177,7 +177,7 @@ namespace SME.CDEP.TesteUnitario.Aplicacao.DTOS
         {
             var dto = new AcervoSolicitacaoItemDetalheResumidoDTO { Titulo = "O Cortiço" };
 
-            dto.Titulo = null;
+            dto.Titulo = null!;
 
             dto.Titulo.Should().BeNull();
         }
@@ -224,7 +224,7 @@ namespace SME.CDEP.TesteUnitario.Aplicacao.DTOS
         {
             var dto = new AcervoSolicitacaoItemDetalheResumidoDTO { Situacao = "Aguardando" };
 
-            dto.Situacao = null;
+            dto.Situacao = null!;
 
             dto.Situacao.Should().BeNull();
         }
@@ -366,7 +366,7 @@ namespace SME.CDEP.TesteUnitario.Aplicacao.DTOS
         {
             var dto = new AcervoSolicitacaoItemDetalheResumidoDTO { DataVisitaFormatada = "15/05/2024" };
 
-            dto.DataVisitaFormatada = null;
+            dto.DataVisitaFormatada = null!;
 
             dto.DataVisitaFormatada.Should().BeNull();
         }
@@ -623,7 +623,7 @@ namespace SME.CDEP.TesteUnitario.Aplicacao.DTOS
         {
             var dto = new AcervoSolicitacaoItemDetalheResumidoDTO { DataEmprestimoFormatada = "15/05/2024" };
 
-            dto.DataEmprestimoFormatada = null;
+            dto.DataEmprestimoFormatada = null!;
 
             dto.DataEmprestimoFormatada.Should().BeNull();
         }
@@ -716,7 +716,7 @@ namespace SME.CDEP.TesteUnitario.Aplicacao.DTOS
         {
             var dto = new AcervoSolicitacaoItemDetalheResumidoDTO { DataDevolucaoFormatada = "15/05/2024" };
 
-            dto.DataDevolucaoFormatada = null;
+            dto.DataDevolucaoFormatada = null!;
 
             dto.DataDevolucaoFormatada.Should().BeNull();
         }
@@ -807,7 +807,7 @@ namespace SME.CDEP.TesteUnitario.Aplicacao.DTOS
         {
             var dto = new AcervoSolicitacaoItemDetalheResumidoDTO { SituacaoDisponibilidade = "Disponível" };
 
-            dto.SituacaoDisponibilidade = null;
+            dto.SituacaoDisponibilidade = null!;
 
             dto.SituacaoDisponibilidade.Should().BeNull();
         }

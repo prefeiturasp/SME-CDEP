@@ -5,11 +5,11 @@ using SME.CDEP.Dominio.Enumerados;
 
 namespace SME.CDEP.TesteUnitario.Aplicacao.DTOS
 {
-    public class AcervoTridimensionalCadastroDTOTeste
+    public class AcervoTridimensionalCadastroDtoTeste
     {
         private readonly Faker faker;
 
-        public AcervoTridimensionalCadastroDTOTeste()
+        public AcervoTridimensionalCadastroDtoTeste()
         {
             faker = new Faker("pt_BR");
         }
@@ -131,7 +131,7 @@ namespace SME.CDEP.TesteUnitario.Aplicacao.DTOS
         {
             var dto = new AcervoTridimensionalCadastroDTO
             {
-                Procedencia = null
+                Procedencia = null!
             };
 
             dto.Procedencia.Should().BeNull();
@@ -829,17 +829,17 @@ namespace SME.CDEP.TesteUnitario.Aplicacao.DTOS
                 Diametro = faker.Random.Double(0.01, 100).ToString()
             };
 
-            dto.Titulo = null;
-            dto.Descricao = null;
-            dto.Codigo = null;
-            dto.CodigoNovo = null;
-            dto.SubTitulo = null;
-            dto.DataAcervo = null;
-            dto.Procedencia = null;
-            dto.Largura = null;
-            dto.Altura = null;
-            dto.Profundidade = null;
-            dto.Diametro = null;
+            dto.Titulo = null!;
+            dto.Descricao = null!;
+            dto.Codigo = null!;
+            dto.CodigoNovo = null!;
+            dto.SubTitulo = null!;
+            dto.DataAcervo = null!;
+            dto.Procedencia = null!;
+            dto.Largura = null!;
+            dto.Altura = null!;
+            dto.Profundidade = null!;
+            dto.Diametro = null!;
 
             dto.Titulo.Should().BeNull();
             dto.Descricao.Should().BeNull();

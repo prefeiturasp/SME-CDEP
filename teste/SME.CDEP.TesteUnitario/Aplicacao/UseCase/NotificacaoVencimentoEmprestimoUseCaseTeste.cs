@@ -77,7 +77,7 @@ namespace SME.CDEP.TesteUnitario.Aplicacao.UseCase
         [Fact]
         public async Task DadoMensagemRabbitComMensagemNula_QuandoExecutar_EntaoChamaServicoERetornaVerdadeiro()
         {
-            var mensagemRabbit = new MensagemRabbit { Mensagem = null };
+            var mensagemRabbit = new MensagemRabbit { Mensagem = null! };
 
             servicoAcervoEmprestimoMock
                 .Setup(s => s.NotificarVencimentoEmprestimo())

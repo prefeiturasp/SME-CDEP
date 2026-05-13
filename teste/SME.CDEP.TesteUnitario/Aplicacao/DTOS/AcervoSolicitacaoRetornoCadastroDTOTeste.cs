@@ -4,11 +4,11 @@ using SME.CDEP.Aplicacao.DTOS;
 
 namespace SME.CDEP.TesteUnitario.Aplicacao.DTOS
 {
-    public class AcervoSolicitacaoRetornoCadastroDTOTeste
+    public class AcervoSolicitacaoRetornoCadastroDtoTeste
     {
         private readonly Faker faker;
 
-        public AcervoSolicitacaoRetornoCadastroDTOTeste()
+        public AcervoSolicitacaoRetornoCadastroDtoTeste()
         {
             faker = new Faker("pt_BR");
         }
@@ -117,7 +117,7 @@ namespace SME.CDEP.TesteUnitario.Aplicacao.DTOS
         {
             var dto = new AcervoSolicitacaoRetornoCadastroDTO
             {
-                Itens = null
+                Itens = null!
             };
 
             dto.Itens.Should().BeNull();
@@ -290,7 +290,7 @@ namespace SME.CDEP.TesteUnitario.Aplicacao.DTOS
 
             dto.Itens.Should().NotBeNull();
 
-            dto.Itens = null;
+            dto.Itens = null!;
 
             dto.Itens.Should().BeNull();
         }

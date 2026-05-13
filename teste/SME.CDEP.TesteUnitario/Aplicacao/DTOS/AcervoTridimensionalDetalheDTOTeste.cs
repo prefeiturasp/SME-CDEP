@@ -4,11 +4,11 @@ using SME.CDEP.Aplicacao.DTOS;
 
 namespace SME.CDEP.TesteUnitario.Aplicacao.DTOS
 {
-    public class AcervoTridimensionalDetalheDTOTeste
+    public class AcervoTridimensionalDetalheDtoTeste
     {
         private readonly Faker faker;
 
-        public AcervoTridimensionalDetalheDTOTeste()
+        public AcervoTridimensionalDetalheDtoTeste()
         {
             faker = new Faker("pt_BR");
         }
@@ -131,7 +131,7 @@ namespace SME.CDEP.TesteUnitario.Aplicacao.DTOS
         {
             var dto = new AcervoTridimensionalDetalheDTO
             {
-                Descricao = null
+                Descricao = null!
             };
 
             dto.Descricao.Should().BeNull();
@@ -208,7 +208,7 @@ namespace SME.CDEP.TesteUnitario.Aplicacao.DTOS
         {
             var dto = new AcervoTridimensionalDetalheDTO
             {
-                DataAcervo = null
+                DataAcervo = null!
             };
 
             dto.DataAcervo.Should().BeNull();
@@ -294,7 +294,7 @@ namespace SME.CDEP.TesteUnitario.Aplicacao.DTOS
         {
             var dto = new AcervoTridimensionalDetalheDTO
             {
-                Procedencia = null
+                Procedencia = null!
             };
 
             dto.Procedencia.Should().BeNull();
@@ -382,7 +382,7 @@ namespace SME.CDEP.TesteUnitario.Aplicacao.DTOS
         {
             var dto = new AcervoTridimensionalDetalheDTO
             {
-                Conservacao = null
+                Conservacao = null!
             };
 
             dto.Conservacao.Should().BeNull();
@@ -525,7 +525,7 @@ namespace SME.CDEP.TesteUnitario.Aplicacao.DTOS
         {
             var dto = new AcervoTridimensionalDetalheDTO
             {
-                Dimensoes = null
+                Dimensoes = null!
             };
 
             dto.Dimensoes.Should().BeNull();
@@ -611,7 +611,7 @@ namespace SME.CDEP.TesteUnitario.Aplicacao.DTOS
         {
             var dto = new AcervoTridimensionalDetalheDTO
             {
-                Imagens = null
+                Imagens = null!
             };
 
             dto.Imagens.Should().BeNull();
@@ -717,7 +717,7 @@ namespace SME.CDEP.TesteUnitario.Aplicacao.DTOS
         {
             var imagens = new[]
             {
-                new ImagemDTO { Original = null, Thumbnail = null }
+                new ImagemDTO { Original = null!, Thumbnail = null! }
             };
 
             var dto = new AcervoTridimensionalDetalheDTO
@@ -971,15 +971,15 @@ namespace SME.CDEP.TesteUnitario.Aplicacao.DTOS
             var dto = new AcervoTridimensionalDetalheDTO
             {
                 Titulo = faker.Lorem.Sentence(),
-                Codigo = null,
+                Codigo = null!,
                 Ano = faker.Date.Recent().Year.ToString(),
-                EnderecoImagemPadrao = null,
+                EnderecoImagemPadrao = null!,
                 Descricao = faker.Lorem.Paragraphs(1),
-                DataAcervo = null,
+                DataAcervo = null!,
                 Procedencia = faker.Lorem.Word(),
-                Conservacao = null,
+                Conservacao = null!,
                 Dimensoes = faker.Random.Double(0.01, 100).ToString(),
-                Imagens = null
+                Imagens = null!
             };
 
             dto.Titulo.Should().NotBeNull();
@@ -1011,17 +1011,16 @@ namespace SME.CDEP.TesteUnitario.Aplicacao.DTOS
                 Dimensoes = faker.Random.Double(0.01, 100).ToString()
             };
 
-            dto.Titulo = null;
-            dto.Codigo = null;
-            dto.Ano = null;
-            dto.EnderecoImagemPadrao = null;
-            dto.SituacaoDisponibilidade = null;
-            dto.Descricao = null;
-            dto.DataAcervo = null;
-            dto.Procedencia = null;
-            dto.Conservacao = null;
-            dto.Dimensoes = null;
-
+            dto.Titulo = null!;
+            dto.Codigo = null!;
+            dto.Ano = null!;
+            dto.EnderecoImagemPadrao = null!;
+            dto.SituacaoDisponibilidade = null!;
+            dto.Descricao = null!;
+            dto.DataAcervo = null!;
+            dto.Procedencia = null!;
+            dto.Conservacao = null!;
+            dto.Dimensoes = null!;
             dto.Titulo.Should().BeNull();
             dto.Codigo.Should().BeNull();
             dto.Ano.Should().BeNull();

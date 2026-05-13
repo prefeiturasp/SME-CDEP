@@ -5,7 +5,7 @@ using SME.CDEP.Infra.Dominio.Enumerados;
 
 namespace SME.CDEP.TesteUnitario.Aplicacao.DTOS
 {
-    public class AcervoSolicitacaoDetalheDTOTeste
+    public class AcervoSolicitacaoDetalheDtoTeste
     {
         #region Testes de Propriedade DadosSolicitante
 
@@ -33,7 +33,7 @@ namespace SME.CDEP.TesteUnitario.Aplicacao.DTOS
         {
             var dto = new AcervoSolicitacaoDetalheDTO { DadosSolicitante = new DadosSolicitanteDto { Nome = "Teste" } };
 
-            dto.DadosSolicitante = null;
+            dto.DadosSolicitante = null!;
 
             dto.DadosSolicitante.Should().BeNull();
         }
@@ -201,7 +201,7 @@ namespace SME.CDEP.TesteUnitario.Aplicacao.DTOS
         {
             var dto = new AcervoSolicitacaoDetalheDTO { DataSolicitacaoFormatado = "15/05/2024" };
 
-            dto.DataSolicitacaoFormatado = null;
+            dto.DataSolicitacaoFormatado = null!;
 
             dto.DataSolicitacaoFormatado.Should().BeNull();
         }
@@ -247,7 +247,7 @@ namespace SME.CDEP.TesteUnitario.Aplicacao.DTOS
         {
             var dto = new AcervoSolicitacaoDetalheDTO { Situacao = "Aguardando" };
 
-            dto.Situacao = null;
+            dto.Situacao = null!;
 
             dto.Situacao.Should().BeNull();
         }

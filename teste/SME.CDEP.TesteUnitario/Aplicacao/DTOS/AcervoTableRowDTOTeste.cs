@@ -5,11 +5,11 @@ using SME.CDEP.Infra.Dominio.Enumerados;
 
 namespace SME.CDEP.TesteUnitario.Aplicacao.DTOS
 {
-    public class AcervoTableRowDTOTeste
+    public class AcervoTableRowDtoTeste
     {
         private readonly Faker faker;
 
-        public AcervoTableRowDTOTeste()
+        public AcervoTableRowDtoTeste()
         {
             faker = new Faker("pt_BR");
         }
@@ -600,9 +600,9 @@ namespace SME.CDEP.TesteUnitario.Aplicacao.DTOS
             var dto = new AcervoTableRowDTO
             {
                 TipoAcervo = "Livro",
-                Titulo = null,
+                Titulo = null!,
                 CreditoAutoria = "Autor",
-                Codigo = null,
+                Codigo = null!,
                 CapaDocumento = "http://example.com/capa.jpg"
             };
 
@@ -627,13 +627,13 @@ namespace SME.CDEP.TesteUnitario.Aplicacao.DTOS
                 Editora = "Editora"
             };
 
-            dto.TipoAcervo = null;
-            dto.Titulo = null;
-            dto.CreditoAutoria = null;
-            dto.Codigo = null;
-            dto.Data = null;
-            dto.CapaDocumento = null;
-            dto.Editora = null;
+            dto.TipoAcervo = null!;
+            dto.Titulo = null!;
+            dto.CreditoAutoria = null!;
+            dto.Codigo = null!;
+            dto.Data = null!;
+            dto.CapaDocumento = null!;
+            dto.Editora = null!;
 
             dto.TipoAcervo.Should().BeNull();
             dto.Titulo.Should().BeNull();

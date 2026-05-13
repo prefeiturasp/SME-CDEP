@@ -4,7 +4,7 @@ using SME.CDEP.Aplicacao.DTOS;
 
 namespace SME.CDEP.TesteUnitario.Aplicacao.DTOS
 {
-    public class CreditoAutorDTOTeste
+    public class CreditoAutorDtoTeste
     {
         [Fact]
         public void DadoDTOValido_QuandoCriar_EntaoDevePossuirNomeProperty()
@@ -39,7 +39,7 @@ namespace SME.CDEP.TesteUnitario.Aplicacao.DTOS
         public void DadoDTOComNomeNulo_QuandoVerificar_EntaoNomeDeveSerNulo()
         {
             var dto = new CreditoAutorDTO();
-            dto.nome = null;
+            dto.nome = null!;
 
             dto.nome.Should().BeNull();
         }

@@ -5,7 +5,7 @@ using SME.CDEP.Infra.Dominio.Enumerados;
 
 namespace SME.CDEP.TesteUnitario.Aplicacao.DTOS
 {
-    public class AcervoTridimensionalLinhaDTOTeste
+    public class AcervoTridimensionalLinhaDtoTeste
     {
         [Fact]
         public void DadoAcervoTridimensionalLinhaDTO_QuandoInstanciar_EntaoTodasAsPropriedadesSaoInicializadasCorretamente()
@@ -206,17 +206,17 @@ namespace SME.CDEP.TesteUnitario.Aplicacao.DTOS
                 PossuiErros = true,
                 Mensagem = "Erro anterior",
                 Status = ImportacaoStatus.Erros,
-                Titulo = null,
-                Codigo = null,
-                Procedencia = null,
-                EstadoConservacao = null,
-                Descricao = null,
-                Quantidade = null,
-                Altura = null,
-                Largura = null,
-                Profundidade = null,
-                Diametro = null,
-                Ano = null
+                Titulo = null!,
+                Codigo = null!,
+                Procedencia = null!,
+                EstadoConservacao = null!,
+                Descricao = null!,
+                Quantidade = null!,
+                Altura = null!,
+                Largura = null!,
+                Profundidade = null!,
+                Diametro = null!,
+                Ano = null!
             };
 
             var action = () => dto.DefinirLinhaComoSucesso();
@@ -250,17 +250,17 @@ namespace SME.CDEP.TesteUnitario.Aplicacao.DTOS
         {
             var dto = new AcervoTridimensionalLinhaDTO();
 
-            dto.Titulo = null;
-            dto.Codigo = null;
-            dto.Procedencia = null;
-            dto.EstadoConservacao = null;
-            dto.Quantidade = null;
-            dto.Descricao = null;
-            dto.Largura = null;
-            dto.Altura = null;
-            dto.Profundidade = null;
-            dto.Diametro = null;
-            dto.Ano = null;
+            dto.Titulo = null!;
+            dto.Codigo = null!;
+            dto.Procedencia = null!;
+            dto.EstadoConservacao = null!;
+            dto.Quantidade = null!;
+            dto.Descricao = null!;
+            dto.Largura = null!;
+            dto.Altura = null!;
+            dto.Profundidade = null!;
+            dto.Diametro = null!;
+            dto.Ano = null!;
 
             dto.Titulo.Should().BeNull();
             dto.Codigo.Should().BeNull();

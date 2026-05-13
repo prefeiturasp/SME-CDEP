@@ -4,7 +4,7 @@ using SME.CDEP.Aplicacao.DTOS;
 
 namespace SME.CDEP.TesteUnitario.Aplicacao.DTOS
 {
-    public class EmailUsuarioDTOTeste
+    public class EmailUsuarioDtoTeste
     {
         [Fact]
         public void DadoDTOValido_QuandoCriar_EntaoDevePossuirPropriedades()
@@ -31,7 +31,7 @@ namespace SME.CDEP.TesteUnitario.Aplicacao.DTOS
         {
             var dto = new EmailUsuarioDTO();
 
-            dto.Email = null;
+            dto.Email = null!;
 
             dto.Email.Should().BeNull();
         }
@@ -404,10 +404,10 @@ namespace SME.CDEP.TesteUnitario.Aplicacao.DTOS
         public void DadoDTOComEmailNull_QuandoAlterar_EntaoDeveMantidoNull()
         {
             var dto = new EmailUsuarioDTO();
-            dto.Email = null;
+            dto.Email = null!;
             var emailAnterior = dto.Email;
 
-            dto.Email = null;
+            dto.Email = null!;
 
             dto.Email.Should().Be(emailAnterior);
             dto.Email.Should().BeNull();

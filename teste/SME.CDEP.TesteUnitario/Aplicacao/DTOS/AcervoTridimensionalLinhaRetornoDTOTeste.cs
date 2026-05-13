@@ -4,7 +4,7 @@ using SME.CDEP.Aplicacao.DTOS;
 
 namespace SME.CDEP.TesteUnitario.Aplicacao.DTOS
 {
-    public class AcervoTridimensionalLinhaRetornoDTOTeste
+    public class AcervoTridimensionalLinhaRetornoDtoTeste
     {
         [Fact]
         public void DadoAcervoTridimensionalLinhaRetornoDTO_QuandoInstanciar_EntaoTodasAsPropriedadesSaoInicializadasCorretamente()
@@ -166,18 +166,18 @@ namespace SME.CDEP.TesteUnitario.Aplicacao.DTOS
         {
             var dto = new AcervoTridimensionalLinhaRetornoDTO();
 
-            dto.Titulo = null;
-            dto.Codigo = null;
-            dto.Procedencia = null;
-            dto.DataAcervo = null;
-            dto.ConservacaoId = null;
-            dto.Quantidade = null;
-            dto.Descricao = null;
-            dto.Largura = null;
-            dto.Altura = null;
-            dto.Profundidade = null;
-            dto.Diametro = null;
-            dto.Ano = null;
+            dto.Titulo = null!;
+            dto.Codigo = null!;
+            dto.Procedencia = null!;
+            dto.DataAcervo = null!;
+            dto.ConservacaoId = null!;
+            dto.Quantidade = null!;
+            dto.Descricao = null!;
+            dto.Largura = null!;
+            dto.Altura = null!;
+            dto.Profundidade = null!;
+            dto.Diametro = null!;
+            dto.Ano = null!;
 
             dto.Titulo.Should().BeNull();
             dto.Codigo.Should().BeNull();
@@ -286,7 +286,7 @@ namespace SME.CDEP.TesteUnitario.Aplicacao.DTOS
             };
 
             dto.Should().BeOfType<AcervoTridimensionalLinhaRetornoDTO>();
-            (dto as AcervoTridimensionalLinhaRetornoDTO).Should().NotBeNull();
+            (dto).Should().NotBeNull();
         }
 
         [Fact]

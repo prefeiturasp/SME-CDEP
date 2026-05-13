@@ -184,9 +184,8 @@ namespace SME.CDEP.TesteUnitario.Aplicacao.DTOS
             var dto = new DadosSolicitanteDto();
             dto.Endereco = "Avenida Paulista";
             var numero = "1578";
-            string complemento = null;
-            string estado = null;
-            string cep = null;
+            string complemento = null!;
+            string estado = null!;
             var cidade = "São Paulo";
 
             var resultado = dto.ObterEnderecoCompleto(numero, complemento, estado, null, cidade);
@@ -199,11 +198,11 @@ namespace SME.CDEP.TesteUnitario.Aplicacao.DTOS
         {
             var dto = new DadosSolicitanteDto();
             dto.Endereco = "Rua Principal";
-            string numero = null;
-            string complemento = null;
-            string cidade = null;
-            string estado = null;
-            string cep = null;
+            string numero = null!;
+            string complemento = null!;
+            string cidade = null!;
+            string estado = null!;
+            string cep = null!;
 
             var resultado = dto.ObterEnderecoCompleto(numero, complemento, cidade, estado, cep);
 
@@ -217,9 +216,9 @@ namespace SME.CDEP.TesteUnitario.Aplicacao.DTOS
             dto.Endereco = "Rua das Acácias";
             var numero = "999";
             var complemento = "Casa 2";
-            string cidade = null;
-            string estado = null;
-            string cep = null;
+            string cidade = null!;
+            string estado = null!;
+            string cep = null!;
 
             var resultado = dto.ObterEnderecoCompleto(numero, complemento, cidade, estado, cep);
 
@@ -232,10 +231,10 @@ namespace SME.CDEP.TesteUnitario.Aplicacao.DTOS
             var dto = new DadosSolicitanteDto();
             dto.Endereco = "Rua do Comércio";
             var numero = "50";
-            string complemento = null;
+            string complemento = null!;
             var cidade = "Rio de Janeiro";
             var estado = "RJ";
-            string cep = null;
+            string cep = null!;
 
             var resultado = dto.ObterEnderecoCompleto(numero, complemento, cidade, estado, cep);
 
@@ -265,9 +264,9 @@ namespace SME.CDEP.TesteUnitario.Aplicacao.DTOS
             dto.Endereco = "Rua do Teste";
             var numero = "";
             var complemento = "Sala 1";
-            string cidade = null;
-            string estado = null;
-            string cep = null;
+            string cidade = null!;
+            string estado = null!;
+            string cep = null!;
 
             var resultado = dto.ObterEnderecoCompleto(numero, complemento, cidade, estado, cep);
 
@@ -280,10 +279,10 @@ namespace SME.CDEP.TesteUnitario.Aplicacao.DTOS
             var dto = new DadosSolicitanteDto();
             dto.Endereco = "Rua da Esperança";
             var numero = "   ";
-            string complemento = null;
+            string complemento = null!;
             var cidade = "Salvador";
-            string estado = null;
-            string cep = null;
+            string estado = null!;
+            string cep = null!;
 
             var resultado = dto.ObterEnderecoCompleto(numero, complemento, cidade, estado, cep);
 
@@ -297,9 +296,9 @@ namespace SME.CDEP.TesteUnitario.Aplicacao.DTOS
             dto.Endereco = "Rua Teste";
             var numero = "100";
             var complemento = "";
-            string cidade = null;
-            string estado = null;
-            string cep = null;
+            string cidade = null!;
+            string estado = null!;
+            string cep = null!;
 
             var resultado = dto.ObterEnderecoCompleto(numero, complemento, cidade, estado, cep);
 
@@ -315,7 +314,7 @@ namespace SME.CDEP.TesteUnitario.Aplicacao.DTOS
             var complemento = "Loja B";
             var cidade = "";
             var estado = "MG";
-            string cep = null;
+            string cep = null!;
 
             var resultado = dto.ObterEnderecoCompleto(numero, complemento, cidade, estado, cep);
 
@@ -328,7 +327,7 @@ namespace SME.CDEP.TesteUnitario.Aplicacao.DTOS
             var dto = new DadosSolicitanteDto();
             dto.Endereco = "Rua Modelo";
             var numero = "300";
-            string complemento = null;
+            string complemento = null!;
             var cidade = "Curitiba";
             var estado = "";
             var cep = "80000-000";
