@@ -5,7 +5,7 @@ using SME.CDEP.Infra.Dominio.Enumerados;
 
 namespace SME.CDEP.TesteUnitario.Aplicacao.DTOS
 {
-    public class ArquivoDTOTeste
+    public class ArquivoDtoTeste
     {
         [Fact]
         public void DadoArquivoDTO_QuandoInstanciar_EntaoTodasAsPropriedadesSaoInicializadasCorretamente()
@@ -14,7 +14,7 @@ namespace SME.CDEP.TesteUnitario.Aplicacao.DTOS
 
             dto.Should().NotBeNull();
             dto.Nome.Should().BeNull();
-            dto.Codigo.Should().Be(default(Guid));
+            dto.Codigo.Should().Be(Guid.Empty);
             dto.TipoConteudo.Should().BeNull();
             dto.Tipo.Should().Be(default(TipoArquivo));
             dto.Id.Should().Be(0);
@@ -91,11 +91,11 @@ namespace SME.CDEP.TesteUnitario.Aplicacao.DTOS
         [InlineData(null)]
         [InlineData("")]
         [InlineData(" ")]
-        public void DadoValoresNulosOuVazios_QuandoAtribuirNome_EntaoOsValoresSaoArmazenadosCorretamente(string valor)
+        public void DadoValoresNulosOuVazios_QuandoAtribuirNome_EntaoOsValoresSaoArmazenadosCorretamente(string? valor)
         {
             var dto = new ArquivoDTO();
 
-            dto.Nome = valor;
+            dto.Nome = valor!;
 
             dto.Nome.Should().Be(valor);
         }
@@ -132,11 +132,11 @@ namespace SME.CDEP.TesteUnitario.Aplicacao.DTOS
         [InlineData(null)]
         [InlineData("")]
         [InlineData(" ")]
-        public void DadoValoresNulosOuVazios_QuandoAtribuirTipoConteudo_EntaoOsValoresSaoArmazenadosCorretamente(string valor)
+        public void DadoValoresNulosOuVazios_QuandoAtribuirTipoConteudo_EntaoOsValoresSaoArmazenadosCorretamente(string? valor)
         {
             var dto = new ArquivoDTO();
 
-            dto.TipoConteudo = valor;
+            dto.TipoConteudo = valor!;
 
             dto.TipoConteudo.Should().Be(valor);
         }

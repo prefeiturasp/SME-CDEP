@@ -4,7 +4,7 @@ using SME.CDEP.Aplicacao.DTOS;
 
 namespace SME.CDEP.TesteUnitario.Aplicacao.DTOS
 {
-    public class AlterarSenhaUsuarioDTOTeste
+    public class AlterarSenhaUsuarioDtoTeste
     {
         [Fact]
         public void DadoAlterarSenhaUsuarioDTO_QuandoInstanciar_EntaoTodasAsPropriedadesSaoInicializadasCorretamente()
@@ -75,11 +75,11 @@ namespace SME.CDEP.TesteUnitario.Aplicacao.DTOS
         [InlineData(null)]
         [InlineData("")]
         [InlineData(" ")]
-        public void DadoValoresNulosOuVazios_QuandoAtribuirSenhaAtual_EntaoOsValoresSaoArmazenadosCorretamente(string valor)
+        public void DadoValoresNulosOuVazios_QuandoAtribuirSenhaAtual_EntaoOsValoresSaoArmazenadosCorretamente(string? valor)
         {
             var dto = new AlterarSenhaUsuarioDTO();
 
-            dto.SenhaAtual = valor;
+            dto.SenhaAtual = valor!;
 
             dto.SenhaAtual.Should().Be(valor);
         }
@@ -88,11 +88,11 @@ namespace SME.CDEP.TesteUnitario.Aplicacao.DTOS
         [InlineData(null)]
         [InlineData("")]
         [InlineData(" ")]
-        public void DadoValoresNulosOuVazios_QuandoAtribuirSenhaNova_EntaoOsValoresSaoArmazenadosCorretamente(string valor)
+        public void DadoValoresNulosOuVazios_QuandoAtribuirSenhaNova_EntaoOsValoresSaoArmazenadosCorretamente(string? valor)
         {
             var dto = new AlterarSenhaUsuarioDTO();
 
-            dto.SenhaNova = valor;
+            dto.SenhaNova = valor!;
 
             dto.SenhaNova.Should().Be(valor);
         }
@@ -101,11 +101,11 @@ namespace SME.CDEP.TesteUnitario.Aplicacao.DTOS
         [InlineData(null)]
         [InlineData("")]
         [InlineData(" ")]
-        public void DadoValoresNulosOuVazios_QuandoAtribuirConfirmarSenha_EntaoOsValoresSaoArmazenadosCorretamente(string valor)
+        public void DadoValoresNulosOuVazios_QuandoAtribuirConfirmarSenha_EntaoOsValoresSaoArmazenadosCorretamente(string? valor)
         {
             var dto = new AlterarSenhaUsuarioDTO();
 
-            dto.ConfirmarSenha = valor;
+            dto.ConfirmarSenha = valor!;
 
             dto.ConfirmarSenha.Should().Be(valor);
         }

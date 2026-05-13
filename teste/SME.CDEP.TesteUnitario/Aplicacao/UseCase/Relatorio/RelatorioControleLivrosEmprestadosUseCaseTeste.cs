@@ -103,7 +103,7 @@ namespace SME.CDEP.TesteUnitario.Aplicacao.UseCase.Relatorio
             ConfigurarServicoAcervo();
 
             var httpMessageHandlerMock = new Mock<HttpMessageHandler>();
-            HttpRequestMessage capturedRequest = null;
+            HttpRequestMessage capturedRequest = null!;
 
             httpMessageHandlerMock.Protected()
                 .Setup<Task<HttpResponseMessage>>(
@@ -128,7 +128,7 @@ namespace SME.CDEP.TesteUnitario.Aplicacao.UseCase.Relatorio
 
             capturedRequest.Should().NotBeNull();
             capturedRequest.Method.Should().Be(System.Net.Http.HttpMethod.Post);
-            capturedRequest.RequestUri.ToString().Should().Contain(ApiEndpoint);
+            capturedRequest.RequestUri!.ToString().Should().Contain(ApiEndpoint);
             contextoMock.Verify(x => x.NomeUsuario, Times.Once);
             contextoMock.Verify(x => x.UsuarioLogado, Times.Once);
         }
@@ -141,7 +141,7 @@ namespace SME.CDEP.TesteUnitario.Aplicacao.UseCase.Relatorio
             ConfigurarServicoAcervo();
 
             var httpMessageHandlerMock = new Mock<HttpMessageHandler>();
-            HttpRequestMessage capturedRequest = null;
+            HttpRequestMessage capturedRequest = null!;
 
             httpMessageHandlerMock.Protected()
                 .Setup<Task<HttpResponseMessage>>(
@@ -166,7 +166,7 @@ namespace SME.CDEP.TesteUnitario.Aplicacao.UseCase.Relatorio
 
             resultado.Should().NotBeNull();
             capturedRequest.Content.Should().NotBeNull();
-            capturedRequest.Content.Headers.ContentType.MediaType.Should().Be("application/json");
+            capturedRequest.Content.Headers.ContentType!.MediaType.Should().Be("application/json");
         }
 
         [Fact]
@@ -327,7 +327,7 @@ namespace SME.CDEP.TesteUnitario.Aplicacao.UseCase.Relatorio
             ConfigurarServicoAcervo();
 
             var httpMessageHandlerMock = new Mock<HttpMessageHandler>();
-            HttpRequestMessage capturedRequest = null;
+            HttpRequestMessage capturedRequest = null!;
 
             httpMessageHandlerMock.Protected()
                 .Setup<Task<HttpResponseMessage>>(

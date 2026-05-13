@@ -5,11 +5,11 @@ using SME.CDEP.Dominio.Enumerados;
 
 namespace SME.CDEP.TesteUnitario.Aplicacao.DTOS
 {
-    public class AcervoTridimensionalAlteracaoDTOTeste
+    public class AcervoTridimensionalAlteracaoDtoTeste
     {
         private readonly Faker faker;
 
-        public AcervoTridimensionalAlteracaoDTOTeste()
+        public AcervoTridimensionalAlteracaoDtoTeste()
         {
             faker = new Faker("pt_BR");
         }
@@ -54,7 +54,7 @@ namespace SME.CDEP.TesteUnitario.Aplicacao.DTOS
                 DataAcervo = dataAcervo,
                 Ano = ano,
                 SituacaoAcervo = situacaoAcervo,
-                Procedencia = procedencia,
+                Procedencia = procedencia!,
                 ConservacaoId = conservacaoId,
                 Quantidade = quantidade,
                 Largura = largura,
@@ -259,7 +259,7 @@ namespace SME.CDEP.TesteUnitario.Aplicacao.DTOS
             var dto = new AcervoTridimensionalAlteracaoDTO();
             var novaProcedencia = faker.Lorem.Words(5).ToString();
 
-            dto.Procedencia = novaProcedencia;
+            dto.Procedencia = novaProcedencia!;
 
             dto.Procedencia.Should().Be(novaProcedencia);
         }
@@ -826,7 +826,7 @@ namespace SME.CDEP.TesteUnitario.Aplicacao.DTOS
             dto.DataAcervo = dataAcervoValor;
             dto.Ano = anoValor;
             dto.SituacaoAcervo = situacaoAcervoValor;
-            dto.Procedencia = procedenciaValor;
+            dto.Procedencia = procedenciaValor!;
             dto.ConservacaoId = conservacaoIdValor;
             dto.Quantidade = quantidadeValor;
             dto.Largura = larguraValor;

@@ -4,7 +4,7 @@ using SME.CDEP.Aplicacao.DTOS;
 
 namespace SME.CDEP.TesteUnitario.Aplicacao.DTOS
 {
-    public class ArquivoCodigoNomeDTOTeste
+    public class ArquivoCodigoNomeDtoTeste
     {
         [Fact]
         public void DadoArquivoCodigoNomeDTO_QuandoInstanciar_EntaoTodasAsPropriedadesSaoInicializadasCorretamente()
@@ -13,7 +13,7 @@ namespace SME.CDEP.TesteUnitario.Aplicacao.DTOS
 
             dto.Should().NotBeNull();
             dto.Nome.Should().BeNull();
-            dto.Codigo.Should().Be(default(Guid));
+            dto.Codigo.Should().Be(Guid.Empty);
         }
 
         [Fact]
@@ -55,14 +55,13 @@ namespace SME.CDEP.TesteUnitario.Aplicacao.DTOS
         }
 
         [Theory]
-        [InlineData(null)]
         [InlineData("")]
         [InlineData(" ")]
-        public void DadoValoresNulosOuVazios_QuandoAtribuirNome_EntaoOsValoresSaoArmazenadosCorretamente(string valor)
+        public void DadoValoresNulosOuVazios_QuandoAtribuirNome_EntaoOsValoresSaoArmazenadosCorretamente(string? valor)
         {
             var dto = new ArquivoCodigoNomeDTO();
 
-            dto.Nome = valor;
+            dto.Nome = valor!;
 
             dto.Nome.Should().Be(valor);
         }

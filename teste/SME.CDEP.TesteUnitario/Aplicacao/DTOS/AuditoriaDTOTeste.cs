@@ -4,7 +4,7 @@ using SME.CDEP.Dominio;
 
 namespace SME.CDEP.TesteUnitario.Aplicacao.DTOS
 {
-    public class AuditoriaDTOTeste
+    public class AuditoriaDtoTeste
     {
         [Fact]
         public void DadoParametroValido_QuandoInstanciarDTO_EntaoTodasAsPropriedadesPodemSerAtribuidas()
@@ -194,7 +194,7 @@ namespace SME.CDEP.TesteUnitario.Aplicacao.DTOS
         [Fact]
         public void DadoEntidadeNula_QuandoConverterParaDTO_EntaoRetornaNulo()
         {
-            EntidadeAuditoriaTesteFake entidade = null;
+            EntidadeAuditoriaTesteFake entidade = null!;
 
             AuditoriaDTO dto = (AuditoriaDTO)entidade;
 
@@ -285,7 +285,7 @@ namespace SME.CDEP.TesteUnitario.Aplicacao.DTOS
             dto.CriadoEm.Minute.Should().Be(30);
             dto.CriadoPor.Should().Be("Admin");
             dto.CriadoLogin.Should().Be("admin_123");
-            dto.AlteradoEm.Value.Year.Should().Be(2024);
+            dto.AlteradoEm!.Value.Year.Should().Be(2024);
             dto.AlteradoEm.Value.Month.Should().Be(2);
             dto.AlteradoEm.Value.Day.Should().Be(28);
             dto.AlteradoEm.Value.Hour.Should().Be(16);
@@ -460,7 +460,7 @@ namespace SME.CDEP.TesteUnitario.Aplicacao.DTOS
         }
         private class EntidadeAuditoriaTesteFake : EntidadeBaseAuditavel
         {
-            public long Id { get; set; }
+            public new long Id { get; set; } = 0L;
         }
     }
 }

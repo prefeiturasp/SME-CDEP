@@ -83,7 +83,7 @@ namespace SME.CDEP.TesteUnitario.Aplicacao.UseCase.Relatorio
             resultado.Should().BeOfType<MemoryStream>();
             resultado.Seek(0, SeekOrigin.Begin);
             var bytesLidos = new byte[resultado.Length];
-            await resultado.ReadAsync(bytesLidos);
+            await resultado.ReadExactlyAsync(bytesLidos);
             bytesLidos.Should().BeEquivalentTo(bytesRelatorio);
         }
 
@@ -360,7 +360,7 @@ namespace SME.CDEP.TesteUnitario.Aplicacao.UseCase.Relatorio
             await sut.ExecutarAsync(filtros);
 
             jsonEnviado.Should().NotBeNullOrEmpty();
-            var jsonObject = JsonConvert.DeserializeObject<dynamic>(jsonEnviado);
+            var jsonObject = JsonConvert.DeserializeObject<dynamic>(jsonEnviado)!;
             ((string)jsonObject.Mensagem.Usuario).Should().Be(nomeUsuario);
             ((string)jsonObject.Mensagem.UsuarioRF).Should().Be(usuarioRF);
             ((string)jsonObject.Mensagem.Titulo).Should().Be(titulo);
@@ -473,7 +473,7 @@ namespace SME.CDEP.TesteUnitario.Aplicacao.UseCase.Relatorio
         }
 
         private void MockarRespostaHttpClientComFalha(HttpStatusCode statusCode, byte[] conteudoRetorno)
-        {
+        {            
             var mockHandler = new Mock<HttpMessageHandler>();
 
             mockHandler.Protected()
@@ -482,10 +482,16 @@ namespace SME.CDEP.TesteUnitario.Aplicacao.UseCase.Relatorio
                     ItExpr.IsAny<HttpRequestMessage>(),
                     ItExpr.IsAny<CancellationToken>()
                 )
-                .ReturnsAsync(new HttpResponseMessage
+                .ReturnsAsync(() =>
                 {
-                    StatusCode = statusCode,
-                    Content = new ByteArrayContent(conteudoRetorno)
+                    var response = new HttpResponseMessage
+                    {
+                        StatusCode = statusCode,
+                        Content = new ByteArrayContent(conteudoRetorno)
+                    };
+                    // Adiciona um header customizado para diferenciar do método de sucesso
+                    response.Headers.Add("X-Mock-Failure", "true");
+                    return response;
                 });
 
             var httpClient = new HttpClient(mockHandler.Object)
@@ -576,7 +582,7 @@ namespace SME.CDEP.TesteUnitario.Aplicacao.UseCase.Relatorio
                 {
                     if (request.Content?.Headers.ContentType != null)
                     {
-                        capturaContentType(request.Content.Headers.ContentType.MediaType);
+                        capturaContentType(request.Content.Headers.ContentType.MediaType!);
                     }
                 })
                 .ReturnsAsync(new HttpResponseMessage

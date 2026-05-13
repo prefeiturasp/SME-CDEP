@@ -494,7 +494,7 @@ namespace SME.CDEP.TesteUnitario.Aplicacao.DTOS
         {
             var dto = new AcervoSolicitacaoItemDetalheResumidoDTO { Responsavel = "João Silva" };
 
-            dto.Responsavel = null;
+            dto.Responsavel = null!;
 
             dto.Responsavel.Should().BeNull();
         }

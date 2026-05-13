@@ -5,7 +5,7 @@ using SME.CDEP.Dominio.Enumerados;
 
 namespace SME.CDEP.TesteUnitario.Aplicacao.DTOS
 {
-    public class AcervoTridimensionalDTOTeste
+    public class AcervoTridimensionalDtoTeste
     {
         [Fact]
         public void DadoAcervoTridimensionalDTO_QuandoInstanciar_EntaoTodasAsPropriedadesSaoInicializadasCorretamente()
@@ -221,16 +221,16 @@ namespace SME.CDEP.TesteUnitario.Aplicacao.DTOS
         [InlineData(null)]
         [InlineData("")]
         [InlineData(" ")]
-        public void DadoValoresNulosOuVazios_QuandoAtribuirPropriedadesString_EntaoOsValoresSaoArmazenadosCorretamente(string valor)
+        public void DadoValoresNulosOuVazios_QuandoAtribuirPropriedadesString_EntaoOsValoresSaoArmazenadosCorretamente(string? valor)
         {
             var dto = new AcervoTridimensionalDTO();
 
-            dto.Titulo = valor;
-            dto.Codigo = valor;
-            dto.Procedencia = valor;
-            dto.DataAcervo = valor;
-            dto.Descricao = valor;
-            dto.Ano = valor;
+            dto.Titulo = valor!;
+            dto.Codigo = valor!;
+            dto.Procedencia = valor!;
+            dto.DataAcervo = valor!;
+            dto.Descricao = valor!;
+            dto.Ano = valor!;
 
             dto.Titulo.Should().Be(valor);
             dto.Codigo.Should().Be(valor);
@@ -245,14 +245,14 @@ namespace SME.CDEP.TesteUnitario.Aplicacao.DTOS
         [InlineData("")]
         [InlineData("1.50")]
         [InlineData("99.99")]
-        public void DadoValoresValidos_QuandoAtribuirPropriedadesDimensoesOpcionais_EntaoOsValoresSaoArmazenadosCorretamente(string valor)
+        public void DadoValoresValidos_QuandoAtribuirPropriedadesDimensoesOpcionais_EntaoOsValoresSaoArmazenadosCorretamente(string? valor)
         {
             var dto = new AcervoTridimensionalDTO();
 
-            dto.Largura = valor;
-            dto.Altura = valor;
-            dto.Profundidade = valor;
-            dto.Diametro = valor;
+            dto.Largura = valor!;
+            dto.Altura = valor!;
+            dto.Profundidade = valor!;
+            dto.Diametro = valor!;
 
             dto.Largura.Should().Be(valor);
             dto.Altura.Should().Be(valor);

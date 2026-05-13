@@ -97,7 +97,7 @@ namespace SME.CDEP.TesteUnitario.Aplicacao.UseCase.Relatorio
             contextoMock.Setup(c => c.UsuarioLogado).Returns(usuarioRF);
 
             var httpMessageHandlerMock = new Mock<HttpMessageHandler>();
-            HttpRequestMessage capturedRequest = null;
+            HttpRequestMessage capturedRequest = null!;
 
             httpMessageHandlerMock.Protected()
                 .Setup<Task<HttpResponseMessage>>(
@@ -122,7 +122,7 @@ namespace SME.CDEP.TesteUnitario.Aplicacao.UseCase.Relatorio
 
             capturedRequest.Should().NotBeNull();
             capturedRequest.Method.Should().Be(HttpMethod.Post);
-            capturedRequest.RequestUri.ToString().Should().Contain(ApiEndpoint);
+            capturedRequest.RequestUri!.ToString().Should().Contain(ApiEndpoint);
             contextoMock.Verify(x => x.NomeUsuario, Times.Once);
             contextoMock.Verify(x => x.UsuarioLogado, Times.Once);
         }
@@ -134,7 +134,7 @@ namespace SME.CDEP.TesteUnitario.Aplicacao.UseCase.Relatorio
             ConfigurarContextoUsuario();
 
             var httpMessageHandlerMock = new Mock<HttpMessageHandler>();
-            HttpRequestMessage capturedRequest = null;
+            HttpRequestMessage capturedRequest = null!;
 
             httpMessageHandlerMock.Protected()
                 .Setup<Task<HttpResponseMessage>>(
@@ -159,7 +159,7 @@ namespace SME.CDEP.TesteUnitario.Aplicacao.UseCase.Relatorio
 
             resultado.Should().NotBeNull();
             capturedRequest.Content.Should().NotBeNull();
-            capturedRequest.Content.Headers.ContentType.MediaType.Should().Be("application/json");
+            capturedRequest.Content.Headers.ContentType!.MediaType.Should().Be("application/json");
         }
 
         [Fact]
@@ -281,7 +281,7 @@ namespace SME.CDEP.TesteUnitario.Aplicacao.UseCase.Relatorio
             contextoMock.Setup(c => c.UsuarioLogado).Returns("d123456");
         }
 
-        private RelatorioHistoricoSolicitacoesRequest GerarFiltrosValidos() =>
+        private static RelatorioHistoricoSolicitacoesRequest GerarFiltrosValidos() =>
             new Faker<RelatorioHistoricoSolicitacoesRequest>()
                 .CustomInstantiator(f => new RelatorioHistoricoSolicitacoesRequest(
                     f.Person.FullName,

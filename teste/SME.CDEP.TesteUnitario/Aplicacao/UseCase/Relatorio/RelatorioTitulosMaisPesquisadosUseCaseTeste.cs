@@ -180,7 +180,7 @@ namespace SME.CDEP.TesteUnitario.Aplicacao.UseCase.Relatorio
                 Times.Once(),
                 ItExpr.Is<HttpRequestMessage>(req =>
                     req.Method == HttpMethod.Post &&
-                    req.RequestUri.ToString().Contains(ApiEndpoint)),
+                    req.RequestUri!.ToString().Contains(ApiEndpoint)),
                 ItExpr.IsAny<CancellationToken>());
 
             _contextoAplicacaoMock.Verify(x => x.NomeUsuario, Times.Once);
@@ -207,7 +207,7 @@ namespace SME.CDEP.TesteUnitario.Aplicacao.UseCase.Relatorio
 
             var handlerMock = new Mock<HttpMessageHandler>();
             var streamContent = new MemoryStream(Encoding.UTF8.GetBytes("relatório"));
-            HttpRequestMessage capturedRequest = null;
+            HttpRequestMessage capturedRequest = null!;
 
             handlerMock.Protected()
                 .Setup<Task<HttpResponseMessage>>(
@@ -231,7 +231,7 @@ namespace SME.CDEP.TesteUnitario.Aplicacao.UseCase.Relatorio
             resultado.Should().NotBeNull();
             capturedRequest.Should().NotBeNull();
             capturedRequest.Content.Should().NotBeNull();
-            capturedRequest.Content.Headers.ContentType.MediaType.Should().Be("application/json");
+            capturedRequest.Content.Headers.ContentType!.MediaType.Should().Be("application/json");
         }
 
         [Fact]

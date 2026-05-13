@@ -111,7 +111,7 @@ namespace SME.CDEP.TesteUnitario.Aplicacao.UseCase.Relatorio
                 )
                 .Callback<HttpRequestMessage, CancellationToken>(async (req, _) =>
                 {
-                    corpoRequisicao = await req.Content.ReadAsStringAsync();
+                    corpoRequisicao = await req.Content!.ReadAsStringAsync();
                 })
                 .ReturnsAsync(new HttpResponseMessage
                 {
@@ -228,7 +228,7 @@ namespace SME.CDEP.TesteUnitario.Aplicacao.UseCase.Relatorio
                 )
                 .Callback<HttpRequestMessage, CancellationToken>(async (req, _) =>
                 {
-                    corpoRequisicao = await req.Content.ReadAsStringAsync();
+                    corpoRequisicao = await req.Content!.ReadAsStringAsync();
                 })
                 .ReturnsAsync(new HttpResponseMessage
                 {
@@ -275,7 +275,7 @@ namespace SME.CDEP.TesteUnitario.Aplicacao.UseCase.Relatorio
                 )
                 .Callback<HttpRequestMessage, CancellationToken>(async (req, _) =>
                 {
-                    corpoRequisicao = await req.Content.ReadAsStringAsync();
+                    corpoRequisicao = await req.Content!.ReadAsStringAsync();
                 })
                 .ReturnsAsync(new HttpResponseMessage
                 {
@@ -316,7 +316,7 @@ namespace SME.CDEP.TesteUnitario.Aplicacao.UseCase.Relatorio
                 )
                 .Callback<HttpRequestMessage, CancellationToken>(async (req, _) =>
                 {
-                    corpoRequisicao = await req.Content.ReadAsStringAsync();
+                    corpoRequisicao = await req.Content!.ReadAsStringAsync();
                 })
                 .ReturnsAsync(new HttpResponseMessage
                 {
@@ -358,7 +358,7 @@ namespace SME.CDEP.TesteUnitario.Aplicacao.UseCase.Relatorio
                 )
                 .Callback<HttpRequestMessage, CancellationToken>(async (req, _) =>
                 {
-                    corpoRequisicao = await req.Content.ReadAsStringAsync();
+                    corpoRequisicao = await req.Content!.ReadAsStringAsync();
                 })
                 .ReturnsAsync(new HttpResponseMessage
                 {
@@ -477,7 +477,7 @@ namespace SME.CDEP.TesteUnitario.Aplicacao.UseCase.Relatorio
                 )
                 .Callback<HttpRequestMessage, CancellationToken>(async (req, _) =>
                 {
-                    corpoRequisicao = await req.Content.ReadAsStringAsync();
+                    corpoRequisicao = await req.Content!.ReadAsStringAsync();
                 })
                 .ReturnsAsync(new HttpResponseMessage
                 {
