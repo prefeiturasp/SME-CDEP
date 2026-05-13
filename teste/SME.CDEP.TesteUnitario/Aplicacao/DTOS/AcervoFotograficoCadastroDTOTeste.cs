@@ -5,7 +5,7 @@ using SME.CDEP.Dominio.Enumerados;
 
 namespace SME.CDEP.TesteUnitario.Aplicacao.DTOS
 {
-    public class AcervoFotograficoCadastroDTOTeste
+    public class AcervoFotograficoCadastroDtoTeste
     {
         #region Localizacao
 
@@ -620,7 +620,7 @@ namespace SME.CDEP.TesteUnitario.Aplicacao.DTOS
             var dto = new AcervoFotograficoCadastroDTO
             {
                 Localizacao = null,
-                Procedencia = null,
+                Procedencia = null!,
                 CopiaDigital = null,
                 PermiteUsoImagem = null,
                 Largura = null,

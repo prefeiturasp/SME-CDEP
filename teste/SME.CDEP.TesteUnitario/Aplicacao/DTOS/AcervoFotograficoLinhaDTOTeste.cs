@@ -5,7 +5,7 @@ using SME.CDEP.Infra.Dominio.Enumerados;
 
 namespace SME.CDEP.TesteUnitario.Aplicacao.DTOS
 {
-    public class AcervoFotograficoLinhaDTOTeste
+    public class AcervoFotograficoLinhaDtoTeste
     {
         #region Status
 
@@ -635,10 +635,10 @@ namespace SME.CDEP.TesteUnitario.Aplicacao.DTOS
         {
             var dto = new AcervoFotograficoLinhaDTO
             {
-                Titulo = null,
-                Codigo = null,
-                Credito = null,
-                Localizacao = null
+                Titulo = null!,
+                Codigo = null!,
+                Credito = null!,
+                Localizacao = null!
             };
 
             var excecao = Record.Exception(() => dto.DefinirLinhaComoSucesso());
@@ -825,26 +825,26 @@ namespace SME.CDEP.TesteUnitario.Aplicacao.DTOS
         {
             var dto = new AcervoFotograficoLinhaDTO
             {
-                Titulo = null,
-                Codigo = null,
-                Credito = null,
-                Localizacao = null,
-                Procedencia = null,
-                Data = null,
-                CopiaDigital = null,
-                PermiteUsoImagem = null,
-                EstadoConservacao = null,
-                Descricao = null,
-                Quantidade = null,
-                Largura = null,
-                Altura = null,
-                Suporte = null,
-                FormatoImagem = null,
-                TamanhoArquivo = null,
-                Cromia = null,
-                Resolucao = null,
-                Ano = null,
-                Mensagem = null
+                Titulo = null!,
+                Codigo = null!,
+                Credito = null!,
+                Localizacao = null!,
+                Procedencia = null!,
+                Data = null!,
+                CopiaDigital = null!,
+                PermiteUsoImagem = null!,
+                EstadoConservacao = null!,
+                Descricao = null!,
+                Quantidade = null!,
+                Largura = null!,
+                Altura = null!,
+                Suporte = null!,
+                FormatoImagem = null!,
+                TamanhoArquivo = null!,
+                Cromia = null!,
+                Resolucao = null!,
+                Ano = null!,
+                Mensagem = null!
             };
 
             dto.Titulo.Should().BeNull();

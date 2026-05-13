@@ -5,7 +5,7 @@ using SME.CDEP.Dominio.Enumerados;
 
 namespace SME.CDEP.TesteUnitario.Aplicacao.DTOS
 {
-    public class AcervoFotograficoDTOTeste
+    public class AcervoFotograficoDtoTeste
     {
         #region Id
 
@@ -759,26 +759,26 @@ namespace SME.CDEP.TesteUnitario.Aplicacao.DTOS
         {
             var dto = new AcervoFotograficoDTO
             {
-                Titulo = null,
-                Codigo = null,
-                Localizacao = null,
-                Procedencia = null,
-                DataAcervo = null,
+                Titulo = null!,
+                Codigo = null!,
+                Localizacao = null!,
+                Procedencia = null!,
+                DataAcervo = null!,
                 CopiaDigital = null,
                 PermiteUsoImagem = null,
                 ConservacaoId = null,
-                Descricao = null,
+                Descricao = null!,
                 Quantidade = null,
                 Largura = null,
                 Altura = null,
                 SuporteId = null,
                 FormatoId = null,
                 CromiaId = null,
-                Resolucao = null,
-                TamanhoArquivo = null,
+                Resolucao = null!,
+                TamanhoArquivo = null!,
                 Arquivos = null,
-                Auditoria = null,
-                CreditosAutoresIds = null,
+                Auditoria = null!,
+                CreditosAutoresIds = null!,
                 Ano = null
             };
 
@@ -808,7 +808,6 @@ namespace SME.CDEP.TesteUnitario.Aplicacao.DTOS
         [Fact]
         public void DadoDTOComMultiplosArquivos_QuandoAtribuirVariosArquivos_EntaoDeveArmazenarTodos()
         {
-            var faker = new Faker("pt_BR");
             var arquivos = Enumerable.Range(1, 5)
                 .Select(i => new ArquivoResumidoDTO 
                 { 

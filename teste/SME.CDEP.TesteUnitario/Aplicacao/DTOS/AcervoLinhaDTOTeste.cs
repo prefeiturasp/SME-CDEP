@@ -5,7 +5,7 @@ using SME.CDEP.Infra.Dominio.Enumerados;
 
 namespace SME.CDEP.TesteUnitario.Aplicacao.DTOS
 {
-    public class AcervoLinhaDTOTeste
+    public class AcervoLinhaDtoTeste
     {
         #region Status
 
@@ -313,7 +313,7 @@ namespace SME.CDEP.TesteUnitario.Aplicacao.DTOS
         {
             var dto = new AcervoLinhaDTO
             {
-                Mensagem = null,
+                Mensagem = null!,
                 Status = ImportacaoStatus.Sucesso,
                 NumeroLinha = 0,
                 PossuiErros = false

@@ -5,7 +5,7 @@ using SME.CDEP.Infra.Dominio.Enumerados;
 
 namespace SME.CDEP.TesteUnitario.Aplicacao.DTOS
 {
-    public class AcervoFotograficoLinhaRetornoDTOTeste
+    public class AcervoFotograficoLinhaRetornoDtoTeste
     {
         #region Titulo
 
@@ -832,26 +832,26 @@ namespace SME.CDEP.TesteUnitario.Aplicacao.DTOS
         {
             var dto = new AcervoFotograficoLinhaRetornoDTO
             {
-                Titulo = null,
-                Codigo = null,
-                CreditosAutoresIds = null,
-                Localizacao = null,
-                Procedencia = null,
-                DataAcervo = null,
-                CopiaDigital = null,
-                PermiteUsoImagem = null,
-                ConservacaoId = null,
-                Descricao = null,
-                Quantidade = null,
-                Largura = null,
-                Altura = null,
-                SuporteId = null,
-                FormatoId = null,
-                TamanhoArquivo = null,
-                CromiaId = null,
-                Resolucao = null,
-                Ano = null,
-                Mensagem = null
+                Titulo = null!,
+                Codigo = null!,
+                CreditosAutoresIds = null!,
+                Localizacao = null!,
+                Procedencia = null!,
+                DataAcervo = null!,
+                CopiaDigital = null!,
+                PermiteUsoImagem = null!,
+                ConservacaoId = null!,
+                Descricao = null!,
+                Quantidade = null!,
+                Largura = null!,
+                Altura = null!,
+                SuporteId = null!,
+                FormatoId = null!,
+                TamanhoArquivo = null!,
+                CromiaId = null!,
+                Resolucao = null!,
+                Ano = null!,
+                Mensagem = null!
             };
 
             dto.Titulo.Should().BeNull();
@@ -959,7 +959,7 @@ namespace SME.CDEP.TesteUnitario.Aplicacao.DTOS
             {
                 Conteudo = "Desc",
                 PossuiErro = false,
-                Mensagem = null
+                Mensagem = null!
             };
 
             var dto = new AcervoFotograficoLinhaRetornoDTO

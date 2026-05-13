@@ -3,7 +3,7 @@ using SME.CDEP.Aplicacao.DTOS;
 
 namespace SME.CDEP.TesteUnitario.Aplicacao.DTOS
 {
-    public class AcervoLinhaErroDTOTeste
+    public class AcervoLinhaErroDtoTeste
     {
         [Fact]
         public void DadoNumeroLinha_QuandoAssignar_EntaoRetornaValorAssignado()
@@ -126,7 +126,7 @@ namespace SME.CDEP.TesteUnitario.Aplicacao.DTOS
         {
             var dto = new AcervoLinhaErroDTO<string, string> { Titulo = "Qualquer valor" };
 
-            dto.Titulo = null;
+            dto.Titulo = null!;
 
             dto.Titulo.Should().BeNull();
         }
@@ -136,7 +136,7 @@ namespace SME.CDEP.TesteUnitario.Aplicacao.DTOS
         {
             var dto = new AcervoLinhaErroDTO<string, string> { Tombo = "2024.001.0001" };
 
-            dto.Tombo = null;
+            dto.Tombo = null!;
 
             dto.Tombo.Should().BeNull();
         }
@@ -146,7 +146,7 @@ namespace SME.CDEP.TesteUnitario.Aplicacao.DTOS
         {
             var dto = new AcervoLinhaErroDTO<TestObject, string> { RetornoObjeto = new TestObject() };
 
-            dto.RetornoObjeto = null;
+            dto.RetornoObjeto = null!;
 
             dto.RetornoObjeto.Should().BeNull();
         }
@@ -156,7 +156,7 @@ namespace SME.CDEP.TesteUnitario.Aplicacao.DTOS
         {
             var dto = new AcervoLinhaErroDTO<string, TestError> { RetornoErro = new TestError() };
 
-            dto.RetornoErro = null;
+            dto.RetornoErro = null!;
 
             dto.RetornoErro.Should().BeNull();
         }
@@ -251,13 +251,13 @@ namespace SME.CDEP.TesteUnitario.Aplicacao.DTOS
         private class TestObject
         {
             public int Id { get; set; }
-            public string Nome { get; set; }
+            public string Nome { get; set; } = null!;
         }
 
         private class TestError
         {
             public int Codigo { get; set; }
-            public string Mensagem { get; set; }
+            public string Mensagem { get; set; } = null!;
         }
     }
 }

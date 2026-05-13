@@ -1150,7 +1150,7 @@ namespace SME.CDEP.TesteUnitario.Aplicacao.DTOS
             var imagens = new[]
             {
                 new ImagemDTO { Original = null!, Thumbnail = "https://exemplo.com/thumb.jpg" },
-                new ImagemDTO { Original = "https://exemplo.com/original.jpg", Thumbnail = null }
+                new ImagemDTO { Original = "https://exemplo.com/original.jpg", Thumbnail = null! }
             };
 
             dto.Imagens = imagens;

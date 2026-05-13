@@ -1,11 +1,10 @@
 ﻿using Bogus;
 using FluentAssertions;
 using SME.CDEP.Aplicacao.DTOS;
-using SME.CDEP.Dominio.Enumerados;
 
 namespace SME.CDEP.TesteUnitario.Aplicacao.DTOS
 {
-    public class AcervoFotograficoDetalheDTOTeste
+    public class AcervoFotograficoDetalheDtoTeste
     {
         #region Descricao
 
@@ -561,7 +560,6 @@ namespace SME.CDEP.TesteUnitario.Aplicacao.DTOS
             { 
                 new ImagemDTO { Original = "IMG001", Thumbnail = "THB001" } 
             };
-            var id = faker.Random.Long(1, 1000);
             var acervoId = faker.Random.Long(1, 1000);
             var titulo = faker.Lorem.Sentence();
             var tipoAcervoId = faker.Random.Int(1, 100);
@@ -642,21 +640,21 @@ namespace SME.CDEP.TesteUnitario.Aplicacao.DTOS
         {
             var dto = new AcervoFotograficoDetalheDTO
             {
-                Descricao = null,
-                CreditosAutores = null,
-                DataAcervo = null,
-                Localizacao = null,
-                Procedencia = null,
-                CopiaDigital = null,
-                PermiteUsoImagem = null,
-                Conservacao = null,
-                Dimensoes = null,
-                Suporte = null,
-                Formato = null,
-                TamanhoArquivo = null,
-                Cromia = null,
-                Resolucao = null,
-                Imagens = null
+                Descricao = null!,
+                CreditosAutores = null!,
+                DataAcervo = null!,
+                Localizacao = null!,
+                Procedencia = null!,
+                CopiaDigital = null!,
+                PermiteUsoImagem = null!,
+                Conservacao = null!,
+                Dimensoes = null!,
+                Suporte = null!,
+                Formato = null!,
+                TamanhoArquivo = null!,
+                Cromia = null!,
+                Resolucao = null!,
+                Imagens = null!
             };
 
             dto.Descricao.Should().BeNull();
@@ -716,7 +714,6 @@ namespace SME.CDEP.TesteUnitario.Aplicacao.DTOS
         [Fact]
         public void DadoDTOComMultiplasImagens_QuandoAtribuirVariasImagens_EntaoDeveArmazenarTodas()
         {
-            var faker = new Faker("pt_BR");
             var imagens = Enumerable.Range(1, 10)
                 .Select(i => new ImagemDTO 
                 { 
