@@ -276,10 +276,10 @@ namespace SME.CDEP.TesteUnitario.Aplicacao.DTOS
             var acervoIdProperty = tipo.GetProperty("AcervoId");
 
             idProperty.Should().NotBeNull();
-            idProperty!.PropertyType.Should().Be(typeof(long));
+            idProperty!.PropertyType.Should().Be<long>();
 
             acervoIdProperty.Should().NotBeNull();
-            acervoIdProperty!.PropertyType.Should().Be(typeof(long));
+            acervoIdProperty!.PropertyType.Should().Be<long>();
         }
 
         [Fact(DisplayName = "AcervoBibliograficoAlteracaoDTO - Validação com múltiplos erros")]

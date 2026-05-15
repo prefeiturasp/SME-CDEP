@@ -6,7 +6,7 @@ namespace SME.CDEP.TesteUnitario.Aplicacao.DTOS
 {
     public class AcervoCadastroDTOTeste
     {
-        private AcervoCadastroDTO CriarAcervoCadastroDTO()
+        private static AcervoCadastroDTO CriarAcervoCadastroDTO()
         {
             return new AcervoCadastroDTO
             {
@@ -261,8 +261,6 @@ namespace SME.CDEP.TesteUnitario.Aplicacao.DTOS
         [Fact]
         public void DadoAcervoCadastro_QuandoVazioComValidacoes_EntaoValidacoesEstaoCorretas()
         {
-            var dto = new AcervoCadastroDTO();
-
             var properties = typeof(AcervoCadastroDTO).GetProperties();
             properties.Should().Contain(p => p.Name == "Titulo");
             properties.Should().Contain(p => p.Name == "Ano");
@@ -273,7 +271,7 @@ namespace SME.CDEP.TesteUnitario.Aplicacao.DTOS
         public void DadoAcervoCadastro_QuandoDefinirCreditosAutoresIdsVazio_EntaoCreditosAutoresIdsEhVazio()
         {
             var dto = new AcervoCadastroDTO();
-            var creditosVazios = new long[] { };
+            var creditosVazios = Array.Empty<long>();
 
             dto.CreditosAutoresIds = creditosVazios;
 
@@ -284,7 +282,7 @@ namespace SME.CDEP.TesteUnitario.Aplicacao.DTOS
         public void DadoAcervoCadastro_QuandoDefinirCoAutoresVazio_EntaoCoAutoresEhVazio()
         {
             var dto = new AcervoCadastroDTO();
-            var coAutoresVazios = new CoAutorDTO[] { };
+            var coAutoresVazios = Array.Empty<CoAutorDTO>();
 
             dto.CoAutores = coAutoresVazios;
 

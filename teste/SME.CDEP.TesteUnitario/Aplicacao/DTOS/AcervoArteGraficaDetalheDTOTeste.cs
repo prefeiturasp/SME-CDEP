@@ -33,8 +33,8 @@ namespace SME.CDEP.TesteUnitario.Aplicacao.DTOS
         {
             var imagens = new ImagemDTO[]
             {
-                new ImagemDTO { Original = "img1.jpg", Thumbnail = "thumb1.jpg" },
-                new ImagemDTO { Original = "img2.jpg", Thumbnail = "thumb2.jpg" }
+                new() { Original = "img1.jpg", Thumbnail = "thumb1.jpg" },
+                new() { Original = "img2.jpg", Thumbnail = "thumb2.jpg" }
             };
 
             var dto = new AcervoArteGraficaDetalheDTO
@@ -308,7 +308,7 @@ namespace SME.CDEP.TesteUnitario.Aplicacao.DTOS
         {
             var imagens = new ImagemDTO[]
             {
-                new ImagemDTO { Original = "img1.jpg", Thumbnail = "thumb1.jpg" }
+                new() { Original = "img1.jpg", Thumbnail = "thumb1.jpg" }
             };
 
             var dto = new AcervoArteGraficaDetalheDTO { Imagens = imagens };
@@ -323,9 +323,9 @@ namespace SME.CDEP.TesteUnitario.Aplicacao.DTOS
         {
             var imagens = new ImagemDTO[]
             {
-                new ImagemDTO { Original = "img1.jpg", Thumbnail = "thumb1.jpg" },
-                new ImagemDTO { Original = "img2.jpg", Thumbnail = "thumb2.jpg" },
-                new ImagemDTO { Original = "img3.jpg", Thumbnail = "thumb3.jpg" }
+                new() { Original = "img1.jpg", Thumbnail = "thumb1.jpg" },
+                new() { Original = "img2.jpg", Thumbnail = "thumb2.jpg" },
+                new() { Original = "img3.jpg", Thumbnail = "thumb3.jpg" }
             };
 
             var dto = new AcervoArteGraficaDetalheDTO { Imagens = imagens };
@@ -349,7 +349,7 @@ namespace SME.CDEP.TesteUnitario.Aplicacao.DTOS
         {
             var imagens = new ImagemDTO[]
             {
-                new ImagemDTO { Original = "img1.jpg", Thumbnail = null! }
+                new() { Original = "img1.jpg", Thumbnail = null! }
             };
 
             var dto = new AcervoArteGraficaDetalheDTO { Imagens = imagens };
@@ -468,7 +468,7 @@ namespace SME.CDEP.TesteUnitario.Aplicacao.DTOS
         {
             var imagens = new ImagemDTO[]
             {
-                new ImagemDTO { Original = "img1.jpg", Thumbnail = "thumb1.jpg" }
+                new() { Original = "img1.jpg", Thumbnail = "thumb1.jpg" }
             };
 
             var dto = new AcervoArteGraficaDetalheDTO
@@ -541,7 +541,6 @@ namespace SME.CDEP.TesteUnitario.Aplicacao.DTOS
         [Fact]
         public void DadoPropriedadesString_QuandoVerificar_EntaoSaoTipoString()
         {
-            var dto = new AcervoArteGraficaDetalheDTO();
             var tipo = typeof(AcervoArteGraficaDetalheDTO);
 
             var propriedadesString = new[]
@@ -554,7 +553,7 @@ namespace SME.CDEP.TesteUnitario.Aplicacao.DTOS
             {
                 var prop = tipo.GetProperty(propriedade);
                 prop.Should().NotBeNull();
-                prop!.PropertyType.Should().Be(typeof(string));
+                prop!.PropertyType.Should().Be<string>();
             }
         }
 
@@ -565,7 +564,7 @@ namespace SME.CDEP.TesteUnitario.Aplicacao.DTOS
             var propriedade = tipo.GetProperty(nameof(AcervoArteGraficaDetalheDTO.Quantidade));
 
             propriedade.Should().NotBeNull();
-            propriedade!.PropertyType.Should().Be(typeof(long));
+            propriedade!.PropertyType.Should().Be<long>();
         }
 
         [Fact]
@@ -575,7 +574,7 @@ namespace SME.CDEP.TesteUnitario.Aplicacao.DTOS
             var propriedade = tipo.GetProperty(nameof(AcervoArteGraficaDetalheDTO.Imagens));
 
             propriedade.Should().NotBeNull();
-            propriedade!.PropertyType.Should().Be(typeof(ImagemDTO[]));
+            propriedade!.PropertyType.Should().Be<ImagemDTO[]>();
         }
 
         #endregion
@@ -677,7 +676,7 @@ namespace SME.CDEP.TesteUnitario.Aplicacao.DTOS
         {
             var imagens = new ImagemDTO[]
             {
-                new ImagemDTO { Original = "img1.jpg", Thumbnail = "thumb1.jpg" }
+                new() { Original = "img1.jpg", Thumbnail = "thumb1.jpg" }
             };
 
             var dto = new AcervoArteGraficaDetalheDTO { Imagens = imagens };

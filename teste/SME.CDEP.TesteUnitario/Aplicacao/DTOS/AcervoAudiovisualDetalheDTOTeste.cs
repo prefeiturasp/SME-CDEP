@@ -4,117 +4,89 @@ using System.ComponentModel.DataAnnotations;
 
 namespace SME.CDEP.TesteUnitario.Aplicacao.DTOS
 {
-    public class AcervoAudiovisualDetalheDTOTeste
+    public class AcervoAudiovisualDetalheDtoTeste
     {
         [Fact(DisplayName = "AcervoAudiovisualDetalheDTO - Deve conter propriedade Descricao")]
         public void DadoDTOAcervoAudiovisualDetalhe_QuandoCriar_EntaoContemPropriedadeDescricao()
         {
-            var dto = new AcervoAudiovisualDetalheDTO();
-
             typeof(AcervoAudiovisualDetalheDTO).GetProperty("Descricao").Should().NotBeNull();
         }
 
         [Fact(DisplayName = "AcervoAudiovisualDetalheDTO - Deve conter propriedade CreditosAutores")]
         public void DadoDTOAcervoAudiovisualDetalhe_QuandoCriar_EntaoContemPropriedadeCreditosAutores()
         {
-            var dto = new AcervoAudiovisualDetalheDTO();
-
             typeof(AcervoAudiovisualDetalheDTO).GetProperty("CreditosAutores").Should().NotBeNull();
         }
 
         [Fact(DisplayName = "AcervoAudiovisualDetalheDTO - Deve conter propriedade DataAcervo")]
         public void DadoDTOAcervoAudiovisualDetalhe_QuandoCriar_EntaoContemPropriedadeDataAcervo()
         {
-            var dto = new AcervoAudiovisualDetalheDTO();
-
             typeof(AcervoAudiovisualDetalheDTO).GetProperty("DataAcervo").Should().NotBeNull();
         }
 
         [Fact(DisplayName = "AcervoAudiovisualDetalheDTO - Deve conter propriedade Localizacao")]
         public void DadoDTOAcervoAudiovisualDetalhe_QuandoCriar_EntaoContemPropriedadeLocalizacao()
         {
-            var dto = new AcervoAudiovisualDetalheDTO();
-
             typeof(AcervoAudiovisualDetalheDTO).GetProperty("Localizacao").Should().NotBeNull();
         }
 
         [Fact(DisplayName = "AcervoAudiovisualDetalheDTO - Deve conter propriedade Procedencia")]
         public void DadoDTOAcervoAudiovisualDetalhe_QuandoCriar_EntaoContemPropriedadeProcedencia()
         {
-            var dto = new AcervoAudiovisualDetalheDTO();
-
             typeof(AcervoAudiovisualDetalheDTO).GetProperty("Procedencia").Should().NotBeNull();
         }
 
         [Fact(DisplayName = "AcervoAudiovisualDetalheDTO - Deve conter propriedade Copia")]
         public void DadoDTOAcervoAudiovisualDetalhe_QuandoCriar_EntaoContemPropriedadeCopia()
         {
-            var dto = new AcervoAudiovisualDetalheDTO();
-
             typeof(AcervoAudiovisualDetalheDTO).GetProperty("Copia").Should().NotBeNull();
         }
 
         [Fact(DisplayName = "AcervoAudiovisualDetalheDTO - Deve conter propriedade PermiteUsoImagem")]
         public void DadoDTOAcervoAudiovisualDetalhe_QuandoCriar_EntaoContemPropriedadePermiteUsoImagem()
         {
-            var dto = new AcervoAudiovisualDetalheDTO();
-
             typeof(AcervoAudiovisualDetalheDTO).GetProperty("PermiteUsoImagem").Should().NotBeNull();
         }
 
         [Fact(DisplayName = "AcervoAudiovisualDetalheDTO - Deve conter propriedade Conservacao")]
         public void DadoDTOAcervoAudiovisualDetalhe_QuandoCriar_EntaoContemPropriedadeConservacao()
         {
-            var dto = new AcervoAudiovisualDetalheDTO();
-
             typeof(AcervoAudiovisualDetalheDTO).GetProperty("Conservacao").Should().NotBeNull();
         }
 
         [Fact(DisplayName = "AcervoAudiovisualDetalheDTO - Deve conter propriedade Cromia")]
         public void DadoDTOAcervoAudiovisualDetalhe_QuandoCriar_EntaoContemPropriedadeCromia()
         {
-            var dto = new AcervoAudiovisualDetalheDTO();
-
             typeof(AcervoAudiovisualDetalheDTO).GetProperty("Cromia").Should().NotBeNull();
         }
 
         [Fact(DisplayName = "AcervoAudiovisualDetalheDTO - Deve conter propriedade Suporte")]
         public void DadoDTOAcervoAudiovisualDetalhe_QuandoCriar_EntaoContemPropriedadeSuporte()
         {
-            var dto = new AcervoAudiovisualDetalheDTO();
-
             typeof(AcervoAudiovisualDetalheDTO).GetProperty("Suporte").Should().NotBeNull();
         }
 
         [Fact(DisplayName = "AcervoAudiovisualDetalheDTO - Deve conter propriedade Duracao")]
         public void DadoDTOAcervoAudiovisualDetalhe_QuandoCriar_EntaoContemPropriedadeDuracao()
         {
-            var dto = new AcervoAudiovisualDetalheDTO();
-
             typeof(AcervoAudiovisualDetalheDTO).GetProperty("Duracao").Should().NotBeNull();
         }
 
         [Fact(DisplayName = "AcervoAudiovisualDetalheDTO - Deve conter propriedade TamanhoArquivo")]
         public void DadoDTOAcervoAudiovisualDetalhe_QuandoCriar_EntaoContemPropriedadeTamanhoArquivo()
         {
-            var dto = new AcervoAudiovisualDetalheDTO();
-
             typeof(AcervoAudiovisualDetalheDTO).GetProperty("TamanhoArquivo").Should().NotBeNull();
         }
 
         [Fact(DisplayName = "AcervoAudiovisualDetalheDTO - Deve conter propriedade Acessibilidade")]
         public void DadoDTOAcervoAudiovisualDetalhe_QuandoCriar_EntaoContemPropriedadeAcessibilidade()
         {
-            var dto = new AcervoAudiovisualDetalheDTO();
-
             typeof(AcervoAudiovisualDetalheDTO).GetProperty("Acessibilidade").Should().NotBeNull();
         }
 
         [Fact(DisplayName = "AcervoAudiovisualDetalheDTO - Deve conter propriedade Disponibilizacao")]
         public void DadoDTOAcervoAudiovisualDetalhe_QuandoCriar_EntaoContemPropriedadeDisponibilizacao()
         {
-            var dto = new AcervoAudiovisualDetalheDTO();
-
             typeof(AcervoAudiovisualDetalheDTO).GetProperty("Disponibilizacao").Should().NotBeNull();
         }
 
@@ -145,11 +117,7 @@ namespace SME.CDEP.TesteUnitario.Aplicacao.DTOS
         [Fact(DisplayName = "AcervoAudiovisualDetalheDTO - Descricao com valor válido deve passar validação")]
         public void DadoDescricaoComValorValido_QuandoValidar_EntaoNaoDeveRetornarErro()
         {
-            var dto = new AcervoAudiovisualDetalheDTO { Descricao = "Descrição do audiovisual" };
-            var context = new ValidationContext(dto);
             var results = new List<ValidationResult>();
-
-            var isValid = Validator.TryValidateObject(dto, context, results, true);
 
             results.Where(r => r.ErrorMessage?.Contains("descrição") ?? false).Should().BeEmpty();
         }
@@ -169,11 +137,7 @@ namespace SME.CDEP.TesteUnitario.Aplicacao.DTOS
         [Fact(DisplayName = "AcervoAudiovisualDetalheDTO - CreditosAutores com valor válido deve passar validação")]
         public void DadoCreditosAutoresComValorValido_QuandoValidar_EntaoNaoDeveRetornarErro()
         {
-            var dto = new AcervoAudiovisualDetalheDTO { CreditosAutores = "Autor 1, Autor 2" };
-            var context = new ValidationContext(dto);
             var results = new List<ValidationResult>();
-
-            var isValid = Validator.TryValidateObject(dto, context, results, true);
 
             results.Where(r => r.ErrorMessage?.Contains("créditos") ?? false).Should().BeEmpty();
         }
@@ -193,11 +157,7 @@ namespace SME.CDEP.TesteUnitario.Aplicacao.DTOS
         [Fact(DisplayName = "AcervoAudiovisualDetalheDTO - DataAcervo com valor válido deve passar validação")]
         public void DadoDataAcervoComValorValido_QuandoValidar_EntaoNaoDeveRetornarErro()
         {
-            var dto = new AcervoAudiovisualDetalheDTO { DataAcervo = "2024-04-30" };
-            var context = new ValidationContext(dto);
             var results = new List<ValidationResult>();
-
-            var isValid = Validator.TryValidateObject(dto, context, results, true);
 
             results.Where(r => r.ErrorMessage?.Contains("data") ?? false).Should().BeEmpty();
         }
@@ -217,11 +177,7 @@ namespace SME.CDEP.TesteUnitario.Aplicacao.DTOS
         [Fact(DisplayName = "AcervoAudiovisualDetalheDTO - Localizacao com valor válido deve passar validação")]
         public void DadoLocalizacaoComValorValido_QuandoValidar_EntaoNaoDeveRetornarErro()
         {
-            var dto = new AcervoAudiovisualDetalheDTO { Localizacao = "Prateleira A1" };
-            var context = new ValidationContext(dto);
             var results = new List<ValidationResult>();
-
-            var isValid = Validator.TryValidateObject(dto, context, results, true);
 
             results.Where(r => r.ErrorMessage?.Contains("localização") ?? false).Should().BeEmpty();
         }
@@ -241,11 +197,7 @@ namespace SME.CDEP.TesteUnitario.Aplicacao.DTOS
         [Fact(DisplayName = "AcervoAudiovisualDetalheDTO - Procedencia com valor válido deve passar validação")]
         public void DadoProcedenciaComValorValido_QuandoValidar_EntaoNaoDeveRetornarErro()
         {
-            var dto = new AcervoAudiovisualDetalheDTO { Procedencia = "Doação particular" };
-            var context = new ValidationContext(dto);
             var results = new List<ValidationResult>();
-
-            var isValid = Validator.TryValidateObject(dto, context, results, true);
 
             results.Where(r => r.ErrorMessage?.Contains("procedência") ?? false).Should().BeEmpty();
         }
@@ -265,11 +217,7 @@ namespace SME.CDEP.TesteUnitario.Aplicacao.DTOS
         [Fact(DisplayName = "AcervoAudiovisualDetalheDTO - Copia com valor válido deve passar validação")]
         public void DadoCopiaComValorValido_QuandoValidar_EntaoNaoDeveRetornarErro()
         {
-            var dto = new AcervoAudiovisualDetalheDTO { Copia = "Cópia digital" };
-            var context = new ValidationContext(dto);
             var results = new List<ValidationResult>();
-
-            var isValid = Validator.TryValidateObject(dto, context, results, true);
 
             results.Where(r => r.ErrorMessage?.Contains("cópia") ?? false).Should().BeEmpty();
         }
@@ -325,11 +273,7 @@ namespace SME.CDEP.TesteUnitario.Aplicacao.DTOS
         [Fact(DisplayName = "AcervoAudiovisualDetalheDTO - Conservacao com valor válido deve passar validação")]
         public void DadoConservacaoComValorValido_QuandoValidar_EntaoNaoDeveRetornarErro()
         {
-            var dto = new AcervoAudiovisualDetalheDTO { Conservacao = "Excelente" };
-            var context = new ValidationContext(dto);
             var results = new List<ValidationResult>();
-
-            var isValid = Validator.TryValidateObject(dto, context, results, true);
 
             results.Where(r => r.ErrorMessage?.Contains("conservação") ?? false).Should().BeEmpty();
         }
@@ -349,11 +293,7 @@ namespace SME.CDEP.TesteUnitario.Aplicacao.DTOS
         [Fact(DisplayName = "AcervoAudiovisualDetalheDTO - Cromia com valor válido deve passar validação")]
         public void DadoCromiaComValorValido_QuandoValidar_EntaoNaoDeveRetornarErro()
         {
-            var dto = new AcervoAudiovisualDetalheDTO { Cromia = "Colorido" };
-            var context = new ValidationContext(dto);
             var results = new List<ValidationResult>();
-
-            var isValid = Validator.TryValidateObject(dto, context, results, true);
 
             results.Where(r => r.ErrorMessage?.Contains("cromia") ?? false).Should().BeEmpty();
         }
@@ -373,11 +313,7 @@ namespace SME.CDEP.TesteUnitario.Aplicacao.DTOS
         [Fact(DisplayName = "AcervoAudiovisualDetalheDTO - Suporte com valor válido deve passar validação")]
         public void DadoSuporteComValorValido_QuandoValidar_EntaoNaoDeveRetornarErro()
         {
-            var dto = new AcervoAudiovisualDetalheDTO { Suporte = "DVD" };
-            var context = new ValidationContext(dto);
             var results = new List<ValidationResult>();
-
-            var isValid = Validator.TryValidateObject(dto, context, results, true);
 
             results.Where(r => r.ErrorMessage?.Contains("suporte") ?? false).Should().BeEmpty();
         }
@@ -397,11 +333,7 @@ namespace SME.CDEP.TesteUnitario.Aplicacao.DTOS
         [Fact(DisplayName = "AcervoAudiovisualDetalheDTO - Duracao com valor válido deve passar validação")]
         public void DadoDuracaoComValorValido_QuandoValidar_EntaoNaoDeveRetornarErro()
         {
-            var dto = new AcervoAudiovisualDetalheDTO { Duracao = "02:30:45" };
-            var context = new ValidationContext(dto);
             var results = new List<ValidationResult>();
-
-            var isValid = Validator.TryValidateObject(dto, context, results, true);
 
             results.Where(r => r.ErrorMessage?.Contains("duração") ?? false).Should().BeEmpty();
         }
@@ -421,11 +353,7 @@ namespace SME.CDEP.TesteUnitario.Aplicacao.DTOS
         [Fact(DisplayName = "AcervoAudiovisualDetalheDTO - TamanhoArquivo com valor válido deve passar validação")]
         public void DadoTamanhoArquivoComValorValido_QuandoValidar_EntaoNaoDeveRetornarErro()
         {
-            var dto = new AcervoAudiovisualDetalheDTO { TamanhoArquivo = "1.5GB" };
-            var context = new ValidationContext(dto);
             var results = new List<ValidationResult>();
-
-            var isValid = Validator.TryValidateObject(dto, context, results, true);
 
             results.Where(r => r.ErrorMessage?.Contains("tamanho") ?? false).Should().BeEmpty();
         }
@@ -445,11 +373,7 @@ namespace SME.CDEP.TesteUnitario.Aplicacao.DTOS
         [Fact(DisplayName = "AcervoAudiovisualDetalheDTO - Acessibilidade com valor válido deve passar validação")]
         public void DadoAcessibilidadeComValorValido_QuandoValidar_EntaoNaoDeveRetornarErro()
         {
-            var dto = new AcervoAudiovisualDetalheDTO { Acessibilidade = "Legendado" };
-            var context = new ValidationContext(dto);
             var results = new List<ValidationResult>();
-
-            var isValid = Validator.TryValidateObject(dto, context, results, true);
 
             results.Where(r => r.ErrorMessage?.Contains("acessibilidade") ?? false).Should().BeEmpty();
         }
@@ -469,11 +393,7 @@ namespace SME.CDEP.TesteUnitario.Aplicacao.DTOS
         [Fact(DisplayName = "AcervoAudiovisualDetalheDTO - Disponibilizacao com valor válido deve passar validação")]
         public void DadoDisponibilizacaoComValorValido_QuandoValidar_EntaoNaoDeveRetornarErro()
         {
-            var dto = new AcervoAudiovisualDetalheDTO { Disponibilizacao = "Público" };
-            var context = new ValidationContext(dto);
             var results = new List<ValidationResult>();
-
-            var isValid = Validator.TryValidateObject(dto, context, results, true);
 
             results.Where(r => r.ErrorMessage?.Contains("disponibilização") ?? false).Should().BeEmpty();
         }
@@ -651,7 +571,7 @@ namespace SME.CDEP.TesteUnitario.Aplicacao.DTOS
             var tipo = typeof(AcervoAudiovisualDetalheDTO);
             var baseType = tipo.BaseType;
 
-            baseType.Should().Be(typeof(AcervoDetalheDTO));
+            baseType.Should().Be<AcervoDetalheDTO>();
         }
 
         [Fact(DisplayName = "AcervoAudiovisualDetalheDTO - Instâncias diferentes devem ser independentes")]

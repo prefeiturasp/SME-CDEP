@@ -6,7 +6,7 @@ namespace SME.CDEP.TesteUnitario.Aplicacao.DTOS
 {
     public class AcervoBibliograficoLinhaDtoTeste
     {
-        private AcervoBibliograficoLinhaDTO CriarAcervoBibliograficoLinhaDTO()
+        private static AcervoBibliograficoLinhaDTO CriarAcervoBibliograficoLinhaDTO()
         {
             return new AcervoBibliograficoLinhaDTO
             {

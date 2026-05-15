@@ -404,8 +404,8 @@ namespace SME.CDEP.TesteUnitario.Aplicacao.DTOS
         {
             var arquivos = new ArquivoResumidoDTO[]
             {
-                new ArquivoResumidoDTO { Id = 1, Nome = "arquivo1.jpg", Codigo = Guid.NewGuid() },
-                new ArquivoResumidoDTO { Id = 2, Nome = "arquivo2.pdf", Codigo = Guid.NewGuid() }
+                new() { Id = 1, Nome = "arquivo1.jpg", Codigo = Guid.NewGuid() },
+                new() { Id = 2, Nome = "arquivo2.pdf", Codigo = Guid.NewGuid() }
             };
 
             var dto = new AcervoArteGraficaDTO { Arquivos = arquivos };
@@ -417,7 +417,7 @@ namespace SME.CDEP.TesteUnitario.Aplicacao.DTOS
         [Fact]
         public void DadoArquivosVazio_QuandoAtribuir_EntaoArmazena()
         {
-            var arquivos = new ArquivoResumidoDTO[] { };
+            var arquivos = Array.Empty<ArquivoResumidoDTO>();
             var dto = new AcervoArteGraficaDTO { Arquivos = arquivos };
 
             dto.Arquivos.Should().HaveCount(0);
@@ -460,7 +460,7 @@ namespace SME.CDEP.TesteUnitario.Aplicacao.DTOS
         [Fact]
         public void DadoCreditosAutoresIdsVazio_QuandoAtribuir_EntaoArmazena()
         {
-            var ids = new long[] { };
+            var ids = Array.Empty<long>();
             var dto = new AcervoArteGraficaDTO { CreditosAutoresIds = ids };
 
             dto.CreditosAutoresIds.Should().HaveCount(0);
@@ -662,7 +662,7 @@ namespace SME.CDEP.TesteUnitario.Aplicacao.DTOS
             {
                 var prop = tipo.GetProperty(propriedade);
                 prop.Should().NotBeNull($"A propriedade {propriedade} deve existir");
-                prop!.PropertyType.Should().Be(typeof(string));
+                prop!.PropertyType.Should().Be<string>();
             }
         }
 
@@ -677,7 +677,7 @@ namespace SME.CDEP.TesteUnitario.Aplicacao.DTOS
             {
                 var prop = tipo.GetProperty(propriedade);
                 prop.Should().NotBeNull($"A propriedade {propriedade} deve existir");
-                prop!.PropertyType.Should().Be(typeof(long));
+                prop!.PropertyType.Should().Be<long>();
             }
         }
 
@@ -695,7 +695,7 @@ namespace SME.CDEP.TesteUnitario.Aplicacao.DTOS
             {
                 var prop = tipo.GetProperty(propriedade);
                 prop.Should().NotBeNull($"A propriedade {propriedade} deve existir");
-                prop!.PropertyType.Should().Be(typeof(long?));
+                prop!.PropertyType.Should().Be<long?>();
             }
         }
 
@@ -710,7 +710,7 @@ namespace SME.CDEP.TesteUnitario.Aplicacao.DTOS
             {
                 var prop = tipo.GetProperty(propriedade);
                 prop.Should().NotBeNull($"A propriedade {propriedade} deve existir");
-                prop!.PropertyType.Should().Be(typeof(bool?));
+                prop!.PropertyType.Should().Be<bool?>();
             }
         }
 
@@ -721,7 +721,7 @@ namespace SME.CDEP.TesteUnitario.Aplicacao.DTOS
             var propriedade = tipo.GetProperty("Arquivos");
 
             propriedade.Should().NotBeNull();
-            propriedade!.PropertyType.Should().Be(typeof(ArquivoResumidoDTO[]));
+            propriedade!.PropertyType.Should().Be<ArquivoResumidoDTO[]>();
         }
 
         [Fact]
@@ -731,7 +731,7 @@ namespace SME.CDEP.TesteUnitario.Aplicacao.DTOS
             var propriedade = tipo.GetProperty("Auditoria");
 
             propriedade.Should().NotBeNull();
-            propriedade!.PropertyType.Should().Be(typeof(AuditoriaDTO));
+            propriedade!.PropertyType.Should().Be<AuditoriaDTO>();
         }
 
         [Fact]
@@ -741,7 +741,7 @@ namespace SME.CDEP.TesteUnitario.Aplicacao.DTOS
             var propriedade = tipo.GetProperty("CreditosAutoresIds");
 
             propriedade.Should().NotBeNull();
-            propriedade!.PropertyType.Should().Be(typeof(long[]));
+            propriedade!.PropertyType.Should().Be<long[]>();
         }
 
         [Fact]
@@ -751,7 +751,7 @@ namespace SME.CDEP.TesteUnitario.Aplicacao.DTOS
             var propriedade = tipo.GetProperty("SituacaoAcervo");
 
             propriedade.Should().NotBeNull();
-            propriedade!.PropertyType.Should().Be(typeof(SituacaoAcervo));
+            propriedade!.PropertyType.Should().Be<SituacaoAcervo>();
         }
 
         #endregion

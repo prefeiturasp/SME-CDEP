@@ -666,7 +666,7 @@ namespace SME.CDEP.TesteUnitario.Aplicacao.DTOS
 
         #region Métodos Auxiliares
 
-        private AcervoBibliograficoDetalheDTO GerarAcervoBibliograficoDetalheDtoCompleto()
+        private static AcervoBibliograficoDetalheDTO GerarAcervoBibliograficoDetalheDtoCompleto()
         {
             return new Faker<AcervoBibliograficoDetalheDTO>("pt_BR")
                 .RuleFor(x => x.Titulo, f => f.Lorem.Sentence())

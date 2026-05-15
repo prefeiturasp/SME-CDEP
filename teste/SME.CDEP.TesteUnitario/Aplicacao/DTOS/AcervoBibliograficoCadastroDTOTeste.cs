@@ -593,7 +593,7 @@ namespace SME.CDEP.TesteUnitario.Aplicacao.DTOS
             results.Should().HaveCountGreaterThanOrEqualTo(2);
         }
 
-        private AcervoBibliograficoCadastroDTO GerarAcervoBibliograficoCadastroDtoValido()
+        private static AcervoBibliograficoCadastroDTO GerarAcervoBibliograficoCadastroDtoValido()
         {
             return new Bogus.Faker<AcervoBibliograficoCadastroDTO>("pt_BR")
                 .RuleFor(x => x.Titulo, f =>

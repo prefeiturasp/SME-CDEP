@@ -2,11 +2,10 @@
 using Moq;
 using SME.CDEP.Aplicacao.DTOS;
 using SME.CDEP.Infra.Dominio.Enumerados;
-using System.Reflection;
 
 namespace SME.CDEP.TesteUnitario.Aplicacao.DTOS
 {
-    public class AcervoAudiovisualLinhaDTOTeste
+    public class AcervoAudiovisualLinhaDtoTeste
     {
         [Fact(DisplayName = "AcervoAudiovisualLinhaDTO - Deve conter propriedade Titulo")]
         public void DadoDTOAcervoAudiovisualLinha_QuandoCriar_EntaoContemPropriedadeTitulo()
@@ -476,7 +475,7 @@ namespace SME.CDEP.TesteUnitario.Aplicacao.DTOS
             var tipo = typeof(AcervoAudiovisualLinhaDTO);
             var baseType = tipo.BaseType;
 
-            baseType.Should().Be(typeof(AcervoLinhaDTO));
+            baseType.Should().Be<AcervoLinhaDTO>();
         }
 
         [Fact(DisplayName = "AcervoAudiovisualLinhaDTO - Propriedades podem ser reconfiguradas após inicialização")]

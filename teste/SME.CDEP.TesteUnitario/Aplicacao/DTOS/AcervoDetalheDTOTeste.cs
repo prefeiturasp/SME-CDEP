@@ -5,7 +5,7 @@ namespace SME.CDEP.TesteUnitario.Aplicacao.DTOS
 {
     public class AcervoDetalheDtoTeste
     {
-        private AcervoDetalheDTO CriarAcervoDetalheDTO()
+        private static AcervoDetalheDTO CriarAcervoDetalheDTO()
         {
             return new AcervoDetalheDTO
             {

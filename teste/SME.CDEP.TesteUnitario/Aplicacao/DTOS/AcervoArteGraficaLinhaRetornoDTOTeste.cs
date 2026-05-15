@@ -4,7 +4,7 @@ using SME.CDEP.Infra.Dominio.Enumerados;
 
 namespace SME.CDEP.TesteUnitario.Aplicacao.DTOS
 {
-    public class AcervoArteGraficaLinhaRetornoDTOTeste
+    public class AcervoArteGraficaLinhaRetornoDtoTeste
     {
         #region Testes de Instanciação
 
@@ -596,9 +596,7 @@ namespace SME.CDEP.TesteUnitario.Aplicacao.DTOS
         [Fact]
         public void DadoAcervoArteGraficaLinhaRetornoDTO_QuandoHerdarDeAcervoLinhaRetornoDTO_EntaoTemPropriedadesHerdadas()
         {
-            var dto = new AcervoArteGraficaLinhaRetornoDTO();
-
-            typeof(AcervoArteGraficaLinhaRetornoDTO).BaseType.Should().Be(typeof(AcervoLinhaRetornoDTO));
+            typeof(AcervoArteGraficaLinhaRetornoDTO).BaseType.Should().Be<AcervoLinhaRetornoDTO>();
         }
 
         [Fact]
@@ -707,7 +705,7 @@ namespace SME.CDEP.TesteUnitario.Aplicacao.DTOS
             {
                 var prop = tipo.GetProperty(propName);
                 prop.Should().NotBeNull();
-                prop!.PropertyType.Should().Be(typeof(LinhaConteudoAjustarRetornoDTO));
+                prop!.PropertyType.Should().Be<LinhaConteudoAjustarRetornoDTO>();
             }
         }
 
@@ -832,6 +830,7 @@ namespace SME.CDEP.TesteUnitario.Aplicacao.DTOS
             dto.Status.Should().Be(default(ImportacaoStatus));
             dto.NumeroLinha.Should().Be(0);
         }
+        private static readonly string[] expectation = ["Campo1", "Campo2"];
 
         [Fact]
         public void DadoObjectInitializerComPropriedadesHerdadas_QuandoCriar_EntaoPropriedadesHerdadasArmazenam()
@@ -847,14 +846,14 @@ namespace SME.CDEP.TesteUnitario.Aplicacao.DTOS
             dto.Status.Should().Be(ImportacaoStatus.Sucesso);
             dto.NumeroLinha.Should().Be(10);
             dto.Mensagem.Should().Be("Teste de mensagem");
-            dto.ErrosCampos.Should().BeEquivalentTo(new[] { "Campo1", "Campo2" });
+            dto.ErrosCampos.Should().BeEquivalentTo(expectation);
         }
 
         #endregion
 
         #region Métodos Auxiliares
 
-        private LinhaConteudoAjustarRetornoDTO CriarLinhaConteudoAjustarRetorno(string conteudo = "")
+        private static LinhaConteudoAjustarRetornoDTO CriarLinhaConteudoAjustarRetorno(string conteudo = "")
         {
             return new LinhaConteudoAjustarRetornoDTO
             {
@@ -862,7 +861,7 @@ namespace SME.CDEP.TesteUnitario.Aplicacao.DTOS
             };
         }
 
-        private void VerificarTodosOsCampos(AcervoArteGraficaLinhaRetornoDTO dto)
+        private static void VerificarTodosOsCampos(AcervoArteGraficaLinhaRetornoDTO dto)
         {
             dto.Titulo.Should().NotBeNull();
             dto.Codigo.Should().NotBeNull();

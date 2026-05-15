@@ -6,7 +6,7 @@ namespace SME.CDEP.TesteUnitario.Aplicacao.DTOS
 {
     public class AcervoBibliograficoLinhaRetornoDtoTeste
     {
-        private AcervoBibliograficoLinhaRetornoDTO CriarAcervoBibliograficoLinhaRetornoDTO()
+        private static AcervoBibliograficoLinhaRetornoDTO CriarAcervoBibliograficoLinhaRetornoDTO()
         {
             return new AcervoBibliograficoLinhaRetornoDTO
             {
@@ -34,7 +34,7 @@ namespace SME.CDEP.TesteUnitario.Aplicacao.DTOS
                 Status = ImportacaoStatus.Sucesso,
                 NumeroLinha = 1,
                 Mensagem = string.Empty,
-                ErrosCampos = new string[] { }
+                ErrosCampos = Array.Empty<string>()
             };
         }
 

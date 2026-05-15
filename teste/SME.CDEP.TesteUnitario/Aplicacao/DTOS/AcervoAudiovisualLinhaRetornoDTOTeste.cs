@@ -435,7 +435,7 @@ namespace SME.CDEP.TesteUnitario.Aplicacao.DTOS
             var tipo = typeof(AcervoAudiovisualLinhaRetornoDTO);
             var baseType = tipo.BaseType;
 
-            baseType.Should().Be(typeof(AcervoLinhaRetornoDTO));
+            baseType.Should().Be<AcervoLinhaRetornoDTO>();
         }
 
         [Fact(DisplayName = "AcervoAudiovisualLinhaRetornoDTO - Propriedades podem ser reconfiguradas após inicialização")]

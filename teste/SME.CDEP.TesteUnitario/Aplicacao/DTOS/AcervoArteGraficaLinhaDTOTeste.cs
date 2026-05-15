@@ -477,7 +477,7 @@ namespace SME.CDEP.TesteUnitario.Aplicacao.DTOS
         [Fact]
         public void DadoAcervoArteGraficaLinhaDTO_QuandoHerdarDeAcervoLinhaDTO_EntaoTemPropriedadesHerdadas()
         {
-            typeof(AcervoArteGraficaLinhaDTO).BaseType.Should().Be(typeof(AcervoLinhaDTO));
+            typeof(AcervoArteGraficaLinhaDTO).BaseType.Should().Be<AcervoLinhaDTO>();
         }
 
         [Fact]
@@ -516,7 +516,7 @@ namespace SME.CDEP.TesteUnitario.Aplicacao.DTOS
 
         #region Métodos Auxiliares
 
-        private LinhaConteudoAjustarDTO CriarLinhaConteudoAjustar(
+        private static LinhaConteudoAjustarDTO CriarLinhaConteudoAjustar(
             string conteudo = "",
             bool possuiErro = false,
             string mensagem = "")

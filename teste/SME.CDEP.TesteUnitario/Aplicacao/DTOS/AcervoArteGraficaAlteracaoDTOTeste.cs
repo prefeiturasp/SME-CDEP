@@ -4,8 +4,10 @@ using System.ComponentModel.DataAnnotations;
 
 namespace SME.CDEP.TesteUnitario.Aplicacao.DTOS
 {
-    public class AcervoArteGraficaAlteracaoDTOTeste
+    public class AcervoArteGraficaAlteracaoDtoTeste
     {
+        private static readonly string[] PropriedadesEsperadas = { "Id", "AcervoId" };
+
         #region Testes da Propriedade Id
 
         [Fact]
@@ -311,9 +313,10 @@ namespace SME.CDEP.TesteUnitario.Aplicacao.DTOS
         [Fact]
         public void DadoAcervoIdComValor1_QuandoValidar_EntaoPassaValidacao()
         {
+            // Arrange
             var dto = new AcervoArteGraficaAlteracaoDTO
             {
-                Id = 1L,
+                Id = 99L, // valor diferente do teste DadoIdComValor1_QuandoValidar_EntaoPassaValidacao
                 AcervoId = 1L,
                 Titulo = "Obra",
                 Ano = "2024",
@@ -326,9 +329,12 @@ namespace SME.CDEP.TesteUnitario.Aplicacao.DTOS
             var contexto = new ValidationContext(dto);
             var resultados = new List<ValidationResult>();
 
+            // Act
             var ehValido = Validator.TryValidateObject(dto, contexto, resultados, true);
 
+            // Assert
             ehValido.Should().BeTrue();
+            resultados.Should().BeEmpty();
         }
 
         #endregion
@@ -387,7 +393,7 @@ namespace SME.CDEP.TesteUnitario.Aplicacao.DTOS
                 Altura = "",
                 Diametro = "",
                 Tecnica = "",
-                Arquivos = new long[] { },
+                Arquivos = Array.Empty<long>(),
                 Descricao = ""
             };
 
@@ -466,12 +472,11 @@ namespace SME.CDEP.TesteUnitario.Aplicacao.DTOS
         [Fact]
         public void DadoInstancia_QuandoVerificarSePropriedadesExistem_EntaoTodosOsGettersESettersEstaDisponíveis()
         {
-            var dto = new AcervoArteGraficaAlteracaoDTO();
             var tipo = typeof(AcervoArteGraficaAlteracaoDTO);
             var propriedades = tipo.GetProperties();
 
             propriedades.Should().NotBeEmpty();
-            propriedades.Select(p => p.Name).Should().Contain(new[] { "Id", "AcervoId" });
+            propriedades.Select(p => p.Name).Should().Contain(PropriedadesEsperadas);
         }
 
         #endregion
