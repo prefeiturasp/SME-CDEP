@@ -264,7 +264,7 @@ namespace SME.CDEP.TesteUnitario.Aplicacao.DTOS
         public void DadoArquivosVazio_QuandoAtribuirArquivos_EntaoOArrayVazioEhArmazenado()
         {
             var dto = new AcervoTridimensionalDTO();
-            var arquivosVazios = new ArquivoResumidoDTO[] { };
+            var arquivosVazios = Array.Empty<ArquivoResumidoDTO>();
 
             dto.Arquivos = arquivosVazios;
 

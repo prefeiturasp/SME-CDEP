@@ -330,7 +330,7 @@ namespace SME.CDEP.TesteUnitario.Aplicacao.DTOS
 
             propriedades.Should().AllSatisfy(p =>
             {
-                p.PropertyType.Should().Be(typeof(long));
+                p.PropertyType.Should().Be<long>();
             });
         }
 

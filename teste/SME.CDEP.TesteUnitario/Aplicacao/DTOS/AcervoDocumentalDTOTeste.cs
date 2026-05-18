@@ -580,7 +580,7 @@ namespace SME.CDEP.TesteUnitario.Aplicacao.DTOS
         public void DadoAcessoDocumentosVazio_QuandoAtribuir_EntaoArrayVazioEhArmazenado()
         {
             var dto = new AcervoDocumentalDTO();
-            var acessoVazio = new long[] { };
+            var acessoVazio = Array.Empty<long>();
 
             dto.AcessoDocumentosIds = acessoVazio;
 
@@ -591,7 +591,7 @@ namespace SME.CDEP.TesteUnitario.Aplicacao.DTOS
         public void DadoCreditosVazio_QuandoAtribuir_EntaoArrayVazioEhArmazenado()
         {
             var dto = new AcervoDocumentalDTO();
-            var creditosVazios = new long[] { };
+            var creditosVazios = Array.Empty<long>();
 
             dto.CreditosAutoresIds = creditosVazios;
 

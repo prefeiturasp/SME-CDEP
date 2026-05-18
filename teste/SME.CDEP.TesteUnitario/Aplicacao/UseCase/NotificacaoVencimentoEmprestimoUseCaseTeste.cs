@@ -24,17 +24,18 @@ namespace SME.CDEP.TesteUnitario.Aplicacao.UseCase
         [Fact]
         public void DadoDependenciasValidas_QuandoInstanciarUseCase_EntaoRetornaInstanciaComSucesso()
         {
-            Action acao = () => new NotificacaoVencimentoEmprestimoUseCase(
+            var instancia = new NotificacaoVencimentoEmprestimoUseCase(
                 servicoAcervoEmprestimoMock.Object);
 
-            acao.Should().NotThrow();
+            instancia.Should().NotBeNull();
             sut.Should().NotBeNull();
         }
 
         [Fact]
         public void DadoServicoAcervoEmprestimoNulo_QuandoInstanciarUseCase_EntaoLancaArgumentNullException()
         {
-            Action acao = () => new NotificacaoVencimentoEmprestimoUseCase(null!);
+            // A instância criada é usada na ação, não precisa ser atribuída a uma variável.
+            Action acao = () => _ = new NotificacaoVencimentoEmprestimoUseCase(null!);
 
             acao.Should().Throw<ArgumentNullException>()
                 .WithParameterName("servicoEventoAcervoEmprestimo");

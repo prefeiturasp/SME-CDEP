@@ -125,7 +125,7 @@ namespace SME.CDEP.TesteUnitario.Aplicacao.DTOS
             var dto = faker.Generate();
 
             dto.Id.Should().BeGreaterThanOrEqualTo(1);
-            dto.Excluido.GetType().Should().Be(typeof(bool));
+            dto.Excluido.GetType().Should().Be<bool>();
         }
 
         [Fact]

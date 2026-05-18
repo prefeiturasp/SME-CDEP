@@ -236,7 +236,7 @@ namespace SME.CDEP.TesteUnitario.Aplicacao.DTOS
                 Status = ImportacaoStatus.Sucesso,
                 NumeroLinha = 10,
                 Mensagem = "Acervo importado com sucesso",
-                ErrosCampos = new string[] { }
+                ErrosCampos = Array.Empty<string>()
             };
 
             dto.Status.Should().Be(ImportacaoStatus.Sucesso);
@@ -261,7 +261,7 @@ namespace SME.CDEP.TesteUnitario.Aplicacao.DTOS
 
             dto.Status = ImportacaoStatus.Sucesso;
             dto.Mensagem = "Sucesso";
-            dto.ErrosCampos = new string[] { };
+            dto.ErrosCampos = Array.Empty<string>();
             dto.Status.Should().Be(ImportacaoStatus.Sucesso);
             dto.Mensagem.Should().Be("Sucesso");
             dto.ErrosCampos.Should().BeEmpty();

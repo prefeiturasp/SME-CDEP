@@ -235,7 +235,7 @@ namespace SME.CDEP.TesteUnitario.Aplicacao.DTOS
             var dto = new AcervoSolicitacaoRetornoCadastroDTO
             {
                 PodeCancelarSolicitacao = true,
-                Itens = new List<AcervoSolicitacaoItemRetornoCadastroDTO>()
+                Itens = []
             };
 
             dto.PodeCancelarSolicitacao.Should().BeTrue();
@@ -452,19 +452,13 @@ namespace SME.CDEP.TesteUnitario.Aplicacao.DTOS
             var dto1 = new AcervoSolicitacaoRetornoCadastroDTO
             {
                 PodeCancelarSolicitacao = true,
-                Itens = new List<AcervoSolicitacaoItemRetornoCadastroDTO> 
-                { 
-                    new AcervoSolicitacaoItemRetornoCadastroDTO { Id = 1 } 
-                }
+                Itens = Array.Empty<AcervoSolicitacaoItemRetornoCadastroDTO>()
             };
 
             var dto2 = new AcervoSolicitacaoRetornoCadastroDTO
             {
                 PodeCancelarSolicitacao = false,
-                Itens = new List<AcervoSolicitacaoItemRetornoCadastroDTO> 
-                { 
-                    new AcervoSolicitacaoItemRetornoCadastroDTO { Id = 2 } 
-                }
+                Itens = new[] { new AcervoSolicitacaoItemRetornoCadastroDTO { Id = 2 } }
             };
 
             var dtos = new[] { dto1, dto2 };

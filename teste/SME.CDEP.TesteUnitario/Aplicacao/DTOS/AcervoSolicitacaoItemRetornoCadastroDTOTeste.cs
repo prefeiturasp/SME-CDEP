@@ -436,7 +436,7 @@ namespace SME.CDEP.TesteUnitario.Aplicacao.DTOS
 
             var dto = new AcervoSolicitacaoItemRetornoCadastroDTO
             {
-                Arquivos = new List<ArquivoCodigoNomeDTO> { arquivo }
+                Arquivos = [arquivo]
             };
 
             dto.Arquivos.Should().HaveCount(1);
@@ -455,7 +455,7 @@ namespace SME.CDEP.TesteUnitario.Aplicacao.DTOS
 
             var dto = new AcervoSolicitacaoItemRetornoCadastroDTO
             {
-                Arquivos = new List<ArquivoCodigoNomeDTO> { arquivo }
+                Arquivos = [arquivo]
             };
 
             dto.Arquivos.Should().HaveCount(1);

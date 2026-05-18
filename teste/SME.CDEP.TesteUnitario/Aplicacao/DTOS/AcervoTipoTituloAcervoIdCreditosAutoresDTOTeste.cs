@@ -259,7 +259,7 @@ namespace SME.CDEP.TesteUnitario.Aplicacao.DTOS
         [Fact(DisplayName = "DTO - Deve suportar array vazio de AutoresCreditos")]
         public void Deve_suportar_array_vazio_autores_creditos()
         {
-            var autoresVazio = new string[] { };
+            var autoresVazio = Array.Empty<string>();
 
             var dto = new AcervoTipoTituloAcervoIdCreditosAutoresDTO
             {
@@ -669,7 +669,7 @@ namespace SME.CDEP.TesteUnitario.Aplicacao.DTOS
         {
             var dto = new AcervoTipoTituloAcervoIdCreditosAutoresDTO
             {
-                AutoresCreditos = new string[] { },
+                AutoresCreditos = Array.Empty<string>(),
                 EstaDisponivel = true,
                 TemControleDisponibilidade = true
             };
