@@ -15,7 +15,7 @@ namespace SME.CDEP.TesteUnitario.Aplicacao.UseCase.Relatorio
         private readonly Mock<IHttpClientFactory> _httpClientFactoryMock;
         private readonly Mock<IContextoAplicacao> _contextoAplicacaoMock;
         private readonly RelatorioTitulosMaisPesquisadosUseCase _useCase;
-        private readonly List<TipoAcervo> _tipoAcervos = new List<TipoAcervo> { TipoAcervo.Bibliografico };
+        private readonly List<TipoAcervo> _tipoAcervos = new() { TipoAcervo.Bibliografico };
         private const string BaseAddress = "https://api.example.com/";
         private const string ApiEndpoint = "v1/cdep/titulos-mais-pesquisados";
 

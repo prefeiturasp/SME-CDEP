@@ -76,7 +76,7 @@ namespace SME.CDEP.TesteUnitario.Aplicacao.UseCase.Relatorio
 
             var useCase = new RelatorioControleEditoraUseCase(httpClientFactoryMock.Object, servicoAcervoMock.Object, contextoAplicacaoMock.Object);
 
-            var request = new RelatorioControleEditoraRequest { EditoraId = new List<int> { 10 } };
+            var request = new RelatorioControleEditoraRequest { EditoraId = [10] };
 
             var result = await useCase.Executar(request);
 
@@ -150,7 +150,7 @@ namespace SME.CDEP.TesteUnitario.Aplicacao.UseCase.Relatorio
                 contextoAplicacaoMock.Object
             );
 
-            var request = new RelatorioControleEditoraRequest { EditoraId = new List<int> { 99 } };
+            var request = new RelatorioControleEditoraRequest { EditoraId = [99] };
 
             await useCase.Executar(request);
 

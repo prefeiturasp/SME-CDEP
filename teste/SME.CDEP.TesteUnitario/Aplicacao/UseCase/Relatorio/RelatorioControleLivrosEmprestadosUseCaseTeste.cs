@@ -576,7 +576,7 @@ namespace SME.CDEP.TesteUnitario.Aplicacao.UseCase.Relatorio
                 .Returns([1]);
         }
 
-        private RelatorioControleLivroEmprestadosRequest GerarFiltrosValidos() =>
+        private static RelatorioControleLivroEmprestadosRequest GerarFiltrosValidos() =>
             new Faker<RelatorioControleLivroEmprestadosRequest>()
                 .CustomInstantiator(f => new RelatorioControleLivroEmprestadosRequest
                 {
