@@ -11,7 +11,7 @@ using SME.CDEP.Infra.Servicos.Rabbit.Dto;
 
 namespace SME.CDEP.Aplicacao
 {
-    public class NotificarViaEmailCancelamentoAtendimentoItemUseCaseUseCase(IRepositorioAcervoSolicitacaoItem repositorioAcervoSolicitacaoItem,
+    public class NotificarViaEmailCancelamentoAtendimentoItemUseCase(IRepositorioAcervoSolicitacaoItem repositorioAcervoSolicitacaoItem,
         IServicoNotificacaoEmail servicoNotificacaoEmail, IRepositorioParametroSistema repositorioParametroSistema) : INotificarViaEmailCancelamentoAtendimentoItemUseCase
     {
         public async Task<bool> Executar(MensagemRabbit param)

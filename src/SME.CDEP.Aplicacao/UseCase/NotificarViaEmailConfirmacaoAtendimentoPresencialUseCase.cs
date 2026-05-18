@@ -12,7 +12,7 @@ using SME.CDEP.Infra.Servicos.Rabbit.Dto;
 
 namespace SME.CDEP.Aplicacao
 {
-    public class NotificarViaEmailConfirmacaoAtendimentoPresencialUseCaseUseCase(IRepositorioAcervoSolicitacaoItem repositorioAcervoSolicitacaoItem,
+    public class NotificarViaEmailConfirmacaoAtendimentoPresencialUseCase(IRepositorioAcervoSolicitacaoItem repositorioAcervoSolicitacaoItem,
         IServicoNotificacaoEmail servicoNotificacaoEmail, IRepositorioParametroSistema repositorioParametroSistema) : INotificarViaEmailConfirmacaoAtendimentoPresencialUseCase
     {
         public async Task<bool> Executar(MensagemRabbit param)
