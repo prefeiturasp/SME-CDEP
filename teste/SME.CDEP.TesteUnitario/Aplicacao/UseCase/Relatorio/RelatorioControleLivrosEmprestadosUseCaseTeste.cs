@@ -448,7 +448,7 @@ namespace SME.CDEP.TesteUnitario.Aplicacao.UseCase.Relatorio
                 Tombo = null,
                 Modelo = ModeloRelatorio.Analitico,
                 SituacaoSolicitacaoItem = SituacaoSolicitacaoItem.FINALIZADO_MANUALMENTE,
-                SituacaoEmprestimo = new List<SituacaoEmprestimo> { SituacaoEmprestimo.DEVOLVIDO },
+                SituacaoEmprestimo = [SituacaoEmprestimo.DEVOLVIDO],
                 SomenteDevolvidos = true
             };
 
@@ -573,7 +573,7 @@ namespace SME.CDEP.TesteUnitario.Aplicacao.UseCase.Relatorio
         {
             var servicoAcervoMock = _mocker.GetMock<IServicoAcervo>();
             servicoAcervoMock.Setup(x => x.ObterTiposAcervosPermitidosDoPerfilLogado())
-                .Returns(new long[] { 1 });
+                .Returns([1]);
         }
 
         private RelatorioControleLivroEmprestadosRequest GerarFiltrosValidos() =>
@@ -584,12 +584,12 @@ namespace SME.CDEP.TesteUnitario.Aplicacao.UseCase.Relatorio
                     Tombo = f.Random.AlphaNumeric(10),
                     Modelo = ModeloRelatorio.Analitico,
                     SituacaoSolicitacaoItem = SituacaoSolicitacaoItem.FINALIZADO_MANUALMENTE,
-                    SituacaoEmprestimo = new List<SituacaoEmprestimo> { SituacaoEmprestimo.DEVOLVIDO },
+                    SituacaoEmprestimo = [SituacaoEmprestimo.DEVOLVIDO],
                     SomenteDevolvidos = true
                 })
                 .Generate();
 
-        private Mock<HttpMessageHandler> CriarHttpMessageHandlerMock(HttpStatusCode statusCode, string content = "")
+        private static Mock<HttpMessageHandler> CriarHttpMessageHandlerMock(HttpStatusCode statusCode, string content = "")
         {
             var handlerMock = new Mock<HttpMessageHandler>();
 

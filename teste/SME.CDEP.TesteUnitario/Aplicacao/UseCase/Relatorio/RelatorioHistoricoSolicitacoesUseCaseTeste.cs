@@ -287,12 +287,12 @@ namespace SME.CDEP.TesteUnitario.Aplicacao.UseCase.Relatorio
                     f.Person.FullName,
                     f.Date.Past(),
                     f.Date.Future(),
-                    new List<TipoAcervo> { TipoAcervo.Bibliografico },
-                    new List<SituacaoSolicitacaoItem> { SituacaoSolicitacaoItem.AGUARDANDO_ATENDIMENTO }
+                    [TipoAcervo.Bibliografico],
+                    [SituacaoSolicitacaoItem.AGUARDANDO_ATENDIMENTO]
                 ))
                 .Generate();
 
-        private Mock<HttpMessageHandler> CriarHttpMessageHandlerMock(HttpStatusCode statusCode, string content = "")
+        private static Mock<HttpMessageHandler> CriarHttpMessageHandlerMock(HttpStatusCode statusCode, string content = "")
         {
             var handlerMock = new Mock<HttpMessageHandler>();
 

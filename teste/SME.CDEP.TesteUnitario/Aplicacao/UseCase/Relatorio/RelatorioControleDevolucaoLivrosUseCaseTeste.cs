@@ -583,7 +583,7 @@ namespace SME.CDEP.TesteUnitario.Aplicacao.UseCase.Relatorio
                 .Returns(new long[] { 1 });
         }
 
-        private RelatorioControleDevolucaoLivrosRequest GerarFiltrosValidos() =>
+        private static RelatorioControleDevolucaoLivrosRequest GerarFiltrosValidos() =>
             new Faker<RelatorioControleDevolucaoLivrosRequest>()
                 .CustomInstantiator(f => new RelatorioControleDevolucaoLivrosRequest
                 {
@@ -592,7 +592,7 @@ namespace SME.CDEP.TesteUnitario.Aplicacao.UseCase.Relatorio
                 })
                 .Generate();
 
-        private Mock<HttpMessageHandler> CriarHttpMessageHandlerMock(HttpStatusCode statusCode, string content = "")
+        private static Mock<HttpMessageHandler> CriarHttpMessageHandlerMock(HttpStatusCode statusCode, string content = "")
         {
             var handlerMock = new Mock<HttpMessageHandler>();
 

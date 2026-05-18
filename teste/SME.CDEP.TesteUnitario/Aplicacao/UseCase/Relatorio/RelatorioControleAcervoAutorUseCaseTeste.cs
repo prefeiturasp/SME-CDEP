@@ -35,7 +35,7 @@ namespace SME.CDEP.TesteUnitario.Aplicacao.UseCase.Relatorio
         {
             var filtros = new RelatorioControleAcervoAutorRequest
             {
-                Autores = new List<int> { 1 },
+                Autores = [1],
                 TipoAcervo = Infra.Dominio.Enumerados.TipoAcervo.Bibliografico
             };
 
@@ -72,7 +72,7 @@ namespace SME.CDEP.TesteUnitario.Aplicacao.UseCase.Relatorio
         {
             var filtros = new RelatorioControleAcervoAutorRequest
             {
-                Autores = new List<int> { 1 },
+                Autores = [1],
                 TipoAcervo = Infra.Dominio.Enumerados.TipoAcervo.Bibliografico
             };
 
@@ -102,7 +102,7 @@ namespace SME.CDEP.TesteUnitario.Aplicacao.UseCase.Relatorio
         {
             var filtros = new RelatorioControleAcervoAutorRequest
             {
-                Autores = new List<int> { 1 },
+                Autores = [1],
                 TipoAcervo = Infra.Dominio.Enumerados.TipoAcervo.Bibliografico
             };
 
@@ -132,7 +132,7 @@ namespace SME.CDEP.TesteUnitario.Aplicacao.UseCase.Relatorio
         {
             var filtros = new RelatorioControleAcervoAutorRequest
             {
-                Autores = new List<int> { 1 },
+                Autores = [1],
                 TipoAcervo = Infra.Dominio.Enumerados.TipoAcervo.Bibliografico
             };
 
@@ -206,13 +206,13 @@ namespace SME.CDEP.TesteUnitario.Aplicacao.UseCase.Relatorio
         {
             var filtros = new RelatorioControleAcervoAutorRequest
             {
-                Autores = new List<int> { 1 },
+                Autores = [1],
                 TipoAcervo = Infra.Dominio.Enumerados.TipoAcervo.Bibliografico
             };
             var nomeUsuario = "Maria Santos";
 
             mockServicoAcervo.Setup(s => s.ObterTiposAcervosPermitidosDoPerfilLogado())
-                .Returns(new long[] { 1 });
+                .Returns([1]);
 
             mockContextoAplicacao.Setup(c => c.NomeUsuario).Returns(nomeUsuario);
             mockContextoAplicacao.Setup(c => c.UsuarioLogado).Returns("RF789");
@@ -239,13 +239,13 @@ namespace SME.CDEP.TesteUnitario.Aplicacao.UseCase.Relatorio
         {
             var filtros = new RelatorioControleAcervoAutorRequest
             {
-                Autores = new List<int> { 1 },
+                Autores = [1],
                 TipoAcervo = Infra.Dominio.Enumerados.TipoAcervo.Bibliografico
             };
             var usuarioRF = "RF456";
 
             mockServicoAcervo.Setup(s => s.ObterTiposAcervosPermitidosDoPerfilLogado())
-                .Returns(new long[] { 1 });
+                .Returns([1]);
 
             mockContextoAplicacao.Setup(c => c.NomeUsuario).Returns("João");
             mockContextoAplicacao.Setup(c => c.UsuarioLogado).Returns(usuarioRF);
@@ -272,7 +272,7 @@ namespace SME.CDEP.TesteUnitario.Aplicacao.UseCase.Relatorio
         {
             var filtros = new RelatorioControleAcervoAutorRequest
             {
-                Autores = new List<int> { 1 },
+                Autores = [1],
                 TipoAcervo = Infra.Dominio.Enumerados.TipoAcervo.Bibliografico
             };
             var tiposPermitidos = new long[] { 10, 20, 30 };
@@ -305,12 +305,12 @@ namespace SME.CDEP.TesteUnitario.Aplicacao.UseCase.Relatorio
         {
             var filtros = new RelatorioControleAcervoAutorRequest
             {
-                Autores = new List<int> { 1 },
+                Autores = [1],
                 TipoAcervo = Infra.Dominio.Enumerados.TipoAcervo.Bibliografico
             };
 
             mockServicoAcervo.Setup(s => s.ObterTiposAcervosPermitidosDoPerfilLogado())
-                .Returns(new long[] { 1, 2 });
+                .Returns([1]);
 
             mockContextoAplicacao.Setup(c => c.NomeUsuario).Returns("João");
             mockContextoAplicacao.Setup(c => c.UsuarioLogado).Returns("RF123");
@@ -344,12 +344,12 @@ namespace SME.CDEP.TesteUnitario.Aplicacao.UseCase.Relatorio
         {
             var filtros = new RelatorioControleAcervoAutorRequest
             {
-                Autores = new List<int> { 1 },
+                Autores = [1],
                 TipoAcervo = Infra.Dominio.Enumerados.TipoAcervo.Bibliografico
             };
 
             mockServicoAcervo.Setup(s => s.ObterTiposAcervosPermitidosDoPerfilLogado())
-                .Returns(new long[] { 1 });
+                .Returns([1]);
 
             mockContextoAplicacao.Setup(c => c.NomeUsuario).Returns("João");
             mockContextoAplicacao.Setup(c => c.UsuarioLogado).Returns("RF123");
@@ -376,14 +376,14 @@ namespace SME.CDEP.TesteUnitario.Aplicacao.UseCase.Relatorio
         {
             var filtros = new RelatorioControleAcervoAutorRequest
             {
-                Autores = new List<int> { 1 },
+                Autores = [1],
                 TipoAcervo = Infra.Dominio.Enumerados.TipoAcervo.Bibliografico
             };
             var conteudoEsperado = "Conteúdo do relatório PDF de autores";
             var streamContent = new MemoryStream(Encoding.UTF8.GetBytes(conteudoEsperado));
 
             mockServicoAcervo.Setup(s => s.ObterTiposAcervosPermitidosDoPerfilLogado())
-                .Returns(new long[] { 1 });
+                .Returns([1]);
 
             mockContextoAplicacao.Setup(c => c.NomeUsuario).Returns("João");
             mockContextoAplicacao.Setup(c => c.UsuarioLogado).Returns("RF123");
@@ -416,12 +416,12 @@ namespace SME.CDEP.TesteUnitario.Aplicacao.UseCase.Relatorio
         {
             var filtros = new RelatorioControleAcervoAutorRequest
             {
-                Autores = new List<int> { 1 },
+                Autores = [1],
                 TipoAcervo = Infra.Dominio.Enumerados.TipoAcervo.Bibliografico
             };
 
             mockServicoAcervo.Setup(s => s.ObterTiposAcervosPermitidosDoPerfilLogado())
-                .Returns(new long[] { 1 });
+                .Returns([1]);
 
             mockContextoAplicacao.Setup(c => c.NomeUsuario).Returns("João");
             mockContextoAplicacao.Setup(c => c.UsuarioLogado).Returns("RF123");
@@ -506,7 +506,7 @@ namespace SME.CDEP.TesteUnitario.Aplicacao.UseCase.Relatorio
             };
 
             mockServicoAcervo.Setup(s => s.ObterTiposAcervosPermitidosDoPerfilLogado())
-                .Returns(new long[] { 1 });
+                .Returns([1]);
 
             mockContextoAplicacao.Setup(c => c.NomeUsuario).Returns("João");
             mockContextoAplicacao.Setup(c => c.UsuarioLogado).Returns("RF123");
@@ -534,7 +534,7 @@ namespace SME.CDEP.TesteUnitario.Aplicacao.UseCase.Relatorio
         {
             var filtros = new RelatorioControleAcervoAutorRequest
             {
-                Autores = new List<int> { 1 },
+                Autores = [1],
                 TipoAcervo = Infra.Dominio.Enumerados.TipoAcervo.Bibliografico
             };
 
