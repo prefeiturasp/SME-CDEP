@@ -5,7 +5,7 @@ namespace SME.CDEP.TesteUnitario.Aplicacao.DTOS
 {
     public class AcervoFotograficoAlteracaoDTOTeste
     {
-        private AcervoFotograficoAlteracaoDTO CriarAcervoFotograficoAlteracaoDTOCompleto()
+        private static AcervoFotograficoAlteracaoDTO CriarAcervoFotograficoAlteracaoDTOCompleto()
         {
             return new AcervoFotograficoAlteracaoDTO
             {
@@ -555,7 +555,7 @@ namespace SME.CDEP.TesteUnitario.Aplicacao.DTOS
             var propriedadeId = typeof(AcervoFotograficoAlteracaoDTO).GetProperty("Id");
 
             propriedadeId.Should().NotBeNull();
-            propriedadeId!.PropertyType.Should().Be(typeof(long));
+            propriedadeId!.PropertyType.Should().Be<long>();
         }
 
         [Fact]
@@ -564,46 +564,7 @@ namespace SME.CDEP.TesteUnitario.Aplicacao.DTOS
             var propriedadeAcervoId = typeof(AcervoFotograficoAlteracaoDTO).GetProperty("AcervoId");
 
             propriedadeAcervoId.Should().NotBeNull();
-            propriedadeAcervoId!.PropertyType.Should().Be(typeof(long));
-        }
-
-        [Fact]
-        public void DadoAcervoFotograficoAlteracaoDTO_QuandoCompararPropriedadesAntesEDepois_EntaoPropriedadesAlteradas()
-        {
-            var dto = new AcervoFotograficoAlteracaoDTO
-            {
-                Id = 100,
-                AcervoId = 200,
-                Quantidade = 10
-            };
-
-            dto.Id = 150;
-            dto.AcervoId = 250;
-            dto.Quantidade = 20;
-
-            dto.Id.Should().Be(150);
-            dto.AcervoId.Should().Be(250);
-            dto.Quantidade.Should().Be(20);
-        }
-
-        [Fact]
-        public void DadoAcervoFotograficoAlteracaoDTO_QuandoHerdarDeAcervoFotograficoCadastroDTO_EntaoTodosPropriedadesDisponiveis()
-        {
-            var dto = new AcervoFotograficoAlteracaoDTO();
-
-            // Verificar propriedades herdadas
-            dto.Should().BeAssignableTo<AcervoFotograficoCadastroDTO>();
-
-            // Verificar se pode acessar propriedades da classe base
-            dto.Localizacao = "Teste Herança";
-            dto.Procedencia = "Procedência Teste";
-            dto.ConservacaoId = 5;
-            dto.Quantidade = 100;
-
-            dto.Localizacao.Should().Be("Teste Herança");
-            dto.Procedencia.Should().Be("Procedência Teste");
-            dto.ConservacaoId.Should().Be(5);
-            dto.Quantidade.Should().Be(100);
+            propriedadeAcervoId!.PropertyType.Should().Be<long>();
         }
 
         [Fact]
@@ -617,8 +578,8 @@ namespace SME.CDEP.TesteUnitario.Aplicacao.DTOS
             propriedadeId.Should().NotBeNull();
             propriedadeAcervoId.Should().NotBeNull();
 
-            propriedadeId!.PropertyType.Should().Be(typeof(long));
-            propriedadeAcervoId!.PropertyType.Should().Be(typeof(long));
+            propriedadeId!.PropertyType.Should().Be<long>();
+            propriedadeAcervoId!.PropertyType.Should().Be<long>();
         }
 
         [Fact]

@@ -416,7 +416,7 @@ namespace SME.CDEP.TesteUnitario.Aplicacao.DTOS
         [Fact]
         public void DadoArquivosVazio_QuandoAtribuirArrayVazio_EntaoDeveArmazenarVazio()
         {
-            var arquivos = new long[] { };
+            var arquivos = Array.Empty<long>();
             var dto = new AcervoFotograficoCadastroDTO { Arquivos = arquivos };
 
             dto.Arquivos.Should().BeEmpty();

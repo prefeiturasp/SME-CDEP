@@ -6,7 +6,7 @@ namespace SME.CDEP.TesteUnitario.Aplicacao.DTOS
 {
     public class AcervoDocumentalDtoTeste
     {
-        private AcervoDocumentalDTO CriarAcervoDocumentalDTOCompleto()
+        private static AcervoDocumentalDTO CriarAcervoDocumentalDTOCompleto()
         {
             return new AcervoDocumentalDTO
             {
@@ -567,7 +567,7 @@ namespace SME.CDEP.TesteUnitario.Aplicacao.DTOS
         {
             // Arrange
             var dto = new AcervoDocumentalDTO();
-            var arquivosVazios = new ArquivoResumidoDTO[] { };
+            var arquivosVazios = Array.Empty<ArquivoResumidoDTO>();
 
             // Act
             dto.Arquivos = arquivosVazios;

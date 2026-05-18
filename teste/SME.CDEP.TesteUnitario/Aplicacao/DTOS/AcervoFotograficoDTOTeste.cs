@@ -494,8 +494,8 @@ namespace SME.CDEP.TesteUnitario.Aplicacao.DTOS
         [Fact]
         public void DadoArquivos_QuandoAtribuirArray_EntaoDeveArmazenarCorretamente()
         {
-            var arquivos = new[] 
-            { 
+            var arquivos = new[]
+            {
                 new ArquivoResumidoDTO { Id = 1, Nome = "Arquivo1" },
                 new ArquivoResumidoDTO { Id = 2, Nome = "Arquivo2" }
             };
@@ -508,8 +508,7 @@ namespace SME.CDEP.TesteUnitario.Aplicacao.DTOS
         [Fact]
         public void DadoArquivosVazio_QuandoAtribuirArrayVazio_EntaoDeveArmazenarVazio()
         {
-            var arquivos = Array.Empty<ArquivoResumidoDTO>();
-            var dto = new AcervoFotograficoDTO { Arquivos = arquivos };
+            var dto = new AcervoFotograficoDTO { Arquivos = Array.Empty<ArquivoResumidoDTO>() };
 
             dto.Arquivos.Should().BeEmpty();
         }
@@ -829,7 +828,7 @@ namespace SME.CDEP.TesteUnitario.Aplicacao.DTOS
             var dto = new AcervoFotograficoDTO { CreditosAutoresIds = creditosAutoresIds };
 
             dto.CreditosAutoresIds.Should().HaveCount(5);
-            dto.CreditosAutoresIds.Should().Contain(new[] { 1L, 2L, 3L, 4L, 5L });
+            dto.CreditosAutoresIds.Should().Contain([1L, 2L, 3L, 4L, 5L]);
         }
 
         [Fact]

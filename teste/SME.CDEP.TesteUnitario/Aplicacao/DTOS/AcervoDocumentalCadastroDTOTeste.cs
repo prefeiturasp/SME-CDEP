@@ -5,7 +5,7 @@ namespace SME.CDEP.TesteUnitario.Aplicacao.DTOS
 {
     public class AcervoDocumentalCadastroDtoTeste
     {
-        private AcervoDocumentalCadastroDTO CriarAcervoDocumentalCadastroDTO()
+        private static AcervoDocumentalCadastroDTO CriarAcervoDocumentalCadastroDTO()
         {
             return new AcervoDocumentalCadastroDTO
             {
@@ -499,7 +499,7 @@ namespace SME.CDEP.TesteUnitario.Aplicacao.DTOS
         public void DadoAcervoDocumentalCadastro_QuandoArquivosVazio_EntaoArquivosEhVazio()
         {
             var dto = new AcervoDocumentalCadastroDTO();
-            var arquivosVazios = new long[] { };
+            var arquivosVazios = Array.Empty<long>();
 
             dto.Arquivos = arquivosVazios;
 
@@ -510,7 +510,7 @@ namespace SME.CDEP.TesteUnitario.Aplicacao.DTOS
         public void DadoAcervoDocumentalCadastro_QuandoAcessoDocumentosIdsVazio_EntaoAcessoDocumentosIdsEhVazio()
         {
             var dto = new AcervoDocumentalCadastroDTO();
-            var acessoVazio = new long[] { };
+            var acessoVazio = Array.Empty<long>();
 
             dto.AcessoDocumentosIds = acessoVazio;
 

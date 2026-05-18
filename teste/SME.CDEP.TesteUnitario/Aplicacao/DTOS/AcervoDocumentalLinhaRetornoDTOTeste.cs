@@ -6,7 +6,7 @@ namespace SME.CDEP.TesteUnitario.Aplicacao.DTOS
 {
     public class AcervoDocumentalLinhaRetornoDtoTeste
     {
-        private AcervoDocumentalLinhaRetornoDTO CriarAcervoDocumentalLinhaRetornoCompleto()
+        private static AcervoDocumentalLinhaRetornoDTO CriarAcervoDocumentalLinhaRetornoCompleto()
         {
             return new AcervoDocumentalLinhaRetornoDTO
             {
@@ -237,7 +237,7 @@ namespace SME.CDEP.TesteUnitario.Aplicacao.DTOS
         {
             var dto = new AcervoDocumentalLinhaRetornoDTO();
 
-            dto.ErrosCampos = new string[] { };
+            dto.ErrosCampos = Array.Empty<string>();
 
             dto.ErrosCampos.Should().BeEmpty();
         }
@@ -834,7 +834,7 @@ namespace SME.CDEP.TesteUnitario.Aplicacao.DTOS
         {
             var dto = new AcervoDocumentalLinhaRetornoDTO
             {
-                ErrosCampos = new string[] { }
+                ErrosCampos = Array.Empty<string>()
             };
 
             dto.ErrosCampos.Should().BeEmpty();

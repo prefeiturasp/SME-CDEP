@@ -6,7 +6,7 @@ namespace SME.CDEP.TesteUnitario.Aplicacao.DTOS
 {
     public class AcervoDocumentalAlteracaoDtoTeste
     {
-        private AcervoDocumentalAlteracaoDTO CriarAcervoDocumentalAlteracaoDTO()
+        private static AcervoDocumentalAlteracaoDTO CriarAcervoDocumentalAlteracaoDTO()
         {
             return new AcervoDocumentalAlteracaoDTO
             {
@@ -467,7 +467,7 @@ namespace SME.CDEP.TesteUnitario.Aplicacao.DTOS
         public void DadoAcervoDocumentalAlteracao_QuandoDefinirCreditosAutoresIdsVazio_EntaoCreditosAutoresIdsEhVazio()
         {
             var dto = new AcervoDocumentalAlteracaoDTO();
-            var creditosVazios = new long[] { };
+            var creditosVazios = Array.Empty<long>();
 
             dto.CreditosAutoresIds = creditosVazios;
 
@@ -478,7 +478,7 @@ namespace SME.CDEP.TesteUnitario.Aplicacao.DTOS
         public void DadoAcervoDocumentalAlteracao_QuandoDefinirCoAutoresVazio_EntaoCoAutoresEhVazio()
         {
             var dto = new AcervoDocumentalAlteracaoDTO();
-            var coAutoresVazios = new CoAutorDTO[] { };
+            var coAutoresVazios = Array.Empty<CoAutorDTO>();
 
             dto.CoAutores = coAutoresVazios;
 

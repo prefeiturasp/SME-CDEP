@@ -529,7 +529,7 @@ namespace SME.CDEP.TesteUnitario.Aplicacao.DTOS
             };
         }
 
-        private void CriarDto(out AcervoArteGraficaLinhaDTO dto)
+        private static void CriarDto(out AcervoArteGraficaLinhaDTO dto)
         {
             dto = new AcervoArteGraficaLinhaDTO
             {

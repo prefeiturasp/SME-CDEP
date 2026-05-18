@@ -5,7 +5,7 @@ namespace SME.CDEP.TesteUnitario.Aplicacao.DTOS
 {
     public class AcervoDocumentalDetalheDtoTeste
     {
-        private AcervoDocumentalDetalheDTO CriarAcervoDocumentalDetalheDTO()
+        private static AcervoDocumentalDetalheDTO CriarAcervoDocumentalDetalheDTO()
         {
             return new AcervoDocumentalDetalheDTO
             {
@@ -723,7 +723,7 @@ namespace SME.CDEP.TesteUnitario.Aplicacao.DTOS
         public void DadoAcervoDocumentalDetalhe_QuandoImagensVazia_EntaoImagensEhVazia()
         {
             var dto = new AcervoDocumentalDetalheDTO();
-            var imagensVazias = new ImagemDTO[] { };
+            var imagensVazias = Array.Empty<ImagemDTO>();
 
             dto.Imagens = imagensVazias;
 

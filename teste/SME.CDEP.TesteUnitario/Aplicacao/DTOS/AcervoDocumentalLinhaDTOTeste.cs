@@ -6,7 +6,7 @@ namespace SME.CDEP.TesteUnitario.Aplicacao.DTOS
 {
     public class AcervoDocumentalLinhaDtoTeste
     {
-        private AcervoDocumentalLinhaDTO CriarAcervoDocumentalLinhaCompleto()
+        private static AcervoDocumentalLinhaDTO CriarAcervoDocumentalLinhaCompleto()
         {
             return new AcervoDocumentalLinhaDTO
             {

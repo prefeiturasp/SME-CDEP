@@ -337,7 +337,7 @@ namespace SME.CDEP.TesteUnitario.Aplicacao.DTOS
         [Fact]
         public void DadoImagemVazia_QuandoAtribuir_EntaoArmazena()
         {
-            var imagens = new ImagemDTO[] { };
+            var imagens = Array.Empty<ImagemDTO>();
 
             var dto = new AcervoArteGraficaDetalheDTO { Imagens = imagens };
 

@@ -5,7 +5,7 @@ namespace SME.CDEP.TesteUnitario.Aplicacao.DTOS
 {
     public class AcervoEmprestimoProrrogacaoDTOTeste
     {
-        private AcervoEmprestimoProrrogacaoDTO CriarAcervoEmprestimoProrrogacaoDTOCompleto()
+        private static AcervoEmprestimoProrrogacaoDTO CriarAcervoEmprestimoProrrogacaoDTOCompleto()
         {
             return new AcervoEmprestimoProrrogacaoDTO
             {
@@ -437,7 +437,7 @@ namespace SME.CDEP.TesteUnitario.Aplicacao.DTOS
             var propriedadeDataDevolucao = typeof(AcervoEmprestimoProrrogacaoDTO).GetProperty("DataDevolucao");
 
             propriedadeDataDevolucao.Should().NotBeNull();
-            propriedadeDataDevolucao!.PropertyType.Should().Be(typeof(DateTime));
+            propriedadeDataDevolucao!.PropertyType.Should().Be<DateTime>();
         }
 
         [Fact]
@@ -447,7 +447,7 @@ namespace SME.CDEP.TesteUnitario.Aplicacao.DTOS
             var propriedadeAcervoId = typeof(AcervoEmprestimoProrrogacaoDTO).GetProperty("AcervoSolicitacaoItemId");
 
             propriedadeAcervoId.Should().NotBeNull();
-            propriedadeAcervoId!.PropertyType.Should().Be(typeof(long));
+            propriedadeAcervoId!.PropertyType.Should().Be<long>();
         }
 
         [Fact]

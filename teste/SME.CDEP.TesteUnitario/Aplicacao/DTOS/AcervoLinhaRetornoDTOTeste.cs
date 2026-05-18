@@ -170,7 +170,7 @@ namespace SME.CDEP.TesteUnitario.Aplicacao.DTOS
         [Fact]
         public void DadoErrosCamposVazio_QuandoAssignar_EntaoRetornaArrayVazio()
         {
-            var erros = new string[] { };
+            var erros = Array.Empty<string>();
             var dto = new AcervoLinhaRetornoDTO();
 
             dto.ErrosCampos = erros;

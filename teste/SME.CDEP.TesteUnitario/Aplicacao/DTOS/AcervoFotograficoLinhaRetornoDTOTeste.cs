@@ -753,7 +753,7 @@ namespace SME.CDEP.TesteUnitario.Aplicacao.DTOS
                 NumeroLinha = numeroLinha,
                 Status = ImportacaoStatus.Sucesso,
                 Mensagem = "Processado",
-                ErrosCampos = new string[] { },
+                ErrosCampos = Array.Empty<string>(),
                 Titulo = titulo,
                 Codigo = codigo,
                 CreditosAutoresIds = creditosAutoresIds,
