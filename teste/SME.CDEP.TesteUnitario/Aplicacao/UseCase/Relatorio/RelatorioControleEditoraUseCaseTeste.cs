@@ -7,11 +7,30 @@ using SME.CDEP.Dominio.Contexto;
 using System.Net;
 using System.Text;
 using Newtonsoft.Json.Linq;
+using System.Linq;
 
 namespace SME.CDEP.TesteUnitario.Aplicacao.UseCase.Relatorio
 {
     public class RelatorioControleEditoraUseCaseTeste
     {
+        private static readonly long[] TiposAcervosPermitidosPadrao = { 1, 2, 3 };
+        private static readonly long[] TiposAcervosPermitidosAlternativo = { 10, 20, 30, 40 };
+        private static readonly int[] EditoraIdsPadrao = { 5, 10, 15 };
+        private static readonly HttpStatusCode[] CodigosErroHttp = 
+        {
+            HttpStatusCode.BadRequest,
+            HttpStatusCode.Unauthorized,
+            HttpStatusCode.Forbidden,
+            HttpStatusCode.NotFound,
+            HttpStatusCode.InternalServerError
+        };
+        private static readonly HttpStatusCode[] CodigosSucessoHttp = 
+        {
+            HttpStatusCode.OK,
+            HttpStatusCode.Created,
+            HttpStatusCode.Accepted
+        };
+
         private readonly Mock<IHttpClientFactory> httpClientFactoryMock;
         private readonly Mock<IServicoAcervo> servicoAcervoMock;
         private readonly Mock<IContextoAplicacao> contextoAplicacaoMock;
@@ -25,10 +44,10 @@ namespace SME.CDEP.TesteUnitario.Aplicacao.UseCase.Relatorio
             contextoAplicacaoMock.SetupGet(x => x.NomeUsuario).Returns("Usuário Teste");
             contextoAplicacaoMock.SetupGet(x => x.UsuarioLogado).Returns("123456");
             servicoAcervoMock.Setup(x => x.ObterTiposAcervosPermitidosDoPerfilLogado())
-                .Returns(new long[] { 1, 2, 3 });
+                .Returns(TiposAcervosPermitidosPadrao);
         }
 
-        private HttpClient CriarHttpClient(HttpStatusCode statusCode, string content = "arquivo fake")
+        private static HttpClient CriarHttpClient(HttpStatusCode statusCode, string content = "arquivo fake")
         {
             var handlerMock = new Mock<HttpMessageHandler>();
             handlerMock.Protected()
@@ -57,7 +76,7 @@ namespace SME.CDEP.TesteUnitario.Aplicacao.UseCase.Relatorio
 
             var useCase = new RelatorioControleEditoraUseCase(httpClientFactoryMock.Object, servicoAcervoMock.Object, contextoAplicacaoMock.Object);
 
-            var request = new RelatorioControleEditoraRequest { EditoraId = new List<int> { 10 } };
+            var request = new RelatorioControleEditoraRequest { EditoraId = [10] };
 
             var result = await useCase.Executar(request);
 
@@ -111,7 +130,7 @@ namespace SME.CDEP.TesteUnitario.Aplicacao.UseCase.Relatorio
                 )
                 .Callback<HttpRequestMessage, CancellationToken>(async (req, _) =>
                 {
-                    corpoRequisicao = await req.Content.ReadAsStringAsync();
+                    corpoRequisicao = await req.Content!.ReadAsStringAsync(CancellationToken.None);
                 })
                 .ReturnsAsync(new HttpResponseMessage
                 {
@@ -131,7 +150,7 @@ namespace SME.CDEP.TesteUnitario.Aplicacao.UseCase.Relatorio
                 contextoAplicacaoMock.Object
             );
 
-            var request = new RelatorioControleEditoraRequest { EditoraId = new List<int> { 99 } };
+            var request = new RelatorioControleEditoraRequest { EditoraId = [99] };
 
             await useCase.Executar(request);
 
@@ -142,7 +161,7 @@ namespace SME.CDEP.TesteUnitario.Aplicacao.UseCase.Relatorio
             Assert.Equal(99, mensagem["EditoraId"]?[0]?.Value<int>());
             Assert.Equal("Usuário Teste", mensagem["Usuario"]?.Value<string>());
             Assert.Equal("123456", mensagem["UsuarioRF"]?.Value<string>());
-            Assert.Equal(new[] { 1L, 2L, 3L }, mensagem["TiposAcervosPermitidos"]?.Values<long>());
+            Assert.Equal(TiposAcervosPermitidosPadrao, mensagem["TiposAcervosPermitidos"]?.Values<long>());
         }
 
         [Fact]
@@ -228,7 +247,7 @@ namespace SME.CDEP.TesteUnitario.Aplicacao.UseCase.Relatorio
                 )
                 .Callback<HttpRequestMessage, CancellationToken>(async (req, _) =>
                 {
-                    corpoRequisicao = await req.Content.ReadAsStringAsync();
+                    corpoRequisicao = await req.Content!.ReadAsStringAsync(CancellationToken.None);
                 })
                 .ReturnsAsync(new HttpResponseMessage
                 {
@@ -244,8 +263,7 @@ namespace SME.CDEP.TesteUnitario.Aplicacao.UseCase.Relatorio
 
             var useCase = new RelatorioControleEditoraUseCase(httpClientFactoryMock.Object, servicoAcervoMock.Object, contextoAplicacaoMock.Object);
 
-            var editoraIds = new List<int> { 5, 10, 15 };
-            var request = new RelatorioControleEditoraRequest { EditoraId = editoraIds };
+            var request = new RelatorioControleEditoraRequest { EditoraId = EditoraIdsPadrao.ToList() };
 
             await useCase.Executar(request);
 
@@ -255,7 +273,7 @@ namespace SME.CDEP.TesteUnitario.Aplicacao.UseCase.Relatorio
             Assert.NotNull(mensagem);
             var editoraIdArray = mensagem["EditoraId"]?.Values<int>().ToList();
             Assert.NotNull(editoraIdArray);
-            Assert.Equal(new[] { 5, 10, 15 }, editoraIdArray);
+            Assert.Equal(EditoraIdsPadrao, editoraIdArray);
         }
 
         [Fact]
@@ -275,7 +293,7 @@ namespace SME.CDEP.TesteUnitario.Aplicacao.UseCase.Relatorio
                 )
                 .Callback<HttpRequestMessage, CancellationToken>(async (req, _) =>
                 {
-                    corpoRequisicao = await req.Content.ReadAsStringAsync();
+                    corpoRequisicao = await req.Content!.ReadAsStringAsync(CancellationToken.None);
                 })
                 .ReturnsAsync(new HttpResponseMessage
                 {
@@ -316,7 +334,7 @@ namespace SME.CDEP.TesteUnitario.Aplicacao.UseCase.Relatorio
                 )
                 .Callback<HttpRequestMessage, CancellationToken>(async (req, _) =>
                 {
-                    corpoRequisicao = await req.Content.ReadAsStringAsync();
+                    corpoRequisicao = await req.Content!.ReadAsStringAsync(CancellationToken.None);
                 })
                 .ReturnsAsync(new HttpResponseMessage
                 {
@@ -344,10 +362,9 @@ namespace SME.CDEP.TesteUnitario.Aplicacao.UseCase.Relatorio
         public async Task Executar_Deve_Incluir_TiposAcervosPermitidos_No_Json()
         {
             string? corpoRequisicao = null;
-            var tiposEsperados = new long[] { 10, 20, 30, 40 };
 
             servicoAcervoMock.Setup(x => x.ObterTiposAcervosPermitidosDoPerfilLogado())
-                .Returns(tiposEsperados);
+                .Returns(TiposAcervosPermitidosAlternativo);
 
             var handlerMock = new Mock<HttpMessageHandler>();
             handlerMock.Protected()
@@ -358,7 +375,7 @@ namespace SME.CDEP.TesteUnitario.Aplicacao.UseCase.Relatorio
                 )
                 .Callback<HttpRequestMessage, CancellationToken>(async (req, _) =>
                 {
-                    corpoRequisicao = await req.Content.ReadAsStringAsync();
+                    corpoRequisicao = await req.Content!.ReadAsStringAsync(CancellationToken.None);
                 })
                 .ReturnsAsync(new HttpResponseMessage
                 {
@@ -380,7 +397,7 @@ namespace SME.CDEP.TesteUnitario.Aplicacao.UseCase.Relatorio
             var json = JObject.Parse(corpoRequisicao);
             var tipos = json["Mensagem"]?["TiposAcervosPermitidos"]?.Values<long>().ToList();
             Assert.NotNull(tipos);
-            Assert.Equal(tiposEsperados, tipos);
+            Assert.Equal(TiposAcervosPermitidosAlternativo, tipos);
         }
 
         [Fact]
@@ -415,16 +432,7 @@ namespace SME.CDEP.TesteUnitario.Aplicacao.UseCase.Relatorio
         [Fact]
         public async Task Executar_Deve_Retornar_Null_Para_Diferentes_Codigos_Erro_Http()
         {
-            var codigosErro = new[]
-            {
-                HttpStatusCode.BadRequest,
-                HttpStatusCode.Unauthorized,
-                HttpStatusCode.Forbidden,
-                HttpStatusCode.NotFound,
-                HttpStatusCode.InternalServerError
-            };
-
-            foreach (var codigoErro in codigosErro)
+            foreach (var codigoErro in CodigosErroHttp)
             {
                 var httpClient = CriarHttpClient(codigoErro);
                 httpClientFactoryMock.Setup(x => x.CreateClient("apiSR")).Returns(httpClient);
@@ -440,14 +448,7 @@ namespace SME.CDEP.TesteUnitario.Aplicacao.UseCase.Relatorio
         [Fact]
         public async Task Executar_Deve_Retornar_Stream_Para_Diferentes_Codigos_Sucesso_Http()
         {
-            var codigosSucesso = new[]
-            {
-                HttpStatusCode.OK,
-                HttpStatusCode.Created,
-                HttpStatusCode.Accepted
-            };
-
-            foreach (var codigoSucesso in codigosSucesso)
+            foreach (var codigoSucesso in CodigosSucessoHttp)
             {
                 var httpClient = CriarHttpClient(codigoSucesso, "conteudo relatorio");
                 httpClientFactoryMock.Setup(x => x.CreateClient("apiSR")).Returns(httpClient);
@@ -477,7 +478,7 @@ namespace SME.CDEP.TesteUnitario.Aplicacao.UseCase.Relatorio
                 )
                 .Callback<HttpRequestMessage, CancellationToken>(async (req, _) =>
                 {
-                    corpoRequisicao = await req.Content.ReadAsStringAsync();
+                    corpoRequisicao = await req.Content!.ReadAsStringAsync(CancellationToken.None);
                 })
                 .ReturnsAsync(new HttpResponseMessage
                 {

@@ -15,7 +15,7 @@ namespace SME.CDEP.TesteUnitario.Aplicacao.UseCase.Relatorio
         private readonly Mock<IHttpClientFactory> _httpClientFactoryMock;
         private readonly Mock<IContextoAplicacao> _contextoAplicacaoMock;
         private readonly RelatorioTitulosMaisPesquisadosUseCase _useCase;
-        private readonly List<TipoAcervo> _tipoAcervos = new List<TipoAcervo> { TipoAcervo.Bibliografico };
+        private readonly List<TipoAcervo> _tipoAcervos = [TipoAcervo.Bibliografico];
         private const string BaseAddress = "https://api.example.com/";
         private const string ApiEndpoint = "v1/cdep/titulos-mais-pesquisados";
 
@@ -180,7 +180,7 @@ namespace SME.CDEP.TesteUnitario.Aplicacao.UseCase.Relatorio
                 Times.Once(),
                 ItExpr.Is<HttpRequestMessage>(req =>
                     req.Method == HttpMethod.Post &&
-                    req.RequestUri.ToString().Contains(ApiEndpoint)),
+                    req.RequestUri!.ToString().Contains(ApiEndpoint)),
                 ItExpr.IsAny<CancellationToken>());
 
             _contextoAplicacaoMock.Verify(x => x.NomeUsuario, Times.Once);
@@ -207,7 +207,7 @@ namespace SME.CDEP.TesteUnitario.Aplicacao.UseCase.Relatorio
 
             var handlerMock = new Mock<HttpMessageHandler>();
             var streamContent = new MemoryStream(Encoding.UTF8.GetBytes("relatório"));
-            HttpRequestMessage capturedRequest = null;
+            HttpRequestMessage capturedRequest = null!;
 
             handlerMock.Protected()
                 .Setup<Task<HttpResponseMessage>>(
@@ -231,7 +231,7 @@ namespace SME.CDEP.TesteUnitario.Aplicacao.UseCase.Relatorio
             resultado.Should().NotBeNull();
             capturedRequest.Should().NotBeNull();
             capturedRequest.Content.Should().NotBeNull();
-            capturedRequest.Content.Headers.ContentType.MediaType.Should().Be("application/json");
+            capturedRequest.Content.Headers.ContentType!.MediaType.Should().Be("application/json");
         }
 
         [Fact]

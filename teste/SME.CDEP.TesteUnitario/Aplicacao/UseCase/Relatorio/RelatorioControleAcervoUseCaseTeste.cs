@@ -1,24 +1,21 @@
 ﻿using Moq;
 using Moq.Protected;
-using Newtonsoft.Json;
 using SME.CDEP.Aplicacao.DTOS;
 using SME.CDEP.Aplicacao.Servicos.Interface;
 using SME.CDEP.Aplicacao.UseCase;
 using SME.CDEP.Dominio.Contexto;
 using SME.CDEP.Dominio.Enumerados;
-using SME.CDEP.Infra.Dominio.Enumerados;
 using System.Net;
 using System.Text;
-using Xunit;
 
 namespace SME.CDEP.TesteUnitario.Aplicacao.UseCase.Relatorio
 {
     public class RelatorioControleAcervoUseCaseTeste
     {
-        private Mock<IHttpClientFactory> mockHttpClientFactory;
-        private Mock<IServicoAcervo> mockServicoAcervo;
-        private Mock<IContextoAplicacao> mockContextoAplicacao;
-        private RelatorioControleAcervoUseCase useCase;
+        private readonly Mock<IHttpClientFactory> mockHttpClientFactory;
+        private readonly Mock<IServicoAcervo> mockServicoAcervo;
+        private readonly Mock<IContextoAplicacao> mockContextoAplicacao;
+        private readonly RelatorioControleAcervoUseCase useCase;
 
         public RelatorioControleAcervoUseCaseTeste()
         {
@@ -113,7 +110,7 @@ namespace SME.CDEP.TesteUnitario.Aplicacao.UseCase.Relatorio
                 Times.Once(),
                 ItExpr.Is<HttpRequestMessage>(req =>
                     req.Method == HttpMethod.Post &&
-                    req.RequestUri.ToString().EndsWith("v1/cdep/controle-acervo")),
+                    req.RequestUri!.ToString().EndsWith("v1/cdep/controle-acervo")),
                 ItExpr.IsAny<CancellationToken>()
             );
         }
@@ -346,7 +343,7 @@ namespace SME.CDEP.TesteUnitario.Aplicacao.UseCase.Relatorio
                 Times.Once(),
                 ItExpr.Is<HttpRequestMessage>(req =>
                     req.Method == HttpMethod.Post &&
-                    req.RequestUri.ToString().EndsWith("v1/cdep/controle-acervo")),
+                    req.RequestUri!.ToString().EndsWith("v1/cdep/controle-acervo")),
                 ItExpr.IsAny<CancellationToken>()
             );
         }
@@ -422,7 +419,7 @@ namespace SME.CDEP.TesteUnitario.Aplicacao.UseCase.Relatorio
             Assert.NotNull(useCase);
         }
 
-        private Mock<HttpMessageHandler> CriarMockHttpMessageHandler(HttpResponseMessage response)
+        private static Mock<HttpMessageHandler> CriarMockHttpMessageHandler(HttpResponseMessage response)
         {
             var mockHandler = new Mock<HttpMessageHandler>();
             mockHandler
