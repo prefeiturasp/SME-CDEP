@@ -339,7 +339,7 @@ namespace SME.CDEP.TesteUnitario.Aplicacao.Servicos
 
             repositorioArquivoMock
                 .Setup(r => r.ObterPorCodigo(codigoArquivo))
-                .ReturnsAsync((Arquivo)null);
+                .ReturnsAsync((Arquivo)null!);
 
             // Act
             Func<Task> acao = async () => await sut.Download(codigoArquivo);
@@ -350,7 +350,7 @@ namespace SME.CDEP.TesteUnitario.Aplicacao.Servicos
             repositorioArquivoMock.Verify(r => r.ObterPorCodigo(codigoArquivo), Times.Once);
         }
 
-        private static Arquivo GerarArquivoMock(Guid codigoArquivo, TipoArquivo tipo = TipoArquivo.Sistema, string nomeArquivo = null)
+        private static Arquivo GerarArquivoMock(Guid codigoArquivo, TipoArquivo tipo = TipoArquivo.Sistema, string nomeArquivo = null!)
         {
             return new Faker<Arquivo>("pt_BR")
                 .RuleFor(a => a.Codigo, codigoArquivo)
