@@ -26,12 +26,12 @@ public class AcervoAudiovisualCadastroDTO : AcervoCadastroDTO
     
     public long? CromiaId { get; set; }
     
-    [MaxLength(15, ErrorMessage = "A localização do acervo audiovisual não pode conter mais que 100 caracteres")]
+    [MaxLength(15, ErrorMessage = "A tamanho do arquivo do acervo audiovisual não pode conter mais que 15 caracteres")]
     public string? TamanhoArquivo { get; set; }
     
-    [MaxLength(100, ErrorMessage = "A localização do acervo audiovisual não pode conter mais que 100 caracteres")]
+    [MaxLength(100, ErrorMessage = "A acessibilidade do acervo audiovisual não pode conter mais que 100 caracteres")]
     public string? Acessibilidade { get; set; }
     
-    [MaxLength(200, ErrorMessage = "A localização do acervo audiovisual não pode conter mais que 100 caracteres")]
+    [MaxLength(200, ErrorMessage = "A disponibilização do acervo audiovisual não pode conter mais que 200 caracteres")]
     public string? Disponibilizacao { get; set; }
 }

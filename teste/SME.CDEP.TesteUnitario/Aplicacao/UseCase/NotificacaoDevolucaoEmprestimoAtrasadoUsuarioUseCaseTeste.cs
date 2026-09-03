@@ -31,11 +31,11 @@ namespace SME.CDEP.TesteUnitario.Aplicacao.UseCase
         [Fact]
         public void DadoDependenciasValidas_QuandoInstanciarUseCase_EntaoRetornaInstanciaComSucesso()
         {
-            Action acao = () => new NotificacaoDevolucaoEmprestimoAtrasadoUsuarioUseCase(
+            var instancia = new NotificacaoDevolucaoEmprestimoAtrasadoUsuarioUseCase(
                 repositorioParametroSistemaMock.Object,
                 servicoNotificacaoEmailMock.Object);
 
-            acao.Should().NotThrow();
+            instancia.Should().NotBeNull();
             sut.Should().NotBeNull();
         }
 

@@ -19,6 +19,7 @@ namespace SME.CDEP.TesteUnitario.Aplicacao.UseCase.Relatorio
         private readonly Mock<IContextoAplicacao> contextoAplicacaoMock;
         private readonly RelatorioControleDownloadAcervoUseCase sut;
         private const string BaseUrlMock = "http://localhost/";
+        private static readonly byte[] EmptyByteArray = Array.Empty<byte>();
 
         public RelatorioControleDownloadAcervoUseCaseTeste()
         {
@@ -83,7 +84,7 @@ namespace SME.CDEP.TesteUnitario.Aplicacao.UseCase.Relatorio
             resultado.Should().BeOfType<MemoryStream>();
             resultado.Seek(0, SeekOrigin.Begin);
             var bytesLidos = new byte[resultado.Length];
-            await resultado.ReadAsync(bytesLidos);
+            await resultado.ReadExactlyAsync(bytesLidos);
             bytesLidos.Should().BeEquivalentTo(bytesRelatorio);
         }
 
@@ -238,7 +239,7 @@ namespace SME.CDEP.TesteUnitario.Aplicacao.UseCase.Relatorio
             contextoAplicacaoMock.Setup(c => c.NomeUsuario).Returns("User");
             contextoAplicacaoMock.Setup(c => c.UsuarioLogado).Returns("1234567");
 
-            MockarRespostaHttpClientComFalha(HttpStatusCode.NotFound, new byte[] { });
+            MockarRespostaHttpClientComFalha(HttpStatusCode.NotFound, EmptyByteArray);
 
             var resultado = await sut.ExecutarAsync(filtros);
 
@@ -252,7 +253,7 @@ namespace SME.CDEP.TesteUnitario.Aplicacao.UseCase.Relatorio
             contextoAplicacaoMock.Setup(c => c.NomeUsuario).Returns("User");
             contextoAplicacaoMock.Setup(c => c.UsuarioLogado).Returns("1234567");
 
-            MockarRespostaHttpClientComFalha(HttpStatusCode.BadRequest, new byte[] { });
+            MockarRespostaHttpClientComFalha(HttpStatusCode.BadRequest, EmptyByteArray);
 
             var resultado = await sut.ExecutarAsync(filtros);
 
@@ -266,7 +267,7 @@ namespace SME.CDEP.TesteUnitario.Aplicacao.UseCase.Relatorio
             contextoAplicacaoMock.Setup(c => c.NomeUsuario).Returns("User");
             contextoAplicacaoMock.Setup(c => c.UsuarioLogado).Returns("1234567");
 
-            MockarRespostaHttpClientComFalha(HttpStatusCode.InternalServerError, new byte[] { });
+            MockarRespostaHttpClientComFalha(HttpStatusCode.InternalServerError, EmptyByteArray);
 
             var resultado = await sut.ExecutarAsync(filtros);
 
@@ -280,7 +281,7 @@ namespace SME.CDEP.TesteUnitario.Aplicacao.UseCase.Relatorio
             contextoAplicacaoMock.Setup(c => c.NomeUsuario).Returns("User");
             contextoAplicacaoMock.Setup(c => c.UsuarioLogado).Returns("1234567");
 
-            MockarRespostaHttpClientComFalha(HttpStatusCode.Unauthorized, new byte[] { });
+            MockarRespostaHttpClientComFalha(HttpStatusCode.Unauthorized, EmptyByteArray);
 
             var resultado = await sut.ExecutarAsync(filtros);
 
@@ -294,7 +295,7 @@ namespace SME.CDEP.TesteUnitario.Aplicacao.UseCase.Relatorio
             contextoAplicacaoMock.Setup(c => c.NomeUsuario).Returns("User");
             contextoAplicacaoMock.Setup(c => c.UsuarioLogado).Returns("1234567");
 
-            MockarRespostaHttpClientComFalha(HttpStatusCode.Forbidden, new byte[] { });
+            MockarRespostaHttpClientComFalha(HttpStatusCode.Forbidden, EmptyByteArray);
 
             var resultado = await sut.ExecutarAsync(filtros);
 
@@ -312,7 +313,7 @@ namespace SME.CDEP.TesteUnitario.Aplicacao.UseCase.Relatorio
             contextoAplicacaoMock.Setup(c => c.NomeUsuario).Returns("User");
             contextoAplicacaoMock.Setup(c => c.UsuarioLogado).Returns("1234567");
 
-            MockarRespostaHttpClientComSucesso(HttpStatusCode.NoContent, new byte[] { });
+            MockarRespostaHttpClientComSucesso(HttpStatusCode.NoContent, EmptyByteArray);
 
             var resultado = await sut.ExecutarAsync(filtros);
 
@@ -320,16 +321,21 @@ namespace SME.CDEP.TesteUnitario.Aplicacao.UseCase.Relatorio
         }
 
         [Fact]
-        public async Task DadoStatusCodeNoContentComDados_QuandoExecutarAsync_EntaoRetornaNuloIgnorandoDados()
+        public async Task DadoStatusCodeNoContentComDadosQuandoExecutarAsyncEntaoRetornaNuloIgnorandoDados()
         {
+            // Arrange
             var filtros = new Faker<RelatorioControleDownloadAcervoRequest>().Generate();
             contextoAplicacaoMock.Setup(c => c.NomeUsuario).Returns("User");
             contextoAplicacaoMock.Setup(c => c.UsuarioLogado).Returns("1234567");
 
-            MockarRespostaHttpClientComSucesso(HttpStatusCode.NoContent, new byte[] { 1, 2, 3 });
+            // Simula retorno de NoContent, mas com dados não vazios
+            var dadosNaoVazios = Encoding.UTF8.GetBytes("algum dado inesperado");
+            MockarRespostaHttpClientComSucesso(HttpStatusCode.NoContent, dadosNaoVazios);
 
+            // Act
             var resultado = await sut.ExecutarAsync(filtros);
 
+            // Assert
             resultado.Should().BeNull();
         }
 
@@ -360,7 +366,7 @@ namespace SME.CDEP.TesteUnitario.Aplicacao.UseCase.Relatorio
             await sut.ExecutarAsync(filtros);
 
             jsonEnviado.Should().NotBeNullOrEmpty();
-            var jsonObject = JsonConvert.DeserializeObject<dynamic>(jsonEnviado);
+            var jsonObject = JsonConvert.DeserializeObject<dynamic>(jsonEnviado)!;
             ((string)jsonObject.Mensagem.Usuario).Should().Be(nomeUsuario);
             ((string)jsonObject.Mensagem.UsuarioRF).Should().Be(usuarioRF);
             ((string)jsonObject.Mensagem.Titulo).Should().Be(titulo);
@@ -473,7 +479,7 @@ namespace SME.CDEP.TesteUnitario.Aplicacao.UseCase.Relatorio
         }
 
         private void MockarRespostaHttpClientComFalha(HttpStatusCode statusCode, byte[] conteudoRetorno)
-        {
+        {            
             var mockHandler = new Mock<HttpMessageHandler>();
 
             mockHandler.Protected()
@@ -482,10 +488,16 @@ namespace SME.CDEP.TesteUnitario.Aplicacao.UseCase.Relatorio
                     ItExpr.IsAny<HttpRequestMessage>(),
                     ItExpr.IsAny<CancellationToken>()
                 )
-                .ReturnsAsync(new HttpResponseMessage
+                .ReturnsAsync(() =>
                 {
-                    StatusCode = statusCode,
-                    Content = new ByteArrayContent(conteudoRetorno)
+                    var response = new HttpResponseMessage
+                    {
+                        StatusCode = statusCode,
+                        Content = new ByteArrayContent(conteudoRetorno)
+                    };
+                    // Adiciona um header customizado para diferenciar do método de sucesso
+                    response.Headers.Add("X-Mock-Failure", "true");
+                    return response;
                 });
 
             var httpClient = new HttpClient(mockHandler.Object)
@@ -576,7 +588,7 @@ namespace SME.CDEP.TesteUnitario.Aplicacao.UseCase.Relatorio
                 {
                     if (request.Content?.Headers.ContentType != null)
                     {
-                        capturaContentType(request.Content.Headers.ContentType.MediaType);
+                        capturaContentType(request.Content.Headers.ContentType.MediaType!);
                     }
                 })
                 .ReturnsAsync(new HttpResponseMessage

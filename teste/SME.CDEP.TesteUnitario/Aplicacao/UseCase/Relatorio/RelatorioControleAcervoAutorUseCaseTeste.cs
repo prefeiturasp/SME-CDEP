@@ -12,10 +12,10 @@ namespace SME.CDEP.TesteUnitario.Aplicacao.UseCase.Relatorio
 {
     public class RelatorioControleAcervoAutorUseCaseTeste
     {
-        private Mock<IHttpClientFactory> mockHttpClientFactory;
-        private Mock<IServicoAcervo> mockServicoAcervo;
-        private Mock<IContextoAplicacao> mockContextoAplicacao;
-        private RelatorioControleAcervoAutorUseCase useCase;
+        private readonly Mock<IHttpClientFactory> mockHttpClientFactory;
+        private readonly Mock<IServicoAcervo> mockServicoAcervo;
+        private readonly Mock<IContextoAplicacao> mockContextoAplicacao;
+        private readonly RelatorioControleAcervoAutorUseCase useCase;
 
         public RelatorioControleAcervoAutorUseCaseTeste()
         {
@@ -35,7 +35,7 @@ namespace SME.CDEP.TesteUnitario.Aplicacao.UseCase.Relatorio
         {
             var filtros = new RelatorioControleAcervoAutorRequest
             {
-                Autores = new List<int> { 1 },
+                Autores = [1],
                 TipoAcervo = Infra.Dominio.Enumerados.TipoAcervo.Bibliografico
             };
 
@@ -72,7 +72,7 @@ namespace SME.CDEP.TesteUnitario.Aplicacao.UseCase.Relatorio
         {
             var filtros = new RelatorioControleAcervoAutorRequest
             {
-                Autores = new List<int> { 1 },
+                Autores = [1],
                 TipoAcervo = Infra.Dominio.Enumerados.TipoAcervo.Bibliografico
             };
 
@@ -102,7 +102,7 @@ namespace SME.CDEP.TesteUnitario.Aplicacao.UseCase.Relatorio
         {
             var filtros = new RelatorioControleAcervoAutorRequest
             {
-                Autores = new List<int> { 1 },
+                Autores = [1],
                 TipoAcervo = Infra.Dominio.Enumerados.TipoAcervo.Bibliografico
             };
 
@@ -132,7 +132,7 @@ namespace SME.CDEP.TesteUnitario.Aplicacao.UseCase.Relatorio
         {
             var filtros = new RelatorioControleAcervoAutorRequest
             {
-                Autores = new List<int> { 1 },
+                Autores = [1],
                 TipoAcervo = Infra.Dominio.Enumerados.TipoAcervo.Bibliografico
             };
 
@@ -196,7 +196,7 @@ namespace SME.CDEP.TesteUnitario.Aplicacao.UseCase.Relatorio
                 Times.Once(),
                 ItExpr.Is<HttpRequestMessage>(req =>
                     req.Method == HttpMethod.Post &&
-                    req.RequestUri.ToString().EndsWith("v1/cdep/controle-acervo-autor")),
+                    req.RequestUri!.ToString().EndsWith("v1/cdep/controle-acervo-autor")),
                 ItExpr.IsAny<CancellationToken>()
             );
         }
@@ -206,13 +206,13 @@ namespace SME.CDEP.TesteUnitario.Aplicacao.UseCase.Relatorio
         {
             var filtros = new RelatorioControleAcervoAutorRequest
             {
-                Autores = new List<int> { 1 },
+                Autores = [1],
                 TipoAcervo = Infra.Dominio.Enumerados.TipoAcervo.Bibliografico
             };
             var nomeUsuario = "Maria Santos";
 
             mockServicoAcervo.Setup(s => s.ObterTiposAcervosPermitidosDoPerfilLogado())
-                .Returns(new long[] { 1 });
+                .Returns([1]);
 
             mockContextoAplicacao.Setup(c => c.NomeUsuario).Returns(nomeUsuario);
             mockContextoAplicacao.Setup(c => c.UsuarioLogado).Returns("RF789");
@@ -239,13 +239,13 @@ namespace SME.CDEP.TesteUnitario.Aplicacao.UseCase.Relatorio
         {
             var filtros = new RelatorioControleAcervoAutorRequest
             {
-                Autores = new List<int> { 1 },
+                Autores = [1],
                 TipoAcervo = Infra.Dominio.Enumerados.TipoAcervo.Bibliografico
             };
             var usuarioRF = "RF456";
 
             mockServicoAcervo.Setup(s => s.ObterTiposAcervosPermitidosDoPerfilLogado())
-                .Returns(new long[] { 1 });
+                .Returns([1]);
 
             mockContextoAplicacao.Setup(c => c.NomeUsuario).Returns("João");
             mockContextoAplicacao.Setup(c => c.UsuarioLogado).Returns(usuarioRF);
@@ -272,7 +272,7 @@ namespace SME.CDEP.TesteUnitario.Aplicacao.UseCase.Relatorio
         {
             var filtros = new RelatorioControleAcervoAutorRequest
             {
-                Autores = new List<int> { 1 },
+                Autores = [1],
                 TipoAcervo = Infra.Dominio.Enumerados.TipoAcervo.Bibliografico
             };
             var tiposPermitidos = new long[] { 10, 20, 30 };
@@ -305,12 +305,12 @@ namespace SME.CDEP.TesteUnitario.Aplicacao.UseCase.Relatorio
         {
             var filtros = new RelatorioControleAcervoAutorRequest
             {
-                Autores = new List<int> { 1 },
+                Autores = [1],
                 TipoAcervo = Infra.Dominio.Enumerados.TipoAcervo.Bibliografico
             };
 
             mockServicoAcervo.Setup(s => s.ObterTiposAcervosPermitidosDoPerfilLogado())
-                .Returns(new long[] { 1, 2 });
+                .Returns([1]);
 
             mockContextoAplicacao.Setup(c => c.NomeUsuario).Returns("João");
             mockContextoAplicacao.Setup(c => c.UsuarioLogado).Returns("RF123");
@@ -334,7 +334,7 @@ namespace SME.CDEP.TesteUnitario.Aplicacao.UseCase.Relatorio
                 Times.Once(),
                 ItExpr.Is<HttpRequestMessage>(req =>
                     req.Method == HttpMethod.Post &&
-                    req.RequestUri.ToString().EndsWith("v1/cdep/controle-acervo-autor")),
+                    req.RequestUri!.ToString().EndsWith("v1/cdep/controle-acervo-autor")),
                 ItExpr.IsAny<CancellationToken>()
             );
         }
@@ -344,12 +344,12 @@ namespace SME.CDEP.TesteUnitario.Aplicacao.UseCase.Relatorio
         {
             var filtros = new RelatorioControleAcervoAutorRequest
             {
-                Autores = new List<int> { 1 },
+                Autores = [1],
                 TipoAcervo = Infra.Dominio.Enumerados.TipoAcervo.Bibliografico
             };
 
             mockServicoAcervo.Setup(s => s.ObterTiposAcervosPermitidosDoPerfilLogado())
-                .Returns(new long[] { 1 });
+                .Returns([1]);
 
             mockContextoAplicacao.Setup(c => c.NomeUsuario).Returns("João");
             mockContextoAplicacao.Setup(c => c.UsuarioLogado).Returns("RF123");
@@ -376,14 +376,14 @@ namespace SME.CDEP.TesteUnitario.Aplicacao.UseCase.Relatorio
         {
             var filtros = new RelatorioControleAcervoAutorRequest
             {
-                Autores = new List<int> { 1 },
+                Autores = [1],
                 TipoAcervo = Infra.Dominio.Enumerados.TipoAcervo.Bibliografico
             };
             var conteudoEsperado = "Conteúdo do relatório PDF de autores";
             var streamContent = new MemoryStream(Encoding.UTF8.GetBytes(conteudoEsperado));
 
             mockServicoAcervo.Setup(s => s.ObterTiposAcervosPermitidosDoPerfilLogado())
-                .Returns(new long[] { 1 });
+                .Returns([1]);
 
             mockContextoAplicacao.Setup(c => c.NomeUsuario).Returns("João");
             mockContextoAplicacao.Setup(c => c.UsuarioLogado).Returns("RF123");
@@ -416,12 +416,12 @@ namespace SME.CDEP.TesteUnitario.Aplicacao.UseCase.Relatorio
         {
             var filtros = new RelatorioControleAcervoAutorRequest
             {
-                Autores = new List<int> { 1 },
+                Autores = [1],
                 TipoAcervo = Infra.Dominio.Enumerados.TipoAcervo.Bibliografico
             };
 
             mockServicoAcervo.Setup(s => s.ObterTiposAcervosPermitidosDoPerfilLogado())
-                .Returns(new long[] { 1 });
+                .Returns([1]);
 
             mockContextoAplicacao.Setup(c => c.NomeUsuario).Returns("João");
             mockContextoAplicacao.Setup(c => c.UsuarioLogado).Returns("RF123");
@@ -456,7 +456,7 @@ namespace SME.CDEP.TesteUnitario.Aplicacao.UseCase.Relatorio
             await useCase.Executar(filtros);
 
             Assert.NotEmpty(conteudoCapturado);
-            var objetoSerializado = JsonConvert.DeserializeObject<dynamic>(conteudoCapturado);
+            var objetoSerializado = JsonConvert.DeserializeObject<dynamic>(conteudoCapturado)!;
             Assert.NotNull(objetoSerializado["Mensagem"]);
         }
 
@@ -506,7 +506,7 @@ namespace SME.CDEP.TesteUnitario.Aplicacao.UseCase.Relatorio
             };
 
             mockServicoAcervo.Setup(s => s.ObterTiposAcervosPermitidosDoPerfilLogado())
-                .Returns(new long[] { 1 });
+                .Returns([1]);
 
             mockContextoAplicacao.Setup(c => c.NomeUsuario).Returns("João");
             mockContextoAplicacao.Setup(c => c.UsuarioLogado).Returns("RF123");
@@ -534,7 +534,7 @@ namespace SME.CDEP.TesteUnitario.Aplicacao.UseCase.Relatorio
         {
             var filtros = new RelatorioControleAcervoAutorRequest
             {
-                Autores = new List<int> { 1 },
+                Autores = [1],
                 TipoAcervo = Infra.Dominio.Enumerados.TipoAcervo.Bibliografico
             };
 
@@ -569,7 +569,7 @@ namespace SME.CDEP.TesteUnitario.Aplicacao.UseCase.Relatorio
             );
         }
 
-        private Mock<HttpMessageHandler> CriarMockHttpMessageHandler(HttpResponseMessage response)
+        private static Mock<HttpMessageHandler> CriarMockHttpMessageHandler(HttpResponseMessage response)
         {
             var mockHandler = new Mock<HttpMessageHandler>();
             mockHandler
