@@ -37,6 +37,8 @@ namespace SME.CDEP.Aplicacao.Servicos
         public async Task<D> ObterPorId(long entidadeId)
         {
             var retorno = await repositorio.ObterPorId(entidadeId);
+            if (retorno == null)
+                return default!;
             return mapper.Map<D>(retorno.Excluido ? default : retorno);
         }
 

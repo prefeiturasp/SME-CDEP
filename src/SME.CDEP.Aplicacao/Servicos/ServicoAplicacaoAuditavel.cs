@@ -35,7 +35,7 @@ namespace SME.CDEP.Aplicacao.Servicos
 
         public async Task<IEnumerable<D>> ObterTodos()
         {
-            return (await repositorio.ObterTodos()).Where(w=> !w.Excluido).Select(s=> mapper.Map<D>(s)).ToList();
+            return [.. (await repositorio.ObterTodos()).Where(w=> !w.Excluido).Select(s=> mapper.Map<D>(s))];
         }
 
         public async Task<D> Alterar(D entidadeDto)
@@ -56,7 +56,9 @@ namespace SME.CDEP.Aplicacao.Servicos
         public async Task<D> ObterPorId(long entidadeId)
         {
             var retorno = await repositorio.ObterPorId(entidadeId);
-            return mapper.Map<D>(retorno.Excluido ? default : retorno);
+            if (retorno == null || retorno.Excluido)
+                return default!;
+            return mapper.Map<D>(retorno);
         }
 
         public async Task<bool> Excluir(long entidaId)
